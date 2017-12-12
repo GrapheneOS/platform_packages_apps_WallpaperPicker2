@@ -1,0 +1,10 @@
+.idea/
+.gradle/
+gradle/
+build/
+gradlew*
+local.properties
+*.iml
+android.properties
+gradle.properties
+settings.gradle
