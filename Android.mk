@@ -67,7 +67,6 @@ LOCAL_SRC_FILES := $(call all-java-files-under, src) \
     $(call all-java-files-under, src_override) \
 
 LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res \
-    $(LOCAL_PATH)/res_override \
     prebuilts/sdk/current/support/v7/appcompat/res \
     prebuilts/sdk/current/support/v7/cardview/res \
     prebuilts/sdk/current/support/v7/recyclerview/res \
