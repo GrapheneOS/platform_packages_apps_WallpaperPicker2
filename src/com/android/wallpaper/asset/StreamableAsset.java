@@ -29,8 +29,6 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Represents Asset types for which bytes can be read directly, allowing for flexible bitmap

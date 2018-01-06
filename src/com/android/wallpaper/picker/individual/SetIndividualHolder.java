@@ -42,6 +42,7 @@ class SetIndividualHolder extends IndividualHolder implements View.OnClickListen
     private SelectionAnimator mSelectionAnimator;
     private OnSetListener mOnSetListener;
     private View mTile;
+
     public SetIndividualHolder(
             Activity hostActivity, int tileHeightPx, View itemView,
             SelectionAnimator selectionAnimator,

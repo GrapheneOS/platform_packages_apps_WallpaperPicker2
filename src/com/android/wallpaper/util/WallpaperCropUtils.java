@@ -31,6 +31,7 @@ public final class WallpaperCropUtils {
     private static final float ASPECT_RATIO_PORTRAIT = 10 / 16f;
     private static final float WALLPAPER_WIDTH_TO_SCREEN_RATIO_LANDSCAPE = 1.2f;
     private static final float WALLPAPER_WIDTH_TO_SCREEN_RATIO_PORTRAIT = 1.5f;
+
     // Suppress default constructor for noninstantiability.
     private WallpaperCropUtils() {
         throw new AssertionError();

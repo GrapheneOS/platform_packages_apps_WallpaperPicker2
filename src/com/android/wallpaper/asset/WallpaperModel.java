@@ -43,6 +43,7 @@ public class WallpaperModel {
     @Source
     private int mWallpaperSource;
     private WallpaperManager mWallpaperManager;
+
     public WallpaperModel(Context context, @Source int wallpaperSource) {
         mWallpaperSource = wallpaperSource;
         mWallpaperManager = WallpaperManager.getInstance(context);
