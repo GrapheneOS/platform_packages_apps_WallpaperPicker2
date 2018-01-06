@@ -12,12 +12,12 @@ buildscript {
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.0"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.0"
     defaultConfig {
         applicationId "com.android.wallpaper"
         minSdkVersion 26
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -62,7 +62,7 @@ android {
     }
 }
 
-final String SUPPORT_LIBS_VERSION = '27.0.1'
+final String SUPPORT_LIBS_VERSION = '28.0.0-SNAPSHOT'
 
 
 repositories {
@@ -84,6 +84,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:SNAPSHOT'
     implementation 'com.github.bumptech.glide:disklrucache:SNAPSHOT'
     implementation 'com.github.bumptech.glide:gifdecoder:SNAPSHOT'
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.9.0'
 
 
     androidTestImplementation('junit:junit:4.12')

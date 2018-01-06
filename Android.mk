@@ -69,8 +69,10 @@ LOCAL_STATIC_JAVA_LIBRARIES := \
 
 LOCAL_SRC_FILES := $(call all-java-files-under, src) \
     $(call all-java-files-under, src_override) \
+    $(call all-java-files-under, ../../../external/subsampling-scale-image-view/library/src)
 
-LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res
+LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res \
+    $(LOCAL_PATH)/../../../external/subsampling-scale-image-view/library/src/main/res
 
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 LOCAL_PROGUARD_ENABLED := disabled
@@ -85,7 +87,8 @@ LOCAL_AAPT_FLAGS := \
     --extra-packages android.support.coreui \
     --extra-packages android.support.design \
     --extra-packages android.support.mediacompat \
-    --extra-packages android.support.transition
+    --extra-packages android.support.transition \
+    --extra-packages com.davemorrissey.labs.subscaleview
 
 LOCAL_SDK_VERSION := current
 LOCAL_PACKAGE_NAME := WallpaperPicker2

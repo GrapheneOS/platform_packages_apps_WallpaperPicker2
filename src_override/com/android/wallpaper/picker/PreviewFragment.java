@@ -31,9 +31,9 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -69,7 +69,6 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.Asset.BitmapReceiver;
 import com.android.wallpaper.asset.Asset.DimensionsReceiver;
-import com.android.wallpaper.asset.BitmapUtils;
 import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.compat.ButtonDrawableSetterCompat;
 import com.android.wallpaper.config.Flags;
@@ -89,6 +88,8 @@ import com.android.wallpaper.util.WallpaperCropUtils;
 import com.android.wallpaper.widget.MaterialProgressDrawable;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import java.util.Date;
 import java.util.List;
@@ -111,6 +112,16 @@ public class PreviewFragment extends Fragment implements
      * wallpaper with pan and crop position to the device.
      */
     public static final int MODE_CROP_AND_SET_WALLPAPER = 1;
+
+    /**
+     * Possible preview modes for the fragment.
+     */
+    @IntDef({
+            MODE_VIEW_ONLY,
+            MODE_CROP_AND_SET_WALLPAPER})
+    public @interface PreviewMode {
+    }
+
     private static final String ARG_WALLPAPER = "wallpaper";
     private static final String ARG_PREVIEW_MODE = "preview_mode";
     private static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
@@ -126,14 +137,18 @@ public class PreviewFragment extends Fragment implements
     private static final boolean PROGRESS_DIALOG_INDETERMINATE = true;
     private static final float PAGE_BITMAP_MAX_HEAP_RATIO = 0.25f;
     private static final String KEY_BOTTOM_SHEET_STATE = "key_bottom_sheet_state";
+
     @PreviewMode
     private int mPreviewMode;
+
     /**
      * When true, enables a test mode of operation -- in which certain UI features are disabled to
      * allow for UI tests to run correctly. Works around issue in ProgressDialog currently where the
      * dialog constantly keeps the UI thread alive and blocks a test forever.
      */
     private boolean mTestingModeEnabled;
+
+    private SubsamplingScaleImageView mMosaicView;
     private WallpaperInfo mWallpaper;
     private Asset mWallpaperAsset;
     private WallpaperPersister mWallpaperPersister;
@@ -154,10 +169,13 @@ public class PreviewFragment extends Fragment implements
     private ImageView mLoadingIndicator;
     private MaterialProgressDrawable mProgressDrawable;
     private ImageView mLowResImageView;
+
     @SuppressWarnings("RestrictTo")
     @State
     private int mBottomSheetInitialState;
+
     private Intent mExploreIntent;
+
     /**
      * Staged error dialog fragments that were unable to be shown when the hosting activity didn't
      * allow committing fragment transactions.
@@ -179,35 +197,6 @@ public class PreviewFragment extends Fragment implements
         PreviewFragment fragment = new PreviewFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    /**
-     * Returns a zoom level that is similar to the actual zoom, but that is exactly 0.5 ** n for some
-     * integer n. This is useful for downsampling a bitmap--we want to see the bitmap at full detail,
-     * or downsampled to 1 in every 2 pixels, or 1 in 4, and so on, depending on the zoom.
-     */
-    private static float getDownsampleZoom(float actualZoom) {
-        if (actualZoom > 1) {
-            // Very zoomed in, but we can't sample more than 1 pixel per pixel.
-            return 1.0f;
-        }
-        float lower = 1.0f / roundUpToPower2((int) Math.ceil(1 / actualZoom));
-        float upper = lower * 2;
-        return nearestValue(actualZoom, lower, upper);
-    }
-
-    /**
-     * Returns the integer rounded up to the next power of 2.
-     */
-    private static int roundUpToPower2(int value) {
-        return 1 << (32 - Integer.numberOfLeadingZeros(value - 1));
-    }
-
-    /**
-     * Returns the closer of two values a and b to the given value.
-     */
-    private static float nearestValue(float value, float a, float b) {
-        return Math.abs(a - value) < Math.abs(b - value) ? a : b;
     }
 
     @Override
@@ -276,6 +265,7 @@ public class PreviewFragment extends Fragment implements
                         R.dimen.preview_toolbar_set_wallpaper_button_end_padding),
         /* bottom */ 0);
 
+        mMosaicView = view.findViewById(R.id.mosaic_view);
         mLoadingIndicator = (ImageView) view.findViewById(R.id.loading_indicator);
 
         mBottomSheet = (LinearLayout) view.findViewById(R.id.bottom_sheet);
@@ -330,13 +320,13 @@ public class PreviewFragment extends Fragment implements
                 if (actionUrl != null && !actionUrl.isEmpty()) {
                     Uri exploreUri = Uri.parse(mWallpaper.getActionUrl(activity));
 
-                    intentChecker.fetchValidActionViewIntent(exploreUri, (@Nullable Intent exploreIntent) -> {
-                            if (getActivity() == null) {
-                                return;
-                            }
+                    intentChecker.fetchValidActionViewIntent(exploreUri, exploreIntent -> {
+                        if (getActivity() == null) {
+                            return;
+                        }
 
-                            mExploreIntent = exploreIntent;
-                            initMosaicView();
+                        mExploreIntent = exploreIntent;
+                        initMosaicView();
                     });
                 } else {
                     initMosaicView();
@@ -358,8 +348,7 @@ public class PreviewFragment extends Fragment implements
         mLoadingIndicator.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mLowResImageView != null
-                        && mLowResImageView.getDrawable() instanceof ColorDrawable) {
+                if (mMosaicView != null && !mMosaicView.hasImage() && !mTestingModeEnabled) {
                     mLoadingIndicator.setVisibility(View.VISIBLE);
                     mLoadingIndicator.setAlpha(1f);
                     if (mProgressDrawable != null) {
@@ -475,6 +464,7 @@ public class PreviewFragment extends Fragment implements
         if (mProgressDrawable != null) {
             mProgressDrawable.stop();
         }
+        mMosaicView.recycle();
     }
 
     @Override
@@ -497,6 +487,35 @@ public class PreviewFragment extends Fragment implements
         }
         mPreviewPaneArrow.setColorFilter(
                 getResources().getColor(R.color.preview_pane_arrow_color), Mode.SRC_IN);
+    }
+
+    /**
+     * Returns a zoom level that is similar to the actual zoom, but that is exactly 0.5 ** n for some
+     * integer n. This is useful for downsampling a bitmap--we want to see the bitmap at full detail,
+     * or downsampled to 1 in every 2 pixels, or 1 in 4, and so on, depending on the zoom.
+     */
+    private static float getDownsampleZoom(float actualZoom) {
+        if (actualZoom > 1) {
+            // Very zoomed in, but we can't sample more than 1 pixel per pixel.
+            return 1.0f;
+        }
+        float lower = 1.0f / roundUpToPower2((int) Math.ceil(1 / actualZoom));
+        float upper = lower * 2;
+        return nearestValue(actualZoom, lower, upper);
+    }
+
+    /**
+     * Returns the integer rounded up to the next power of 2.
+     */
+    private static int roundUpToPower2(int value) {
+        return 1 << (32 - Integer.numberOfLeadingZeros(value - 1));
+    }
+
+    /**
+     * Returns the closer of two values a and b to the given value.
+     */
+    private static float nearestValue(float value, float a, float b) {
+        return Math.abs(a - value) < Math.abs(b - value) ? a : b;
     }
 
     private void setUpBottomSheetListeners() {
@@ -545,7 +564,7 @@ public class PreviewFragment extends Fragment implements
     }
 
     private boolean isWallpaperLoaded() {
-        return true;
+        return mMosaicView.hasImage();
     }
 
     private void populateAttributionPane() {
@@ -620,9 +639,18 @@ public class PreviewFragment extends Fragment implements
      * a zoom-scroll observer and click listener.
      */
     private void initMosaicView() {
+        mMosaicView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
+
+        // Set a solid black "page bitmap" so MosaicView draws a black background while waiting
+        // for the image to load or a transparent one if a thumbnail already loaded.
+        Bitmap blackBitmap = Bitmap.createBitmap(1, 1, Config.ARGB_8888);
+        int color = (mLowResImageView.getDrawable() == null) ? Color.BLACK : Color.TRANSPARENT;
+        blackBitmap.setPixel(0, 0, color);
+        mMosaicView.setImage(ImageSource.bitmap(blackBitmap));
+
         // Then set a fallback "page bitmap" to cover the whole MosaicView, which is an actual
         // (lower res) version of the image to be displayed.
-        Point targetPageBitmapSize = new Point(mDefaultCropSurfaceSize);
+        Point targetPageBitmapSize = new Point(mRawWallpaperSize);
         mWallpaperAsset.decodeBitmap(targetPageBitmapSize.x, targetPageBitmapSize.y,
                 new BitmapReceiver() {
                     @Override
@@ -642,28 +670,29 @@ public class PreviewFragment extends Fragment implements
                             showLoadWallpaperErrorDialog();
                             return;
                         }
+                        if (mMosaicView != null) {
+                            // Set page bitmap.
+                            mMosaicView.setImage(ImageSource.bitmap(pageBitmap));
 
-                        mLowResImageView.setImageBitmap(pageBitmap);
+                            crossFadeInMosaicView();
 
-                        crossFadeInMosaicView();
+                            // Record memory snapshot of app one second delayed to allow time for MosaicView tiles
+                            // to be decoded and overlaid on top of the page bitmap.
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (getActivity() == null) {
+                                        return;
+                                    }
 
-                        // Record memory snapshot of app one second delayed to allow time for MosaicView tiles
-                        // to be decoded and overlaid on top of the page bitmap.
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (getActivity() == null) {
-                                    return;
+                                    InjectorProvider.getInjector().getPerformanceMonitor()
+                                            .recordFullResPreviewLoadedMemorySnapshot();
                                 }
-
-                                InjectorProvider.getInjector().getPerformanceMonitor()
-                                        .recordFullResPreviewLoadedMemorySnapshot();
-                            }
-                        }, 1000);
+                            }, 1000);
+                        }
                         if (mProgressDrawable != null) {
                             mProgressDrawable.stop();
                         }
-
                         getActivity().invalidateOptionsMenu();
 
                         populateAttributionPane();
@@ -678,10 +707,19 @@ public class PreviewFragment extends Fragment implements
     private void crossFadeInMosaicView() {
         long shortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        mLowResImageView.setAlpha(0f);
-        mLowResImageView.animate()
+        mMosaicView.setAlpha(0f);
+        mMosaicView.animate()
                 .alpha(1f)
-                .setDuration(shortAnimationDuration);
+                .setDuration(shortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        // Clear the thumbnail bitmap reference to save memory since it's no longer visible.
+                        if (mLowResImageView != null) {
+                            mLowResImageView.setImageBitmap(null);
+                        }
+                    }
+                });
 
         mLoadingIndicator.animate()
                 .alpha(0f)
@@ -696,50 +734,19 @@ public class PreviewFragment extends Fragment implements
                 });
     }
 
-    /**
-     * Caps the expected memory consumption of the MosaicView's page bitmap at 25% of max heap.
-     * Mutates the target page bitmap size parameter passed to this method.
-     */
-    private void capPageBitmapSize(Point targetPageBitmapSize) {
-        // Get max heap size for the app to make sure page bitmap is not too large (for example, when
-        // the source image is a drastically different aspect ratio than the device screen).
-        long maxHeapBytes = Runtime.getRuntime().maxMemory();
-        long maxPageBitmapSizeBytes = (long) (maxHeapBytes * PAGE_BITMAP_MAX_HEAP_RATIO);
-
-        // Check how much memory would be consumed by the page bitmap at this target page bitmap size.
-        int inSampleSize = BitmapUtils.calculateInSampleSize(
-                mRawWallpaperSize.x, mRawWallpaperSize.y, targetPageBitmapSize.x, targetPageBitmapSize.y);
-        int outWidth = mRawWallpaperSize.x / inSampleSize;
-        int outHeight = mRawWallpaperSize.y / inSampleSize;
-        final int bytesPerPixelRgb8888 = 4;
-
-        while (outWidth * outHeight * bytesPerPixelRgb8888 > maxPageBitmapSizeBytes) {
-            targetPageBitmapSize.x /= 2;
-            targetPageBitmapSize.y /= 2;
-
-            outWidth /= 2;
-            outHeight /= 2;
-        }
-    }
-
-    /**
-     * Calculates crop area of wallpaper.
-     *
-     * @return crop area represented as a Rect i.e., left, top, right, and bottom positions as a set
-     * of 4 ints. Units are in physical pixels.
-     */
     private Rect calculateCropRect() {
         // Calculate Rect of wallpaper in physical pixel terms (i.e., scaled to current zoom).
-        float wallpaperZoom = 1f;
+        float wallpaperZoom = mMosaicView.getScale();
         int scaledWallpaperWidth = (int) (mRawWallpaperSize.x * wallpaperZoom);
         int scaledWallpaperHeight = (int) (mRawWallpaperSize.y * wallpaperZoom);
-        Rect scaledWallpaperRect = new Rect(0, 0, scaledWallpaperWidth, scaledWallpaperHeight);
+        Rect rect = new Rect();
+        mMosaicView.visibleFileRect(rect);
+        int scrollX = (int) (rect.left * wallpaperZoom);
+        int scrollY = (int) (rect.top * wallpaperZoom);
 
+        rect.set(0, 0, scaledWallpaperWidth, scaledWallpaperHeight);
         Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(
                 getActivity().getWindowManager().getDefaultDisplay());
-        int scrollX = 0;
-        int scrollY = 0;
-
         // Crop rect should start off as the visible screen and then include extra width and height if
         // available within wallpaper at the current zoom.
         Rect cropRect = new Rect(scrollX, scrollY, scrollX + screenSize.x, scrollY + screenSize.y);
@@ -751,17 +758,17 @@ public class PreviewFragment extends Fragment implements
 
         // Try to increase size of screenRect to include extra width depending on the layout direction.
         if (isRtl()) {
-            cropRect.left = Math.max(cropRect.left - extraWidth, scaledWallpaperRect.left);
+            cropRect.left = Math.max(cropRect.left - extraWidth, rect.left);
         } else {
-            cropRect.right = Math.min(cropRect.right + extraWidth, scaledWallpaperRect.right);
+            cropRect.right = Math.min(cropRect.right + extraWidth, rect.right);
         }
 
         // Try to increase the size of the cropRect to to include extra height.
         int availableExtraHeightTop = cropRect.top - Math.max(
-                scaledWallpaperRect.top,
+                rect.top,
                 cropRect.top - extraHeightTopAndBottom);
         int availableExtraHeightBottom = Math.min(
-                scaledWallpaperRect.bottom,
+                rect.bottom,
                 cropRect.bottom + extraHeightTopAndBottom) - cropRect.bottom;
 
         int availableExtraHeightTopAndBottom =
@@ -784,6 +791,8 @@ public class PreviewFragment extends Fragment implements
         // wallpaper and restore after setting the wallpaper finishes.
         saveAndLockScreenOrientation();
 
+        // Clear MosaicView tiles and Glide's cache and pools to reclaim memory for final cropped
+        // bitmap.
         Glide.get(getActivity()).clearMemory();
 
         // ProgressDialog endlessly updates the UI thread, keeping it from going idle which therefore
@@ -804,9 +813,8 @@ public class PreviewFragment extends Fragment implements
             mProgressDialog.show();
         }
 
-        float wallpaperScale = 1f;
+        float wallpaperScale = mMosaicView.getScale();
         Rect cropRect = calculateCropRect();
-
         mWallpaperPersister.setIndividualWallpaper(mWallpaper, mWallpaperAsset, cropRect,
                 wallpaperScale, destination, new SetWallpaperCallback() {
                     @Override
@@ -903,6 +911,14 @@ public class PreviewFragment extends Fragment implements
         }
     }
 
+    @IntDef({
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT,
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE,
+            ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT,
+            ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE})
+    private @interface ActivityInfoScreenOrientation {
+    }
+
     /**
      * Gets the appropriate ActivityInfo orientation for the current configuration orientation to
      * enable locking screen rotation at API levels lower than 18.
@@ -952,7 +968,7 @@ public class PreviewFragment extends Fragment implements
         }
     }
 
-    @TargetApi(VERSION_CODES.JELLY_BEAN_MR2)
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void saveAndLockScreenOrientation() {
         mCurrentScreenOrientation = getActivity().getRequestedOrientation();
         if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR2) {
@@ -971,24 +987,7 @@ public class PreviewFragment extends Fragment implements
      * added in API 17, returns false for versions lower than 17.
      */
     private boolean isRtl() {
-        return VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1
+        return VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
                 && getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
-    }
-
-    /**
-     * Possible preview modes for the fragment.
-     */
-    @IntDef({
-            MODE_VIEW_ONLY,
-            MODE_CROP_AND_SET_WALLPAPER})
-    public @interface PreviewMode {
-    }
-
-    @IntDef({
-            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT,
-            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE,
-            ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT,
-            ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE})
-    private @interface ActivityInfoScreenOrientation {
     }
 }
