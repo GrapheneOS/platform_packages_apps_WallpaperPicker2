@@ -47,7 +47,9 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE_TAGS := optional
 
-LOCAL_STATIC_JAVA_LIBRARIES := \
+LOCAL_USE_AAPT2 := true
+
+LOCAL_STATIC_ANDROID_LIBRARIES := \
     android-support-v4 \
     android-support-v7-appcompat \
     android-support-v7-cardview \
@@ -55,7 +57,9 @@ LOCAL_STATIC_JAVA_LIBRARIES := \
     android-support-compat \
     android-support-design \
     android-support-exifinterface \
-    android-support-media-compat \
+    android-support-media-compat
+
+LOCAL_STATIC_JAVA_LIBRARIES := \
     wallpaper2-glide-target \
     wallpaper2-disklrucache-target \
     wallpaper2-gifdecoder-target \
@@ -66,14 +70,7 @@ LOCAL_STATIC_JAVA_LIBRARIES := \
 LOCAL_SRC_FILES := $(call all-java-files-under, src) \
     $(call all-java-files-under, src_override) \
 
-LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res \
-    prebuilts/sdk/current/support/v7/appcompat/res \
-    prebuilts/sdk/current/support/v7/cardview/res \
-    prebuilts/sdk/current/support/v7/recyclerview/res \
-    prebuilts/sdk/current/support/compat/res \
-    prebuilts/sdk/current/support/core-ui/res \
-    prebuilts/sdk/current/support/design/res \
-    prebuilts/sdk/current/support/media-compat/res \
+LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res
 
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 LOCAL_PROGUARD_ENABLED := disabled
@@ -90,7 +87,7 @@ LOCAL_AAPT_FLAGS := \
     --extra-packages android.support.mediacompat \
     --extra-packages android.support.transition
 
-LOCAL_SDK_VERSION := 27
+LOCAL_SDK_VERSION := current
 LOCAL_PACKAGE_NAME := WallpaperPicker2
 
 include $(BUILD_PACKAGE)
