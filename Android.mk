@@ -55,7 +55,7 @@ LOCAL_STATIC_ANDROID_LIBRARIES := \
     android-support-v7-cardview \
     android-support-v7-recyclerview \
     android-support-compat \
-    android-support-design \
+    $(ANDROID_SUPPORT_DESIGN_TARGETS) \
     android-support-exifinterface \
     android-support-media-compat
 
@@ -79,15 +79,6 @@ LOCAL_PROGUARD_ENABLED := disabled
 
 LOCAL_AAPT_FLAGS := \
     --auto-add-overlay \
-    --extra-packages android.support.v4 \
-    --extra-packages android.support.v7.appcompat \
-    --extra-packages android.support.v7.cardview \
-    --extra-packages android.support.v7.recyclerview \
-    --extra-packages android.support.compat \
-    --extra-packages android.support.coreui \
-    --extra-packages android.support.design \
-    --extra-packages android.support.mediacompat \
-    --extra-packages android.support.transition \
     --extra-packages com.davemorrissey.labs.subscaleview
 
 LOCAL_SDK_VERSION := current
