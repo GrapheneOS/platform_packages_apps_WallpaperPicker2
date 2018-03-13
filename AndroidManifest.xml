@@ -30,7 +30,8 @@
       android:name="com.android.wallpaper.picker.WallpapersApplication"
       android:requiredForAllUsers="true"
       android:restoreAnyVersion="true"
-      android:supportsRtl="true">
+      android:supportsRtl="true"
+      android:extractNativeLibs="false">
 
     <meta-data
         android:name="com.android.wallpaper.asset.WallpaperGlideModule"

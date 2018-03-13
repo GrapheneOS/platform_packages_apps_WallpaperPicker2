@@ -38,8 +38,6 @@ public class WallpaperPreviewBitmapTransformation extends BitmapTransformation {
     private boolean mIsRtl;
 
     public WallpaperPreviewBitmapTransformation(Context appContext, boolean isRtl) {
-        super(appContext);
-
         WindowManager windowManager = (WindowManager)
                 appContext.getSystemService(Context.WINDOW_SERVICE);
         mDefaultCropSurfaceSize = WallpaperCropUtils.getDefaultCropSurfaceSize(
