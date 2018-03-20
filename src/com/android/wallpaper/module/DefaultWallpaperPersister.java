@@ -731,7 +731,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
      * changed.
      */
     private void notifyLiveWallpaperBitmapChanged() {
-        Intent intent = new Intent(NoBackupImageWallpaper.ACTION_ROTATING_WALLPAPER_CHANGED);
+        Intent intent = new Intent(mAppContext.getPackageName()
+                + NoBackupImageWallpaper.ACTION_ROTATING_WALLPAPER_CHANGED);
         // Handled by a runtime-registered receiver in NoBackupImageWallpaper.
         intent.setPackage(mAppContext.getPackageName());
         mAppContext.sendBroadcast(intent);

@@ -78,9 +78,9 @@ import static javax.microedition.khronos.egl.EGL10.EGL_NO_SURFACE;
 public class NoBackupImageWallpaper extends WallpaperService {
 
     public static final String ACTION_ROTATING_WALLPAPER_CHANGED =
-            "com.android.wallpaper.ACTION_ROTATING_WALLPAPER_CHANGED";
+            ".ACTION_ROTATING_WALLPAPER_CHANGED";
     public static final String PERMISSION_NOTIFY_ROTATING_WALLPAPER_CHANGED =
-            "com.android.wallpaper.NOTIFY_ROTATING_WALLPAPER_CHANGED";
+            ".NOTIFY_ROTATING_WALLPAPER_CHANGED";
     public static final String PREVIEW_WALLPAPER_FILE_PATH = "preview_wallpaper.jpg";
     public static final String ROTATING_WALLPAPER_FILE_PATH = "rotating_wallpaper.jpg";
 
@@ -215,7 +215,7 @@ public class NoBackupImageWallpaper extends WallpaperService {
             // rotating wallpaper file.
             if (!isPreview()) {
                 IntentFilter filter = new IntentFilter();
-                filter.addAction(ACTION_ROTATING_WALLPAPER_CHANGED);
+                filter.addAction(getPackageName() + ACTION_ROTATING_WALLPAPER_CHANGED);
 
                 mReceiver = new BroadcastReceiver() {
                     @Override
@@ -225,14 +225,14 @@ public class NoBackupImageWallpaper extends WallpaperService {
                         }
 
                         String action = intent.getAction();
-                        if (action.equals(ACTION_ROTATING_WALLPAPER_CHANGED)) {
+                        if (action.equals(getPackageName() + ACTION_ROTATING_WALLPAPER_CHANGED)) {
                             DrawableEngine.this.invalidateAndRedrawWallpaper();
                         }
                     }
                 };
 
-                registerReceiver(
-                        mReceiver, filter, PERMISSION_NOTIFY_ROTATING_WALLPAPER_CHANGED, null /* handler */);
+                registerReceiver(mReceiver, filter, getPackageName()
+                        + PERMISSION_NOTIFY_ROTATING_WALLPAPER_CHANGED, null /* handler */);
             }
         }
 

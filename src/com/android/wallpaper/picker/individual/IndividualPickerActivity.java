@@ -59,8 +59,6 @@ public class IndividualPickerActivity extends BaseActivity {
             "com.android.wallpaper.category_collection_id";
     private static final int PREVIEW_WALLPAPER_REQUEST_CODE = 0;
     private static final int NO_BACKUP_IMAGE_WALLPAPER_REQUEST_CODE = 1;
-    private static final String NO_BACKUP_IMAGE_WALLPAPER_RELATIVE_CLASS_PATH =
-            ".module.NoBackupImageWallpaper";
     private static final String KEY_CATEGORY_COLLECTION_ID = "key_category_collection_id";
 
     private InlinePreviewIntentFactory mPreviewIntentFactory;
@@ -182,8 +180,7 @@ public class IndividualPickerActivity extends BaseActivity {
      */
     public void showNoBackupImageWallpaperPreview() {
         Intent intent = new Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
-        ComponentName componentName = new ComponentName(
-                getPackageName(), getPackageName() + NO_BACKUP_IMAGE_WALLPAPER_RELATIVE_CLASS_PATH);
+        ComponentName componentName = new ComponentName(this, NoBackupImageWallpaper.class);
         intent.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, componentName);
         ActivityUtils.startActivityForResultSafely(
                 this, intent, NO_BACKUP_IMAGE_WALLPAPER_REQUEST_CODE);
