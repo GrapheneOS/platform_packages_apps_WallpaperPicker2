@@ -29,6 +29,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -39,7 +40,6 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IntDef;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetBehavior.State;
 import android.support.v4.app.DialogFragment;
@@ -313,7 +313,6 @@ public class PreviewFragment extends Fragment implements
                 }
 
                 mRawWallpaperSize = dimensions;
-
                 ExploreIntentChecker intentChecker =
                         InjectorProvider.getInjector().getExploreIntentChecker(activity);
                 String actionUrl = mWallpaper.getActionUrl(activity);
@@ -674,6 +673,7 @@ public class PreviewFragment extends Fragment implements
                             // Set page bitmap.
                             mMosaicView.setImage(ImageSource.bitmap(pageBitmap));
 
+                            setDefaultWallpaperZoomAndScroll();
                             crossFadeInMosaicView();
 
                             // Record memory snapshot of app one second delayed to allow time for MosaicView tiles
@@ -732,6 +732,44 @@ public class PreviewFragment extends Fragment implements
                         }
                     }
                 });
+    }
+
+    /**
+     * Sets the default wallpaper zoom and scroll position based on a "crop surface"
+     * (with extra width to account for parallax) superimposed on the screen. Shows as much of the
+     * wallpaper as possible on the crop surface and align screen to crop surface such that the
+     * default preview matches what would be seen by the user in the left-most home screen.
+     *
+     * <p>This method is called once in the Fragment lifecycle after the wallpaper asset has loaded
+     * and rendered to the layout.
+     */
+    private void setDefaultWallpaperZoomAndScroll() {
+        // Determine minimum zoom to fit maximum visible area of wallpaper on crop surface.
+        float defaultWallpaperZoom =
+                WallpaperCropUtils.calculateMinZoom(mRawWallpaperSize, mDefaultCropSurfaceSize);
+        float minWallpaperZoom =
+                WallpaperCropUtils.calculateMinZoom(mRawWallpaperSize, mScreenSize);
+
+        Point screenToCropSurfacePosition = WallpaperCropUtils.calculateCenterPosition(
+                mDefaultCropSurfaceSize, mScreenSize, true /* alignStart */, isRtl());
+        Point zoomedWallpaperSize = new Point(
+                Math.round(mRawWallpaperSize.x * defaultWallpaperZoom),
+                Math.round(mRawWallpaperSize.y * defaultWallpaperZoom));
+        Point cropSurfaceToWallpaperPosition = WallpaperCropUtils.calculateCenterPosition(
+                zoomedWallpaperSize, mDefaultCropSurfaceSize, false /* alignStart */, isRtl());
+
+        // Set min wallpaper zoom and max zoom on MosaicView widget.
+        mMosaicView.setMaxScale(Math.max(DEFAULT_WALLPAPER_MAX_ZOOM, defaultWallpaperZoom));
+        mMosaicView.setMinScale(minWallpaperZoom);
+
+        // Set center to composite positioning between scaled wallpaper and screen.
+        PointF centerPosition = new PointF(
+                mRawWallpaperSize.x / 2f,
+                mRawWallpaperSize.y / 2f);
+        centerPosition.offset( - (screenToCropSurfacePosition.x + cropSurfaceToWallpaperPosition.x),
+                - (screenToCropSurfacePosition.y + cropSurfaceToWallpaperPosition.y));
+
+        mMosaicView.setScaleAndCenter(defaultWallpaperZoom, centerPosition);
     }
 
     private Rect calculateCropRect() {
