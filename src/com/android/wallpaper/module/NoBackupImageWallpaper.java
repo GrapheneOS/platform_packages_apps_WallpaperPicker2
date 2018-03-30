@@ -695,9 +695,8 @@ public class NoBackupImageWallpaper extends WallpaperService {
                     final float right = left + mBackgroundWidth * mScale;
                     final float bottom = top + mBackgroundHeight * mScale;
                     if (w < 0 || h < 0) {
-                        c.save(Canvas.CLIP_SAVE_FLAG);
-                        c.clipRect(left, top, right, bottom,
-                                Op.DIFFERENCE);
+                        c.save();
+                        c.clipOutRect(left, top, right, bottom);
                         c.drawColor(0xff000000);
                         c.restore();
                     }
