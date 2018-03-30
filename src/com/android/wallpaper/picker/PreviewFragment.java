@@ -148,7 +148,7 @@ public class PreviewFragment extends Fragment implements
      */
     private boolean mTestingModeEnabled;
 
-    private SubsamplingScaleImageView mMosaicView;
+    private SubsamplingScaleImageView mFullResImageView;
     private WallpaperInfo mWallpaper;
     private Asset mWallpaperAsset;
     private WallpaperPersister mWallpaperPersister;
@@ -265,7 +265,7 @@ public class PreviewFragment extends Fragment implements
                         R.dimen.preview_toolbar_set_wallpaper_button_end_padding),
         /* bottom */ 0);
 
-        mMosaicView = view.findViewById(R.id.mosaic_view);
+        mFullResImageView = view.findViewById(R.id.full_res_image);
         mLoadingIndicator = (ImageView) view.findViewById(R.id.loading_indicator);
 
         mBottomSheet = (LinearLayout) view.findViewById(R.id.bottom_sheet);
@@ -325,10 +325,10 @@ public class PreviewFragment extends Fragment implements
                         }
 
                         mExploreIntent = exploreIntent;
-                        initMosaicView();
+                        initFullResView();
                     });
                 } else {
-                    initMosaicView();
+                    initFullResView();
                 }
             }
         });
@@ -347,7 +347,8 @@ public class PreviewFragment extends Fragment implements
         mLoadingIndicator.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mMosaicView != null && !mMosaicView.hasImage() && !mTestingModeEnabled) {
+                if (mFullResImageView != null && !mFullResImageView.hasImage()
+                        && !mTestingModeEnabled) {
                     mLoadingIndicator.setVisibility(View.VISIBLE);
                     mLoadingIndicator.setAlpha(1f);
                     if (mProgressDrawable != null) {
@@ -359,7 +360,8 @@ public class PreviewFragment extends Fragment implements
 
         mBottomSheetInitialState = (savedInstanceState == null)
                 ? BottomSheetBehavior.STATE_EXPANDED
-                : savedInstanceState.getInt(KEY_BOTTOM_SHEET_STATE, BottomSheetBehavior.STATE_EXPANDED);
+                : savedInstanceState.getInt(KEY_BOTTOM_SHEET_STATE,
+                        BottomSheetBehavior.STATE_EXPANDED);
         setUpBottomSheetListeners();
 
         return view;
@@ -463,7 +465,7 @@ public class PreviewFragment extends Fragment implements
         if (mProgressDrawable != null) {
             mProgressDrawable.stop();
         }
-        mMosaicView.recycle();
+        mFullResImageView.recycle();
     }
 
     @Override
@@ -563,7 +565,7 @@ public class PreviewFragment extends Fragment implements
     }
 
     private boolean isWallpaperLoaded() {
-        return mMosaicView.hasImage();
+        return mFullResImageView.hasImage();
     }
 
     private void populateAttributionPane() {
@@ -637,15 +639,15 @@ public class PreviewFragment extends Fragment implements
      * Initializes MosaicView by initializing tiling, setting a fallback page bitmap, and initializing
      * a zoom-scroll observer and click listener.
      */
-    private void initMosaicView() {
-        mMosaicView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
+    private void initFullResView() {
+        mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
 
         // Set a solid black "page bitmap" so MosaicView draws a black background while waiting
         // for the image to load or a transparent one if a thumbnail already loaded.
         Bitmap blackBitmap = Bitmap.createBitmap(1, 1, Config.ARGB_8888);
         int color = (mLowResImageView.getDrawable() == null) ? Color.BLACK : Color.TRANSPARENT;
         blackBitmap.setPixel(0, 0, color);
-        mMosaicView.setImage(ImageSource.bitmap(blackBitmap));
+        mFullResImageView.setImage(ImageSource.bitmap(blackBitmap));
 
         // Then set a fallback "page bitmap" to cover the whole MosaicView, which is an actual
         // (lower res) version of the image to be displayed.
@@ -669,9 +671,9 @@ public class PreviewFragment extends Fragment implements
                             showLoadWallpaperErrorDialog();
                             return;
                         }
-                        if (mMosaicView != null) {
+                        if (mFullResImageView != null) {
                             // Set page bitmap.
-                            mMosaicView.setImage(ImageSource.bitmap(pageBitmap));
+                            mFullResImageView.setImage(ImageSource.bitmap(pageBitmap));
 
                             setDefaultWallpaperZoomAndScroll();
                             crossFadeInMosaicView();
@@ -707,8 +709,8 @@ public class PreviewFragment extends Fragment implements
     private void crossFadeInMosaicView() {
         long shortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        mMosaicView.setAlpha(0f);
-        mMosaicView.animate()
+        mFullResImageView.setAlpha(0f);
+        mFullResImageView.animate()
                 .alpha(1f)
                 .setDuration(shortAnimationDuration)
                 .setListener(new AnimatorListenerAdapter() {
@@ -759,8 +761,8 @@ public class PreviewFragment extends Fragment implements
                 zoomedWallpaperSize, mDefaultCropSurfaceSize, false /* alignStart */, isRtl());
 
         // Set min wallpaper zoom and max zoom on MosaicView widget.
-        mMosaicView.setMaxScale(Math.max(DEFAULT_WALLPAPER_MAX_ZOOM, defaultWallpaperZoom));
-        mMosaicView.setMinScale(minWallpaperZoom);
+        mFullResImageView.setMaxScale(Math.max(DEFAULT_WALLPAPER_MAX_ZOOM, defaultWallpaperZoom));
+        mFullResImageView.setMinScale(minWallpaperZoom);
 
         // Set center to composite positioning between scaled wallpaper and screen.
         PointF centerPosition = new PointF(
@@ -769,16 +771,16 @@ public class PreviewFragment extends Fragment implements
         centerPosition.offset( - (screenToCropSurfacePosition.x + cropSurfaceToWallpaperPosition.x),
                 - (screenToCropSurfacePosition.y + cropSurfaceToWallpaperPosition.y));
 
-        mMosaicView.setScaleAndCenter(defaultWallpaperZoom, centerPosition);
+        mFullResImageView.setScaleAndCenter(defaultWallpaperZoom, centerPosition);
     }
 
     private Rect calculateCropRect() {
         // Calculate Rect of wallpaper in physical pixel terms (i.e., scaled to current zoom).
-        float wallpaperZoom = mMosaicView.getScale();
+        float wallpaperZoom = mFullResImageView.getScale();
         int scaledWallpaperWidth = (int) (mRawWallpaperSize.x * wallpaperZoom);
         int scaledWallpaperHeight = (int) (mRawWallpaperSize.y * wallpaperZoom);
         Rect rect = new Rect();
-        mMosaicView.visibleFileRect(rect);
+        mFullResImageView.visibleFileRect(rect);
         int scrollX = (int) (rect.left * wallpaperZoom);
         int scrollY = (int) (rect.top * wallpaperZoom);
 
@@ -851,7 +853,7 @@ public class PreviewFragment extends Fragment implements
             mProgressDialog.show();
         }
 
-        float wallpaperScale = mMosaicView.getScale();
+        float wallpaperScale = mFullResImageView.getScale();
         Rect cropRect = calculateCropRect();
         mWallpaperPersister.setIndividualWallpaper(mWallpaper, mWallpaperAsset, cropRect,
                 wallpaperScale, destination, new SetWallpaperCallback() {
