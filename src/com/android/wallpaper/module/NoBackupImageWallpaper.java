@@ -29,7 +29,6 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Region.Op;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.opengl.GLES20;
@@ -49,7 +48,6 @@ import android.view.WindowManager;
 
 import com.android.wallpaper.util.ScreenSizeCalculator;
 
-import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -534,9 +532,9 @@ public class NoBackupImageWallpaper extends WallpaperService {
                         // Decode bitmap of rotating image wallpaper.
                         String wallpaperFilePath = isPreview()
                                 ? PREVIEW_WALLPAPER_FILE_PATH : ROTATING_WALLPAPER_FILE_PATH;
-                        File wallpaperFile = new File(getApplicationContext().getFilesDir(), wallpaperFilePath);
-
-                        FileInputStream fileInputStream = new FileInputStream(wallpaperFile.getAbsolutePath());
+                        Context context = isPreview() ? getApplicationContext()
+                                : getApplicationContext().createDeviceProtectedStorageContext();
+                        FileInputStream fileInputStream = context.openFileInput(wallpaperFilePath);
                         Bitmap bitmap = BitmapFactory.decodeStream(fileInputStream);
                         fileInputStream.close();
                         return bitmap;

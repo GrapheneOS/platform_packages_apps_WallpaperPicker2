@@ -46,6 +46,7 @@ import com.android.wallpaper.module.BitmapCropper.Callback;
 import com.android.wallpaper.module.RotatingWallpaperComponentChecker.RotatingWallpaperComponent;
 import com.android.wallpaper.util.BitmapTransformer;
 import com.android.wallpaper.util.DiskBasedLogger;
+import com.android.wallpaper.util.FileMover;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 
 import java.io.ByteArrayInputStream;
@@ -68,6 +69,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     private static final String TAG = "WallpaperPersister";
 
     private final Context mAppContext; // The application's context.
+    // Context that accesses files in device protected storage
+    private final Context mDeviceProtectedContext;
     private final WallpaperManager mWallpaperManager;
     private final WallpaperManagerCompat mWallpaperManagerCompat;
     private final WallpaperPreferences mWallpaperPreferences;
@@ -79,6 +82,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     @SuppressLint("ServiceCast")
     public DefaultWallpaperPersister(Context context) {
         mAppContext = context.getApplicationContext();
+        mDeviceProtectedContext = mAppContext.createDeviceProtectedStorageContext();
         // Retrieve WallpaperManager using Context#getSystemService instead of
         // WallpaperManager#getInstance so it can be mocked out in test.
         Injector injector = InjectorProvider.getInjector();
@@ -429,29 +433,23 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         } else { // Live wallpaper rotating component.
 
             // Copy "preview" JPEG to "rotating" JPEG if the preview file exists.
-            File previewWallpaper = new File(mAppContext.getFilesDir(),
-                    NoBackupImageWallpaper.PREVIEW_WALLPAPER_FILE_PATH);
-            File rotatingWallpaper = new File(mAppContext.getFilesDir(),
-                    NoBackupImageWallpaper.ROTATING_WALLPAPER_FILE_PATH);
-            if (previewWallpaper.exists()) {
-                try {
-                    if (!previewWallpaper.renameTo(rotatingWallpaper)) {
-                        DiskBasedLogger.e(
-                                TAG,
-                                "Unable to rename preview to final file for rotating wallpaper file",
-                                mAppContext);
-                        return false;
-                    }
-                } catch (Exception e) {
-                    DiskBasedLogger.e(
-                            TAG,
-                            "Unable to rename preview to final file for rotating wallpaper file (exception)"
-                                    + e.toString(),
-                            mAppContext);
-                    return false;
-                }
+           File rotatingWallpaper;
+            try {
+                rotatingWallpaper = moveToDeviceProtectedStorage(
+                        NoBackupImageWallpaper.PREVIEW_WALLPAPER_FILE_PATH,
+                        NoBackupImageWallpaper.ROTATING_WALLPAPER_FILE_PATH);
+            } catch (Exception e) {
+                DiskBasedLogger.e(
+                        TAG,
+                        "Unable to move preview to final file for rotating wallpaper " +
+                                "file (exception)" + e.toString(),
+                        mAppContext);
+                return false;
             }
-
+            if (rotatingWallpaper == null) {
+                rotatingWallpaper = mDeviceProtectedContext.getFileStreamPath(
+                        NoBackupImageWallpaper.ROTATING_WALLPAPER_FILE_PATH);
+            }
             try {
                 FileInputStream fis = new FileInputStream(rotatingWallpaper.getAbsolutePath());
                 Bitmap bitmap = BitmapFactory.decodeStream(fis);
@@ -552,10 +550,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             return false;
         }
 
-        File finalFile = isPreview
-                ? new File(mAppContext.getFilesDir(), NoBackupImageWallpaper.PREVIEW_WALLPAPER_FILE_PATH)
-                : new File(mAppContext.getFilesDir(), NoBackupImageWallpaper.ROTATING_WALLPAPER_FILE_PATH);
-
         FileOutputStream fos;
         try {
             fos = mAppContext.openFileOutput(pendingFile.getName(), Context.MODE_PRIVATE);
@@ -580,8 +574,14 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         if (compressedSuccessfully) {
             // Compressing/writing to disk succeeded, so move the pending file to the final location.
             try {
-                if (!pendingFile.renameTo(finalFile)) {
-                    return false;
+                if (isPreview) {
+                    if (!pendingFile.renameTo(mAppContext.getFileStreamPath(
+                            NoBackupImageWallpaper.PREVIEW_WALLPAPER_FILE_PATH))) {
+                        return false;
+                    }
+                } else {
+                    moveToDeviceProtectedStorage(pendingFile.getName(),
+                            NoBackupImageWallpaper.ROTATING_WALLPAPER_FILE_PATH);
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Unable to rename pending to final file for rotating wallpaper file"
@@ -736,6 +736,24 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         // Handled by a runtime-registered receiver in NoBackupImageWallpaper.
         intent.setPackage(mAppContext.getPackageName());
         mAppContext.sendBroadcast(intent);
+    }
+
+    /**
+     * Moves a file from the app's files directory to the device content protected storage
+     * directory.
+     * @param srcFileName Name of the source file (just the name, no path). It's expected to be
+     *                    located in {@link Context#getFilesDir()} for {@link #mAppContext}
+     * @param dstFileName Name of the destination file (just the name, no path), which will be
+     *                    located in {@link Context#getFilesDir()}
+     *                    for {@link #mDeviceProtectedContext}
+     * @return a {@link File} corresponding to the moved file in its new location, or null if
+     *      nothing was moved (because srcFileName didn't exist).
+     */
+    @Nullable
+    private File moveToDeviceProtectedStorage(String srcFileName, String dstFileName)
+            throws IOException {
+        return FileMover.moveFileBetweenContexts(mAppContext, srcFileName, mDeviceProtectedContext,
+                dstFileName);
     }
 
     private class SetWallpaperTask extends AsyncTask<Void, Void, Boolean> {
@@ -900,11 +918,9 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                 mWallpaperPreferences.setLockWallpaperId(
                         mWallpaperManagerCompat.getWallpaperId(WallpaperManagerCompat.FLAG_LOCK));
             } else {
-                File rotatingWallpaper = new File(mAppContext.getFilesDir(),
-                        NoBackupImageWallpaper.ROTATING_WALLPAPER_FILE_PATH);
                 try {
-                    FileInputStream fileInputStream = new FileInputStream(
-                            rotatingWallpaper.getAbsolutePath());
+                    FileInputStream fileInputStream = mDeviceProtectedContext.openFileInput(
+                            NoBackupImageWallpaper.ROTATING_WALLPAPER_FILE_PATH);
                     int lockWallpaperId = setStreamToWallpaperManagerCompat(
                             fileInputStream, false /* allowBackup */, WallpaperManagerCompat.FLAG_LOCK);
                     fileInputStream.close();

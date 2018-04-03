@@ -31,7 +31,6 @@ import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.model.WallpaperMetadata;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -53,6 +52,7 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
     private final WallpaperManager mWallpaperManager;
     private final LiveWallpaperStatusChecker mLiveWallpaperStatusChecker;
     private final UserEventLogger mUserEventLogger;
+    private final Context mDeviceProtectedContext;
 
     /**
      * @param context The application's context.
@@ -68,6 +68,7 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
         // Retrieve WallpaperManager using Context#getSystemService instead of
         // WallpaperManager#getInstance so it can be mocked out in test.
         mWallpaperManager = (WallpaperManager) context.getSystemService(Context.WALLPAPER_SERVICE);
+        mDeviceProtectedContext = mAppContext.createDeviceProtectedStorageContext();
     }
 
     @Override
@@ -212,18 +213,20 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
         private long getCurrentHomeWallpaperHashCode() {
             if (mCurrentHomeWallpaperHashCode == 0) {
                 if (mLiveWallpaperStatusChecker.isNoBackupImageWallpaperSet()) {
-                    File rotatingWallpaper = new File(mAppContext.getFilesDir(),
-                            NoBackupImageWallpaper.ROTATING_WALLPAPER_FILE_PATH);
 
                     synchronized (RotatingWallpaperLockProvider.getInstance()) {
                         Bitmap bitmap = null;
                         try {
-                            FileInputStream fis = new FileInputStream(rotatingWallpaper.getAbsolutePath());
+                            FileInputStream fis =
+                                    mDeviceProtectedContext.openFileInput(
+                                            NoBackupImageWallpaper.ROTATING_WALLPAPER_FILE_PATH);
                             bitmap = BitmapFactory.decodeStream(fis);
                             fis.close();
                         } catch (FileNotFoundException e) {
                             Log.e(TAG, "Rotating wallpaper file not found at path: "
-                                    + rotatingWallpaper.getAbsolutePath(), e);
+                                    + mDeviceProtectedContext.getFileStreamPath(
+                                            NoBackupImageWallpaper.ROTATING_WALLPAPER_FILE_PATH),
+                                    e);
                         } catch (IOException e) {
                             Log.e(TAG, "IOException when closing FileInputStream " + e);
                         }

@@ -115,13 +115,14 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
      * Constructs and returns an Asset instance representing the currently-set wallpaper asset.
      */
     private Asset createCurrentWallpaperAssetVN(Context context) {
-        // If the live wallpaper for rotating wallpapers is set, then provide a file asset representing
-        // that wallpaper.
+        // If the live wallpaper for rotating wallpapers is set, then provide a file asset
+        // representing that wallpaper.
         boolean isNoBackupImageWallpaperSet = InjectorProvider.getInjector()
                 .getLiveWallpaperStatusChecker(context).isNoBackupImageWallpaperSet();
         if (mWallpaperManagerFlag == WallpaperManagerCompat.FLAG_SYSTEM
                 && isNoBackupImageWallpaperSet) {
-            return new FileAsset(new File(context.getApplicationContext().getFilesDir(),
+            Context deviceProtectedContext = context.createDeviceProtectedStorageContext();
+            return new FileAsset(new File(deviceProtectedContext.getFilesDir(),
                     NoBackupImageWallpaper.ROTATING_WALLPAPER_FILE_PATH));
         }
 
