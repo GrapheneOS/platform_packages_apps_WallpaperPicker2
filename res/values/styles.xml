@@ -49,6 +49,7 @@
     </style>
 
     <style name="LightDialogTheme" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:dialogCornerRadius">8dp</item>
         <item name="colorAccent">@color/accent_color</item>
     </style>
 

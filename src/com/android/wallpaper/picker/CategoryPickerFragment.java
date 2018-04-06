@@ -450,8 +450,8 @@ public class CategoryPickerFragment extends Fragment {
             mSkipWallpaperButton = (ImageButton) metadataView.findViewById(R.id.skip_wallpaper_button);
 
             if (Flags.skipDailyWallpaperButtonEnabled) {
-                Drawable exploreButtonDrawable = getResources().getDrawable(
-                        R.drawable.material_ic_explore_black_24);
+                Drawable exploreButtonDrawable = getContext().getDrawable(
+                        R.drawable.ic_explore_24px);
                 // This Drawable's state is shared across the app, so make a copy of it before applying a
                 // color tint as not to affect other clients elsewhere in the app.
                 exploreButtonDrawable = exploreButtonDrawable.getConstantState().newDrawable().mutate();

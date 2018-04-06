@@ -592,8 +592,8 @@ public class PreviewFragment extends Fragment implements
         if (actionUrl != null && !actionUrl.isEmpty()) {
             if (mExploreIntent != null) {
                 if (Flags.skipDailyWallpaperButtonEnabled) {
-                    Drawable exploreButtonDrawable = getResources().getDrawable(
-                            R.drawable.material_ic_explore_black_24);
+                    Drawable exploreButtonDrawable = context.getDrawable(
+                            R.drawable.ic_explore_24px);
 
                     // This Drawable's state is shared across the app, so make a copy of it before applying a
                     // color tint as not to affect other clients elsewhere in the app.

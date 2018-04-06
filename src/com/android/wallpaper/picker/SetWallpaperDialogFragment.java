@@ -64,7 +64,7 @@ public class SetWallpaperDialogFragment extends DialogFragment {
         });
         ButtonDrawableSetterCompat.setDrawableToButtonStart(
                 setHomeWallpaperButton,
-                context.getResources().getDrawable(R.drawable.material_ic_home_black_24));
+                context.getDrawable(R.drawable.ic_home_24px));
 
         Button setLockWallpaperButton = (Button) layout.findViewById(R.id.set_lock_wallpaper_button);
         setLockWallpaperButton.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +76,7 @@ public class SetWallpaperDialogFragment extends DialogFragment {
         });
         ButtonDrawableSetterCompat.setDrawableToButtonStart(
                 setLockWallpaperButton,
-                context.getResources().getDrawable(R.drawable.material_ic_https_black_24));
+                context.getDrawable(R.drawable.ic_lock_outline_24px));
 
         Button setBothWallpaperButton = (Button) layout.findViewById(R.id.set_both_wallpaper_button);
         setBothWallpaperButton.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +88,7 @@ public class SetWallpaperDialogFragment extends DialogFragment {
         });
         ButtonDrawableSetterCompat.setDrawableToButtonStart(
                 setBothWallpaperButton,
-                context.getResources().getDrawable(R.drawable.material_ic_smartphone_black_24));
+                context.getDrawable(R.drawable.ic_smartphone_24px));
 
         return dialog;
     }

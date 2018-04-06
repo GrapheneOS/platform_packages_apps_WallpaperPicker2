@@ -26,6 +26,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build.VERSION;
@@ -472,7 +473,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
 
         // Add "compass" icon to the Explore button
         Drawable exploreButtonDrawable = getResources().getDrawable(
-                R.drawable.material_ic_explore_black_18);
+                R.drawable.ic_explore_18px);
 
         // This Drawable's state is shared across the app, so make a copy of it before applying a
         // color tint as not to affect other clients elsewhere in the app.
@@ -486,7 +487,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         if (Flags.skipDailyWallpaperButtonEnabled) {
             // Add "next" icon to the Next Wallpaper button
             Drawable nextWallpaperButtonDrawable = getResources().getDrawable(
-                    R.drawable.material_ic_refresh_black_18);
+                    R.drawable.ic_refresh_18px);
 
             // This Drawable's state is shared across the app, so make a copy of it before applying a
             // color tint as not to affect other clients elsewhere in the app.

@@ -132,7 +132,7 @@
                             android:contentDescription="@string/refresh_daily_wallpaper_content_description"
                             android:focusable="true"
                             android:padding="@dimen/single_metadata_explore_section_button_padding"
-                            android:src="@drawable/material_ic_refresh_black_24"
+                            android:src="@drawable/ic_refresh_24px"
                             android:visibility="gone" />
 
                         <ImageButton
@@ -146,7 +146,7 @@
                             android:contentDescription="@string/explore"
                             android:focusable="true"
                             android:padding="@dimen/single_metadata_explore_section_button_padding"
-                            android:src="@drawable/material_ic_explore_black_24"
+                            android:src="@drawable/ic_explore_24px"
                             android:visibility="gone" />
 
                         <Button

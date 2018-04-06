@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/rotation_tile_refresh_icon_offset"
                 android:layout_marginStart="@dimen/rotation_tile_refresh_icon_offset"
-                android:src="@drawable/material_ic_refresh_black_18" />
+                android:src="@drawable/ic_refresh_18px" />
 
             <TextView
                 android:id="@+id/rotation_tile_message"
