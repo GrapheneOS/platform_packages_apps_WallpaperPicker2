@@ -214,17 +214,14 @@ public class LiveWallpaperInfo extends WallpaperInfo {
 
     @Override
     public String getTitle(Context context) {
-        CharSequence labelCharSeq = mInfo.loadLabel(context.getPackageManager());
-        if (labelCharSeq != null) {
-            return labelCharSeq.toString();
-        }
         return null;
     }
 
     @Override
     public List<String> getAttributions(Context context) {
         List<String> attributions = new ArrayList<>();
-        attributions.add(getTitle(context));
+        CharSequence labelCharSeq = mInfo.loadLabel(context.getPackageManager());
+        attributions.add(labelCharSeq == null ? null : labelCharSeq.toString());
 
         try {
             CharSequence authorCharSeq = mInfo.loadAuthor(context.getPackageManager());
