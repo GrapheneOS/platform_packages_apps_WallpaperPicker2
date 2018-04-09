@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -181,7 +182,8 @@ public class LiveWallpaperInfo extends WallpaperInfo {
     }
 
     /**
-     * Returns ResolveInfo objects for all live wallpaper services installed on the device, sorted
+     * Returns ResolveInfo objects for all live wallpaper services installed on the device. System
+     * wallpapers are listed first, unsorted, with other installed wallpapers following sorted
      * in alphabetical order.
      */
     private static List<ResolveInfo> getAllOnDevice(Context context) {
@@ -192,6 +194,26 @@ public class LiveWallpaperInfo extends WallpaperInfo {
                 new Intent(WallpaperService.SERVICE_INTERFACE),
                 PackageManager.GET_META_DATA);
 
+        List<ResolveInfo> wallpaperInfos = new ArrayList<>();
+
+        // Remove the "Rotating Image Wallpaper" live wallpaper, which is owned by this package,
+        // and separate system wallpapers to sort only non-system ones.
+        Iterator<ResolveInfo> iter = resolveInfos.iterator();
+        while (iter.hasNext()) {
+            ResolveInfo resolveInfo = iter.next();
+            if (packageName.equals(resolveInfo.serviceInfo.packageName)) {
+                iter.remove();
+            } else if (isSystemApp(resolveInfo.serviceInfo.applicationInfo)) {
+                wallpaperInfos.add(resolveInfo);
+                iter.remove();
+            }
+        }
+
+        if (resolveInfos.isEmpty()) {
+            return wallpaperInfos;
+        }
+
+        // Sort non-system wallpapers alphabetically and append them to system ones
         Collections.sort(resolveInfos, new Comparator<ResolveInfo>() {
             final Collator mCollator = Collator.getInstance();
 
@@ -200,16 +222,14 @@ public class LiveWallpaperInfo extends WallpaperInfo {
                 return mCollator.compare(info1.loadLabel(pm), info2.loadLabel(pm));
             }
         });
+        wallpaperInfos.addAll(resolveInfos);
 
-        // Remove the "Rotating Image Wallpaper" live wallpaper, which is owned by this package.
-        Iterator<ResolveInfo> iter = resolveInfos.iterator();
-        while (iter.hasNext()) {
-            if (packageName.equals(iter.next().serviceInfo.packageName)) {
-                iter.remove();
-            }
-        }
+        return wallpaperInfos;
+    }
 
-        return resolveInfos;
+    private static boolean isSystemApp(ApplicationInfo appInfo) {
+        return (appInfo.flags & (ApplicationInfo.FLAG_SYSTEM
+                | ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)) != 0;
     }
 
     @Override
