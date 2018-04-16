@@ -317,6 +317,7 @@ public class CategoryPickerFragment extends Fragment {
             mRefreshWallpaperProgressDialog.setMessage(
                     getResources().getString(R.string.refreshing_daily_wallpaper_dialog_message));
             mRefreshWallpaperProgressDialog.setIndeterminate(true);
+            mRefreshWallpaperProgressDialog.setCancelable(false);
             mRefreshWallpaperProgressDialog.show();
         }
 
