@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
@@ -554,14 +555,28 @@ public class CategoryPickerFragment extends Fragment {
 
                     if (showSkipWallpaperButton) {
                         exploreButton = mWallpaperExploreButtonNoText;
+                        mWallpaperExploreButtonNoText.setImageDrawable(getContext().getDrawable(
+                                mWallpaperInfo.getActionIconRes()));
+                        mWallpaperExploreButtonNoText.setContentDescription(
+                                getString(mWallpaperInfo.getActionLabelRes()));
                         mWallpaperExploreButtonNoText.setColorFilter(
-                                getResources().getColor(R.color.currently_set_explore_button_color), Mode.SRC_IN);
+                                getResources().getColor(R.color.currently_set_explore_button_color),
+                                Mode.SRC_IN);
                         mWallpaperExploreButton.setVisibility(View.GONE);
                     } else {
                         exploreButton = mWallpaperExploreButton;
+
+                        Drawable drawable = getContext().getDrawable(
+                                mWallpaperInfo.getActionIconRes()).getConstantState()
+                                .newDrawable().mutate();
+                        // Color the "compass" icon with the accent color.
+                        drawable.setColorFilter(
+                                getResources().getColor(R.color.accent_color), Mode.SRC_IN);
+                        ButtonDrawableSetterCompat.setDrawableToButtonStart(
+                                mWallpaperExploreButton, drawable);
+                        mWallpaperExploreButton.setText(mWallpaperInfo.getActionLabelRes());
                         mWallpaperExploreButtonNoText.setVisibility(View.GONE);
                     }
-
                     exploreButton.setVisibility(View.VISIBLE);
                     exploreButton.setOnClickListener((View view) -> {
                         eventLogger.logExploreClicked(mWallpaperInfo.getCollectionId(appContext));
@@ -709,6 +724,10 @@ public class CategoryPickerFragment extends Fragment {
                             }
 
                             exploreButton.setVisibility(View.VISIBLE);
+                            exploreButton.setImageDrawable(getContext().getDrawable(
+                                    homeWallpaper.getActionIconRes()));
+                            exploreButton.setContentDescription(getString(homeWallpaper
+                                    .getActionLabelRes()));
                             exploreButton.setColorFilter(
                                     getResources().getColor(R.color.currently_set_explore_button_color), Mode.SRC_IN);
                             exploreButton.setOnClickListener(new OnClickListener() {
@@ -795,10 +814,15 @@ public class CategoryPickerFragment extends Fragment {
                             if (exploreIntent == null || getActivity() == null) {
                                 return;
                             }
-
+                            exploreButton.setImageDrawable(getContext().getDrawable(
+                                    lockWallpaper.getActionIconRes()));
+                            exploreButton.setContentDescription(getString(
+                                    lockWallpaper.getActionLabelRes()));
                             exploreButton.setVisibility(View.VISIBLE);
                             exploreButton.setColorFilter(
-                                    getResources().getColor(R.color.currently_set_explore_button_color), Mode.SRC_IN);
+                                    getResources().getColor(
+                                            R.color.currently_set_explore_button_color),
+                                    Mode.SRC_IN);
                             exploreButton.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

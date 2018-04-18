@@ -82,12 +82,16 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                         homeWallpaper = new CurrentWallpaperInfoVN(
                                 homeWallpaperMetadata.getAttributions(),
                                 homeWallpaperMetadata.getActionUrl(),
+                                homeWallpaperMetadata.getActionLabelRes(),
+                                homeWallpaperMetadata.getActionIconRes(),
                                 homeWallpaperMetadata.getCollectionId(),
                                 WallpaperManagerCompat.FLAG_SYSTEM);
                     } else {
                         homeWallpaper = new CurrentWallpaperInfoV16(
                                 homeWallpaperMetadata.getAttributions(),
                                 homeWallpaperMetadata.getActionUrl(),
+                                homeWallpaperMetadata.getActionLabelRes(),
+                                homeWallpaperMetadata.getActionIconRes(),
                                 homeWallpaperMetadata.getCollectionId());
                     }
                 } else { // Live wallpaper
@@ -100,6 +104,8 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                     lockWallpaper = new CurrentWallpaperInfoVN(
                             lockWallpaperMetadata.getAttributions(),
                             lockWallpaperMetadata.getActionUrl(),
+                            lockWallpaperMetadata.getActionLabelRes(),
+                            lockWallpaperMetadata.getActionIconRes(),
                             lockWallpaperMetadata.getCollectionId(),
                             WallpaperManagerCompat.FLAG_LOCK);
                 }

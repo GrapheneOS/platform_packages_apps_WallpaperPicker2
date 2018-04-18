@@ -19,8 +19,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Parcelable;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
+import android.support.annotation.StringRes;
 
+import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 
 import java.util.List;
@@ -29,6 +32,16 @@ import java.util.List;
  * Interface for wallpaper info model.
  */
 public abstract class WallpaperInfo implements Parcelable {
+
+    @DrawableRes
+    public static int getDefaultActionIcon() {
+        return R.drawable.ic_explore_24px;
+    }
+
+    @StringRes
+    public static int getDefaultActionLabel() {
+        return R.string.explore;
+    }
 
     public static final int BACKUP_NOT_ALLOWED = 0;
     public static final int BACKUP_ALLOWED = 1;
@@ -60,6 +73,24 @@ public abstract class WallpaperInfo implements Parcelable {
      */
     public String getActionUrl(Context unused) {
         return null;
+    }
+
+    /**
+     * Returns the icon to use to represent the action link corresponding to
+     * {@link #getActionUrl(Context)}
+     */
+    @DrawableRes
+    public int getActionIconRes() {
+        return getDefaultActionIcon();
+    }
+
+    /**
+     * Returns the label to use for the action link corresponding to
+     * {@link #getActionUrl(Context)}
+     */
+    @StringRes
+    public int getActionLabelRes() {
+        return getDefaultActionLabel();
     }
 
     /**

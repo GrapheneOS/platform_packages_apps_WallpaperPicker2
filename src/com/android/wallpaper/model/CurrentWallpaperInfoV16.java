@@ -18,6 +18,8 @@ package com.android.wallpaper.model;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Parcel;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.CurrentWallpaperAssetV16;
@@ -50,11 +52,19 @@ public class CurrentWallpaperInfoV16 extends WallpaperInfo {
     private List<String> mAttributions;
     private Asset mAsset;
     private String mActionUrl;
+    @StringRes
+    private int mActionLabelRes;
+    @DrawableRes
+    private int mActionIconRes;
     private String mCollectionId;
 
-    public CurrentWallpaperInfoV16(List<String> attributions, String actionUrl, String collectionId) {
+    public CurrentWallpaperInfoV16(List<String> attributions, String actionUrl,
+                                   @StringRes int actionLabelRes, @DrawableRes int actionIconRes,
+                                   String collectionId) {
         mAttributions = attributions;
         mActionUrl = actionUrl;
+        mActionLabelRes = actionLabelRes;
+        mActionIconRes = actionIconRes;
         mCollectionId = collectionId;
     }
 
@@ -63,6 +73,8 @@ public class CurrentWallpaperInfoV16 extends WallpaperInfo {
         in.readStringList(mAttributions);
         mActionUrl = in.readString();
         mCollectionId = in.readString();
+        mActionLabelRes = in.readInt();
+        mActionIconRes = in.readInt();
     }
 
     @Override
@@ -95,6 +107,16 @@ public class CurrentWallpaperInfoV16 extends WallpaperInfo {
     }
 
     @Override
+    public int getActionIconRes() {
+        return mActionIconRes != 0 ? mActionIconRes : WallpaperInfo.getDefaultActionIcon();
+    }
+
+    @Override
+    public int getActionLabelRes() {
+        return mActionLabelRes != 0 ? mActionLabelRes : WallpaperInfo.getDefaultActionLabel();
+    }
+
+    @Override
     public String getCollectionId(Context unused) {
         return mCollectionId;
     }
@@ -104,6 +126,8 @@ public class CurrentWallpaperInfoV16 extends WallpaperInfo {
         parcel.writeStringList(mAttributions);
         parcel.writeString(mActionUrl);
         parcel.writeString(mCollectionId);
+        parcel.writeInt(mActionLabelRes);
+        parcel.writeInt(mActionIconRes);
     }
 
     @Override
