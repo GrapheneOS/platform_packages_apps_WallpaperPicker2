@@ -275,7 +275,7 @@
 
     <!-- "Center crop" wallpaper position option where the custom photo wallpaper is center cropped
          to the device's desktop so that the maximum area of the photo is shown without empty space.
-         [CHAR_LIMIT=30] -->
+         [CHAR_LIMIT=50] -->
     <string name="center_crop_wallpaper_position">Center crop</string>
 
     <!-- "Stretch" wallpaper position option where the custom photo wallpaper is scaled and
