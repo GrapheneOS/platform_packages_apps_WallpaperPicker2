@@ -471,19 +471,6 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     private void setUpBottomSheet() {
         mBottomSheet.setVisibility(View.VISIBLE);
 
-        // Add "compass" icon to the Explore button
-        Drawable exploreButtonDrawable = getResources().getDrawable(
-                R.drawable.ic_explore_18px);
-
-        // This Drawable's state is shared across the app, so make a copy of it before applying a
-        // color tint as not to affect other clients elsewhere in the app.
-        exploreButtonDrawable = exploreButtonDrawable.getConstantState().newDrawable().mutate();
-        // Color the "compass" icon with the accent color.
-        exploreButtonDrawable.setColorFilter(
-                getResources().getColor(R.color.accent_color), Mode.SRC_IN);
-        ButtonDrawableSetterCompat.setDrawableToButtonStart(
-                mCurrentWallpaperExploreButton, exploreButtonDrawable);
-
         if (Flags.skipDailyWallpaperButtonEnabled) {
             // Add "next" icon to the Next Wallpaper button
             Drawable nextWallpaperButtonDrawable = getResources().getDrawable(
@@ -592,11 +579,29 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                     ExploreIntentChecker intentChecker = injector.getExploreIntentChecker(appContext);
                     intentChecker.fetchValidActionViewIntent(exploreUri, (@Nullable Intent exploreIntent) -> {
                         if (exploreIntent != null && !isDestroyed()) {
+                            // Set the icon for the button
+                            Drawable exploreButtonDrawable = getResources().getDrawable(
+                                    homeWallpaper.getActionIconRes());
+
+                            // This Drawable's state is shared across the app, so make a copy of it
+                            // before applying a color tint as not to affect other clients elsewhere
+                            // in the app.
+                            exploreButtonDrawable = exploreButtonDrawable.getConstantState()
+                                    .newDrawable().mutate();
+                            // Color the "compass" icon with the accent color.
+                            exploreButtonDrawable.setColorFilter(
+                                    getResources().getColor(R.color.accent_color), Mode.SRC_IN);
+
+                            ButtonDrawableSetterCompat.setDrawableToButtonStart(
+                                    mCurrentWallpaperExploreButton, exploreButtonDrawable);
+                            mCurrentWallpaperExploreButton.setText(getString(
+                                    homeWallpaper.getActionLabelRes()));
                             mCurrentWallpaperExploreButton.setVisibility(View.VISIBLE);
                             mCurrentWallpaperExploreButton.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    mUserEventLogger.logExploreClicked(homeWallpaper.getCollectionId(appContext));
+                                    mUserEventLogger.logExploreClicked(
+                                            homeWallpaper.getCollectionId(appContext));
                                     startActivity(exploreIntent);
                                 }
                             });

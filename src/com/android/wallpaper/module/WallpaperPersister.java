@@ -82,6 +82,7 @@ public interface WallpaperPersister {
      * @return Whether the set wallpaper operation was successful.
      */
     boolean setWallpaperInRotation(Bitmap wallpaperBitmap, List<String> attributions,
+                                   int actionLabelRes, int actionIconRes,
                                    String actionUrl, String collectionId);
 
     /**
@@ -107,6 +108,7 @@ public interface WallpaperPersister {
      * @return Whether the operation succeeded.
      */
     boolean finalizeWallpaperForNextRotation(List<String> attributions, String actionUrl,
+                                             int actionLabelRes, int actionIconRes,
                                              String collectionId, int wallpaperId);
 
     /**

@@ -67,6 +67,26 @@ public interface WallpaperPreferences {
     void setHomeWallpaperActionUrl(String actionUrl);
 
     /**
+     * Returns the resource id for the home wallpaper's action label.
+     */
+    int getHomeWallpaperActionLabelRes();
+
+    /**
+     * Sets the resource id for the home wallpaper's action label.
+     */
+    void setHomeWallpaperActionLabelRes(int resId);
+
+    /**
+     * Returns the resource id for the home wallpaper's action icon.
+     */
+    int getHomeWallpaperActionIconRes();
+
+    /**
+     * Sets the resource id for the home wallpaper's action icon.
+     */
+    void setHomeWallpaperActionIconRes(int resId);
+
+    /**
      * Returns the home wallpaper's base image URL or if there is none.
      */
     String getHomeWallpaperBaseImageUrl();
@@ -144,6 +164,26 @@ public interface WallpaperPreferences {
      * Sets the lock wallpaper's action URL.
      */
     void setLockWallpaperActionUrl(String actionUrl);
+
+    /**
+     * Returns the resource id for the lock wallpaper's action label.
+     */
+    int getLockWallpaperActionLabelRes();
+
+    /**
+     * Sets the resource id for the lock wallpaper's action label.
+     */
+    void setLockWallpaperActionLabelRes(int resId);
+
+    /**
+     * Returns the resource id for the lock wallpaper's action icon.
+     */
+    int getLockWallpaperActionIconRes();
+
+    /**
+     * Sets the resource id for the lock wallpaper's action icon.
+     */
+    void setLockWallpaperActionIconRes(int resId);
 
     /**
      * Returns the lock wallpaper's collection ID or null if there is none.

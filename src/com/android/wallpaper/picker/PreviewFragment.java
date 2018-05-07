@@ -593,16 +593,19 @@ public class PreviewFragment extends Fragment implements
             if (mExploreIntent != null) {
                 if (Flags.skipDailyWallpaperButtonEnabled) {
                     Drawable exploreButtonDrawable = context.getDrawable(
-                            R.drawable.ic_explore_24px);
+                            mWallpaper.getActionIconRes());
 
                     // This Drawable's state is shared across the app, so make a copy of it before applying a
                     // color tint as not to affect other clients elsewhere in the app.
-                    exploreButtonDrawable = exploreButtonDrawable.getConstantState().newDrawable().mutate();
+                    exploreButtonDrawable = exploreButtonDrawable.getConstantState()
+                            .newDrawable().mutate();
                     // Color the "compass" icon with the accent color.
                     exploreButtonDrawable.setColorFilter(
                             getResources().getColor(R.color.accent_color), Mode.SRC_IN);
                     ButtonDrawableSetterCompat.setDrawableToButtonStart(
                             mAttributionExploreButton, exploreButtonDrawable);
+                    mAttributionExploreButton.setText(context.getString(
+                            mWallpaper.getActionLabelRes()));
                 }
 
                 mAttributionExploreSection.setVisibility(View.VISIBLE);
