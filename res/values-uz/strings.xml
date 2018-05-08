@@ -17,13 +17,13 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name" msgid="5610614769724978966">"Orqa fon rasmlari"</string>
+    <string name="app_name" msgid="5610614769724978966">"Fon rasmlari"</string>
     <string name="select_wallpaper_label" msgid="3026032670158694582">"Fon rasmini tanlang"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Fonga rasm o‘rnatish"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Fonga rasm o‘rnatilmoqda…"</string>
     <string name="try_again" msgid="8278874823700921234">"Qaytadan"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Fonga rasm o‘rnatib bo‘lmadi."</string>
-    <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Fon rasmini yuklab bo‘lmadi. Rasm buzilgan yoki mavjud emas."</string>
+    <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Fon rasmi yuklanmadi. Rasm buzilgan yoki mavjud emas."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Hozirda o‘rnatilgan"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Kunlik fon rasmi"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Bosh ekran"</string>
@@ -34,8 +34,8 @@
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Ekran qulfi"</string>
     <string name="set_wallpaper_both_destination" msgid="227262321455200923">"Ikkala ekran"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Fon rasmlarini aylantirish"</string>
-    <string name="permission_needed_explanation" msgid="139166837541426823">"Bu yerda joriy fon rasmini ko‘rsatis uchun <xliff:g id="APP_NAME">%1$s</xliff:g> uchun qurilmangiz xotirasiga ruxsat lozim."</string>
-    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Bu yerda joriy fon rasmini ko‘rsatish uchun Fon rasmlariga qurilmaning xotirasiga ruxsat zarur.\n\nBu parametrni o‘zgartirish uchun Fon rasmlari ilova ma’lumotlaridagi Ruxsatlar maydoniga o‘ting."</string>
+    <string name="permission_needed_explanation" msgid="139166837541426823">"Bu yerda joriy fon rasmini chiqarish uchun <xliff:g id="APP_NAME">%1$s</xliff:g> xizmatiga qurilmangiz xotirasiga kirishi uchun ruxsat lozim."</string>
+    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Bu yerda joriy fon rasmini chiqarish uchun Fon rasmlari xizmatiga qurilmaning xotirasiga kirishi uchun ruxsat zarur.\n\nBu parametrni o‘zgartirish uchun Fon rasmlari ilova ma’lumotlaridagi Ruxsatlar sahifasiga kiring."</string>
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Ruxsat berish"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Fon rasmlarini aylantirish uchun jonli fon xizmati"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Kunlik fon rasmi"</string>
@@ -44,7 +44,7 @@
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Yangi fon rasmlari faqat Wi-Fi orqali yuklab olinsin"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Keyingisi"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Birinchi fon rasmi yuklab olinmoqda…"</string>
-    <string name="start_rotation_error_message" msgid="3053799836719618972">"Birinchi fon rasmini yuklab bo‘lmadi. Tarmoq sozlamalarini tekshirib, qaytadan urinib ko‘ring."</string>
+    <string name="start_rotation_error_message" msgid="3053799836719618972">"Birinchi fon rasmi yuklab olinmadi. Tarmoq sozlamalarini tekshirib, qaytadan urining."</string>
     <string name="start_rotation_dialog_body" msgid="7903554799046364916">"Fon rasmi har kuni avtomatik ravishda almashib turadi"</string>
     <string name="settings_button_label" msgid="8724734130079207955">"Sozlamalar"</string>
     <string name="explore" msgid="7468719504199497281">"Qarab chiqish"</string>
@@ -62,7 +62,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"Kunlik bosh ekran fon rasmini yangilash"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Kunlik fon rasmini yangilash"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"Kunlik fon rasmi yangilanmoqda…"</string>
-    <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"Kunlik fon rasmini yangilab bo‘lmadi. Internet aloqasini tekshiring va qaytadan urinib ko‘ring."</string>
+    <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"Kunlik fon rasmi yangilanmadi. Internet aloqasini tekshiring va qaytadan urining."</string>
     <string name="collapse_attribution_panel" msgid="4367971404848122275">"Fon rasmi haqida ma’lumot panelini yig‘ish"</string>
     <string name="expand_attribution_panel" msgid="6975094181456095915">"Fon rasmi haqida ma’lumot panelini ochish"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"Qurilmadagi fon rasmlari"</string>
@@ -72,8 +72,8 @@
     <string name="my_photos_category_title" msgid="4294567122144565273">"Suratlarim"</string>
     <string name="my_photos_generic_wallpaper_title" msgid="7002867526154631172">"Suratim"</string>
     <string name="fallback_wallpaper_title" msgid="6154655421012506001">"Fon rasmi"</string>
-    <string name="app_not_found" msgid="4431461707854088231">"Ilova o‘rnatilmagan."</string>
-    <string name="center_wallpaper_position" msgid="4166894762352288883">"Senter"</string>
+    <string name="app_not_found" msgid="4431461707854088231">"Bu ilova topilmadi."</string>
+    <string name="center_wallpaper_position" msgid="4166894762352288883">"Markazlash"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"To‘ldirish"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Yoyish"</string>
 </resources>
