@@ -40,7 +40,7 @@
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Жандуу тушкагаз кызматы тушкагаздарды алмаштырат"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Күнүмдүк тушкагаз"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Күйгүзүү үчүн таптап коюңуз"</string>
-    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Тушкагаз күн сайын автоматтык түрдө алмашып турат. Жөндөөнү аягына чыгаруу үчүн кийинки экрандан &lt;strong&gt;Set wallpaper&lt;/strong&gt; баскычын таптап коюңуз."</string>
+    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Тушкагаз күн сайын автоматтык түрдө алмашып турат. Жөндөөнү аягына чыгаруу үчүн кийинки экрандан &lt;strong&gt;Тушкагаз орнотуу&lt;/strong&gt; баскычын таптап коюңуз."</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Келечекте тушкагаздар Wi-Fi аркылуу гана жүктөлүп алынсын"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Улантуу"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Биринчи тушкагаз жүктөлүп алынууда…"</string>
