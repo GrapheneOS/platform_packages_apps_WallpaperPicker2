@@ -63,8 +63,8 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Aggiorna lo sfondo giornaliero"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"Aggiornamento dello sfondo giornaliero…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"Impossibile aggiornare lo sfondo giornaliero. Controlla la connessione di rete e riprova."</string>
-    <string name="collapse_attribution_panel" msgid="4367971404848122275">"Comprimi il riquadro informazioni dello sfondo"</string>
-    <string name="expand_attribution_panel" msgid="6975094181456095915">"Espandi il riquadro informazioni dello sfondo"</string>
+    <string name="collapse_attribution_panel" msgid="4367971404848122275">"Comprime il riquadro informazioni dello sfondo"</string>
+    <string name="expand_attribution_panel" msgid="6975094181456095915">"Espande il riquadro informazioni dello sfondo"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"Sfondi sul dispositivo"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"Sul dispositivo"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Sfondo Android"</string>
