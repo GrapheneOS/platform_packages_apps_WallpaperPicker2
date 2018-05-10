@@ -40,12 +40,15 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     private static final String TAG = "DefaultWPPreferences";
 
     private SharedPreferences mSharedPrefs;
+    private Context mContext;
+
     // Keep a strong reference to this OnSharedPreferenceChangeListener to prevent the listener from
     // being garbage collected because SharedPreferences only holds a weak reference.
     private OnSharedPreferenceChangeListener mSharedPrefsChangedListener;
 
     public DefaultWallpaperPreferences(Context context) {
         mSharedPrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        mContext = context.getApplicationContext();
 
         // Register a prefs changed listener so that all prefs changes trigger a backup event.
         final BackupManager backupManager = new BackupManager(context);
@@ -56,6 +59,20 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
             }
         };
         mSharedPrefs.registerOnSharedPreferenceChangeListener(mSharedPrefsChangedListener);
+    }
+
+    private int getResIdPersistedByName(String key, String type) {
+        String resName = mSharedPrefs.getString(key, null);
+        if (resName == null) {
+            return 0;
+        }
+        return mContext.getResources().getIdentifier(resName, type,
+                mContext.getPackageName());
+    }
+
+    private void persistResIdByName(String key, int resId) {
+        String resName = mContext.getResources().getResourceName(resId);
+        mSharedPrefs.edit().putString(key, resName).apply();
     }
 
     @Override
@@ -110,6 +127,30 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
+    public int getHomeWallpaperActionLabelRes() {
+        // We need to store and read the resource names as their ids could change from build to
+        // build and we might end up reading the wrong id
+        return getResIdPersistedByName(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_LABEL_RES,
+                "string");
+    }
+
+    @Override
+    public void setHomeWallpaperActionLabelRes(int resId) {
+        persistResIdByName(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_LABEL_RES, resId);
+    }
+
+    @Override
+    public int getHomeWallpaperActionIconRes() {
+        return getResIdPersistedByName(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_ICON_RES,
+                "drawable");
+    }
+
+    @Override
+    public void setHomeWallpaperActionIconRes(int resId) {
+        persistResIdByName(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_ICON_RES, resId);
+    }
+
+    @Override
     public String getHomeWallpaperBaseImageUrl() {
         return mSharedPrefs.getString(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_BASE_IMAGE_URL, null);
     }
@@ -150,6 +191,8 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
                 .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_2)
                 .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_3)
                 .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_URL)
+                .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_LABEL_RES)
+                .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_ICON_RES)
                 .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_BASE_IMAGE_URL)
                 .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_HASH_CODE)
                 .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_MANAGER_ID)
@@ -226,6 +269,30 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     public void setLockWallpaperActionUrl(String actionUrl) {
         mSharedPrefs.edit().putString(
                 WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_URL, actionUrl).apply();
+    }
+
+    @Override
+    public int getLockWallpaperActionLabelRes() {
+        // We need to store and read the resource names as their ids could change from build to
+        // build and we might end up reading the wrong id
+        return getResIdPersistedByName(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_LABEL_RES,
+                "string");
+    }
+
+    @Override
+    public void setLockWallpaperActionLabelRes(int resId) {
+        persistResIdByName(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_LABEL_RES, resId);
+    }
+
+    @Override
+    public int getLockWallpaperActionIconRes() {
+        return getResIdPersistedByName(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_ICON_RES,
+                "drawable");
+    }
+
+    @Override
+    public void setLockWallpaperActionIconRes(int resId) {
+        persistResIdByName(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_ICON_RES, resId);
     }
 
     @Override
