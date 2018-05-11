@@ -107,12 +107,12 @@ public class CurrentWallpaperInfoV16 extends WallpaperInfo {
     }
 
     @Override
-    public int getActionIconRes() {
+    public int getActionIconRes(Context unused) {
         return mActionIconRes != 0 ? mActionIconRes : WallpaperInfo.getDefaultActionIcon();
     }
 
     @Override
-    public int getActionLabelRes() {
+    public int getActionLabelRes(Context unused) {
         return mActionLabelRes != 0 ? mActionLabelRes : WallpaperInfo.getDefaultActionLabel();
     }
 

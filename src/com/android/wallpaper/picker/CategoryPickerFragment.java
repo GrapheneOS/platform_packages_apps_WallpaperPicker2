@@ -563,9 +563,9 @@ public class CategoryPickerFragment extends Fragment {
                     if (showSkipWallpaperButton) {
                         exploreButton = mWallpaperExploreButtonNoText;
                         mWallpaperExploreButtonNoText.setImageDrawable(getContext().getDrawable(
-                                mWallpaperInfo.getActionIconRes()));
+                                mWallpaperInfo.getActionIconRes(appContext)));
                         mWallpaperExploreButtonNoText.setContentDescription(
-                                getString(mWallpaperInfo.getActionLabelRes()));
+                                getString(mWallpaperInfo.getActionLabelRes(appContext)));
                         mWallpaperExploreButtonNoText.setColorFilter(
                                 getResources().getColor(R.color.currently_set_explore_button_color),
                                 Mode.SRC_IN);
@@ -574,14 +574,15 @@ public class CategoryPickerFragment extends Fragment {
                         exploreButton = mWallpaperExploreButton;
 
                         Drawable drawable = getContext().getDrawable(
-                                mWallpaperInfo.getActionIconRes()).getConstantState()
+                                mWallpaperInfo.getActionIconRes(appContext)).getConstantState()
                                 .newDrawable().mutate();
                         // Color the "compass" icon with the accent color.
                         drawable.setColorFilter(
                                 getResources().getColor(R.color.accent_color), Mode.SRC_IN);
                         ButtonDrawableSetterCompat.setDrawableToButtonStart(
                                 mWallpaperExploreButton, drawable);
-                        mWallpaperExploreButton.setText(mWallpaperInfo.getActionLabelRes());
+                        mWallpaperExploreButton.setText(
+                                mWallpaperInfo.getActionLabelRes(appContext));
                         mWallpaperExploreButtonNoText.setVisibility(View.GONE);
                     }
                     exploreButton.setVisibility(View.VISIBLE);
@@ -732,9 +733,9 @@ public class CategoryPickerFragment extends Fragment {
 
                             exploreButton.setVisibility(View.VISIBLE);
                             exploreButton.setImageDrawable(getContext().getDrawable(
-                                    homeWallpaper.getActionIconRes()));
+                                    homeWallpaper.getActionIconRes(appContext)));
                             exploreButton.setContentDescription(getString(homeWallpaper
-                                    .getActionLabelRes()));
+                                    .getActionLabelRes(appContext)));
                             exploreButton.setColorFilter(
                                     getResources().getColor(R.color.currently_set_explore_button_color), Mode.SRC_IN);
                             exploreButton.setOnClickListener(new OnClickListener() {
@@ -822,9 +823,9 @@ public class CategoryPickerFragment extends Fragment {
                                 return;
                             }
                             exploreButton.setImageDrawable(getContext().getDrawable(
-                                    lockWallpaper.getActionIconRes()));
+                                    lockWallpaper.getActionIconRes(appContext)));
                             exploreButton.setContentDescription(getString(
-                                    lockWallpaper.getActionLabelRes()));
+                                    lockWallpaper.getActionLabelRes(appContext)));
                             exploreButton.setVisibility(View.VISIBLE);
                             exploreButton.setColorFilter(
                                     getResources().getColor(
