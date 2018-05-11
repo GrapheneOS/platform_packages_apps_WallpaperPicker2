@@ -55,14 +55,15 @@
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground" />
 
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top"
+                    android:layout_alignParentTop="true"
+                    android:layout_above="@+id/wallpaper_explore_section"
                     android:layout_marginEnd="@dimen/single_metadata_pane_attributions_margin_right"
                     android:layout_marginLeft="@dimen/single_metadata_pane_attributions_margin_left"
                     android:layout_marginRight="@dimen/single_metadata_pane_attributions_margin_right"
@@ -105,7 +106,7 @@
                     android:id="@+id/wallpaper_explore_section"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
+                    android:layout_alignParentBottom="true"
                     android:orientation="vertical"
                     android:visibility="gone">
 
@@ -159,7 +160,9 @@
                             android:clickable="true"
                             android:contentDescription="@string/explore"
                             android:drawablePadding="@dimen/explore_button_drawable_padding"
+                            android:ellipsize="end"
                             android:focusable="true"
+                            android:maxLines="1"
                             android:text="@string/explore"
                             android:textColor="@color/currently_set_explore_button_color"
                             android:visibility="gone" />
@@ -169,7 +172,7 @@
 
                 </LinearLayout>
 
-            </FrameLayout>
+            </RelativeLayout>
 
         </LinearLayout>
 

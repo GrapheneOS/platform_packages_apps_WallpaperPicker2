@@ -36,6 +36,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -504,8 +505,14 @@ public class CategoryPickerFragment extends Fragment {
             if (!attributions.isEmpty()) {
                 mWallpaperTitle.setText(attributions.get(0));
             }
-            mWallpaperSubtitle.setText(
-                    AttributionFormatter.formatWallpaperSubtitle(appContext, mWallpaperInfo));
+            String subtitleText =
+                    AttributionFormatter.formatWallpaperSubtitle(appContext, mWallpaperInfo);
+            if (!TextUtils.isEmpty(subtitleText)) {
+                mWallpaperSubtitle.setText(subtitleText);
+                mWallpaperSubtitle.setVisibility(View.VISIBLE);
+            } else {
+                mWallpaperSubtitle.setVisibility(View.GONE);
+            }
         }
 
         private void bindWallpaperActionButtons(@PresentationMode int presentationMode) {
