@@ -80,7 +80,7 @@ public abstract class WallpaperInfo implements Parcelable {
      * {@link #getActionUrl(Context)}
      */
     @DrawableRes
-    public int getActionIconRes() {
+    public int getActionIconRes(Context context) {
         return getDefaultActionIcon();
     }
 
@@ -89,7 +89,7 @@ public abstract class WallpaperInfo implements Parcelable {
      * {@link #getActionUrl(Context)}
      */
     @StringRes
-    public int getActionLabelRes() {
+    public int getActionLabelRes(Context context) {
         return getDefaultActionLabel();
     }
 

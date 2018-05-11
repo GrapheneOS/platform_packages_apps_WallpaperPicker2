@@ -593,7 +593,7 @@ public class PreviewFragment extends Fragment implements
             if (mExploreIntent != null) {
                 if (Flags.skipDailyWallpaperButtonEnabled) {
                     Drawable exploreButtonDrawable = context.getDrawable(
-                            mWallpaper.getActionIconRes());
+                            mWallpaper.getActionIconRes(context));
 
                     // This Drawable's state is shared across the app, so make a copy of it before applying a
                     // color tint as not to affect other clients elsewhere in the app.
@@ -605,7 +605,7 @@ public class PreviewFragment extends Fragment implements
                     ButtonDrawableSetterCompat.setDrawableToButtonStart(
                             mAttributionExploreButton, exploreButtonDrawable);
                     mAttributionExploreButton.setText(context.getString(
-                            mWallpaper.getActionLabelRes()));
+                            mWallpaper.getActionLabelRes(context)));
                 }
 
                 mAttributionExploreSection.setVisibility(View.VISIBLE);

@@ -581,7 +581,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                         if (exploreIntent != null && !isDestroyed()) {
                             // Set the icon for the button
                             Drawable exploreButtonDrawable = getResources().getDrawable(
-                                    homeWallpaper.getActionIconRes());
+                                    homeWallpaper.getActionIconRes(appContext));
 
                             // This Drawable's state is shared across the app, so make a copy of it
                             // before applying a color tint as not to affect other clients elsewhere
@@ -595,7 +595,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                             ButtonDrawableSetterCompat.setDrawableToButtonStart(
                                     mCurrentWallpaperExploreButton, exploreButtonDrawable);
                             mCurrentWallpaperExploreButton.setText(getString(
-                                    homeWallpaper.getActionLabelRes()));
+                                    homeWallpaper.getActionLabelRes(appContext)));
                             mCurrentWallpaperExploreButton.setVisibility(View.VISIBLE);
                             mCurrentWallpaperExploreButton.setOnClickListener(new OnClickListener() {
                                 @Override

@@ -1001,8 +1001,10 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                     mWallpaper.getAttributions(mAppContext));
             mWallpaperPreferences.setHomeWallpaperBaseImageUrl(mWallpaper.getBaseImageUrl());
             mWallpaperPreferences.setHomeWallpaperActionUrl(mWallpaper.getActionUrl(mAppContext));
-            mWallpaperPreferences.setHomeWallpaperActionLabelRes(mWallpaper.getActionLabelRes());
-            mWallpaperPreferences.setHomeWallpaperActionIconRes(mWallpaper.getActionIconRes());
+            mWallpaperPreferences.setHomeWallpaperActionLabelRes(
+                    mWallpaper.getActionLabelRes(mAppContext));
+            mWallpaperPreferences.setHomeWallpaperActionIconRes(
+                    mWallpaper.getActionIconRes(mAppContext));
             mWallpaperPreferences.setHomeWallpaperCollectionId(
                     mWallpaper.getCollectionId(mAppContext));
             mWallpaperPreferences.setHomeWallpaperRemoteId(mWallpaper.getWallpaperId());
@@ -1013,8 +1015,10 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setLockWallpaperAttributions(
                     mWallpaper.getAttributions(mAppContext));
             mWallpaperPreferences.setLockWallpaperActionUrl(mWallpaper.getActionUrl(mAppContext));
-            mWallpaperPreferences.setHomeWallpaperActionLabelRes(mWallpaper.getActionLabelRes());
-            mWallpaperPreferences.setHomeWallpaperActionIconRes(mWallpaper.getActionIconRes());
+            mWallpaperPreferences.setHomeWallpaperActionLabelRes(
+                    mWallpaper.getActionLabelRes(mAppContext));
+            mWallpaperPreferences.setHomeWallpaperActionIconRes(
+                    mWallpaper.getActionIconRes(mAppContext));
             mWallpaperPreferences.setLockWallpaperCollectionId(
                     mWallpaper.getCollectionId(mAppContext));
 
