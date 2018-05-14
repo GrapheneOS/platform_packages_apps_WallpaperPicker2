@@ -65,6 +65,7 @@ public class LiveWallpaperInfo extends WallpaperInfo {
     private static final String TAG = "LiveWallpaperInfo";
     private android.app.WallpaperInfo mInfo;
     private LiveWallpaperThumbAsset mThumbAsset;
+    private boolean mVisibleTitle;
 
     /**
      * Constructs a LiveWallpaperInfo wrapping the given system WallpaperInfo object, representing
@@ -73,11 +74,21 @@ public class LiveWallpaperInfo extends WallpaperInfo {
      * @param info
      */
     public LiveWallpaperInfo(android.app.WallpaperInfo info) {
+        this(info, true);
+    }
+
+    /**
+     * Constructs a LiveWallpaperInfo wrapping the given system WallpaperInfo object, representing
+     * a particular live wallpaper.
+     */
+    public LiveWallpaperInfo(android.app.WallpaperInfo info, boolean visibleTitle) {
         mInfo = info;
+        mVisibleTitle = visibleTitle;
     }
 
     private LiveWallpaperInfo(Parcel in) {
         mInfo = in.readParcelable(android.app.WallpaperInfo.class.getClassLoader());
+        mVisibleTitle = in.readInt() == 1;
     }
 
     /**
@@ -118,7 +129,8 @@ public class LiveWallpaperInfo extends WallpaperInfo {
      * given package name.
      */
     public static List<WallpaperInfo> getFromSpecifiedPackage(
-            Context context, String packageName, @Nullable List<String> serviceNames) {
+            Context context, String packageName, @Nullable List<String> serviceNames,
+            boolean shouldShowTitle) {
         List<ResolveInfo> resolveInfos;
         if (serviceNames != null) {
             resolveInfos = getAllContainingServiceNames(context, serviceNames);
@@ -149,7 +161,7 @@ public class LiveWallpaperInfo extends WallpaperInfo {
                 continue;
             }
 
-            wallpaperInfos.add(new LiveWallpaperInfo(wallpaperInfo));
+            wallpaperInfos.add(new LiveWallpaperInfo(wallpaperInfo, shouldShowTitle));
         }
 
         return wallpaperInfos;
@@ -234,6 +246,10 @@ public class LiveWallpaperInfo extends WallpaperInfo {
 
     @Override
     public String getTitle(Context context) {
+        if (mVisibleTitle) {
+            CharSequence labelCharSeq = mInfo.loadLabel(context.getPackageManager());
+            return labelCharSeq == null ? null : labelCharSeq.toString();
+        }
         return null;
     }
 
@@ -296,6 +312,7 @@ public class LiveWallpaperInfo extends WallpaperInfo {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeParcelable(mInfo, 0 /* flags */);
+        parcel.writeInt(mVisibleTitle ? 1 : 0);
     }
 
     @Override
