@@ -27,6 +27,7 @@ import com.android.wallpaper.model.DefaultWallpaperInfo;
 import com.android.wallpaper.model.DesktopCustomCategory;
 import com.android.wallpaper.model.ImageCategory;
 import com.android.wallpaper.model.LegacyPartnerWallpaperInfo;
+import com.android.wallpaper.model.LiveWallpaperCategory;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.PartnerWallpaperInfo;
 import com.android.wallpaper.model.ThirdPartyAppCategory;
@@ -75,6 +76,19 @@ public class DefaultCategoryProvider implements CategoryProvider {
         }
 
         doFetch(receiver);
+    }
+
+    @Override
+    public int getSize() {
+        return mFetchedCategories ? mCategories.size() : 0;
+    }
+
+    @Override
+    public Category getCategory(int index) {
+        if (!mFetchedCategories) {
+            throw new IllegalStateException("Categories are not available");
+        }
+        return mCategories.get(index);
     }
 
     @Override
@@ -135,11 +149,12 @@ public class DefaultCategoryProvider implements CategoryProvider {
                         mAppContext, getExcludedLiveWallpaperPackageNames());
                 if (liveWallpapers.size() > 0) {
                     publishProgress(
-                            new WallpaperCategory(
+                            new LiveWallpaperCategory(
                                     mAppContext.getString(R.string.live_wallpapers_category_title),
                                     mAppContext.getString(R.string.live_wallpaper_collection_id),
                                     liveWallpapers,
-                                    PRIORITY_LIVE));
+                                    PRIORITY_LIVE,
+                                    getExcludedLiveWallpaperPackageNames()));
                 }
             }
 
@@ -165,7 +180,7 @@ public class DefaultCategoryProvider implements CategoryProvider {
             }
         }
 
-        protected List<String> getExcludedLiveWallpaperPackageNames() {
+        public List<String> getExcludedLiveWallpaperPackageNames() {
             return new ArrayList<String>();
         }
 

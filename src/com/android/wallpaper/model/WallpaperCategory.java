@@ -35,10 +35,7 @@ public class WallpaperCategory extends Category {
 
     public WallpaperCategory(String title, String collectionId, List<WallpaperInfo> wallpapers,
                              int priority) {
-        super(title, collectionId, priority);
-        mWallpapers = wallpapers;
-        mWallpapersLock = new Object();
-        mFeaturedThumbnailIndex = 0;
+        this(title, collectionId, 0, wallpapers, priority);
     }
 
     public WallpaperCategory(String title, String collectionId, int featuredThumbnailIndex,
@@ -53,7 +50,7 @@ public class WallpaperCategory extends Category {
      * Fetches wallpapers for this category and passes them to the receiver. Subclasses may use a
      * context to fetch wallpaper info.
      */
-    public void fetchWallpapers(Context unused, WallpaperReceiver receiver) {
+    public void fetchWallpapers(Context unused, WallpaperReceiver receiver, boolean forceReload) {
         // Perform a shallow clone so as not to pass the reference to the list along to clients.
         receiver.onWallpapersReceived(new ArrayList<>(mWallpapers));
     }
@@ -85,5 +82,15 @@ public class WallpaperCategory extends Category {
             }
         }
         return mThumbAsset;
+    }
+
+    @Override
+    public boolean supportsThirdParty() {
+        return false;
+    }
+
+    @Override
+    public boolean containsThirdParty(String packageName) {
+        return false;
     }
 }
