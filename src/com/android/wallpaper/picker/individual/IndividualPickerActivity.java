@@ -89,7 +89,11 @@ public class IndividualPickerActivity extends BaseActivity {
                 : savedInstanceState.getString(KEY_CATEGORY_COLLECTION_ID);
         mCategory = injector.getCategoryProvider(this).getCategory(mCategoryCollectionId);
         if (mCategory == null) {
-            DiskBasedLogger.e(TAG, "Failed to find the category.", this);
+            DiskBasedLogger.e(TAG, "Failed to find the category: " + mCategoryCollectionId, this);
+            // We either were called with an invalid collection Id, or we're restarting with no
+            // saved state, or with a collection id that doesn't exist anymore.
+            // In those cases, we cannot continue, so let's just go back.
+            finish();
         }
 
         setTitle(mCategory.getTitle());
