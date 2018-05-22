@@ -122,9 +122,9 @@ public class PreviewFragment extends Fragment implements
     public @interface PreviewMode {
     }
 
-    private static final String ARG_WALLPAPER = "wallpaper";
-    private static final String ARG_PREVIEW_MODE = "preview_mode";
-    private static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
+    protected static final String ARG_WALLPAPER = "wallpaper";
+    protected static final String ARG_PREVIEW_MODE = "preview_mode";
+    protected static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
     private static final String TAG_LOAD_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "load_wallpaper_error_dialog";
     private static final String TAG_SET_WALLPAPER_DIALOG_FRAGMENT = "set_wallpaper_dialog";
@@ -148,8 +148,8 @@ public class PreviewFragment extends Fragment implements
      */
     private boolean mTestingModeEnabled;
 
-    private SubsamplingScaleImageView mFullResImageView;
-    private WallpaperInfo mWallpaper;
+    protected SubsamplingScaleImageView mFullResImageView;
+    protected WallpaperInfo mWallpaper;
     private Asset mWallpaperAsset;
     private WallpaperPersister mWallpaperPersister;
     private WallpaperPreferences mPreferences;
@@ -777,7 +777,7 @@ public class PreviewFragment extends Fragment implements
         mFullResImageView.setScaleAndCenter(defaultWallpaperZoom, centerPosition);
     }
 
-    private Rect calculateCropRect() {
+    protected Rect calculateCropRect() {
         // Calculate Rect of wallpaper in physical pixel terms (i.e., scaled to current zoom).
         float wallpaperZoom = mFullResImageView.getScale();
         int scaledWallpaperWidth = (int) (mRawWallpaperSize.x * wallpaperZoom);
