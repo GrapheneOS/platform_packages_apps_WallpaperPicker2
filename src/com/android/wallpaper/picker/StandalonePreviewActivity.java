@@ -114,7 +114,7 @@ public class StandalonePreviewActivity extends BasePreviewActivity {
 
         boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
         WallpaperInfo wallpaper = new ImageWallpaperInfo(intent.getData());
-        Fragment fragment = PreviewFragment.newInstance(
+        Fragment fragment = InjectorProvider.getInjector().getPreviewFragment(
                 wallpaper, PreviewFragment.MODE_CROP_AND_SET_WALLPAPER, testingModeEnabled);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, fragment)

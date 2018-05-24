@@ -17,10 +17,13 @@ package com.android.wallpaper.module;
 
 import android.content.Context;
 
+import android.support.v4.app.Fragment;
 import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.model.CategoryProvider;
+import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.monitor.PerformanceMonitor;
 import com.android.wallpaper.network.Requester;
+import com.android.wallpaper.picker.PreviewFragment.PreviewMode;
 
 /**
  * Interface for a provider of "injected dependencies." (NOTE: The term "injector" is somewhat of a
@@ -66,4 +69,9 @@ public interface Injector {
     WallpaperRefresher getWallpaperRefresher(Context context);
 
     WallpaperRotationRefresher getWallpaperRotationRefresher();
+
+    Fragment getPreviewFragment(
+        WallpaperInfo wallpaperInfo,
+        @PreviewMode int mode,
+        boolean testingModeEnabled);
 }

@@ -18,6 +18,7 @@ package com.android.wallpaper.model;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
@@ -72,6 +73,11 @@ public abstract class WallpaperInfo implements Parcelable {
      * Returns the action or "explore" URL for the wallpaper, or null if none exists.
      */
     public String getActionUrl(Context unused) {
+        return null;
+    }
+
+    /** Returns the URI corresponding to the wallpaper, or null if none exists. */
+    public Uri getUri() {
         return null;
     }
 
