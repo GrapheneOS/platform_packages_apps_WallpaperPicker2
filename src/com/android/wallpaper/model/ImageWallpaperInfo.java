@@ -69,6 +69,11 @@ public class ImageWallpaperInfo extends WallpaperInfo {
         mUri = Uri.parse(in.readString());
     }
 
+    @Override
+    public Uri getUri() {
+        return mUri;
+    }
+
     /**
      * Formats a localized date string based on the provided datetime string in EXIF datetime format.
      *
