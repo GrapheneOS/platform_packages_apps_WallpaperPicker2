@@ -17,8 +17,11 @@ package com.android.wallpaper.module;
 
 import android.content.Context;
 
+import android.support.v4.app.Fragment;
 import com.android.wallpaper.model.CategoryProvider;
+import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.monitor.PerformanceMonitor;
+import com.android.wallpaper.picker.PreviewFragment;
 
 /**
  * A concrete, real implementation of the dependency provider.
@@ -57,6 +60,14 @@ public class WallpapersInjector extends BaseWallpaperInjector {
             };
         }
         return mWallpaperRotationRefresher;
+    }
+
+    @Override
+    public Fragment getPreviewFragment(
+        WallpaperInfo wallpaperInfo,
+        int mode,
+        boolean testingModeEnabled) {
+        return PreviewFragment.newInstance(wallpaperInfo, mode, testingModeEnabled);
     }
 
     @Override
