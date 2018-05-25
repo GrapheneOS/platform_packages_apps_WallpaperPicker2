@@ -15,10 +15,5 @@
  */
 package com.android.wallpaper.config;
 
-public class Flags {
-    public static boolean skipDailyWallpaperButtonEnabled = true;
-    public static boolean desktopUiEnabled = false;
-    public static boolean dynamicStartRotationTileEnabled = true;
-    public static boolean stagingBackdropContentEnabled = true;
-    public static boolean performanceMonitoringEnabled = true;
+public class Flags extends BaseFlags {
 }
