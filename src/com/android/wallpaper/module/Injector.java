@@ -74,4 +74,6 @@ public interface Injector {
         WallpaperInfo wallpaperInfo,
         @PreviewMode int mode,
         boolean testingModeEnabled);
+
+    PackageStatusNotifier getPackageStatusNotifier(Context context);
 }
