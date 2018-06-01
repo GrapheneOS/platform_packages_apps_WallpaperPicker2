@@ -26,7 +26,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build.VERSION;
@@ -600,8 +599,9 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                             mCurrentWallpaperExploreButton.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    mUserEventLogger.logExploreClicked(
-                                            homeWallpaper.getCollectionId(appContext));
+                                    mUserEventLogger.logActionClicked(
+                                            homeWallpaper.getCollectionId(appContext),
+                                            homeWallpaper.getActionLabelRes(appContext));
                                     startActivity(exploreIntent);
                                 }
                             });

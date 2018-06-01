@@ -612,7 +612,8 @@ public class PreviewFragment extends Fragment implements
                 mAttributionExploreButton.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mUserEventLogger.logExploreClicked(mWallpaper.getCollectionId(context));
+                        mUserEventLogger.logActionClicked(mWallpaper.getCollectionId(context),
+                                mWallpaper.getActionLabelRes(context));
 
                         startActivity(mExploreIntent);
                     }
