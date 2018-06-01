@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
@@ -587,7 +586,8 @@ public class CategoryPickerFragment extends Fragment {
                     }
                     exploreButton.setVisibility(View.VISIBLE);
                     exploreButton.setOnClickListener((View view) -> {
-                        eventLogger.logExploreClicked(mWallpaperInfo.getCollectionId(appContext));
+                        eventLogger.logActionClicked(mWallpaperInfo.getCollectionId(appContext),
+                                mWallpaperInfo.getActionLabelRes(appContext));
                         startActivity(exploreIntent);
                     });
                 }
@@ -741,7 +741,9 @@ public class CategoryPickerFragment extends Fragment {
                             exploreButton.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    eventLogger.logExploreClicked(mHomeWallpaperInfo.getCollectionId(appContext));
+                                    eventLogger.logActionClicked(
+                                            mHomeWallpaperInfo.getCollectionId(appContext),
+                                            mHomeWallpaperInfo.getActionLabelRes(appContext));
                                     startActivity(exploreIntent);
                                 }
                             });
@@ -834,7 +836,9 @@ public class CategoryPickerFragment extends Fragment {
                             exploreButton.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    eventLogger.logExploreClicked(mLockWallpaperInfo.getCollectionId(appContext));
+                                    eventLogger.logActionClicked(
+                                            mLockWallpaperInfo.getCollectionId(appContext),
+                                            mLockWallpaperInfo.getActionLabelRes(appContext));
                                     startActivity(exploreIntent);
                                 }
                             });
