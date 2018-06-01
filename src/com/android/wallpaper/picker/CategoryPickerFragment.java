@@ -19,6 +19,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
@@ -28,9 +29,9 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.service.wallpaper.WallpaperService;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
@@ -58,12 +59,16 @@ import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.compat.ButtonDrawableSetterCompat;
 import com.android.wallpaper.config.Flags;
 import com.android.wallpaper.model.Category;
+import com.android.wallpaper.model.ThirdPartyAppCategory;
+import com.android.wallpaper.model.WallpaperCategory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory;
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory.WallpaperInfoCallback;
 import com.android.wallpaper.module.ExploreIntentChecker;
+import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.LockWallpaperStatusChecker;
+import com.android.wallpaper.module.PackageStatusNotifier;
 import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
@@ -187,10 +192,10 @@ public class CategoryPickerFragment extends Fragment {
     /**
      * Inserts the given category into the categories list in priority order.
      */
-    public void addCategory(Category category) {
+    public void addCategory(Category category, boolean loading) {
         // If not previously waiting for categories, enter the waiting state by showing the loading
         // indicator.
-        if (!mAwaitingCategories) {
+        if (loading && !mAwaitingCategories) {
             mAdapter.notifyItemChanged(getNumColumns());
             mAdapter.notifyItemInserted(getNumColumns());
             mAwaitingCategories = true;
@@ -208,6 +213,28 @@ public class CategoryPickerFragment extends Fragment {
             // Offset the index because of the static metadata element at beginning of RecyclerView.
             mAdapter.notifyItemInserted(index + NUM_NON_CATEGORY_VIEW_HOLDERS);
         }
+    }
+
+    public void removeCategory(Category category) {
+        int index = mCategories.indexOf(category);
+        if (index >= 0) {
+            mCategories.remove(index);
+            mAdapter.notifyItemRemoved(index + NUM_NON_CATEGORY_VIEW_HOLDERS);
+        }
+    }
+
+    public void updateCategory(Category category) {
+        int index = mCategories.indexOf(category);
+        if (index >= 0) {
+            mCategories.remove(index);
+            mCategories.add(index, category);
+            mAdapter.notifyItemChanged(index + NUM_NON_CATEGORY_VIEW_HOLDERS);
+        }
+    }
+
+    public void clearCategories() {
+        mCategories.clear();
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

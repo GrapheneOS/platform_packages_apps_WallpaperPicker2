@@ -26,12 +26,12 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.service.wallpaper.WallpaperService;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -73,6 +73,7 @@ import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.NetworkStatusNotifier;
 import com.android.wallpaper.module.NetworkStatusNotifier.NetworkStatus;
+import com.android.wallpaper.module.PackageStatusNotifier;
 import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.UserEventLogger.WallpaperSetFailureReason;
 import com.android.wallpaper.module.WallpaperPersister;
@@ -114,7 +115,6 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     private IndividualPickerActivityIntentFactory mPickerIntentFactory;
     private InlinePreviewIntentFactory mPreviewIntentFactory;
     private InlinePreviewIntentFactory mViewOnlyPreviewIntentFactory;
-    private ArrayList<Category> mCategories;
     private int mLastSelectedCategoryTabIndex;
     @FormFactor
     private int mFormFactor;
@@ -122,6 +122,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     private UserEventLogger mUserEventLogger;
     private NetworkStatusNotifier mNetworkStatusNotifier;
     private NetworkStatusNotifier.Listener mNetworkStatusListener;
+    private PackageStatusNotifier mPackageStatusNotifier;
     private WallpaperPersister mWallpaperPersister;
     private boolean mWasCustomPhotoWallpaperSet;
     @WallpaperPosition
@@ -166,6 +167,9 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
      * retry or re-crop operations.
      */
     private WallpaperInfo mPendingSetWallpaperInfo;
+    private PackageStatusNotifier.Listener mLiveWallpaperStatusListener;
+    private PackageStatusNotifier.Listener mThirdPartyStatusListener;
+    private CategoryProvider mCategoryProvider;
 
     private static int getTextColorIdForWallpaperPositionButton(boolean isSelected) {
         return isSelected ? R.color.accent_color : R.color.material_grey500;
@@ -178,13 +182,14 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         mPickerIntentFactory = new IndividualPickerActivityIntentFactory();
         mPreviewIntentFactory = new PreviewActivityIntentFactory();
         mViewOnlyPreviewIntentFactory = new ViewOnlyPreviewActivityIntentFactory();
-        mCategories = new ArrayList<>();
         mLastSelectedCategoryTabIndex = -1;
 
         Injector injector = InjectorProvider.getInjector();
+        mCategoryProvider = injector.getCategoryProvider(this);
         mPreferences = injector.getPreferences(this);
         mUserEventLogger = injector.getUserEventLogger(this);
         mNetworkStatusNotifier = injector.getNetworkStatusNotifier(this);
+        mPackageStatusNotifier = injector.getPackageStatusNotifier(this);
         final FormFactorChecker formFactorChecker = injector.getFormFactorChecker(this);
         mFormFactor = formFactorChecker.getFormFactor();
         mWallpaperPersister = injector.getWallpaperPersister(this);
@@ -232,6 +237,11 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
 
         if (mNetworkStatusListener != null) {
             mNetworkStatusNotifier.unregisterListener(mNetworkStatusListener);
+        }
+
+        if (mPackageStatusNotifier != null) {
+            mPackageStatusNotifier.removeListener(mLiveWallpaperStatusListener);
+            mPackageStatusNotifier.removeListener(mThirdPartyStatusListener);
         }
 
         if (mRefreshWallpaperProgressDialog != null) {
@@ -315,6 +325,97 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         }
 
         populateCategories(-1, forceCategoryRefresh);
+        mLiveWallpaperStatusListener = this::updateLiveWallpapersCategories;
+        mThirdPartyStatusListener = this::updateThirdPartyCategories;
+        mPackageStatusNotifier.addListener(mLiveWallpaperStatusListener,
+                WallpaperService.SERVICE_INTERFACE);
+        mPackageStatusNotifier.addListener(mThirdPartyStatusListener,
+                Intent.ACTION_SET_WALLPAPER);
+    }
+
+    private void updateThirdPartyCategories(String packageName, @PackageStatusNotifier.PackageStatus
+            int status) {
+
+        if (status == PackageStatusNotifier.PackageStatus.ADDED) {
+            mCategoryProvider.fetchCategories(new CategoryReceiver() {
+                @Override
+                public void onCategoryReceived(Category category) {
+                    if (category.supportsThirdParty() && category.containsThirdParty(packageName)) {
+                        addCategory(category, false);
+                    }
+                }
+
+                @Override
+                public void doneFetchingCategories() {
+                    // Do nothing here.
+                }
+            }, true);
+        } else if (status == PackageStatusNotifier.PackageStatus.REMOVED) {
+            Category oldCategory = findThirdPartyCategory(packageName);
+            if (oldCategory != null) {
+                mCategoryProvider.fetchCategories(new CategoryReceiver() {
+                    @Override
+                    public void onCategoryReceived(Category category) {
+                       // Do nothing here
+                    }
+
+                    @Override
+                    public void doneFetchingCategories() {
+                        removeCategory(oldCategory);
+                    }
+                }, true);
+            }
+        } else {
+            // CHANGED package, let's reload all categories as we could have more or fewer now
+            populateCategories(-1, true);
+        }
+    }
+
+    private Category findThirdPartyCategory(String packageName) {
+        int size = mCategoryProvider.getSize();
+        for (int i = 0; i < size; i++) {
+            Category category = mCategoryProvider.getCategory(i);
+            if (category.supportsThirdParty() && category.containsThirdParty(packageName)) {
+                return category;
+            }
+        }
+        return null;
+    }
+
+    private void updateLiveWallpapersCategories(String packageName,
+                                                @PackageStatusNotifier.PackageStatus int status) {
+        String liveWallpaperCollectionId = getString(R.string.live_wallpaper_collection_id);
+        Category oldLiveWallpapersCategory = mCategoryProvider.getCategory(
+                liveWallpaperCollectionId);
+        if (status == PackageStatusNotifier.PackageStatus.REMOVED
+                && (oldLiveWallpapersCategory == null
+                    || !oldLiveWallpapersCategory.containsThirdParty(packageName))) {
+            // If we're removing a wallpaper and the live category didn't contain it already,
+            // there's nothing to do.
+            return;
+        }
+        mCategoryProvider.fetchCategories(new CategoryReceiver() {
+            @Override
+            public void onCategoryReceived(Category category) {
+                // Do nothing here
+            }
+
+            @Override
+            public void doneFetchingCategories() {
+                Category liveWallpapersCategory =
+                        mCategoryProvider.getCategory(liveWallpaperCollectionId);
+                if (liveWallpapersCategory == null) {
+                    // There are no more 3rd party live wallpapers, so the Category is gone.
+                    removeCategory(oldLiveWallpapersCategory);
+                } else {
+                    if (oldLiveWallpapersCategory != null) {
+                        updateCategory(liveWallpapersCategory);
+                    } else {
+                        addCategory(liveWallpapersCategory, false);
+                    }
+                }
+            }
+        }, true);
     }
 
     private void initializeDesktop(Bundle savedInstanceState) {
@@ -666,45 +767,65 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
      *                            on first launch.
      */
     private void populateCategories(final int selectedTabPosition, boolean forceRefresh) {
-        mCategories.clear();
 
-        Injector injector = InjectorProvider.getInjector();
-        CategoryProvider categoryProvider = injector.getCategoryProvider(this);
-        categoryProvider.fetchCategories(new CategoryReceiver() {
+        final CategoryPickerFragment categoryPickerFragment = getCategoryPickerFragment();
+
+        if (forceRefresh && categoryPickerFragment != null) {
+            categoryPickerFragment.clearCategories();
+        }
+
+        mCategoryProvider.fetchCategories(new CategoryReceiver() {
             @Override
             public void onCategoryReceived(Category category) {
-                int priority = category.getPriority();
-
-                int index = 0;
-                while (index < mCategories.size() && priority >= mCategories.get(index).getPriority()) {
-                    index++;
-                }
-                mCategories.add(index, category);
-
-                if (mFormFactor == FormFactorChecker.FORM_FACTOR_MOBILE) {
-                    final FragmentManager fm = getSupportFragmentManager();
-                    CategoryPickerFragment categoryPickerFragment =
-                            (CategoryPickerFragment) fm.findFragmentById(R.id.fragment_container);
-                    if (categoryPickerFragment != null) {
-                        categoryPickerFragment.addCategory(category);
-                    }
-                }
+                addCategory(category, true);
             }
 
             @Override
             public void doneFetchingCategories() {
                 if (mFormFactor == FormFactorChecker.FORM_FACTOR_MOBILE) {
-                    final FragmentManager fm = getSupportFragmentManager();
-                    CategoryPickerFragment categoryPickerFragment =
-                            (CategoryPickerFragment) fm.findFragmentById(R.id.fragment_container);
-                    if (categoryPickerFragment != null) {
-                        categoryPickerFragment.doneFetchingCategories();
-                    }
+                    notifyDoneFetchingCategories();
                 } else { // DESKTOP
                     populateCategoryTabs(selectedTabPosition);
                 }
             }
         }, forceRefresh);
+    }
+
+    private void notifyDoneFetchingCategories() {
+        CategoryPickerFragment categoryPickerFragment = getCategoryPickerFragment();
+        if (categoryPickerFragment != null) {
+            categoryPickerFragment.doneFetchingCategories();
+        }
+    }
+
+    private void addCategory(Category category, boolean fetchingAll) {
+        CategoryPickerFragment categoryPickerFragment = getCategoryPickerFragment();
+        if (categoryPickerFragment != null) {
+            categoryPickerFragment.addCategory(category, fetchingAll);
+        }
+    }
+
+    private void removeCategory(Category category) {
+        CategoryPickerFragment categoryPickerFragment = getCategoryPickerFragment();
+        if (categoryPickerFragment != null) {
+            categoryPickerFragment.removeCategory(category);
+        }
+    }
+
+    private void updateCategory(Category category) {
+        CategoryPickerFragment categoryPickerFragment = getCategoryPickerFragment();
+        if (categoryPickerFragment != null) {
+            categoryPickerFragment.updateCategory(category);
+        }
+    }
+
+    @Nullable
+    private CategoryPickerFragment getCategoryPickerFragment() {
+        if (mFormFactor != FormFactorChecker.FORM_FACTOR_MOBILE) {
+            return null;
+        }
+        FragmentManager fm = getSupportFragmentManager();
+        return (CategoryPickerFragment) fm.findFragmentById(R.id.fragment_container);
     }
 
     /**
@@ -723,8 +844,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
 
         Tab tabToSelect = null;
         Tab firstEnumerableCategoryTab = null;
-        for (int i = 0; i < mCategories.size(); i++) {
-            Category category = mCategories.get(i);
+        for (int i = 0; i < mCategoryProvider.getSize(); i++) {
+            Category category = mCategoryProvider.getCategory(i);
 
             Tab tab = tabLayout.newTab();
             tab.setText(category.getTitle());
@@ -901,12 +1022,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
 
     @Nullable
     private Category findCategoryForCollectionId(String collectionId) {
-        for (Category category : mCategories) {
-            if (category.getCollectionId().equals(collectionId)) {
-                return category;
-            }
-        }
-        return null;
+        return mCategoryProvider.getCategory(collectionId);
     }
 
     private void showCategoryDesktop(String collectionId) {

@@ -18,6 +18,7 @@ package com.android.wallpaper.model;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 
 import com.android.wallpaper.asset.Asset;
 
@@ -61,8 +62,6 @@ public abstract class Category {
     public boolean isEnumerable() {
         return false;
     }
-
-    ;
 
     /**
      * @return The title of the category.
@@ -120,5 +119,32 @@ public abstract class Category {
      */
     public boolean supportsCustomPhotos() {
         return false;
+    }
+
+    /**
+     * Returns whether this category is or contains third-party wallpapers
+     */
+    public boolean supportsThirdParty() {
+        return false;
+    }
+
+    /**
+     * Returns whether this Category contains or represents a third party wallpaper with the given
+     * packageName (this only makes sense if #supportsThirdParty() returns true).
+     */
+    public boolean containsThirdParty(String packageName) {
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Category)) return false;
+        if (obj == this) return true;
+        return TextUtils.equals(getCollectionId(), ((Category) obj).getCollectionId());
+    }
+
+    @Override
+    public int hashCode() {
+        return mCollectionId == null ? super.hashCode() : mCollectionId.hashCode();
     }
 }
