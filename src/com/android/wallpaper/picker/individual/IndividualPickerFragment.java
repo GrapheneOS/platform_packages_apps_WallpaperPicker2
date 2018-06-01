@@ -25,6 +25,7 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
+import android.service.wallpaper.WallpaperService;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -56,6 +57,7 @@ import com.android.wallpaper.module.FormFactorChecker;
 import com.android.wallpaper.module.FormFactorChecker.FormFactor;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.module.PackageStatusNotifier;
 import com.android.wallpaper.module.RotatingWallpaperComponentChecker;
 import com.android.wallpaper.module.WallpaperChangedNotifier;
 import com.android.wallpaper.module.WallpaperPersister;
@@ -119,6 +121,7 @@ public class IndividualPickerFragment extends Fragment
     @FormFactor
     private int mFormFactor;
     private SetIndividualHolder mPendingSetIndividualHolder;
+    private PackageStatusNotifier mPackageStatusNotifier;
 
     /**
      * Staged error dialog fragments that were unable to be shown when the activity didn't allow
@@ -180,6 +183,7 @@ public class IndividualPickerFragment extends Fragment
             }
         }
     };
+    private PackageStatusNotifier.Listener mAppStatusListener;
 
     public static IndividualPickerFragment newInstance(String collectionId) {
         Bundle args = new Bundle();
@@ -238,6 +242,8 @@ public class IndividualPickerFragment extends Fragment
 
         mFormFactor = injector.getFormFactorChecker(appContext).getFormFactor();
 
+        mPackageStatusNotifier = injector.getPackageStatusNotifier(appContext);
+
         mWallpapers = new ArrayList<>();
         mRandom = new Random();
         mHandler = new Handler();
@@ -257,6 +263,22 @@ public class IndividualPickerFragment extends Fragment
 
         mWallpaperRotationInitializer = mCategory.getWallpaperRotationInitializer();
 
+        fetchWallpapers(false);
+
+        if (mCategory.supportsThirdParty()) {
+            mAppStatusListener = (packageName, status) -> {
+                if (status != PackageStatusNotifier.PackageStatus.REMOVED ||
+                        mCategory.containsThirdParty(packageName)) {
+                    fetchWallpapers(true);
+                }
+            };
+            mPackageStatusNotifier.addListener(mAppStatusListener,
+                    WallpaperService.SERVICE_INTERFACE);
+        }
+    }
+
+    private void fetchWallpapers(boolean forceReload) {
+        mWallpapers.clear();
         mCategory.fetchWallpapers(getActivity().getApplicationContext(), new WallpaperReceiver() {
             @Override
             public void onWallpapersReceived(List<WallpaperInfo> wallpapers) {
@@ -264,17 +286,27 @@ public class IndividualPickerFragment extends Fragment
                     mWallpapers.add(wallpaper);
                 }
 
-                // Wallpapers may load after the adapter is initialized, in which case we have to explicitly
-                // notify that the data set has changed.
+                // Wallpapers may load after the adapter is initialized, in which case we have
+                // to explicitly notify that the data set has changed.
                 if (mAdapter != null) {
                     mAdapter.notifyDataSetChanged();
                 }
 
                 if (mWallpapersUiContainer != null) {
                     mWallpapersUiContainer.onWallpapersReady();
+                } else {
+                    if (wallpapers.isEmpty()) {
+                        // If there are no more wallpapers and we're on phone, just finish the
+                        // Activity.
+                        Activity activity = getActivity();
+                        if (activity != null
+                                && mFormFactor == FormFactorChecker.FORM_FACTOR_MOBILE) {
+                            activity.finish();
+                        }
+                    }
                 }
             }
-        });
+        }, forceReload);
     }
 
     @Override
@@ -412,6 +444,9 @@ public class IndividualPickerFragment extends Fragment
             mProgressDialog.dismiss();
         }
         mWallpaperChangedNotifier.unregisterListener(mWallpaperChangedListener);
+        if (mAppStatusListener != null) {
+            mPackageStatusNotifier.removeListener(mAppStatusListener);
+        }
     }
 
     @Override

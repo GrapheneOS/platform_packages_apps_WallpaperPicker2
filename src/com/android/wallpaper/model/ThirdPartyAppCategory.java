@@ -86,7 +86,8 @@ public class ThirdPartyAppCategory extends Category {
             ThirdPartyAppCategory category = new ThirdPartyAppCategory(
                     context,
                     info,
-                    context.getString(R.string.third_party_app_wallpaper_collection_id) + "_" + i,
+                    context.getString(R.string.third_party_app_wallpaper_collection_id) + "_"
+                            + itemPackageName,
                     priority);
             thirdPartyApps.add(category);
         }
@@ -119,5 +120,15 @@ public class ThirdPartyAppCategory extends Category {
     @Override
     public Asset getThumbnail(Context unused) {
         return null;
+    }
+
+    @Override
+    public boolean supportsThirdParty() {
+        return true;
+    }
+
+    @Override
+    public boolean containsThirdParty(String packageName) {
+        return mResolveInfo.activityInfo.packageName.equals(packageName);
     }
 }
