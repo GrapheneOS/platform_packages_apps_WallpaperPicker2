@@ -17,11 +17,11 @@ package com.android.wallpaper.model;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
 
 public class LiveWallpaperCategory extends WallpaperCategory {
 
