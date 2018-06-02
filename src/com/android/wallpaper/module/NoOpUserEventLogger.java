@@ -35,7 +35,7 @@ public class NoOpUserEventLogger implements UserEventLogger {
     }
 
     @Override
-    public void logExploreClicked(String collectionId) {
+    public void logActionClicked(String collectionId, int actionLabelResId) {
     }
 
     @Override

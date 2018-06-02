@@ -50,7 +50,7 @@ public interface UserEventLogger {
 
     void logCurrentWallpaperPreviewed();
 
-    void logExploreClicked(String collectionId);
+    void logActionClicked(String collectionId, int actionLabelResId);
 
     void logIndividualWallpaperSelected(String collectionId);
 

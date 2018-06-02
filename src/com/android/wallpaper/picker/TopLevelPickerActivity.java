@@ -701,8 +701,9 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                             mCurrentWallpaperExploreButton.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    mUserEventLogger.logExploreClicked(
-                                            homeWallpaper.getCollectionId(appContext));
+                                    mUserEventLogger.logActionClicked(
+                                            homeWallpaper.getCollectionId(appContext),
+                                            homeWallpaper.getActionLabelRes(appContext));
                                     startActivity(exploreIntent);
                                 }
                             });
