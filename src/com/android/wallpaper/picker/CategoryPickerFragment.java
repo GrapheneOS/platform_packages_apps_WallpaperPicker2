@@ -614,7 +614,8 @@ public class CategoryPickerFragment extends Fragment {
                     }
                     exploreButton.setVisibility(View.VISIBLE);
                     exploreButton.setOnClickListener((View view) -> {
-                        eventLogger.logExploreClicked(mWallpaperInfo.getCollectionId(appContext));
+                        eventLogger.logActionClicked(mWallpaperInfo.getCollectionId(appContext),
+                                mWallpaperInfo.getActionLabelRes(appContext));
                         startActivity(exploreIntent);
                     });
                 }
@@ -768,7 +769,9 @@ public class CategoryPickerFragment extends Fragment {
                             exploreButton.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    eventLogger.logExploreClicked(mHomeWallpaperInfo.getCollectionId(appContext));
+                                    eventLogger.logActionClicked(
+                                            mHomeWallpaperInfo.getCollectionId(appContext),
+                                            mHomeWallpaperInfo.getActionLabelRes(appContext));
                                     startActivity(exploreIntent);
                                 }
                             });
@@ -861,7 +864,9 @@ public class CategoryPickerFragment extends Fragment {
                             exploreButton.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    eventLogger.logExploreClicked(mLockWallpaperInfo.getCollectionId(appContext));
+                                    eventLogger.logActionClicked(
+                                            mLockWallpaperInfo.getCollectionId(appContext),
+                                            mLockWallpaperInfo.getActionLabelRes(appContext));
                                     startActivity(exploreIntent);
                                 }
                             });
