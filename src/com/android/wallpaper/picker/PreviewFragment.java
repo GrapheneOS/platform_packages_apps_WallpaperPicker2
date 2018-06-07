@@ -44,6 +44,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetBehavior.State;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -453,7 +454,10 @@ public class PreviewFragment extends Fragment implements
 
     @Override
     public void onClickOk() {
-        getActivity().finish();
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            activity.finish();
+        }
     }
 
     @Override
