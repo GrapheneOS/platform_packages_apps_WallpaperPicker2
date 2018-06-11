@@ -73,7 +73,9 @@ import com.android.wallpaper.asset.Asset.DimensionsReceiver;
 import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.compat.ButtonDrawableSetterCompat;
 import com.android.wallpaper.config.Flags;
+import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
+import com.android.wallpaper.module.CurrentWallpaperInfoFactory;
 import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
@@ -413,9 +415,7 @@ public class PreviewFragment extends Fragment implements
         int id = item.getItemId();
         if (id == R.id.set_wallpaper) {
             if (BuildCompat.isAtLeastN()) {
-                DialogFragment newFragment = new SetWallpaperDialogFragment();
-                newFragment.setTargetFragment(this, UNUSED_REQUEST_CODE);
-                newFragment.show(getFragmentManager(), TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
+                requestDestination();
             } else {
                 setCurrentWallpaper(WallpaperPersister.DEST_HOME_SCREEN);
             }
@@ -430,6 +430,21 @@ public class PreviewFragment extends Fragment implements
         }
 
         return false;
+    }
+
+    private void requestDestination() {
+        CurrentWallpaperInfoFactory factory = InjectorProvider.getInjector()
+                .getCurrentWallpaperFactory(getContext());
+
+        factory.createCurrentWallpaperInfos((homeWallpaper, lockWallpaper, presentationMode) -> {
+            SetWallpaperDialogFragment setWallpaperDialog = new SetWallpaperDialogFragment();
+            setWallpaperDialog.setTargetFragment(this, UNUSED_REQUEST_CODE);
+            if (homeWallpaper instanceof LiveWallpaperInfo && lockWallpaper == null) {
+                // if the lock wallpaper is a live wallpaper, we cannot set a home-only static one
+                setWallpaperDialog.setHomeOptionAvailable(false);
+            }
+            setWallpaperDialog.show(getFragmentManager(), TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
+        }, true); // Force refresh as the wallpaper may have been set while this fragment was paused
     }
 
     @Override
