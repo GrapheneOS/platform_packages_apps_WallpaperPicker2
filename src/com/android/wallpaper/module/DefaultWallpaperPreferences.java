@@ -337,6 +337,8 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_2)
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_3)
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_URL)
+                .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_LABEL_RES)
+                .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_ICON_RES)
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_HASH_CODE)
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_MANAGER_ID)
                 .apply();

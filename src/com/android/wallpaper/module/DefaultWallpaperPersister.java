@@ -1015,9 +1015,9 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setLockWallpaperAttributions(
                     mWallpaper.getAttributions(mAppContext));
             mWallpaperPreferences.setLockWallpaperActionUrl(mWallpaper.getActionUrl(mAppContext));
-            mWallpaperPreferences.setHomeWallpaperActionLabelRes(
+            mWallpaperPreferences.setLockWallpaperActionLabelRes(
                     mWallpaper.getActionLabelRes(mAppContext));
-            mWallpaperPreferences.setHomeWallpaperActionIconRes(
+            mWallpaperPreferences.setLockWallpaperActionIconRes(
                     mWallpaper.getActionIconRes(mAppContext));
             mWallpaperPreferences.setLockWallpaperCollectionId(
                     mWallpaper.getCollectionId(mAppContext));
