@@ -32,7 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Đặt hình nền"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Màn hình chính"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Màn hình khóa"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"Cả hai"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Màn hình chính và màn hình khóa"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Xoay vòng hình nền"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Để hiển thị hình nền hiện tại ở đây, <xliff:g id="APP_NAME">%1$s</xliff:g> cần quyền truy cập vào bộ nhớ của thiết bị."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Để hiển thị hình nền hiện tại ở đây, ứng dụng Hình nền cần quyền truy cập vào bộ nhớ của thiết bị.\n\nĐể thay đổi cài đặt này, hãy chuyển đến khu vực Quyền của thông tin ứng dụng Hình nền."</string>

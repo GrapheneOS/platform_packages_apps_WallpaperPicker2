@@ -32,7 +32,8 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"വാൾപേപ്പർ സജ്ജമാക്കുക"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"ഹോം സ്‌ക്രീൻ"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"ലോക്ക് സ്‌ക്രീൻ"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"രണ്ടും"</string>
+    <!-- no translation found for set_wallpaper_both_destination (6967226064958263939) -->
+    <skip />
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"ചിത്ര വാൾപേപ്പർ തിരിക്കുന്നു"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"നിലവിലെ വാൾപേപ്പർ ഇവിടെ പ്രദർശിപ്പിക്കുന്നതിന്, <xliff:g id="APP_NAME">%1$s</xliff:g> എന്നതിന് നിങ്ങളുടെ ഉപകരണത്തിന്‍റെ സ്‌റ്റോറേജിലേക്ക് ആക്‌സസ് ആവശ്യമാണ്."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"നിലവിലെ വാൾപേപ്പർ ഇവിടെ പ്രദർശിപ്പിക്കുന്നതിന്, Wallpapers-ന് നിങ്ങളുടെ ഉപകരണത്തിന്റെ സ്റ്റോറേജിലേക്ക് ആക്സസ് ആവശ്യമാണ്.\n\nഈ ക്രമീകരണം മാറ്റുന്നതിന്, Wallpapers ആപ്പ് വിവരങ്ങളുടെ അനുമതികളിലേക്ക് പോവുക."</string>

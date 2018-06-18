@@ -32,7 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Magtakda ng wallpaper"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Home screen"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Lock screen"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"Pareho"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Home screen at lock screen"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Nagro-roate na Larawan na Wallpaper"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Para ipakita ang kasalukuyang wallpaper dito, kailangan ng <xliff:g id="APP_NAME">%1$s</xliff:g> ng access sa storage ng iyong device."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Para ipakita rito ang kasalukuyang wallpaper, kailangan ng Mga Wallpaper ng access sa storage ng iyong device.\n\nPara baguhin ang setting na ito, pumunta sa bahaging Mga Pahintulot ng impormasyon ng app ng Mga Wallpaper."</string>

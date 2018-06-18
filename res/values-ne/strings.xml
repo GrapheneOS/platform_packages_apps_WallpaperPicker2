@@ -32,7 +32,8 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"वालपेपर सेट गर्नुहोस्"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"गृह स्क्रिन"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"लक स्क्रिन"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"दुवै"</string>
+    <!-- no translation found for set_wallpaper_both_destination (6967226064958263939) -->
+    <skip />
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"छवि परिवर्तन हुने वालपेपर"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"यहाँ हालको वालपेपर देखाउन <xliff:g id="APP_NAME">%1$s</xliff:g> लाई तपाईंको यन्त्रको भण्डारणमाथिको पहुँच अनिवार्य हुन्छ।"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"यहाँ हालैको वालपेपर देखाउन वालपेपरहरूलाई तपाईंको यन्त्रको भण्डारणमाथिको पहुँच अनिवार्य हुन्छ।\n\nयो सेटिङ बदल्न वालपेपरहरूको अनुप्रयोगसम्बन्धी जानकारीमा रहेको अनुमति क्षेत्रमा जानुहोस्।"</string>

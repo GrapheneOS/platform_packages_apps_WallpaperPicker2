@@ -32,7 +32,8 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Weka mandhari"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Skrini ya kwanza"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Skrini iliyofungwa"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"Skrini zote mbili"</string>
+    <!-- no translation found for set_wallpaper_both_destination (6967226064958263939) -->
+    <skip />
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Mandhari ya Picha Yanayozunguka"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Ili kuonyesha mandhari yanayotumika kwa sasa hapa, <xliff:g id="APP_NAME">%1$s</xliff:g> inahitaji idhini ya kufikia hifadhi ya kifaa chako."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Ili kuonyesha hapa mandhari yaliyopo sasa, programu ya Mandhari inahitaji ruhusa ya kufikia hifadhi ya kifaa chako.\n\nIli kubadilisha mipangilio hii, nenda kwenye sehemu ya Ruhusa katika maelezo ya programu ya Mandhari."</string>

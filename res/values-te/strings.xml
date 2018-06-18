@@ -32,7 +32,8 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"వాల్‌పేపర్‌ను సెట్ చేయండి"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"హోమ్ స్క్రీన్"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"లాక్ స్క్రీన్"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"రెండూ"</string>
+    <!-- no translation found for set_wallpaper_both_destination (6967226064958263939) -->
+    <skip />
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"చిత్ర వాల్‌పేపర్‌ను వంతుల వారీగా మార్చడం"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"ప్రస్తుత వాల్‌పేపర్‌ని ఇక్కడ ప్రదర్శించడానికి, <xliff:g id="APP_NAME">%1$s</xliff:g>కి మీ పరికర నిల్వ యొక్క యాక్సెస్ అవసరమవుతుంది."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"ఇక్కడ ప్రస్తుత వాల్‌పేపర్‌ను ప్రదర్శించడానికి, వాల్‌పేపర్‌‌లకు మీ పరికర నిల్వ యాక్సెస్ అవసరం.\n\nఈ సెట్టింగ్‌ను మార్చడానికి, వాల్‌పేపర్‌ల యాప్ సమాచారం యొక్క అనుమతుల ప్రాంతానికి వెళ్లండి."</string>

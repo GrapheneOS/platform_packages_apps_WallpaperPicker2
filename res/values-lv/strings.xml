@@ -32,7 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Fona tapetes iestatīšana"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Sākuma ekrāns"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Bloķēšanas ekrāns"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"Abi"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Sākuma ekrāns un bloķēšanas ekrāns"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Mainīgs fona tapetes attēls"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Lai šeit attēlotu pašreizējo fona tapeti, lietotnei <xliff:g id="APP_NAME">%1$s</xliff:g> ir nepieciešama piekļuve jūsu ierīces krātuvei."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Lai šeit attēlotu pašreizējo fona tapeti, lietotnei “Fona tapetes” ir nepieciešama piekļuve jūsu ierīces krātuvei.\n\nLai mainītu šo iestatījumu, pārejiet uz lietotnes “Fona tapetes” informācijas sadaļu “Atļaujas”."</string>
