@@ -32,7 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Establecer fondo de pantalla"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Pantalla de inicio"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Pantalla de bloqueo"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"Ambas"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Pantalla de inicio y de bloqueo"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Fondo de pantalla de imagen cambiante"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Para mostrar el fondo de pantalla actual aquí, <xliff:g id="APP_NAME">%1$s</xliff:g> necesita acceder al almacenamiento de tu dispositivo."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Para mostrar el fondo de pantalla actual, la aplicación Fondos de pantalla necesita acceder al almacenamiento del dispositivo.\n\nPara cambiar esta opción, accede al área Permisos de la información de la aplicación."</string>

@@ -32,7 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Velja veggfóður"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Heimaskjár"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Lásskjár"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"Bæði"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Heimaskjár og lásskjár"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Breytilegt veggfóður"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Til að birta núverandi veggfóður hér þarf <xliff:g id="APP_NAME">%1$s</xliff:g> aðgang að geymslu tækisins."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Veggfóður þarf að fá aðgang að geymslu tækisins þíns til að birta þetta veggfóður hér.\n\nTil að breyta þessari stillingu skaltu opna heimildir í forritsupplýsingum Veggfóðurs."</string>

@@ -32,7 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Тушкагаз орнотуу"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Башкы экран"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Кулпуланган экран"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"Экөө тең"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Башкы экран жана кулпуланган экран"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Алмаштырма тушкагаз сүрөтү"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Учурдагы тушкагазды бул жерден көрсөтүү үчүн <xliff:g id="APP_NAME">%1$s</xliff:g> колдонмосуна түзмөгүңүздүн сактагычын колдонуу мүмкүнчүлүгү керек."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Учурдагы тушкагазды бул жерден көрсөтүү үчүн Тушкагаздар колдонмосу түзмөгүңүздүн сактагычын колдонуу мүмкүнчүлүгүн алышы керек.\n\nБул жөндөөнү өзгөртүү үчүн Тушкагаздар колдонмосу жөнүндө маалыматтын \"Уруксаттар\" бөлүмүнө өтүңүз."</string>
@@ -40,7 +40,7 @@
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Жандуу тушкагаз кызматы тушкагаздарды алмаштырат"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Күнүмдүк тушкагаз"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Күйгүзүү үчүн таптап коюңуз"</string>
-    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Тушкагаз күн сайын автоматтык түрдө алмашып турат. Жөндөөнү аягына чыгаруу үчүн кийинки экрандан &lt;strong&gt;Set wallpaper&lt;/strong&gt; баскычын таптап коюңуз."</string>
+    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Тушкагаз күн сайын автоматтык түрдө алмашып турат. Жөндөөнү аягына чыгаруу үчүн кийинки экрандан &lt;strong&gt;Тушкагаз орнотуу&lt;/strong&gt; баскычын таптап коюңуз."</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Келечекте тушкагаздар Wi-Fi аркылуу гана жүктөлүп алынсын"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Улантуу"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Биринчи тушкагаз жүктөлүп алынууда…"</string>

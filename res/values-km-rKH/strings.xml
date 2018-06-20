@@ -18,7 +18,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name" msgid="5610614769724978966">"ផ្ទាំង​រូបភាព"</string>
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"ជ្រើសផ្ទាំងរូបភាព"</string>
+    <string name="select_wallpaper_label" msgid="3026032670158694582">"ជ្រើសរើសផ្ទាំងរូបភាព"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"កំណត់ផ្ទាំងរូបភាព"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"កំពុង​កំណត់​ផ្ទាំង​រូបភាព..."</string>
     <string name="try_again" msgid="8278874823700921234">"ព្យាយាមម្ដងទៀត"</string>
@@ -32,7 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"កំណត់​ផ្ទាំង​រូបភាព"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"អេក្រង់ដើម"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"អេក្រង់​ចាក់សោ"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"ទាំងពីរ"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"អេក្រង់ដើម និង​អេក្រង់​ចាក់សោ"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"បង្វិលផ្ទាំងរូបភាពបែបរូបភាព"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"ដើម្បី​បង្ហាញ​ផ្ទាំងរូបភាព​បច្ចុប្បន្ន​នៅទីនេះ <xliff:g id="APP_NAME">%1$s</xliff:g> ត្រូវការ​សិទ្ធិចូលប្រើ​ទំហំ​ផ្ទុកឧបករណ៍​របស់អ្នក។"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"ដើម្បី​បង្ហាញ​ផ្ទាំងរូបភាព​បច្ចុប្បន្ននៅទីនេះ កម្មវិធី Wallpapers ត្រូវការសិទ្ធិចូលប្រើ​ទំហំផ្ទុក​របស់ឧបករណ៍អ្នក។\n\nដើម្បី​ផ្លាស់ប្តូរការកំណត់នេះ សូមចូលទៅកាន់ផ្នែកការអនុញ្ញាតនៃព័ត៌មានរបស់កម្មវិធី Wallpapers ។"</string>
@@ -41,16 +41,16 @@
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"ផ្ទាំងរូបភាពប្រចាំថ្ងៃ"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"ប៉ះដើម្បីបើក"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Wallpaper នឹង​ផ្លាស់​ប្ដូរ​ដោយស្វ័យ​ប្រវត្តិ​ជារៀងរាល់ថ្ងៃ។ ដើម្បី​បញ្ចប់​ការ​រៀបចំ សូម​ចុច &lt;strong&gt;កំណត់​ផ្ទាំងរូបភាព&lt;/strong&gt; នៅលើ​អេក្រង់​បន្ទាប់។"</string>
-    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"ដោនឡូតផ្ទាំងរូបភាពនៅពេលក្រោយតាមរយៈ Wi-Fi តែប៉ុណ្ណោះ"</string>
+    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"ទាញយកផ្ទាំងរូបភាពនៅពេលក្រោយតាមរយៈ Wi-Fi តែប៉ុណ្ណោះ"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"បន្ត"</string>
-    <string name="start_rotation_progress_message" msgid="7872623873682262083">"កំពុងដោនឡូតផ្ទាំងរូបភាពដំបូង…"</string>
-    <string name="start_rotation_error_message" msgid="3053799836719618972">"មិនអាចដោនឡូតផ្ទាំងរូបភាពដំបូងបានទេ។ សូមពិនិត្យការតភ្ជាប់បណ្តាញរបស់អ្នក ហើយព្យាយាមម្តងទៀត។"</string>
+    <string name="start_rotation_progress_message" msgid="7872623873682262083">"កំពុងទាញយកផ្ទាំងរូបភាពដំបូង…"</string>
+    <string name="start_rotation_error_message" msgid="3053799836719618972">"មិនអាចទាញយកផ្ទាំងរូបភាពដំបូងបានទេ។ សូមពិនិត្យការកំណត់បណ្តាញរបស់អ្នក រួចព្យាយាមម្តងទៀត។"</string>
     <string name="start_rotation_dialog_body" msgid="7903554799046364916">"ផ្ទាំងរូបភាពនឹងប្តូរដោយស្វ័យប្រវត្តិជារៀងរាល់ថ្ងៃ"</string>
     <string name="settings_button_label" msgid="8724734130079207955">"ការកំណត់"</string>
     <string name="explore" msgid="7468719504199497281">"រុករក"</string>
     <string name="next_wallpaper" msgid="3911873152952596232">"ផ្ទាំងរូបភាពបន្ទាប់"</string>
-    <string name="wallpaper_disabled_message" msgid="7309484130562148185">"ការកំណត់ផ្ទាំងរូបភាពត្រូវបានបិទដំណើរការនៅលើឧបករណ៍នេះ"</string>
-    <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"ការកំណត់ផ្ទាំងរូបភាពមួយត្រូវបានបិទដំណើរការដោយអ្នកគ្រប់គ្រងឧបករណ៍របស់អ្នក"</string>
+    <string name="wallpaper_disabled_message" msgid="7309484130562148185">"ការកំណត់ផ្ទាំងរូបភាពត្រូវបានបិទនៅលើឧបករណ៍នេះ"</string>
+    <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"ការកំណត់ផ្ទាំងរូបភាពត្រូវបានបិទដោយអ្នកគ្រប់គ្រងឧបករណ៍របស់អ្នក"</string>
     <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"បានកំណត់ផ្ទាំងរូបភាពដោយជោគជ័យ"</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"អ្នកត្រូវ​ភ្ជាប់​អ៊ីនធឺណិត​ដើម្បី​មើលផ្ទាំង​រូបភាព។ សូម​ភ្ជាប់ រួច​ព្យាយាមម្តង​ទៀត។"</string>
     <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"បច្ចុប្បន្នត្រូវបានកំណត់ជារូបភាពតូចនៃផ្ទាំងរូបភាពអេក្រង់ដើម"</string>
@@ -72,7 +72,7 @@
     <string name="my_photos_category_title" msgid="4294567122144565273">"រូប​ថត​របស់​ខ្ញុំ"</string>
     <string name="my_photos_generic_wallpaper_title" msgid="7002867526154631172">"រូបថតរបស់ខ្ញុំ"</string>
     <string name="fallback_wallpaper_title" msgid="6154655421012506001">"ផ្ទាំង​រូបភាព"</string>
-    <string name="app_not_found" msgid="4431461707854088231">"កម្មវិធីមិនបានដំឡើងទេ"</string>
+    <string name="app_not_found" msgid="4431461707854088231">"កម្មវិធីមិនបានដំឡើងទេ។"</string>
     <string name="center_wallpaper_position" msgid="4166894762352288883">"កណ្តាល"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"ច្រឹប​កណ្តាល"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"ទាញ"</string>

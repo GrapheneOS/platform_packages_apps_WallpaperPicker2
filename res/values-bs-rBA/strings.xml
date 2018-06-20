@@ -32,7 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Postavi pozadinsku sliku"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Početni ekran"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Zaključavanje ekrana"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"Oboje"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Početni ekran i zaključavanje ekrana"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Smjenjivanje pozadinskih slika"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Da ovdje prikažete trenutne pozadinske slike, aplikaciji <xliff:g id="APP_NAME">%1$s</xliff:g> treba pristup pohrani na vašem uređaju."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Da ovdje prikažete trenutne pozadinske slike, aplikaciji Pozadinske slike treba pristup pohrani na vašem uređaju.\n\nZa promjenu postavke, u informacijama o aplikaciji Pozadinske slike idite u odjeljak Odobrenja."</string>
@@ -41,7 +41,7 @@
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Dnevna pozadinska slika"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Dodirnite da uključite"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Pozadinska slika će se automatski mijenjati svakodnevno. Da završite postavljanje, na sljedećem ekranu dodirnite &lt;strong&gt;Postavi pozadinsku sliku&lt;/strong&gt;."</string>
-    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Preuzmi nove pozadinske slike samo putem WiFi mreže"</string>
+    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Preuzimaj nove pozadinske slike samo putem WiFi mreže"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Nastavi"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Preuzimanje prve pozadinske slike…"</string>
     <string name="start_rotation_error_message" msgid="3053799836719618972">"Nije moguće preuzeti prvu pozadinsku sliku. Provjerite postavke mreže i pokušajte ponovo."</string>

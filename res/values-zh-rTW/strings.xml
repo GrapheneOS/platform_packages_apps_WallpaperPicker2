@@ -32,7 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"設定桌布"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"主螢幕"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"螢幕鎖定"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"主螢幕和螢幕鎖定"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"主螢幕和螢幕鎖定"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"輪播圖片桌布"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"如要在這裡顯示目前的桌布，「<xliff:g id="APP_NAME">%1$s</xliff:g>」需要存取裝置的儲存空間。"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"如要在這裡顯示目前的桌布，「桌布」需要存取裝置的儲存空間。\n\n如要變更這項設定，請前往「桌布」應用程式資訊的權限區域。"</string>
