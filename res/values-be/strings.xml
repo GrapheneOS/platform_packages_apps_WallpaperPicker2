@@ -32,8 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Усталяваць як шпалеры"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Галоўны экран"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Экран блакіроўкі"</string>
-    <!-- no translation found for set_wallpaper_both_destination (6967226064958263939) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Галоўны экран і экран блакіроўкі"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Рэгулярная змена шпалер"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Каб паглядзець бягучыя шпалеры тут, дайце праграме \"<xliff:g id="APP_NAME">%1$s</xliff:g>\" доступ да сховішча прылады."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Каб паглядзець бягучыя шпалеры тут, дайце праграме \"Шпалеры\" доступ да сховішча прылады.\n\nЗакрыць доступ можна, перайшоўшы ў \"Налады &gt; Праграмы &gt; Шпалеры &gt; Дазволы\"."</string>

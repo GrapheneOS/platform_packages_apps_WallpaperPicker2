@@ -32,7 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Fonga rasm o‘rnatish"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Bosh ekran"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Ekran qulfi"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Bosh va qulf ekrani"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Bosh ekran va qulf ekrani"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Fon rasmlarini aylantirish"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Bu yerda joriy fon rasmini chiqarish uchun <xliff:g id="APP_NAME">%1$s</xliff:g> xizmatiga qurilmangiz xotirasiga kirishi uchun ruxsat lozim."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Bu yerda joriy fon rasmini chiqarish uchun Fon rasmlari xizmatiga qurilmaning xotirasiga kirishi uchun ruxsat zarur.\n\nBu parametrni o‘zgartirish uchun Fon rasmlari ilova ma’lumotlaridagi Ruxsatlar sahifasiga kiring."</string>

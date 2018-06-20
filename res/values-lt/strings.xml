@@ -32,8 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Nustatyti ekrano foną"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Pagrindinis ekranas"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Užrakinimo ekranas"</string>
-    <!-- no translation found for set_wallpaper_both_destination (6967226064958263939) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Pagrindinis ekranas ir užrakinimo ekranas"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Kaitaliojamų vaizdų ekrano fonas"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Jei norite čia rodyti dabartinį ekrano foną, programai „<xliff:g id="APP_NAME">%1$s</xliff:g>“ reikia galimybės pasiekti įrenginio saugyklą."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Kad galėtumėte čia rodyti dabartinį ekrano foną, programai „Ekrano fonai“ reikia galimybės pasiekti įrenginio saugyklą.\n\nJei norite pakeisti šį nustatymą, eikite į ekrano fonų programos informacijos leidimų sritį."</string>

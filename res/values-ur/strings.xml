@@ -32,8 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"وال پیپر سیٹ کریں"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"ہوم اسکرین"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"مقفل اسکرین"</string>
-    <!-- no translation found for set_wallpaper_both_destination (6967226064958263939) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"ہوم اسکرین اور مقفل اسکرین"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"گردشی تصویری وال پیپر"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"موجودہ وال پیپر یہاں ڈسپلے کرنے کے لیے، <xliff:g id="APP_NAME">%1$s</xliff:g> کو آپ کے آلہ کے اسٹوریج تک رسائی درکار ہے۔"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"یہاں موجودہ وال پیپر ڈسپلے کرنے کے لیے، وال پیپرز کو آپ کے آلہ کے اسٹوریج تک رسائی درکار ہے۔\n\nاس ترتیب کو بدلنے کے لیے، وال پیپرز کی ایپ کی معلومات کی اجازتوں کے ایریا میں جائیں۔"</string>
