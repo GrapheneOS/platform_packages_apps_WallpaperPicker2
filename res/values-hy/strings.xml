@@ -32,7 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Օգտագործել որպես պաստառ"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Հիմնական էկրան"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Կողպէկրան"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"Երկուսն էլ"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Հիմնական էկրան և կողպէկրան"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Փոխվող պատկերներով պաստառ"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Ընթացիկ պաստառն այստեղ տեսնելու համար թույլատրեք «<xliff:g id="APP_NAME">%1$s</xliff:g>» հավելվածին օգտագործել սարքի հիշողությունը։"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Ընթացիկ պաստառն այստեղ տեսնելու համար թույլատրեք «Պաստառներ» հավելվածին օգտագործել սարքի հիշողությունը:\n\nԱյս կարգավորումը փոխելու համար անցեք Կարգավորումներ &gt; Հավելվածներ &gt; Պաստառներ &gt; Թույլտվություններ։"</string>

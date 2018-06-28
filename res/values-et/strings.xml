@@ -32,7 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Taustapildi määramine"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Avaekraan"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Lukustuskuva"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"Mõlemad"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Avaekraan ja lukustuskuva"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Vahelduva kujutisega taustapilt"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Kui soovite praeguse taustapildi kuvada siin, vajab rakendus <xliff:g id="APP_NAME">%1$s</xliff:g> juurdepääsu teie seadme salvestusruumile."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Kui soovite praeguse taustapildi kuvada siin, vajab rakendus Taustapildid juurdepääsu teie seadme salvestusruumile.\n\nSelle seade muutmiseks avage rakenduse Taustapildid teabe juures jaotis Load."</string>

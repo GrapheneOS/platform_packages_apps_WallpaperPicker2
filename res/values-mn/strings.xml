@@ -32,7 +32,7 @@
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Ханын зураг тохируулах"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Үндсэн нүүр"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Түгжигдсэн дэлгэц"</string>
-    <string name="set_wallpaper_both_destination" msgid="227262321455200923">"Аль алинд нь"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Үндсэн нүүр болон түгжих дэлгэц"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Ханын зургийг эргүүлж байна"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Одоогийн ханын зургийг энд харуулахын тулд <xliff:g id="APP_NAME">%1$s</xliff:g> таны төхөөрөмжийн санд хандах шаардлагатай байна."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Одоогийн ханын зургийг энд харуулахын тулд Ханын зураг таны төхөөрөмжийн санд хандах шаардлагатай байна.\n\nЭнэ тохиргоог өөрчлөх бол Ханын зургийн аппын мэдээллийн Зөвшөөрөл хэсэгт очно уу."</string>
