@@ -15,9 +15,9 @@
  */
 package com.android.wallpaper.picker.individual;
 
+import android.util.Log;
 import android.view.View;
 
-import com.android.wallpaper.R;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.UserEventLogger;
 
@@ -26,15 +26,20 @@ import com.android.wallpaper.module.UserEventLogger;
  * show a full-screen preview of the wallpaper.
  */
 class PreviewIndividualHolder extends IndividualHolder implements View.OnClickListener {
+    private final static String TAG = "PreviewIndividualHolder";
 
     public PreviewIndividualHolder(
             IndividualPickerActivity hostActivity, int tileHeightPx, View itemView) {
         super(hostActivity, tileHeightPx, itemView);
-        itemView.findViewById(R.id.tile).setOnClickListener(this);
+        mTileLayout.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
+        if (mActivity.isFinishing()) {
+            Log.w(TAG, "onClick received on VH on finishing Activity");
+            return;
+        }
         UserEventLogger eventLogger =
                 InjectorProvider.getInjector().getUserEventLogger(mActivity);
         eventLogger.logIndividualWallpaperSelected(mWallpaper.getCollectionId(mActivity));
