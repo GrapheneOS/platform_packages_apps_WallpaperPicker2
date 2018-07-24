@@ -24,7 +24,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
-import android.support.media.ExifInterface;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -43,13 +42,11 @@ public final class ContentUriAsset extends StreamableAsset {
     private static final String TAG = "ContentUriAsset";
     private static final String JPEG_MIME_TYPE = "image/jpeg";
     private static final String PNG_MIME_TYPE = "image/png";
-    private static final int EXIF_ORIENTATION_NORMAL = 1;
-    private static final int EXIF_ORIENTATION_UNKNOWN = -1;
 
     private final Context mContext;
     private final Uri mUri;
 
-    private ExifInterface mExifInterface;
+    private ExifInterfaceCompat mExifCompat;
     private int mExifOrientation;
 
     /**
@@ -57,7 +54,7 @@ public final class ContentUriAsset extends StreamableAsset {
      * @param uri     Content URI locating the asset.
      */
     public ContentUriAsset(Context context, Uri uri) {
-        mExifOrientation = EXIF_ORIENTATION_UNKNOWN;
+        mExifOrientation = ExifInterfaceCompat.EXIF_ORIENTATION_UNKNOWN;
         mContext = context.getApplicationContext();
         mUri = uri;
     }
@@ -65,9 +62,9 @@ public final class ContentUriAsset extends StreamableAsset {
     @Override
     public void decodeBitmapRegion(final Rect rect, int targetWidth, int targetHeight,
                                    final BitmapReceiver receiver) {
-        // BitmapRegionDecoder only supports images encoded in either JPEG or PNG, so if the content URI
-        // asset is encoded with another format (for example, GIF), then fall back to cropping a bitmap
-        // region from the full-sized bitmap.
+        // BitmapRegionDecoder only supports images encoded in either JPEG or PNG, so if the content
+        // URI asset is encoded with another format (for example, GIF), then fall back to cropping a
+        // bitmap region from the full-sized bitmap.
         if (isJpeg() || isPng()) {
             super.decodeBitmapRegion(rect, targetWidth, targetHeight, receiver);
             return;
@@ -77,8 +74,8 @@ public final class ContentUriAsset extends StreamableAsset {
             @Override
             public void onDimensionsDecoded(@Nullable Point dimensions) {
                 if (dimensions == null) {
-                    Log.e(TAG, "There was an error decoding the asset's raw dimensions with content URI: "
-                            + mUri);
+                    Log.e(TAG, "There was an error decoding the asset's raw dimensions with " +
+                            "content URI: " + mUri);
                     receiver.onBitmapDecoded(null);
                     return;
                 }
@@ -87,8 +84,8 @@ public final class ContentUriAsset extends StreamableAsset {
                     @Override
                     public void onBitmapDecoded(@Nullable Bitmap fullBitmap) {
                         if (fullBitmap == null) {
-                            Log.e(TAG, "There was an error decoding the asset's full bitmap with content URI: "
-                                    + mUri);
+                            Log.e(TAG, "There was an error decoding the asset's full bitmap with " +
+                                    "content URI: " + mUri);
                             receiver.onBitmapDecoded(null);
                             return;
                         }
@@ -125,33 +122,32 @@ public final class ContentUriAsset extends StreamableAsset {
      * empty (i.e., only whitespace).
      */
     public String readExifTag(String tagId) {
-        if (mExifInterface == null) {
-            InputStream inputStream = null;
-            try {
-                inputStream = openInputStream();
-                if (inputStream != null) {
-                    mExifInterface = new ExifInterface(inputStream);
-                }
-            } catch (IOException e) {
-                Log.w(TAG, "Unable to read EXIF tags for content URI asset", e);
-                return null;
-            } finally {
-                if (inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        Log.e(TAG, "Unable to close InputStream", e);
-                    }
-                }
-            }
+        ensureExifInterface();
+        if (mExifCompat == null) {
+            Log.w(TAG, "Unable to read EXIF tags for content URI asset");
+            return null;
         }
 
-        String attribute = mExifInterface.getAttribute(tagId);
+
+        String attribute = mExifCompat.getAttribute(tagId);
         if (attribute == null || attribute.trim().isEmpty()) {
             return null;
         }
 
         return attribute.trim();
+    }
+
+    private void ensureExifInterface() {
+        if (mExifCompat == null) {
+            try (InputStream inputStream = openInputStream()) {
+                if (inputStream != null) {
+                    mExifCompat = new ExifInterfaceCompat(inputStream);
+                }
+            } catch (IOException e) {
+                Log.w(TAG, "Couldn't read stream for " + mUri, e);
+            }
+        }
+
     }
 
     @Override
@@ -166,7 +162,7 @@ public final class ContentUriAsset extends StreamableAsset {
 
     @Override
     protected int getExifOrientation() {
-        if (mExifOrientation != EXIF_ORIENTATION_UNKNOWN) {
+        if (mExifOrientation != ExifInterfaceCompat.EXIF_ORIENTATION_UNKNOWN) {
             return mExifOrientation;
         }
 
@@ -175,35 +171,19 @@ public final class ContentUriAsset extends StreamableAsset {
     }
 
     /**
-     * Returns the EXIF rotation for the content URI asset. This method should only be called off the
-     * main UI thread.
+     * Returns the EXIF rotation for the content URI asset. This method should only be called off
+     * the main UI thread.
      */
     private int readExifOrientation() {
-        if (mExifInterface == null) {
-            InputStream inputStream = null;
-            try {
-                inputStream = openInputStream();
-                if (inputStream != null) {
-                    mExifInterface = new ExifInterface(inputStream);
-                }
-            } catch (IOException e) {
-                Log.w(TAG, "Unable to read EXIF rotation for content URI asset with content URI: "
-                        + mUri, e);
-                return EXIF_ORIENTATION_NORMAL;
-            } finally {
-                if (inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        Log.e(TAG, "Unable to close InputStream", e);
-                    }
-                }
-            }
+        ensureExifInterface();
+        if (mExifCompat == null) {
+            Log.w(TAG, "Unable to read EXIF rotation for content URI asset with content URI: "
+                    + mUri);
+            return ExifInterfaceCompat.EXIF_ORIENTATION_NORMAL;
         }
 
-        int orientationAttribute =
-                mExifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, EXIF_ORIENTATION_NORMAL);
-        return orientationAttribute;
+        return mExifCompat.getAttributeInt(ExifInterfaceCompat.TAG_ORIENTATION,
+                ExifInterfaceCompat.EXIF_ORIENTATION_NORMAL);
     }
 
     @Override
@@ -240,7 +220,8 @@ public final class ContentUriAsset extends StreamableAsset {
             }
 
             return Bitmap.createBitmap(
-                    mFromBitmap, mCropRect.left, mCropRect.top, mCropRect.width(), mCropRect.height());
+                    mFromBitmap, mCropRect.left, mCropRect.top, mCropRect.width(),
+                    mCropRect.height());
         }
 
         @Override
