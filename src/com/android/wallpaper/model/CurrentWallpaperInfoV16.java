@@ -18,8 +18,6 @@ package com.android.wallpaper.model;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Parcel;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
 
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.CurrentWallpaperAssetV16;
@@ -30,6 +28,9 @@ import com.android.wallpaper.module.NoBackupImageWallpaper;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 
 /**
  * Represents the wallpaper currently set to the device for API 16 through 23. Should not be used

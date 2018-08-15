@@ -15,9 +15,9 @@
  */
 package com.android.wallpaper.module;
 
-import android.support.annotation.IntDef;
-
 import com.android.wallpaper.module.WallpaperPersister.WallpaperPosition;
+
+import androidx.annotation.IntDef;
 
 /**
  * Interface for logging user events in the wallpaper picker.

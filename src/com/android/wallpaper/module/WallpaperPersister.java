@@ -18,13 +18,14 @@ package com.android.wallpaper.module;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.support.annotation.IntDef;
-import android.support.annotation.Nullable;
 
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.model.WallpaperInfo;
 
 import java.util.List;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
 
 /**
  * Interface for classes which persist wallpapers to the system.

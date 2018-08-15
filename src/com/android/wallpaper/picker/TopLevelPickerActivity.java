@@ -32,17 +32,6 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.service.wallpaper.WallpaperService;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetBehavior.BottomSheetCallback;
-import android.support.design.widget.TabLayout;
-import android.support.design.widget.TabLayout.OnTabSelectedListener;
-import android.support.design.widget.TabLayout.Tab;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -87,13 +76,27 @@ import com.android.wallpaper.module.WallpaperRotationRefresher.Listener;
 import com.android.wallpaper.picker.PreviewActivity.PreviewActivityIntentFactory;
 import com.android.wallpaper.picker.ViewOnlyPreviewActivity.ViewOnlyPreviewActivityIntentFactory;
 import com.android.wallpaper.picker.WallpaperDisabledFragment.WallpaperSupportLevel;
-import com.android.wallpaper.picker.individual.IndividualPickerActivity.IndividualPickerActivityIntentFactory;
+import com.android.wallpaper.picker.individual.IndividualPickerActivity
+        .IndividualPickerActivityIntentFactory;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.ThrowableAnalyzer;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
+import com.google.android.material.tabs.TabLayout.Tab;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 /**
  * Activity allowing users to select a category of wallpapers to choose from.

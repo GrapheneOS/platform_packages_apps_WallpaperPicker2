@@ -15,8 +15,6 @@
  */
 package com.android.wallpaper.asset;
 
-import android.support.annotation.Nullable;
-
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.Options;
@@ -26,6 +24,8 @@ import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.MultiModelLoaderFactory;
 
 import java.io.InputStream;
+
+import androidx.annotation.Nullable;
 
 /**
  * Glide ModelLoader which loads InputStreams from ResourceAssets.

@@ -3,10 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.android.wallpaper">
 
-  <uses-sdk
-      android:minSdkVersion="16"
-      android:targetSdkVersion="27"/>
-
   <!-- Custom permission to enforce that only this app can notify the running live wallpaper that
        the rotating wallpaper image data changed. -->
   <permission

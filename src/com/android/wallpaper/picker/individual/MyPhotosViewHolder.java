@@ -23,8 +23,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -32,6 +30,9 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.ContentUriAsset;
 import com.android.wallpaper.picker.MyPhotosLauncher;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 /**
  * ViewHolder for a "my photos" tile presented in an individual category grid.

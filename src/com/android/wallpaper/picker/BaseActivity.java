@@ -15,7 +15,7 @@
  */
 package com.android.wallpaper.picker;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Base activity that keeps track of whether fragment transactions are safe to commit given the

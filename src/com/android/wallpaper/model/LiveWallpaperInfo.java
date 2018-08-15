@@ -26,7 +26,6 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Parcel;
 import android.service.wallpaper.WallpaperService;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.android.wallpaper.R;
@@ -45,6 +44,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 /**
  * Represents a live wallpaper from the system.

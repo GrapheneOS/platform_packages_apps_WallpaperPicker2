@@ -16,10 +16,11 @@
 package com.android.wallpaper.widget;
 
 import android.graphics.Rect;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.util.Log;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration;
 
 /**
  * Decorates a grid view item with margins on each side. Note that this pads on the bottom and

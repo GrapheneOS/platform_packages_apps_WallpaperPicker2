@@ -18,11 +18,12 @@ package com.android.wallpaper.picker;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 
 import com.android.wallpaper.R;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 /**
  * Dialog fragment which communicates a message that loading the wallpaper failed with an OK button,

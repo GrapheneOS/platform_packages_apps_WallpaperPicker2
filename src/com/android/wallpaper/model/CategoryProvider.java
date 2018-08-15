@@ -15,7 +15,7 @@
  */
 package com.android.wallpaper.model;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * Fetches and provides wallpaper categories to any registered {@link CategoryReceiver}s.

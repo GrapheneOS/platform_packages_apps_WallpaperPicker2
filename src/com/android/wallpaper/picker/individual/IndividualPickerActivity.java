@@ -25,10 +25,6 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -48,6 +44,11 @@ import com.android.wallpaper.picker.BaseActivity;
 import com.android.wallpaper.picker.PreviewActivity.PreviewActivityIntentFactory;
 import com.android.wallpaper.util.ActivityUtils;
 import com.android.wallpaper.util.DiskBasedLogger;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 /**
  * Activity that can be launched from the Android wallpaper picker and allows users to pick from

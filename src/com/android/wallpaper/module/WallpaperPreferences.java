@@ -17,10 +17,11 @@ package com.android.wallpaper.module;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.support.annotation.IntDef;
-import android.support.annotation.Nullable;
 
 import java.util.List;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
 
 /**
  * Interface for persisting and retrieving wallpaper specific preferences.

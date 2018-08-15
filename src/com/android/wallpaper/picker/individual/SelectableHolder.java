@@ -15,7 +15,7 @@
  */
 package com.android.wallpaper.picker.individual;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 
 /**
  * Interface for a ViewHolder class which has a selection state which can be set by a caller.

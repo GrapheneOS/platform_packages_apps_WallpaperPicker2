@@ -15,10 +15,10 @@
  */
 package com.android.wallpaper.module;
 
-import android.support.annotation.Nullable;
-
 import com.android.wallpaper.model.WallpaperMetadata;
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
+
+import androidx.annotation.Nullable;
 
 /**
  * Interface for classes which refresh stored wallpaper metadata against the currently set

@@ -19,7 +19,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
@@ -29,14 +28,6 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.service.wallpaper.WallpaperService;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -59,16 +50,12 @@ import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.compat.ButtonDrawableSetterCompat;
 import com.android.wallpaper.config.Flags;
 import com.android.wallpaper.model.Category;
-import com.android.wallpaper.model.ThirdPartyAppCategory;
-import com.android.wallpaper.model.WallpaperCategory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory;
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory.WallpaperInfoCallback;
 import com.android.wallpaper.module.ExploreIntentChecker;
-import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.LockWallpaperStatusChecker;
-import com.android.wallpaper.module.PackageStatusNotifier;
 import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
@@ -79,12 +66,21 @@ import com.android.wallpaper.util.DisplayMetricsRetriever;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.TileSizeCalculator;
 import com.android.wallpaper.widget.GridMarginDecoration;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 /**
  * Displays the Main UI for picking an category of wallpapers to choose from.

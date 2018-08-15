@@ -26,10 +26,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+
+import androidx.annotation.Nullable;
 
 /**
  * Interface representing an image asset.

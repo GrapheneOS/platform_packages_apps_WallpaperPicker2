@@ -18,14 +18,15 @@ package com.android.wallpaper.picker;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.compat.ButtonDrawableSetterCompat;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.fragment.app.DialogFragment;
 
 /**
  * Dialog fragment which shows the "Set wallpaper" destination dialog for N+ devices. Lets user

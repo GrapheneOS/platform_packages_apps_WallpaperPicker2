@@ -23,7 +23,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -34,6 +33,8 @@ import com.bumptech.glide.request.RequestOptions;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import androidx.annotation.Nullable;
 
 /**
  * Represents an asset located via an Android content URI.

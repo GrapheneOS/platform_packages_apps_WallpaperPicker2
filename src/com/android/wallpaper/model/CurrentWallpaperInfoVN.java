@@ -19,8 +19,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.ParcelFileDescriptor;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
 import android.util.Log;
 
 import com.android.wallpaper.asset.Asset;
@@ -36,6 +34,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 
 /**
  * Represents the currently set wallpaper on N+ devices. Should not be used to set a new wallpaper.

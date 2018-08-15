@@ -15,7 +15,7 @@
  */
 package com.android.wallpaper.picker;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * Interface for a presenter class which displays the currently set wallpaper(s) in the view.

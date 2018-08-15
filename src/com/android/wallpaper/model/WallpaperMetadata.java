@@ -16,10 +16,11 @@
 package com.android.wallpaper.model;
 
 import android.app.WallpaperInfo;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
 
 import java.util.List;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 
 /**
  * Lightweight wrapper for user-facing wallpaper metadata.

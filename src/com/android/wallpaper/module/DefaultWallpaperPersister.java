@@ -28,7 +28,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
@@ -58,6 +57,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 /**
  * Concrete implementation of WallpaperPersister which actually sets wallpapers to the system via

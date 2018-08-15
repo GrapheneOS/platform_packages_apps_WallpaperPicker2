@@ -20,14 +20,15 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Parcelable;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.IntDef;
-import android.support.annotation.StringRes;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 
 import java.util.List;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IntDef;
+import androidx.annotation.StringRes;
 
 /**
  * Interface for wallpaper info model.

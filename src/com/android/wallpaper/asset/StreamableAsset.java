@@ -24,11 +24,12 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import androidx.annotation.Nullable;
 
 /**
  * Represents Asset types for which bytes can be read directly, allowing for flexible bitmap

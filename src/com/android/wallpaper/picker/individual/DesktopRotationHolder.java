@@ -16,7 +16,6 @@
 package com.android.wallpaper.picker.individual;
 
 import android.app.Activity;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -27,6 +26,8 @@ import com.android.wallpaper.model.WallpaperRotationInitializer;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.picker.RotationStarter;
+
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 /**
  * IndividualHolder subclass for a wallpaper tile in the RecyclerView for which a click should

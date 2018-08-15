@@ -17,9 +17,10 @@ package com.android.wallpaper.widget;
 
 import android.content.Context;
 import android.graphics.Matrix;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import androidx.annotation.Nullable;
 
 /**
  * Custom ImageView that mimics the home launcher screen wallpaper position by aligning start and

@@ -1,11 +1,11 @@
 package com.android.wallpaper.asset;
 
-import android.support.media.ExifInterface;
-
 import com.android.wallpaper.compat.BuildCompat;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import androidx.exifinterface.media.ExifInterface;
 
 /**
  * Provides access to basic ExifInterface APIs using {@link android.media.ExifInterface} in OMR1+

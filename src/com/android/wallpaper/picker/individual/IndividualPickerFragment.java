@@ -26,12 +26,6 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.service.wallpaper.WallpaperService;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +68,7 @@ import com.android.wallpaper.picker.individual.SetIndividualHolder.OnSetListener
 import com.android.wallpaper.util.DiskBasedLogger;
 import com.android.wallpaper.util.TileSizeCalculator;
 import com.android.wallpaper.widget.GridMarginDecoration;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
 
@@ -81,6 +76,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 /**
  * Displays the Main UI for picking an individual wallpaper image.
