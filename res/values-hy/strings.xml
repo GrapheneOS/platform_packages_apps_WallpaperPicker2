@@ -69,7 +69,7 @@
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"Սարքում պահված"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Android պաստառ"</string>
     <string name="live_wallpapers_category_title" msgid="1814374812192366349">"Կենդանի պաստառներ"</string>
-    <string name="my_photos_category_title" msgid="4294567122144565273">"Իմ լուսանկարները"</string>
+    <string name="my_photos_category_title" msgid="4294567122144565273">"Իմ նկարները"</string>
     <string name="my_photos_generic_wallpaper_title" msgid="7002867526154631172">"Իմ լուսանկարը"</string>
     <string name="fallback_wallpaper_title" msgid="6154655421012506001">"Պաստառ"</string>
     <string name="app_not_found" msgid="4431461707854088231">"Հավելվածը տեղադրված չէ:"</string>
