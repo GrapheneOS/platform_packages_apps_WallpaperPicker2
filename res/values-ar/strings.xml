@@ -34,8 +34,8 @@
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"شاشة التأمين"</string>
     <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"الشاشة الرئيسية وشاشة التأمين"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"خلفية الصور التي يتم عرضها بالتناوب"</string>
-    <string name="permission_needed_explanation" msgid="139166837541426823">"لعرض الخلفية الحالية هنا، يحتاج تطبيق <xliff:g id="APP_NAME">%1$s</xliff:g> إلى الوصول إلى سعة تخزين الجهاز."</string>
-    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"لعرض الخلفية الحالية هنا، يحتاج تطبيق \"الخلفيات\" إلى الدخول إلى سعة تخزين جهازك.\n\nلتغيير هذا الإعداد، انتقل إلى \"منطقة الأذونات\" في المعلومات التي يقدّمها تطبيق \"الخلفيات\"."</string>
+    <string name="permission_needed_explanation" msgid="139166837541426823">"لعرض الخلفية الحالية هنا، يحتاج تطبيق <xliff:g id="APP_NAME">%1$s</xliff:g> إلى الوصول إلى مساحة تخزين الجهاز."</string>
+    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"لعرض الخلفية الحالية هنا، يحتاج تطبيق \"الخلفيات\" إلى الدخول إلى مساحة تخزين جهازك.\n\nلتغيير هذا الإعداد، انتقل إلى \"منطقة الأذونات\" في المعلومات التي يقدّمها تطبيق \"الخلفيات\"."</string>
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"السماح بالدخول"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"خدمة الخلفيات المتحركة التي يتم عرضها بالتناوب"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"خلفية يومية"</string>
