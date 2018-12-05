@@ -25,6 +25,7 @@ import android.service.wallpaper.WallpaperService;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.compat.WallpaperManagerCompat;
@@ -54,7 +55,7 @@ import java.util.List;
  */
 public class WallpaperPickerDelegate implements MyPhotosLauncher {
 
-    private final BaseActivity mActivity;
+    private final FragmentActivity mActivity;
     private final WallpapersUiContainer mContainer;
     static final int SHOW_CATEGORY_REQUEST_CODE = 0;
     static final int PREVIEW_WALLPAPER_REQUEST_CODE = 1;
@@ -75,7 +76,7 @@ public class WallpaperPickerDelegate implements MyPhotosLauncher {
     private PackageStatusNotifier.Listener mThirdPartyStatusListener;
     private CategoryProvider mCategoryProvider;
 
-    public WallpaperPickerDelegate(WallpapersUiContainer container, BaseActivity activity,
+    public WallpaperPickerDelegate(WallpapersUiContainer container, FragmentActivity activity,
             Injector injector) {
         mContainer = container;
         mActivity = activity;
