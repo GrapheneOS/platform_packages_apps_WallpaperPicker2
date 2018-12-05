@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.picker;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -45,6 +46,14 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.compat.ButtonDrawableSetterCompat;
@@ -74,19 +83,26 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
-
 /**
- * Displays the Main UI for picking an category of wallpapers to choose from.
+ * Displays the Main UI for picking a category of wallpapers to choose from.
  */
-public class CategoryPickerFragment extends Fragment {
-    private static final String TAG = "CategoryPickerFragment";
+public class CategoryFragment extends Fragment {
+
+    /**
+     * Interface to be implemented by an Activity hosting a {@link CategoryFragment}
+     */
+    public interface CategoryFragmentHost {
+
+        void requestExternalStoragePermission(PermissionChangedListener listener);
+
+        boolean isReadExternalStoragePermissionGranted();
+
+        void showViewOnlyPreview(WallpaperInfo wallpaperInfo);
+
+        void show(String collectionId);
+    }
+
+    private static final String TAG = "CategoryFragment";
 
     // The number of ViewHolders that don't pertain to category tiles.
     // Currently 2: one for the metadata section and one for the "Select wallpaper" header.
@@ -111,7 +127,7 @@ public class CategoryPickerFragment extends Fragment {
     private ProgressDialog mRefreshWallpaperProgressDialog;
     private boolean mTestingMode;
 
-    public CategoryPickerFragment() {
+    public CategoryFragment() {
     }
 
     @Override
@@ -234,7 +250,7 @@ public class CategoryPickerFragment extends Fragment {
     }
 
     /**
-     * Notifies the CategoryPickerFragment that no further categories are expected so it may hide
+     * Notifies the CategoryFragment that no further categories are expected so it may hide
      * the loading indicator.
      */
     public void doneFetchingCategories() {
@@ -254,13 +270,18 @@ public class CategoryPickerFragment extends Fragment {
     }
 
     private boolean canShowCurrentWallpaper() {
-        TopLevelPickerActivity activity = (TopLevelPickerActivity) getActivity();
+        Activity activity = getActivity();
+        CategoryFragmentHost host = getFragmentHost();
         PackageManager packageManager = activity.getPackageManager();
         String packageName = activity.getPackageName();
 
         boolean hasReadWallpaperInternal = packageManager.checkPermission(
                 PERMISSION_READ_WALLPAPER_INTERNAL, packageName) == PackageManager.PERMISSION_GRANTED;
-        return hasReadWallpaperInternal || activity.isReadExternalStoragePermissionGranted();
+        return hasReadWallpaperInternal || host.isReadExternalStoragePermissionGranted();
+    }
+
+    private CategoryFragmentHost getFragmentHost() {
+        return (CategoryFragmentHost) getActivity();
     }
 
     /**
@@ -511,7 +532,7 @@ public class CategoryPickerFragment extends Fragment {
             mWallpaperImage.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((TopLevelPickerActivity) getActivity()).showViewOnlyPreview(mWallpaperInfo);
+                    getFragmentHost().showViewOnlyPreview(mWallpaperInfo);
                     eventLogger.logCurrentWallpaperPreviewed();
                 }
             });
@@ -795,7 +816,7 @@ public class CategoryPickerFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     eventLogger.logCurrentWallpaperPreviewed();
-                    ((TopLevelPickerActivity) getActivity()).showViewOnlyPreview(mHomeWallpaperInfo);
+                    getFragmentHost().showViewOnlyPreview(mHomeWallpaperInfo);
                 }
             });
         }
@@ -875,7 +896,7 @@ public class CategoryPickerFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     eventLogger.logCurrentWallpaperPreviewed();
-                    ((TopLevelPickerActivity) getActivity()).showViewOnlyPreview(mLockWallpaperInfo);
+                    getFragmentHost().showViewOnlyPreview(mLockWallpaperInfo);
                 }
             });
         }
@@ -925,7 +946,7 @@ public class CategoryPickerFragment extends Fragment {
                 return;
             }
 
-            ((TopLevelPickerActivity) getActivity()).show(mCategory.getCollectionId());
+            getFragmentHost().show(mCategory.getCollectionId());
         }
 
         /**
@@ -997,7 +1018,7 @@ public class CategoryPickerFragment extends Fragment {
             mAllowAccessButton =
                     (Button) view.findViewById(R.id.permission_needed_allow_access_button);
             mAllowAccessButton.setOnClickListener((View v) -> {
-                ((TopLevelPickerActivity) getActivity()).requestExternalStoragePermission(mAdapter);
+                getFragmentHost().requestExternalStoragePermission(mAdapter);
             });
 
             // Replace explanation text with text containing the Wallpapers app name which replaces the
