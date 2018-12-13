@@ -48,7 +48,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
 import androidx.recyclerview.widget.RecyclerView;
@@ -86,7 +85,7 @@ import java.util.List;
 /**
  * Displays the Main UI for picking a category of wallpapers to choose from.
  */
-public class CategoryFragment extends Fragment {
+public class CategoryFragment extends ToolbarFragment {
 
     /**
      * Interface to be implemented by an Activity hosting a {@link CategoryFragment}
@@ -100,6 +99,12 @@ public class CategoryFragment extends Fragment {
         void showViewOnlyPreview(WallpaperInfo wallpaperInfo);
 
         void show(String collectionId);
+    }
+
+    public static CategoryFragment newInstance(CharSequence title) {
+        CategoryFragment fragment = new CategoryFragment();
+        fragment.setArguments(ToolbarFragment.createArguments(title));
+        return fragment;
     }
 
     private static final String TAG = "CategoryFragment";
@@ -121,7 +126,7 @@ public class CategoryFragment extends Fragment {
 
     private RecyclerView mImageGrid;
     private CategoryAdapter mAdapter;
-    private ArrayList<Category> mCategories;
+    private ArrayList<Category> mCategories = new ArrayList<>();
     private Point mTileSizePx;
     private boolean mAwaitingCategories;
     private ProgressDialog mRefreshWallpaperProgressDialog;
@@ -133,7 +138,6 @@ public class CategoryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCategories = new ArrayList<>();
         mAdapter = new CategoryAdapter(mCategories);
     }
 
@@ -158,8 +162,13 @@ public class CategoryFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getNumColumns());
         gridLayoutManager.setSpanSizeLookup(new CategorySpanSizeLookup(mAdapter));
         mImageGrid.setLayoutManager(gridLayoutManager);
-
+        setUpToolbar(view);
         return view;
+    }
+
+    @Override
+    public CharSequence getDefaultTitle() {
+        return getContext().getString(R.string.app_name);
     }
 
     @Override
