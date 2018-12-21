@@ -24,7 +24,7 @@
     <string name="try_again" msgid="8278874823700921234">"ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"ਵਾਲਪੇਪਰ ਸੈੱਟ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ।"</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"ਵਾਲਪੇਪਰ ਨੂੰ ਲੋਡ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ। ਚਿੱਤਰ ਖਰਾਬ ਜਾਂ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।"</string>
-    <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"ਵਰਤਮਾਨ ਤੌਰ \'ਤੇ ਸੈੱਟ ਹੈ"</string>
+    <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"ਇਸ ਵੇਲੇ ਸੈੱਟ ਹੈ"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"ਰੋਜ਼ਾਨਾ ਵਾਲਪੇਪਰ"</string>
     <string name="home_screen_message" msgid="106444102822522813">"ਹੋਮ ਸਕ੍ਰੀਨ"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"ਲਾਕ ਸਕ੍ਰੀਨ"</string>

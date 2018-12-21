@@ -27,12 +27,12 @@
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Установлено как обои"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Обои на каждый день"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Главный экран"</string>
-    <string name="lock_screen_message" msgid="1534506081955058013">"Экран блокировки"</string>
+    <string name="lock_screen_message" msgid="1534506081955058013">"Заблокированный экран"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Оба экрана"</string>
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Установка обоев"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Главный экран"</string>
-    <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Экран блокировки"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Главный экран и экран блокировки"</string>
+    <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Заблокированный экран"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Главный экран и заблокированный экран"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Автоматически меняющиеся обои"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Чтобы посмотреть текущие обои здесь, предоставьте приложению \"<xliff:g id="APP_NAME">%1$s</xliff:g>\" доступ к памяти устройства."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Чтобы посмотреть текущие обои здесь, предоставьте приложению \"Обои\" доступ к памяти устройства.\n\nЗакрыть доступ можно, нажав \"Настройки &gt; Приложения &gt; Обои &gt; Разрешения\"."</string>

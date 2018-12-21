@@ -41,17 +41,17 @@
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"দৈনিক ৱালপেপাৰ"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"অন কৰিবলৈ টিপক"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"প্ৰতি দিনে ৱালপেপাৰ স্বয়ংক্ৰিয়ভাৱে সলনি হ\'ব। ছেট আপ সম্পূৰ্ণ কৰিবলৈ পৰৱৰ্তী স্ক্ৰীণত &lt;strong&gt;ৱালপেপাৰ ছেট কৰক&lt;/strong&gt;-ত টিপক।"</string>
-    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"ভৱিষ্যতৰ ৱালপেপাৰসমূহ কেৱল ৱাই-ফাইৰ জৰিয়তে ডাউনল\'ড কৰক"</string>
+    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"ভৱিষ্যতৰ ৱালপেপাৰসমূহ কেৱল ৱাই-ফাইৰ জৰিয়তে ডাউনল’ড কৰক"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"অব্যাহত ৰাখক"</string>
-    <string name="start_rotation_progress_message" msgid="7872623873682262083">"প্ৰথমখন ৱালপেপাৰ ডাউনল\'ড কৰি থকা হৈছে…"</string>
-    <string name="start_rotation_error_message" msgid="3053799836719618972">"প্ৰথমখন ৱালপেপাৰ ডাউনল\'ড কৰিব পৰা নগ\'ল। অনুগ্ৰহ কৰি আপোনাৰ নেটৱর্ক ছেটিংসমূহ পৰীক্ষা কৰি আকৌ চেষ্টা কৰক।"</string>
+    <string name="start_rotation_progress_message" msgid="7872623873682262083">"প্ৰথমখন ৱালপেপাৰ ডাউনল’ড কৰি থকা হৈছে…"</string>
+    <string name="start_rotation_error_message" msgid="3053799836719618972">"প্ৰথমখন ৱালপেপাৰ ডাউনল’ড কৰিব পৰা নগ\'ল। অনুগ্ৰহ কৰি আপোনাৰ নেটৱর্ক ছেটিংসমূহ পৰীক্ষা কৰি আকৌ চেষ্টা কৰক।"</string>
     <string name="start_rotation_dialog_body" msgid="7903554799046364916">"প্ৰতি দিনে ৱালপেপাৰ স্বয়ংক্ৰিয়ভাৱে সলনি হ\'ব"</string>
     <string name="settings_button_label" msgid="8724734130079207955">"ছেটিংসমূহ"</string>
     <string name="explore" msgid="7468719504199497281">"অন্বেষণ কৰক"</string>
     <string name="next_wallpaper" msgid="3911873152952596232">"পৰৱর্তী ৱালপেপাৰ"</string>
     <string name="wallpaper_disabled_message" msgid="7309484130562148185">"ৱালপেপাৰ ছেট কৰাৰ সুবিধাটো এই ডিভাইচটোত অক্ষম থোৱা আছে"</string>
     <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"আপোনাৰ ডিভাইচৰ প্ৰশাসকে ৱালপেপাৰ ছেট কৰাৰ সুবিধাটো অক্ষম কৰি থৈছে"</string>
-    <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"ৱালপেপাৰ সফলতাৰে ছেট কৰা হ\'ল"</string>
+    <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"ৱালপেপাৰ সফলতাৰে ছেট কৰা হ’ল"</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"ৱালপেপাৰ চাবলৈ আপোনাক ইণ্টাৰনেট সংযোগৰ প্ৰয়োজন। অনুগ্ৰহ কৰি ইণ্টাৰনেটৰ সৈতে সংযোগ কৰক আৰু আকৌ চেষ্টা কৰক।"</string>
     <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"বর্তমান ছেট কৰি থোৱা গৃহ স্ক্ৰীণৰ ৱালপেপাৰৰ থাম্বনেইল"</string>
     <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"বর্তমান ছেট কৰি থোৱা লক স্ক্ৰীণৰ ৱালপেপাৰৰ থাম্বনেইল"</string>
