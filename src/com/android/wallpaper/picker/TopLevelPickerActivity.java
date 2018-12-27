@@ -235,7 +235,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     }
 
     private void initializeMobile() {
-        setContentView(R.layout.activity_single_fragment_with_toolbar);
+        setContentView(R.layout.activity_single_fragment);
 
         // Set toolbar as the action bar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
