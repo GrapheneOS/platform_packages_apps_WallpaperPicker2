@@ -701,20 +701,6 @@ public class PreviewFragment extends Fragment implements
 
                             setDefaultWallpaperZoomAndScroll();
                             crossFadeInMosaicView();
-
-                            // Record memory snapshot of app one second delayed to allow time for MosaicView tiles
-                            // to be decoded and overlaid on top of the page bitmap.
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (getActivity() == null) {
-                                        return;
-                                    }
-
-                                    InjectorProvider.getInjector().getPerformanceMonitor()
-                                            .recordFullResPreviewLoadedMemorySnapshot();
-                                }
-                            }, 1000);
                         }
                         if (mProgressDrawable != null) {
                             mProgressDrawable.stop();
