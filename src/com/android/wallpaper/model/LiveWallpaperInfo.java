@@ -87,7 +87,7 @@ public class LiveWallpaperInfo extends WallpaperInfo {
         mVisibleTitle = visibleTitle;
     }
 
-    private LiveWallpaperInfo(Parcel in) {
+    LiveWallpaperInfo(Parcel in) {
         mInfo = in.readParcelable(android.app.WallpaperInfo.class.getClassLoader());
         mVisibleTitle = in.readInt() == 1;
     }
@@ -240,7 +240,7 @@ public class LiveWallpaperInfo extends WallpaperInfo {
         return wallpaperInfos;
     }
 
-    private static boolean isSystemApp(ApplicationInfo appInfo) {
+    static boolean isSystemApp(ApplicationInfo appInfo) {
         return (appInfo.flags & (ApplicationInfo.FLAG_SYSTEM
                 | ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)) != 0;
     }
