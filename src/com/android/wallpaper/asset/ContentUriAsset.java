@@ -26,6 +26,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
@@ -33,8 +35,6 @@ import com.bumptech.glide.request.RequestOptions;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-
-import androidx.annotation.Nullable;
 
 /**
  * Represents an asset located via an Android content URI.
@@ -46,6 +46,7 @@ public final class ContentUriAsset extends StreamableAsset {
 
     private final Context mContext;
     private final Uri mUri;
+    private final RequestOptions mRequestOptions;
 
     private ExifInterfaceCompat mExifCompat;
     private int mExifOrientation;
@@ -53,11 +54,21 @@ public final class ContentUriAsset extends StreamableAsset {
     /**
      * @param context The application's context.
      * @param uri     Content URI locating the asset.
+     * @param requestOptions {@link RequestOptions} to be applied when loading the asset.
      */
-    public ContentUriAsset(Context context, Uri uri) {
+    public ContentUriAsset(Context context, Uri uri, RequestOptions requestOptions) {
         mExifOrientation = ExifInterfaceCompat.EXIF_ORIENTATION_UNKNOWN;
         mContext = context.getApplicationContext();
         mUri = uri;
+        mRequestOptions = requestOptions;
+    }
+
+    /**
+     * @param context The application's context.
+     * @param uri     Content URI locating the asset.
+     */
+    public ContentUriAsset(Context context, Uri uri) {
+        this(context, uri, RequestOptions.centerCropTransform());
     }
 
     @Override
@@ -193,7 +204,7 @@ public final class ContentUriAsset extends StreamableAsset {
         Glide.with(activity)
                 .asDrawable()
                 .load(mUri)
-                .apply(RequestOptions.centerCropTransform()
+                .apply(mRequestOptions
                         .placeholder(new ColorDrawable(placeholderColor)))
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView);
