@@ -69,7 +69,8 @@ import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
 import com.android.wallpaper.module.WallpaperRotationRefresher;
 import com.android.wallpaper.module.WallpaperRotationRefresher.Listener;
-import com.android.wallpaper.picker.MyPhotosLauncher.PermissionChangedListener;
+import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
+import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
 import com.android.wallpaper.util.DisplayMetricsRetriever;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.TileSizeCalculator;
@@ -90,7 +91,7 @@ public class CategoryFragment extends ToolbarFragment {
     /**
      * Interface to be implemented by an Activity hosting a {@link CategoryFragment}
      */
-    public interface CategoryFragmentHost {
+    public interface CategoryFragmentHost extends MyPhotosStarterProvider {
 
         void requestExternalStoragePermission(PermissionChangedListener listener);
 
@@ -940,7 +941,7 @@ public class CategoryFragment extends ToolbarFragment {
             eventLogger.logCategorySelected(mCategory.getCollectionId());
 
             if (mCategory.supportsCustomPhotos()) {
-                ((MyPhotosLauncher) getActivity()).requestCustomPhotoPicker(
+                getFragmentHost().getMyPhotosStarter().requestCustomPhotoPicker(
                         new PermissionChangedListener() {
                             @Override
                             public void onPermissionsGranted() {

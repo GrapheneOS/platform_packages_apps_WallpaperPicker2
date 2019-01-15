@@ -89,7 +89,7 @@ import java.util.List;
  */
 public class TopLevelPickerActivity extends BaseActivity implements WallpapersUiContainer,
         CurrentWallpaperBottomSheetPresenter, SetWallpaperErrorDialogFragment.Listener,
-        MyPhotosLauncher, CategoryFragmentHost {
+        MyPhotosStarter, CategoryFragmentHost {
 
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "toplevel_set_wallpaper_error_dialog";
@@ -834,6 +834,11 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     public void onWallpapersReady() {
         setDesktopLoading(false);
         setCurrentWallpapersExpanded(true);
+    }
+
+    @Override
+    public MyPhotosStarter getMyPhotosStarter() {
+        return this;
     }
 
     @Override

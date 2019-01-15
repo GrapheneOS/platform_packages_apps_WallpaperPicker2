@@ -53,7 +53,7 @@ import java.util.List;
  * Implements all the logic for handling a WallpaperPicker container Activity.
  * @see TopLevelPickerActivity for usage details.
  */
-public class WallpaperPickerDelegate implements MyPhotosLauncher {
+public class WallpaperPickerDelegate implements MyPhotosStarter {
 
     private final FragmentActivity mActivity;
     private final WallpapersUiContainer mContainer;

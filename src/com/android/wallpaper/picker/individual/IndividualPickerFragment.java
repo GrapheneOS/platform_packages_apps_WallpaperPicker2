@@ -35,6 +35,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.Asset.DrawableLoadedListener;
@@ -59,6 +66,7 @@ import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.picker.BaseActivity;
 import com.android.wallpaper.picker.CurrentWallpaperBottomSheetPresenter;
+import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
 import com.android.wallpaper.picker.RotationStarter;
 import com.android.wallpaper.picker.SetWallpaperErrorDialogFragment;
 import com.android.wallpaper.picker.StartRotationDialogFragment;
@@ -76,13 +84,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 /**
  * Displays the Main UI for picking an individual wallpaper image.
@@ -894,7 +895,9 @@ public class IndividualPickerFragment extends Fragment
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.grid_item_my_photos, parent, false);
 
-            return new MyPhotosViewHolder(getActivity(), mTileSizePx.y, view);
+            return new MyPhotosViewHolder(getActivity(),
+                    ((MyPhotosStarterProvider) getActivity()).getMyPhotosStarter(),
+                    mTileSizePx.y, view);
         }
 
         /**

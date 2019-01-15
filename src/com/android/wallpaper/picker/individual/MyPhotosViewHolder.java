@@ -26,34 +26,37 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.ContentUriAsset;
-import com.android.wallpaper.picker.MyPhotosLauncher;
-
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+import com.android.wallpaper.picker.MyPhotosStarter;
 
 /**
  * ViewHolder for a "my photos" tile presented in an individual category grid.
  */
 public class MyPhotosViewHolder extends ViewHolder implements View.OnClickListener,
-        MyPhotosLauncher.PermissionChangedListener {
+        MyPhotosStarter.PermissionChangedListener {
 
-    private Activity mActivity;
-    private ImageView mThumbnailView;
-    private ImageView mOverlayIconView;
+    private final Activity mActivity;
+    private final MyPhotosStarter mMyPhotosStarter;
+    private final ImageView mThumbnailView;
+    private final ImageView mOverlayIconView;
 
-    /* package */ MyPhotosViewHolder(Activity activity, int tileHeightPx, View itemView) {
+    /* package */ MyPhotosViewHolder(Activity activity, MyPhotosStarter myPhotosStarter,
+            int tileHeightPx, View itemView) {
         super(itemView);
 
         mActivity = activity;
+        mMyPhotosStarter = myPhotosStarter;
         itemView.getLayoutParams().height = tileHeightPx;
 
         itemView.findViewById(R.id.tile).setOnClickListener(this);
 
-        mThumbnailView = (ImageView) itemView.findViewById(R.id.thumbnail);
-        mOverlayIconView = (ImageView) itemView.findViewById(R.id.overlay_icon);
+        mThumbnailView = itemView.findViewById(R.id.thumbnail);
+        mOverlayIconView = itemView.findViewById(R.id.overlay_icon);
     }
 
     /**
@@ -110,7 +113,7 @@ public class MyPhotosViewHolder extends ViewHolder implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        ((MyPhotosLauncher) mActivity).requestCustomPhotoPicker(this);
+        mMyPhotosStarter.requestCustomPhotoPicker(this);
     }
 
     /**
