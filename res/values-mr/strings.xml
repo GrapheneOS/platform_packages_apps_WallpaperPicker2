@@ -35,7 +35,7 @@
     <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"होम स्क्रीन आणि लॉक स्क्रीन"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"फिरती इमेज वॉलपेपर"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"येथे सध्याचा वॉलपेपर दाखवण्यासाठी, <xliff:g id="APP_NAME">%1$s</xliff:g> ला तुमच्या डिव्हाइसच्या स्टोरेजचा अॅक्सेस हवा आहे."</string>
-    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"येथे सध्याचा वॉलपेपर दाखवण्यासाठी, वॉलपेपरला तुमच्या डिव्हाइसच्या स्टोरेजचा अॅक्सेस हवा आहे.\n\nहे सेटिंग बदलण्यासाठी, वॉलपेपरच्या अॅप माहितीच्या परवानग्या भागावर जा."</string>
+    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"येथे सध्याचा वॉलपेपर दाखवण्यासाठी, वॉलपेपरला तुमच्या डिव्हाइसच्या स्टोरेजचा अॅक्सेस हवा आहे.\n\nहे सेटिंग बदलण्यासाठी, वॉलपेपरच्या ॲप माहितीच्या परवानग्या भागावर जा."</string>
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"अॅक्सेस द्या"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"फिरत्या वॉलपेपरसाठी लाइव्ह वॉलपेपर सेवा"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"दैनिक वॉलपेपर"</string>
@@ -72,7 +72,7 @@
     <string name="my_photos_category_title" msgid="4294567122144565273">"माझे फोटो"</string>
     <string name="my_photos_generic_wallpaper_title" msgid="7002867526154631172">"माझा फोटो"</string>
     <string name="fallback_wallpaper_title" msgid="6154655421012506001">"वॉलपेपर"</string>
-    <string name="app_not_found" msgid="4431461707854088231">"अॅप इंस्टॉल केलेले नाही."</string>
+    <string name="app_not_found" msgid="4431461707854088231">"ॲप इंस्टॉल केलेले नाही."</string>
     <string name="center_wallpaper_position" msgid="4166894762352288883">"मध्यभागी"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"मध्यभागी क्रॉप केलेले"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"ताणा"</string>
