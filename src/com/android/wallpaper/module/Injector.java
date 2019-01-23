@@ -23,6 +23,7 @@ import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.monitor.PerformanceMonitor;
 import com.android.wallpaper.network.Requester;
 import com.android.wallpaper.picker.PreviewFragment.PreviewMode;
+import com.android.wallpaper.picker.individual.IndividualPickerFragment;
 
 import androidx.fragment.app.Fragment;
 
@@ -77,4 +78,6 @@ public interface Injector {
         boolean testingModeEnabled);
 
     PackageStatusNotifier getPackageStatusNotifier(Context context);
+
+    IndividualPickerFragment getIndividualPickerFragment(String collectionId);
 }
