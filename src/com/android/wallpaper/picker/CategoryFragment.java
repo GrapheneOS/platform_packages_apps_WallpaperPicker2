@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.picker;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,13 +29,7 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -50,6 +45,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
@@ -67,11 +69,13 @@ import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
 import com.android.wallpaper.module.WallpaperRotationRefresher;
 import com.android.wallpaper.module.WallpaperRotationRefresher.Listener;
-import com.android.wallpaper.picker.MyPhotosLauncher.PermissionChangedListener;
+import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
+import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
 import com.android.wallpaper.util.DisplayMetricsRetriever;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.TileSizeCalculator;
 import com.android.wallpaper.widget.GridMarginDecoration;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
 
@@ -80,10 +84,31 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Displays the Main UI for picking an category of wallpapers to choose from.
+ * Displays the Main UI for picking a category of wallpapers to choose from.
  */
-public class CategoryPickerFragment extends Fragment {
-    private static final String TAG = "CategoryPickerFragment";
+public class CategoryFragment extends ToolbarFragment {
+
+    /**
+     * Interface to be implemented by an Activity hosting a {@link CategoryFragment}
+     */
+    public interface CategoryFragmentHost extends MyPhotosStarterProvider {
+
+        void requestExternalStoragePermission(PermissionChangedListener listener);
+
+        boolean isReadExternalStoragePermissionGranted();
+
+        void showViewOnlyPreview(WallpaperInfo wallpaperInfo);
+
+        void show(String collectionId);
+    }
+
+    public static CategoryFragment newInstance(CharSequence title) {
+        CategoryFragment fragment = new CategoryFragment();
+        fragment.setArguments(ToolbarFragment.createArguments(title));
+        return fragment;
+    }
+
+    private static final String TAG = "CategoryFragment";
 
     // The number of ViewHolders that don't pertain to category tiles.
     // Currently 2: one for the metadata section and one for the "Select wallpaper" header.
@@ -102,19 +127,18 @@ public class CategoryPickerFragment extends Fragment {
 
     private RecyclerView mImageGrid;
     private CategoryAdapter mAdapter;
-    private ArrayList<Category> mCategories;
+    private ArrayList<Category> mCategories = new ArrayList<>();
     private Point mTileSizePx;
     private boolean mAwaitingCategories;
     private ProgressDialog mRefreshWallpaperProgressDialog;
     private boolean mTestingMode;
 
-    public CategoryPickerFragment() {
+    public CategoryFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCategories = new ArrayList<>();
         mAdapter = new CategoryAdapter(mCategories);
     }
 
@@ -139,8 +163,13 @@ public class CategoryPickerFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getNumColumns());
         gridLayoutManager.setSpanSizeLookup(new CategorySpanSizeLookup(mAdapter));
         mImageGrid.setLayoutManager(gridLayoutManager);
-
+        setUpToolbar(view);
         return view;
+    }
+
+    @Override
+    public CharSequence getDefaultTitle() {
+        return getContext().getString(R.string.app_name);
     }
 
     @Override
@@ -185,10 +214,10 @@ public class CategoryPickerFragment extends Fragment {
     /**
      * Inserts the given category into the categories list in priority order.
      */
-    public void addCategory(Category category) {
+    public void addCategory(Category category, boolean loading) {
         // If not previously waiting for categories, enter the waiting state by showing the loading
         // indicator.
-        if (!mAwaitingCategories) {
+        if (loading && !mAwaitingCategories) {
             mAdapter.notifyItemChanged(getNumColumns());
             mAdapter.notifyItemInserted(getNumColumns());
             mAwaitingCategories = true;
@@ -208,8 +237,30 @@ public class CategoryPickerFragment extends Fragment {
         }
     }
 
+    public void removeCategory(Category category) {
+        int index = mCategories.indexOf(category);
+        if (index >= 0) {
+            mCategories.remove(index);
+            mAdapter.notifyItemRemoved(index + NUM_NON_CATEGORY_VIEW_HOLDERS);
+        }
+    }
+
+    public void updateCategory(Category category) {
+        int index = mCategories.indexOf(category);
+        if (index >= 0) {
+            mCategories.remove(index);
+            mCategories.add(index, category);
+            mAdapter.notifyItemChanged(index + NUM_NON_CATEGORY_VIEW_HOLDERS);
+        }
+    }
+
+    public void clearCategories() {
+        mCategories.clear();
+        mAdapter.notifyDataSetChanged();
+    }
+
     /**
-     * Notifies the CategoryPickerFragment that no further categories are expected so it may hide
+     * Notifies the CategoryFragment that no further categories are expected so it may hide
      * the loading indicator.
      */
     public void doneFetchingCategories() {
@@ -229,13 +280,18 @@ public class CategoryPickerFragment extends Fragment {
     }
 
     private boolean canShowCurrentWallpaper() {
-        TopLevelPickerActivity activity = (TopLevelPickerActivity) getActivity();
+        Activity activity = getActivity();
+        CategoryFragmentHost host = getFragmentHost();
         PackageManager packageManager = activity.getPackageManager();
         String packageName = activity.getPackageName();
 
         boolean hasReadWallpaperInternal = packageManager.checkPermission(
                 PERMISSION_READ_WALLPAPER_INTERNAL, packageName) == PackageManager.PERMISSION_GRANTED;
-        return hasReadWallpaperInternal || activity.isReadExternalStoragePermissionGranted();
+        return hasReadWallpaperInternal || host.isReadExternalStoragePermissionGranted();
+    }
+
+    private CategoryFragmentHost getFragmentHost() {
+        return (CategoryFragmentHost) getActivity();
     }
 
     /**
@@ -317,6 +373,7 @@ public class CategoryPickerFragment extends Fragment {
             mRefreshWallpaperProgressDialog.setMessage(
                     getResources().getString(R.string.refreshing_daily_wallpaper_dialog_message));
             mRefreshWallpaperProgressDialog.setIndeterminate(true);
+            mRefreshWallpaperProgressDialog.setCancelable(false);
             mRefreshWallpaperProgressDialog.show();
         }
 
@@ -485,7 +542,7 @@ public class CategoryPickerFragment extends Fragment {
             mWallpaperImage.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((TopLevelPickerActivity) getActivity()).showViewOnlyPreview(mWallpaperInfo);
+                    getFragmentHost().showViewOnlyPreview(mWallpaperInfo);
                     eventLogger.logCurrentWallpaperPreviewed();
                 }
             });
@@ -502,8 +559,14 @@ public class CategoryPickerFragment extends Fragment {
             if (!attributions.isEmpty()) {
                 mWallpaperTitle.setText(attributions.get(0));
             }
-            mWallpaperSubtitle.setText(
-                    AttributionFormatter.formatWallpaperSubtitle(appContext, mWallpaperInfo));
+            String subtitleText =
+                    AttributionFormatter.formatWallpaperSubtitle(appContext, mWallpaperInfo);
+            if (!TextUtils.isEmpty(subtitleText)) {
+                mWallpaperSubtitle.setText(subtitleText);
+                mWallpaperSubtitle.setVisibility(View.VISIBLE);
+            } else {
+                mWallpaperSubtitle.setVisibility(View.GONE);
+            }
         }
 
         private void bindWallpaperActionButtons(@PresentationMode int presentationMode) {
@@ -553,17 +616,33 @@ public class CategoryPickerFragment extends Fragment {
 
                     if (showSkipWallpaperButton) {
                         exploreButton = mWallpaperExploreButtonNoText;
+                        mWallpaperExploreButtonNoText.setImageDrawable(getContext().getDrawable(
+                                mWallpaperInfo.getActionIconRes(appContext)));
+                        mWallpaperExploreButtonNoText.setContentDescription(
+                                getString(mWallpaperInfo.getActionLabelRes(appContext)));
                         mWallpaperExploreButtonNoText.setColorFilter(
-                                getResources().getColor(R.color.currently_set_explore_button_color), Mode.SRC_IN);
+                                getResources().getColor(R.color.currently_set_explore_button_color),
+                                Mode.SRC_IN);
                         mWallpaperExploreButton.setVisibility(View.GONE);
                     } else {
                         exploreButton = mWallpaperExploreButton;
+
+                        Drawable drawable = getContext().getDrawable(
+                                mWallpaperInfo.getActionIconRes(appContext)).getConstantState()
+                                .newDrawable().mutate();
+                        // Color the "compass" icon with the accent color.
+                        drawable.setColorFilter(
+                                getResources().getColor(R.color.accent_color), Mode.SRC_IN);
+                        ButtonDrawableSetterCompat.setDrawableToButtonStart(
+                                mWallpaperExploreButton, drawable);
+                        mWallpaperExploreButton.setText(
+                                mWallpaperInfo.getActionLabelRes(appContext));
                         mWallpaperExploreButtonNoText.setVisibility(View.GONE);
                     }
-
                     exploreButton.setVisibility(View.VISIBLE);
                     exploreButton.setOnClickListener((View view) -> {
-                        eventLogger.logExploreClicked(mWallpaperInfo.getCollectionId(appContext));
+                        eventLogger.logActionClicked(mWallpaperInfo.getCollectionId(appContext),
+                                mWallpaperInfo.getActionLabelRes(appContext));
                         startActivity(exploreIntent);
                     });
                 }
@@ -708,12 +787,18 @@ public class CategoryPickerFragment extends Fragment {
                             }
 
                             exploreButton.setVisibility(View.VISIBLE);
+                            exploreButton.setImageDrawable(getContext().getDrawable(
+                                    homeWallpaper.getActionIconRes(appContext)));
+                            exploreButton.setContentDescription(getString(homeWallpaper
+                                    .getActionLabelRes(appContext)));
                             exploreButton.setColorFilter(
                                     getResources().getColor(R.color.currently_set_explore_button_color), Mode.SRC_IN);
                             exploreButton.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    eventLogger.logExploreClicked(mHomeWallpaperInfo.getCollectionId(appContext));
+                                    eventLogger.logActionClicked(
+                                            mHomeWallpaperInfo.getCollectionId(appContext),
+                                            mHomeWallpaperInfo.getActionLabelRes(appContext));
                                     startActivity(exploreIntent);
                                 }
                             });
@@ -741,7 +826,7 @@ public class CategoryPickerFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     eventLogger.logCurrentWallpaperPreviewed();
-                    ((TopLevelPickerActivity) getActivity()).showViewOnlyPreview(mHomeWallpaperInfo);
+                    getFragmentHost().showViewOnlyPreview(mHomeWallpaperInfo);
                 }
             });
         }
@@ -794,14 +879,21 @@ public class CategoryPickerFragment extends Fragment {
                             if (exploreIntent == null || getActivity() == null) {
                                 return;
                             }
-
+                            exploreButton.setImageDrawable(getContext().getDrawable(
+                                    lockWallpaper.getActionIconRes(appContext)));
+                            exploreButton.setContentDescription(getString(
+                                    lockWallpaper.getActionLabelRes(appContext)));
                             exploreButton.setVisibility(View.VISIBLE);
                             exploreButton.setColorFilter(
-                                    getResources().getColor(R.color.currently_set_explore_button_color), Mode.SRC_IN);
+                                    getResources().getColor(
+                                            R.color.currently_set_explore_button_color),
+                                    Mode.SRC_IN);
                             exploreButton.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    eventLogger.logExploreClicked(mLockWallpaperInfo.getCollectionId(appContext));
+                                    eventLogger.logActionClicked(
+                                            mLockWallpaperInfo.getCollectionId(appContext),
+                                            mLockWallpaperInfo.getActionLabelRes(appContext));
                                     startActivity(exploreIntent);
                                 }
                             });
@@ -814,7 +906,7 @@ public class CategoryPickerFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     eventLogger.logCurrentWallpaperPreviewed();
-                    ((TopLevelPickerActivity) getActivity()).showViewOnlyPreview(mLockWallpaperInfo);
+                    getFragmentHost().showViewOnlyPreview(mLockWallpaperInfo);
                 }
             });
         }
@@ -849,7 +941,7 @@ public class CategoryPickerFragment extends Fragment {
             eventLogger.logCategorySelected(mCategory.getCollectionId());
 
             if (mCategory.supportsCustomPhotos()) {
-                ((MyPhotosLauncher) getActivity()).requestCustomPhotoPicker(
+                getFragmentHost().getMyPhotosStarter().requestCustomPhotoPicker(
                         new PermissionChangedListener() {
                             @Override
                             public void onPermissionsGranted() {
@@ -864,7 +956,7 @@ public class CategoryPickerFragment extends Fragment {
                 return;
             }
 
-            ((TopLevelPickerActivity) getActivity()).show(mCategory.getCollectionId());
+            getFragmentHost().show(mCategory.getCollectionId());
         }
 
         /**
@@ -936,7 +1028,7 @@ public class CategoryPickerFragment extends Fragment {
             mAllowAccessButton =
                     (Button) view.findViewById(R.id.permission_needed_allow_access_button);
             mAllowAccessButton.setOnClickListener((View v) -> {
-                ((TopLevelPickerActivity) getActivity()).requestExternalStoragePermission(mAdapter);
+                getFragmentHost().requestExternalStoragePermission(mAdapter);
             });
 
             // Replace explanation text with text containing the Wallpapers app name which replaces the

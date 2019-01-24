@@ -17,7 +17,6 @@ package com.android.wallpaper.picker.individual;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,6 +26,8 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.model.WallpaperInfo;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 /**
  * Base class for ViewHolders for individual wallpaper tiles.

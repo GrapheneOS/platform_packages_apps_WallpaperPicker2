@@ -20,7 +20,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.media.ExifInterface;
 import android.util.Log;
 
 import com.android.wallpaper.R;
@@ -33,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import androidx.exifinterface.media.ExifInterface;
 
 /**
  * Represents a wallpaper image from the system's image picker.
@@ -67,6 +68,11 @@ public class ImageWallpaperInfo extends WallpaperInfo {
 
     private ImageWallpaperInfo(Parcel in) {
         mUri = Uri.parse(in.readString());
+    }
+
+    @Override
+    public Uri getUri() {
+        return mUri;
     }
 
     /**

@@ -15,34 +15,19 @@
  */
 package com.android.wallpaper.picker;
 
-import android.Manifest.permission;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetBehavior.BottomSheetCallback;
-import android.support.design.widget.TabLayout;
-import android.support.design.widget.TabLayout.OnTabSelectedListener;
-import android.support.design.widget.TabLayout.Tab;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,23 +37,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.compat.ButtonDrawableSetterCompat;
-import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.config.Flags;
 import com.android.wallpaper.model.Category;
-import com.android.wallpaper.model.CategoryProvider;
-import com.android.wallpaper.model.CategoryReceiver;
 import com.android.wallpaper.model.ImageWallpaperInfo;
-import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory;
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory.WallpaperInfoCallback;
 import com.android.wallpaper.module.DailyLoggingAlarmScheduler;
 import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.FormFactorChecker;
-import com.android.wallpaper.module.FormFactorChecker.FormFactor;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.NetworkStatusNotifier;
@@ -83,15 +70,18 @@ import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
 import com.android.wallpaper.module.WallpaperRotationRefresher;
 import com.android.wallpaper.module.WallpaperRotationRefresher.Listener;
-import com.android.wallpaper.picker.PreviewActivity.PreviewActivityIntentFactory;
-import com.android.wallpaper.picker.ViewOnlyPreviewActivity.ViewOnlyPreviewActivityIntentFactory;
+import com.android.wallpaper.picker.CategoryFragment.CategoryFragmentHost;
 import com.android.wallpaper.picker.WallpaperDisabledFragment.WallpaperSupportLevel;
-import com.android.wallpaper.picker.individual.IndividualPickerActivity.IndividualPickerActivityIntentFactory;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.ThrowableAnalyzer;
 
-import java.util.ArrayList;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
+import com.google.android.material.tabs.TabLayout.Tab;
+
 import java.util.List;
 
 /**
@@ -99,11 +89,7 @@ import java.util.List;
  */
 public class TopLevelPickerActivity extends BaseActivity implements WallpapersUiContainer,
         CurrentWallpaperBottomSheetPresenter, SetWallpaperErrorDialogFragment.Listener,
-        MyPhotosLauncher {
-    private static final int SHOW_CATEGORY_REQUEST_CODE = 0;
-    private static final int PREVIEW_WALLPAPER_REQUEST_CODE = 1;
-    private static final int VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE = 2;
-    private static final int READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 3;
+        MyPhotosStarter, CategoryFragmentHost {
 
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "toplevel_set_wallpaper_error_dialog";
@@ -111,14 +97,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     private static final String TAG = "TopLevelPicker";
     private static final String KEY_SELECTED_CATEGORY_TAB = "selected_category_tab";
 
-    private IndividualPickerActivityIntentFactory mPickerIntentFactory;
-    private InlinePreviewIntentFactory mPreviewIntentFactory;
-    private InlinePreviewIntentFactory mViewOnlyPreviewIntentFactory;
-    private ArrayList<Category> mCategories;
+    private WallpaperPickerDelegate mDelegate;
     private int mLastSelectedCategoryTabIndex;
-    @FormFactor
-    private int mFormFactor;
-    private WallpaperPreferences mPreferences;
     private UserEventLogger mUserEventLogger;
     private NetworkStatusNotifier mNetworkStatusNotifier;
     private NetworkStatusNotifier.Listener mNetworkStatusListener;
@@ -153,8 +133,6 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     private FrameLayout mLoadingIndicatorContainer;
     private LinearLayout mWallpaperPositionOptions;
 
-    private List<PermissionChangedListener> mPermissionChangedListeners;
-
     /**
      * Staged error dialog fragments that were unable to be shown when the activity didn't allow
      * committing fragment transactions.
@@ -175,24 +153,16 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPickerIntentFactory = new IndividualPickerActivityIntentFactory();
-        mPreviewIntentFactory = new PreviewActivityIntentFactory();
-        mViewOnlyPreviewIntentFactory = new ViewOnlyPreviewActivityIntentFactory();
-        mCategories = new ArrayList<>();
         mLastSelectedCategoryTabIndex = -1;
 
         Injector injector = InjectorProvider.getInjector();
-        mPreferences = injector.getPreferences(this);
+        mDelegate = new WallpaperPickerDelegate(this, this, injector);
         mUserEventLogger = injector.getUserEventLogger(this);
         mNetworkStatusNotifier = injector.getNetworkStatusNotifier(this);
-        final FormFactorChecker formFactorChecker = injector.getFormFactorChecker(this);
-        mFormFactor = formFactorChecker.getFormFactor();
         mWallpaperPersister = injector.getWallpaperPersister(this);
         mWasCustomPhotoWallpaperSet = false;
 
-        mPermissionChangedListeners = new ArrayList<>();
-
-        @WallpaperSupportLevel int wallpaperSupportLevel = getWallpaperSupportLevel();
+        @WallpaperSupportLevel int wallpaperSupportLevel = mDelegate.getWallpaperSupportLevel();
         if (wallpaperSupportLevel != WallpaperDisabledFragment.SUPPORTED_CAN_SET) {
             setContentView(R.layout.activity_single_fragment);
 
@@ -205,7 +175,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
             return;
         }
 
-        if (mFormFactor == FormFactorChecker.FORM_FACTOR_MOBILE) {
+        if (mDelegate.getFormFactor() == FormFactorChecker.FORM_FACTOR_MOBILE) {
             initializeMobile();
         } else { // DESKTOP
             initializeDesktop(savedInstanceState);
@@ -229,7 +199,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        mDelegate.cleanUp();
         if (mNetworkStatusListener != null) {
             mNetworkStatusNotifier.unregisterListener(mNetworkStatusListener);
         }
@@ -241,57 +211,31 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
             mSetWallpaperProgressDialog.dismiss();
         }
 
-        if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP && mWasCustomPhotoWallpaperSet) {
+        if (mDelegate.getFormFactor() == FormFactorChecker.FORM_FACTOR_DESKTOP
+                && mWasCustomPhotoWallpaperSet) {
             mUserEventLogger.logWallpaperPosition(mCustomPhotoWallpaperPosition);
         }
     }
 
     @Override
     public void requestCustomPhotoPicker(PermissionChangedListener listener) {
-        if (!isReadExternalStoragePermissionGranted()) {
-            PermissionChangedListener wrappedListener = new PermissionChangedListener() {
-                @Override
-                public void onPermissionsGranted() {
-                    listener.onPermissionsGranted();
-                    showCustomPhotoPicker();
-                }
-
-                @Override
-                public void onPermissionsDenied(boolean dontAskAgain) {
-                    listener.onPermissionsDenied(dontAskAgain);
-                }
-            };
-            requestExternalStoragePermission(wrappedListener);
-
-            return;
-        }
-
-        showCustomPhotoPicker();
+        mDelegate.requestCustomPhotoPicker(listener);
     }
 
-    void requestExternalStoragePermission(PermissionChangedListener listener) {
-        mPermissionChangedListeners.add(listener);
-        requestPermissions(
-                new String[]{permission.READ_EXTERNAL_STORAGE},
-                READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE);
+    @Override
+    public void requestExternalStoragePermission(PermissionChangedListener listener) {
+        mDelegate.requestExternalStoragePermission(listener);
     }
 
     /**
      * Returns whether READ_EXTERNAL_STORAGE has been granted for the application.
      */
-    boolean isReadExternalStoragePermissionGranted() {
-        return getPackageManager().checkPermission(permission.READ_EXTERNAL_STORAGE,
-                getPackageName()) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void showCustomPhotoPicker() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent, SHOW_CATEGORY_REQUEST_CODE);
+    public boolean isReadExternalStoragePermissionGranted() {
+        return mDelegate.isReadExternalStoragePermissionGranted();
     }
 
     private void initializeMobile() {
-        setContentView(R.layout.activity_single_fragment_with_toolbar);
+        setContentView(R.layout.activity_single_fragment);
 
         // Set toolbar as the action bar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -306,7 +250,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
             mUserEventLogger.logAppLaunched();
             DailyLoggingAlarmScheduler.setAlarm(getApplicationContext());
 
-            CategoryPickerFragment newFragment = new CategoryPickerFragment();
+            CategoryFragment newFragment = new CategoryFragment();
             fm.beginTransaction()
                     .add(R.id.fragment_container, newFragment)
                     .commit();
@@ -314,7 +258,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
             forceCategoryRefresh = true;
         }
 
-        populateCategories(-1, forceCategoryRefresh);
+        mDelegate.initialize(forceCategoryRefresh);
     }
 
     private void initializeDesktop(Bundle savedInstanceState) {
@@ -342,7 +286,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
             @Override
             public void onTabSelected(Tab tab) {
                 Category category = (Category) tab.getTag();
-                show(category.getCollectionId());
+                showCategoryDesktop(category.getCollectionId());
                 mLastSelectedCategoryTabIndex = tabLayout.getSelectedTabPosition();
             }
 
@@ -404,9 +348,9 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                     .commit();
         }
 
-        int selectedTabPosition = savedInstanceState != null
+        mLastSelectedCategoryTabIndex = savedInstanceState != null
                 ? savedInstanceState.getInt(KEY_SELECTED_CATEGORY_TAB) : -1;
-        populateCategories(selectedTabPosition, forceCategoryRefresh);
+        mDelegate.populateCategories(forceCategoryRefresh);
 
         setDesktopLoading(true);
         setUpBottomSheet();
@@ -427,11 +371,11 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                 .add(R.id.fragment_container, newFragment)
                 .commit();
 
-        // Reset the last selected category tab index to ensure the app doesn't try to reselect a tab
-        // for a category not yet repopulated.
+        // Reset the last selected category tab index to ensure the app doesn't try to reselect a
+        // tab for a category not yet repopulated.
         mLastSelectedCategoryTabIndex = -1;
 
-        populateCategories(-1 /* selectedTabPosition */, true /* forceCategoryRefresh */);
+        mDelegate.populateCategories(true /* forceCategoryRefresh */);
 
         setDesktopLoading(false);
         setCurrentWallpapersExpanded(false);
@@ -471,19 +415,6 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     private void setUpBottomSheet() {
         mBottomSheet.setVisibility(View.VISIBLE);
 
-        // Add "compass" icon to the Explore button
-        Drawable exploreButtonDrawable = getResources().getDrawable(
-                R.drawable.ic_explore_18px);
-
-        // This Drawable's state is shared across the app, so make a copy of it before applying a
-        // color tint as not to affect other clients elsewhere in the app.
-        exploreButtonDrawable = exploreButtonDrawable.getConstantState().newDrawable().mutate();
-        // Color the "compass" icon with the accent color.
-        exploreButtonDrawable.setColorFilter(
-                getResources().getColor(R.color.accent_color), Mode.SRC_IN);
-        ButtonDrawableSetterCompat.setDrawableToButtonStart(
-                mCurrentWallpaperExploreButton, exploreButtonDrawable);
-
         if (Flags.skipDailyWallpaperButtonEnabled) {
             // Add "next" icon to the Next Wallpaper button
             Drawable nextWallpaperButtonDrawable = getResources().getDrawable(
@@ -515,7 +446,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                 } else {
                     alpha = 1f - slideOffset;
                 }
-                LinearLayout bottomSheetContents = (LinearLayout) findViewById(R.id.bottom_sheet_contents);
+                LinearLayout bottomSheetContents = findViewById(R.id.bottom_sheet_contents);
                 bottomSheetContents.setAlpha(alpha);
             }
         });
@@ -592,11 +523,30 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                     ExploreIntentChecker intentChecker = injector.getExploreIntentChecker(appContext);
                     intentChecker.fetchValidActionViewIntent(exploreUri, (@Nullable Intent exploreIntent) -> {
                         if (exploreIntent != null && !isDestroyed()) {
+                            // Set the icon for the button
+                            Drawable exploreButtonDrawable = getResources().getDrawable(
+                                    homeWallpaper.getActionIconRes(appContext));
+
+                            // This Drawable's state is shared across the app, so make a copy of it
+                            // before applying a color tint as not to affect other clients elsewhere
+                            // in the app.
+                            exploreButtonDrawable = exploreButtonDrawable.getConstantState()
+                                    .newDrawable().mutate();
+                            // Color the "compass" icon with the accent color.
+                            exploreButtonDrawable.setColorFilter(
+                                    getResources().getColor(R.color.accent_color), Mode.SRC_IN);
+
+                            ButtonDrawableSetterCompat.setDrawableToButtonStart(
+                                    mCurrentWallpaperExploreButton, exploreButtonDrawable);
+                            mCurrentWallpaperExploreButton.setText(getString(
+                                    homeWallpaper.getActionLabelRes(appContext)));
                             mCurrentWallpaperExploreButton.setVisibility(View.VISIBLE);
                             mCurrentWallpaperExploreButton.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    mUserEventLogger.logExploreClicked(homeWallpaper.getCollectionId(appContext));
+                                    mUserEventLogger.logActionClicked(
+                                            homeWallpaper.getCollectionId(appContext),
+                                            homeWallpaper.getActionLabelRes(appContext));
                                     startActivity(exploreIntent);
                                 }
                             });
@@ -619,12 +569,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                         && presentationMode == WallpaperPreferences.PRESENTATION_MODE_ROTATING;
                 if (showSkipWallpaperButton) {
                     mCurrentWallpaperSkipWallpaperButton.setVisibility(View.VISIBLE);
-                    mCurrentWallpaperSkipWallpaperButton.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            refreshDailyWallpaper();
-                        }
-                    });
+                    mCurrentWallpaperSkipWallpaperButton.setOnClickListener(
+                            v -> refreshDailyWallpaper());
                 } else {
                     mCurrentWallpaperSkipWallpaperButton.setVisibility(View.GONE);
                 }
@@ -642,7 +588,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         if (formFactorChecker.getFormFactor() == FormFactorChecker.FORM_FACTOR_DESKTOP) {
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
-            // tabLayout is only present when the main IndividualPickerFragment is present (as opposed to
+            // tabLayout is only present when the main IndividualPickerFragment is present (as
+            // opposed to
             // the WallpaperDisabledFragment), so need this null check.
             if (tabLayout != null) {
                 savedInstanceState.putInt(KEY_SELECTED_CATEGORY_TAB, tabLayout.getSelectedTabPosition());
@@ -652,54 +599,14 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    /**
-     * Populates the categories appropriately depending on the device form factor.
-     *
-     * @param selectedTabPosition The position of the tab to show as selected, or -1 if no tab
-     *                            should be selected (i.e. because there is no tab layout present, as on MOBILE form factor).
-     * @param forceRefresh        Whether to force a refresh of categories from the CategoryProvider. True if
-     *                            on first launch.
-     */
-    private void populateCategories(final int selectedTabPosition, boolean forceRefresh) {
-        mCategories.clear();
-
-        Injector injector = InjectorProvider.getInjector();
-        CategoryProvider categoryProvider = injector.getCategoryProvider(this);
-        categoryProvider.fetchCategories(new CategoryReceiver() {
-            @Override
-            public void onCategoryReceived(Category category) {
-                int priority = category.getPriority();
-
-                int index = 0;
-                while (index < mCategories.size() && priority >= mCategories.get(index).getPriority()) {
-                    index++;
-                }
-                mCategories.add(index, category);
-
-                if (mFormFactor == FormFactorChecker.FORM_FACTOR_MOBILE) {
-                    final FragmentManager fm = getSupportFragmentManager();
-                    CategoryPickerFragment categoryPickerFragment =
-                            (CategoryPickerFragment) fm.findFragmentById(R.id.fragment_container);
-                    if (categoryPickerFragment != null) {
-                        categoryPickerFragment.addCategory(category);
-                    }
-                }
-            }
-
-            @Override
-            public void doneFetchingCategories() {
-                if (mFormFactor == FormFactorChecker.FORM_FACTOR_MOBILE) {
-                    final FragmentManager fm = getSupportFragmentManager();
-                    CategoryPickerFragment categoryPickerFragment =
-                            (CategoryPickerFragment) fm.findFragmentById(R.id.fragment_container);
-                    if (categoryPickerFragment != null) {
-                        categoryPickerFragment.doneFetchingCategories();
-                    }
-                } else { // DESKTOP
-                    populateCategoryTabs(selectedTabPosition);
-                }
-            }
-        }, forceRefresh);
+    @Override
+    @Nullable
+    public CategoryFragment getCategoryFragment() {
+        if (mDelegate.getFormFactor() != FormFactorChecker.FORM_FACTOR_MOBILE) {
+            return null;
+        }
+        FragmentManager fm = getSupportFragmentManager();
+        return (CategoryFragment) fm.findFragmentById(R.id.fragment_container);
     }
 
     /**
@@ -714,12 +621,12 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.removeAllTabs();
 
-        String currentlySetCollectionId = mPreferences.getHomeWallpaperCollectionId();
+        String currentlySetCollectionId = mDelegate.getPreferences().getHomeWallpaperCollectionId();
 
         Tab tabToSelect = null;
         Tab firstEnumerableCategoryTab = null;
-        for (int i = 0; i < mCategories.size(); i++) {
-            Category category = mCategories.get(i);
+        for (int i = 0; i < mDelegate.getCategoryProvider().getSize(); i++) {
+            Category category = mDelegate.getCategoryProvider().getCategory(i);
 
             Tab tab = tabLayout.newTab();
             tab.setText(category.getTitle());
@@ -811,23 +718,27 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == SHOW_CATEGORY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == WallpaperPickerDelegate.SHOW_CATEGORY_REQUEST_CODE
+                && resultCode == Activity.RESULT_OK) {
             Uri imageUri = (data == null) ? null : data.getData();
             if (imageUri != null) {
-                // User selected an image from the system picker, so launch the preview for that image.
+                // User selected an image from the system picker, so launch the preview for that
+                // image.
                 ImageWallpaperInfo imageWallpaper = new ImageWallpaperInfo(imageUri);
-                if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
+                if (mDelegate.getFormFactor() == FormFactorChecker.FORM_FACTOR_DESKTOP) {
                     setCustomPhotoWallpaper(imageWallpaper);
                     return;
                 }
 
-                imageWallpaper.showPreview(this, mPreviewIntentFactory, PREVIEW_WALLPAPER_REQUEST_CODE);
+                imageWallpaper.showPreview(this, mDelegate.getPreviewIntentFactory(),
+                        WallpaperPickerDelegate.PREVIEW_WALLPAPER_REQUEST_CODE);
             } else {
                 // User finished viewing a category without any data, which implies that the user previewed
                 // and selected a wallpaper in-app, so finish this activity.
                 finishActivityWithResultOk();
             }
-        } else if (requestCode == PREVIEW_WALLPAPER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == WallpaperPickerDelegate.PREVIEW_WALLPAPER_REQUEST_CODE
+                && resultCode == Activity.RESULT_OK) {
             // User previewed and selected a wallpaper, so finish this activity.
             finishActivityWithResultOk();
         }
@@ -837,48 +748,21 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
      * Shows the view-only preview activity for the given wallpaper.
      */
     public void showViewOnlyPreview(WallpaperInfo wallpaperInfo) {
-        wallpaperInfo.showPreview(
-                this, mViewOnlyPreviewIntentFactory, VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE);
+        mDelegate.showViewOnlyPreview(wallpaperInfo);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
-                && permissions.length > 0
-                && permissions[0].equals(permission.READ_EXTERNAL_STORAGE)
-                && grantResults.length > 0) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                for (PermissionChangedListener listener : mPermissionChangedListeners) {
-                    listener.onPermissionsGranted();
-                }
-            } else if (!shouldShowRequestPermissionRationale(permission.READ_EXTERNAL_STORAGE)) {
-                for (PermissionChangedListener listener : mPermissionChangedListeners) {
-                    listener.onPermissionsDenied(true /* dontAskAgain */);
-                }
-            } else {
-                for (PermissionChangedListener listener : mPermissionChangedListeners) {
-                    listener.onPermissionsDenied(false /* dontAskAgain */);
-                }
-            }
-        }
-        mPermissionChangedListeners.clear();
+        mDelegate.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**
      * Shows the picker activity for the given category.
      */
+    @Override
     public void show(String collectionId) {
-        Category category = findCategoryForCollectionId(collectionId);
-        if (category == null) {
-            return;
-        }
-
-        if (mFormFactor == FormFactorChecker.FORM_FACTOR_MOBILE) {
-            category.show(this, mPickerIntentFactory, SHOW_CATEGORY_REQUEST_CODE);
-        } else { // DESKTOP
-            showCategoryDesktop(collectionId);
-        }
+        mDelegate.show(collectionId);
     }
 
     private void reselectLastTab() {
@@ -887,25 +771,16 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         // In the offline case, "My photos" could be the only category. Thus we need this check --
         // to ensure that we don't try to select the "previously selected" category which was -1.
         if (mLastSelectedCategoryTabIndex > -1) {
-            Tab tabToSelect = tabLayout.getTabAt(mLastSelectedCategoryTabIndex);
+            Tab tabToSelect = tabLayout.getTabAt(
+                    mLastSelectedCategoryTabIndex);
             if (((Category) tabToSelect.getTag()).isEnumerable()) {
                 tabToSelect.select();
             }
         }
     }
 
-    @Nullable
-    private Category findCategoryForCollectionId(String collectionId) {
-        for (Category category : mCategories) {
-            if (category.getCollectionId().equals(collectionId)) {
-                return category;
-            }
-        }
-        return null;
-    }
-
     private void showCategoryDesktop(String collectionId) {
-        Category category = findCategoryForCollectionId(collectionId);
+        Category category = mDelegate.findCategoryForCollectionId(collectionId);
         if (category == null) {
             return;
         }
@@ -926,7 +801,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
             newFragment.setCurrentWallpaperBottomSheetPresenter(this);
             newFragment.setWallpapersUiContainer(this);
         } else {
-            category.show(this, mPickerIntentFactory, SHOW_CATEGORY_REQUEST_CODE);
+            category.show(this, mDelegate.getPickerIntentFactory(),
+                    WallpaperPickerDelegate.SHOW_CATEGORY_REQUEST_CODE);
 
             // Need to select the tab here in case we are coming back from a "My photos" in which case
             // the tab would have been set to "My photos" while viewing a regular image category.
@@ -940,42 +816,29 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         finish();
     }
 
-    @WallpaperSupportLevel
-    private int getWallpaperSupportLevel() {
-        WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
-
-        if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            if (wallpaperManager.isWallpaperSupported()) {
-                return wallpaperManager.isSetWallpaperAllowed()
-                        ? WallpaperDisabledFragment.SUPPORTED_CAN_SET
-                        : WallpaperDisabledFragment.NOT_SUPPORTED_BLOCKED_BY_ADMIN;
-            }
-            return WallpaperDisabledFragment.NOT_SUPPORTED_BY_DEVICE;
-        } else if (VERSION.SDK_INT >= VERSION_CODES.M) {
-            return wallpaperManager.isWallpaperSupported() ? WallpaperDisabledFragment.SUPPORTED_CAN_SET
-                    : WallpaperDisabledFragment.NOT_SUPPORTED_BY_DEVICE;
-        } else {
-            WallpaperManagerCompat wallpaperManagerCompat =
-                    InjectorProvider.getInjector().getWallpaperManagerCompat(this);
-            boolean isSupported = wallpaperManagerCompat.getDrawable() != null;
-            wallpaperManager.forgetLoadedWallpaper();
-            return isSupported ? WallpaperDisabledFragment.SUPPORTED_CAN_SET
-                    : WallpaperDisabledFragment.NOT_SUPPORTED_BY_DEVICE;
-        }
-    }
-
     @Override
     public void setCurrentWallpapersExpanded(boolean expanded) {
         final BottomSheetBehavior<LinearLayout> bottomSheetBehavior =
                 BottomSheetBehavior.from(mBottomSheet);
         bottomSheetBehavior.setState(
-                expanded ? BottomSheetBehavior.STATE_EXPANDED : BottomSheetBehavior.STATE_COLLAPSED);
+                expanded ? BottomSheetBehavior.STATE_EXPANDED
+                        : BottomSheetBehavior.STATE_COLLAPSED);
+    }
+
+    @Override
+    public void doneFetchingCategories() {
+        populateCategoryTabs(mLastSelectedCategoryTabIndex);
     }
 
     @Override
     public void onWallpapersReady() {
         setDesktopLoading(false);
         setCurrentWallpapersExpanded(true);
+    }
+
+    @Override
+    public MyPhotosStarter getMyPhotosStarter() {
+        return this;
     }
 
     @Override
@@ -1003,7 +866,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                         dismissSettingWallpaperProgressDialog();
                         refreshCurrentWallpapers(null /* refreshListener */);
 
-                        mPreferences.setPendingWallpaperSetStatus(
+                        mDelegate.getPreferences().setPendingWallpaperSetStatus(
                                 WallpaperPreferences.WALLPAPER_SET_NOT_PENDING);
                         mUserEventLogger.logWallpaperSet(
                                 wallpaper.getCollectionId(getApplicationContext()),
@@ -1029,7 +892,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                         dismissSettingWallpaperProgressDialog();
                         showSetWallpaperErrorDialog();
 
-                        mPreferences.setPendingWallpaperSetStatus(
+                        mDelegate.getPreferences().setPendingWallpaperSetStatus(
                                 WallpaperPreferences.WALLPAPER_SET_NOT_PENDING);
                         mUserEventLogger.logWallpaperSetResult(
                                 UserEventLogger.WALLPAPER_SET_RESULT_FAILURE);
@@ -1173,8 +1036,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     }
 
     private void showSettingWallpaperProgressDialog() {
-        // ProgressDialog endlessly updates the UI thread, keeping it from going idle which therefore
-        // causes Espresso to hang once the dialog is shown.
+        // ProgressDialog endlessly updates the UI thread, keeping it from going idle which
+        // therefore causes Espresso to hang once the dialog is shown.
         if (!mTestingMode) {
             int themeResId;
             if (VERSION.SDK_INT < VERSION_CODES.LOLLIPOP) {

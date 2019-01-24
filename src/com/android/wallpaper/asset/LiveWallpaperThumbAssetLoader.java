@@ -16,7 +16,6 @@
 package com.android.wallpaper.asset;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
 
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
@@ -25,6 +24,8 @@ import com.bumptech.glide.load.data.DataFetcher;
 import com.bumptech.glide.load.model.ModelLoader;
 import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.MultiModelLoaderFactory;
+
+import androidx.annotation.Nullable;
 
 /**
  * Glide model loader for live wallpaper thumbnails.

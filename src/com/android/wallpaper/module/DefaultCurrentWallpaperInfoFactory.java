@@ -16,7 +16,6 @@
 package com.android.wallpaper.module;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 
 import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.compat.WallpaperManagerCompat;
@@ -27,6 +26,8 @@ import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.model.WallpaperMetadata;
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
 import com.android.wallpaper.module.WallpaperRefresher.RefreshListener;
+
+import androidx.annotation.Nullable;
 
 /**
  * Default implementation of {@link CurrentWallpaperInfoFactory} which actually constructs
@@ -82,12 +83,16 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                         homeWallpaper = new CurrentWallpaperInfoVN(
                                 homeWallpaperMetadata.getAttributions(),
                                 homeWallpaperMetadata.getActionUrl(),
+                                homeWallpaperMetadata.getActionLabelRes(),
+                                homeWallpaperMetadata.getActionIconRes(),
                                 homeWallpaperMetadata.getCollectionId(),
                                 WallpaperManagerCompat.FLAG_SYSTEM);
                     } else {
                         homeWallpaper = new CurrentWallpaperInfoV16(
                                 homeWallpaperMetadata.getAttributions(),
                                 homeWallpaperMetadata.getActionUrl(),
+                                homeWallpaperMetadata.getActionLabelRes(),
+                                homeWallpaperMetadata.getActionIconRes(),
                                 homeWallpaperMetadata.getCollectionId());
                     }
                 } else { // Live wallpaper
@@ -100,6 +105,8 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                     lockWallpaper = new CurrentWallpaperInfoVN(
                             lockWallpaperMetadata.getAttributions(),
                             lockWallpaperMetadata.getActionUrl(),
+                            lockWallpaperMetadata.getActionLabelRes(),
+                            lockWallpaperMetadata.getActionIconRes(),
                             lockWallpaperMetadata.getCollectionId(),
                             WallpaperManagerCompat.FLAG_LOCK);
                 }

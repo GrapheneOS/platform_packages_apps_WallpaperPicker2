@@ -18,17 +18,32 @@ package com.android.wallpaper.model;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
 
+import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 
 import java.util.List;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IntDef;
+import androidx.annotation.StringRes;
 
 /**
  * Interface for wallpaper info model.
  */
 public abstract class WallpaperInfo implements Parcelable {
+
+    @DrawableRes
+    public static int getDefaultActionIcon() {
+        return R.drawable.ic_explore_24px;
+    }
+
+    @StringRes
+    public static int getDefaultActionLabel() {
+        return R.string.explore;
+    }
 
     public static final int BACKUP_NOT_ALLOWED = 0;
     public static final int BACKUP_ALLOWED = 1;
@@ -60,6 +75,29 @@ public abstract class WallpaperInfo implements Parcelable {
      */
     public String getActionUrl(Context unused) {
         return null;
+    }
+
+    /** Returns the URI corresponding to the wallpaper, or null if none exists. */
+    public Uri getUri() {
+        return null;
+    }
+
+    /**
+     * Returns the icon to use to represent the action link corresponding to
+     * {@link #getActionUrl(Context)}
+     */
+    @DrawableRes
+    public int getActionIconRes(Context context) {
+        return getDefaultActionIcon();
+    }
+
+    /**
+     * Returns the label to use for the action link corresponding to
+     * {@link #getActionUrl(Context)}
+     */
+    @StringRes
+    public int getActionLabelRes(Context context) {
+        return getDefaultActionLabel();
     }
 
     /**

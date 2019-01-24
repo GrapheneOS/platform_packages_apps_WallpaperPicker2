@@ -16,9 +16,9 @@
 package com.android.wallpaper.picker;
 
 /**
- * Interface for activities that launch an Android cutom image picker.
+ * Interface for activities that launch an Android custom image picker.
  */
-public interface MyPhotosLauncher {
+public interface MyPhotosStarter {
 
     /**
      * Requests that this Activity show the Android custom photo picker for the sake of picking a
@@ -42,5 +42,10 @@ public interface MyPhotosLauncher {
          *                     request prior to denying it.
          */
         void onPermissionsDenied(boolean dontAskAgain);
+    }
+
+    interface MyPhotosStarterProvider {
+
+        MyPhotosStarter getMyPhotosStarter();
     }
 }

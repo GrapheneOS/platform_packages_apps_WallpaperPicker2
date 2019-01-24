@@ -18,12 +18,13 @@ package com.android.wallpaper.picker;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.WallpaperRotationInitializer.NetworkPreference;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 /**
  * Dialog fragment which communicates that starting a wallpaper rotation failed and gives the user

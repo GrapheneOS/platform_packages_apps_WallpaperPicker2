@@ -15,15 +15,16 @@
  */
 package com.android.wallpaper.asset;
 
-import android.support.annotation.Nullable;
-
 import com.android.wallpaper.asset.ResourceAssetLoader.ResourceAssetFetcher;
+
 import com.bumptech.glide.load.Options;
 import com.bumptech.glide.load.model.ModelLoader;
 import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.MultiModelLoaderFactory;
 
 import java.io.InputStream;
+
+import androidx.annotation.Nullable;
 
 /**
  * Glide ModelLoader which loads InputStreams from NexusStaticAssets.

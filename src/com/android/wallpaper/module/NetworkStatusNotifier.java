@@ -15,7 +15,7 @@
  */
 package com.android.wallpaper.module;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 
 /**
  * Provides current status of the network. Abstraction layer above Android's ConnectivityManager

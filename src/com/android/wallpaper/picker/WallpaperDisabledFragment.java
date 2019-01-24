@@ -16,8 +16,6 @@
 package com.android.wallpaper.picker;
 
 import android.os.Bundle;
-import android.support.annotation.IntDef;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +28,9 @@ import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.WallpaperPreferences;
 
 import java.util.Date;
+
+import androidx.annotation.IntDef;
+import androidx.fragment.app.Fragment;
 
 /**
  * Displays the UI indicating that setting wallpaper is disabled.

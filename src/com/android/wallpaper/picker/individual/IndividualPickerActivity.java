@@ -25,13 +25,14 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.compat.BuildCompat;
@@ -89,7 +90,11 @@ public class IndividualPickerActivity extends BaseActivity {
                 : savedInstanceState.getString(KEY_CATEGORY_COLLECTION_ID);
         mCategory = injector.getCategoryProvider(this).getCategory(mCategoryCollectionId);
         if (mCategory == null) {
-            DiskBasedLogger.e(TAG, "Failed to find the category.", this);
+            DiskBasedLogger.e(TAG, "Failed to find the category: " + mCategoryCollectionId, this);
+            // We either were called with an invalid collection Id, or we're restarting with no
+            // saved state, or with a collection id that doesn't exist anymore.
+            // In those cases, we cannot continue, so let's just go back.
+            finish();
         }
 
         setTitle(mCategory.getTitle());

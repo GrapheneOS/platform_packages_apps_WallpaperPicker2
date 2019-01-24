@@ -15,10 +15,10 @@
  */
 package com.android.wallpaper.module;
 
-import android.support.annotation.Nullable;
-
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
+
+import androidx.annotation.Nullable;
 
 /**
  * Interface for factories which construct {@link WallpaperInfo} objects representing the device's

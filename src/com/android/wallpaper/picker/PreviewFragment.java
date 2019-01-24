@@ -39,14 +39,6 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.IntDef;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetBehavior.State;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -72,7 +64,9 @@ import com.android.wallpaper.asset.Asset.DimensionsReceiver;
 import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.compat.ButtonDrawableSetterCompat;
 import com.android.wallpaper.config.Flags;
+import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
+import com.android.wallpaper.module.CurrentWallpaperInfoFactory;
 import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
@@ -86,13 +80,23 @@ import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.ThrowableAnalyzer;
 import com.android.wallpaper.util.WallpaperCropUtils;
 import com.android.wallpaper.widget.MaterialProgressDrawable;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetBehavior.State;
 
 import java.util.Date;
 import java.util.List;
+
+import androidx.annotation.IntDef;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 /**
  * Fragment which displays the UI for previewing an individual wallpaper and its attribution
@@ -122,9 +126,9 @@ public class PreviewFragment extends Fragment implements
     public @interface PreviewMode {
     }
 
-    private static final String ARG_WALLPAPER = "wallpaper";
-    private static final String ARG_PREVIEW_MODE = "preview_mode";
-    private static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
+    protected static final String ARG_WALLPAPER = "wallpaper";
+    protected static final String ARG_PREVIEW_MODE = "preview_mode";
+    protected static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
     private static final String TAG_LOAD_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "load_wallpaper_error_dialog";
     private static final String TAG_SET_WALLPAPER_DIALOG_FRAGMENT = "set_wallpaper_dialog";
@@ -148,8 +152,8 @@ public class PreviewFragment extends Fragment implements
      */
     private boolean mTestingModeEnabled;
 
-    private SubsamplingScaleImageView mFullResImageView;
-    private WallpaperInfo mWallpaper;
+    protected SubsamplingScaleImageView mFullResImageView;
+    protected WallpaperInfo mWallpaper;
     private Asset mWallpaperAsset;
     private WallpaperPersister mWallpaperPersister;
     private WallpaperPreferences mPreferences;
@@ -412,9 +416,7 @@ public class PreviewFragment extends Fragment implements
         int id = item.getItemId();
         if (id == R.id.set_wallpaper) {
             if (BuildCompat.isAtLeastN()) {
-                DialogFragment newFragment = new SetWallpaperDialogFragment();
-                newFragment.setTargetFragment(this, UNUSED_REQUEST_CODE);
-                newFragment.show(getFragmentManager(), TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
+                requestDestination();
             } else {
                 setCurrentWallpaper(WallpaperPersister.DEST_HOME_SCREEN);
             }
@@ -429,6 +431,21 @@ public class PreviewFragment extends Fragment implements
         }
 
         return false;
+    }
+
+    private void requestDestination() {
+        CurrentWallpaperInfoFactory factory = InjectorProvider.getInjector()
+                .getCurrentWallpaperFactory(getContext());
+
+        factory.createCurrentWallpaperInfos((homeWallpaper, lockWallpaper, presentationMode) -> {
+            SetWallpaperDialogFragment setWallpaperDialog = new SetWallpaperDialogFragment();
+            setWallpaperDialog.setTargetFragment(this, UNUSED_REQUEST_CODE);
+            if (homeWallpaper instanceof LiveWallpaperInfo && lockWallpaper == null) {
+                // if the lock wallpaper is a live wallpaper, we cannot set a home-only static one
+                setWallpaperDialog.setHomeOptionAvailable(false);
+            }
+            setWallpaperDialog.show(getFragmentManager(), TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
+        }, true); // Force refresh as the wallpaper may have been set while this fragment was paused
     }
 
     @Override
@@ -453,7 +470,10 @@ public class PreviewFragment extends Fragment implements
 
     @Override
     public void onClickOk() {
-        getActivity().finish();
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            activity.finish();
+        }
     }
 
     @Override
@@ -593,23 +613,27 @@ public class PreviewFragment extends Fragment implements
             if (mExploreIntent != null) {
                 if (Flags.skipDailyWallpaperButtonEnabled) {
                     Drawable exploreButtonDrawable = context.getDrawable(
-                            R.drawable.ic_explore_24px);
+                            mWallpaper.getActionIconRes(context));
 
                     // This Drawable's state is shared across the app, so make a copy of it before applying a
                     // color tint as not to affect other clients elsewhere in the app.
-                    exploreButtonDrawable = exploreButtonDrawable.getConstantState().newDrawable().mutate();
+                    exploreButtonDrawable = exploreButtonDrawable.getConstantState()
+                            .newDrawable().mutate();
                     // Color the "compass" icon with the accent color.
                     exploreButtonDrawable.setColorFilter(
                             getResources().getColor(R.color.accent_color), Mode.SRC_IN);
                     ButtonDrawableSetterCompat.setDrawableToButtonStart(
                             mAttributionExploreButton, exploreButtonDrawable);
+                    mAttributionExploreButton.setText(context.getString(
+                            mWallpaper.getActionLabelRes(context)));
                 }
 
                 mAttributionExploreSection.setVisibility(View.VISIBLE);
                 mAttributionExploreButton.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mUserEventLogger.logExploreClicked(mWallpaper.getCollectionId(context));
+                        mUserEventLogger.logActionClicked(mWallpaper.getCollectionId(context),
+                                mWallpaper.getActionLabelRes(context));
 
                         startActivity(mExploreIntent);
                     }
@@ -677,20 +701,6 @@ public class PreviewFragment extends Fragment implements
 
                             setDefaultWallpaperZoomAndScroll();
                             crossFadeInMosaicView();
-
-                            // Record memory snapshot of app one second delayed to allow time for MosaicView tiles
-                            // to be decoded and overlaid on top of the page bitmap.
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (getActivity() == null) {
-                                        return;
-                                    }
-
-                                    InjectorProvider.getInjector().getPerformanceMonitor()
-                                            .recordFullResPreviewLoadedMemorySnapshot();
-                                }
-                            }, 1000);
                         }
                         if (mProgressDrawable != null) {
                             mProgressDrawable.stop();
@@ -774,7 +784,7 @@ public class PreviewFragment extends Fragment implements
         mFullResImageView.setScaleAndCenter(defaultWallpaperZoom, centerPosition);
     }
 
-    private Rect calculateCropRect() {
+    protected Rect calculateCropRect() {
         // Calculate Rect of wallpaper in physical pixel terms (i.e., scaled to current zoom).
         float wallpaperZoom = mFullResImageView.getScale();
         int scaledWallpaperWidth = (int) (mRawWallpaperSize.x * wallpaperZoom);

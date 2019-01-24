@@ -17,7 +17,8 @@ package com.android.wallpaper.module;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 /**
  * Interface for an object which checks whether any activity on the device can handle ACTION_VIEW

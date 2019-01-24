@@ -15,6 +15,9 @@
  */
 package com.android.wallpaper.module;
 
+import static javax.microedition.khronos.egl.EGL10.EGL_NO_CONTEXT;
+import static javax.microedition.khronos.egl.EGL10.EGL_NO_SURFACE;
+
 import android.annotation.SuppressLint;
 import android.app.WallpaperColors;
 import android.app.WallpaperManager;
@@ -39,7 +42,6 @@ import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.renderscript.Matrix4f;
 import android.service.wallpaper.WallpaperService;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -63,8 +65,7 @@ import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 
-import static javax.microedition.khronos.egl.EGL10.EGL_NO_CONTEXT;
-import static javax.microedition.khronos.egl.EGL10.EGL_NO_SURFACE;
+import androidx.annotation.RequiresApi;
 
 /**
  * Live wallpaper service which simply renders a wallpaper from internal storage. Designed as a

@@ -81,6 +81,13 @@ public class BuildCompat {
     }
 
     /**
+     * Returns whether the framework on the current Android device is O-MR1 or higher.
+     */
+    public static boolean isAtLeastOMR1() {
+        return sSdk >= VERSION_CODES.O_MR1;
+    }
+
+    /**
      * Sets the SDK version that BuildCompat will consider the current device to be on. Used for
      * testing only.
      */

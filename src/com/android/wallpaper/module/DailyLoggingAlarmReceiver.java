@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.android.wallpaper.model.WallpaperMetadata;
@@ -29,6 +28,8 @@ import com.android.wallpaper.module.WallpaperRefresher.RefreshListener;
 import com.android.wallpaper.util.DiskBasedLogger;
 
 import java.util.Calendar;
+
+import androidx.annotation.Nullable;
 
 /**
  * Performs daily logging operations when alarm is received.

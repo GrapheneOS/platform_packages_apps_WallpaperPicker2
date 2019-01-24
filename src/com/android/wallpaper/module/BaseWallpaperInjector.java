@@ -40,6 +40,7 @@ public abstract class BaseWallpaperInjector implements Injector {
     private SystemFeatureChecker mSystemFeatureChecker;
     private RotatingWallpaperComponentChecker mRotatingWallpaperComponentChecker;
     private FormFactorChecker mFormFactorChecker;
+    private PackageStatusNotifier mPackageStatusNotifier;
 
     @Override
     public synchronized BitmapCropper getBitmapCropper() {
@@ -121,6 +122,15 @@ public abstract class BaseWallpaperInjector implements Injector {
             mNetworkStatusNotifier = new DefaultNetworkStatusNotifier(context.getApplicationContext());
         }
         return mNetworkStatusNotifier;
+    }
+
+    @Override
+    public synchronized PackageStatusNotifier getPackageStatusNotifier(Context context) {
+        if (mPackageStatusNotifier == null) {
+            mPackageStatusNotifier = new DefaultPackageStatusNotifier(
+                    context.getApplicationContext());
+        }
+        return mPackageStatusNotifier;
     }
 
     @Override

@@ -18,20 +18,27 @@ package com.android.wallpaper.picker;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.compat.ButtonDrawableSetterCompat;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.fragment.app.DialogFragment;
+
 /**
  * Dialog fragment which shows the "Set wallpaper" destination dialog for N+ devices. Lets user
  * choose whether to set the wallpaper on the home screen, lock screen, or both.
  */
 public class SetWallpaperDialogFragment extends DialogFragment {
+
+    private Button mSetHomeWallpaperButton;
+    private Button mSetLockWallpaperButton;
+    private Button mSetBothWallpaperButton;
+
+    private boolean mHomeAvailable = true;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -54,8 +61,8 @@ public class SetWallpaperDialogFragment extends DialogFragment {
                 .setView(layout)
                 .create();
 
-        Button setHomeWallpaperButton = (Button) layout.findViewById(R.id.set_home_wallpaper_button);
-        setHomeWallpaperButton.setOnClickListener(new View.OnClickListener() {
+        mSetHomeWallpaperButton = layout.findViewById(R.id.set_home_wallpaper_button);
+        mSetHomeWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callback.onSetHomeScreen();
@@ -63,11 +70,11 @@ public class SetWallpaperDialogFragment extends DialogFragment {
             }
         });
         ButtonDrawableSetterCompat.setDrawableToButtonStart(
-                setHomeWallpaperButton,
+                mSetHomeWallpaperButton,
                 context.getDrawable(R.drawable.ic_home_24px));
 
-        Button setLockWallpaperButton = (Button) layout.findViewById(R.id.set_lock_wallpaper_button);
-        setLockWallpaperButton.setOnClickListener(new View.OnClickListener() {
+        mSetLockWallpaperButton = layout.findViewById(R.id.set_lock_wallpaper_button);
+        mSetLockWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callback.onSetLockScreen();
@@ -75,11 +82,11 @@ public class SetWallpaperDialogFragment extends DialogFragment {
             }
         });
         ButtonDrawableSetterCompat.setDrawableToButtonStart(
-                setLockWallpaperButton,
+                mSetLockWallpaperButton,
                 context.getDrawable(R.drawable.ic_lock_outline_24px));
 
-        Button setBothWallpaperButton = (Button) layout.findViewById(R.id.set_both_wallpaper_button);
-        setBothWallpaperButton.setOnClickListener(new View.OnClickListener() {
+        mSetBothWallpaperButton = layout.findViewById(R.id.set_both_wallpaper_button);
+        mSetBothWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callback.onSetBoth();
@@ -87,10 +94,23 @@ public class SetWallpaperDialogFragment extends DialogFragment {
             }
         });
         ButtonDrawableSetterCompat.setDrawableToButtonStart(
-                setBothWallpaperButton,
+                mSetBothWallpaperButton,
                 context.getDrawable(R.drawable.ic_smartphone_24px));
 
+        updateButtonsVisibility();
+
         return dialog;
+    }
+
+    public void setHomeOptionAvailable(boolean homeAvailable) {
+        mHomeAvailable = homeAvailable;
+        updateButtonsVisibility();
+    }
+
+    private void updateButtonsVisibility() {
+        if (mSetHomeWallpaperButton != null) {
+            mSetHomeWallpaperButton.setVisibility(mHomeAvailable ? View.VISIBLE : View.GONE);
+        }
     }
 
     /**

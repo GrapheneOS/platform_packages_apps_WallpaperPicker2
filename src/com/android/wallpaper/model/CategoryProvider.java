@@ -15,7 +15,7 @@
  */
 package com.android.wallpaper.model;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * Fetches and provides wallpaper categories to any registered {@link CategoryReceiver}s.
@@ -30,7 +30,21 @@ public interface CategoryProvider {
      * @param forceRefresh Whether to force the CategoryProvider to refresh the categories
      *                     (as opposed to returning cached values from a prior fetch).
      */
-    public void fetchCategories(CategoryReceiver receiver, boolean forceRefresh);
+    void fetchCategories(CategoryReceiver receiver, boolean forceRefresh);
+
+    int getSize();
+
+    /**
+     * Returns the Category at the given index position.
+     * <p>
+     * Note that this method is expected to be called after the categories have been fetched.
+     * @param index index of the Category to return.
+     *
+     * @throws IllegalStateException if this method is called before fetching happened.
+     * @throws IndexOutOfBoundsException if the given index is either negative or larger than
+     * {@link #getSize()}
+     */
+    Category getCategory(int index);
 
     /**
      * Returns the Category having the given collection ID. If not found, returns null.
@@ -39,5 +53,5 @@ public interface CategoryProvider {
      * already fetched, so the null return case should be treated as an error by callers.
      */
     @Nullable
-    public Category getCategory(String collectionId);
+    Category getCategory(String collectionId);
 }

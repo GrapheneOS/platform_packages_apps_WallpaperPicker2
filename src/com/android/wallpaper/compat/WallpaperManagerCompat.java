@@ -21,10 +21,11 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.ParcelFileDescriptor;
-import android.support.annotation.IntDef;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import androidx.annotation.IntDef;
 
 /**
  * An abstraction over WallpaperManager to allow for the transitional state in which the N SDK

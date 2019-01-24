@@ -18,12 +18,14 @@ package com.android.wallpaper.picker;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
+import com.android.wallpaper.module.InjectorProvider;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 /**
  * Activity that displays a preview of a specific wallpaper and provides the ability to set the
@@ -52,7 +54,7 @@ public class PreviewActivity extends BasePreviewActivity {
             Intent intent = getIntent();
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
             boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
-            fragment = PreviewFragment.newInstance(
+            fragment = InjectorProvider.getInjector().getPreviewFragment(
                     wallpaper, PreviewFragment.MODE_CROP_AND_SET_WALLPAPER, testingModeEnabled);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)

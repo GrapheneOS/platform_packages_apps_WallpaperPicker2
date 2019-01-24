@@ -20,11 +20,12 @@ import android.app.WallpaperManager;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.IntDef;
 import android.util.Log;
 
 import com.bumptech.glide.load.Key;
 import com.bumptech.glide.signature.ObjectKey;
+
+import androidx.annotation.IntDef;
 
 /**
  * Glide model representing wallpaper image data retrieved from {@link WallpaperManager}.

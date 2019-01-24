@@ -89,6 +89,7 @@ public class WallpaperRequester implements Requester {
                     .asBitmap()
                     .load(imageUrl)
                     .apply(RequestOptions.noTransformation())
+                    .apply(RequestOptions.option(HttpGlideUrlLoader.TIMEOUT, LONG_TIMEOUT_MS))
                     .into(target);
         } catch (Exception e) {
             Log.e(TAG, "Unable to get Bitmap for image with url: " + imageUrl, e);

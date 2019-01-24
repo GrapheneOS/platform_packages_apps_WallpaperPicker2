@@ -28,8 +28,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.ParcelFileDescriptor;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.android.wallpaper.asset.BitmapUtils;
@@ -43,6 +41,9 @@ import com.android.wallpaper.util.DiskBasedLogger;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 /**
  * {@link android.app.job.JobScheduler} job for generating missing hash codes for static wallpapers

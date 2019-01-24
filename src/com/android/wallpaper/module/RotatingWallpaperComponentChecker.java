@@ -16,7 +16,8 @@
 package com.android.wallpaper.module;
 
 import android.content.Context;
-import android.support.annotation.IntDef;
+
+import androidx.annotation.IntDef;
 
 /**
  * Checks what component is responsible for presenting the rotating wallpaper image under the

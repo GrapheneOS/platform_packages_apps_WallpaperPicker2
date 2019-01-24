@@ -75,7 +75,7 @@
 
     <!-- Label referring to both the home screen and the lock screen of the
          device. [CHAR LIMIT=100] -->
-    <string name="set_wallpaper_both_destination">Both</string>
+    <string name="set_wallpaper_both_destination">Home screen and lock screen</string>
 
     <!-- Label describing a live wallpaper whose responsibility is to display a different wallpaper
          on a periodic basis (i.e., in a daily rotation). [CHAR LIMIT=80] -->
@@ -275,7 +275,7 @@
 
     <!-- "Center crop" wallpaper position option where the custom photo wallpaper is center cropped
          to the device's desktop so that the maximum area of the photo is shown without empty space.
-         [CHAR_LIMIT=30] -->
+         [CHAR_LIMIT=50] -->
     <string name="center_crop_wallpaper_position">Center crop</string>
 
     <!-- "Stretch" wallpaper position option where the custom photo wallpaper is scaled and

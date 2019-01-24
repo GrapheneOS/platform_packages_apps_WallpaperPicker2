@@ -15,6 +15,8 @@
  */
 package com.android.wallpaper.picker;
 
+import androidx.annotation.Nullable;
+
 /**
  * Interface for a class which presents (in UI) a collection of wallpapers.
  */
@@ -23,4 +25,16 @@ public interface WallpapersUiContainer {
      * Notifies the container that wallpapers are ready to display.
      */
     void onWallpapersReady();
+
+    /**
+     * Returns the {@link CategoryFragment} used by this container to display wallpaper
+     * categories, or {@code null} if none is available.
+     */
+    @Nullable
+    CategoryFragment getCategoryFragment();
+
+    /**
+     * Notifies the container that categories have been fetched.
+     */
+    void doneFetchingCategories();
 }

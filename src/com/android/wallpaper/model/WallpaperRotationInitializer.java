@@ -17,7 +17,8 @@ package com.android.wallpaper.model;
 
 import android.content.Context;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
+
+import androidx.annotation.IntDef;
 
 /**
  * Interface for objects which initialize daily wallpaper rotations.

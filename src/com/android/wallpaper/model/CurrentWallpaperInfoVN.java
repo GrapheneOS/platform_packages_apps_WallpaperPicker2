@@ -35,6 +35,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+
 /**
  * Represents the currently set wallpaper on N+ devices. Should not be used to set a new wallpaper.
  */
@@ -56,6 +59,10 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
     private List<String> mAttributions;
     private Asset mAsset;
     private String mActionUrl;
+    @StringRes
+    private int mActionLabelRes;
+    @DrawableRes
+    private int mActionIconRes;
     private String mCollectionId;
     @WallpaperLocation
     private int mWallpaperManagerFlag;
@@ -66,11 +73,15 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
      * @param wallpaperManagerFlag Either SYSTEM or LOCK--the source of image data which this object
      *                             represents.
      */
-    public CurrentWallpaperInfoVN(List<String> attributions, String actionUrl, String collectionId,
+    public CurrentWallpaperInfoVN(List<String> attributions, String actionUrl,
+                                  @StringRes int actionLabelRes, @DrawableRes int actionIconRes,
+                                  String collectionId,
                                   @WallpaperLocation int wallpaperManagerFlag) {
         mAttributions = attributions;
         mWallpaperManagerFlag = wallpaperManagerFlag;
         mActionUrl = actionUrl;
+        mActionLabelRes = actionLabelRes;
+        mActionIconRes = actionIconRes;
         mCollectionId = collectionId;
     }
 
@@ -81,6 +92,8 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
         mWallpaperManagerFlag = in.readInt();
         mActionUrl = in.readString();
         mCollectionId = in.readString();
+        mActionLabelRes = in.readInt();
+        mActionIconRes = in.readInt();
     }
 
     @Override
@@ -109,6 +122,16 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
     @Override
     public String getCollectionId(Context unused) {
         return mCollectionId;
+    }
+
+    @Override
+    public int getActionIconRes(Context unused) {
+        return mActionIconRes != 0 ? mActionIconRes : WallpaperInfo.getDefaultActionIcon();
+    }
+
+    @Override
+    public int getActionLabelRes(Context unused) {
+        return mActionLabelRes != 0 ? mActionLabelRes : WallpaperInfo.getDefaultActionLabel();
     }
 
     /**
@@ -155,6 +178,8 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
         parcel.writeInt(mWallpaperManagerFlag);
         parcel.writeString(mActionUrl);
         parcel.writeString(mCollectionId);
+        parcel.writeInt(mActionLabelRes);
+        parcel.writeInt(mActionIconRes);
     }
 
     @Override

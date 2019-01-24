@@ -40,6 +40,58 @@ LOCAL_SRC_FILES := ../../../prebuilts/maven_repo/bumptech/com/github/bumptech/gl
 LOCAL_UNINSTALLABLE_MODULE := true
 include $(BUILD_PREBUILT)
 
+include $(CLEAR_VARS)
+LOCAL_USE_AAPT2 := true
+LOCAL_AAPT2_ONLY := true
+LOCAL_MODULE_TAGS := optional
+
+LOCAL_STATIC_ANDROID_LIBRARIES := android-support-exifinterface
+LOCAL_SRC_FILES := $(call all-java-files-under, ../../../external/subsampling-scale-image-view/library/src)
+LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/../../../external/subsampling-scale-image-view/library/src/main/res
+
+LOCAL_PROGUARD_ENABLED := disabled
+
+LOCAL_SDK_VERSION := current
+LOCAL_MIN_SDK_VERSION := 21
+LOCAL_MODULE := wallpaper-subsampling-scale-image-view
+LOCAL_MANIFEST_FILE := ../../../external/subsampling-scale-image-view/library/src/main/AndroidManifest.xml
+
+include $(BUILD_STATIC_JAVA_LIBRARY)
+
+
+#
+# Build rule for WallpaperPicker2 dependencies lib.
+#
+include $(CLEAR_VARS)
+LOCAL_USE_AAPT2 := true
+LOCAL_MODULE_TAGS := optional
+
+LOCAL_STATIC_ANDROID_LIBRARIES := \
+    androidx.appcompat_appcompat \
+    androidx.cardview_cardview \
+    androidx.recyclerview_recyclerview \
+    com.google.android.material_material \
+    androidx.exifinterface_exifinterface \
+    wallpaper-subsampling-scale-image-view
+
+LOCAL_STATIC_JAVA_LIBRARIES := \
+    wallpaper2-glide-target \
+    wallpaper2-disklrucache-target \
+    wallpaper2-gifdecoder-target \
+    volley \
+    libbackup
+
+LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res
+
+LOCAL_PROGUARD_ENABLED := disabled
+LOCAL_MANIFEST_FILE := AndroidManifest.xml
+LOCAL_SDK_VERSION := current
+
+LOCAL_MODULE := WallpaperPicker2CommonDepsLib
+LOCAL_PRIVILEGED_MODULE := true
+
+include $(BUILD_STATIC_JAVA_LIBRARY)
+
 #
 # Build app code.
 #
@@ -49,42 +101,18 @@ LOCAL_MODULE_TAGS := optional
 
 LOCAL_USE_AAPT2 := true
 
-LOCAL_STATIC_ANDROID_LIBRARIES := \
-    android-support-v4 \
-    android-support-v7-appcompat \
-    android-support-v7-cardview \
-    android-support-v7-recyclerview \
-    android-support-compat \
-    $(ANDROID_SUPPORT_DESIGN_TARGETS) \
-    android-support-exifinterface \
-    android-support-media-compat
-
-LOCAL_STATIC_JAVA_LIBRARIES := \
-    wallpaper2-glide-target \
-    wallpaper2-disklrucache-target \
-    wallpaper2-gifdecoder-target \
-    volley \
-    libbackup \
-    icc_profiles
+LOCAL_STATIC_ANDROID_LIBRARIES := WallpaperPicker2CommonDepsLib
 
 LOCAL_SRC_FILES := $(call all-java-files-under, src) \
-    $(call all-java-files-under, src_override) \
-    $(call all-java-files-under, ../../../external/subsampling-scale-image-view/library/src)
+    $(call all-java-files-under, src_override)
 
-LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res \
-    $(LOCAL_PATH)/../../../external/subsampling-scale-image-view/library/src/main/res
+LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res
 
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 LOCAL_PROGUARD_ENABLED := disabled
 
-LOCAL_AAPT_FLAGS := \
-    --auto-add-overlay \
-    --extra-packages com.davemorrissey.labs.subscaleview
-
 LOCAL_SDK_VERSION := current
 LOCAL_PACKAGE_NAME := WallpaperPicker2
+LOCAL_JETIFIER_ENABLED := true
 
 include $(BUILD_PACKAGE)
-
-# ==================================================
-include $(call all-makefiles-under,$(LOCAL_PATH))

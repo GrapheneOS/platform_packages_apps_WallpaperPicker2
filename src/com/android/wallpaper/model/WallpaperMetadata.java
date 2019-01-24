@@ -19,6 +19,9 @@ import android.app.WallpaperInfo;
 
 import java.util.List;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+
 /**
  * Lightweight wrapper for user-facing wallpaper metadata.
  */
@@ -28,11 +31,17 @@ public class WallpaperMetadata {
     private final String mActionUrl;
     private final String mCollectionId;
     private final android.app.WallpaperInfo mWallpaperComponent;
+    @StringRes private final int mActionLabelRes;
+    @DrawableRes private final int mActionIconRes;
 
-    public WallpaperMetadata(List<String> attributions, String actionUrl, String collectionId,
+    public WallpaperMetadata(List<String> attributions, String actionUrl,
+                             @StringRes int actionLabelRes,
+                             @DrawableRes int actionIconRes, String collectionId,
                              android.app.WallpaperInfo wallpaperComponent) {
         mAttributions = attributions;
         mActionUrl = actionUrl;
+        mActionLabelRes = actionLabelRes;
+        mActionIconRes = actionIconRes;
         mCollectionId = collectionId;
         mWallpaperComponent = wallpaperComponent;
     }
@@ -49,6 +58,22 @@ public class WallpaperMetadata {
      */
     public String getActionUrl() {
         return mActionUrl;
+    }
+
+    /**
+     * Returns the wallpaper's action label.
+     */
+    @StringRes
+    public int getActionLabelRes() {
+        return mActionLabelRes;
+    }
+
+    /**
+     * Returns the wallpaper's action icon.
+     */
+    @DrawableRes
+    public int getActionIconRes() {
+        return mActionIconRes;
     }
 
     /**

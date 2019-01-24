@@ -17,9 +17,10 @@ package com.android.wallpaper.module;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.support.annotation.Nullable;
 
 import com.android.wallpaper.asset.Asset;
+
+import androidx.annotation.Nullable;
 
 /**
  * Interface for classes which perform crop operations on bitmaps.

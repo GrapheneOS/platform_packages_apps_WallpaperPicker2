@@ -18,15 +18,17 @@ package com.android.wallpaper.picker;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.support.annotation.NonNull;
 import android.view.WindowManager;
 
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.WallpaperCropUtils;
+
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
 import java.security.MessageDigest;
+
+import androidx.annotation.NonNull;
 
 /**
  * Glide bitmap transformation which emulates the default preview positioning of a wallpaper image.

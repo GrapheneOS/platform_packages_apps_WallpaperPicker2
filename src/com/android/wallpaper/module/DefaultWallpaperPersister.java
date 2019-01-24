@@ -28,7 +28,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
@@ -58,6 +57,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 /**
  * Concrete implementation of WallpaperPersister which actually sets wallpapers to the system via
@@ -337,15 +338,18 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
 
     @Override
     public boolean setWallpaperInRotation(Bitmap wallpaperBitmap, List<String> attributions,
+                                          int actionLabelRes, int actionIconRes,
                                           String actionUrl, String collectionId) {
         @RotatingWallpaperComponent int rotatingWallpaperComponent = mRotatingWallpaperComponentChecker
                 .getCurrentRotatingWallpaperComponent(mAppContext);
 
         switch (rotatingWallpaperComponent) {
             case RotatingWallpaperComponentChecker.ROTATING_WALLPAPER_COMPONENT_STATIC:
-                return setWallpaperInRotationStatic(wallpaperBitmap, attributions, actionUrl, collectionId);
+                return setWallpaperInRotationStatic(wallpaperBitmap, attributions, actionUrl,
+                        actionLabelRes, actionIconRes, collectionId);
             case RotatingWallpaperComponentChecker.ROTATING_WALLPAPER_COMPONENT_LIVE:
-                return setWallpaperInRotationLive(wallpaperBitmap, attributions, actionUrl, collectionId);
+                return setWallpaperInRotationLive(wallpaperBitmap, attributions, actionUrl,
+                        actionLabelRes, actionIconRes, collectionId);
             default:
                 Log.e(TAG, "Unknown rotating wallpaper component: " + rotatingWallpaperComponent);
                 return false;
@@ -371,11 +375,12 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
 
     @Override
     public boolean finalizeWallpaperForNextRotation(List<String> attributions, String actionUrl,
+                                                    int actionLabelRes, int actionIconRes,
                                                     String collectionId, int wallpaperId) {
-        @RotatingWallpaperComponent int rotatingWallpaperComponent = mRotatingWallpaperComponentChecker
-                .getNextRotatingWallpaperComponent(mAppContext);
-        return finalizeWallpaperForRotatingComponent(attributions, actionUrl, collectionId,
-                wallpaperId, rotatingWallpaperComponent);
+        @RotatingWallpaperComponent int rotatingWallpaperComponent =
+                mRotatingWallpaperComponentChecker.getNextRotatingWallpaperComponent(mAppContext);
+        return finalizeWallpaperForRotatingComponent(attributions, actionUrl, actionLabelRes,
+                actionIconRes, collectionId, wallpaperId, rotatingWallpaperComponent);
     }
 
     /**
@@ -383,15 +388,17 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
      * current "daily wallpaper".
      */
     private boolean setWallpaperInRotationStatic(Bitmap wallpaperBitmap, List<String> attributions,
-                                                 String actionUrl, String collectionId) {
+                                                 String actionUrl, int actionLabelRes,
+                                                 int actionIconRes, String collectionId) {
         final int wallpaperId = setWallpaperBitmapInRotationStatic(wallpaperBitmap);
 
         if (wallpaperId == 0) {
             return false;
         }
 
-        return finalizeWallpaperForRotatingComponent(attributions, actionUrl, collectionId,
-                wallpaperId, RotatingWallpaperComponentChecker.ROTATING_WALLPAPER_COMPONENT_STATIC);
+        return finalizeWallpaperForRotatingComponent(attributions, actionUrl, actionLabelRes,
+                actionIconRes, collectionId, wallpaperId,
+                RotatingWallpaperComponentChecker.ROTATING_WALLPAPER_COMPONENT_STATIC);
     }
 
     /**
@@ -402,8 +409,12 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
      * @return Whether the operation was successful.
      */
     private boolean finalizeWallpaperForRotatingComponent(List<String> attributions,
-                                                          String actionUrl, String collectionId, int wallpaperId,
-                                                          @RotatingWallpaperComponent int rotatingWallpaperComponent) {
+            String actionUrl,
+            int actionLabelRes,
+            int actionIconRes,
+            String collectionId,
+            int wallpaperId,
+            @RotatingWallpaperComponent int rotatingWallpaperComponent) {
         mWallpaperPreferences.clearHomeWallpaperMetadata();
 
         boolean isLockWallpaperSet = isSeparateLockScreenWallpaperSet();
@@ -481,6 +492,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
 
         mWallpaperPreferences.setHomeWallpaperAttributions(attributions);
         mWallpaperPreferences.setHomeWallpaperActionUrl(actionUrl);
+        mWallpaperPreferences.setHomeWallpaperActionLabelRes(actionLabelRes);
+        mWallpaperPreferences.setHomeWallpaperActionIconRes(actionIconRes);
         // Only set base image URL for static Backdrop images, not for rotation.
         mWallpaperPreferences.setHomeWallpaperBaseImageUrl(null);
         mWallpaperPreferences.setHomeWallpaperCollectionId(collectionId);
@@ -492,6 +505,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                 && !isLockWallpaperSet) {
             mWallpaperPreferences.setLockWallpaperAttributions(attributions);
             mWallpaperPreferences.setLockWallpaperActionUrl(actionUrl);
+            mWallpaperPreferences.setLockWallpaperActionLabelRes(actionLabelRes);
+            mWallpaperPreferences.setLockWallpaperActionIconRes(actionIconRes);
             mWallpaperPreferences.setLockWallpaperCollectionId(collectionId);
         }
 
@@ -503,15 +518,18 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
      * current "daily wallpaper".
      */
     private boolean setWallpaperInRotationLive(Bitmap wallpaperBitmap, List<String> attributions,
-                                               String actionUrl, String collectionId) {
+                                               String actionUrl, int actionLabelRes,
+                                               int actionIconRes, String collectionId) {
 
         synchronized (RotatingWallpaperLockProvider.getInstance()) {
             if (!setWallpaperBitmapInRotationLive(wallpaperBitmap, false /* isPreview */)) {
                 return false;
             }
 
-            return finalizeWallpaperForRotatingComponent(attributions, actionUrl, collectionId,
-                    0 /* wallpaperId */, RotatingWallpaperComponentChecker.ROTATING_WALLPAPER_COMPONENT_LIVE);
+            return finalizeWallpaperForRotatingComponent(attributions, actionUrl, actionLabelRes,
+                    actionIconRes, collectionId,
+                    0 /* wallpaperId */,
+                    RotatingWallpaperComponentChecker.ROTATING_WALLPAPER_COMPONENT_LIVE);
         }
     }
 
@@ -907,6 +925,10 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                     mWallpaperPreferences.getHomeWallpaperAttributions());
             mWallpaperPreferences.setLockWallpaperActionUrl(
                     mWallpaperPreferences.getHomeWallpaperActionUrl());
+            mWallpaperPreferences.setLockWallpaperActionLabelRes(
+                    mWallpaperPreferences.getHomeWallpaperActionLabelRes());
+            mWallpaperPreferences.setLockWallpaperActionIconRes(
+                    mWallpaperPreferences.getHomeWallpaperActionIconRes());
             mWallpaperPreferences.setLockWallpaperCollectionId(
                     mWallpaperPreferences.getHomeWallpaperCollectionId());
 
@@ -976,18 +998,30 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
 
             mWallpaperPreferences.setHomeWallpaperHashCode(bitmapHash);
 
-            mWallpaperPreferences.setHomeWallpaperAttributions(mWallpaper.getAttributions(mAppContext));
+            mWallpaperPreferences.setHomeWallpaperAttributions(
+                    mWallpaper.getAttributions(mAppContext));
             mWallpaperPreferences.setHomeWallpaperBaseImageUrl(mWallpaper.getBaseImageUrl());
             mWallpaperPreferences.setHomeWallpaperActionUrl(mWallpaper.getActionUrl(mAppContext));
-            mWallpaperPreferences.setHomeWallpaperCollectionId(mWallpaper.getCollectionId(mAppContext));
+            mWallpaperPreferences.setHomeWallpaperActionLabelRes(
+                    mWallpaper.getActionLabelRes(mAppContext));
+            mWallpaperPreferences.setHomeWallpaperActionIconRes(
+                    mWallpaper.getActionIconRes(mAppContext));
+            mWallpaperPreferences.setHomeWallpaperCollectionId(
+                    mWallpaper.getCollectionId(mAppContext));
             mWallpaperPreferences.setHomeWallpaperRemoteId(mWallpaper.getWallpaperId());
         }
 
         private void setImageWallpaperLockMetadata(int lockWallpaperId) {
             mWallpaperPreferences.setLockWallpaperId(lockWallpaperId);
-            mWallpaperPreferences.setLockWallpaperAttributions(mWallpaper.getAttributions(mAppContext));
+            mWallpaperPreferences.setLockWallpaperAttributions(
+                    mWallpaper.getAttributions(mAppContext));
             mWallpaperPreferences.setLockWallpaperActionUrl(mWallpaper.getActionUrl(mAppContext));
-            mWallpaperPreferences.setLockWallpaperCollectionId(mWallpaper.getCollectionId(mAppContext));
+            mWallpaperPreferences.setLockWallpaperActionLabelRes(
+                    mWallpaper.getActionLabelRes(mAppContext));
+            mWallpaperPreferences.setLockWallpaperActionIconRes(
+                    mWallpaper.getActionIconRes(mAppContext));
+            mWallpaperPreferences.setLockWallpaperCollectionId(
+                    mWallpaper.getCollectionId(mAppContext));
 
             // Save the lock wallpaper image's hash code as well for the sake of backup & restore because
             // WallpaperManager-generated IDs are specific to a physical device and cannot be used to
