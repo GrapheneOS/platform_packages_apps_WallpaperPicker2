@@ -19,7 +19,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -38,7 +37,6 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -64,20 +62,17 @@ import com.android.wallpaper.asset.Asset.DimensionsReceiver;
 import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.compat.ButtonDrawableSetterCompat;
 import com.android.wallpaper.config.Flags;
-import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
-import com.android.wallpaper.module.CurrentWallpaperInfoFactory;
 import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.UserEventLogger;
-import com.android.wallpaper.module.UserEventLogger.WallpaperSetFailureReason;
 import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.module.WallpaperPreferences;
+import com.android.wallpaper.module.WallpaperSetter;
 import com.android.wallpaper.util.ScreenSizeCalculator;
-import com.android.wallpaper.util.ThrowableAnalyzer;
 import com.android.wallpaper.util.WallpaperCropUtils;
 import com.android.wallpaper.widget.MaterialProgressDrawable;
 
@@ -92,6 +87,7 @@ import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
@@ -131,14 +127,11 @@ public class PreviewFragment extends Fragment implements
     protected static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
     private static final String TAG_LOAD_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "load_wallpaper_error_dialog";
-    private static final String TAG_SET_WALLPAPER_DIALOG_FRAGMENT = "set_wallpaper_dialog";
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "set_wallpaper_error_dialog";
     private static final int UNUSED_REQUEST_CODE = 1;
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
     private static final String TAG = "PreviewFragment";
-    private static final String PROGRESS_DIALOG_NO_TITLE = null;
-    private static final boolean PROGRESS_DIALOG_INDETERMINATE = true;
     private static final float PAGE_BITMAP_MAX_HEAP_RATIO = 0.25f;
     private static final String KEY_BOTTOM_SHEET_STATE = "key_bottom_sheet_state";
 
@@ -155,8 +148,7 @@ public class PreviewFragment extends Fragment implements
     protected SubsamplingScaleImageView mFullResImageView;
     protected WallpaperInfo mWallpaper;
     private Asset mWallpaperAsset;
-    private WallpaperPersister mWallpaperPersister;
-    private WallpaperPreferences mPreferences;
+    private WallpaperSetter mWallpaperSetter;;
     private UserEventLogger mUserEventLogger;
     private LinearLayout mBottomSheet;
     private TextView mAttributionTitle;
@@ -166,7 +158,6 @@ public class PreviewFragment extends Fragment implements
     private Button mAttributionExploreButton;
     private ImageView mPreviewPaneArrow;
     private int mCurrentScreenOrientation;
-    private ProgressDialog mProgressDialog;
     private Point mDefaultCropSurfaceSize;
     private Point mScreenSize;
     private Point mRawWallpaperSize; // Native size of wallpaper image.
@@ -211,14 +202,14 @@ public class PreviewFragment extends Fragment implements
         Context appContext = activity.getApplicationContext();
         Injector injector = InjectorProvider.getInjector();
 
-        mWallpaperPersister = injector.getWallpaperPersister(appContext);
-        mPreferences = injector.getPreferences(appContext);
         mUserEventLogger = injector.getUserEventLogger(appContext);
         mWallpaper = getArguments().getParcelable(ARG_WALLPAPER);
         mWallpaperAsset = mWallpaper.getAsset(appContext);
         //noinspection ResourceType
         mPreviewMode = getArguments().getInt(ARG_PREVIEW_MODE);
         mTestingModeEnabled = getArguments().getBoolean(ARG_TESTING_MODE_ENABLED);
+        mWallpaperSetter = new WallpaperSetter(injector.getWallpaperPersister(appContext),
+                injector.getPreferences(appContext), mUserEventLogger, mTestingModeEnabled);
 
         setHasOptionsMenu(true);
 
@@ -270,18 +261,18 @@ public class PreviewFragment extends Fragment implements
         /* bottom */ 0);
 
         mFullResImageView = view.findViewById(R.id.full_res_image);
-        mLoadingIndicator = (ImageView) view.findViewById(R.id.loading_indicator);
+        mLoadingIndicator = view.findViewById(R.id.loading_indicator);
 
-        mBottomSheet = (LinearLayout) view.findViewById(R.id.bottom_sheet);
-        mAttributionTitle = (TextView) view.findViewById(R.id.preview_attribution_pane_title);
-        mAttributionSubtitle1 = (TextView) view.findViewById(R.id.preview_attribution_pane_subtitle1);
-        mAttributionSubtitle2 = (TextView) view.findViewById(R.id.preview_attribution_pane_subtitle2);
-        mAttributionExploreSection = (FrameLayout) view.findViewById(
+        mBottomSheet = view.findViewById(R.id.bottom_sheet);
+        mAttributionTitle = view.findViewById(R.id.preview_attribution_pane_title);
+        mAttributionSubtitle1 = view.findViewById(R.id.preview_attribution_pane_subtitle1);
+        mAttributionSubtitle2 = view.findViewById(R.id.preview_attribution_pane_subtitle2);
+        mAttributionExploreSection = view.findViewById(
                 R.id.preview_attribution_pane_explore_section);
-        mAttributionExploreButton = (Button) view.findViewById(
+        mAttributionExploreButton = view.findViewById(
                 R.id.preview_attribution_pane_explore_button);
-        mPreviewPaneArrow = (ImageView) view.findViewById(R.id.preview_attribution_pane_arrow);
-        mLowResImageView = (ImageView) view.findViewById(R.id.low_res_image);
+        mPreviewPaneArrow = view.findViewById(R.id.preview_attribution_pane_arrow);
+        mLowResImageView = view.findViewById(R.id.low_res_image);
 
         mPreviewPaneArrow.setColorFilter(
                 getResources().getColor(R.color.preview_pane_arrow_color), Mode.SRC_IN);
@@ -362,6 +353,7 @@ public class PreviewFragment extends Fragment implements
             }
         }, 500);
 
+
         mBottomSheetInitialState = (savedInstanceState == null)
                 ? BottomSheetBehavior.STATE_EXPANDED
                 : savedInstanceState.getInt(KEY_BOTTOM_SHEET_STATE,
@@ -416,7 +408,7 @@ public class PreviewFragment extends Fragment implements
         int id = item.getItemId();
         if (id == R.id.set_wallpaper) {
             if (BuildCompat.isAtLeastN()) {
-                requestDestination();
+                mWallpaperSetter.requestDestination(this);
             } else {
                 setCurrentWallpaper(WallpaperPersister.DEST_HOME_SCREEN);
             }
@@ -431,21 +423,6 @@ public class PreviewFragment extends Fragment implements
         }
 
         return false;
-    }
-
-    private void requestDestination() {
-        CurrentWallpaperInfoFactory factory = InjectorProvider.getInjector()
-                .getCurrentWallpaperFactory(getContext());
-
-        factory.createCurrentWallpaperInfos((homeWallpaper, lockWallpaper, presentationMode) -> {
-            SetWallpaperDialogFragment setWallpaperDialog = new SetWallpaperDialogFragment();
-            setWallpaperDialog.setTargetFragment(this, UNUSED_REQUEST_CODE);
-            if (homeWallpaper instanceof LiveWallpaperInfo && lockWallpaper == null) {
-                // if the lock wallpaper is a live wallpaper, we cannot set a home-only static one
-                setWallpaperDialog.setHomeOptionAvailable(false);
-            }
-            setWallpaperDialog.show(getFragmentManager(), TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
-        }, true); // Force refresh as the wallpaper may have been set while this fragment was paused
     }
 
     @Override
@@ -479,9 +456,7 @@ public class PreviewFragment extends Fragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-        }
+        mWallpaperSetter.cleanUp();
         if (mProgressDrawable != null) {
             mProgressDrawable.stop();
         }
@@ -835,80 +810,16 @@ public class PreviewFragment extends Fragment implements
      * @param destination The wallpaper destination i.e. home vs. lockscreen vs. both.
      */
     private void setCurrentWallpaper(@Destination final int destination) {
-        mPreferences.setPendingWallpaperSetStatus(WallpaperPreferences.WALLPAPER_SET_PENDING);
-
-        // Save current screen rotation so we can temporarily disable rotation while setting the
-        // wallpaper and restore after setting the wallpaper finishes.
-        saveAndLockScreenOrientation();
-
-        // Clear MosaicView tiles and Glide's cache and pools to reclaim memory for final cropped
-        // bitmap.
-        Glide.get(getActivity()).clearMemory();
-
-        // ProgressDialog endlessly updates the UI thread, keeping it from going idle which therefore
-        // causes Espresso to hang once the dialog is shown.
-        if (!mTestingModeEnabled) {
-            int themeResId;
-            if (VERSION.SDK_INT < VERSION_CODES.LOLLIPOP) {
-                themeResId = R.style.ProgressDialogThemePreL;
-            } else {
-                themeResId = R.style.LightDialogTheme;
-            }
-            mProgressDialog = new ProgressDialog(getActivity(), themeResId);
-
-            mProgressDialog.setTitle(PROGRESS_DIALOG_NO_TITLE);
-            mProgressDialog.setMessage(
-                    getResources().getString(R.string.set_wallpaper_progress_message));
-            mProgressDialog.setIndeterminate(PROGRESS_DIALOG_INDETERMINATE);
-            mProgressDialog.show();
-        }
-
-        float wallpaperScale = mFullResImageView.getScale();
-        Rect cropRect = calculateCropRect();
-        mWallpaperPersister.setIndividualWallpaper(mWallpaper, mWallpaperAsset, cropRect,
-                wallpaperScale, destination, new SetWallpaperCallback() {
+        mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, mWallpaperAsset,
+                destination, mFullResImageView.getScale(), calculateCropRect(),
+                new SetWallpaperCallback() {
                     @Override
                     public void onSuccess() {
-                        Context context = getContext();
-                        mUserEventLogger.logWallpaperSet(
-                                mWallpaper.getCollectionId(context),
-                                mWallpaper.getWallpaperId());
-                        mPreferences.setPendingWallpaperSetStatus(
-                                WallpaperPreferences.WALLPAPER_SET_NOT_PENDING);
-                        mUserEventLogger.logWallpaperSetResult(
-                                UserEventLogger.WALLPAPER_SET_RESULT_SUCCESS);
-
-                        if (getActivity() == null) {
-                            return;
-                        }
-
-                        if (mProgressDialog != null) {
-                            mProgressDialog.dismiss();
-                        }
-
-                        restoreScreenOrientation();
                         finishActivityWithResultOk();
                     }
 
                     @Override
-                    public void onError(Throwable throwable) {
-                        mPreferences.setPendingWallpaperSetStatus(
-                                WallpaperPreferences.WALLPAPER_SET_NOT_PENDING);
-                        mUserEventLogger.logWallpaperSetResult(
-                                UserEventLogger.WALLPAPER_SET_RESULT_FAILURE);
-                        @WallpaperSetFailureReason int failureReason = ThrowableAnalyzer.isOOM(throwable)
-                                ? UserEventLogger.WALLPAPER_SET_FAILURE_REASON_OOM
-                                : UserEventLogger.WALLPAPER_SET_FAILURE_REASON_OTHER;
-                        mUserEventLogger.logWallpaperSetFailureReason(failureReason);
-
-                        if (getActivity() == null) {
-                            return;
-                        }
-
-                        if (mProgressDialog != null) {
-                            mProgressDialog.dismiss();
-                        }
-                        restoreScreenOrientation();
+                    public void onError(@Nullable Throwable throwable) {
                         showSetWallpaperErrorDialog(destination);
                     }
                 });

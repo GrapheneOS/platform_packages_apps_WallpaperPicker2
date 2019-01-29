@@ -21,14 +21,14 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Parcelable;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IntDef;
+import androidx.annotation.StringRes;
+
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 
 import java.util.List;
-
-import androidx.annotation.DrawableRes;
-import androidx.annotation.IntDef;
-import androidx.annotation.StringRes;
 
 /**
  * Interface for wallpaper info model.
@@ -58,8 +58,9 @@ public abstract class WallpaperInfo implements Parcelable {
     }
 
     /**
-     * @param context
-     * @return The available attributions for this wallpaper, as a list of strings.
+     * @return The available attributions for this wallpaper, as a list of strings. These represent
+     * the author / website or any other attribution required to be displayed for this wallpaper
+     * regarding authorship, ownership, etc.
      */
     public abstract List<String> getAttributions(Context context);
 
