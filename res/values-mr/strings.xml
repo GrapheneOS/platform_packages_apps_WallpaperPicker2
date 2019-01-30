@@ -17,7 +17,10 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name" msgid="5610614769724978966">"वॉलपेपर"</string>
+    <!-- no translation found for wallpaper_app_name (1719889291772891695) -->
+    <skip />
+    <!-- no translation found for app_name (8773648973927541493) -->
+    <skip />
     <string name="select_wallpaper_label" msgid="3026032670158694582">"वॉलपेपर निवडा"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"वॉलपेपर सेट करा"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"वॉलपेपर सेट करत आहे…"</string>
