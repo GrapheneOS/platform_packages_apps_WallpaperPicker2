@@ -34,16 +34,27 @@ import java.security.MessageDigest;
 public class ResourceAsset extends StreamableAsset {
     protected final Resources mRes;
     protected final int mResId;
+    private final RequestOptions mRequestOptions;
 
     protected Key mKey;
 
     /**
      * @param res   Resources containing the asset.
      * @param resId Resource ID referencing the asset.
+     * @param requestOptions {@link RequestOptions} to be applied when loading the asset.
      */
-    public ResourceAsset(Resources res, int resId) {
+    public ResourceAsset(Resources res, int resId, RequestOptions requestOptions) {
         mRes = res;
         mResId = resId;
+        mRequestOptions = requestOptions;
+    }
+
+    /**
+     * @param res   Resources containing the asset.
+     * @param resId Resource ID referencing the asset.
+     */
+    public ResourceAsset(Resources res, int resId) {
+        this(res, resId, RequestOptions.centerCropTransform());
     }
 
     @Override
@@ -52,7 +63,7 @@ public class ResourceAsset extends StreamableAsset {
         Glide.with(activity)
                 .asDrawable()
                 .load(ResourceAsset.this)
-                .apply(RequestOptions.centerCropTransform()
+                .apply(mRequestOptions
                         .placeholder(new ColorDrawable(placeholderColor)))
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView);
