@@ -16,7 +16,9 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- The name of this application, a wallpaper picker. [CHAR LIMIT=50] -->
-    <string name="app_name">Wallpapers</string>
+    <string name="wallpaper_app_name">Wallpapers</string>
+
+    <string name="app_name">@string/wallpaper_app_name</string>
 
     <!-- UI Strings -->
     <!-- Label which asks the user to select a wallpaper from the given choices. [CHAR LIMIT=50] -->

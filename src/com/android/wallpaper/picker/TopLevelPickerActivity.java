@@ -250,7 +250,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
             mUserEventLogger.logAppLaunched();
             DailyLoggingAlarmScheduler.setAlarm(getApplicationContext());
 
-            CategoryFragment newFragment = new CategoryFragment();
+            CategoryFragment newFragment = CategoryFragment.newInstance(
+                    getString(R.string.wallpaper_app_name));
             fm.beginTransaction()
                     .add(R.id.fragment_container, newFragment)
                     .commit();
