@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.asset;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -204,9 +203,9 @@ public final class ContentUriAsset extends StreamableAsset {
     }
 
     @Override
-    public void loadDrawable(Activity activity, ImageView imageView,
+    public void loadDrawable(Context context, ImageView imageView,
                              int placeholderColor) {
-        Glide.with(activity)
+        Glide.with(context)
                 .asDrawable()
                 .load(mUri)
                 .apply(mRequestOptions
@@ -216,10 +215,10 @@ public final class ContentUriAsset extends StreamableAsset {
     }
 
     @Override
-    public void loadDrawableWithTransition(Activity activity, ImageView imageView,
-            int transitionDurationMillis, DrawableLoadedListener drawableLoadedListener,
+    public void loadDrawableWithTransition(Context context, ImageView imageView,
+            int transitionDurationMillis, @Nullable DrawableLoadedListener drawableLoadedListener,
             int placeholderColor) {
-        Glide.with(activity)
+        Glide.with(context)
                 .asDrawable()
                 .load(mUri)
                 .apply(mRequestOptions

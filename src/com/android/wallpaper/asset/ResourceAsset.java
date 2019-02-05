@@ -15,7 +15,7 @@
  */
 package com.android.wallpaper.asset;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.widget.ImageView;
@@ -58,9 +58,9 @@ public class ResourceAsset extends StreamableAsset {
     }
 
     @Override
-    public void loadDrawable(Activity activity, ImageView imageView,
+    public void loadDrawable(Context context, ImageView imageView,
                              int placeholderColor) {
-        Glide.with(activity)
+        Glide.with(context)
                 .asDrawable()
                 .load(ResourceAsset.this)
                 .apply(mRequestOptions

@@ -108,13 +108,13 @@ public final class BuiltInWallpaperAsset extends Asset {
     }
 
     @Override
-    public void loadDrawable(Activity activity, ImageView imageView, int placeholderColor) {
+    public void loadDrawable(Context context, ImageView imageView, int placeholderColor) {
         if (mBuiltInWallpaperModel == null) {
             mBuiltInWallpaperModel =
-                    new WallpaperModel(activity.getApplicationContext(), WallpaperModel.SOURCE_BUILT_IN);
+                    new WallpaperModel(context.getApplicationContext(), WallpaperModel.SOURCE_BUILT_IN);
         }
 
-        Glide.with(activity)
+        Glide.with(context)
                 .asDrawable()
                 .load(mBuiltInWallpaperModel)
                 .apply(RequestOptions.centerCropTransform()
