@@ -26,7 +26,7 @@
         style="@style/RegularToolbarStyle"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?android:attr/actionBarSize"
         android:layout_gravity="top"
         app:layout_scrollFlags="scroll|enterAlways">
         <TextView

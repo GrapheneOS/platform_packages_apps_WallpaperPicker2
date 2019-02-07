@@ -17,8 +17,8 @@
 
     <style name="WallpaperTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="colorControlActivated">?attr/colorPrimary</item>
-        <item name="colorControlNormal">@color/accent_color</item>
-        <item name="android:statusBarColor">@color/status_bar_color</item>
+        <item name="colorControlNormal">?attr/colorAccent</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:windowLightStatusBar">true</item>
 
         <item name="android:navigationBarColor">#ffffffff</item>
@@ -26,4 +26,5 @@
         <item name="android:windowLightNavigationBar">true</item>
     </style>
 
+    <style name="LightDialogTheme" parent="@android:style/Theme.DeviceDefault.Light.Dialog.NoActionBar"/>
 </resources>

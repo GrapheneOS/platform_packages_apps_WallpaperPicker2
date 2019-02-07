@@ -17,7 +17,7 @@
 
     <style name="WallpaperTheme" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="colorControlActivated">?attr/colorPrimary</item>
-        <item name="android:statusBarColor">@color/status_bar_color</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
     </style>
 
     <style name="WallpaperTheme.Preview" parent="@style/Theme.AppCompat.NoActionBar">
@@ -48,10 +48,7 @@
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
-    <style name="LightDialogTheme" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:dialogCornerRadius">8dp</item>
-        <item name="colorAccent">@color/accent_color</item>
-    </style>
+    <style name="LightDialogTheme" parent="@android:style/Theme.DeviceDefault.Dialog.NoActionBar"/>
 
     <style name="ProgressDialogThemePreL" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -88,7 +85,7 @@
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:drawablePadding">@dimen/set_wallpaper_dialog_item_drawable_padding
         </item>
-        <item name="android:drawableTint">@color/accent_color</item>
+        <item name="android:drawableTint">?android:colorAccent</item>
         <item name="android:drawableTintMode">src_atop</item>
     </style>
 
