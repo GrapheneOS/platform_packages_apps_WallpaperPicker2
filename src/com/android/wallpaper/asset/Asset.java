@@ -16,6 +16,7 @@
 package com.android.wallpaper.asset;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -28,9 +29,9 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-
 import androidx.annotation.Nullable;
+
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
 /**
  * Interface representing an image asset.
@@ -42,12 +43,12 @@ public abstract class Asset {
      * filled completely with pixels of the provided placeholder color.
      */
     protected static Drawable getPlaceholderDrawable(
-            Activity activity, ImageView imageView, int placeholderColor) {
+            Context context, ImageView imageView, int placeholderColor) {
         Point imageViewDimensions = getImageViewDimensions(imageView);
         Bitmap placeholderBitmap =
                 Bitmap.createBitmap(imageViewDimensions.x, imageViewDimensions.y, Config.ARGB_8888);
         placeholderBitmap.eraseColor(placeholderColor);
-        return new BitmapDrawable(activity.getResources(), placeholderBitmap);
+        return new BitmapDrawable(context.getResources(), placeholderBitmap);
     }
 
     /**
@@ -128,12 +129,11 @@ public abstract class Asset {
     /**
      * Loads a Drawable for this asset into the provided ImageView. While waiting for the image to
      * load, first loads a ColorDrawable based on the provided placeholder color.
-     *
-     * @param activity         Activity hosting the ImageView.
+     *  @param context         Activity hosting the ImageView.
      * @param imageView        ImageView which is the target view of this asset.
      * @param placeholderColor Color of placeholder set to ImageView while waiting for image to load.
      */
-    public void loadDrawable(final Activity activity, final ImageView imageView,
+    public void loadDrawable(final Context context, final ImageView imageView,
                              int placeholderColor) {
         // Transition from a placeholder ColorDrawable to the decoded bitmap when the ImageView in
         // question is empty.
@@ -160,7 +160,7 @@ public abstract class Asset {
                     return;
                 }
 
-                Resources resources = activity.getResources();
+                Resources resources = context.getResources();
 
                 Drawable[] layers = new Drawable[2];
                 layers[0] = placeholderDrawable;
@@ -179,19 +179,17 @@ public abstract class Asset {
     /**
      * Loads a Drawable for this asset into the provided ImageView, providing a crossfade transition
      * with the given duration from the Drawable previously set on the ImageView.
-     *
-     * @param activity                 Activity hosting the ImageView.
+     * @param context                 Activity hosting the ImageView.
      * @param imageView                ImageView which is the target view of this asset.
      * @param transitionDurationMillis Duration of the crossfade, in milliseconds.
      * @param drawableLoadedListener   Listener called once the transition has begun.
      * @param placeholderColor         Color of the placeholder if the provided ImageView is empty before the
-     *                                 drawable loads.
      */
     public void loadDrawableWithTransition(
-            final Activity activity,
+            final Context context,
             final ImageView imageView,
             final int transitionDurationMillis,
-            final DrawableLoadedListener drawableLoadedListener,
+            @Nullable final DrawableLoadedListener drawableLoadedListener,
             int placeholderColor) {
         Point imageViewDimensions = getImageViewDimensions(imageView);
 
@@ -199,13 +197,13 @@ public abstract class Asset {
         // question is empty.
         boolean needsPlaceholder = imageView.getDrawable() == null;
         if (needsPlaceholder) {
-            imageView.setImageDrawable(getPlaceholderDrawable(activity, imageView, placeholderColor));
+            imageView.setImageDrawable(getPlaceholderDrawable(context, imageView, placeholderColor));
         }
 
         decodeBitmap(imageViewDimensions.x, imageViewDimensions.y, new BitmapReceiver() {
             @Override
             public void onBitmapDecoded(Bitmap bitmap) {
-                final Resources resources = activity.getResources();
+                final Resources resources = context.getResources();
 
                 new CenterCropBitmapTask(bitmap, imageView, new BitmapReceiver() {
                     @Override
@@ -232,7 +230,9 @@ public abstract class Asset {
                         imageView.setImageDrawable(transitionDrawable);
                         transitionDrawable.startTransition(transitionDurationMillis);
 
-                        drawableLoadedListener.onDrawableLoaded();
+                        if (drawableLoadedListener != null) {
+                            drawableLoadedListener.onDrawableLoaded();
+                        }
                     }
                 }).execute();
             }

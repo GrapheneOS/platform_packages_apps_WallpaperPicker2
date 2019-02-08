@@ -69,9 +69,9 @@ public final class LiveWallpaperThumbAsset extends Asset {
     }
 
     @Override
-    public void loadDrawable(Activity activity, ImageView imageView,
+    public void loadDrawable(Context context, ImageView imageView,
                              int placeholderColor) {
-        Glide.with(activity)
+        Glide.with(context)
                 .asDrawable()
                 .load(LiveWallpaperThumbAsset.this)
                 .apply(RequestOptions.centerCropTransform()

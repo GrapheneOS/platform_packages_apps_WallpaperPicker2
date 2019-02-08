@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.asset;
 
-import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.os.ParcelFileDescriptor;
@@ -86,9 +85,9 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
     }
 
     @Override
-    public void loadDrawable(Activity activity, ImageView imageView,
+    public void loadDrawable(Context context, ImageView imageView,
                              int unusedPlaceholderColor) {
-        Glide.with(activity)
+        Glide.with(context)
                 .asDrawable()
                 .load(CurrentWallpaperAssetVN.this)
                 .apply(RequestOptions.centerCropTransform())

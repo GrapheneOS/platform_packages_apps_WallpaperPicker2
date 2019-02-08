@@ -15,12 +15,12 @@
  */
 package com.android.wallpaper.asset;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -29,8 +29,12 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -199,14 +203,44 @@ public final class ContentUriAsset extends StreamableAsset {
     }
 
     @Override
-    public void loadDrawable(Activity activity, ImageView imageView,
+    public void loadDrawable(Context context, ImageView imageView,
                              int placeholderColor) {
-        Glide.with(activity)
+        Glide.with(context)
                 .asDrawable()
                 .load(mUri)
                 .apply(mRequestOptions
                         .placeholder(new ColorDrawable(placeholderColor)))
                 .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageView);
+    }
+
+    @Override
+    public void loadDrawableWithTransition(Context context, ImageView imageView,
+            int transitionDurationMillis, @Nullable DrawableLoadedListener drawableLoadedListener,
+            int placeholderColor) {
+        Glide.with(context)
+                .asDrawable()
+                .load(mUri)
+                .apply(mRequestOptions
+                        .placeholder(new ColorDrawable(placeholderColor)))
+                .transition(DrawableTransitionOptions.withCrossFade(transitionDurationMillis))
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(GlideException e, Object model,
+                            Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model,
+                            Target<Drawable> target, DataSource dataSource,
+                            boolean isFirstResource) {
+                        if (drawableLoadedListener != null) {
+                            drawableLoadedListener.onDrawableLoaded();
+                        }
+                        return false;
+                    }
+                })
                 .into(imageView);
     }
 
