@@ -721,26 +721,18 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
 
         if (requestCode == WallpaperPickerDelegate.SHOW_CATEGORY_REQUEST_CODE
                 && resultCode == Activity.RESULT_OK) {
-            Uri imageUri = (data == null) ? null : data.getData();
-            if (imageUri != null) {
-                // User selected an image from the system picker, so launch the preview for that
-                // image.
-                ImageWallpaperInfo imageWallpaper = new ImageWallpaperInfo(imageUri);
-                if (mDelegate.getFormFactor() == FormFactorChecker.FORM_FACTOR_DESKTOP) {
+            if (mDelegate.getFormFactor() == FormFactorChecker.FORM_FACTOR_DESKTOP) {
+                Uri imageUri = (data == null) ? null : data.getData();
+                if (imageUri != null) {
+                    // User selected an image from the system picker, so launch the preview for that
+                    // image.
+                    ImageWallpaperInfo imageWallpaper = new ImageWallpaperInfo(imageUri);
                     setCustomPhotoWallpaper(imageWallpaper);
                     return;
                 }
-
-                imageWallpaper.showPreview(this, mDelegate.getPreviewIntentFactory(),
-                        WallpaperPickerDelegate.PREVIEW_WALLPAPER_REQUEST_CODE);
-            } else {
-                // User finished viewing a category without any data, which implies that the user previewed
-                // and selected a wallpaper in-app, so finish this activity.
-                finishActivityWithResultOk();
             }
-        } else if (requestCode == WallpaperPickerDelegate.PREVIEW_WALLPAPER_REQUEST_CODE
-                && resultCode == Activity.RESULT_OK) {
-            // User previewed and selected a wallpaper, so finish this activity.
+        }
+        if (mDelegate.handleActivityResult(requestCode, resultCode, data)) {
             finishActivityWithResultOk();
         }
     }
