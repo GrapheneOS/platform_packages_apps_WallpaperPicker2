@@ -16,15 +16,18 @@
 package com.android.wallpaper.picker;
 
 import android.Manifest.permission;
+import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.service.wallpaper.WallpaperService;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.os.BuildCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
@@ -32,6 +35,7 @@ import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.CategoryProvider;
 import com.android.wallpaper.model.CategoryReceiver;
+import com.android.wallpaper.model.ImageWallpaperInfo;
 import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.FormFactorChecker;
@@ -75,6 +79,8 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     private PackageStatusNotifier.Listener mLiveWallpaperStatusListener;
     private PackageStatusNotifier.Listener mThirdPartyStatusListener;
     private CategoryProvider mCategoryProvider;
+    private static final String READ_PERMISSION = BuildCompat.isAtLeastQ() ?
+            permission.READ_MEDIA_IMAGES : permission.READ_EXTERNAL_STORAGE;
 
     public WallpaperPickerDelegate(WallpapersUiContainer container, FragmentActivity activity,
             Injector injector) {
@@ -135,7 +141,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     public void requestExternalStoragePermission(PermissionChangedListener listener) {
         mPermissionChangedListeners.add(listener);
         mActivity.requestPermissions(
-                new String[]{permission.READ_EXTERNAL_STORAGE},
+                new String[]{READ_PERMISSION},
                 READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE);
     }
 
@@ -398,14 +404,13 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
             @NonNull int[] grantResults) {
         if (requestCode == WallpaperPickerDelegate.READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
                 && permissions.length > 0
-                && permissions[0].equals(permission.READ_EXTERNAL_STORAGE)
+                && permissions[0].equals(READ_PERMISSION)
                 && grantResults.length > 0) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 for (PermissionChangedListener listener : getPermissionChangedListeners()) {
                     listener.onPermissionsGranted();
                 }
-            } else if (!mActivity.shouldShowRequestPermissionRationale(
-                    permission.READ_EXTERNAL_STORAGE)) {
+            } else if (!mActivity.shouldShowRequestPermissionRationale(READ_PERMISSION)) {
                 for (PermissionChangedListener listener : getPermissionChangedListeners()) {
                     listener.onPermissionsDenied(true /* dontAskAgain */);
                 }
@@ -416,5 +421,34 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
             }
         }
        getPermissionChangedListeners().clear();
+    }
+
+    /**
+     * To be called from an Activity's onActivityResult method.
+     * Checks the result for ones that are handled by this delegate
+     * @return true if the intent was handled and calling Activity needs to finish with result
+     * OK, false otherwise.
+     */
+    public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SHOW_CATEGORY_REQUEST_CODE  && resultCode == Activity.RESULT_OK) {
+            Uri imageUri = (data == null) ? null : data.getData();
+            if (imageUri != null) {
+                // User selected an image from the system picker, so launch the preview for that
+                // image.
+                ImageWallpaperInfo imageWallpaper = new ImageWallpaperInfo(imageUri);
+
+                imageWallpaper.showPreview(mActivity, getPreviewIntentFactory(),
+                        PREVIEW_WALLPAPER_REQUEST_CODE);
+            } else {
+                // User finished viewing a category without any data, which implies that the user
+                // previewed and selected a wallpaper in-app, so finish this activity.
+                return true;
+            }
+        } else if (requestCode == PREVIEW_WALLPAPER_REQUEST_CODE
+                && resultCode == Activity.RESULT_OK) {
+            // User previewed and selected a wallpaper, so finish this activity.
+            return true;
+        }
+        return false;
     }
 }

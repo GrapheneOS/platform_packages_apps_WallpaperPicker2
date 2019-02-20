@@ -25,7 +25,8 @@
     <color name="material_black_100">#000000</color>
 
     <color name="material_white_divider">#1fffffff</color>
-
+    <color name="text_color_dark">#2d2d2d</color>
+    <color name="text_color_light">@color/material_white_text</color>
     <color name="primary_color">#2d2d2d</color>
     <color name="secondary_color">#3a3a3a</color>
     <color name="accent_color">@color/material_googblue500</color>

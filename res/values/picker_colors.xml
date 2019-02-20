@@ -53,7 +53,7 @@
     <color name="currently_set_both_attribution_title_text_color">@color/material_white_text</color>
     <color name="currently_set_both_attribution_subtitle_text_color">@color/white_70_alpha</color>
 
-    <color name="select_wallpaper_header_text_color">@color/translucent_black_60_alpha</color>
+    <color name="select_wallpaper_header_text_color">@color/white_60_alpha</color>
 
     <color name="rotation_tile_enabled_background_color">@color/accent_color</color>
     <color name="rotation_tile_enabled_title_text_color">@color/material_white_100</color>
@@ -67,7 +67,7 @@
     <color name="individual_tile_title_scrim_color">@color/translucent_black</color>
     <color name="individual_tile_title_text_color">@color/material_white_100</color>
 
-    <color name="individual_picker_background_color">@color/material_grey200</color>
+    <color name="individual_picker_background_color">@color/translucent_black</color>
 
     <color name="preview_pane_arrow_color">@color/material_white_100</color>
 </resources>
