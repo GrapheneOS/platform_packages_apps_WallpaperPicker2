@@ -76,7 +76,7 @@
     <style name="set_wallpaper_destination_item">
         <item name="android:minHeight">@dimen/set_wallpaper_dialog_item_min_height</item>
         <item name="android:textAppearance">?attr/textAppearanceListItemSmall</item>
-        <item name="android:textColor">?attr/textColorAlertDialogListItem</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="android:textSize">@dimen/abc_text_size_subhead_material</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:alpha">.87</item>
