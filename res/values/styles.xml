@@ -38,11 +38,6 @@
         </item>
     </style>
 
-    <style name="RegularToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/primary_color</item>
-        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-    </style>
-
     <style name="TranslucentToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
         <item name="android:background">@color/translucent_black</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
