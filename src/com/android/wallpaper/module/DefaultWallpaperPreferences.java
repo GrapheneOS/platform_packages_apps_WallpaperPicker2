@@ -21,6 +21,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -30,8 +32,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import androidx.annotation.Nullable;
-
 /**
  * Default implementation that writes to and reads from SharedPreferences.
  */
@@ -40,8 +40,8 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
 
     private static final String TAG = "DefaultWPPreferences";
 
-    private SharedPreferences mSharedPrefs;
-    private Context mContext;
+    protected SharedPreferences mSharedPrefs;
+    protected Context mContext;
 
     // Keep a strong reference to this OnSharedPreferenceChangeListener to prevent the listener from
     // being garbage collected because SharedPreferences only holds a weak reference.
