@@ -20,6 +20,7 @@ import android.content.Context;
 import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.network.Requester;
 import com.android.wallpaper.network.WallpaperRequester;
+import com.android.wallpaper.picker.individual.IndividualPickerFragment;
 
 /**
  * Base implementation of Injector.
@@ -41,6 +42,7 @@ public abstract class BaseWallpaperInjector implements Injector {
     private RotatingWallpaperComponentChecker mRotatingWallpaperComponentChecker;
     private FormFactorChecker mFormFactorChecker;
     private PackageStatusNotifier mPackageStatusNotifier;
+    private IndividualPickerFragment mIndividualPickerFragment;
 
     @Override
     public synchronized BitmapCropper getBitmapCropper() {
@@ -171,5 +173,12 @@ public abstract class BaseWallpaperInjector implements Injector {
             mFormFactorChecker = new DefaultFormFactorChecker(context.getApplicationContext());
         }
         return mFormFactorChecker;
+    }
+
+    @Override
+    public synchronized IndividualPickerFragment getIndividualPickerFragment(String collectionId) {
+        mIndividualPickerFragment = IndividualPickerFragment.newInstance(collectionId);
+
+        return mIndividualPickerFragment;
     }
 }

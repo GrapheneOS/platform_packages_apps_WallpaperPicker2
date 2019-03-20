@@ -92,8 +92,14 @@ public class IndividualPickerFragment extends Fragment
         implements RotationStarter, StartRotationErrorDialogFragment.Listener,
         CurrentWallpaperBottomSheetPresenter.RefreshListener,
         SetWallpaperErrorDialogFragment.Listener {
+    /**
+     * Position of a special tile that doesn't belong to an individual wallpaper of the category,
+     * such as "my photos" or "daily rotation".
+     */
+    static final int SPECIAL_FIXED_TILE_ADAPTER_POSITION = 0;
+    static final String ARG_CATEGORY_COLLECTION_ID = "category_collection_id";
+
     private static final String TAG = "IndividualPickerFrgmnt";
-    private static final String ARG_CATEGORY_COLLECTION_ID = "category_collection_id";
     private static final int UNUSED_REQUEST_CODE = 1;
     private static final String TAG_START_ROTATION_DIALOG = "start_rotation_dialog";
     private static final String TAG_START_ROTATION_ERROR_DIALOG = "start_rotation_error_dialog";
@@ -102,29 +108,51 @@ public class IndividualPickerFragment extends Fragment
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "individual_set_wallpaper_error_dialog";
 
-    /**
-     * Position of a special tile that doesn't belong to an individual wallpaper of the category,
-     * such as "my photos" or "daily rotation".
-     */
-    private static final int SPECIAL_FIXED_TILE_ADAPTER_POSITION = 0;
+    WallpaperPreferences mWallpaperPreferences;
+    WallpaperChangedNotifier mWallpaperChangedNotifier;
+    RotatingWallpaperComponentChecker mRotatingWallpaperComponentChecker;
+    RecyclerView mImageGrid;
+    IndividualAdapter mAdapter;
+    WallpaperCategory mCategory;
+    WallpaperRotationInitializer mWallpaperRotationInitializer;
+    List<WallpaperInfo> mWallpapers;
+    Point mTileSizePx;
+    WallpapersUiContainer mWallpapersUiContainer;
+    @FormFactor
+    int mFormFactor;
+    PackageStatusNotifier mPackageStatusNotifier;
 
-    private WallpaperPreferences mWallpaperPreferences;
-    private WallpaperChangedNotifier mWallpaperChangedNotifier;
-    private RotatingWallpaperComponentChecker mRotatingWallpaperComponentChecker;
-    private RecyclerView mImageGrid;
-    private IndividualAdapter mAdapter;
-    private WallpaperCategory mCategory;
-    private WallpaperRotationInitializer mWallpaperRotationInitializer;
-    private List<WallpaperInfo> mWallpapers;
-    private Point mTileSizePx;
+    Handler mHandler;
+    Random mRandom;
+
+    WallpaperChangedNotifier.Listener mWallpaperChangedListener =
+            new WallpaperChangedNotifier.Listener() {
+        @Override
+        public void onWallpaperChanged() {
+            if (mFormFactor != FormFactorChecker.FORM_FACTOR_DESKTOP) {
+                return;
+            }
+
+            ViewHolder selectedViewHolder = mImageGrid.findViewHolderForAdapterPosition(
+                    mAdapter.mSelectedAdapterPosition);
+
+            // Null remote ID => My Photos wallpaper, so deselect whatever was previously selected.
+            if (mWallpaperPreferences.getHomeWallpaperRemoteId() == null) {
+                if (selectedViewHolder instanceof SelectableHolder) {
+                    ((SelectableHolder) selectedViewHolder).setSelectionState(
+                            SelectableHolder.SELECTION_STATE_DESELECTED);
+                }
+            } else {
+                mAdapter.updateSelectedTile(mAdapter.mPendingSelectedAdapterPosition);
+            }
+        }
+    };
+    PackageStatusNotifier.Listener mAppStatusListener;
+
     private ProgressDialog mProgressDialog;
     private boolean mTestingMode;
     private CurrentWallpaperBottomSheetPresenter mCurrentWallpaperBottomSheetPresenter;
-    private WallpapersUiContainer mWallpapersUiContainer;
-    @FormFactor
-    private int mFormFactor;
     private SetIndividualHolder mPendingSetIndividualHolder;
-    private PackageStatusNotifier mPackageStatusNotifier;
 
     /**
      * Staged error dialog fragments that were unable to be shown when the activity didn't allow
@@ -133,9 +161,7 @@ public class IndividualPickerFragment extends Fragment
     private SetWallpaperErrorDialogFragment mStagedSetWallpaperErrorDialogFragment;
     private StartRotationErrorDialogFragment mStagedStartRotationErrorDialogFragment;
 
-    private Handler mHandler;
     private Runnable mCurrentWallpaperBottomSheetExpandedRunnable;
-    private Random mRandom;
 
     /**
      * Whether {@code mUpdateDailyWallpaperThumbRunnable} has been run at least once in this
@@ -164,29 +190,6 @@ public class IndividualPickerFragment extends Fragment
             }
         }
     };
-
-    private WallpaperChangedNotifier.Listener mWallpaperChangedListener = new WallpaperChangedNotifier.Listener() {
-        @Override
-        public void onWallpaperChanged() {
-            if (mFormFactor != FormFactorChecker.FORM_FACTOR_DESKTOP) {
-                return;
-            }
-
-            ViewHolder selectedViewHolder = mImageGrid.findViewHolderForAdapterPosition(
-                    mAdapter.mSelectedAdapterPosition);
-
-            // Null remote ID => My Photos wallpaper, so deselect whatever was previously selected.
-            if (mWallpaperPreferences.getHomeWallpaperRemoteId() == null) {
-                if (selectedViewHolder instanceof SelectableHolder) {
-                    ((SelectableHolder) selectedViewHolder).setSelectionState(
-                            SelectableHolder.SELECTION_STATE_DESELECTED);
-                }
-            } else {
-                mAdapter.updateSelectedTile(mAdapter.mPendingSelectedAdapterPosition);
-            }
-        }
-    };
-    private PackageStatusNotifier.Listener mAppStatusListener;
 
     public static IndividualPickerFragment newInstance(String collectionId) {
         Bundle args = new Bundle();
@@ -280,7 +283,7 @@ public class IndividualPickerFragment extends Fragment
         }
     }
 
-    private void fetchWallpapers(boolean forceReload) {
+    void fetchWallpapers(boolean forceReload) {
         mWallpapers.clear();
         mCategory.fetchWallpapers(getActivity().getApplicationContext(), new WallpaperReceiver() {
             @Override
@@ -327,10 +330,7 @@ public class IndividualPickerFragment extends Fragment
         }
         GridMarginDecoration.applyTo(mImageGrid);
 
-        mAdapter = new IndividualAdapter(mWallpapers);
-        mImageGrid.setAdapter(mAdapter);
-        mImageGrid.setLayoutManager(new GridLayoutManager(getActivity(), getNumColumns()));
-
+        setUpImageGrid();
         setUpBottomSheet();
 
         return view;
@@ -343,7 +343,7 @@ public class IndividualPickerFragment extends Fragment
         }
     }
 
-    private void updateImageGridPadding(boolean addExtraBottomSpace) {
+    void updateImageGridPadding(boolean addExtraBottomSpace) {
         int gridPaddingPx = getResources().getDimensionPixelSize(R.dimen.grid_padding_desktop);
         int bottomSheetHeightPx = getResources().getDimensionPixelSize(
                 R.dimen.current_wallpaper_bottom_sheet_layout_height);
@@ -353,10 +353,16 @@ public class IndividualPickerFragment extends Fragment
                 gridPaddingPx, gridPaddingPx, 0, paddingBottomPx);
     }
 
+    void setUpImageGrid() {
+        mAdapter = new IndividualAdapter(mWallpapers);
+        mImageGrid.setAdapter(mAdapter);
+        mImageGrid.setLayoutManager(new GridLayoutManager(getActivity(), getNumColumns()));
+    }
+
     /**
      * Enables and populates the "Currently set" wallpaper BottomSheet.
      */
-    private void setUpBottomSheet() {
+    void setUpBottomSheet() {
         mImageGrid.addOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, final int dy) {
@@ -622,14 +628,14 @@ public class IndividualPickerFragment extends Fragment
         }
     }
 
-    private int getNumColumns() {
+    int getNumColumns() {
         return TileSizeCalculator.getNumIndividualColumns(getActivity());
     }
 
     /**
      * Returns whether rotation is enabled for this category.
      */
-    private boolean isRotationEnabled() {
+    boolean isRotationEnabled() {
         boolean isRotationSupported =
                 mRotatingWallpaperComponentChecker.getRotatingWallpaperSupport(getContext())
                         == RotatingWallpaperComponentChecker.ROTATING_WALLPAPER_SUPPORT_SUPPORTED;
@@ -748,10 +754,10 @@ public class IndividualPickerFragment extends Fragment
     /**
      * RecyclerView Adapter subclass for the wallpaper tiles in the RecyclerView.
      */
-    private class IndividualAdapter extends RecyclerView.Adapter<ViewHolder> {
-        private static final int ITEM_VIEW_TYPE_ROTATION = 1;
-        private static final int ITEM_VIEW_TYPE_INDIVIDUAL_WALLPAPER = 2;
-        private static final int ITEM_VIEW_TYPE_MY_PHOTOS = 3;
+    class IndividualAdapter extends RecyclerView.Adapter<ViewHolder> {
+        static final int ITEM_VIEW_TYPE_ROTATION = 1;
+        static final int ITEM_VIEW_TYPE_INDIVIDUAL_WALLPAPER = 2;
+        static final int ITEM_VIEW_TYPE_MY_PHOTOS = 3;
 
         private final List<WallpaperInfo> mWallpapers;
 
@@ -965,7 +971,7 @@ public class IndividualPickerFragment extends Fragment
             updateImageGridPadding(isInLastRow /* addExtraBottomSpace */);
         }
 
-        private void onBindRotationHolder(ViewHolder holder, int position) {
+        void onBindRotationHolder(ViewHolder holder, int position) {
             if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
                 String collectionId = mCategory.getCollectionId();
                 ((DesktopRotationHolder) holder).bind(collectionId);
@@ -983,7 +989,7 @@ public class IndividualPickerFragment extends Fragment
             }
         }
 
-        private void onBindIndividualHolder(ViewHolder holder, int position) {
+        void onBindIndividualHolder(ViewHolder holder, int position) {
             int wallpaperIndex = (isRotationEnabled() || mCategory.supportsCustomPhotos())
                     ? position - 1 : position;
             WallpaperInfo wallpaper = mWallpapers.get(wallpaperIndex);

@@ -787,7 +787,9 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                         .remove(fragment)
                         .commit();
             }
-            IndividualPickerFragment newFragment = IndividualPickerFragment.newInstance(collectionId);
+            Injector injector = InjectorProvider.getInjector();
+            IndividualPickerFragment newFragment = injector.getIndividualPickerFragment(
+                    collectionId);
             fm.beginTransaction()
                     .add(R.id.fragment_container, newFragment)
                     .commit();

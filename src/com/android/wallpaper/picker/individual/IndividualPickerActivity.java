@@ -122,7 +122,7 @@ public class IndividualPickerActivity extends BaseActivity {
         }
 
         if (fragment == null) {
-            fragment = IndividualPickerFragment.newInstance(mCategoryCollectionId);
+            fragment = injector.getIndividualPickerFragment(mCategoryCollectionId);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();
