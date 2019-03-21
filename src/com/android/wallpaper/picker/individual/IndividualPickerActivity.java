@@ -95,6 +95,7 @@ public class IndividualPickerActivity extends BaseActivity {
             // saved state, or with a collection id that doesn't exist anymore.
             // In those cases, we cannot continue, so let's just go back.
             finish();
+            return;
         }
 
         setTitle(mCategory.getTitle());
