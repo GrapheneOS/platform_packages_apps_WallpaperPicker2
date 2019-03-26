@@ -2,13 +2,15 @@ package com.android.wallpaper.module;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.FragmentManager;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
@@ -18,6 +20,7 @@ import com.android.wallpaper.module.UserEventLogger.WallpaperSetFailureReason;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment;
+import com.android.wallpaper.picker.SetWallpaperDialogFragment.Listener;
 import com.android.wallpaper.util.ThrowableAnalyzer;
 
 import com.bumptech.glide.Glide;
@@ -155,24 +158,36 @@ public class WallpaperSetter {
     /**
      * Show a dialog asking the user for the Wallpaper's destination
      * (eg, "Home screen", "Lock Screen")
-     * @param targetFragment fragment that will receive the response. It needs to implement
-     * {@link SetWallpaperDialogFragment.Listener} to receive the result.
+     * @param listener {@link SetWallpaperDialogFragment.Listener} that will receive the response.
      * @see Destination
-     * TODO(santie): refactor to not require the target fragment to implement "Listener" interface.
      */
-    public void requestDestination(Fragment targetFragment) {
+    public void requestDestination(Context context, FragmentManager fragmentManager,
+            Listener listener) {
+        requestDestination(context, fragmentManager, R.string.set_wallpaper_dialog_message,
+                listener);
+    }
+
+    /**
+     * Show a dialog asking the user for the Wallpaper's destination
+     * (eg, "Home screen", "Lock Screen")
+     * @param listener {@link SetWallpaperDialogFragment.Listener} that will receive the response.
+     * @param titleResId title for the dialog
+     * @see Destination
+     */
+    public void requestDestination(Context context, FragmentManager fragmentManager,
+            @StringRes int titleResId, Listener listener) {
         CurrentWallpaperInfoFactory factory = InjectorProvider.getInjector()
-                .getCurrentWallpaperFactory(targetFragment.getContext());
+                .getCurrentWallpaperFactory(context);
 
         factory.createCurrentWallpaperInfos((homeWallpaper, lockWallpaper, presentationMode) -> {
             SetWallpaperDialogFragment setWallpaperDialog = new SetWallpaperDialogFragment();
-            setWallpaperDialog.setTargetFragment(targetFragment, UNUSED_REQUEST_CODE);
+            setWallpaperDialog.setTitleResId(titleResId);
+            setWallpaperDialog.setListener(listener);
             if (homeWallpaper instanceof LiveWallpaperInfo && lockWallpaper == null) {
                 // if the lock wallpaper is a live wallpaper, we cannot set a home-only static one
                 setWallpaperDialog.setHomeOptionAvailable(false);
             }
-            setWallpaperDialog.show(
-                    targetFragment.getFragmentManager(), TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
+            setWallpaperDialog.show(fragmentManager, TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
         }, true); // Force refresh as the wallpaper may have been set while this fragment was paused
     }
 

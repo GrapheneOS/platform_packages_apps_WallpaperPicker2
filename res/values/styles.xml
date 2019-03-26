@@ -43,7 +43,10 @@
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
-    <style name="LightDialogTheme" parent="@android:style/Theme.DeviceDefault.Dialog.NoActionBar"/>
+    <style name="LightDialogTheme" parent="@android:style/Theme.DeviceDefault.Dialog.NoActionBar">
+        <item name="android:layout">@layout/abc_alert_dialog_material</item>
+        <item name="windowActionBar">false</item>
+    </style>
 
     <style name="ProgressDialogThemePreL" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@android:color/transparent</item>
