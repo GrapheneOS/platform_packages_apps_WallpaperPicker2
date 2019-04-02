@@ -17,10 +17,13 @@ package com.android.wallpaper.picker;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.MenuRes;
 import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener;
 import androidx.fragment.app.Fragment;
 
 import com.android.wallpaper.R;
@@ -37,7 +40,7 @@ import com.android.wallpaper.R;
  *
  * @see #setArguments(Bundle)
  */
-public abstract class ToolbarFragment extends Fragment {
+public abstract class ToolbarFragment extends Fragment implements OnMenuItemClickListener {
 
     private static final String ARG_TITLE = "ToolbarFragment.title";
 
@@ -52,7 +55,7 @@ public abstract class ToolbarFragment extends Fragment {
         return args;
     }
 
-    private Toolbar mToolbar;
+    protected Toolbar mToolbar;
     private TextView mTitleView;
 
     /**
@@ -75,6 +78,18 @@ public abstract class ToolbarFragment extends Fragment {
     }
 
     /**
+     * Configures a toolbar in the given rootView, inflating the menu corresponding to the given id
+     * for the toolbar menu.
+     * Override {@link #onMenuItemClick(MenuItem)} to listen to item click events.
+     * @see #setUpToolbar(View)
+     */
+    public void setUpToolbar(View rootView, @MenuRes int menuResId) {
+        setUpToolbar(rootView);
+        mToolbar.inflateMenu(menuResId);
+        mToolbar.setOnMenuItemClickListener(this);
+    }
+
+    /**
      * Provides a title for this Fragment's toolbar to be used if none is found in
      * {@link #getArguments()}.
      * Default implementation returns {@code null}.
@@ -93,5 +108,10 @@ public abstract class ToolbarFragment extends Fragment {
         } else {
             mToolbar.setTitle(title);
         }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        return false;
     }
 }
