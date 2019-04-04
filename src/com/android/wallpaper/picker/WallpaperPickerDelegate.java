@@ -79,8 +79,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     private PackageStatusNotifier.Listener mLiveWallpaperStatusListener;
     private PackageStatusNotifier.Listener mThirdPartyStatusListener;
     private CategoryProvider mCategoryProvider;
-    private static final String READ_PERMISSION = BuildCompat.isAtLeastQ() ?
-            permission.READ_MEDIA_IMAGES : permission.READ_EXTERNAL_STORAGE;
+    private static final String READ_PERMISSION = permission.READ_EXTERNAL_STORAGE;
 
     public WallpaperPickerDelegate(WallpapersUiContainer container, FragmentActivity activity,
             Injector injector) {
