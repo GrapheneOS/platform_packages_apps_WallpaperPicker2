@@ -29,7 +29,6 @@
         android:layout_marginRight="@dimen/abc_dialog_padding_material"
         android:layout_marginStart="@dimen/abc_dialog_padding_material"
         android:layout_marginTop="@dimen/start_rotation_dialog_subhead_margin_top"
-        android:textColor="@color/translucent_black_60_alpha"
         android:textSize="@dimen/abc_text_size_subhead_material" />
 
     <LinearLayout
@@ -51,7 +50,6 @@
             android:layout_marginRight="@dimen/start_rotation_dialog_checkbox_margin_right"
             android:minHeight="@dimen/start_rotation_dialog_checkbox_min_height"
             android:text="@string/start_rotation_dialog_wifi_only_option_message"
-            android:textColor="@color/translucent_black_60_alpha"
             android:textSize="@dimen/abc_text_size_body_1_material"
             auto:buttonTint="@color/accent_color" />
 
