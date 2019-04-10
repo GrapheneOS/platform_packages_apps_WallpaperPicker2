@@ -23,6 +23,16 @@ import com.android.wallpaper.module.WallpaperPersister.WallpaperPosition;
 public class NoOpUserEventLogger implements UserEventLogger {
 
     @Override
+    public void logResumed() {
+
+    }
+
+    @Override
+    public void logStopped() {
+
+    }
+
+    @Override
     public void logAppLaunched() {
     }
 
