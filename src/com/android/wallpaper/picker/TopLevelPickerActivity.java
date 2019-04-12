@@ -185,7 +185,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     @Override
     protected void onResume() {
         super.onResume();
-
+        mUserEventLogger.logResumed();
         // Show the staged 'load wallpaper' or 'set wallpaper' error dialog fragments if there is one
         // that was unable to be shown earlier when this fragment's hosting activity didn't allow
         // committing fragment transactions.
@@ -194,6 +194,12 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                     getSupportFragmentManager(), TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT);
             mStagedSetWallpaperErrorDialogFragment = null;
         }
+    }
+
+    @Override
+    protected void onStop() {
+        mUserEventLogger.logStopped();
+        super.onStop();
     }
 
     @Override
@@ -209,11 +215,6 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         }
         if (mSetWallpaperProgressDialog != null) {
             mSetWallpaperProgressDialog.dismiss();
-        }
-
-        if (mDelegate.getFormFactor() == FormFactorChecker.FORM_FACTOR_DESKTOP
-                && mWasCustomPhotoWallpaperSet) {
-            mUserEventLogger.logWallpaperPosition(mCustomPhotoWallpaperPosition);
         }
     }
 
