@@ -16,11 +16,14 @@
 package com.android.wallpaper.asset;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.util.LruCache;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityManagerCompat;
 
 import java.util.Objects;
 
@@ -65,14 +68,23 @@ public class BitmapCachingAsset extends Asset {
         }
     };
 
+    private final boolean mIsLowRam;
     private final Asset mOriginalAsset;
 
-    public BitmapCachingAsset(Asset originalAsset) {
+    public BitmapCachingAsset(Context context, Asset originalAsset) {
         mOriginalAsset = originalAsset;
+        mIsLowRam = ActivityManagerCompat.isLowRamDevice(
+                (ActivityManager) context.getApplicationContext().getSystemService(
+                        Context.ACTIVITY_SERVICE));
     }
 
     @Override
     public void decodeBitmap(int targetWidth, int targetHeight, BitmapReceiver receiver) {
+        // Skip the cache in low ram devices
+        if (mIsLowRam) {
+            mOriginalAsset.decodeBitmap(targetWidth, targetHeight, receiver::onBitmapDecoded);
+            return;
+        }
         CacheKey key = new CacheKey(mOriginalAsset, targetWidth, targetHeight);
         Bitmap cached = sCache.get(key);
         if (cached != null) {
