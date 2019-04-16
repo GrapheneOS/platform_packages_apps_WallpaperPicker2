@@ -222,6 +222,10 @@ public class CategoryFragment extends ToolbarFragment {
             mAdapter.notifyItemInserted(getNumColumns());
             mAwaitingCategories = true;
         }
+        // Not add existing category to category list
+        if (mCategories.indexOf(category) >= 0) {
+            return;
+        }
 
         int priority = category.getPriority();
 
