@@ -81,22 +81,6 @@ public class NoOpUserEventLogger implements UserEventLogger {
     }
 
     @Override
-    public void log1DayActive() {
-    }
-
-    @Override
-    public void log7DayActive() {
-    }
-
-    @Override
-    public void log14DayActive() {
-    }
-
-    @Override
-    public void log28DayActive() {
-    }
-
-    @Override
     public void logDailyWallpaperDecodes(boolean decodes) {
     }
 
@@ -148,9 +132,5 @@ public class NoOpUserEventLogger implements UserEventLogger {
 
     @Override
     public void logRestored() {
-    }
-
-    @Override
-    public void logWallpaperPosition(@WallpaperPosition int wallpaperPosition) {
     }
 }
