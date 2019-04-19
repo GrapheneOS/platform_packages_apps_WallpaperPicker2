@@ -89,26 +89,6 @@ public interface UserEventLogger {
     void logDailyWallpaperRotationHour(int hour);
 
     /**
-     * Logs that the user is a 1 day active.
-     */
-    void log1DayActive();
-
-    /**
-     * Logs that the user is a 7 day active.
-     */
-    void log7DayActive();
-
-    /**
-     * Logs that the user is a 14 day active.
-     */
-    void log14DayActive();
-
-    /**
-     * Logs that the user is a 28 day active.
-     */
-    void log28DayActive();
-
-    /**
      * Logs whether the image file for the daily wallpaper "rotating image wallpaper" is successfully
      * decoded as a bitmap.
      *
@@ -180,11 +160,6 @@ public interface UserEventLogger {
      * Logs that the app was restored from a backup set.
      */
     void logRestored();
-
-    /**
-     * Logs the wallpaper position of a custom photo wallpaper set by the user on desktop.
-     */
-    void logWallpaperPosition(@WallpaperPosition int wallpaperPosition);
 
     /**
      * Possible results of a "set wallpaper" operation.

@@ -58,7 +58,6 @@ public class DailyLoggingAlarmReceiver extends BroadcastReceiver {
         logger.logNumDailyWallpaperRotationsInLastWeek();
         logger.logNumDailyWallpaperRotationsPreviousDay();
         logger.logWallpaperPresentationMode();
-        logDailyActive(appContext);
 
         preferences.setLastDailyLogTimestamp(System.currentTimeMillis());
 
@@ -66,42 +65,6 @@ public class DailyLoggingAlarmReceiver extends BroadcastReceiver {
 
         // Clear disk-based logs older than 7 days if they exist.
         DiskBasedLogger.clearOldLogs(appContext);
-    }
-
-    private void logDailyActive(Context appContext) {
-        Injector injector = InjectorProvider.getInjector();
-        UserEventLogger logger = injector.getUserEventLogger(appContext);
-        WallpaperPreferences preferences = injector.getPreferences(appContext);
-
-        long lastAppLaunchTimestamp = preferences.getLastAppActiveTimestamp();
-
-        Calendar calendar = Calendar.getInstance();
-        // Subtract 28 days first to get a date 28 days ago to assess 28 day active, then add back
-        // enough days to calculate 14 day active, 7 day active, and 1 day active.
-        calendar.add(Calendar.DAY_OF_YEAR, -28);
-        long twentyEightDaysAgo = calendar.getTimeInMillis();
-
-        calendar.add(Calendar.DAY_OF_YEAR, 14);
-        long fourteenDaysAgo = calendar.getTimeInMillis();
-
-        calendar.add(Calendar.DAY_OF_YEAR, 7);
-        long sevenDaysAgo = calendar.getTimeInMillis();
-
-        calendar.add(Calendar.DAY_OF_YEAR, 6);
-        long oneDayAgo = calendar.getTimeInMillis();
-
-        if (lastAppLaunchTimestamp >= oneDayAgo) {
-            logger.log1DayActive();
-        }
-        if (lastAppLaunchTimestamp >= sevenDaysAgo) {
-            logger.log7DayActive();
-        }
-        if (lastAppLaunchTimestamp >= fourteenDaysAgo) {
-            logger.log14DayActive();
-        }
-        if (lastAppLaunchTimestamp >= twentyEightDaysAgo) {
-            logger.log28DayActive();
-        }
     }
 
     /**
