@@ -2,6 +2,7 @@ package com.android.wallpaper.module;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
@@ -24,6 +25,8 @@ import com.android.wallpaper.picker.SetWallpaperDialogFragment.Listener;
 import com.android.wallpaper.util.ThrowableAnalyzer;
 
 import com.bumptech.glide.Glide;
+
+import java.io.IOException;
 
 /**
  * Helper class used to set the current wallpaper. It handles showing the destination request dialog
@@ -71,6 +74,11 @@ public class WallpaperSetter {
     public void setCurrentWallpaper(Activity containerActivity, WallpaperInfo wallpaper,
             Asset wallpaperAsset, @Destination final int destination, float wallpaperScale,
             @Nullable Rect cropRect, @Nullable SetWallpaperCallback callback) {
+        if (wallpaper instanceof LiveWallpaperInfo) {
+            setCurrentLiveWallpaper(containerActivity, (LiveWallpaperInfo) wallpaper, destination,
+                    callback);
+            return;
+        }
         mPreferences.setPendingWallpaperSetStatus(
                 WallpaperPreferences.WALLPAPER_SET_PENDING);
 
@@ -115,6 +123,40 @@ public class WallpaperSetter {
                         }
                     }
                 });
+    }
+
+    public void setCurrentLiveWallpaper(Activity activity, LiveWallpaperInfo wallpaper,
+            @Destination final int destination, @Nullable SetWallpaperCallback callback) {
+        try {
+            // Save current screen rotation so we can temporarily disable rotation while setting the
+            // wallpaper and restore after setting the wallpaper finishes.
+            saveAndLockScreenOrientation(activity);
+
+            if (destination == WallpaperPersister.DEST_LOCK_SCREEN) {
+                throw new IllegalArgumentException(
+                        "Live wallpaper cannot be applied on lock screen only");
+            }
+            WallpaperManager wallpaperManager = WallpaperManager.getInstance(activity);
+            wallpaperManager.setWallpaperComponent(
+                    wallpaper.getWallpaperComponent().getComponent());
+            wallpaperManager.setWallpaperOffsetSteps(0.5f /* xStep */, 0.0f /* yStep */);
+            wallpaperManager.setWallpaperOffsets(
+                    activity.getWindow().getDecorView().getRootView().getWindowToken(),
+                    0.5f /* xOffset */, 0.0f /* yOffset */);
+            if (destination == WallpaperPersister.DEST_BOTH) {
+                wallpaperManager.clear(WallpaperManager.FLAG_LOCK);
+            }
+            onWallpaperApplied(wallpaper, activity);
+            if (callback != null) {
+                callback.onSuccess();
+            }
+        } catch (RuntimeException | IOException e) {
+            onWallpaperApplyError(e, activity);
+            if (callback != null) {
+                callback.onError(e);
+            }
+        }
+
     }
 
     private void onWallpaperApplied(WallpaperInfo wallpaper, Activity containerActivity) {
@@ -162,9 +204,9 @@ public class WallpaperSetter {
      * @see Destination
      */
     public void requestDestination(Context context, FragmentManager fragmentManager,
-            Listener listener) {
+            WallpaperInfo wallpaper, Listener listener) {
         requestDestination(context, fragmentManager, R.string.set_wallpaper_dialog_message,
-                listener);
+                wallpaper, listener);
     }
 
     /**
@@ -175,7 +217,7 @@ public class WallpaperSetter {
      * @see Destination
      */
     public void requestDestination(Context context, FragmentManager fragmentManager,
-            @StringRes int titleResId, Listener listener) {
+            @StringRes int titleResId, WallpaperInfo wallpaper, Listener listener) {
         CurrentWallpaperInfoFactory factory = InjectorProvider.getInjector()
                 .getCurrentWallpaperFactory(context);
 
@@ -184,8 +226,17 @@ public class WallpaperSetter {
             setWallpaperDialog.setTitleResId(titleResId);
             setWallpaperDialog.setListener(listener);
             if (homeWallpaper instanceof LiveWallpaperInfo && lockWallpaper == null) {
+                if (wallpaper instanceof LiveWallpaperInfo) {
+                    // If lock wallpaper is live and we're setting a live wallpaper, we can only
+                    // set it to both, so bypass the dialog.
+                    listener.onSetBoth();
+                    return;
+                }
                 // if the lock wallpaper is a live wallpaper, we cannot set a home-only static one
                 setWallpaperDialog.setHomeOptionAvailable(false);
+            }
+            if (wallpaper instanceof LiveWallpaperInfo) {
+                setWallpaperDialog.setLockOptionAvailable(false);
             }
             setWallpaperDialog.show(fragmentManager, TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
         }, true); // Force refresh as the wallpaper may have been set while this fragment was paused

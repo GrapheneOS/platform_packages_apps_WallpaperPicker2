@@ -408,7 +408,8 @@ public class PreviewFragment extends Fragment implements
         int id = item.getItemId();
         if (id == R.id.set_wallpaper) {
             if (BuildCompat.isAtLeastN()) {
-                mWallpaperSetter.requestDestination(getContext(), getFragmentManager(), this);
+                mWallpaperSetter.requestDestination(getContext(), getFragmentManager(), mWallpaper,
+                        this);
             } else {
                 setCurrentWallpaper(WallpaperPersister.DEST_HOME_SCREEN);
             }

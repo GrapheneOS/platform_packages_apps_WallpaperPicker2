@@ -40,6 +40,7 @@ public class SetWallpaperDialogFragment extends DialogFragment {
     private Button mSetBothWallpaperButton;
 
     private boolean mHomeAvailable = true;
+    private boolean mLockAvailable = true;
     private Listener mListener;
     private int mTitleResId;
 
@@ -98,6 +99,11 @@ public class SetWallpaperDialogFragment extends DialogFragment {
         updateButtonsVisibility();
     }
 
+    public void setLockOptionAvailable(boolean lockAvailable) {
+        mLockAvailable = lockAvailable;
+        updateButtonsVisibility();
+    }
+
     public void setTitleResId(@StringRes int titleResId) {
         mTitleResId = titleResId;
     }
@@ -109,6 +115,9 @@ public class SetWallpaperDialogFragment extends DialogFragment {
     private void updateButtonsVisibility() {
         if (mSetHomeWallpaperButton != null) {
             mSetHomeWallpaperButton.setVisibility(mHomeAvailable ? View.VISIBLE : View.GONE);
+        }
+        if (mSetLockWallpaperButton != null) {
+            mSetLockWallpaperButton.setVisibility(mLockAvailable ? View.VISIBLE : View.GONE);
         }
     }
 
