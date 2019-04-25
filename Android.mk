@@ -133,7 +133,7 @@ LOCAL_PROGUARD_ENABLED := disabled
 ifneq (,$(wildcard frameworks/base))
   LOCAL_PRIVATE_PLATFORM_APIS := true
 else
-  LOCAL_SDK_VERSION := current
+  LOCAL_SDK_VERSION := system_current
 endif
 LOCAL_PACKAGE_NAME := WallpaperPicker2
 LOCAL_JETIFIER_ENABLED := true
