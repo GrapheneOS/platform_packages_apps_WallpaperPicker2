@@ -794,7 +794,7 @@ public class PreviewFragment extends Fragment implements
         centerPosition.offset( - (screenToCropSurfacePosition.x + cropSurfaceToWallpaperPosition.x),
                 - (screenToCropSurfacePosition.y + cropSurfaceToWallpaperPosition.y));
 
-        mFullResImageView.setScaleAndCenter(defaultWallpaperZoom, centerPosition);
+        mFullResImageView.setScaleAndCenter(minWallpaperZoom, centerPosition);
     }
 
     protected Rect calculateCropRect() {
