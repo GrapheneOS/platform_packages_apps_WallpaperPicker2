@@ -73,16 +73,16 @@ public class ScreenSizeCalculator {
     private Point getPortraitScreenSize(Display display) {
         if (mPortraitScreenSize == null) {
             mPortraitScreenSize = new Point();
-            writeDisplaySizeToPoint(display, mPortraitScreenSize);
         }
+        writeDisplaySizeToPoint(display, mPortraitScreenSize);
         return mPortraitScreenSize;
     }
 
     private Point getLandscapeScreenSize(Display display) {
         if (mLandscapeScreenSize == null) {
             mLandscapeScreenSize = new Point();
-            writeDisplaySizeToPoint(display, mLandscapeScreenSize);
         }
+        writeDisplaySizeToPoint(display, mLandscapeScreenSize);
         return mLandscapeScreenSize;
     }
 
