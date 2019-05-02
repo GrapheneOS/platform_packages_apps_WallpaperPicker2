@@ -82,6 +82,7 @@ LOCAL_STATIC_ANDROID_LIBRARIES := \
     androidx.appcompat_appcompat \
     androidx.cardview_cardview \
     androidx.recyclerview_recyclerview \
+    androidx-constraintlayout_constraintlayout \
     com.google.android.material_material \
     androidx.exifinterface_exifinterface \
     wallpaper-subsampling-scale-image-view
