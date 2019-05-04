@@ -94,4 +94,8 @@ public class BuildCompat {
     public static void setSdkVersionForTesting(int sdk) {
         sSdk = sdk;
     }
+
+    public static boolean isAtLeastQ() {
+        return sSdk > VERSION_CODES.P;
+    }
 }
