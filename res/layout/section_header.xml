@@ -20,7 +20,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:elevation="0dp">
+    android:elevation="8dp">
 
     <androidx.appcompat.widget.Toolbar
         style="@style/RegularToolbarStyle"

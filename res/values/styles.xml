@@ -18,6 +18,9 @@
     <style name="WallpaperTheme" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="colorControlActivated">?attr/colorPrimary</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/translucent_black</item>
+        <item name="android:navigationBarDividerColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="WallpaperTheme.Preview" parent="@style/Theme.AppCompat.NoActionBar">
