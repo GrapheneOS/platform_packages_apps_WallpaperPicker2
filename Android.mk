@@ -82,6 +82,7 @@ LOCAL_STATIC_ANDROID_LIBRARIES := \
     androidx.appcompat_appcompat \
     androidx.cardview_cardview \
     androidx.recyclerview_recyclerview \
+    androidx-constraintlayout_constraintlayout \
     com.google.android.material_material \
     androidx.exifinterface_exifinterface \
     wallpaper-subsampling-scale-image-view
@@ -133,7 +134,7 @@ LOCAL_PROGUARD_ENABLED := disabled
 ifneq (,$(wildcard frameworks/base))
   LOCAL_PRIVATE_PLATFORM_APIS := true
 else
-  LOCAL_SDK_VERSION := current
+  LOCAL_SDK_VERSION := system_current
 endif
 LOCAL_PACKAGE_NAME := WallpaperPicker2
 LOCAL_JETIFIER_ENABLED := true

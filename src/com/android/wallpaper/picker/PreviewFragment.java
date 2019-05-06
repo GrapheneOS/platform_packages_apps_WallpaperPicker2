@@ -408,7 +408,8 @@ public class PreviewFragment extends Fragment implements
         int id = item.getItemId();
         if (id == R.id.set_wallpaper) {
             if (BuildCompat.isAtLeastN()) {
-                mWallpaperSetter.requestDestination(getContext(), getFragmentManager(), this);
+                mWallpaperSetter.requestDestination(getContext(), getFragmentManager(), mWallpaper,
+                        this);
             } else {
                 setCurrentWallpaper(WallpaperPersister.DEST_HOME_SCREEN);
             }
@@ -756,7 +757,7 @@ public class PreviewFragment extends Fragment implements
         centerPosition.offset( - (screenToCropSurfacePosition.x + cropSurfaceToWallpaperPosition.x),
                 - (screenToCropSurfacePosition.y + cropSurfaceToWallpaperPosition.y));
 
-        mFullResImageView.setScaleAndCenter(defaultWallpaperZoom, centerPosition);
+        mFullResImageView.setScaleAndCenter(minWallpaperZoom, centerPosition);
     }
 
     protected Rect calculateCropRect() {
