@@ -58,13 +58,13 @@ public class AttributionFormatter {
 
         switch (presentationMode) {
             case WallpaperPreferences.PRESENTATION_MODE_STATIC:
-                return resources.getString(R.string.static_wallpaper_presentation_mode_message);
+                return "";
             case WallpaperPreferences.PRESENTATION_MODE_ROTATING:
                 return resources.getString(R.string.rotating_wallpaper_presentation_mode_message);
             default:
                 Log.e(TAG, "No matching human-readable string for wallpaper presentation mode: "
                         + presentationMode);
-                return resources.getString(R.string.static_wallpaper_presentation_mode_message);
+                return "";
         }
     }
 }

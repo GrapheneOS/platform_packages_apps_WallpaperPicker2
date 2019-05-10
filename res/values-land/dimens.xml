@@ -19,4 +19,7 @@
 
     <!-- Dimensions for "permissions needed" tile. -->
     <dimen name="permissions_needed_metadata_warning_icon_margin_top">0dp</dimen>
+
+    <dimen name="grid_tile_aspect_height">182dp</dimen>
+    <dimen name="grid_tile_aspect_width">340dp</dimen>
 </resources>

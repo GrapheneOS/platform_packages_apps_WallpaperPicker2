@@ -103,5 +103,7 @@
         <item name="textAllCaps">false</item>
     </style>
 
-    <style name="HeaderTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+    <style name="HeaderTextAppearance" parent="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title">
+        <item name="android:textFontWeight">400</item>
+    </style>
 </resources>
