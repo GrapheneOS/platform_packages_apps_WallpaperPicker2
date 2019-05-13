@@ -102,8 +102,7 @@
     <dimen name="preview_toolbar_up_button_start_padding">0dp</dimen>
     <dimen name="preview_toolbar_set_wallpaper_button_end_padding">12dp</dimen>
 
-    <!-- 48dp + 2 * 1dp margin -->
-    <dimen name="preview_attribution_pane_collapsed_height">50dp</dimen>
+    <dimen name="preview_attribution_pane_collapsed_height">0dp</dimen>
 
     <dimen name="preview_attribution_pane_expanded_height">96dp</dimen>
     <dimen name="preview_attribution_pane_content_side_margin">16dp</dimen>
@@ -118,6 +117,15 @@
     <dimen name="preview_attribution_pane_explore_height">48dp</dimen>
     <dimen name="preview_attribution_pane_explore_left_margin">2dp</dimen>
     <dimen name="preview_attribution_pane_explore_bottom_margin">16dp</dimen>
+    <dimen name="preview_attribution_pane_horizontal_padding">24dp</dimen>
+    <dimen name="preview_attribution_pane_extra_spacer_height">16dp</dimen>
+    <dimen name="preview_attribution_pane_inner_spacer_height">14dp</dimen>
+    <dimen name="preview_attribution_pane_title_height">48dp</dimen>
+    <dimen name="preview_attribution_pane_author_height">24dp</dimen>
+    <dimen name="preview_attribution_pane_author_top_margin">0dp</dimen>
+    <dimen name="preview_attribution_pane_description_height">34dp</dimen>
+    <dimen name="preview_attribution_pane_button_bottom_margin">8dp</dimen>
+
 
     <!-- Dimensions for the "start rotation" dialog. -->
     <dimen name="start_rotation_dialog_subhead_margin_top">19dp</dimen>
@@ -168,5 +176,6 @@
 
     <!-- Dimensions for the "disabled by admin" UI in desktop mode. -->
     <dimen name="disabled_by_admin_desktop_message_text_size">13sp</dimen>
+    <dimen name="preview_bottom_sheet_corner_radius">?android:attr/dialogCornerRadius</dimen>
 
 </resources>

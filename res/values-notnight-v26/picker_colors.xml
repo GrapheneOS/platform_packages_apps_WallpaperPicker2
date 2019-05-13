@@ -50,4 +50,6 @@
     <color name="individual_tile_title_text_color">@color/textColorPrimary</color>
 
     <color name="individual_picker_background_color">@color/material_white_100</color>
+
+    <color name="toolbar_icon_color">@color/text_color_dark</color>
 </resources>
