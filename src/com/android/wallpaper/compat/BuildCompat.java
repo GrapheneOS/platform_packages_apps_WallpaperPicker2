@@ -96,6 +96,8 @@ public class BuildCompat {
     }
 
     public static boolean isAtLeastQ() {
-        return sSdk > VERSION_CODES.P;
+        return Build.VERSION.CODENAME.length() == 1
+                && Build.VERSION.CODENAME.charAt(0) >= 'Q'
+                && Build.VERSION.CODENAME.charAt(0) <= 'Z';
     }
 }
