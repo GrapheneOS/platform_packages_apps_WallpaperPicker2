@@ -15,354 +15,288 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/metadata"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/metadata"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="2dp"
-        android:layout_marginRight="2dp"
         android:layout_weight="1"
-        android:background="@color/secondary_color"
-        android:orientation="vertical">
+        android:layout_marginHorizontal="4dp"
+        app:cardCornerRadius="?android:dialogCornerRadius"
+        app:cardElevation="@dimen/single_metadata_card_elevation"
+        app:cardMaxElevation="@dimen/single_metadata_card_elevation"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="0dp">
 
-        <!-- Wraps the image and the "home screen" label overlapping it. -->
-        <FrameLayout
-            android:id="@+id/home_wallpaper_section"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <com.android.wallpaper.widget.WallpaperThumbnailView
-                android:id="@+id/home_wallpaper_image"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/both_metadata_thumb_height"
-                android:layout_gravity="top"
-                android:clickable="true"
-                android:contentDescription="@string/currently_set_home_wallpaper_thumbnail"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:nextFocusForward="@+id/home_wallpaper_attribution_section" />
-
-            <LinearLayout
-                android:id="@+id/home_wallpaper_top_section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/currently_set_both_header_scrim"
-                android:focusable="true"
-                android:nextFocusForward="@+id/home_wallpaper_explore_button_legacy"
-                android:orientation="horizontal"
-                android:visibility="invisible">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/home_wallpaper_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/both_metadata_content_side_margin"
-                        android:layout_marginLeft="@dimen/both_metadata_content_side_margin"
-                        android:layout_marginRight="@dimen/both_metadata_content_side_margin"
-                        android:layout_marginStart="@dimen/both_metadata_content_side_margin"
-                        android:layout_marginTop="@dimen/both_metadata_scrim_content_top_margin"
-                        android:text="@string/home_screen_message"
-                        android:textColor="@color/currently_set_both_title_text_color"
-                        android:textSize="@dimen/abc_text_size_subhead_material"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/home_wallpaper_presentation_mode"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/both_metadata_scrim_content_bottom_margin"
-                        android:layout_marginEnd="@dimen/both_metadata_content_side_margin"
-                        android:layout_marginLeft="@dimen/both_metadata_content_side_margin"
-                        android:layout_marginRight="@dimen/both_metadata_content_side_margin"
-                        android:layout_marginStart="@dimen/both_metadata_content_side_margin"
-                        android:textColor="@color/currently_set_both_presentation_mode_text_color"
-                        android:textSize="@dimen/abc_text_size_body_2_material" />
-
-                </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/home_wallpaper_explore_button_legacy"
-                    style="?attr/borderlessButtonStyle"
-                    android:layout_width="@dimen/both_metadata_explore_button_size"
-                    android:layout_height="@dimen/both_metadata_explore_button_size"
-                    android:layout_gravity="center_vertical|end"
-                    android:clickable="true"
-                    android:contentDescription="@string/explore_home_screen"
-                    android:focusable="true"
-                    android:nextFocusForward="@id/home_wallpaper_image"
-                    android:src="@drawable/ic_explore_24px"
-                    android:visibility="gone" />
-
-                <ImageButton
-                    android:id="@+id/skip_home_wallpaper"
-                    style="?attr/borderlessButtonStyle"
-                    android:layout_width="@dimen/both_metadata_explore_button_size"
-                    android:layout_height="@dimen/both_metadata_explore_button_size"
-                    android:layout_gravity="center_vertical|end"
-                    android:clickable="true"
-                    android:contentDescription="@string/refresh_daily_wallpaper_home_content_description"
-                    android:focusable="true"
-                    android:nextFocusForward="@id/home_wallpaper_image"
-                    android:src="@drawable/ic_refresh_24px"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-        </FrameLayout>
-
-        <!-- Wraps the attribution section. -->
-        <FrameLayout
-            android:id="@id/home_wallpaper_attribution_section"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/both_metadata_attribution_section_height"
-            android:focusable="true"
-            android:nextFocusForward="@+id/lock_wallpaper_top_section">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <!-- Wraps the image and the "lock screen" label overlapping it. -->
+            <FrameLayout
+                android:id="@+id/lock_wallpaper_section"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/home_wallpaper_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/both_metadata_content_side_margin"
-                    android:layout_marginLeft="@dimen/both_metadata_content_side_margin"
-                    android:layout_marginRight="@dimen/both_metadata_content_side_margin"
-                    android:layout_marginStart="@dimen/both_metadata_content_side_margin"
-                    android:layout_marginTop="@dimen/both_metadata_attribution_section_top_margin"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:textColor="@color/currently_set_both_title_text_color"
-                    android:textSize="@dimen/both_metadata_title_text_size"
-                    android:textStyle="bold" />
+                <com.android.wallpaper.widget.WallpaperThumbnailView
+                    android:id="@+id/lock_wallpaper_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/both_metadata_thumb_height"
+                    android:layout_gravity="top"
+                    android:clickable="true"
+                    android:contentDescription="@string/currently_set_lock_wallpaper_thumbnail"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:nextFocusForward="@+id/lock_wallpaper_attribution_section" />
 
                 <ImageButton
-                    android:id="@+id/home_wallpaper_explore_button"
                     style="?attr/borderlessButtonStyle"
-                    android:layout_width="@dimen/both_metadata_explore_button_size"
-                    android:layout_height="@dimen/both_metadata_explore_button_size"
+                    android:id="@+id/lock_wallpaper_explore_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/single_metadata_explore_button_margin"
+                    android:layout_gravity="top|end"
+                    android:background="@drawable/button_over_thumbnail_background"
                     android:clickable="true"
-                    android:contentDescription="@string/explore_home_screen"
+                    android:contentDescription="@string/explore"
                     android:focusable="true"
-                    android:nextFocusForward="@id/home_wallpaper_image"
+                    android:padding="@dimen/single_metadata_explore_section_button_padding"
                     android:src="@drawable/ic_explore_24px"
                     android:visibility="gone" />
+            </FrameLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
+            <!-- Wraps the attribution section. -->
+            <FrameLayout
+                android:id="@id/lock_wallpaper_attribution_section"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="@dimen/both_metadata_attribution_section_bottom_margin"
-                android:layout_marginEnd="@dimen/both_metadata_content_side_margin"
-                android:layout_marginLeft="@dimen/both_metadata_content_side_margin"
-                android:layout_marginRight="@dimen/both_metadata_content_side_margin"
-                android:layout_marginStart="@dimen/both_metadata_content_side_margin"
-                android:orientation="vertical">
+                android:layout_height="@dimen/both_metadata_attribution_section_height"
+                android:focusable="true">
 
-                <TextView
-                    android:id="@+id/home_wallpaper_subtitle1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
-                    android:textSize="@dimen/abc_text_size_caption_material" />
-
-                <TextView
-                    android:id="@+id/home_wallpaper_subtitle2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
-                    android:textSize="@dimen/abc_text_size_caption_material" />
-
-            </LinearLayout>
-
-        </FrameLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:layout_weight="1"
-        android:background="@color/secondary_color"
-        android:orientation="vertical">
-
-        <!-- Wraps the image and the "lock screen" label overlapping it. -->
-        <FrameLayout
-            android:id="@+id/lock_wallpaper_section"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <com.android.wallpaper.widget.WallpaperThumbnailView
-                android:id="@+id/lock_wallpaper_image"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/both_metadata_thumb_height"
-                android:layout_gravity="top"
-                android:clickable="true"
-                android:contentDescription="@string/currently_set_lock_wallpaper_thumbnail"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:nextFocusForward="@+id/lock_wallpaper_attribution_section" />
-
-            <LinearLayout
-                android:id="@id/lock_wallpaper_top_section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/currently_set_both_header_scrim"
-                android:focusable="true"
-                android:nextFocusForward="@+id/lock_wallpaper_explore_button_legacy"
-                android:orientation="horizontal"
-                android:visibility="invisible">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/single_metadata_pane_attributions_margin_right"
+                    android:layout_marginStart="@dimen/single_metadata_pane_attributions_margin_left"
+                    android:layout_marginBottom="@dimen/single_metadata_pane_wallpaper_subtitle_margin_bottom"
+                    android:focusable="true">
 
                     <TextView
                         android:id="@+id/lock_wallpaper_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start|top"
-                        android:layout_marginEnd="@dimen/both_metadata_content_side_margin"
-                        android:layout_marginLeft="@dimen/both_metadata_content_side_margin"
-                        android:layout_marginRight="@dimen/both_metadata_content_side_margin"
-                        android:layout_marginStart="@dimen/both_metadata_content_side_margin"
-                        android:layout_marginTop="@dimen/both_metadata_scrim_content_top_margin"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="@dimen/single_metadata_pane_wallpaper_label_margin_top"
                         android:text="@string/lock_screen_message"
-                        android:textColor="@color/currently_set_both_title_text_color"
+                        android:textAppearance="@style/HeaderTextAppearance"
+                        android:textColor="@color/currently_set_presentation_mode_text_color"
                         android:textSize="@dimen/abc_text_size_subhead_material"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/lock_wallpaper_presentation_mode"
+                        android:id="@+id/lock_wallpaper_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/lock_wallpaper_subtitle1"
+                        android:layout_alignParentStart="true"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+                        android:textColor="@color/currently_set_both_attribution_title_text_color"
+                        android:textSize="@dimen/both_metadata_title_text_size"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/lock_wallpaper_subtitle1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/lock_wallpaper_subtitle2"
+                        android:layout_alignParentStart="true"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+                        android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
+                        android:textSize="@dimen/abc_text_size_caption_material" />
+
+                    <TextView
+                        android:id="@+id/lock_wallpaper_subtitle2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentStart="true"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+                        android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
+                        android:textSize="@dimen/abc_text_size_caption_material" />
+
+                </RelativeLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="4dp"
+        app:cardCornerRadius="?android:dialogCornerRadius"
+        app:cardElevation="@dimen/single_metadata_card_elevation"
+        app:cardMaxElevation="@dimen/single_metadata_card_elevation"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- Wraps the image and the "home screen" label overlapping it. -->
+            <FrameLayout
+                android:id="@+id/home_wallpaper_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.android.wallpaper.widget.WallpaperThumbnailView
+                    android:id="@+id/home_wallpaper_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/both_metadata_thumb_height"
+                    android:layout_gravity="top"
+                    android:clickable="true"
+                    android:contentDescription="@string/currently_set_home_wallpaper_thumbnail"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:nextFocusForward="@+id/home_wallpaper_attribution_section" />
+
+                <ImageButton
+                    style="?attr/borderlessButtonStyle"
+                    android:id="@+id/home_wallpaper_explore_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/single_metadata_explore_button_margin"
+                    android:layout_gravity="top|end"
+                    android:background="@drawable/button_over_thumbnail_background"
+                    android:clickable="true"
+                    android:contentDescription="@string/explore_home_screen"
+                    android:focusable="true"
+                    android:padding="@dimen/single_metadata_explore_section_button_padding"
+                    android:src="@drawable/ic_explore_24px"
+                    android:visibility="gone" />
+
+                <FrameLayout
+                    android:id="@+id/home_wallpaper_presentation_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:padding="@dimen/both_metadata_scrim_content_bottom_margin"
+                    android:background="@drawable/presentation_mode_content_protection"
+                    android:visibility="gone">
+                    <TextView
+                        android:id="@+id/home_wallpaper_presentation_mode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="start|bottom"
-                        android:layout_marginBottom="@dimen/both_metadata_scrim_content_bottom_margin"
-                        android:layout_marginEnd="@dimen/both_metadata_content_side_margin"
-                        android:layout_marginLeft="@dimen/both_metadata_content_side_margin"
-                        android:layout_marginRight="@dimen/both_metadata_content_side_margin"
-                        android:layout_marginStart="@dimen/both_metadata_content_side_margin"
-                        android:textColor="@color/currently_set_both_presentation_mode_text_color"
-                        android:textSize="@dimen/abc_text_size_body_2_material" />
+                        android:layout_gravity="center_vertical|start"
+                        android:gravity="start"
+                        android:textColor="@color/material_white_100"
+                        android:textSize="@dimen/abc_text_size_body_2_material"/>
 
-                </LinearLayout>
+                    <ImageButton
+                        style="?attr/borderlessButtonStyle"
+                        android:id="@+id/skip_home_wallpaper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="0dp"
+                        android:layout_gravity="center_vertical|end"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:contentDescription="@string/refresh_daily_wallpaper_home_content_description"
+                        android:focusable="true"
+                        android:nextFocusForward="@id/home_wallpaper_image"
+                        android:padding="@dimen/single_metadata_explore_section_button_padding"
+                        android:src="@drawable/ic_refresh_24px"
+                        android:visibility="gone" />
+                </FrameLayout>
+            </FrameLayout>
 
-                <ImageButton
-                    android:id="@+id/lock_wallpaper_explore_button_legacy"
-                    style="?attr/borderlessButtonStyle"
-                    android:layout_width="@dimen/both_metadata_explore_button_size"
-                    android:layout_height="@dimen/both_metadata_explore_button_size"
-                    android:layout_gravity="center_vertical|end"
-                    android:clickable="true"
-                    android:contentDescription="@string/explore_lock_screen"
-                    android:focusable="true"
-                    android:nextFocusForward="@id/lock_wallpaper_image"
-                    android:src="@drawable/ic_explore_24px"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-        </FrameLayout>
-
-        <!-- Wraps the attribution section. -->
-        <FrameLayout
-            android:id="@id/lock_wallpaper_attribution_section"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/both_metadata_attribution_section_height"
-            android:focusable="true">
-
-            <LinearLayout
+            <!-- Wraps the attribution section. -->
+            <FrameLayout
+                android:id="@id/home_wallpaper_attribution_section"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:orientation="horizontal">
+                android:layout_height="@dimen/both_metadata_attribution_section_height"
+                android:focusable="true">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/single_metadata_pane_attributions_margin_right"
+                    android:layout_marginStart="@dimen/single_metadata_pane_attributions_margin_left"
+                    android:layout_marginBottom="@dimen/single_metadata_pane_wallpaper_subtitle_margin_bottom"
+                    android:focusable="true">
 
-                <TextView
-                    android:id="@+id/lock_wallpaper_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/both_metadata_content_side_margin"
-                    android:layout_marginLeft="@dimen/both_metadata_content_side_margin"
-                    android:layout_marginRight="@dimen/both_metadata_content_side_margin"
-                    android:layout_marginStart="@dimen/both_metadata_content_side_margin"
-                    android:layout_marginTop="@dimen/both_metadata_attribution_section_top_margin"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:textColor="@color/currently_set_both_attribution_title_text_color"
-                    android:textSize="@dimen/both_metadata_title_text_size"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/home_wallpaper_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start|top"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="@dimen/single_metadata_pane_wallpaper_label_margin_top"
+                        android:text="@string/home_screen_message"
+                        android:textAppearance="@style/HeaderTextAppearance"
+                        android:textColor="@color/currently_set_presentation_mode_text_color"
+                        android:textSize="@dimen/abc_text_size_subhead_material"
+                        android:textStyle="bold" />
 
-                <ImageButton
-                    android:id="@+id/lock_wallpaper_explore_button"
-                    style="?attr/borderlessButtonStyle"
-                    android:layout_width="@dimen/both_metadata_explore_button_size"
-                    android:layout_height="@dimen/both_metadata_explore_button_size"
-                    android:clickable="true"
-                    android:contentDescription="@string/explore_lock_screen"
-                    android:focusable="true"
-                    android:nextFocusForward="@+id/lock_wallpaper_image"
-                    android:src="@drawable/ic_explore_24px"
-                    android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/home_wallpaper_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/home_wallpaper_subtitle1"
+                        android:layout_alignParentStart="true"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+                        android:textColor="@color/currently_set_both_attribution_title_text_color"
+                        android:textSize="@dimen/both_metadata_title_text_size"
+                        android:textStyle="bold" />
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/home_wallpaper_subtitle1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/home_wallpaper_subtitle2"
+                        android:layout_alignParentStart="true"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+                        android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
+                        android:textSize="@dimen/abc_text_size_caption_material" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="@dimen/both_metadata_attribution_section_bottom_margin"
-                android:layout_marginEnd="@dimen/both_metadata_content_side_margin"
-                android:layout_marginLeft="@dimen/both_metadata_content_side_margin"
-                android:layout_marginRight="@dimen/both_metadata_content_side_margin"
-                android:layout_marginStart="@dimen/both_metadata_content_side_margin"
-                android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/home_wallpaper_subtitle2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentStart="true"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+                        android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
+                        android:textSize="@dimen/abc_text_size_caption_material" />
 
-                <TextView
-                    android:id="@+id/lock_wallpaper_subtitle1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
-                    android:textSize="@dimen/abc_text_size_caption_material" />
+                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/lock_wallpaper_subtitle2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
-                    android:textSize="@dimen/abc_text_size_caption_material" />
+            </FrameLayout>
 
-            </LinearLayout>
-
-        </FrameLayout>
-
-    </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

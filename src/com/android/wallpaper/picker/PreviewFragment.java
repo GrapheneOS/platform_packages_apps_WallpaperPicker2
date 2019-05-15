@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
@@ -32,12 +33,11 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,11 +45,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -68,8 +67,6 @@ import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.Asset.BitmapReceiver;
 import com.android.wallpaper.asset.Asset.DimensionsReceiver;
 import com.android.wallpaper.compat.BuildCompat;
-import com.android.wallpaper.compat.ButtonDrawableSetterCompat;
-import com.android.wallpaper.config.Flags;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.Injector;
@@ -154,9 +151,7 @@ public class PreviewFragment extends Fragment implements
     private TextView mAttributionTitle;
     private TextView mAttributionSubtitle1;
     private TextView mAttributionSubtitle2;
-    private FrameLayout mAttributionExploreSection;
     private Button mAttributionExploreButton;
-    private ImageView mPreviewPaneArrow;
     private int mCurrentScreenOrientation;
     private Point mDefaultCropSurfaceSize;
     private Point mScreenSize;
@@ -164,6 +159,9 @@ public class PreviewFragment extends Fragment implements
     private ImageView mLoadingIndicator;
     private MaterialProgressDrawable mProgressDrawable;
     private ImageView mLowResImageView;
+    private Button mSetWallpaperButton;
+    private View mSpacer;
+    private CheckBox mPreview;
 
     @SuppressWarnings("RestrictTo")
     @State
@@ -192,6 +190,13 @@ public class PreviewFragment extends Fragment implements
         PreviewFragment fragment = new PreviewFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private static int getAttrColor(Context context, int attr) {
+        TypedArray ta = context.obtainStyledAttributes(new int[]{attr});
+        int colorAccent = ta.getColor(0, 0);
+        ta.recycle();
+        return colorAccent;
     }
 
     @Override
@@ -233,10 +238,11 @@ public class PreviewFragment extends Fragment implements
         View view = inflater.inflate(R.layout.fragment_preview, container, false);
 
         // Set toolbar as the action bar.
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Use updated fancy arrow icon for O+.
         if (BuildCompat.isAtLeastO()) {
@@ -267,15 +273,22 @@ public class PreviewFragment extends Fragment implements
         mAttributionTitle = view.findViewById(R.id.preview_attribution_pane_title);
         mAttributionSubtitle1 = view.findViewById(R.id.preview_attribution_pane_subtitle1);
         mAttributionSubtitle2 = view.findViewById(R.id.preview_attribution_pane_subtitle2);
-        mAttributionExploreSection = view.findViewById(
-                R.id.preview_attribution_pane_explore_section);
         mAttributionExploreButton = view.findViewById(
                 R.id.preview_attribution_pane_explore_button);
-        mPreviewPaneArrow = view.findViewById(R.id.preview_attribution_pane_arrow);
         mLowResImageView = view.findViewById(R.id.low_res_image);
+        mSetWallpaperButton = view.findViewById(R.id.preview_attribution_pane_set_wallpaper_button);
+        mSpacer = view.findViewById(R.id.spacer);
 
-        mPreviewPaneArrow.setColorFilter(
-                getResources().getColor(R.color.preview_pane_arrow_color), Mode.SRC_IN);
+        // Workaround as we don't have access to bottomDialogCornerRadius, mBottomSheet radii are
+        // set to dialogCornerRadius by default.
+        GradientDrawable bottomSheetBackground = (GradientDrawable) mBottomSheet.getBackground();
+        float[] radii = bottomSheetBackground.getCornerRadii();
+        for (int i = 0; i < radii.length; i++) {
+            radii[i]*=2f;
+        }
+        bottomSheetBackground = ((GradientDrawable)bottomSheetBackground.mutate());
+        bottomSheetBackground.setCornerRadii(radii);
+        mBottomSheet.setBackground(bottomSheetBackground);
 
         // Trim some memory from Glide to make room for the full-size image in this fragment.
         Glide.get(getActivity()).setMemoryCategory(MemoryCategory.LOW);
@@ -289,7 +302,8 @@ public class PreviewFragment extends Fragment implements
         // shown to the user more quickly than the full-sized image.
         if (mWallpaperAsset.hasLowResDataSource()) {
             mWallpaperAsset.loadLowResDrawable(getActivity(), mLowResImageView, Color.BLACK,
-                    new WallpaperPreviewBitmapTransformation(getActivity().getApplicationContext(), isRtl()));
+                    new WallpaperPreviewBitmapTransformation(getActivity().getApplicationContext(),
+                            isRtl()));
         }
 
         mWallpaperAsset.decodeRawDimensions(getActivity(), new DimensionsReceiver() {
@@ -332,23 +346,23 @@ public class PreviewFragment extends Fragment implements
         mProgressDrawable =
                 new MaterialProgressDrawable(getActivity().getApplicationContext(), mLoadingIndicator);
         mProgressDrawable.setAlpha(255);
-        mProgressDrawable.setBackgroundColor(getResources().getColor(R.color.material_white_100));
-        mProgressDrawable.setColorSchemeColors(getResources().getColor(R.color.accent_color));
+        mProgressDrawable.setBackgroundColor(getResources().getColor(R.color.material_white_100,
+                getContext().getTheme()));
+        mProgressDrawable.setColorSchemeColors(getAttrColor(
+                new ContextThemeWrapper(getContext(), getDeviceDefaultTheme()),
+                android.R.attr.colorAccent));
         mProgressDrawable.updateSizes(MaterialProgressDrawable.LARGE);
         mLoadingIndicator.setImageDrawable(mProgressDrawable);
 
         // We don't want to show the spinner every time we load an image if it loads quickly; instead,
         // only start showing the spinner if loading the image has taken longer than half of a second.
-        mLoadingIndicator.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mFullResImageView != null && !mFullResImageView.hasImage()
-                        && !mTestingModeEnabled) {
-                    mLoadingIndicator.setVisibility(View.VISIBLE);
-                    mLoadingIndicator.setAlpha(1f);
-                    if (mProgressDrawable != null) {
-                        mProgressDrawable.start();
-                    }
+        mLoadingIndicator.postDelayed(() -> {
+            if (mFullResImageView != null && !mFullResImageView.hasImage()
+                    && !mTestingModeEnabled) {
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+                mLoadingIndicator.setAlpha(1f);
+                if (mProgressDrawable != null) {
+                    mProgressDrawable.start();
                 }
             }
         }, 500);
@@ -361,6 +375,16 @@ public class PreviewFragment extends Fragment implements
         setUpBottomSheetListeners();
 
         return view;
+    }
+
+    protected int getDeviceDefaultTheme() {
+        return BuildCompat.isAtLeastQ() ? getDayNightDeviceDefault()
+                : android.R.style.Theme_DeviceDefault;
+    }
+
+    @TargetApi(29)
+    private int getDayNightDeviceDefault() {
+        return R.style.Theme_AppCompat_DayNight;
     }
 
     @Override
@@ -389,32 +413,13 @@ public class PreviewFragment extends Fragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.preview_menu, menu);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        MenuItem setWallpaperButton = menu.findItem(R.id.set_wallpaper);
-
-        if (mPreviewMode == MODE_CROP_AND_SET_WALLPAPER && isWallpaperLoaded()) {
-            setWallpaperButton.setVisible(true);
-        } else {
-            setWallpaperButton.setVisible(false);
-        }
+        setupPreviewMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.set_wallpaper) {
-            if (BuildCompat.isAtLeastN()) {
-                mWallpaperSetter.requestDestination(getContext(), getFragmentManager(), mWallpaper,
-                        this);
-            } else {
-                setCurrentWallpaper(WallpaperPersister.DEST_HOME_SCREEN);
-            }
-            return true;
-        } else if (id == android.R.id.home) {
+        if (id == android.R.id.home) {
             // The Preview screen has multiple entry points. It could be opened from either
             // the IndividualPreviewActivity, the "My photos" selection (by way of
             // TopLevelPickerActivity), or from a system "crop and set wallpaper" intent.
@@ -424,6 +429,31 @@ public class PreviewFragment extends Fragment implements
         }
 
         return false;
+    }
+
+    protected void setupPreviewMenu(Menu menu) {
+        mPreview = (CheckBox) menu.findItem(R.id.preview).getActionView();
+        mPreview.setOnClickListener(this::setPreviewBehavior);
+    }
+
+    private void setPreviewChecked(boolean checked) {
+        if (mPreview != null) {
+            mPreview.setChecked(checked);
+            int resId = checked ? R.string.expand_attribution_panel
+                    : R.string.collapse_attribution_panel;
+            mPreview.setContentDescription(getResources().getString(resId));
+        }
+    }
+
+    private void setPreviewBehavior(final View v) {
+        CheckBox checkbox = (CheckBox) v;
+        BottomSheetBehavior<?> behavior = BottomSheetBehavior.from(mBottomSheet);
+
+        if (checkbox.isChecked()) {
+            behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        } else {
+            behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
     }
 
     @Override
@@ -472,18 +502,13 @@ public class PreviewFragment extends Fragment implements
         outState.putInt(KEY_BOTTOM_SHEET_STATE, bottomSheetBehavior.getState());
     }
 
-    private void updatePreviewPaneArrow(int bottomSheetState) {
-        if (bottomSheetState == BottomSheetBehavior.STATE_COLLAPSED) {
-            mPreviewPaneArrow.setImageResource(R.drawable.material_ic_keyboard_arrow_up_black_24);
-            mPreviewPaneArrow.setContentDescription(
-                    getResources().getString(R.string.expand_attribution_panel));
-        } else if (bottomSheetState == BottomSheetBehavior.STATE_EXPANDED) {
-            mPreviewPaneArrow.setImageResource(R.drawable.material_ic_keyboard_arrow_down_black_24);
-            mPreviewPaneArrow.setContentDescription(
-                    getResources().getString(R.string.collapse_attribution_panel));
+    private void onSetWallpaperClicked(View button) {
+        if (BuildCompat.isAtLeastN()) {
+            mWallpaperSetter.requestDestination(getContext(), getFragmentManager(), mWallpaper,
+                    this);
+        } else {
+            setCurrentWallpaper(WallpaperPersister.DEST_HOME_SCREEN);
         }
-        mPreviewPaneArrow.setColorFilter(
-                getResources().getColor(R.color.preview_pane_arrow_color), Mode.SRC_IN);
     }
 
     /**
@@ -518,30 +543,23 @@ public class PreviewFragment extends Fragment implements
     private void setUpBottomSheetListeners() {
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 
-        OnClickListener onClickListener = new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-            }
-        };
-        mAttributionTitle.setOnClickListener(onClickListener);
-        mPreviewPaneArrow.setOnClickListener(onClickListener);
-
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(View bottomSheet, int newState) {
-                // Don't respond to lingering state change events occurring after the fragment has already
-                // been detached from the activity. Else, IllegalStateException may occur when trying to
-                // fetch resources.
+                // Don't respond to lingering state change events occurring after the fragment has
+                // already been detached from the activity. Else, IllegalStateException may occur
+                // when trying to fetch resources.
                 if (getActivity() == null) {
                     return;
                 }
-
-                updatePreviewPaneArrow(newState);
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        setPreviewChecked(true /* checked */);
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        setPreviewChecked(false /* checked */);
+                        break;
+                }
             }
 
             @Override
@@ -584,37 +602,36 @@ public class PreviewFragment extends Fragment implements
             mAttributionSubtitle2.setText(attributions.get(2));
         }
 
+        if (mPreviewMode == MODE_CROP_AND_SET_WALLPAPER) {
+            mSetWallpaperButton.setVisibility(View.VISIBLE);
+            mSetWallpaperButton.setOnClickListener(this::onSetWallpaperClicked);
+        } else {
+            mSetWallpaperButton.setVisibility(View.GONE);
+        }
+
         String actionUrl = mWallpaper.getActionUrl(context);
+
+        mAttributionExploreButton.setVisibility(View.GONE);
         if (actionUrl != null && !actionUrl.isEmpty()) {
             if (mExploreIntent != null) {
-                if (Flags.skipDailyWallpaperButtonEnabled) {
-                    Drawable exploreButtonDrawable = context.getDrawable(
-                            mWallpaper.getActionIconRes(context));
+                mAttributionExploreButton.setVisibility(View.VISIBLE);
+                mAttributionExploreButton.setText(context.getString(
+                        mWallpaper.getActionLabelRes(context)));
 
-                    // This Drawable's state is shared across the app, so make a copy of it before applying a
-                    // color tint as not to affect other clients elsewhere in the app.
-                    exploreButtonDrawable = exploreButtonDrawable.getConstantState()
-                            .newDrawable().mutate();
-                    // Color the "compass" icon with the accent color.
-                    exploreButtonDrawable.setColorFilter(
-                            getResources().getColor(R.color.accent_color), Mode.SRC_IN);
-                    ButtonDrawableSetterCompat.setDrawableToButtonStart(
-                            mAttributionExploreButton, exploreButtonDrawable);
-                    mAttributionExploreButton.setText(context.getString(
-                            mWallpaper.getActionLabelRes(context)));
-                }
+                mAttributionExploreButton.setOnClickListener(view -> {
+                    mUserEventLogger.logActionClicked(mWallpaper.getCollectionId(context),
+                            mWallpaper.getActionLabelRes(context));
 
-                mAttributionExploreSection.setVisibility(View.VISIBLE);
-                mAttributionExploreButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mUserEventLogger.logActionClicked(mWallpaper.getCollectionId(context),
-                                mWallpaper.getActionLabelRes(context));
-
-                        startActivity(mExploreIntent);
-                    }
+                    startActivity(mExploreIntent);
                 });
             }
+        }
+
+        if (mAttributionExploreButton.getVisibility() == View.VISIBLE
+                && mSetWallpaperButton.getVisibility() == View.VISIBLE) {
+            mSpacer.setVisibility(View.VISIBLE);
+        } else {
+            mSpacer.setVisibility(View.GONE);
         }
 
         mBottomSheet.setVisibility(View.VISIBLE);
@@ -622,22 +639,20 @@ public class PreviewFragment extends Fragment implements
         // Initialize the state of the BottomSheet based on the current state because if the initial
         // and current state are the same, the state change listener won't fire and set the correct
         // arrow asset and text alpha.
-        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-            updatePreviewPaneArrow(BottomSheetBehavior.STATE_EXPANDED);
-        } else {
+        if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             mAttributionTitle.setAlpha(0f);
             mAttributionSubtitle1.setAlpha(0f);
             mAttributionSubtitle2.setAlpha(0f);
         }
 
-        // Let the state change listener take care of animating a state change to the initial state if
-        // there's a state change.
+        // Let the state change listener take care of animating a state change to the initial state
+        // if there's a state change.
         bottomSheetBehavior.setState(mBottomSheetInitialState);
     }
 
     /**
-     * Initializes MosaicView by initializing tiling, setting a fallback page bitmap, and initializing
-     * a zoom-scroll observer and click listener.
+     * Initializes MosaicView by initializing tiling, setting a fallback page bitmap, and
+     * initializing a zoom-scroll observer and click listener.
      */
     private void initFullResView() {
         mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
@@ -666,7 +681,8 @@ public class PreviewFragment extends Fragment implements
                         if (mLoadingIndicator != null) {
                             mLoadingIndicator.setVisibility(View.GONE);
                         }
-                        // The page bitmap may be null if there was a decoding error, so show an error dialog.
+                        // The page bitmap may be null if there was a decoding error, so show an
+                        // error dialog.
                         if (pageBitmap == null) {
                             showLoadWallpaperErrorDialog();
                             return;
@@ -693,7 +709,8 @@ public class PreviewFragment extends Fragment implements
      * indicator.
      */
     private void crossFadeInMosaicView() {
-        long shortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        long shortAnimationDuration = getResources().getInteger(
+                android.R.integer.config_shortAnimTime);
 
         mFullResImageView.setAlpha(0f);
         mFullResImageView.animate()
@@ -702,7 +719,8 @@ public class PreviewFragment extends Fragment implements
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        // Clear the thumbnail bitmap reference to save memory since it's no longer visible.
+                        // Clear the thumbnail bitmap reference to save memory since it's no longer
+                        // visible.
                         if (mLowResImageView != null) {
                             mLowResImageView.setImageBitmap(null);
                         }
@@ -773,8 +791,8 @@ public class PreviewFragment extends Fragment implements
         rect.set(0, 0, scaledWallpaperWidth, scaledWallpaperHeight);
         Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(
                 getActivity().getWindowManager().getDefaultDisplay());
-        // Crop rect should start off as the visible screen and then include extra width and height if
-        // available within wallpaper at the current zoom.
+        // Crop rect should start off as the visible screen and then include extra width and height
+        // if available within wallpaper at the current zoom.
         Rect cropRect = new Rect(scrollX, scrollY, scrollX + screenSize.x, scrollY + screenSize.y);
 
         Point defaultCropSurfaceSize = WallpaperCropUtils.getDefaultCropSurfaceSize(
@@ -782,7 +800,8 @@ public class PreviewFragment extends Fragment implements
         int extraWidth = defaultCropSurfaceSize.x - screenSize.x;
         int extraHeightTopAndBottom = (int) ((defaultCropSurfaceSize.y - screenSize.y) / 2f);
 
-        // Try to increase size of screenRect to include extra width depending on the layout direction.
+        // Try to increase size of screenRect to include extra width depending on the layout
+        // direction.
         if (isRtl()) {
             cropRect.left = Math.max(cropRect.left - extraWidth, rect.left);
         } else {
@@ -843,8 +862,9 @@ public class PreviewFragment extends Fragment implements
                 R.string.set_wallpaper_error_message, wallpaperDestination);
         newFragment.setTargetFragment(this, UNUSED_REQUEST_CODE);
 
-        // Show 'set wallpaper' error dialog now if it's safe to commit fragment transactions, otherwise
-        // stage it for later when the hosting activity is in a state to commit fragment transactions.
+        // Show 'set wallpaper' error dialog now if it's safe to commit fragment transactions,
+        // otherwise stage it for later when the hosting activity is in a state to commit fragment
+        // transactions.
         BasePreviewActivity activity = (BasePreviewActivity) getActivity();
         if (activity.isSafeToCommitFragmentTransaction()) {
             newFragment.show(getFragmentManager(), TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT);
@@ -854,8 +874,8 @@ public class PreviewFragment extends Fragment implements
     }
 
     /**
-     * Shows 'load wallpaper' error dialog now or stage it to be shown when the hosting activity is in
-     * a state that allows committing fragment transactions.
+     * Shows 'load wallpaper' error dialog now or stage it to be shown when the hosting activity is
+     * in a state that allows committing fragment transactions.
      */
     private void showLoadWallpaperErrorDialog() {
         LoadWallpaperErrorDialogFragment dialogFragment =
@@ -923,33 +943,19 @@ public class PreviewFragment extends Fragment implements
             case 3:
                 return ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
             default:
-                Log.e(TAG, "Display rotation did not correspond to a valid ActivityInfo orientation with"
-                        + " display rotation: " + display.getRotation() + " and index offset: " + indexOffset
-                        + ".");
+                Log.e(TAG, "Display rotation did not correspond to a valid ActivityInfo orientation"
+                        +  "with display rotation: " + display.getRotation() + " and index offset: "
+                        + indexOffset + ".");
                 return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private void saveAndLockScreenOrientation() {
-        mCurrentScreenOrientation = getActivity().getRequestedOrientation();
-        if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR2) {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
-        } else {
-            getActivity().setRequestedOrientation(getCompatActivityInfoOrientation());
-        }
-    }
-
-    private void restoreScreenOrientation() {
-        getActivity().setRequestedOrientation(mCurrentScreenOrientation);
-    }
-
     /**
-     * Returns whether layout direction is RTL (or false for LTR). Since native RTL layout support was
-     * added in API 17, returns false for versions lower than 17.
+     * Returns whether layout direction is RTL (or false for LTR). Since native RTL layout support
+     * was added in API 17, returns false for versions lower than 17.
      */
     private boolean isRtl() {
-        return VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
-                && getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+        return getResources().getConfiguration().getLayoutDirection()
+                    == View.LAYOUT_DIRECTION_RTL;
     }
 }

@@ -21,12 +21,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
+import android.graphics.Insets;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowInsets;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -111,7 +114,7 @@ public class IndividualPickerActivity extends BaseActivity {
             // color tint as not to affect other clients elsewhere in the app.
             navigationIcon = navigationIcon.getConstantState().newDrawable().mutate();
             navigationIcon.setColorFilter(
-                    ContextCompat.getColor(this, R.color.accent_color), Mode.SRC_IN);
+                    ContextCompat.getColor(this, R.color.toolbar_icon_color), Mode.SRC_IN);
 
             // Need to explicitly check against 19 rather than using BuildCompat in order to avoid a
             // NoSuchMethodError here in UI tests running on pre-API 19 emulators.
@@ -121,6 +124,28 @@ public class IndividualPickerActivity extends BaseActivity {
 
             toolbar.setNavigationIcon(navigationIcon);
         }
+
+        getWindow().getDecorView().setSystemUiVisibility(
+                getWindow().getDecorView().getSystemUiVisibility() |
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+        getWindow().getDecorView().setOnApplyWindowInsetsListener((view, windowInsets) -> {
+            view.setPadding(view.getPaddingLeft(), windowInsets.getSystemWindowInsetTop(),
+                    view.getPaddingRight(), view.getBottom());
+            // Consume only the top inset (status bar), to let other content in the Activity consume
+            // the nav bar (ie, by using "fitSystemWindows")
+            if (BuildCompat.isAtLeastQ()) {
+                WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
+                builder.setSystemWindowInsets(Insets.of(windowInsets.getSystemWindowInsetLeft(),
+                        0, windowInsets.getStableInsetRight(),
+                        windowInsets.getSystemWindowInsetBottom()));
+                return builder.build();
+            } else {
+                return windowInsets.replaceSystemWindowInsets(
+                        windowInsets.getSystemWindowInsetLeft(),
+                        0, windowInsets.getStableInsetRight(),
+                        windowInsets.getSystemWindowInsetBottom());
+            }
+        });
 
         if (fragment == null) {
             fragment = injector.getIndividualPickerFragment(mCategoryCollectionId);

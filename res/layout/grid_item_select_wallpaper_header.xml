@@ -22,6 +22,6 @@
     android:contentDescription="@string/select_wallpaper_label"
     android:gravity="center_vertical"
     android:text="@string/select_wallpaper_label"
+    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title"
     android:textColor="@color/select_wallpaper_header_text_color"
-    android:textSize="@dimen/abc_text_size_body_2_material"
-    android:textStyle="bold" />
+    android:textSize="@dimen/abc_text_size_subhead_material"/>
