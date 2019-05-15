@@ -297,4 +297,7 @@
     <string name="third_party_app_wallpaper_collection_id" translatable="false">
       third_party_app_wallpapers
     </string>
+
+    <!-- Label for a checkbox which lets user preview the displayed image as wallpaper. [CHAR LIMIT=30] -->
+    <string name="preview">Preview</string>
 </resources>

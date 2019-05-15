@@ -114,7 +114,7 @@ public class IndividualPickerActivity extends BaseActivity {
             // color tint as not to affect other clients elsewhere in the app.
             navigationIcon = navigationIcon.getConstantState().newDrawable().mutate();
             navigationIcon.setColorFilter(
-                    ContextCompat.getColor(this, R.color.accent_color), Mode.SRC_IN);
+                    ContextCompat.getColor(this, R.color.toolbar_icon_color), Mode.SRC_IN);
 
             // Need to explicitly check against 19 rather than using BuildCompat in order to avoid a
             // NoSuchMethodError here in UI tests running on pre-API 19 emulators.

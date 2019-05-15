@@ -38,8 +38,7 @@
 
     <!-- Dimensions for the preview attribution pane. -->
 
-    <!-- 48dp + 2 * 8dp margin -->
-    <dimen name="preview_attribution_pane_collapsed_height">64dp</dimen>
+    <dimen name="preview_attribution_pane_collapsed_height">0dp</dimen>
 
     <dimen name="preview_attribution_pane_content_side_margin">24dp</dimen>
     <dimen name="preview_attribution_pane_explore_left_margin">10dp</dimen>
