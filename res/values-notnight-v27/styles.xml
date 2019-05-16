@@ -17,7 +17,7 @@
 
     <style name="WallpaperTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="colorControlActivated">?attr/colorPrimary</item>
-        <item name="colorControlNormal">?attr/colorAccent</item>
+        <item name="colorControlNormal">?android:attr/colorPrimary</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:windowLightStatusBar">true</item>
 

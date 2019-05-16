@@ -94,4 +94,10 @@ public class BuildCompat {
     public static void setSdkVersionForTesting(int sdk) {
         sSdk = sdk;
     }
+
+    public static boolean isAtLeastQ() {
+        return Build.VERSION.CODENAME.length() == 1
+                && Build.VERSION.CODENAME.charAt(0) >= 'Q'
+                && Build.VERSION.CODENAME.charAt(0) <= 'Z';
+    }
 }

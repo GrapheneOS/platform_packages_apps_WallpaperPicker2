@@ -30,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
+            android:fitsSystemWindows="true"
             android:paddingLeft="@dimen/grid_padding"
             android:paddingTop="@dimen/grid_padding"
             android:scrollbarSize="@dimen/grid_padding"

@@ -22,9 +22,7 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="RegularToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/primary_color</item>
+    <style name="RegularToolbarStyle" parent="@android:style/Widget.DeviceDefault.Light.ActionBar.Solid">
         <item name="android:theme">@style/WallpaperTheme</item>
-        <item name="titleTextColor">@color/accent_color</item>
     </style>
 </resources>
