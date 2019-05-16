@@ -21,8 +21,8 @@
     <string name="app_name">@string/wallpaper_app_name</string>
 
     <!-- UI Strings -->
-    <!-- Label which asks the user to select a wallpaper from the given choices. [CHAR LIMIT=50] -->
-    <string name="select_wallpaper_label">Select wallpaper</string>
+    <!-- Label which asks the user to select a wallpaper category from the given choices. [CHAR LIMIT=50] -->
+    <string name="select_wallpaper_label">Wallpaper categories</string>
 
     <!-- Label for a button which lets user set the displayed image as wallpaper. [CHAR LIMIT=30] -->
     <string name="set_wallpaper_button_text">Set Wallpaper</string>
@@ -51,6 +51,10 @@
     <!-- Label indicating that the wallpaper being shown near it is the wallpaper that is currently
          set on the device and is part of a daily rotation of wallpapers. [CHAR LIMIT=100] -->
     <string name="rotating_wallpaper_presentation_mode_message">Daily wallpaper</string>
+
+    <!-- Label indicating that the wallpaper being shown is set both on home screen and on lock
+        screen [CHAR LIMIT=100] -->
+    <string name="wallpaper_destination_both">Home &amp; Lock screen</string>
 
     <!-- Label referring to the home screen of the device, i.e. shown behind the launcher.
          [CHAR LIMIT=30] -->
@@ -293,4 +297,7 @@
     <string name="third_party_app_wallpaper_collection_id" translatable="false">
       third_party_app_wallpapers
     </string>
+
+    <!-- Label for a checkbox which lets user preview the displayed image as wallpaper. [CHAR LIMIT=30] -->
+    <string name="preview">Preview</string>
 </resources>

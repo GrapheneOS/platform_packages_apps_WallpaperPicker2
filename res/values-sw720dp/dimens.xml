@@ -16,7 +16,7 @@
 <resources>
     <!-- Dimensions for "single metadata card" configuration. -->
     <dimen name="single_metadata_card_layout_height">256dp</dimen>
-    <dimen name="single_metadata_pane_wallpaper_title_text_size">
+    <dimen name="single_metadata_pane_wallpaper_collection_title_text_size">
         @dimen/abc_text_size_headline_material
     </dimen>
     <dimen name="single_metadata_pane_wallpaper_subtitle_text_size">
@@ -38,8 +38,7 @@
 
     <!-- Dimensions for the preview attribution pane. -->
 
-    <!-- 48dp + 2 * 8dp margin -->
-    <dimen name="preview_attribution_pane_collapsed_height">64dp</dimen>
+    <dimen name="preview_attribution_pane_collapsed_height">0dp</dimen>
 
     <dimen name="preview_attribution_pane_content_side_margin">24dp</dimen>
     <dimen name="preview_attribution_pane_explore_left_margin">10dp</dimen>

@@ -23,13 +23,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -41,7 +39,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -55,7 +52,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
-import com.android.wallpaper.compat.ButtonDrawableSetterCompat;
 import com.android.wallpaper.config.Flags;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.WallpaperInfo;
@@ -148,7 +144,7 @@ public class CategoryFragment extends ToolbarFragment {
         View view = inflater.inflate(
                 R.layout.fragment_category_picker, container, /* attachToRoot */ false);
 
-        mImageGrid = (RecyclerView) view.findViewById(R.id.category_grid);
+        mImageGrid = view.findViewById(R.id.category_grid);
         GridMarginDecoration.applyTo(mImageGrid);
 
         mTileSizePx = TileSizeCalculator.getCategoryTileSize(getActivity());
@@ -482,45 +478,29 @@ public class CategoryFragment extends ToolbarFragment {
             implements MetadataHolder {
         private WallpaperInfo mWallpaperInfo;
         private ImageView mWallpaperImage;
-        private TextView mWallpaperPresentationMode;
+        private TextView mWallpaperPresentationModeSubtitle;
         private TextView mWallpaperTitle;
         private TextView mWallpaperSubtitle;
-        private ViewGroup mWallpaperExploreSection;
-        private Button mWallpaperExploreButton;
+        private TextView mWallpaperSubtitle2;
         private ImageButton mWallpaperExploreButtonNoText;
         private ImageButton mSkipWallpaperButton;
 
         public SingleWallpaperMetadataHolder(View metadataView) {
             super(metadataView);
 
-            mWallpaperImage = (ImageView) metadataView.findViewById(R.id.wallpaper_image);
+            mWallpaperImage = metadataView.findViewById(R.id.wallpaper_image);
             mWallpaperImage.getLayoutParams().width = getSingleWallpaperImageWidth();
 
-            mWallpaperPresentationMode =
-                    (TextView) metadataView.findViewById(R.id.wallpaper_presentation_mode);
-            mWallpaperTitle = (TextView) metadataView.findViewById(R.id.wallpaper_title);
-            mWallpaperSubtitle = (TextView) metadataView.findViewById(R.id.wallpaper_subtitle);
+            mWallpaperPresentationModeSubtitle =
+                    metadataView.findViewById(R.id.wallpaper_presentation_mode_subtitle);
+            mWallpaperTitle = metadataView.findViewById(R.id.wallpaper_title);
+            mWallpaperSubtitle = metadataView.findViewById(R.id.wallpaper_subtitle);
+            mWallpaperSubtitle2 = metadataView.findViewById(R.id.wallpaper_subtitle2);
 
-            mWallpaperExploreSection =
-                    (ViewGroup) metadataView.findViewById(R.id.wallpaper_explore_section);
-            mWallpaperExploreButton =
-                    (Button) metadataView.findViewById(R.id.wallpaper_explore_button);
-            mWallpaperExploreButtonNoText = (ImageButton)
+            mWallpaperExploreButtonNoText =
                     metadataView.findViewById(R.id.wallpaper_explore_button_notext);
 
-            mSkipWallpaperButton = (ImageButton) metadataView.findViewById(R.id.skip_wallpaper_button);
-
-            if (Flags.skipDailyWallpaperButtonEnabled) {
-                Drawable exploreButtonDrawable = getContext().getDrawable(
-                        R.drawable.ic_explore_24px);
-                // This Drawable's state is shared across the app, so make a copy of it before applying a
-                // color tint as not to affect other clients elsewhere in the app.
-                exploreButtonDrawable = exploreButtonDrawable.getConstantState().newDrawable().mutate();
-                exploreButtonDrawable.setColorFilter(
-                        getResources().getColor(R.color.currently_set_explore_button_color), Mode.SRC_IN);
-                ButtonDrawableSetterCompat.setDrawableToButtonStart(
-                        mWallpaperExploreButton, exploreButtonDrawable);
-            }
+            mSkipWallpaperButton = metadataView.findViewById(R.id.skip_wallpaper_button);
         }
 
         /**
@@ -528,7 +508,7 @@ public class CategoryFragment extends ToolbarFragment {
          */
         @Override
         public void bindWallpapers(WallpaperInfo homeWallpaper, WallpaperInfo lockWallpaper,
-                                   @PresentationMode int presentationMode) {
+                @PresentationMode int presentationMode) {
             mWallpaperInfo = homeWallpaper;
 
             bindWallpaperAsset();
@@ -555,7 +535,7 @@ public class CategoryFragment extends ToolbarFragment {
         private void bindWallpaperText(@PresentationMode int presentationMode) {
             Context appContext = getActivity().getApplicationContext();
 
-            mWallpaperPresentationMode.setText(
+            mWallpaperPresentationModeSubtitle.setText(
                     AttributionFormatter.getHumanReadableWallpaperPresentationMode(
                             appContext, presentationMode));
 
@@ -563,13 +543,15 @@ public class CategoryFragment extends ToolbarFragment {
             if (!attributions.isEmpty()) {
                 mWallpaperTitle.setText(attributions.get(0));
             }
-            String subtitleText =
-                    AttributionFormatter.formatWallpaperSubtitle(appContext, mWallpaperInfo);
-            if (!TextUtils.isEmpty(subtitleText)) {
-                mWallpaperSubtitle.setText(subtitleText);
-                mWallpaperSubtitle.setVisibility(View.VISIBLE);
+            if (attributions.size() > 1) {
+                mWallpaperSubtitle.setText(attributions.get(1));
             } else {
-                mWallpaperSubtitle.setVisibility(View.GONE);
+                mWallpaperSubtitle.setVisibility(View.INVISIBLE);
+            }
+            if (attributions.size() > 2) {
+                mWallpaperSubtitle2.setText(attributions.get(2));
+            } else {
+                mWallpaperSubtitle2.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -612,53 +594,26 @@ public class CategoryFragment extends ToolbarFragment {
             boolean showSkipWallpaperButton = Flags.skipDailyWallpaperButtonEnabled
                     && presentationMode == WallpaperPreferences.PRESENTATION_MODE_ROTATING;
 
-            if (exploreIntent != null || showSkipWallpaperButton) {
-                mWallpaperExploreSection.setVisibility(View.VISIBLE);
-
-                if (exploreIntent != null) {
-                    View exploreButton;
-
-                    if (showSkipWallpaperButton) {
-                        exploreButton = mWallpaperExploreButtonNoText;
-                        mWallpaperExploreButtonNoText.setImageDrawable(getContext().getDrawable(
+            if (exploreIntent != null) {
+                mWallpaperExploreButtonNoText.setImageDrawable(getContext().getDrawable(
                                 mWallpaperInfo.getActionIconRes(appContext)));
-                        mWallpaperExploreButtonNoText.setContentDescription(
+                mWallpaperExploreButtonNoText.setContentDescription(
                                 getString(mWallpaperInfo.getActionLabelRes(appContext)));
-                        mWallpaperExploreButtonNoText.setColorFilter(
-                                getResources().getColor(R.color.currently_set_explore_button_color),
+                mWallpaperExploreButtonNoText.setColorFilter(
+                                getResources().getColor(R.color.currently_set_explore_button_color,
+                                        getContext().getTheme()),
                                 Mode.SRC_IN);
-                        mWallpaperExploreButton.setVisibility(View.GONE);
-                    } else {
-                        exploreButton = mWallpaperExploreButton;
+                mWallpaperExploreButtonNoText.setVisibility(View.VISIBLE);
+                mWallpaperExploreButtonNoText.setOnClickListener((View view) -> {
+                    eventLogger.logActionClicked(mWallpaperInfo.getCollectionId(appContext),
+                           mWallpaperInfo.getActionLabelRes(appContext));
+                    startActivity(exploreIntent);
+                });
+            }
 
-                        Drawable drawable = getContext().getDrawable(
-                                mWallpaperInfo.getActionIconRes(appContext)).getConstantState()
-                                .newDrawable().mutate();
-                        // Color the "compass" icon with the accent color.
-                        drawable.setColorFilter(
-                                getResources().getColor(R.color.accent_color), Mode.SRC_IN);
-                        ButtonDrawableSetterCompat.setDrawableToButtonStart(
-                                mWallpaperExploreButton, drawable);
-                        mWallpaperExploreButton.setText(
-                                mWallpaperInfo.getActionLabelRes(appContext));
-                        mWallpaperExploreButtonNoText.setVisibility(View.GONE);
-                    }
-                    exploreButton.setVisibility(View.VISIBLE);
-                    exploreButton.setOnClickListener((View view) -> {
-                        eventLogger.logActionClicked(mWallpaperInfo.getCollectionId(appContext),
-                                mWallpaperInfo.getActionLabelRes(appContext));
-                        startActivity(exploreIntent);
-                    });
-                }
-
-                if (showSkipWallpaperButton) {
-                    mSkipWallpaperButton.setVisibility(View.VISIBLE);
-                    mSkipWallpaperButton.setColorFilter(
-                            getResources().getColor(R.color.currently_set_explore_button_color), Mode.SRC_IN);
-                    mSkipWallpaperButton.setOnClickListener((View view) -> refreshDailyWallpaper());
-                }
-            } else {
-                mWallpaperExploreSection.setVisibility(View.GONE);
+            if (showSkipWallpaperButton) {
+                mSkipWallpaperButton.setVisibility(View.VISIBLE);
+                mSkipWallpaperButton.setOnClickListener((View view) -> refreshDailyWallpaper());
             }
         }
     }
@@ -670,28 +625,22 @@ public class CategoryFragment extends ToolbarFragment {
     private class TwoWallpapersMetadataHolder extends RecyclerView.ViewHolder
             implements MetadataHolder {
         private WallpaperInfo mHomeWallpaperInfo;
-        private FrameLayout mHomeWallpaperSection;
         private ImageView mHomeWallpaperImage;
-        private LinearLayout mHomeWallpaperTopSection;
         private TextView mHomeWallpaperPresentationMode;
         private TextView mHomeWallpaperTitle;
         private TextView mHomeWallpaperSubtitle1;
         private TextView mHomeWallpaperSubtitle2;
 
-        private ImageButton mHomeWallpaperExploreButtonLegacy;
         private ImageButton mHomeWallpaperExploreButton;
         private ImageButton mSkipWallpaperButton;
+        private ViewGroup mHomeWallpaperPresentationSection;
 
-        private FrameLayout mLockWallpaperSection;
         private WallpaperInfo mLockWallpaperInfo;
         private ImageView mLockWallpaperImage;
-        private LinearLayout mLockWallpaperTopSection;
-        private TextView mLockWallpaperPresentationMode;
         private TextView mLockWallpaperTitle;
         private TextView mLockWallpaperSubtitle1;
         private TextView mLockWallpaperSubtitle2;
 
-        private ImageButton mLockWallpaperExploreButtonLegacy;
         private ImageButton mLockWallpaperExploreButton;
 
         public TwoWallpapersMetadataHolder(View metadataView) {
@@ -708,41 +657,37 @@ public class CategoryFragment extends ToolbarFragment {
 
             int bothWallpaperImageWidth = getBothWallpaperImageWidth();
 
-            mHomeWallpaperSection = (FrameLayout) metadataView.findViewById(R.id.home_wallpaper_section);
-            mHomeWallpaperSection.setMinimumWidth(bothWallpaperImageWidth);
-            mHomeWallpaperImage = (ImageView) metadataView.findViewById(R.id.home_wallpaper_image);
-            mHomeWallpaperTopSection =
-                    (LinearLayout) metadataView.findViewById(R.id.home_wallpaper_top_section);
-            mHomeWallpaperPresentationMode =
-                    (TextView) metadataView.findViewById(R.id.home_wallpaper_presentation_mode);
-            mHomeWallpaperTitle = (TextView) metadataView.findViewById(R.id.home_wallpaper_title);
-            mHomeWallpaperSubtitle1 = (TextView) metadataView.findViewById(R.id.home_wallpaper_subtitle1);
-            mHomeWallpaperSubtitle2 = (TextView) metadataView.findViewById(R.id.home_wallpaper_subtitle2);
-            mHomeWallpaperExploreButtonLegacy =
-                    (ImageButton) metadataView.findViewById(R.id.home_wallpaper_explore_button_legacy);
-            mHomeWallpaperExploreButton =
-                    (ImageButton) metadataView.findViewById(R.id.home_wallpaper_explore_button);
-            mSkipWallpaperButton = (ImageButton) metadataView.findViewById(R.id.skip_home_wallpaper);
+            FrameLayout homeWallpaperSection = metadataView.findViewById(
+                    R.id.home_wallpaper_section);
+            homeWallpaperSection.setMinimumWidth(bothWallpaperImageWidth);
+            mHomeWallpaperImage = metadataView.findViewById(R.id.home_wallpaper_image);
 
-            mLockWallpaperSection = (FrameLayout) metadataView.findViewById(R.id.lock_wallpaper_section);
-            mLockWallpaperSection.setMinimumWidth(bothWallpaperImageWidth);
-            mLockWallpaperImage = (ImageView) metadataView.findViewById(R.id.lock_wallpaper_image);
-            mLockWallpaperTopSection =
-                    (LinearLayout) metadataView.findViewById(R.id.lock_wallpaper_top_section);
-            mLockWallpaperPresentationMode =
-                    (TextView) metadataView.findViewById(R.id.lock_wallpaper_presentation_mode);
-            mLockWallpaperTitle = (TextView) metadataView.findViewById(R.id.lock_wallpaper_title);
-            mLockWallpaperSubtitle1 = (TextView) metadataView.findViewById(R.id.lock_wallpaper_subtitle1);
-            mLockWallpaperSubtitle2 = (TextView) metadataView.findViewById(R.id.lock_wallpaper_subtitle2);
-            mLockWallpaperExploreButtonLegacy =
-                    (ImageButton) metadataView.findViewById(R.id.lock_wallpaper_explore_button_legacy);
+            mHomeWallpaperPresentationMode =
+                    metadataView.findViewById(R.id.home_wallpaper_presentation_mode);
+            mHomeWallpaperTitle = metadataView.findViewById(R.id.home_wallpaper_title);
+            mHomeWallpaperSubtitle1 = metadataView.findViewById(R.id.home_wallpaper_subtitle1);
+            mHomeWallpaperSubtitle2 = metadataView.findViewById(R.id.home_wallpaper_subtitle2);
+            mHomeWallpaperPresentationSection = metadataView.findViewById(
+                    R.id.home_wallpaper_presentation_section);
+            mHomeWallpaperExploreButton =
+                    metadataView.findViewById(R.id.home_wallpaper_explore_button);
+            mSkipWallpaperButton = metadataView.findViewById(R.id.skip_home_wallpaper);
+
+            FrameLayout lockWallpaperSection = metadataView.findViewById(
+                    R.id.lock_wallpaper_section);
+            lockWallpaperSection.setMinimumWidth(bothWallpaperImageWidth);
+            mLockWallpaperImage = metadataView.findViewById(R.id.lock_wallpaper_image);
+
+            mLockWallpaperTitle = metadataView.findViewById(R.id.lock_wallpaper_title);
+            mLockWallpaperSubtitle1 = metadataView.findViewById(R.id.lock_wallpaper_subtitle1);
+            mLockWallpaperSubtitle2 = metadataView.findViewById(R.id.lock_wallpaper_subtitle2);
             mLockWallpaperExploreButton =
-                    (ImageButton) metadataView.findViewById(R.id.lock_wallpaper_explore_button);
+                    metadataView.findViewById(R.id.lock_wallpaper_explore_button);
         }
 
         @Override
         public void bindWallpapers(WallpaperInfo homeWallpaper, WallpaperInfo lockWallpaper,
-                                   @PresentationMode int presentationMode) {
+                @PresentationMode int presentationMode) {
             bindHomeWallpaper(homeWallpaper, presentationMode);
             bindLockWallpaper(lockWallpaper);
         }
@@ -756,8 +701,9 @@ public class CategoryFragment extends ToolbarFragment {
             mHomeWallpaperInfo = homeWallpaper;
 
             homeWallpaper.getThumbAsset(appContext).loadDrawable(
-                    getActivity(), mHomeWallpaperImage, getResources().getColor(R.color.secondary_color));
-            mHomeWallpaperTopSection.setVisibility(View.VISIBLE);
+                    getActivity(), mHomeWallpaperImage,
+                    getResources().getColor(R.color.secondary_color, getContext().getTheme()));
+
             mHomeWallpaperPresentationMode.setText(
                     AttributionFormatter.getHumanReadableWallpaperPresentationMode(
                             appContext, presentationMode));
@@ -775,9 +721,6 @@ public class CategoryFragment extends ToolbarFragment {
 
             final String homeActionUrl = homeWallpaper.getActionUrl(appContext);
 
-            ImageButton exploreButton = Flags.skipDailyWallpaperButtonEnabled
-                    ? mHomeWallpaperExploreButton
-                    : mHomeWallpaperExploreButtonLegacy;
             if (homeActionUrl != null && !homeActionUrl.isEmpty()) {
                 Uri homeExploreUri = Uri.parse(homeActionUrl);
 
@@ -785,53 +728,49 @@ public class CategoryFragment extends ToolbarFragment {
                         InjectorProvider.getInjector().getExploreIntentChecker(appContext);
 
                 intentChecker.fetchValidActionViewIntent(
-                        homeExploreUri, (@Nullable Intent exploreIntent) -> {
-                            if (exploreIntent == null || getActivity() == null) {
-                                return;
-                            }
+                    homeExploreUri, (@Nullable Intent exploreIntent) -> {
+                        if (exploreIntent == null || getActivity() == null) {
+                            return;
+                        }
 
-                            exploreButton.setVisibility(View.VISIBLE);
-                            exploreButton.setImageDrawable(getContext().getDrawable(
-                                    homeWallpaper.getActionIconRes(appContext)));
-                            exploreButton.setContentDescription(getString(homeWallpaper
-                                    .getActionLabelRes(appContext)));
-                            exploreButton.setColorFilter(
-                                    getResources().getColor(R.color.currently_set_explore_button_color), Mode.SRC_IN);
-                            exploreButton.setOnClickListener(new OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    eventLogger.logActionClicked(
-                                            mHomeWallpaperInfo.getCollectionId(appContext),
-                                            mHomeWallpaperInfo.getActionLabelRes(appContext));
-                                    startActivity(exploreIntent);
-                                }
-                            });
+                        mHomeWallpaperExploreButton.setVisibility(View.VISIBLE);
+                        mHomeWallpaperExploreButton.setImageDrawable(getContext().getDrawable(
+                                homeWallpaper.getActionIconRes(appContext)));
+                        mHomeWallpaperExploreButton.setContentDescription(getString(homeWallpaper
+                                .getActionLabelRes(appContext)));
+                        mHomeWallpaperExploreButton.setColorFilter(
+                                getResources().getColor(R.color.currently_set_explore_button_color,
+                                        getContext().getTheme()),
+                                Mode.SRC_IN);
+                        mHomeWallpaperExploreButton.setOnClickListener(v -> {
+                            eventLogger.logActionClicked(
+                                    mHomeWallpaperInfo.getCollectionId(appContext),
+                                    mHomeWallpaperInfo.getActionLabelRes(appContext));
+                            startActivity(exploreIntent);
                         });
+                    });
             } else {
-                exploreButton.setVisibility(View.GONE);
+                mHomeWallpaperExploreButton.setVisibility(View.GONE);
             }
 
-            if (Flags.skipDailyWallpaperButtonEnabled
-                    && presentationMode == WallpaperPreferences.PRESENTATION_MODE_ROTATING) {
-                mSkipWallpaperButton.setVisibility(View.VISIBLE);
-                mSkipWallpaperButton.setColorFilter(
-                        getResources().getColor(R.color.currently_set_explore_button_color), Mode.SRC_IN);
-                mSkipWallpaperButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        refreshDailyWallpaper();
-                    }
-                });
-            } else {
-                mSkipWallpaperButton.setVisibility(View.GONE);
-            }
-
-            mHomeWallpaperImage.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    eventLogger.logCurrentWallpaperPreviewed();
-                    getFragmentHost().showViewOnlyPreview(mHomeWallpaperInfo);
+            if (presentationMode == WallpaperPreferences.PRESENTATION_MODE_ROTATING) {
+                mHomeWallpaperPresentationSection.setVisibility(View.VISIBLE);
+                if (Flags.skipDailyWallpaperButtonEnabled) {
+                    mSkipWallpaperButton.setVisibility(View.VISIBLE);
+                    mSkipWallpaperButton.setColorFilter(
+                            getResources().getColor(R.color.currently_set_explore_button_color,
+                                    getContext().getTheme()), Mode.SRC_IN);
+                    mSkipWallpaperButton.setOnClickListener(view -> refreshDailyWallpaper());
+                } else {
+                    mSkipWallpaperButton.setVisibility(View.GONE);
                 }
+            } else {
+                mHomeWallpaperPresentationSection.setVisibility(View.GONE);
+            }
+
+            mHomeWallpaperImage.setOnClickListener(v -> {
+                eventLogger.logCurrentWallpaperPreviewed();
+                getFragmentHost().showViewOnlyPreview(mHomeWallpaperInfo);
             });
         }
 
@@ -849,13 +788,6 @@ public class CategoryFragment extends ToolbarFragment {
 
             lockWallpaper.getThumbAsset(appContext).loadDrawable(
                     getActivity(), mLockWallpaperImage, getResources().getColor(R.color.secondary_color));
-            mLockWallpaperTopSection.setVisibility(View.VISIBLE);
-
-            // Daily wallpaper rotation can't be in effect on only the lock screen, so if there's a
-            // separate lock screen, it must be presented as "Currently set".
-            mLockWallpaperPresentationMode.setText(
-                    AttributionFormatter.getHumanReadableWallpaperPresentationMode(
-                            appContext, WallpaperPreferences.PRESENTATION_MODE_STATIC));
 
             List<String> lockAttributions = lockWallpaper.getAttributions(appContext);
             if (!lockAttributions.isEmpty()) {
@@ -870,9 +802,6 @@ public class CategoryFragment extends ToolbarFragment {
 
             final String lockActionUrl = lockWallpaper.getActionUrl(appContext);
 
-            ImageButton exploreButton = Flags.skipDailyWallpaperButtonEnabled
-                    ? mLockWallpaperExploreButton
-                    : mLockWallpaperExploreButtonLegacy;
             if (lockActionUrl != null && !lockActionUrl.isEmpty()) {
                 Uri lockExploreUri = Uri.parse(lockActionUrl);
 
@@ -883,16 +812,16 @@ public class CategoryFragment extends ToolbarFragment {
                             if (exploreIntent == null || getActivity() == null) {
                                 return;
                             }
-                            exploreButton.setImageDrawable(getContext().getDrawable(
+                            mLockWallpaperExploreButton.setImageDrawable(getContext().getDrawable(
                                     lockWallpaper.getActionIconRes(appContext)));
-                            exploreButton.setContentDescription(getString(
+                            mLockWallpaperExploreButton.setContentDescription(getString(
                                     lockWallpaper.getActionLabelRes(appContext)));
-                            exploreButton.setVisibility(View.VISIBLE);
-                            exploreButton.setColorFilter(
+                            mLockWallpaperExploreButton.setVisibility(View.VISIBLE);
+                            mLockWallpaperExploreButton.setColorFilter(
                                     getResources().getColor(
                                             R.color.currently_set_explore_button_color),
                                     Mode.SRC_IN);
-                            exploreButton.setOnClickListener(new OnClickListener() {
+                            mLockWallpaperExploreButton.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     eventLogger.logActionClicked(
@@ -903,7 +832,7 @@ public class CategoryFragment extends ToolbarFragment {
                             });
                         });
             } else {
-                exploreButton.setVisibility(View.GONE);
+                mLockWallpaperExploreButton.setVisibility(View.GONE);
             }
 
             mLockWallpaperImage.setOnClickListener(new OnClickListener() {
@@ -930,10 +859,10 @@ public class CategoryFragment extends ToolbarFragment {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            mTileLayout = (RelativeLayout) itemView.findViewById(R.id.tile);
-            mImageView = (ImageView) itemView.findViewById(R.id.image);
-            mOverlayIconView = (ImageView) itemView.findViewById(R.id.overlay_icon);
-            mTitleView = (TextView) itemView.findViewById(R.id.category_title);
+            mTileLayout = itemView.findViewById(R.id.tile);
+            mImageView = itemView.findViewById(R.id.image);
+            mOverlayIconView = itemView.findViewById(R.id.overlay_icon);
+            mTitleView = itemView.findViewById(R.id.category_title);
 
             mTileLayout.getLayoutParams().height = mTileSizePx.y;
         }
@@ -1000,8 +929,6 @@ public class CategoryFragment extends ToolbarFragment {
                         .load(nullObj)
                         .into(mImageView);
 
-                mTitleView.setBackgroundColor(getResources().getColor(
-                        R.color.category_title_scrim_color_no_thumbnail));
             }
         }
     }
@@ -1013,7 +940,7 @@ public class CategoryFragment extends ToolbarFragment {
     private class LoadingIndicatorHolder extends RecyclerView.ViewHolder {
         public LoadingIndicatorHolder(View view) {
             super(view);
-            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.loading_indicator);
+            ProgressBar progressBar = view.findViewById(R.id.loading_indicator);
             progressBar.getIndeterminateDrawable().setColorFilter(
                     getResources().getColor(R.color.accent_color), Mode.SRC_IN);
         }
@@ -1029,8 +956,7 @@ public class CategoryFragment extends ToolbarFragment {
         public PermissionNeededHolder(View view) {
             super(view);
 
-            mAllowAccessButton =
-                    (Button) view.findViewById(R.id.permission_needed_allow_access_button);
+            mAllowAccessButton = view.findViewById(R.id.permission_needed_allow_access_button);
             mAllowAccessButton.setOnClickListener((View v) -> {
                 getFragmentHost().requestExternalStoragePermission(mAdapter);
             });
@@ -1039,8 +965,7 @@ public class CategoryFragment extends ToolbarFragment {
             // placeholder.
             String appName = getString(R.string.app_name);
             String explanation = getString(R.string.permission_needed_explanation, appName);
-            TextView explanationTextView =
-                    (TextView) view.findViewById(R.id.permission_needed_explanation);
+            TextView explanationTextView = view.findViewById(R.id.permission_needed_explanation);
             explanationTextView.setText(explanation);
         }
     }

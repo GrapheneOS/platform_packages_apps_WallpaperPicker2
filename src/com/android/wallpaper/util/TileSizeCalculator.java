@@ -17,6 +17,7 @@ package com.android.wallpaper.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -147,7 +148,8 @@ public class TileSizeCalculator {
      * in units of px.
      */
     private static Point getTileSize(Context context, int columnCount, int windowWidthPx) {
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager)
+                context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         Point screenSizePx = ScreenSizeCalculator.getInstance().getScreenSize(display);
 
@@ -156,10 +158,11 @@ public class TileSizeCalculator {
         @FormFactor int formFactor = formFactorChecker.getFormFactor();
 
         int gridPaddingPx;
+        Resources res = context.getResources();
         if (formFactor == FormFactorChecker.FORM_FACTOR_MOBILE) {
-            gridPaddingPx = context.getResources().getDimensionPixelSize(R.dimen.grid_padding);
+            gridPaddingPx = res.getDimensionPixelSize(R.dimen.grid_padding);
         } else { // DESKTOP
-            gridPaddingPx = context.getResources().getDimensionPixelSize(R.dimen.grid_padding_desktop);
+            gridPaddingPx = res.getDimensionPixelSize(R.dimen.grid_padding_desktop);
         }
 
         // Note: don't need to multiply by density because getting the dimension from resources already
@@ -169,7 +172,9 @@ public class TileSizeCalculator {
 
         int widthPx = Math.round((float) availableWidthPx / columnCount);
         int heightPx = Math.round(((float) availableWidthPx / columnCount)
-                * screenSizePx.y / screenSizePx.x);
+                //* screenSizePx.y / screenSizePx.x);
+                * res.getDimensionPixelSize(R.dimen.grid_tile_aspect_height)
+                / res.getDimensionPixelSize(R.dimen.grid_tile_aspect_width));
         return new Point(widthPx, heightPx);
     }
 

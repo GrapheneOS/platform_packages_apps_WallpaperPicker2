@@ -22,11 +22,10 @@
     <color name="category_title_scrim_color_no_thumbnail">@color/material_grey_100</color>
     <color name="category_title_text_color">@color/textColorPrimary</color>
 
-    <color name="currently_set_presentation_mode_text_color">@color/textColorSecondary</color>
+    <color name="currently_set_presentation_mode_text_color">@color/category_title_text_color</color>
     <color name="currently_set_title_text_color">@color/textColorPrimary</color>
     <color name="currently_set_subtitle_text_color">@color/textColorSecondary</color>
     <color name="currently_set_divider_background_color">@android:color/transparent</color>
-    <color name="currently_set_explore_button_color">@color/accent_color</color>
 
     <color name="currently_set_both_header_scrim">@color/white_80_alpha</color>
     <color name="currently_set_both_refresh_button_color">@color/black_54_alpha</color>
@@ -51,4 +50,6 @@
     <color name="individual_tile_title_text_color">@color/textColorPrimary</color>
 
     <color name="individual_picker_background_color">@color/material_white_100</color>
+
+    <color name="toolbar_icon_color">@color/text_color_dark</color>
 </resources>
