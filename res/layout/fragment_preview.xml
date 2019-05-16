@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:fitsSystemWindows="false">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:fitsSystemWindows="false">
 
   <ImageView
     android:id="@+id/low_res_image"
@@ -30,107 +31,19 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-      <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:app="http://schemas.android.com/apk/res-auto"
+      <androidx.coordinatorlayout.widget.CoordinatorLayout
           android:id="@+id/coordinator_layout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_gravity="bottom">
 
-      <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/bottom_sheet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:minHeight="@dimen/preview_attribution_pane_expanded_height"
-        android:orientation="vertical"
-        android:background="@color/translucent_black"
-        app:behavior_peekHeight="@dimen/preview_attribution_pane_collapsed_height"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
-        <LinearLayout
-          android:orientation="vertical"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="@dimen/preview_attribution_pane_content_side_margin"
-          android:layout_marginRight="@dimen/preview_attribution_pane_content_side_margin"
-          android:layout_marginBottom="@dimen/preview_attribution_pane_content_bottom_margin">
-
-          <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-              android:id="@+id/preview_attribution_pane_title"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_gravity="top|start"
-              android:layout_marginRight="@dimen/preview_attribution_pane_title_end_margin"
-              android:layout_marginEnd="@dimen/preview_attribution_pane_title_end_margin"
-              android:layout_marginTop="@dimen/preview_attribution_pane_title_top_margin"
-              style="@style/preview_attribution_pane_title"/>
-
-            <ImageView
-              android:id="@+id/preview_attribution_pane_arrow"
-              android:contentDescription="@string/expand_attribution_panel"
-              android:layout_gravity="top|end"
-              android:layout_width="@dimen/preview_attribution_pane_arrow_size"
-              android:layout_height="@dimen/preview_attribution_pane_arrow_size"
-              android:layout_marginLeft="@dimen/preview_attribution_pane_arrow_start_margin"
-              android:layout_marginStart="@dimen/preview_attribution_pane_arrow_start_margin"
-              android:layout_marginTop="@dimen/preview_attribution_pane_arrow_top_bottom_margin"
-              android:layout_marginBottom="@dimen/preview_attribution_pane_arrow_top_bottom_margin"
-              android:scaleType="center"
-              android:focusable="true"
-              android:clickable="true"
-              android:src="@drawable/material_ic_keyboard_arrow_up_black_24"
-              style="?attr/borderlessButtonStyle"/>
-
-          </FrameLayout>
-
-          <TextView
-            android:id="@+id/preview_attribution_pane_subtitle1"
+        <include
+            layout="@layout/preview_page_info"
+            android:id="@+id/bottom_sheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/preview_attribution_pane_subtitle1_top_margin"
-            android:visibility="gone"
-            style="@style/preview_attribution_pane_subtitle"/>
-
-          <TextView
-            android:id="@+id/preview_attribution_pane_subtitle2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:textColor="@color/white_70_alpha"
-            android:textSize="@dimen/abc_text_size_caption_material"
-            android:layout_marginTop="@dimen/preview_attribution_pane_subtitle2_top_margin"/>
-
-        </LinearLayout>
-
-        <FrameLayout
-          android:id="@+id/preview_attribution_pane_explore_section"
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/preview_attribution_pane_explore_height"
-          android:layout_marginBottom="@dimen/preview_attribution_pane_explore_bottom_margin"
-          android:visibility="gone">
-
-          <Button
-            android:id="@+id/preview_attribution_pane_explore_button"
-            android:drawablePadding="@dimen/explore_button_drawable_padding"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/accent_color"
-            android:text="@string/explore"
-            android:layout_marginLeft="@dimen/preview_attribution_pane_explore_left_margin"
-            android:layout_marginStart="@dimen/preview_attribution_pane_explore_left_margin"
-            android:layout_gravity="center_vertical"
-            style="?attr/borderlessButtonStyle"/>
-
-        </FrameLayout>
-
-      </LinearLayout>
+            app:behavior_peekHeight="@dimen/preview_attribution_pane_collapsed_height"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

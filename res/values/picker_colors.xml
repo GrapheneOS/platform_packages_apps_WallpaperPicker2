@@ -40,11 +40,11 @@
     <color name="category_title_scrim_color_no_thumbnail">@color/translucent_black</color>
     <color name="category_title_text_color">@color/material_white_100</color>
 
-    <color name="currently_set_presentation_mode_text_color">@color/accent_color</color>
+    <color name="currently_set_presentation_mode_text_color">@color/category_title_text_color</color>
     <color name="currently_set_title_text_color">@color/material_white_text</color>
     <color name="currently_set_subtitle_text_color">@color/white_70_alpha</color>
     <color name="currently_set_divider_background_color">@color/material_white_divider</color>
-    <color name="currently_set_explore_button_color">@color/material_white_text</color>
+    <color name="currently_set_explore_button_color">@color/white_80_alpha</color>
 
     <color name="currently_set_both_header_scrim">@color/translucent_black</color>
     <color name="currently_set_both_refresh_button_color">@color/material_white_100</color>
@@ -70,4 +70,6 @@
     <color name="individual_picker_background_color">@color/translucent_black</color>
 
     <color name="preview_pane_arrow_color">@color/material_white_100</color>
+
+    <color name="toolbar_icon_color">@color/material_white_text</color>
 </resources>
