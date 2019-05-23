@@ -72,74 +72,73 @@
             </FrameLayout>
 
             <!-- Wraps the attribution section. -->
-            <FrameLayout
+            <RelativeLayout
                 android:id="@id/lock_wallpaper_attribution_section"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/both_metadata_attribution_section_height"
+                android:layout_marginEnd="@dimen/single_metadata_pane_attributions_margin_right"
+                android:layout_marginStart="@dimen/single_metadata_pane_attributions_margin_left"
+                android:paddingBottom="@dimen/single_metadata_pane_wallpaper_subtitle_margin_bottom"
                 android:focusable="true">
 
-                <RelativeLayout
+
+
+                <TextView
+                    android:id="@+id/lock_wallpaper_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|top"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="@dimen/single_metadata_pane_wallpaper_label_margin_top"
+                    android:gravity="top"
+                    android:text="@string/lock_screen_message"
+                    android:textAppearance="@style/HeaderTextAppearance"
+                    android:textColor="@color/currently_set_presentation_mode_text_color"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textSize="@dimen/abc_text_size_subhead_material"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/lock_wallpaper_title"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="@dimen/single_metadata_pane_attributions_margin_right"
-                    android:layout_marginStart="@dimen/single_metadata_pane_attributions_margin_left"
-                    android:layout_marginBottom="@dimen/single_metadata_pane_wallpaper_subtitle_margin_bottom"
-                    android:focusable="true">
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/lock_wallpaper_subtitle1"
+                    android:layout_alignParentStart="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+                    android:textColor="@color/currently_set_both_attribution_title_text_color"
+                    android:textSize="@dimen/both_metadata_title_text_size"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/lock_wallpaper_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start|top"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginTop="@dimen/single_metadata_pane_wallpaper_label_margin_top"
-                        android:text="@string/lock_screen_message"
-                        android:textAppearance="@style/HeaderTextAppearance"
-                        android:textColor="@color/currently_set_presentation_mode_text_color"
-                        android:textSize="@dimen/abc_text_size_subhead_material"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/lock_wallpaper_subtitle1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/lock_wallpaper_subtitle2"
+                    android:layout_alignParentStart="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+                    android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
+                    android:textSize="@dimen/abc_text_size_caption_material" />
 
-                    <TextView
-                        android:id="@+id/lock_wallpaper_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/lock_wallpaper_subtitle1"
-                        android:layout_alignParentStart="true"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-                        android:textColor="@color/currently_set_both_attribution_title_text_color"
-                        android:textSize="@dimen/both_metadata_title_text_size"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/lock_wallpaper_subtitle2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+                    android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
+                    android:textSize="@dimen/abc_text_size_caption_material" />
 
-                    <TextView
-                        android:id="@+id/lock_wallpaper_subtitle1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/lock_wallpaper_subtitle2"
-                        android:layout_alignParentStart="true"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-                        android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
-                        android:textSize="@dimen/abc_text_size_caption_material" />
+            </RelativeLayout>
 
-                    <TextView
-                        android:id="@+id/lock_wallpaper_subtitle2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentStart="true"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-                        android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
-                        android:textSize="@dimen/abc_text_size_caption_material" />
-
-                </RelativeLayout>
-
-            </FrameLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -228,73 +227,69 @@
             </FrameLayout>
 
             <!-- Wraps the attribution section. -->
-            <FrameLayout
+            <RelativeLayout
                 android:id="@id/home_wallpaper_attribution_section"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/both_metadata_attribution_section_height"
+                android:layout_marginEnd="@dimen/single_metadata_pane_attributions_margin_right"
+                android:layout_marginStart="@dimen/single_metadata_pane_attributions_margin_left"
+                android:paddingBottom="@dimen/single_metadata_pane_wallpaper_subtitle_margin_bottom"
                 android:focusable="true">
-                <RelativeLayout
+                <TextView
+                    android:id="@+id/home_wallpaper_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|top"
+                    android:gravity="top"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="@dimen/single_metadata_pane_wallpaper_label_margin_top"
+                    android:text="@string/home_screen_message"
+                    android:textAppearance="@style/HeaderTextAppearance"
+                    android:textColor="@color/currently_set_presentation_mode_text_color"
+                    android:textSize="@dimen/abc_text_size_subhead_material"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/home_wallpaper_title"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="@dimen/single_metadata_pane_attributions_margin_right"
-                    android:layout_marginStart="@dimen/single_metadata_pane_attributions_margin_left"
-                    android:layout_marginBottom="@dimen/single_metadata_pane_wallpaper_subtitle_margin_bottom"
-                    android:focusable="true">
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/home_wallpaper_subtitle1"
+                    android:layout_alignParentStart="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+                    android:textColor="@color/currently_set_both_attribution_title_text_color"
+                    android:textSize="@dimen/both_metadata_title_text_size"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/home_wallpaper_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start|top"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginTop="@dimen/single_metadata_pane_wallpaper_label_margin_top"
-                        android:text="@string/home_screen_message"
-                        android:textAppearance="@style/HeaderTextAppearance"
-                        android:textColor="@color/currently_set_presentation_mode_text_color"
-                        android:textSize="@dimen/abc_text_size_subhead_material"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/home_wallpaper_subtitle1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/home_wallpaper_subtitle2"
+                    android:layout_alignParentStart="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+                    android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
+                    android:textSize="@dimen/abc_text_size_caption_material" />
 
-                    <TextView
-                        android:id="@+id/home_wallpaper_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/home_wallpaper_subtitle1"
-                        android:layout_alignParentStart="true"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-                        android:textColor="@color/currently_set_both_attribution_title_text_color"
-                        android:textSize="@dimen/both_metadata_title_text_size"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/home_wallpaper_subtitle2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+                    android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
+                    android:textSize="@dimen/abc_text_size_caption_material" />
 
-                    <TextView
-                        android:id="@+id/home_wallpaper_subtitle1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/home_wallpaper_subtitle2"
-                        android:layout_alignParentStart="true"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-                        android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
-                        android:textSize="@dimen/abc_text_size_caption_material" />
-
-                    <TextView
-                        android:id="@+id/home_wallpaper_subtitle2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentStart="true"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-                        android:textColor="@color/currently_set_both_attribution_subtitle_text_color"
-                        android:textSize="@dimen/abc_text_size_caption_material" />
-
-                </RelativeLayout>
-
-            </FrameLayout>
+            </RelativeLayout>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
