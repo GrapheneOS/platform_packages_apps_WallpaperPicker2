@@ -14,6 +14,7 @@
      limitations under the License.
 -->
 <resources>
+    <color name="black_24_alpha">#3D000000</color>
     <color name="black_38_alpha">#61000000</color>
     <color name="black_54_alpha">#8A000000</color>
     <color name="black_67_alpha">#AB000000</color>
