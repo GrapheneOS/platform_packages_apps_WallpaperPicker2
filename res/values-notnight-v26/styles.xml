@@ -23,6 +23,7 @@
     </style>
 
     <style name="RegularToolbarStyle" parent="@android:style/Widget.DeviceDefault.Light.ActionBar.Solid">
+        <item name="android:background">@color/toolbar_color</item>
         <item name="android:theme">@style/WallpaperTheme</item>
     </style>
 </resources>
