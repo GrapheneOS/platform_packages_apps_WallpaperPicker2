@@ -107,25 +107,7 @@ public class IndividualPickerActivity extends BaseActivity {
         getSupportActionBar().setTitle(mCategory.getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Use updated fancy arrow icon for O+.
-        if (BuildCompat.isAtLeastO()) {
-            Drawable navigationIcon = ContextCompat.getDrawable(
-                    this, R.drawable.material_ic_arrow_back_black_24);
-
-            // This Drawable's state is shared across the app, so make a copy of it before applying a
-            // color tint as not to affect other clients elsewhere in the app.
-            navigationIcon = navigationIcon.getConstantState().newDrawable().mutate();
-            navigationIcon.setColorFilter(
-                    ContextCompat.getColor(this, R.color.toolbar_icon_color), Mode.SRC_IN);
-
-            // Need to explicitly check against 19 rather than using BuildCompat in order to avoid a
-            // NoSuchMethodError here in UI tests running on pre-API 19 emulators.
-            if (VERSION.SDK_INT >= 19) {
-                navigationIcon.setAutoMirrored(true);
-            }
-
-            toolbar.setNavigationIcon(navigationIcon);
-        }
+        toolbar.getNavigationIcon().setTint(getColor(R.color.toolbar_icon_color));
 
         getWindow().getDecorView().setSystemUiVisibility(
                 getWindow().getDecorView().getSystemUiVisibility() |
