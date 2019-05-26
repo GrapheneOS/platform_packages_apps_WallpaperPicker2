@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"壁紙"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"壁紙の選択"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"壁紙のカテゴリ"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"壁紙を設定"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"壁紙を設定しています…"</string>
     <string name="try_again" msgid="8278874823700921234">"再試行"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"壁紙を読み込めません。画像が破損しているか、使用できません。"</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"現在の設定"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"毎日の壁紙"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"ホーム画面とロック画面"</string>
     <string name="home_screen_message" msgid="106444102822522813">"ホーム画面"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"ロック画面"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"ホーム画面とロック画面"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"中央"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"中央で切り抜き"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"拡大"</string>
+    <string name="preview" msgid="1774602101743861071">"プレビュー"</string>
 </resources>

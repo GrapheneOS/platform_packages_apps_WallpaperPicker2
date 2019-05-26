@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"壁纸"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"选择壁纸"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"壁纸类别"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"设置壁纸"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"正在设置壁纸…"</string>
     <string name="try_again" msgid="8278874823700921234">"重试"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"无法加载壁纸。图片已损坏或不可用。"</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"当前设置的壁纸"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"每日壁纸"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"主屏幕和锁定屏幕"</string>
     <string name="home_screen_message" msgid="106444102822522813">"主屏幕"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"锁定屏幕"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"主屏幕和锁定屏幕"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"居中"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"居中裁剪"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"拉伸"</string>
+    <string name="preview" msgid="1774602101743861071">"预览"</string>
 </resources>

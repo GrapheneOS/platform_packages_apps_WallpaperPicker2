@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"ფონები"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"აირჩიეთ ფონი"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"ფონის კატეგორიები"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"ფონის დაყენება"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"მიმდინარეობს ფონის დაყენება…"</string>
     <string name="try_again" msgid="8278874823700921234">"ხელახლა ცდა"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"ფონი ვერ ჩაიტვირთა. სურათი დაზიანებული ან მიუწვდომელია."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"ამჟამად დაყენებული"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"ყოველდღიური ფონი"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"მთავარი და ჩაკეტილი ეკრანები"</string>
     <string name="home_screen_message" msgid="106444102822522813">"მთავარი ეკრანი"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"ჩაკეტილი ეკრანი"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"მთავარი და ჩაკეტილი ეკრანები"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"ცენტრირება"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"ცენტრში ჩამოჭრა"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"გადაჭიმვა"</string>
+    <string name="preview" msgid="1774602101743861071">"გადახედვა"</string>
 </resources>
