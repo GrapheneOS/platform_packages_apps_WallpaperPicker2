@@ -17,10 +17,10 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="wallpaper_app_name" msgid="1719889291772891695">"බිතුපත්"</string>
+    <string name="wallpaper_app_name" msgid="1719889291772891695">"වෝල්පේපර"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"වෝල්පේපරයක් තෝරන්න"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"බිතුපත් ප්‍රවර්ග"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"වෝල්පේපරය සකසන්න"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"වෝල්පේපරය සකසමින්…"</string>
     <string name="try_again" msgid="8278874823700921234">"නැවත උත්සාහ කර."</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"වෝල්පේපරය පූරණය කිරීමට නොහැකිය. මෙම රූපය හානි වී හෝ ලබා ගත නොහැකිව ඇත."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"දැනට සකසා ඇත"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"දෛනික වෝල්පේපරය"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"මුල් පිටුව සහ අගුළු තිරය"</string>
     <string name="home_screen_message" msgid="106444102822522813">"මුල් පිටු තිරය"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"අගුලු තිරය"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"මුල් පිටුව සහ අගුල"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"මැද"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"මැද කප්පාදු කිරීම"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"අදින්න"</string>
+    <string name="preview" msgid="1774602101743861071">"පෙරදසුන"</string>
 </resources>
