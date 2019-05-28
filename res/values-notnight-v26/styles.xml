@@ -15,6 +15,7 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:targetApi="23">
 
+    <!-- Main theme -->
     <style name="WallpaperTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">?android:colorPrimary</item>
         <item name="colorControlActivated">?attr/colorPrimary</item>

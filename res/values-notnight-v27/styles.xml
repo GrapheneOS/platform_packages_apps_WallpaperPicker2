@@ -15,6 +15,7 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:targetApi="27">
 
+    <!-- Main themes -->
     <style name="WallpaperTheme" parent="@android:style/Theme.DeviceDefault.Settings">
         <item name="colorPrimary">?android:colorPrimary</item>
         <item name="colorControlActivated">?attr/colorPrimary</item>
@@ -42,6 +43,7 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
+    <!-- Dialog themes -->
     <style name="LightDialogTheme" parent="@android:style/Theme.DeviceDefault.Light.Dialog.NoActionBar">
         <item name="android:layout">@layout/abc_alert_dialog_material</item>
         <item name="windowActionBar">false</item>
