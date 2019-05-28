@@ -15,6 +15,7 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:targetApi="23">
 
+    <!-- Main themes -->
     <style name="WallpaperTheme" parent="@android:style/Theme.DeviceDefault.Settings">
         <item name="colorPrimary">?android:colorPrimary</item>
         <item name="colorControlActivated">?attr/colorPrimary</item>
@@ -59,11 +60,19 @@
         </item>
     </style>
 
+    <!-- Toolbar -->
     <style name="TranslucentToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
+    <style name="RegularToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/toolbar_color</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:theme">@style/WallpaperTheme</item>
+    </style>
+
+    <!-- Dialog themes -->
     <style name="LightDialogTheme" parent="@android:style/Theme.DeviceDefault.Dialog.NoActionBar">
         <item name="android:layout">@layout/abc_alert_dialog_material</item>
         <item name="windowActionBar">false</item>
@@ -73,7 +82,28 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <!-- Styles for our own widgets -->
+    <!-- Individual components / Widgets -->
+    <style name="HeaderTextAppearance" parent="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title">
+        <item name="android:textFontWeight">400</item>
+    </style>
+
+    <style name="ButtonStyle" parent="@android:style/Widget.DeviceDefault.Button.Colored">
+        <item name="android:padding">16dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="OutlinedButtonStyle"  parent="@android:style/Widget.DeviceDefault.Button">
+        <item name="android:background">@drawable/btn_transparent</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ActionBarCheckboxStyle" parent="@android:style/Widget.DeviceDefault.CompoundButton.CheckBox"/>
+
+    <style name="PreviewCheckboxDeviceTheme" parent="@android:style/Theme.DeviceDefault">
+        <item name="android:colorControlActivated">@*android:color/accent_device_default_light</item>
+    </style>
+
     <style name="select_wallpaper_header">
         <item name="android:textColor">@color/translucent_black_60_alpha</item>
         <item name="android:textStyle">bold</item>
@@ -121,30 +151,4 @@
         <item name="textAllCaps">false</item>
     </style>
 
-    <style name="HeaderTextAppearance" parent="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title">
-        <item name="android:textFontWeight">400</item>
-    </style>
-
-    <style name="ButtonStyle" parent="@android:style/Widget.DeviceDefault.Button.Colored">
-        <item name="android:padding">16dp</item>
-        <item name="android:minHeight">48dp</item>
-    </style>
-
-    <style name="OutlinedButtonStyle"  parent="@android:style/Widget.DeviceDefault.Button">
-        <item name="android:background">@drawable/btn_transparent</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="ActionBarCheckboxStyle" parent="@android:style/Widget.DeviceDefault.CompoundButton.CheckBox"/>
-
-    <style name="PreviewCheckboxDeviceTheme" parent="@android:style/Theme.DeviceDefault">
-        <item name="android:colorControlActivated">@*android:color/accent_device_default_light</item>
-    </style>
-
-    <style name="RegularToolbarStyle" parent="@android:style/Widget.DeviceDefault.Light.ActionBar.Solid">
-        <item name="android:background">@color/toolbar_color</item>
-        <item name="android:elevation">0dp</item>
-        <item name="android:theme">@style/WallpaperTheme</item>
-    </style>
 </resources>
