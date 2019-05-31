@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"Tapety"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"Vyberte tapetu"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"Kategórie tapiet"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Nastaviť tapetu"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Nastavuje sa tapeta…"</string>
     <string name="try_again" msgid="8278874823700921234">"Skúsiť znova"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Tapetu sa nepodarilo načítať. Obrázok je poškodený alebo nie je k dispozícii."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Práve nastavená"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Denná tapeta"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Plocha a uzamknutá obrazovka"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Plocha"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Uzamknutá obrazovka"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Plocha a uzamknutá obrazovka"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Vycentrovať"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Vycentrovať a orezať"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Roztiahnuť"</string>
+    <string name="preview" msgid="1774602101743861071">"Zobraziť ukážku"</string>
 </resources>

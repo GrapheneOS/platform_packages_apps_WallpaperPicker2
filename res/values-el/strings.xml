@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"Ταπετσαρίες"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"Επιλογή ταπετσαρίας"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"Κατηγορίες ταπετσαρίας"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Ορισμός ταπετσαρίας"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Ορισμός ταπετσαρίας…"</string>
     <string name="try_again" msgid="8278874823700921234">"Δοκιμάστε ξανά"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Δεν είναι δυνατή η φόρτωση της ταπετσαρίας. Η εικόνα είναι κατεστραμμένη ή δεν είναι διαθέσιμη."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Έχει οριστεί"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Ημερήσια ταπετσαρία"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Αρχική οθόνη και οθόνη κλειδώματος"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Αρχική οθόνη"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Οθόνη κλειδώματος"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Αρχική και κλειδώματος"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Κέντρο"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Περικοπή στο κέντρο"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Τέντωμα"</string>
+    <string name="preview" msgid="1774602101743861071">"Προεπισκόπηση"</string>
 </resources>

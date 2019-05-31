@@ -20,14 +20,15 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"വാൾപേപ്പറുകൾ"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"വാൾപേപ്പർ തിരഞ്ഞെടുക്കുക"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"വാൾപേപ്പർ വിഭാഗങ്ങൾ"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"വാൾപേപ്പർ സജ്ജമാക്കുക"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"വാൾപേപ്പർ സജ്ജമാക്കുന്നു…"</string>
     <string name="try_again" msgid="8278874823700921234">"വീണ്ടും ശ്രമിക്കുക"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"വാൾപേപ്പർ സജ്ജമാക്കാനാവുന്നില്ല."</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"വാൾപേപ്പർ ലോഡുചെയ്യാനാവുന്നില്ല. ചിത്രം കേടായിരിക്കുന്നു അല്ലെങ്കിൽ ലഭ്യമല്ല."</string>
-    <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"നിലവിൽ സജ്ജമാക്കി"</string>
+    <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"നിലവിൽ സജ്ജമാക്കിയിരിക്കുന്നത്"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"പ്രതിദിന വാൾപേപ്പർ"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"ഹോമും ലോക്ക് സ്‌ക്രീനും"</string>
     <string name="home_screen_message" msgid="106444102822522813">"ഹോം സ്‌ക്രീൻ"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"ലോക്ക് സ്‌ക്രീൻ"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"ഹോമും ലോക്ക് സ്‌ക്രീനും"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"മധ്യം"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"നടുവിൽ വലുപ്പം മാറ്റുക"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"വലിച്ചുനീട്ടുക"</string>
+    <string name="preview" msgid="1774602101743861071">"പ്രിവ്യൂ"</string>
 </resources>

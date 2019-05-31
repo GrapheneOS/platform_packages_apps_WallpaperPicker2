@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"Háttérképek"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"Háttérkép kiválasztása"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"Háttérkép-kategóriák"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Háttérkép beállítása"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Háttérkép beállítása…"</string>
     <string name="try_again" msgid="8278874823700921234">"Újra"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"A háttérkép betöltése sikertelen. A kép sérült vagy nem áll rendelkezésre."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Jelenleg beállított"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Napi háttérkép"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Kezdő- és lezárási képernyő"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Kezdőképernyő"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Lezárási képernyő"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Kezdő- és lezárási képernyő"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Középre igazítás"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Középre igazítás körülvágással"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Nyújtás"</string>
+    <string name="preview" msgid="1774602101743861071">"Előnézet"</string>
 </resources>

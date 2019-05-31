@@ -15,12 +15,29 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:targetApi="23">
 
-    <style name="WallpaperTheme" parent="@style/Theme.AppCompat.NoActionBar">
+    <!-- Main themes -->
+    <style name="WallpaperTheme" parent="@android:style/Theme.DeviceDefault.Settings">
+        <item name="colorPrimary">?android:colorPrimary</item>
         <item name="colorControlActivated">?attr/colorPrimary</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:navigationBarColor">@color/translucent_black</item>
         <item name="android:navigationBarDividerColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
+
+        <item name="actionBarSize">?android:attr/actionBarSize</item>
+        <item name="homeAsUpIndicator">@drawable/material_ic_arrow_back_black_24</item>
+
+        <item name="selectableItemBackground">?android:attr/selectableItemBackground</item>
+        <item name="dialogPreferredPadding">24dp</item>
+        <item name="colorControlHighlight">@color/ripple_material_dark</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="toolbarNavigationButtonStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:fitsSystemWindows">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
     <style name="WallpaperTheme.Preview" parent="@style/Theme.AppCompat.NoActionBar">
@@ -43,11 +60,19 @@
         </item>
     </style>
 
+    <!-- Toolbar -->
     <style name="TranslucentToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
+    <style name="RegularToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/toolbar_color</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:theme">@style/WallpaperTheme</item>
+    </style>
+
+    <!-- Dialog themes -->
     <style name="LightDialogTheme" parent="@android:style/Theme.DeviceDefault.Dialog.NoActionBar">
         <item name="android:layout">@layout/abc_alert_dialog_material</item>
         <item name="windowActionBar">false</item>
@@ -57,7 +82,28 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <!-- Styles for our own widgets -->
+    <!-- Individual components / Widgets -->
+    <style name="HeaderTextAppearance" parent="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title">
+        <item name="android:textFontWeight">400</item>
+    </style>
+
+    <style name="ButtonStyle" parent="@android:style/Widget.DeviceDefault.Button.Colored">
+        <item name="android:padding">16dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="OutlinedButtonStyle"  parent="@android:style/Widget.DeviceDefault.Button">
+        <item name="android:background">@drawable/btn_transparent</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ActionBarCheckboxStyle" parent="@android:style/Widget.DeviceDefault.CompoundButton.CheckBox"/>
+
+    <style name="PreviewCheckboxDeviceTheme" parent="@android:style/Theme.DeviceDefault">
+        <item name="android:colorControlActivated">@*android:color/accent_device_default_light</item>
+    </style>
+
     <style name="select_wallpaper_header">
         <item name="android:textColor">@color/translucent_black_60_alpha</item>
         <item name="android:textStyle">bold</item>
@@ -105,24 +151,4 @@
         <item name="textAllCaps">false</item>
     </style>
 
-    <style name="HeaderTextAppearance" parent="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title">
-        <item name="android:textFontWeight">400</item>
-    </style>
-
-    <style name="ButtonStyle" parent="@android:style/Widget.DeviceDefault.Button.Colored">
-        <item name="android:padding">16dp</item>
-        <item name="android:minHeight">48dp</item>
-    </style>
-
-    <style name="OutlinedButtonStyle"  parent="@android:style/Widget.DeviceDefault.Button">
-        <item name="android:background">@drawable/btn_transparent</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="ActionBarCheckboxStyle" parent="@android:style/Widget.DeviceDefault.CompoundButton.CheckBox"/>
-
-    <style name="PreviewCheckboxDeviceTheme" parent="@android:style/Theme.DeviceDefault">
-        <item name="android:colorControlActivated">@*android:color/accent_device_default_light</item>
-    </style>
 </resources>

@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"နောက်ခံပုံများ"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"နောက်ခံကို ရွေးပါ"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"နောက်ခံပုံ အမျိုးအစားများ"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"နောက်ခံ သတ်မှတ်ပါ"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"နောက်ခံ သတ်မှတ်နေသည်…"</string>
     <string name="try_again" msgid="8278874823700921234">"ထပ်စမ်းကြည့်ရန်"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"နောက်ခံကို ဖွင့်၍မရပါ။ ဤပုံသည် ပျက်နေပါသည် သို့မဟုတ် မရနိင်ပါ။"</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"လက်ရှိတွင် သတ်မှတ်ထားသည်"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"နေ့စဉ် နောက်ခံ"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"ပင်မစာမျက်နှာနှင့် လော့ခ်ချထားချိန် မျက်နှာပြင်"</string>
     <string name="home_screen_message" msgid="106444102822522813">"ပင်မစာမျက်နှာ"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"လော့ခ်ချထားချိန် မျက်နှာပြင်"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"ပင်မနှင့် လော့ခ်မျက်နှာပြင်"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"အလယ်"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"အလယ်တွင် ဖြတ်ညှိရန်"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"ဆွဲဆန့်ရန်"</string>
+    <string name="preview" msgid="1774602101743861071">"အစမ်းကြည့်ရန်"</string>
 </resources>
