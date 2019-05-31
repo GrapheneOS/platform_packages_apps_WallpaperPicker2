@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"Тушкагаздар"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"Тушкагаз тандоо"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"Тушкагаз категориялары"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Тушкагаз орнотуу"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Тушкагаз орнотулууда…"</string>
     <string name="try_again" msgid="8278874823700921234">"Кайталоо"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Тушкагаз жүктөлбөй жатат. Сүрөт бузулган же жеткиликтүү эмес."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Учурда тушкагаз катары орнотулган"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Күнүмдүк тушкагаз"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Башкы жана кулпуланган экран"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Башкы экран"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Кулпуланган экран"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Башкы жана кулпуланган экран"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Ортосунда"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Ортосуна тууралап кесүү"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Чоюу"</string>
+    <string name="preview" msgid="1774602101743861071">"Алдын ала көрүү"</string>
 </resources>

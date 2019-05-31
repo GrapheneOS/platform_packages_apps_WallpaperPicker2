@@ -15,15 +15,27 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:targetApi="23">
 
+    <!-- Main theme -->
     <style name="WallpaperTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">?android:colorPrimary</item>
         <item name="colorControlActivated">?attr/colorPrimary</item>
         <item name="colorControlNormal">@color/accent_color</item>
         <item name="android:statusBarColor">@color/status_bar_color</item>
         <item name="android:windowLightStatusBar">true</item>
-    </style>
 
-    <style name="RegularToolbarStyle" parent="@android:style/Widget.DeviceDefault.Light.ActionBar.Solid">
-        <item name="android:background">@color/toolbar_color</item>
-        <item name="android:theme">@style/WallpaperTheme</item>
+        <item name="actionBarSize">?android:attr/actionBarSize</item>
+        <item name="homeAsUpIndicator">@drawable/material_ic_arrow_back_black_24</item>
+
+        <item name="selectableItemBackground">?android:attr/selectableItemBackground</item>
+        <item name="dialogPreferredPadding">24dp</item>
+        <item name="colorControlHighlight">@color/ripple_material_dark</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="toolbarNavigationButtonStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:fitsSystemWindows">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 </resources>

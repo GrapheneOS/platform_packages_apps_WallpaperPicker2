@@ -20,14 +20,15 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"Hình nền"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"Chọn hình nền"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"Danh mục hình nền"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Đặt hình nền"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Đang đặt hình nền..."</string>
     <string name="try_again" msgid="8278874823700921234">"Thử lại"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Không thể đặt hình nền."</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Không thể tải hình nền. Hình ảnh bị hỏng hoặc không có sẵn."</string>
-    <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Hiện được đặt"</string>
+    <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Hình nền hiện tại"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Hình nền hàng ngày"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Màn hình chính và màn hình khóa"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Màn hình chính"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Màn hình khóa"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Màn hình chính và khóa"</string>
@@ -71,11 +72,12 @@
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"Trên thiết bị"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Hình nền Android"</string>
     <string name="live_wallpapers_category_title" msgid="1814374812192366349">"Hình nền động"</string>
-    <string name="my_photos_category_title" msgid="4294567122144565273">"Các ảnh của tôi"</string>
+    <string name="my_photos_category_title" msgid="4294567122144565273">"Ảnh của tôi"</string>
     <string name="my_photos_generic_wallpaper_title" msgid="7002867526154631172">"Ảnh của tôi"</string>
     <string name="fallback_wallpaper_title" msgid="6154655421012506001">"Hình nền"</string>
     <string name="app_not_found" msgid="4431461707854088231">"Ứng dụng chưa được cài đặt."</string>
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Giữa"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Cắt giữa"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Kéo dài"</string>
+    <string name="preview" msgid="1774602101743861071">"Xem trước"</string>
 </resources>
