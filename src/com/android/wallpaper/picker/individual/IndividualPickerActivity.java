@@ -41,6 +41,7 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.InlinePreviewIntentFactory;
+import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.PickerIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.Injector;
@@ -63,6 +64,7 @@ public class IndividualPickerActivity extends BaseActivity {
             "com.android.wallpaper.category_collection_id";
     private static final int PREVIEW_WALLPAPER_REQUEST_CODE = 0;
     private static final int NO_BACKUP_IMAGE_WALLPAPER_REQUEST_CODE = 1;
+    private static final int PREVIEW_LIVEWALLPAPER_REQUEST_CODE = 2;
     private static final String KEY_CATEGORY_COLLECTION_ID = "key_category_collection_id";
 
     private InlinePreviewIntentFactory mPreviewIntentFactory;
@@ -105,25 +107,7 @@ public class IndividualPickerActivity extends BaseActivity {
         getSupportActionBar().setTitle(mCategory.getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Use updated fancy arrow icon for O+.
-        if (BuildCompat.isAtLeastO()) {
-            Drawable navigationIcon = ContextCompat.getDrawable(
-                    this, R.drawable.material_ic_arrow_back_black_24);
-
-            // This Drawable's state is shared across the app, so make a copy of it before applying a
-            // color tint as not to affect other clients elsewhere in the app.
-            navigationIcon = navigationIcon.getConstantState().newDrawable().mutate();
-            navigationIcon.setColorFilter(
-                    ContextCompat.getColor(this, R.color.toolbar_icon_color), Mode.SRC_IN);
-
-            // Need to explicitly check against 19 rather than using BuildCompat in order to avoid a
-            // NoSuchMethodError here in UI tests running on pre-API 19 emulators.
-            if (VERSION.SDK_INT >= 19) {
-                navigationIcon.setAutoMirrored(true);
-            }
-
-            toolbar.setNavigationIcon(navigationIcon);
-        }
+        toolbar.getNavigationIcon().setTint(getColor(R.color.toolbar_icon_color));
 
         getWindow().getDecorView().setSystemUiVisibility(
                 getWindow().getDecorView().getSystemUiVisibility() |
@@ -171,13 +155,16 @@ public class IndividualPickerActivity extends BaseActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        boolean shouldShowMessage = false;
         switch (requestCode) {
+            case PREVIEW_LIVEWALLPAPER_REQUEST_CODE:
+                shouldShowMessage = true;
             case PREVIEW_WALLPAPER_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
                     mWallpaperPersister.onLiveWallpaperSet();
 
                     // The wallpaper was set, so finish this activity with result OK.
-                    finishWithResultOk();
+                    finishWithResultOk(shouldShowMessage);
                 }
                 break;
 
@@ -188,7 +175,7 @@ public class IndividualPickerActivity extends BaseActivity {
                 if ((!BuildCompat.isAtLeastL() || resultCode == Activity.RESULT_OK)
                         && mLiveWallpaperStatusChecker.isNoBackupImageWallpaperSet()
                         && mCategory.getWallpaperRotationInitializer().startRotation(getApplicationContext())) {
-                    finishWithResultOk();
+                    finishWithResultOk(true);
                 }
                 break;
 
@@ -202,7 +189,9 @@ public class IndividualPickerActivity extends BaseActivity {
      */
     public void showPreview(WallpaperInfo wallpaperInfo) {
         mWallpaperPersister.setWallpaperInfoInPreview(wallpaperInfo);
-        wallpaperInfo.showPreview(this, mPreviewIntentFactory, PREVIEW_WALLPAPER_REQUEST_CODE);
+        wallpaperInfo.showPreview(this, mPreviewIntentFactory,
+                wallpaperInfo instanceof LiveWallpaperInfo ? PREVIEW_LIVEWALLPAPER_REQUEST_CODE
+                        : PREVIEW_WALLPAPER_REQUEST_CODE);
     }
 
     /**
@@ -217,14 +206,15 @@ public class IndividualPickerActivity extends BaseActivity {
                 this, intent, NO_BACKUP_IMAGE_WALLPAPER_REQUEST_CODE);
     }
 
-    private void finishWithResultOk() {
-        try {
-            Toast.makeText(this, R.string.wallpaper_set_successfully_message,
-                    Toast.LENGTH_SHORT).show();
-        } catch (NotFoundException e) {
-            Log.e(TAG, "Could not show toast " + e);
+    private void finishWithResultOk(boolean shouldShowMessage) {
+        if (shouldShowMessage) {
+            try {
+                Toast.makeText(this, R.string.wallpaper_set_successfully_message,
+                        Toast.LENGTH_SHORT).show();
+            } catch (NotFoundException e) {
+                Log.e(TAG, "Could not show toast " + e);
+            }
         }
-
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setResult(Activity.RESULT_OK);
         finish();

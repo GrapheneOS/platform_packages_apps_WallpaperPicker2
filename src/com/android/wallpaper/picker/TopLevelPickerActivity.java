@@ -176,7 +176,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         }
 
         if (mDelegate.getFormFactor() == FormFactorChecker.FORM_FACTOR_MOBILE) {
-            initializeMobile();
+            initializeMobile(true /* shouldForceRefresh */);
         } else { // DESKTOP
             initializeDesktop(savedInstanceState);
         }
@@ -235,7 +235,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         return mDelegate.isReadExternalStoragePermissionGranted();
     }
 
-    private void initializeMobile() {
+    private void initializeMobile(boolean shouldForceRefresh) {
         setContentView(R.layout.activity_single_fragment);
 
         // Set toolbar as the action bar.
@@ -245,7 +245,6 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
 
-        boolean forceCategoryRefresh = false;
         if (fragment == null) {
             // App launch specific logic: log the "app launched" event and set up daily logging.
             mUserEventLogger.logAppLaunched();
@@ -256,11 +255,9 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
             fm.beginTransaction()
                     .add(R.id.fragment_container, newFragment)
                     .commit();
-
-            forceCategoryRefresh = true;
         }
 
-        mDelegate.initialize(forceCategoryRefresh);
+        mDelegate.initialize(shouldForceRefresh);
     }
 
     private void initializeDesktop(Bundle savedInstanceState) {
