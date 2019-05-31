@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"వాల్‌పేపర్‌లు"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"వాల్‌పేపర్‌ను ఎంచుకోండి"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"వాల్‌పేపర్ రకాలు"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"వాల్‌పేపర్‌ను సెట్ చేయి"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"వాల్‌పేపర్‌ను సెట్ చేస్తోంది…"</string>
     <string name="try_again" msgid="8278874823700921234">"మళ్లీ ప్రయత్నించు"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"వాల్‌పేపర్‌ను లోడ్ చేయలేకపోయాము. చిత్రం పాడై ఉండవచ్చు లేదా అందుబాటులో లేకపోవచ్చు."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"ప్రస్తుతం సెట్ చేసినది"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"రోజువారీ వాల్‌పేపర్"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"హోమ్ &amp; లాక్ స్క్రీన్"</string>
     <string name="home_screen_message" msgid="106444102822522813">"హోమ్ స్క్రీన్"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"లాక్ స్క్రీన్"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"హోమ్ &amp; లాక్"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"మధ్య"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"మధ్యన కత్తిరించు"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"విస్తరించు"</string>
+    <string name="preview" msgid="1774602101743861071">"ప్రివ్యూ చూపు"</string>
 </resources>

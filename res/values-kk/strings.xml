@@ -20,14 +20,15 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"Тұсқағаздар"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"Тұсқағазды таңдаңыз"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"Тұсқағаз санаттары"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Тұсқағаз орнату"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Тұсқағаз орнатылуда…"</string>
     <string name="try_again" msgid="8278874823700921234">"Қайталау"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Тұсқағаз орнатылмады."</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Тұсқағаз жүктелмеді. Кескін бүлінген не қолжетімді емес."</string>
-    <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Ағымдағы орнатылған"</string>
+    <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Қазір орнатылған"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Күнделікті тұсқағаз"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Негізгі экран және құлып экраны"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Негізгі экран"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Құлыпталған экран"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Негізгі және құлыпталған экран"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Ортасы"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Ортасынан қию"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Созу"</string>
+    <string name="preview" msgid="1774602101743861071">"Алдын ала қарау"</string>
 </resources>

@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"Achtergronden"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"Achtergrond selecteren"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"Achtergrondcategorieën"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Achtergrond instellen"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Achtergrond instellen…"</string>
     <string name="try_again" msgid="8278874823700921234">"Opnieuw"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Kan achtergrond niet laden. De afbeelding is beschadigd of is niet beschikbaar."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Momenteel ingesteld"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Dagelijkse achtergrond"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Start- en vergrendelingsscherm"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Startscherm"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Scherm vergrendelen"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Home- en vergrendelingsscherm"</string>
@@ -37,7 +38,7 @@
     <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Startscherm en vergrendelingsscherm"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Achtergrond met roulerende afbeelding"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"<xliff:g id="APP_NAME">%1$s</xliff:g> heeft toegang nodig tot de opslag van je apparaat om de huidige achtergrond hier weer te geven."</string>
-    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Achtergronden heeft toegang nodig tot de opslag van je apparaat om de huidige achtergrond hier weer te geven.\n\nAls je deze instelling wilt wijzigen, ga je naar het gedeelte Machtigingen in de app-informatie van Achtergronden."</string>
+    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Achtergronden heeft toegang nodig tot de opslag van je apparaat om de huidige achtergrond hier weer te geven.\n\nAls je deze instelling wilt wijzigen, ga je naar het gedeelte Rechten in de app-informatie van Achtergronden."</string>
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Toegang toestaan"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Service voor interactieve achtergrond met roulerende achtergronden"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Dagelijkse achtergrond"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Midden"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Gecentreerd bijsnijden"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Uitrekken"</string>
+    <string name="preview" msgid="1774602101743861071">"Voorbeeld"</string>
 </resources>

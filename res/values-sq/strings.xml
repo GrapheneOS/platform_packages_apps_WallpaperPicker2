@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"Imazhet e sfondit"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"Zgjidh imazhin e sfondit"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"Kategoritë e imazheve të sfondit"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Cakto imazhin e sfondit"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Po cakton imazhin e sfondit..."</string>
     <string name="try_again" msgid="8278874823700921234">"Provo sërish"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Sfondi nuk mund të ngarkohet. Imazhi është i dëmtuar ose i padisponueshëm."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"E caktuar aktualisht"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Imazh sfondi i përditshëm"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"\"Ekrani bazë\" dhe \"Ekrani i kyçjes\""</string>
     <string name="home_screen_message" msgid="106444102822522813">"Ekrani bazë"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Ekrani i kyçjes"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"\"Ekrani bazë\" dhe \"Kyçja\""</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Qendror"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Prerje qendrore"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"E tendosur"</string>
+    <string name="preview" msgid="1774602101743861071">"Shiko paraprakisht"</string>
 </resources>

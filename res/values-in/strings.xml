@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"Wallpaper"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"Pilih wallpaper"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"Kategori wallpaper"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Setel Wallpaper"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Menyetel wallpaper…"</string>
     <string name="try_again" msgid="8278874823700921234">"Coba lagi"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Tidak dapat memuat wallpaper. Gambar sudah rusak atau tidak tersedia."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Yang disetel saat ini"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Wallpaper harian"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Layar utama &amp; layar kunci"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Layar utama"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Layar kunci"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Beranda &amp; Layar Kunci"</string>
@@ -49,7 +50,7 @@
     <string name="start_rotation_error_message" msgid="3053799836719618972">"Tidak dapat mendownload wallpaper pertama. Harap periksa setelan jaringan dan coba lagi."</string>
     <string name="start_rotation_dialog_body" msgid="7903554799046364916">"Wallpaper akan otomatis berubah setiap hari"</string>
     <string name="settings_button_label" msgid="8724734130079207955">"Setelan"</string>
-    <string name="explore" msgid="7468719504199497281">"Jelajahi"</string>
+    <string name="explore" msgid="7468719504199497281">"Pelajari"</string>
     <string name="next_wallpaper" msgid="3911873152952596232">"Wallpaper berikutnya"</string>
     <string name="wallpaper_disabled_message" msgid="7309484130562148185">"Fitur menyetel wallpaper dinonaktifkan di perangkat ini"</string>
     <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"Fitur menyetel wallpaper dinonaktifkan oleh administrator perangkat"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Tengah"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Crop tengah"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Regang"</string>
+    <string name="preview" msgid="1774602101743861071">"Pratinjau"</string>
 </resources>
