@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"Wallpapers"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"வால்பேப்பரைத் தேர்ந்தெடுக்கவும்"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"வால்பேப்பர் வகைகள்"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"வால்பேப்பரை அமை"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"வால்பேப்பரை அமைக்கிறது…"</string>
     <string name="try_again" msgid="8278874823700921234">"மீண்டும் முயல்க"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"வால்பேப்பரை ஏற்ற முடியவில்லை. படம் சிதைந்துவிட்டது அல்லது இல்லை."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"தற்போது அமைத்துள்ள வால்பேப்பர்"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"தினசரி வால்பேப்பர்"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"முகப்பு &amp; பூட்டுத் திரை"</string>
     <string name="home_screen_message" msgid="106444102822522813">"முகப்புத் திரை"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"பூட்டுத் திரை"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"முகப்பு &amp; பூட்டு"</string>
@@ -37,7 +38,7 @@
     <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"முகப்புத் திரையும் பூட்டுத் திரையும்"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"சுழலும் பட வால்பேப்பர்"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"இந்த வால்பேப்பரை இங்கே காட்ட, <xliff:g id="APP_NAME">%1$s</xliff:g> பயன்பாட்டிற்கு உங்கள் சாதனத்தின் சேமிப்பகத்திற்கான அணுகல் தேவை."</string>
-    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"இந்த வால்பேப்பரை இங்கே காட்ட, வால்பேப்பர்களுக்கு உங்கள் சாதனத்தின் சேமிப்பகத்திற்கான அணுகல் தேவை.\n\nஇந்த அமைப்பை மாற்ற, வால்பேப்பர்களின் பயன்பாட்டுத் தகவல் பக்கத்தில் உள்ள அனுமதிகள் பகுதிக்குச் செல்லவும்."</string>
+    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"இந்த வால்பேப்பரை இங்கே காட்ட, வால்பேப்பர்களுக்கு உங்கள் சாதனத்தின் சேமிப்பகத்திற்கான அணுகல் தேவை.\n\nஇந்த அமைப்பை மாற்ற, வால்பேப்பர்களின் ஆப்ஸ் தகவல் பக்கத்தில் உள்ள அனுமதிகள் பகுதிக்குச் செல்லவும்."</string>
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"அணுகலை அனுமதி"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"சுழலும் வால்பேப்பர்களுக்கான லைவ் வால்பேப்பர் சேவை"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"தினசரி வால்பேப்பர்"</string>
@@ -74,8 +75,9 @@
     <string name="my_photos_category_title" msgid="4294567122144565273">"எனது படங்கள்"</string>
     <string name="my_photos_generic_wallpaper_title" msgid="7002867526154631172">"எனது படம்"</string>
     <string name="fallback_wallpaper_title" msgid="6154655421012506001">"வால்பேப்பர்"</string>
-    <string name="app_not_found" msgid="4431461707854088231">"பயன்பாடு நிறுவப்படவில்லை."</string>
+    <string name="app_not_found" msgid="4431461707854088231">"ஆப்ஸ் நிறுவப்படவில்லை."</string>
     <string name="center_wallpaper_position" msgid="4166894762352288883">"மையம்"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"மையமாகச் செதுக்கு"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"திரையில் பொருந்தும்படி விரி"</string>
+    <string name="preview" msgid="1774602101743861071">"மாதிரிக்காட்சி"</string>
 </resources>

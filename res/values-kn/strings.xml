@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"ವಾಲ್‌ಪೇಪರ್‌ಗಳು"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"ವಾಲ್‌ಪೇಪರ್ ಆಯ್ಕೆಮಾಡಿ"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"ವಾಲ್‌ಪೇಪರ್‌ ವರ್ಗಗಳು"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"ವಾಲ್‌ಪೇಪರ್ ಹೊಂದಿಸಿ"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"ವಾಲ್‌ಪೇಪರ್ ಹೊಂದಿಸಲಾಗುತ್ತಿದೆ..."</string>
     <string name="try_again" msgid="8278874823700921234">"ಪುನಃ ಪ್ರಯತ್ನಿಸಿ"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"ವಾಲ್‌ಪೇಪರ್ ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಚಿತ್ರವು ದೋಷಪೂರಿತವಾಗಿರಬಹುದು ಅಥವಾ ಲಭ್ಯವಿಲ್ಲದಿರಬಹುದು."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"ಪ್ರಸ್ತುತವಾಗಿ ಹೊಂದಿಸಿ"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"ದಿನನಿತ್ಯದ ವಾಲ್‌ಪೇಪರ್"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"ಹೋಮ್ ಮತ್ತು ಲಾಕ್‌ ಸ್ಕ್ರೀನ್"</string>
     <string name="home_screen_message" msgid="106444102822522813">"ಮುಖಪುಟದ ಪರದೆ"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"ಲಾಕ್ ಪರದೆ"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"ಮುಖಪುಟ ಮತ್ತು ಲಾಕ್‌"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"ಮಧ್ಯ"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"ಮಧ್ಯಕ್ಕೆ ಕ್ರಾಪ್ ಮಾಡಿ"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"ವಿಸ್ತರಿಸಿ"</string>
+    <string name="preview" msgid="1774602101743861071">"ಪೂರ್ವವೀಕ್ಷಣೆ"</string>
 </resources>

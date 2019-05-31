@@ -14,10 +14,10 @@
      limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:auto="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
 
     <TextView
         android:id="@+id/start_rotation_dialog_subhead"
@@ -41,7 +41,7 @@
         android:layout_marginStart="@dimen/start_rotation_dialog_checkbox_area_margin_left"
         android:orientation="horizontal">
 
-        <androidx.appcompat.widget.AppCompatCheckBox
+        <CheckBox
             android:id="@+id/start_rotation_wifi_only_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,8 +50,7 @@
             android:layout_marginRight="@dimen/start_rotation_dialog_checkbox_margin_right"
             android:minHeight="@dimen/start_rotation_dialog_checkbox_min_height"
             android:text="@string/start_rotation_dialog_wifi_only_option_message"
-            android:textSize="@dimen/abc_text_size_body_1_material"
-            auto:buttonTint="@color/accent_color" />
+            android:textSize="@dimen/abc_text_size_body_1_material"/>
 
     </LinearLayout>
 

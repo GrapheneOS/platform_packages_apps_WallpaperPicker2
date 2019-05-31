@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"Hintergründe"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"Hintergrund auswählen"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"Hintergrundkategorien"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Als Hintergrund festlegen"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Hintergrund wird festgelegt…"</string>
     <string name="try_again" msgid="8278874823700921234">"Noch einmal versuchen"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Der Hintergrund konnte nicht geladen werden. Das Bild ist entweder beschädigt oder nicht verfügbar."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Derzeit festgelegt"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Täglicher Hintergrund"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Startbildschirm &amp; Sperrbildschirm"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Startbildschirm"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Sperrbildschirm"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Startbildschirm &amp; Sperrbildschirm"</string>
@@ -42,7 +43,7 @@
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Live-Hintergrunddienst mit rotierenden Bildern"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Täglicher Hintergrund"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Zum Aktivieren tippen"</string>
-    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Hintergrund ändert sich automatisch jeden Tag. Um die Einrichtung abzuschließen, tippen Sie auf dem nächsten Bildschirm auf &lt;strong&gt;Als Hintergrund festlegen&lt;/strong&gt;."</string>
+    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Hintergrund ändert sich automatisch jeden Tag. Um die Einrichtung abzuschließen, tippe auf dem nächsten Bildschirm auf &lt;strong&gt;Als Hintergrund festlegen&lt;/strong&gt;."</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Neue Hintergründe nur über WLAN herunterladen"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Weiter"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Erster Hintergrund wird heruntergeladen…"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Zentriert"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Zentriert anpassen"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Strecken"</string>
+    <string name="preview" msgid="1774602101743861071">"Vorschau"</string>
 </resources>

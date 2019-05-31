@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"वालपेपरहरू"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"वालपेपर चयन गर्नुहोस्"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"वालपेपरका कोटीहरू"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"वालपेपर सेट गर्नुहोस्"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"वालपेपर सेट गर्दै…"</string>
     <string name="try_again" msgid="8278874823700921234">"फेरि प्रयास गर्नुहोस्‌"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"वालपेपर लोड गर्न सकिएन। छवि या त त्रुटिपूर्ण छ वा उपलब्ध छैन।"</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"हाल सेट गरिएको"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"दैनिक वालपेपर"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"गृह तथा लक स्क्रिन"</string>
     <string name="home_screen_message" msgid="106444102822522813">"गृह स्क्रिन"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"लक स्क्रिन"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"गृह स्क्रिन &amp; लक स्क्रिन"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"मध्यभाग"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"मध्यभागमा क्रप गरिएको"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"तन्काइएको"</string>
+    <string name="preview" msgid="1774602101743861071">"पूर्वावलोकन"</string>
 </resources>

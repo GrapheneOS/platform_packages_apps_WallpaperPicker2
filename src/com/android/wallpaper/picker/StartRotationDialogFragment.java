@@ -15,9 +15,11 @@
  */
 package com.android.wallpaper.picker;
 
+import static com.android.wallpaper.model.WallpaperRotationInitializer.NETWORK_PREFERENCE_CELLULAR_OK;
+import static com.android.wallpaper.model.WallpaperRotationInitializer.NETWORK_PREFERENCE_WIFI_ONLY;
+
+import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -25,14 +27,14 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.android.wallpaper.R;
-import com.android.wallpaper.model.WallpaperRotationInitializer;
-import com.android.wallpaper.module.InjectorProvider;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
+
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.fragment.app.DialogFragment;
+
+import com.android.wallpaper.R;
+import com.android.wallpaper.module.InjectorProvider;
 
 /**
  * Dialog which allows user to start a wallpaper rotation or cancel, as well as providing an option
@@ -76,10 +78,10 @@ public class StartRotationDialogFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_start_rotation, null);
 
-        TextView bodyText = (TextView) dialogView.findViewById(R.id.start_rotation_dialog_subhead);
+        TextView bodyText = dialogView.findViewById(R.id.start_rotation_dialog_subhead);
         bodyText.setText(Html.fromHtml(getResources().getString(getBodyTextResourceId())));
 
-        final CheckBox wifiOnlyCheckBox = (CheckBox) dialogView.findViewById(
+        final CheckBox wifiOnlyCheckBox = dialogView.findViewById(
                 R.id.start_rotation_wifi_only_checkbox);
 
         boolean hasTelephony = InjectorProvider.getInjector().getSystemFeatureChecker()
@@ -88,12 +90,8 @@ public class StartRotationDialogFragment extends DialogFragment {
         // Only show the "WiFi only" checkbox if the device supports a cellular data connection.
         if (hasTelephony) {
             wifiOnlyCheckBox.setChecked(mIsWifiOnlyChecked);
-            wifiOnlyCheckBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mIsWifiOnlyChecked = wifiOnlyCheckBox.isChecked();
-                }
-            });
+            wifiOnlyCheckBox.setOnClickListener(
+                    v -> mIsWifiOnlyChecked = wifiOnlyCheckBox.isChecked());
         } else {
             wifiOnlyCheckBox.setVisibility(View.GONE);
         }
@@ -102,15 +100,12 @@ public class StartRotationDialogFragment extends DialogFragment {
                 .setView(dialogView)
                 .setNegativeButton(android.R.string.cancel, null /* listener */)
                 .setPositiveButton(getPositiveButtonTextResourceId(),
-                        new OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                RotationStarter callback = (RotationStarter) getTargetFragment();
-                                callback.startRotation(
-                                        mIsWifiOnlyChecked
-                                                ? WallpaperRotationInitializer.NETWORK_PREFERENCE_WIFI_ONLY
-                                                : WallpaperRotationInitializer.NETWORK_PREFERENCE_CELLULAR_OK);
-                            }
+                        (dialog, which) -> {
+                            RotationStarter callback = (RotationStarter) getTargetFragment();
+                            callback.startRotation(
+                                    mIsWifiOnlyChecked
+                                        ? NETWORK_PREFERENCE_WIFI_ONLY
+                                        : NETWORK_PREFERENCE_CELLULAR_OK);
                         })
                 .create();
     }
