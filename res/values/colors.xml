@@ -32,5 +32,5 @@
     <color name="accent_color">@color/material_googblue500</color>
 
     <color name="status_bar_color">@color/material_black_100</color>
-    <color name="toolbar_color">@color/material_white_100</color>
+    <color name="toolbar_color">#000000</color>
 </resources>

@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"Fonds d\'écran"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"Sélectionner un fond d\'écran"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"Catégories de fonds d\'écran"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Définir comme fond d\'écran"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Définition du fond d\'écran…"</string>
     <string name="try_again" msgid="8278874823700921234">"Réessayer"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Impossible de charger le fond d\'écran. L\'image est corrompue ou indisponible."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Actuellement défini"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Fond d\'écran quotidien"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Écran d\'accueil et écran de verrouillage"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Écran d\'accueil"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Écran de verrouillage"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Accueil et verrouillage"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Centrer"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Recadrer et centrer"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Étirer"</string>
+    <string name="preview" msgid="1774602101743861071">"Prévisualiser"</string>
 </resources>
