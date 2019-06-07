@@ -41,6 +41,10 @@
     </style>
 
     <style name="WallpaperTheme.Preview" parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowDisablePreview">true</item>
+
         <!-- Set no title and no action bar because we use a toolbar instead. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
