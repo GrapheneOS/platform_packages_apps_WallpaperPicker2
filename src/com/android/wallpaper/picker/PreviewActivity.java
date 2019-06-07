@@ -46,6 +46,11 @@ public class PreviewActivity extends BasePreviewActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
@@ -55,7 +60,10 @@ public class PreviewActivity extends BasePreviewActivity {
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
             boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
-                    wallpaper, PreviewFragment.MODE_CROP_AND_SET_WALLPAPER, testingModeEnabled);
+                    /* context */ this,
+                    wallpaper,
+                    PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
+                    testingModeEnabled);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();

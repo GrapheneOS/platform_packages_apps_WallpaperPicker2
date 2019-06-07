@@ -28,6 +28,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.compat.ButtonDrawableSetterCompat;
+import com.android.wallpaper.module.WallpaperPersister;
 
 /**
  * Dialog fragment which shows the "Set wallpaper" destination dialog for N+ devices. Lets user
@@ -68,7 +69,7 @@ public class SetWallpaperDialogFragment extends DialogFragment {
 
         mSetHomeWallpaperButton = layout.findViewById(R.id.set_home_wallpaper_button);
         mSetHomeWallpaperButton.setOnClickListener(v -> {
-            mListener.onSetHomeScreen();
+            mListener.onSet(WallpaperPersister.DEST_HOME_SCREEN);
             dismiss();
         });
         ButtonDrawableSetterCompat.setDrawableToButtonStart(
@@ -77,7 +78,7 @@ public class SetWallpaperDialogFragment extends DialogFragment {
 
         mSetLockWallpaperButton = layout.findViewById(R.id.set_lock_wallpaper_button);
         mSetLockWallpaperButton.setOnClickListener(v -> {
-            mListener.onSetLockScreen();
+            mListener.onSet(WallpaperPersister.DEST_LOCK_SCREEN);
             dismiss();
         });
         ButtonDrawableSetterCompat.setDrawableToButtonStart(
@@ -86,7 +87,7 @@ public class SetWallpaperDialogFragment extends DialogFragment {
 
         mSetBothWallpaperButton = layout.findViewById(R.id.set_both_wallpaper_button);
         mSetBothWallpaperButton.setOnClickListener(v -> {
-            mListener.onSetBoth();
+            mListener.onSet(WallpaperPersister.DEST_BOTH);
             dismiss();
         });
         ButtonDrawableSetterCompat.setDrawableToButtonStart(
@@ -130,10 +131,6 @@ public class SetWallpaperDialogFragment extends DialogFragment {
      * on the dialog's clickable elements.
      */
     public interface Listener {
-        void onSetHomeScreen();
-
-        void onSetLockScreen();
-
-        void onSetBoth();
+        void onSet(int destination);
     }
 }
