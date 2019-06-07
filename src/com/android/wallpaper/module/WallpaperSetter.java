@@ -200,24 +200,26 @@ public class WallpaperSetter {
     /**
      * Show a dialog asking the user for the Wallpaper's destination
      * (eg, "Home screen", "Lock Screen")
+     * @param isLiveWallpaper whether the wallpaper that we want to set is a live wallpaper.
      * @param listener {@link SetWallpaperDialogFragment.Listener} that will receive the response.
      * @see Destination
      */
     public void requestDestination(Context context, FragmentManager fragmentManager,
-            WallpaperInfo wallpaper, Listener listener) {
+                                   Listener listener, boolean isLiveWallpaper) {
         requestDestination(context, fragmentManager, R.string.set_wallpaper_dialog_message,
-                wallpaper, listener);
+                listener, isLiveWallpaper);
     }
 
     /**
      * Show a dialog asking the user for the Wallpaper's destination
      * (eg, "Home screen", "Lock Screen")
+     * @param isLiveWallpaper whether the wallpaper that we want to set is a live wallpaper.
      * @param listener {@link SetWallpaperDialogFragment.Listener} that will receive the response.
      * @param titleResId title for the dialog
      * @see Destination
      */
     public void requestDestination(Context context, FragmentManager fragmentManager,
-            @StringRes int titleResId, WallpaperInfo wallpaper, Listener listener) {
+            @StringRes int titleResId, Listener listener, boolean isLiveWallpaper) {
         CurrentWallpaperInfoFactory factory = InjectorProvider.getInjector()
                 .getCurrentWallpaperFactory(context);
 
@@ -226,16 +228,16 @@ public class WallpaperSetter {
             setWallpaperDialog.setTitleResId(titleResId);
             setWallpaperDialog.setListener(listener);
             if (homeWallpaper instanceof LiveWallpaperInfo && lockWallpaper == null) {
-                if (wallpaper instanceof LiveWallpaperInfo) {
+                if (isLiveWallpaper) {
                     // If lock wallpaper is live and we're setting a live wallpaper, we can only
                     // set it to both, so bypass the dialog.
-                    listener.onSetBoth();
+                    listener.onSet(WallpaperPersister.DEST_BOTH);
                     return;
                 }
                 // if the lock wallpaper is a live wallpaper, we cannot set a home-only static one
                 setWallpaperDialog.setHomeOptionAvailable(false);
             }
-            if (wallpaper instanceof LiveWallpaperInfo) {
+            if (isLiveWallpaper) {
                 setWallpaperDialog.setLockOptionAvailable(false);
             }
             setWallpaperDialog.show(fragmentManager, TAG_SET_WALLPAPER_DIALOG_FRAGMENT);

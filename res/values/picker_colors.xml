@@ -23,8 +23,8 @@
     <!-- Color for material black text @ 60% opacity. -->
     <color name="translucent_black_60_alpha">#99000000</color>
     <color name="translucent_black_90_alpha">#E6000000</color>
-    <color name="translucent_black">#96000000</color>
-    <color name="translucent_black_darker">#CC000000</color>
+    <color name="translucent_black">@color/translucent_black_60_alpha</color>
+
     <color name="light_grey">#d8d8d8</color>
     <color name="white_34_alpha">#57FFFFFF</color>
     <color name="white_60_alpha">#99FFFFFF</color>
