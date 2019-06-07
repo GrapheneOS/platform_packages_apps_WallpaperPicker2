@@ -70,6 +70,7 @@ import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.Asset.BitmapReceiver;
 import com.android.wallpaper.asset.Asset.DimensionsReceiver;
 import com.android.wallpaper.compat.BuildCompat;
+import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.Injector;
@@ -122,9 +123,9 @@ public class PreviewFragment extends Fragment implements
     public @interface PreviewMode {
     }
 
-    protected static final String ARG_WALLPAPER = "wallpaper";
-    protected static final String ARG_PREVIEW_MODE = "preview_mode";
-    protected static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
+    public static final String ARG_WALLPAPER = "wallpaper";
+    public static final String ARG_PREVIEW_MODE = "preview_mode";
+    public static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
     private static final String TAG_LOAD_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "load_wallpaper_error_dialog";
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
@@ -148,7 +149,7 @@ public class PreviewFragment extends Fragment implements
     protected SubsamplingScaleImageView mFullResImageView;
     protected WallpaperInfo mWallpaper;
     private Asset mWallpaperAsset;
-    private WallpaperSetter mWallpaperSetter;;
+    private WallpaperSetter mWallpaperSetter;
     private UserEventLogger mUserEventLogger;
     private LinearLayout mBottomSheet;
     private TextView mAttributionTitle;
@@ -461,18 +462,8 @@ public class PreviewFragment extends Fragment implements
     }
 
     @Override
-    public void onSetHomeScreen() {
-        setCurrentWallpaper(WallpaperPersister.DEST_HOME_SCREEN);
-    }
-
-    @Override
-    public void onSetLockScreen() {
-        setCurrentWallpaper(WallpaperPersister.DEST_LOCK_SCREEN);
-    }
-
-    @Override
-    public void onSetBoth() {
-        setCurrentWallpaper(WallpaperPersister.DEST_BOTH);
+    public void onSet(int destination) {
+        setCurrentWallpaper(destination);
     }
 
     @Override
@@ -508,8 +499,8 @@ public class PreviewFragment extends Fragment implements
 
     private void onSetWallpaperClicked(View button) {
         if (BuildCompat.isAtLeastN()) {
-            mWallpaperSetter.requestDestination(getContext(), getFragmentManager(), mWallpaper,
-                    this);
+            mWallpaperSetter.requestDestination(getContext(), getFragmentManager(), this,
+                    mWallpaper instanceof LiveWallpaperInfo);
         } else {
             setCurrentWallpaper(WallpaperPersister.DEST_HOME_SCREEN);
         }
