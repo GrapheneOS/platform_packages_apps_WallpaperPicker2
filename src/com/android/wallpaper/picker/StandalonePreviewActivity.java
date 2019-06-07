@@ -52,9 +52,6 @@ public class StandalonePreviewActivity extends BasePreviewActivity {
         mUserEventLogger = InjectorProvider.getInjector().getUserEventLogger(getApplicationContext());
         mUserEventLogger.logStandalonePreviewLaunched();
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
-
         Intent cropAndSetWallpaperIntent = getIntent();
         Uri imageUri = cropAndSetWallpaperIntent.getData();
 
@@ -77,8 +74,15 @@ public class StandalonePreviewActivity extends BasePreviewActivity {
             requestPermissions(
                     new String[]{permission.READ_EXTERNAL_STORAGE},
                     READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE);
-            return;
         }
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
 
         if (fragment == null) {
             loadPreviewFragment();
@@ -116,7 +120,10 @@ public class StandalonePreviewActivity extends BasePreviewActivity {
         boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
         WallpaperInfo wallpaper = new ImageWallpaperInfo(intent.getData());
         Fragment fragment = InjectorProvider.getInjector().getPreviewFragment(
-                wallpaper, PreviewFragment.MODE_CROP_AND_SET_WALLPAPER, testingModeEnabled);
+                /* context */ this,
+                wallpaper,
+                PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
+                testingModeEnabled);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, fragment)
                 .commit();
