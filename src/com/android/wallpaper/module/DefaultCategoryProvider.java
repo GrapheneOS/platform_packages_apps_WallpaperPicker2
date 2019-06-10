@@ -118,18 +118,20 @@ public class DefaultCategoryProvider implements CategoryProvider {
             }
         };
 
-        new FetchCategoriesTask(delegatingReceiver).execute();
+        new FetchCategoriesTask(delegatingReceiver, mAppContext).execute();
     }
 
     /**
      * AsyncTask subclass used for fetching all the categories and pushing them one at a time to
      * the receiver.
      */
-    protected class FetchCategoriesTask extends AsyncTask<Void, Category, Void> {
+    protected static class FetchCategoriesTask extends AsyncTask<Void, Category, Void> {
         private CategoryReceiver mReceiver;
+        protected final Context mAppContext;
 
-        public FetchCategoriesTask(CategoryReceiver receiver) {
+        public FetchCategoriesTask(CategoryReceiver receiver, Context context) {
             mReceiver = receiver;
+            mAppContext = context.getApplicationContext();
         }
 
         @Override
