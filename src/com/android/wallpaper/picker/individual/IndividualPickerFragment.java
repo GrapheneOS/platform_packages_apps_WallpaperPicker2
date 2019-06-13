@@ -327,7 +327,7 @@ public class IndividualPickerFragment extends Fragment
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("NIGHT_MODE",
+        outState.putInt(KEY_NIGHT_MODE,
                 getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK);
     }
 
