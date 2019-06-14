@@ -42,7 +42,7 @@ public abstract class BaseWallpaperInjector implements Injector {
     private RotatingWallpaperComponentChecker mRotatingWallpaperComponentChecker;
     private FormFactorChecker mFormFactorChecker;
     private PackageStatusNotifier mPackageStatusNotifier;
-    private IndividualPickerFragment mIndividualPickerFragment;
+    private LiveWallpaperInfoFactory mLiveWallpaperInfoFactory;
 
     @Override
     public synchronized BitmapCropper getBitmapCropper() {
@@ -177,8 +177,14 @@ public abstract class BaseWallpaperInjector implements Injector {
 
     @Override
     public synchronized IndividualPickerFragment getIndividualPickerFragment(String collectionId) {
-        mIndividualPickerFragment = IndividualPickerFragment.newInstance(collectionId);
+        return IndividualPickerFragment.newInstance(collectionId);
+    }
 
-        return mIndividualPickerFragment;
+    @Override
+    public LiveWallpaperInfoFactory getLiveWallpaperInfoFactory(Context context) {
+        if (mLiveWallpaperInfoFactory == null) {
+            mLiveWallpaperInfoFactory = new DefaultLiveWallpaperInfoFactory();
+        }
+        return mLiveWallpaperInfoFactory;
     }
 }
