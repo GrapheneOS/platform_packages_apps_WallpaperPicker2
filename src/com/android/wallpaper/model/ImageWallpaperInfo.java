@@ -66,7 +66,7 @@ public class ImageWallpaperInfo extends WallpaperInfo {
         mUri = uri;
     }
 
-    private ImageWallpaperInfo(Parcel in) {
+    protected ImageWallpaperInfo(Parcel in) {
         mUri = Uri.parse(in.readString());
     }
 
