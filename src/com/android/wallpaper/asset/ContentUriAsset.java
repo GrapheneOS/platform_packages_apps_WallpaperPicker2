@@ -244,6 +244,10 @@ public final class ContentUriAsset extends StreamableAsset {
                 .into(imageView);
     }
 
+    public Uri getUri() {
+        return mUri;
+    }
+
     /**
      * Custom AsyncTask which crops a bitmap region from a larger bitmap.
      */
