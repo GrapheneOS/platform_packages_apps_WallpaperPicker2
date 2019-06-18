@@ -20,7 +20,7 @@
     <string name="wallpaper_app_name" msgid="1719889291772891695">"ৱালপেপাৰ"</string>
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
-    <string name="select_wallpaper_label" msgid="3026032670158694582">"ৱালপেপাৰ বাছনি কৰক"</string>
+    <string name="select_wallpaper_label" msgid="6989581259339646085">"ৱালপেপাৰৰ শিতানসমূহ"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"ৱালপেপাৰ ছেট কৰক"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"ৱালপেপাৰ ছেট কৰি থকা হৈছে…"</string>
     <string name="try_again" msgid="8278874823700921234">"আকৌ চেষ্টা কৰক"</string>
@@ -28,6 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"ৱালপেপাৰ ল\'ড কৰিব পৰা নগ\'ল। প্ৰতিচ্ছবিখন ব্যৱহাৰযোগ্য নহয় বা উপলব্ধ নহয়।"</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"বর্তমান ছেট কৰি থোৱা ৱালপেপাৰ"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"দৈনিক ৱালপেপাৰ"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"গৃহ আৰু লক স্ক্ৰীণ"</string>
     <string name="home_screen_message" msgid="106444102822522813">"গৃহ স্ক্ৰীণ"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"লক স্ক্ৰীণ"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"গৃহ স্ক্ৰীণ আৰু লক স্ক্ৰীণ"</string>
@@ -78,4 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"সোঁমাজত"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"মধ্য অংশৰ পৰা কৰা ক্ৰপ"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"প্ৰসাৰিত"</string>
+    <string name="preview" msgid="1774602101743861071">"পূৰ্বদৰ্শন"</string>
 </resources>
