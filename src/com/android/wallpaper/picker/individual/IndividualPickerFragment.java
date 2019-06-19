@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.individual;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
@@ -35,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -107,6 +109,7 @@ public class IndividualPickerFragment extends Fragment
     private static final boolean PROGRESS_DIALOG_INDETERMINATE = true;
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "individual_set_wallpaper_error_dialog";
+    private static final String KEY_NIGHT_MODE = "IndividualPickerFragment.NIGHT_MODE";
 
     WallpaperPreferences mWallpaperPreferences;
     WallpaperChangedNotifier mWallpaperChangedNotifier;
@@ -269,6 +272,12 @@ public class IndividualPickerFragment extends Fragment
 
         mWallpaperRotationInitializer = mCategory.getWallpaperRotationInitializer();
 
+        // Clear Glide's cache if night-mode changed to ensure thumbnails are reloaded
+        if (savedInstanceState != null && (savedInstanceState.getInt(KEY_NIGHT_MODE)
+                != (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK))) {
+            Glide.get(getContext()).clearMemory();
+        }
+
         fetchWallpapers(false);
 
         if (mCategory.supportsThirdParty()) {
@@ -313,6 +322,13 @@ public class IndividualPickerFragment extends Fragment
                 }
             }
         }, forceReload);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_NIGHT_MODE,
+                getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK);
     }
 
     @Override
