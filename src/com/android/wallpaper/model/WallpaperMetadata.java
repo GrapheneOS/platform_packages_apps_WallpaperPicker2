@@ -17,10 +17,11 @@ package com.android.wallpaper.model;
 
 import android.app.WallpaperInfo;
 
-import java.util.List;
-
 import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+
+import java.util.List;
 
 /**
  * Lightweight wrapper for user-facing wallpaper metadata.
@@ -30,6 +31,7 @@ public class WallpaperMetadata {
     private final List<String> mAttributions;
     private final String mActionUrl;
     private final String mCollectionId;
+    private final String mBackingFileName;
     private final android.app.WallpaperInfo mWallpaperComponent;
     @StringRes private final int mActionLabelRes;
     @DrawableRes private final int mActionIconRes;
@@ -37,12 +39,14 @@ public class WallpaperMetadata {
     public WallpaperMetadata(List<String> attributions, String actionUrl,
                              @StringRes int actionLabelRes,
                              @DrawableRes int actionIconRes, String collectionId,
+                             String backingFileName,
                              android.app.WallpaperInfo wallpaperComponent) {
         mAttributions = attributions;
         mActionUrl = actionUrl;
         mActionLabelRes = actionLabelRes;
         mActionIconRes = actionIconRes;
         mCollectionId = collectionId;
+        mBackingFileName = backingFileName;
         mWallpaperComponent = wallpaperComponent;
     }
 
@@ -81,6 +85,15 @@ public class WallpaperMetadata {
      */
     public String getCollectionId() {
         return mCollectionId;
+    }
+
+    /**
+     * Returns the name of a private file corresponding to a copy of the full image used as
+     * wallpaper if this is a static wallpaper.
+     */
+    @Nullable
+    public String getBackingFileName() {
+        return mBackingFileName;
     }
 
     /**
