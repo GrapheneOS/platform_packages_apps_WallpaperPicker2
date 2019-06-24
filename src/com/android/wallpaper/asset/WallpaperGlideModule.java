@@ -8,12 +8,15 @@ import com.android.wallpaper.asset.LiveWallpaperThumbAssetLoader.LiveWallpaperTh
 import com.android.wallpaper.asset.NexusStaticAssetLoader.NexusStaticAssetLoaderFactory;
 import com.android.wallpaper.asset.ResourceAssetLoader.ResourceAssetLoaderFactory;
 import com.android.wallpaper.asset.WallpaperModelLoader.WallpaperModelLoaderFactory;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.Registry;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 import com.bumptech.glide.load.engine.cache.MemorySizeCalculator;
 import com.bumptech.glide.module.GlideModule;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.InputStream;
 
@@ -40,6 +43,8 @@ public class WallpaperGlideModule implements GlideModule {
                 .setMemoryCacheScreens(1.2f)
                 .build();
         builder.setMemorySizeCalculator(calculator);
+        builder.setDefaultRequestOptions(
+                new RequestOptions().format(DecodeFormat.PREFER_ARGB_8888));
     }
 
     @Override
