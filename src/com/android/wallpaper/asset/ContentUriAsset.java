@@ -30,6 +30,7 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
@@ -59,12 +60,43 @@ public final class ContentUriAsset extends StreamableAsset {
      * @param context The application's context.
      * @param uri     Content URI locating the asset.
      * @param requestOptions {@link RequestOptions} to be applied when loading the asset.
+     * @param uncached If true, {@link #loadDrawable(Context, ImageView, int)} and
+     * {@link #loadDrawableWithTransition(Context, ImageView, int, DrawableLoadedListener, int)}
+     * will not cache data, and fetch it each time.
      */
-    public ContentUriAsset(Context context, Uri uri, RequestOptions requestOptions) {
+    public ContentUriAsset(Context context, Uri uri, RequestOptions requestOptions,
+                           boolean uncached) {
         mExifOrientation = ExifInterfaceCompat.EXIF_ORIENTATION_UNKNOWN;
         mContext = context.getApplicationContext();
         mUri = uri;
-        mRequestOptions = requestOptions;
+
+        if (uncached) {
+            mRequestOptions = requestOptions.apply(RequestOptions
+                    .diskCacheStrategyOf(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true));
+        } else {
+            mRequestOptions = requestOptions;
+        }
+    }
+
+    /**
+     * @param context The application's context.
+     * @param uri     Content URI locating the asset.
+     * @param requestOptions {@link RequestOptions} to be applied when loading the asset.
+     */
+    public ContentUriAsset(Context context, Uri uri, RequestOptions requestOptions) {
+        this(context, uri, requestOptions, /* uncached */ false);
+    }
+
+    /**
+     * @param context The application's context.
+     * @param uri     Content URI locating the asset.
+     * @param uncached If true, {@link #loadDrawable(Context, ImageView, int)} and
+     * {@link #loadDrawableWithTransition(Context, ImageView, int, DrawableLoadedListener, int)}
+     * will not cache data, and fetch it each time.
+     */
+    public ContentUriAsset(Context context, Uri uri, boolean uncached) {
+        this(context, uri, RequestOptions.centerCropTransform(), uncached);
     }
 
     /**
@@ -72,8 +104,10 @@ public final class ContentUriAsset extends StreamableAsset {
      * @param uri     Content URI locating the asset.
      */
     public ContentUriAsset(Context context, Uri uri) {
-        this(context, uri, RequestOptions.centerCropTransform());
+            this(context, uri, /* uncached */ false);
     }
+
+
 
     @Override
     public void decodeBitmapRegion(final Rect rect, int targetWidth, int targetHeight,
@@ -242,6 +276,10 @@ public final class ContentUriAsset extends StreamableAsset {
                     }
                 })
                 .into(imageView);
+    }
+
+    public Uri getUri() {
+        return mUri;
     }
 
     /**

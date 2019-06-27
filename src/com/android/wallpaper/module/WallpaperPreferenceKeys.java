@@ -33,6 +33,7 @@ public class WallpaperPreferenceKeys {
     public static final String KEY_HOME_WALLPAPER_MANAGER_ID = "home_wallpaper_id";
     public static final String KEY_HOME_WALLPAPER_PACKAGE_NAME = "home_wallpaper_package_name";
     public static final String KEY_HOME_WALLPAPER_REMOTE_ID = "home_wallpaper_remote_id";
+    public static final String KEY_HOME_WALLPAPER_BACKING_FILE = "home_wallpaper_backing_file";
 
     public static final String KEY_LOCK_WALLPAPER_ATTRIB_1 = "lock_wallpaper_attribution_line_1";
     public static final String KEY_LOCK_WALLPAPER_ATTRIB_2 = "lock_wallpaper_attribution_line_2";
@@ -43,6 +44,7 @@ public class WallpaperPreferenceKeys {
     public static final String KEY_LOCK_WALLPAPER_HASH_CODE = "lock_wallpaper_hash_code";
     public static final String KEY_LOCK_WALLPAPER_COLLECTION_ID = "lock_wallpaper_collection_id";
     public static final String KEY_LOCK_WALLPAPER_MANAGER_ID = "lock_wallpaper_id";
+    public static final String KEY_LOCK_WALLPAPER_BACKING_FILE = "lock_wallpaper_backing_file";
 
     public static final String KEY_DAILY_ROTATION_TIMESTAMPS = "daily_rotation_timestamps";
     public static final String KEY_DAILY_WALLPAPER_ENABLED_TIMESTAMP =

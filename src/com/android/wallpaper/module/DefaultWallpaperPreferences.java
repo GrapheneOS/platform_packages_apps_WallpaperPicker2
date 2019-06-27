@@ -19,6 +19,7 @@ import android.app.backup.BackupManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -26,6 +27,7 @@ import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -175,6 +177,19 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
+    @Nullable
+    public String getHomeWallpaperBackingFileName() {
+        return mSharedPrefs.getString(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_BACKING_FILE,
+                null);
+    }
+
+    @Override
+    public void setHomeWallpaperBackingFileName(String fileName) {
+        mSharedPrefs.edit().putString(
+                WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_BACKING_FILE, fileName).apply();
+    }
+
+    @Override
     public long getHomeWallpaperHashCode() {
         return mSharedPrefs.getLong(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_HASH_CODE, 0);
     }
@@ -187,6 +202,10 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
 
     @Override
     public void clearHomeWallpaperMetadata() {
+        String homeWallpaperBackingFileName = getHomeWallpaperBackingFileName();
+        if (!TextUtils.isEmpty(homeWallpaperBackingFileName)) {
+            new File(homeWallpaperBackingFileName).delete();
+        }
         mSharedPrefs.edit()
                 .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_1)
                 .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_2)
@@ -199,6 +218,7 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
                 .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_MANAGER_ID)
                 .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_PACKAGE_NAME)
                 .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_REMOTE_ID)
+                .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_BACKING_FILE)
                 .apply();
     }
 
@@ -309,6 +329,19 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
+    @Nullable
+    public String getLockWallpaperBackingFileName() {
+        return mSharedPrefs.getString(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_BACKING_FILE,
+                null);
+    }
+
+    @Override
+    public void setLockWallpaperBackingFileName(String fileName) {
+        mSharedPrefs.edit().putString(
+                WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_BACKING_FILE, fileName).apply();
+    }
+
+    @Override
     public int getLockWallpaperId() {
         return mSharedPrefs.getInt(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_MANAGER_ID, 0);
     }
@@ -333,6 +366,10 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
 
     @Override
     public void clearLockWallpaperMetadata() {
+        String lockWallpaperBackingFileName = getLockWallpaperBackingFileName();
+        if (!TextUtils.isEmpty(lockWallpaperBackingFileName)) {
+            new File(lockWallpaperBackingFileName).delete();
+        }
         mSharedPrefs.edit()
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_1)
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_2)
@@ -342,6 +379,7 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_ICON_RES)
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_HASH_CODE)
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_MANAGER_ID)
+                .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_BACKING_FILE)
                 .apply();
     }
 
