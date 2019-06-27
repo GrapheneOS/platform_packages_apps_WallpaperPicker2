@@ -23,9 +23,7 @@ import com.android.wallpaper.model.CurrentWallpaperInfoV16;
 import com.android.wallpaper.model.CurrentWallpaperInfoVN;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
-import com.android.wallpaper.model.WallpaperMetadata;
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
-import com.android.wallpaper.module.WallpaperRefresher.RefreshListener;
 
 import androidx.annotation.Nullable;
 
@@ -35,9 +33,10 @@ import androidx.annotation.Nullable;
  */
 public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoFactory {
 
-    private Context mAppContext;
-    private WallpaperRefresher mWallpaperRefresher;
-    private LiveWallpaperStatusChecker mLiveWallpaperStatusChecker;
+    private final Context mAppContext;
+    private final WallpaperRefresher mWallpaperRefresher;
+    private final LiveWallpaperStatusChecker mLiveWallpaperStatusChecker;
+    private final LiveWallpaperInfoFactory mLiveWallpaperInfoFactory;
 
     // Cached copies of the currently-set WallpaperInfo(s) and presentation mode.
     private WallpaperInfo mHomeWallpaper;
@@ -48,9 +47,11 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
 
     public DefaultCurrentWallpaperInfoFactory(Context context) {
         mAppContext = context.getApplicationContext();
-        mWallpaperRefresher = InjectorProvider.getInjector().getWallpaperRefresher(mAppContext);
+        Injector injector = InjectorProvider.getInjector();
+        mWallpaperRefresher = injector.getWallpaperRefresher(mAppContext);
         mLiveWallpaperStatusChecker =
-                InjectorProvider.getInjector().getLiveWallpaperStatusChecker(mAppContext);
+                injector.getLiveWallpaperStatusChecker(mAppContext);
+        mLiveWallpaperInfoFactory = injector.getLiveWallpaperInfoFactory(mAppContext);
     }
 
     @Override
@@ -69,54 +70,52 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
             mLockWallpaper = null;
         }
 
-        mWallpaperRefresher.refresh(new RefreshListener() {
-            @Override
-            public void onRefreshed(WallpaperMetadata homeWallpaperMetadata,
-                                    @Nullable WallpaperMetadata lockWallpaperMetadata,
-                                    @PresentationMode int presentationMode) {
+        mWallpaperRefresher.refresh(
+                (homeWallpaperMetadata, lockWallpaperMetadata, presentationMode) -> {
 
-                WallpaperInfo homeWallpaper;
+                    WallpaperInfo homeWallpaper;
 
-                if (homeWallpaperMetadata.getWallpaperComponent() == null
-                        || mLiveWallpaperStatusChecker.isNoBackupImageWallpaperSet()) { // Image wallpaper
-                    if (BuildCompat.isAtLeastN()) {
-                        homeWallpaper = new CurrentWallpaperInfoVN(
-                                homeWallpaperMetadata.getAttributions(),
-                                homeWallpaperMetadata.getActionUrl(),
-                                homeWallpaperMetadata.getActionLabelRes(),
-                                homeWallpaperMetadata.getActionIconRes(),
-                                homeWallpaperMetadata.getCollectionId(),
-                                WallpaperManagerCompat.FLAG_SYSTEM);
-                    } else {
-                        homeWallpaper = new CurrentWallpaperInfoV16(
-                                homeWallpaperMetadata.getAttributions(),
-                                homeWallpaperMetadata.getActionUrl(),
-                                homeWallpaperMetadata.getActionLabelRes(),
-                                homeWallpaperMetadata.getActionIconRes(),
-                                homeWallpaperMetadata.getCollectionId());
+                    if (homeWallpaperMetadata.getWallpaperComponent() == null
+                            || mLiveWallpaperStatusChecker.isNoBackupImageWallpaperSet()) {
+                        // Image wallpaper
+                        if (BuildCompat.isAtLeastN()) {
+                            homeWallpaper = new CurrentWallpaperInfoVN(
+                                    homeWallpaperMetadata.getAttributions(),
+                                    homeWallpaperMetadata.getActionUrl(),
+                                    homeWallpaperMetadata.getActionLabelRes(),
+                                    homeWallpaperMetadata.getActionIconRes(),
+                                    homeWallpaperMetadata.getCollectionId(),
+                                    WallpaperManagerCompat.FLAG_SYSTEM);
+                        } else {
+                            homeWallpaper = new CurrentWallpaperInfoV16(
+                                    homeWallpaperMetadata.getAttributions(),
+                                    homeWallpaperMetadata.getActionUrl(),
+                                    homeWallpaperMetadata.getActionLabelRes(),
+                                    homeWallpaperMetadata.getActionIconRes(),
+                                    homeWallpaperMetadata.getCollectionId());
+                        }
+                    } else { // Live wallpaper
+                        homeWallpaper = mLiveWallpaperInfoFactory.getLiveWallpaperInfo(
+                                homeWallpaperMetadata.getWallpaperComponent());
                     }
-                } else { // Live wallpaper
-                    homeWallpaper = new LiveWallpaperInfo(homeWallpaperMetadata.getWallpaperComponent());
-                }
 
-                WallpaperInfo lockWallpaper = null;
+                    WallpaperInfo lockWallpaper = null;
 
-                if (lockWallpaperMetadata != null) {
-                    lockWallpaper = new CurrentWallpaperInfoVN(
-                            lockWallpaperMetadata.getAttributions(),
-                            lockWallpaperMetadata.getActionUrl(),
-                            lockWallpaperMetadata.getActionLabelRes(),
-                            lockWallpaperMetadata.getActionIconRes(),
-                            lockWallpaperMetadata.getCollectionId(),
-                            WallpaperManagerCompat.FLAG_LOCK);
-                }
+                    if (lockWallpaperMetadata != null) {
+                        lockWallpaper = new CurrentWallpaperInfoVN(
+                                lockWallpaperMetadata.getAttributions(),
+                                lockWallpaperMetadata.getActionUrl(),
+                                lockWallpaperMetadata.getActionLabelRes(),
+                                lockWallpaperMetadata.getActionIconRes(),
+                                lockWallpaperMetadata.getCollectionId(),
+                                WallpaperManagerCompat.FLAG_LOCK);
+                    }
 
-                mHomeWallpaper = homeWallpaper;
-                mLockWallpaper = lockWallpaper;
-                mPresentationMode = presentationMode;
+                    mHomeWallpaper = homeWallpaper;
+                    mLockWallpaper = lockWallpaper;
+                    mPresentationMode = presentationMode;
 
-                callback.onWallpaperInfoCreated(homeWallpaper, lockWallpaper, presentationMode);
-            }
-        });
+                    callback.onWallpaperInfoCreated(homeWallpaper, lockWallpaper, presentationMode);
+                });
     }
 }

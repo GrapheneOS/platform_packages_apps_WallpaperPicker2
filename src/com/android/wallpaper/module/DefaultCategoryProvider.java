@@ -75,7 +75,7 @@ public class DefaultCategoryProvider implements CategoryProvider {
             mFetchedCategories = false;
         }
 
-        doFetch(receiver);
+        doFetch(receiver, forceRefresh);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class DefaultCategoryProvider implements CategoryProvider {
         return null;
     }
 
-    protected void doFetch(final CategoryReceiver receiver) {
+    protected void doFetch(final CategoryReceiver receiver, boolean forceRefresh) {
         CategoryReceiver delegatingReceiver = new CategoryReceiver() {
             @Override
             public void onCategoryReceived(Category category) {

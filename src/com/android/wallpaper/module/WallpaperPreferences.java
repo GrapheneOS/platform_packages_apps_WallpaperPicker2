@@ -18,10 +18,10 @@ package com.android.wallpaper.module;
 import android.annotation.TargetApi;
 import android.os.Build;
 
-import java.util.List;
-
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
+
+import java.util.List;
 
 /**
  * Interface for persisting and retrieving wallpaper specific preferences.
@@ -106,6 +106,16 @@ public interface WallpaperPreferences {
      * Sets the home wallpaper's collection ID.
      */
     void setHomeWallpaperCollectionId(String collectionId);
+
+    /**
+     * Returns the home wallpaper's backing file name if there's one or null.
+     */
+    String getHomeWallpaperBackingFileName();
+
+    /**
+     * Sets the home wallpaper's backing file name
+     */
+    void setHomeWallpaperBackingFileName(String fileName);
 
     /**
      * Removes all home metadata from SharedPreferences.
@@ -195,6 +205,16 @@ public interface WallpaperPreferences {
      * Sets the lock wallpaper's collection ID.
      */
     void setLockWallpaperCollectionId(String collectionId);
+
+    /**
+     * Returns the home wallpaper's backing file name if there's one or null.
+     */
+    String getLockWallpaperBackingFileName();
+
+    /**
+     * Sets the home wallpaper's backing file name
+     */
+    void setLockWallpaperBackingFileName(String fileName);
 
     /**
      * Returns the lock screen attributions as a list.
