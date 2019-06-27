@@ -23,7 +23,7 @@ import com.android.wallpaper.module.WallpaperPersister.WallpaperPosition;
 public class NoOpUserEventLogger implements UserEventLogger {
 
     @Override
-    public void logResumed() {
+    public void logResumed(boolean provisioned, boolean wallpaper) {
 
     }
 
