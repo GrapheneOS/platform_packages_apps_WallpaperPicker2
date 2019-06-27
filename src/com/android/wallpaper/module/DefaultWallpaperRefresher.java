@@ -116,6 +116,7 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                         mWallpaperPreferences.getHomeWallpaperActionLabelRes(),
                         mWallpaperPreferences.getHomeWallpaperActionIconRes(),
                         mWallpaperPreferences.getHomeWallpaperCollectionId(),
+                        mWallpaperPreferences.getHomeWallpaperBackingFileName(),
                         mWallpaperManager.getWallpaperInfo()));
                 return wallpaperMetadatas;
             }
@@ -131,6 +132,7 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                     mWallpaperPreferences.getHomeWallpaperActionLabelRes(),
                     mWallpaperPreferences.getHomeWallpaperActionIconRes(),
                     mWallpaperPreferences.getHomeWallpaperCollectionId(),
+                    mWallpaperPreferences.getHomeWallpaperBackingFileName(),
                     mWallpaperManager.getWallpaperInfo()));
 
             wallpaperMetadatas.add(new WallpaperMetadata(
@@ -139,6 +141,7 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                     mWallpaperPreferences.getLockWallpaperActionLabelRes(),
                     mWallpaperPreferences.getLockWallpaperActionIconRes(),
                     mWallpaperPreferences.getLockWallpaperCollectionId(),
+                    mWallpaperPreferences.getLockWallpaperBackingFileName(),
                     null /* wallpaperComponent */));
 
             return wallpaperMetadatas;
