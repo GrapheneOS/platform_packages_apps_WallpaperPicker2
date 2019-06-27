@@ -22,6 +22,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import androidx.exifinterface.media.ExifInterface;
+
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.ContentUriAsset;
@@ -32,8 +34,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import androidx.exifinterface.media.ExifInterface;
 
 /**
  * Represents a wallpaper image from the system's image picker.
@@ -61,9 +61,15 @@ public class ImageWallpaperInfo extends WallpaperInfo {
     };
     private Uri mUri;
     private ContentUriAsset mAsset;
+    private boolean mIsAssetUncached;
 
     public ImageWallpaperInfo(Uri uri) {
         mUri = uri;
+    }
+
+    public ImageWallpaperInfo(Uri uri, boolean uncachedAsset) {
+        mUri = uri;
+        mIsAssetUncached = uncachedAsset;
     }
 
     protected ImageWallpaperInfo(Parcel in) {
@@ -136,9 +142,17 @@ public class ImageWallpaperInfo extends WallpaperInfo {
 
     @Override
     public Asset getAsset(Context context) {
-        if (mAsset == null) {
-            mAsset = new ContentUriAsset(context, mUri);
+        if (mIsAssetUncached) {
+            mAsset = new ContentUriAsset(
+                    context,
+                    mUri,
+                    /* uncached */ true);
+        } else {
+            if (mAsset == null) {
+                mAsset = new ContentUriAsset(context, mUri);
+            }
         }
+
         return mAsset;
     }
 
