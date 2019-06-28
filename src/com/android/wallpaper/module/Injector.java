@@ -81,4 +81,6 @@ public interface Injector {
     PackageStatusNotifier getPackageStatusNotifier(Context context);
 
     IndividualPickerFragment getIndividualPickerFragment(String collectionId);
+
+    LiveWallpaperInfoFactory getLiveWallpaperInfoFactory(Context context);
 }

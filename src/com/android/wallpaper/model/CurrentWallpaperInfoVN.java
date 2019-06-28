@@ -21,6 +21,9 @@ import android.os.Parcel;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.BuiltInWallpaperAsset;
 import com.android.wallpaper.asset.CurrentWallpaperAssetVN;
@@ -34,9 +37,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.DrawableRes;
-import androidx.annotation.StringRes;
 
 /**
  * Represents the currently set wallpaper on N+ devices. Should not be used to set a new wallpaper.
@@ -132,6 +132,10 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
     @Override
     public int getActionLabelRes(Context unused) {
         return mActionLabelRes != 0 ? mActionLabelRes : WallpaperInfo.getDefaultActionLabel();
+    }
+
+    public int getWallpaperManagerFlag() {
+        return mWallpaperManagerFlag;
     }
 
     /**

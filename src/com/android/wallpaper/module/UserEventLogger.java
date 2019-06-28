@@ -44,7 +44,7 @@ public interface UserEventLogger {
     int DAILY_WALLPAPER_METADATA_FAILURE_SERVER_ERROR = 3;
     int DAILY_WALLPAPER_METADATA_FAILURE_TIMEOUT = 4;
 
-    void logResumed();
+    void logResumed(boolean provisioned, boolean wallpaper);
 
     void logStopped();
 
