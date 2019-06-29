@@ -53,6 +53,7 @@
         android:paddingVertical="@dimen/grid_item_category_label_padding"
         android:textColor="@color/category_title_text_color"
         android:textSize="@dimen/abc_text_size_subhead_material"
+        android:textAlignment="viewStart"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title"
         tools:text="Wallpaper category" />
 
