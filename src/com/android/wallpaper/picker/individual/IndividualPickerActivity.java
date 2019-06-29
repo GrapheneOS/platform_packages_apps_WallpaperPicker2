@@ -108,6 +108,7 @@ public class IndividualPickerActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         toolbar.getNavigationIcon().setTint(getColor(R.color.toolbar_icon_color));
+        toolbar.getNavigationIcon().setAutoMirrored(true);
 
         getWindow().getDecorView().setSystemUiVisibility(
                 getWindow().getDecorView().getSystemUiVisibility()
