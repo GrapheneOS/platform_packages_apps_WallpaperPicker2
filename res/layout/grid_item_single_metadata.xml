@@ -85,6 +85,7 @@
                     android:textSize="@dimen/abc_text_size_subhead_material"
                     android:textAppearance="@style/HeaderTextAppearance"
                     android:textStyle="bold"
+                    android:textAlignment="viewStart"
                     android:ellipsize="end"
                     android:text="@string/wallpaper_destination_both"/>
                 <TextView
@@ -94,6 +95,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/wallpaper_presentation_mode"
                     android:textColor="@color/currently_set_presentation_mode_text_color"
+                    android:textAlignment="viewStart"
                     android:textAppearance="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Subtitle"
                     android:textStyle="italic" />
                 <ImageButton
@@ -124,6 +126,7 @@
                     android:layout_marginTop="@dimen/single_metadata_pane_wallpaper_title_margin_top"
                     android:ellipsize="end"
                     android:maxLines="2"
+                    android:textAlignment="viewStart"
                     android:textAppearance="@android:style/TextAppearance.DeviceDefault.Widget.TextView" />
 
                 <TextView
@@ -135,6 +138,7 @@
                     android:layout_marginTop="@dimen/single_metadata_pane_wallpaper_subtitle_margin_top"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:textAlignment="viewStart"
                     android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
                     android:textColor="@color/currently_set_subtitle_text_color"
                     android:textSize="@dimen/single_metadata_pane_wallpaper_subtitle_text_size" />
@@ -149,6 +153,7 @@
                     android:layout_marginBottom="@dimen/single_metadata_pane_wallpaper_subtitle_margin_bottom"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:textAlignment="viewStart"
                     android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
                     android:textColor="@color/currently_set_subtitle_text_color"
                     android:textSize="@dimen/single_metadata_pane_wallpaper_subtitle_text_size" />
