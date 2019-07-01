@@ -28,6 +28,7 @@ import android.os.AsyncTask;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -185,7 +186,10 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     @Override
     protected void onResume() {
         super.onResume();
-        mUserEventLogger.logResumed();
+        boolean provisioned = Settings.Global.getInt(getContentResolver(),
+                Settings.Global.DEVICE_PROVISIONED, 0) != 0;
+
+        mUserEventLogger.logResumed(provisioned, true);
         // Show the staged 'load wallpaper' or 'set wallpaper' error dialog fragments if there is one
         // that was unable to be shown earlier when this fragment's hosting activity didn't allow
         // committing fragment transactions.

@@ -17,6 +17,7 @@ package com.android.wallpaper.asset;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Matrix;
@@ -26,10 +27,10 @@ import android.media.ExifInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import androidx.annotation.Nullable;
 
 /**
  * Represents Asset types for which bytes can be read directly, allowing for flexible bitmap
@@ -274,6 +275,7 @@ public abstract class StreamableAsset extends Asset {
             }
             options.inSampleSize = BitmapUtils.calculateInSampleSize(
                     rawDimensions.x, rawDimensions.y, mTargetWidth, mTargetHeight);
+            options.inPreferredConfig = Config.HARDWARE;
 
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
             closeInputStream(
