@@ -15,23 +15,16 @@
  */
 package com.android.wallpaper.module;
 
-import com.android.wallpaper.model.LiveWallpaperInfo;
-import com.android.wallpaper.model.WallpaperInfo;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 
 /**
- * Default implementation of {@link LiveWallpaperInfoFactory} that just creates
- * {@link LiveWallpaperInfo}.
+ * Interface for a class that can be used to arbitrarily select a Layer from a LayerDrawable
  */
-public class DefaultLiveWallpaperInfoFactory implements LiveWallpaperInfoFactory {
+public interface DrawableLayerResolver {
 
-    @Override
-    public WallpaperInfo getLiveWallpaperInfo(android.app.WallpaperInfo info) {
-        return new LiveWallpaperInfo(info);
-    }
-
-    @Override
-    public WallpaperInfo getLiveWallpaperInfo(android.app.WallpaperInfo info,
-            boolean shouldShowTitle) {
-        return new LiveWallpaperInfo(info, shouldShowTitle);
-    }
+    /**
+     * Picks a layer from a given {@link LayerDrawable}
+     */
+    Drawable resolveLayer(LayerDrawable layerDrawable);
 }

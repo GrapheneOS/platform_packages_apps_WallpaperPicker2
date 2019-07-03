@@ -17,6 +17,7 @@ package com.android.wallpaper.asset;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -35,9 +36,9 @@ import java.security.MessageDigest;
 /**
  * Asset wrapping a drawable for a live wallpaper thumbnail.
  */
-public final class LiveWallpaperThumbAsset extends Asset {
-    private final Context mContext;
-    private final android.app.WallpaperInfo mInfo;
+public class LiveWallpaperThumbAsset extends Asset {
+    protected final Context mContext;
+    protected final android.app.WallpaperInfo mInfo;
 
     public LiveWallpaperThumbAsset(Context context, android.app.WallpaperInfo info) {
         mContext = context.getApplicationContext();
@@ -48,7 +49,7 @@ public final class LiveWallpaperThumbAsset extends Asset {
     public void decodeBitmap(int targetWidth, int targetHeight,
                              BitmapReceiver receiver) {
         // No scaling is needed, as the thumbnail is already a thumbnail.
-        LoadThumbnailTask task = new LoadThumbnailTask(mInfo, receiver);
+        LoadThumbnailTask task = new LoadThumbnailTask(mContext, mInfo, receiver);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -91,7 +92,7 @@ public final class LiveWallpaperThumbAsset extends Asset {
      * Returns the thumbnail drawable for the live wallpaper synchronously. Should not be called on
      * the main UI thread.
      */
-    Drawable getThumbnailDrawable() {
+    protected Drawable getThumbnailDrawable() {
         return mInfo.loadThumbnail(mContext.getPackageManager());
     }
 
@@ -147,18 +148,21 @@ public final class LiveWallpaperThumbAsset extends Asset {
      * AsyncTask subclass which loads the live wallpaper's thumbnail bitmap off the main UI thread.
      * Resolves with null if live wallpaper thumbnail is not a bitmap.
      */
-    private class LoadThumbnailTask extends AsyncTask<Void, Void, Bitmap> {
+    private static class LoadThumbnailTask extends AsyncTask<Void, Void, Bitmap> {
+        private final PackageManager mPackageManager;
         private android.app.WallpaperInfo mInfo;
         private BitmapReceiver mReceiver;
 
-        public LoadThumbnailTask(android.app.WallpaperInfo info, BitmapReceiver receiver) {
+        public LoadThumbnailTask(Context context, android.app.WallpaperInfo info,
+                BitmapReceiver receiver) {
             mInfo = info;
             mReceiver = receiver;
+            mPackageManager = context.getPackageManager();
         }
 
         @Override
         protected Bitmap doInBackground(Void... unused) {
-            Drawable thumb = mInfo.loadThumbnail(mContext.getPackageManager());
+            Drawable thumb = mInfo.loadThumbnail(mPackageManager);
 
             // Live wallpaper components may or may not specify a thumbnail drawable.
             if (thumb != null && thumb instanceof BitmapDrawable) {
