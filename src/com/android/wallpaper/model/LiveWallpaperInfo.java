@@ -28,10 +28,14 @@ import android.os.Parcel;
 import android.service.wallpaper.WallpaperService;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.LiveWallpaperThumbAsset;
 import com.android.wallpaper.compat.BuildCompat;
+import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.module.LiveWallpaperInfoFactory;
 import com.android.wallpaper.util.ActivityUtils;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -44,8 +48,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-
-import androidx.annotation.Nullable;
 
 /**
  * Represents a live wallpaper from the system.
@@ -64,8 +66,8 @@ public class LiveWallpaperInfo extends WallpaperInfo {
                 }
             };
     private static final String TAG = "LiveWallpaperInfo";
-    private android.app.WallpaperInfo mInfo;
-    private LiveWallpaperThumbAsset mThumbAsset;
+    protected android.app.WallpaperInfo mInfo;
+    protected LiveWallpaperThumbAsset mThumbAsset;
     private boolean mVisibleTitle;
 
     /**
@@ -100,7 +102,8 @@ public class LiveWallpaperInfo extends WallpaperInfo {
                                              @Nullable List<String> excludedPackageNames) {
         List<ResolveInfo> resolveInfos = getAllOnDevice(context);
         List<WallpaperInfo> wallpaperInfos = new ArrayList<>();
-
+        LiveWallpaperInfoFactory factory =
+                InjectorProvider.getInjector().getLiveWallpaperInfoFactory(context);
         for (int i = 0; i < resolveInfos.size(); i++) {
             ResolveInfo resolveInfo = resolveInfos.get(i);
             android.app.WallpaperInfo wallpaperInfo;
@@ -119,7 +122,7 @@ public class LiveWallpaperInfo extends WallpaperInfo {
                 continue;
             }
 
-            wallpaperInfos.add(new LiveWallpaperInfo(wallpaperInfo));
+            wallpaperInfos.add(factory.getLiveWallpaperInfo(wallpaperInfo));
         }
 
         return wallpaperInfos;
@@ -139,6 +142,8 @@ public class LiveWallpaperInfo extends WallpaperInfo {
             resolveInfos = getAllOnDevice(context);
         }
         List<WallpaperInfo> wallpaperInfos = new ArrayList<>();
+        LiveWallpaperInfoFactory factory =
+                InjectorProvider.getInjector().getLiveWallpaperInfoFactory(context);
 
         for (int i = 0; i < resolveInfos.size(); i++) {
             ResolveInfo resolveInfo = resolveInfos.get(i);
@@ -162,7 +167,7 @@ public class LiveWallpaperInfo extends WallpaperInfo {
                 continue;
             }
 
-            wallpaperInfos.add(new LiveWallpaperInfo(wallpaperInfo, shouldShowTitle));
+            wallpaperInfos.add(factory.getLiveWallpaperInfo(wallpaperInfo, shouldShowTitle));
         }
 
         return wallpaperInfos;
