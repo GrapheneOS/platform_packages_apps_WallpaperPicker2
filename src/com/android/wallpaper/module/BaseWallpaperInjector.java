@@ -43,6 +43,7 @@ public abstract class BaseWallpaperInjector implements Injector {
     private FormFactorChecker mFormFactorChecker;
     private PackageStatusNotifier mPackageStatusNotifier;
     private LiveWallpaperInfoFactory mLiveWallpaperInfoFactory;
+    private DrawableLayerResolver mDrawableLayerResolver;
 
     @Override
     public synchronized BitmapCropper getBitmapCropper() {
@@ -186,5 +187,13 @@ public abstract class BaseWallpaperInjector implements Injector {
             mLiveWallpaperInfoFactory = new DefaultLiveWallpaperInfoFactory();
         }
         return mLiveWallpaperInfoFactory;
+    }
+
+    @Override
+    public DrawableLayerResolver getDrawableLayerResolver() {
+        if (mDrawableLayerResolver == null) {
+            mDrawableLayerResolver = new DefaultDrawableLayerResolver();
+        }
+        return mDrawableLayerResolver;
     }
 }

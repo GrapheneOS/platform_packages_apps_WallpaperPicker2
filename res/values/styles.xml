@@ -87,9 +87,7 @@
     </style>
 
     <!-- Individual components / Widgets -->
-    <style name="HeaderTextAppearance" parent="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title">
-        <item name="android:textFontWeight">400</item>
-    </style>
+    <style name="HeaderTextAppearance" parent="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title"/>
 
     <style name="ButtonStyle" parent="@android:style/Widget.DeviceDefault.Button.Colored">
         <item name="android:padding">16dp</item>
