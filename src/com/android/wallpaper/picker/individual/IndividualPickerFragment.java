@@ -645,7 +645,8 @@ public class IndividualPickerFragment extends Fragment
     }
 
     int getNumColumns() {
-        return TileSizeCalculator.getNumIndividualColumns(getActivity());
+        Activity activity = getActivity();
+        return activity == null ? 0 : TileSizeCalculator.getNumIndividualColumns(activity);
     }
 
     /**
