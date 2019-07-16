@@ -28,6 +28,8 @@ import com.android.wallpaper.module.FormFactorChecker;
 import com.android.wallpaper.module.FormFactorChecker.FormFactor;
 import com.android.wallpaper.module.InjectorProvider;
 
+import androidx.annotation.NonNull;
+
 /**
  * Simple utility class that calculates tile sizes relative to the size of the display.
  */
@@ -65,7 +67,7 @@ public class TileSizeCalculator {
      * Returns the number of columns for a grid of category tiles. Selects from fewer and more columns
      * based on the width of the activity.
      */
-    public static int getNumCategoryColumns(Activity activity) {
+    public static int getNumCategoryColumns(@NonNull Activity activity) {
         int windowWidthPx = getActivityWindowWidthPx(activity);
         return getNumCategoryColumns(activity, windowWidthPx);
     }
@@ -74,7 +76,7 @@ public class TileSizeCalculator {
      * Returns the number of columns for a grid of individual tiles. Selects from fewer and more
      * columns based on the width of the activity.
      */
-    public static int getNumIndividualColumns(Activity activity) {
+    public static int getNumIndividualColumns(@NonNull Activity activity) {
         int windowWidthPx = getActivityWindowWidthPx(activity);
         return getNumIndividualColumns(activity, windowWidthPx);
     }
@@ -109,7 +111,7 @@ public class TileSizeCalculator {
     /**
      * Returns the size of a category grid tile in px.
      */
-    public static Point getCategoryTileSize(Activity activity) {
+    public static Point getCategoryTileSize(@NonNull Activity activity) {
         Context appContext = activity.getApplicationContext();
         int windowWidthPx = getActivityWindowWidthPx(activity);
 
@@ -120,7 +122,7 @@ public class TileSizeCalculator {
     /**
      * Returns the size of an individual grid tile for the given activity in px.
      */
-    public static Point getIndividualTileSize(Activity activity) {
+    public static Point getIndividualTileSize(@NonNull Activity activity) {
         Context appContext = activity.getApplicationContext();
         int windowWidthPx = getActivityWindowWidthPx(activity);
 
@@ -133,7 +135,7 @@ public class TileSizeCalculator {
      * category or individual tile on any-sized activity on the device. This size matches the
      * individual tile size when an activity takes up the entire screen's width.
      */
-    public static Point getSuggestedThumbnailSize(Context appContext) {
+    public static Point getSuggestedThumbnailSize(@NonNull Context appContext) {
         // Category tiles are larger than individual tiles, so get the number of columns for categories
         // and then calculate a tile size for when the app window takes up the entire display.
         int windowWidthPx = getDeviceDisplayWidthPx(appContext);
