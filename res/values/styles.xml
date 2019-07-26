@@ -13,7 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" tools:targetApi="23">
+<resources>
 
     <!-- Main themes -->
     <style name="WallpaperTheme" parent="@android:style/Theme.DeviceDefault.Settings">
@@ -102,9 +102,7 @@
 
     <style name="ActionBarCheckboxStyle" parent="@android:style/Widget.DeviceDefault.CompoundButton.CheckBox"/>
 
-    <style name="PreviewCheckboxDeviceTheme" parent="@android:style/Theme.DeviceDefault">
-        <item name="android:colorControlActivated">@*android:color/accent_device_default_light</item>
-    </style>
+    <style name="PreviewCheckboxDeviceTheme" parent="@android:style/Theme.DeviceDefault"/>
 
     <style name="select_wallpaper_header">
         <item name="android:textColor">@color/translucent_black_60_alpha</item>
