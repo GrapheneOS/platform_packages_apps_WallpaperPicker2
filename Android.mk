@@ -34,6 +34,7 @@ LOCAL_MODULE := wallpaper2-glide-target
 LOCAL_SDK_VERSION := current
 LOCAL_SRC_FILES := ../../../prebuilts/maven_repo/bumptech/com/github/bumptech/glide/glide/SNAPSHOT/glide-SNAPSHOT$(COMMON_JAVA_PACKAGE_SUFFIX)
 LOCAL_UNINSTALLABLE_MODULE := true
+LOCAL_JETIFIER_ENABLED := true
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)
