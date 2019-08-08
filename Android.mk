@@ -16,18 +16,6 @@
 
 LOCAL_PATH := $(call my-dir)
 
-#
-# Prebuilt Java Libraries
-#
-include $(CLEAR_VARS)
-LOCAL_MODULE := libStyleProtos
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_CLASS := JAVA_LIBRARIES
-LOCAL_SRC_FILES := libs/style_protos.jar
-LOCAL_UNINSTALLABLE_MODULE := true
-LOCAL_SDK_VERSION := current
-include $(BUILD_PREBUILT)
-
 include $(CLEAR_VARS)
 LOCAL_MODULE_CLASS := JAVA_LIBRARIES
 LOCAL_MODULE := wallpaper2-glide-target
@@ -100,14 +88,7 @@ LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res
 LOCAL_PROGUARD_ENABLED := disabled
 LOCAL_MANIFEST_FILE := AndroidManifest.xml
 
-ifneq (,$(wildcard frameworks/base))
-  LOCAL_STATIC_JAVA_LIBRARIES += SystemUISharedLib styleprotosnano
-  LOCAL_PRIVATE_PLATFORM_APIS := true
-else
-  LOCAL_STATIC_JAVA_LIBRARIES += libSharedSystemUI libStyleProtos
-  LOCAL_SDK_VERSION := current
-endif
-
+LOCAL_SDK_VERSION := current
 LOCAL_MODULE := WallpaperPicker2CommonDepsLib
 LOCAL_PRIVILEGED_MODULE := true
 
@@ -132,11 +113,7 @@ LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 LOCAL_PROGUARD_ENABLED := disabled
 
-ifneq (,$(wildcard frameworks/base))
-  LOCAL_PRIVATE_PLATFORM_APIS := true
-else
-  LOCAL_SDK_VERSION := system_current
-endif
+LOCAL_SDK_VERSION := system_current
 LOCAL_PACKAGE_NAME := WallpaperPicker2
 LOCAL_JETIFIER_ENABLED := true
 
