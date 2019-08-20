@@ -305,7 +305,7 @@ public class IndividualPickerFragment extends Fragment
                     WallpaperService.SERVICE_INTERFACE);
         }
 
-        setUpImageGrid();
+        maybeSetUpImageGrid();
     }
 
     void fetchWallpapers(boolean forceReload) {
@@ -362,7 +362,7 @@ public class IndividualPickerFragment extends Fragment
         }
         GridMarginDecoration.applyTo(mImageGrid);
 
-        setUpImageGrid();
+        maybeSetUpImageGrid();
 
         setUpBottomSheet();
 
@@ -386,7 +386,7 @@ public class IndividualPickerFragment extends Fragment
                 gridPaddingPx, gridPaddingPx, 0, paddingBottomPx);
     }
 
-    void setUpImageGrid() {
+    private void maybeSetUpImageGrid() {
         // Skip if mImageGrid been initialized yet
         if (mImageGrid == null) {
             return;
@@ -399,6 +399,14 @@ public class IndividualPickerFragment extends Fragment
         if (mAdapter != null) {
             return;
         }
+        setUpImageGrid();
+    }
+
+    /**
+     * Create the adapter and assign it to mImageGrid.
+     * Both mImageGrid and mCategory are guaranteed to not be null when this method is called.
+     */
+    void setUpImageGrid() {
         mAdapter = new IndividualAdapter(mWallpapers);
         mImageGrid.setAdapter(mAdapter);
         mImageGrid.setLayoutManager(new GridLayoutManager(getActivity(), getNumColumns()));
