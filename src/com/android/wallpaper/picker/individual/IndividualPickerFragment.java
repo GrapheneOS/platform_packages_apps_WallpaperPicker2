@@ -48,6 +48,9 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.Asset.DrawableLoadedListener;
 import com.android.wallpaper.config.Flags;
+import com.android.wallpaper.model.Category;
+import com.android.wallpaper.model.CategoryProvider;
+import com.android.wallpaper.model.CategoryReceiver;
 import com.android.wallpaper.model.WallpaperCategory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.model.WallpaperReceiver;
@@ -257,27 +260,38 @@ public class IndividualPickerFragment extends Fragment
         mRandom = new Random();
         mHandler = new Handler();
 
-        String collectionId = getArguments().getString(ARG_CATEGORY_COLLECTION_ID);
-        mCategory = (WallpaperCategory) injector.getCategoryProvider(appContext).getCategory(
-                collectionId);
-        if (mCategory == null) {
-            DiskBasedLogger.e(TAG, "Failed to find the category.", appContext);
-
-            // The absence of this category in the CategoryProvider indicates a broken state, probably due
-            // to a relaunch into this activity/fragment following a crash immediately prior; see
-            // b//38030129. Hence, finish the activity and return.
-            getActivity().finish();
-            return;
-        }
-
-        mWallpaperRotationInitializer = mCategory.getWallpaperRotationInitializer();
-
         // Clear Glide's cache if night-mode changed to ensure thumbnails are reloaded
         if (savedInstanceState != null && (savedInstanceState.getInt(KEY_NIGHT_MODE)
                 != (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK))) {
             Glide.get(getContext()).clearMemory();
         }
 
+        CategoryProvider categoryProvider = injector.getCategoryProvider(appContext);
+        categoryProvider.fetchCategories(new CategoryReceiver() {
+            @Override
+            public void onCategoryReceived(Category category) {
+                // Do nothing.
+            }
+
+            @Override
+            public void doneFetchingCategories() {
+                mCategory = (WallpaperCategory) categoryProvider.getCategory(
+                        getArguments().getString(ARG_CATEGORY_COLLECTION_ID));
+                if (mCategory == null) {
+                    DiskBasedLogger.e(TAG, "Failed to find the category.", getContext());
+
+                    // The absence of this category in the CategoryProvider indicates a broken
+                    // state, see b/38030129. Hence, finish the activity and return.
+                    getActivity().finish();
+                    return;
+                }
+                onCategoryLoaded();
+            }
+        }, false);
+    }
+
+    protected void onCategoryLoaded() {
+        mWallpaperRotationInitializer = mCategory.getWallpaperRotationInitializer();
         fetchWallpapers(false);
 
         if (mCategory.supportsThirdParty()) {
@@ -290,6 +304,8 @@ public class IndividualPickerFragment extends Fragment
             mPackageStatusNotifier.addListener(mAppStatusListener,
                     WallpaperService.SERVICE_INTERFACE);
         }
+
+        maybeSetUpImageGrid();
     }
 
     void fetchWallpapers(boolean forceReload) {
@@ -346,7 +362,8 @@ public class IndividualPickerFragment extends Fragment
         }
         GridMarginDecoration.applyTo(mImageGrid);
 
-        setUpImageGrid();
+        maybeSetUpImageGrid();
+
         setUpBottomSheet();
 
         return view;
@@ -369,6 +386,26 @@ public class IndividualPickerFragment extends Fragment
                 gridPaddingPx, gridPaddingPx, 0, paddingBottomPx);
     }
 
+    private void maybeSetUpImageGrid() {
+        // Skip if mImageGrid been initialized yet
+        if (mImageGrid == null) {
+            return;
+        }
+        // Skip if category hasn't loaded yet
+        if (mCategory == null) {
+            return;
+        }
+        // Skip if the adapter was already created
+        if (mAdapter != null) {
+            return;
+        }
+        setUpImageGrid();
+    }
+
+    /**
+     * Create the adapter and assign it to mImageGrid.
+     * Both mImageGrid and mCategory are guaranteed to not be null when this method is called.
+     */
     void setUpImageGrid() {
         mAdapter = new IndividualAdapter(mWallpapers);
         mImageGrid.setAdapter(mAdapter);
