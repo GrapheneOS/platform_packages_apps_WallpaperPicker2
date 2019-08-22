@@ -22,9 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Insets;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.drawable.Drawable;
-import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -33,13 +30,14 @@ import android.view.WindowInsets;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.model.Category;
+import com.android.wallpaper.model.CategoryProvider;
+import com.android.wallpaper.model.CategoryReceiver;
 import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.PickerIntentFactory;
@@ -93,18 +91,29 @@ public class IndividualPickerActivity extends BaseActivity {
         mCategoryCollectionId = (savedInstanceState == null)
                 ? getIntent().getStringExtra(EXTRA_CATEGORY_COLLECTION_ID)
                 : savedInstanceState.getString(KEY_CATEGORY_COLLECTION_ID);
-        mCategory = injector.getCategoryProvider(this).getCategory(mCategoryCollectionId);
-        if (mCategory == null) {
-            DiskBasedLogger.e(TAG, "Failed to find the category: " + mCategoryCollectionId, this);
-            // We either were called with an invalid collection Id, or we're restarting with no
-            // saved state, or with a collection id that doesn't exist anymore.
-            // In those cases, we cannot continue, so let's just go back.
-            finish();
-            return;
-        }
+        CategoryProvider categoryProvider = injector.getCategoryProvider(this);
+        categoryProvider.fetchCategories(new CategoryReceiver() {
+            @Override
+            public void onCategoryReceived(Category category) {
+                // Do nothing.
+            }
 
-        setTitle(mCategory.getTitle());
-        getSupportActionBar().setTitle(mCategory.getTitle());
+            @Override
+            public void doneFetchingCategories() {
+                mCategory = categoryProvider.getCategory(mCategoryCollectionId);
+                if (mCategory == null) {
+                    DiskBasedLogger.e(TAG, "Failed to find the category: " + mCategoryCollectionId,
+                            IndividualPickerActivity.this);
+                    // We either were called with an invalid collection Id, or we're restarting with
+                    // no saved state, or with a collection id that doesn't exist anymore.
+                    // In those cases, we cannot continue, so let's just go back.
+                    finish();
+                    return;
+                }
+                onCategoryLoaded();
+            }
+        }, false);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         toolbar.getNavigationIcon().setTint(getColor(R.color.toolbar_icon_color));
@@ -140,6 +149,11 @@ public class IndividualPickerActivity extends BaseActivity {
                     .add(R.id.fragment_container, fragment)
                     .commit();
         }
+    }
+
+    private void onCategoryLoaded() {
+        setTitle(mCategory.getTitle());
+        getSupportActionBar().setTitle(mCategory.getTitle());
     }
 
     @Override

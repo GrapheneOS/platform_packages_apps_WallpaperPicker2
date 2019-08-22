@@ -220,6 +220,7 @@ public class CategoryFragment extends ToolbarFragment {
         }
         // Not add existing category to category list
         if (mCategories.indexOf(category) >= 0) {
+            updateCategory(category);
             return;
         }
 
