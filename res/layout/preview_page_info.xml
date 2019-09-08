@@ -49,7 +49,7 @@
         android:layout_marginTop="@dimen/preview_attribution_pane_author_top_margin"
         android:forceHasOverlappingRendering="false"
         android:gravity="center"
-        android:textAppearance="@*android:style/TextAppearance.DeviceDefault.Subhead"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Subtitle"
         android:textColor="@color/material_white_100"
         android:visibility="gone"/>
 
@@ -60,7 +60,8 @@
         android:minHeight="@dimen/preview_attribution_pane_description_height"
         android:forceHasOverlappingRendering="false"
         android:gravity="center_horizontal"
-        android:textAppearance="@*android:style/TextAppearance.DeviceDefault.Caption"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        android:textSize="12dp"
         android:textColor="@color/material_white_100"
         android:visibility="gone"/>
 

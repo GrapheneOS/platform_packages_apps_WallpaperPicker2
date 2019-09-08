@@ -114,7 +114,8 @@ public class IndividualPickerActivity extends BaseActivity {
                 getWindow().getDecorView().getSystemUiVisibility()
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        getWindow().getDecorView().setOnApplyWindowInsetsListener((view, windowInsets) -> {
+        ((View) findViewById(R.id.fragment_container).getParent())
+                .setOnApplyWindowInsetsListener((view, windowInsets) -> {
             view.setPadding(view.getPaddingLeft(), windowInsets.getSystemWindowInsetTop(),
                     view.getPaddingRight(), view.getBottom());
             // Consume only the top inset (status bar), to let other content in the Activity consume
