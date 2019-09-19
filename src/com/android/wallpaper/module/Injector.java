@@ -56,8 +56,6 @@ public interface Injector {
 
     Requester getRequester(Context context);
 
-    RotatingWallpaperComponentChecker getRotatingWallpaperComponentChecker();
-
     SystemFeatureChecker getSystemFeatureChecker();
 
     UserEventLogger getUserEventLogger(Context context);
