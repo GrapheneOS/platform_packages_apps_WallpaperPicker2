@@ -39,7 +39,6 @@ public abstract class BaseWallpaperInjector implements Injector {
     private AlarmManagerWrapper mAlarmManagerWrapper;
     private ExploreIntentChecker mExploreIntentChecker;
     private SystemFeatureChecker mSystemFeatureChecker;
-    private RotatingWallpaperComponentChecker mRotatingWallpaperComponentChecker;
     private FormFactorChecker mFormFactorChecker;
     private PackageStatusNotifier mPackageStatusNotifier;
     private LiveWallpaperInfoFactory mLiveWallpaperInfoFactory;
@@ -158,14 +157,6 @@ public abstract class BaseWallpaperInjector implements Injector {
             mSystemFeatureChecker = new DefaultSystemFeatureChecker();
         }
         return mSystemFeatureChecker;
-    }
-
-    @Override
-    public synchronized RotatingWallpaperComponentChecker getRotatingWallpaperComponentChecker() {
-        if (mRotatingWallpaperComponentChecker == null) {
-            mRotatingWallpaperComponentChecker = new DefaultRotatingWallpaperComponentChecker();
-        }
-        return mRotatingWallpaperComponentChecker;
     }
 
     @Override

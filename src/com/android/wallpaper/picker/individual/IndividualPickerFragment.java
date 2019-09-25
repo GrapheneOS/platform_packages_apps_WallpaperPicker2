@@ -64,7 +64,6 @@ import com.android.wallpaper.module.FormFactorChecker.FormFactor;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.PackageStatusNotifier;
-import com.android.wallpaper.module.RotatingWallpaperComponentChecker;
 import com.android.wallpaper.module.WallpaperChangedNotifier;
 import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
@@ -116,7 +115,6 @@ public class IndividualPickerFragment extends Fragment
 
     WallpaperPreferences mWallpaperPreferences;
     WallpaperChangedNotifier mWallpaperChangedNotifier;
-    RotatingWallpaperComponentChecker mRotatingWallpaperComponentChecker;
     RecyclerView mImageGrid;
     IndividualAdapter mAdapter;
     WallpaperCategory mCategory;
@@ -249,8 +247,6 @@ public class IndividualPickerFragment extends Fragment
 
         mWallpaperChangedNotifier = WallpaperChangedNotifier.getInstance();
         mWallpaperChangedNotifier.registerListener(mWallpaperChangedListener);
-
-        mRotatingWallpaperComponentChecker = injector.getRotatingWallpaperComponentChecker();
 
         mFormFactor = injector.getFormFactorChecker(appContext).getFormFactor();
 
@@ -614,34 +610,33 @@ public class IndividualPickerFragment extends Fragment
                         // app before the first wallpaper image in rotation finishes downloading.
                         Activity activity = getActivity();
 
-                        if (activity != null
-                                && mWallpaperRotationInitializer
-                                .isNoBackupImageWallpaperPreviewNeeded(appContext)) {
-                            ((IndividualPickerActivity) activity).showNoBackupImageWallpaperPreview();
-                        } else {
-                            if (mWallpaperRotationInitializer.startRotation(appContext)) {
-                                if (activity != null && mFormFactor == FormFactorChecker.FORM_FACTOR_MOBILE) {
-                                    try {
-                                        Toast.makeText(getActivity(), R.string.wallpaper_set_successfully_message,
-                                                Toast.LENGTH_SHORT).show();
-                                    } catch (NotFoundException e) {
-                                        Log.e(TAG, "Could not show toast " + e);
-                                    }
 
-                                    activity.setResult(Activity.RESULT_OK);
-                                    activity.finish();
-                                } else if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
-                                    mAdapter.updateSelectedTile(SPECIAL_FIXED_TILE_ADAPTER_POSITION);
+                        if (mWallpaperRotationInitializer.startRotation(appContext)) {
+                            if (activity != null
+                                    && mFormFactor == FormFactorChecker.FORM_FACTOR_MOBILE) {
+                                try {
+                                    Toast.makeText(getActivity(),
+                                            R.string.wallpaper_set_successfully_message,
+                                            Toast.LENGTH_SHORT).show();
+                                } catch (NotFoundException e) {
+                                    Log.e(TAG, "Could not show toast " + e);
                                 }
-                            } else { // Failed to start rotation.
-                                showStartRotationErrorDialog(networkPreference);
 
-                                if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
-                                    DesktopRotationHolder rotationViewHolder =
-                                            (DesktopRotationHolder) mImageGrid.findViewHolderForAdapterPosition(
-                                                    SPECIAL_FIXED_TILE_ADAPTER_POSITION);
-                                    rotationViewHolder.setSelectionState(SelectableHolder.SELECTION_STATE_DESELECTED);
-                                }
+                                activity.setResult(Activity.RESULT_OK);
+                                activity.finish();
+                            } else if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
+                                mAdapter.updateSelectedTile(SPECIAL_FIXED_TILE_ADAPTER_POSITION);
+                            }
+                        } else { // Failed to start rotation.
+                            showStartRotationErrorDialog(networkPreference);
+
+                            if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
+                                DesktopRotationHolder rotationViewHolder =
+                                        (DesktopRotationHolder)
+                                                mImageGrid.findViewHolderForAdapterPosition(
+                                                SPECIAL_FIXED_TILE_ADAPTER_POSITION);
+                                rotationViewHolder.setSelectionState(
+                                        SelectableHolder.SELECTION_STATE_DESELECTED);
                             }
                         }
                     }
@@ -690,11 +685,7 @@ public class IndividualPickerFragment extends Fragment
      * Returns whether rotation is enabled for this category.
      */
     boolean isRotationEnabled() {
-        boolean isRotationSupported =
-                mRotatingWallpaperComponentChecker.getRotatingWallpaperSupport(getContext())
-                        == RotatingWallpaperComponentChecker.ROTATING_WALLPAPER_SUPPORT_SUPPORTED;
-
-        return isRotationSupported && mWallpaperRotationInitializer != null;
+        return mWallpaperRotationInitializer != null;
     }
 
     @Override
@@ -765,10 +756,7 @@ public class IndividualPickerFragment extends Fragment
 
         @Override
         public void onClick(View v) {
-            boolean isLiveWallpaperNeeded = mWallpaperRotationInitializer
-                    .isNoBackupImageWallpaperPreviewNeeded(getActivity().getApplicationContext());
-            DialogFragment startRotationDialogFragment = StartRotationDialogFragment
-                    .newInstance(isLiveWallpaperNeeded);
+            DialogFragment startRotationDialogFragment = new StartRotationDialogFragment();
             startRotationDialogFragment.setTargetFragment(
                     IndividualPickerFragment.this, UNUSED_REQUEST_CODE);
             startRotationDialogFragment.show(getFragmentManager(), TAG_START_ROTATION_DIALOG);
