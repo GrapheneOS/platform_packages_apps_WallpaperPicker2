@@ -44,8 +44,6 @@ public interface Injector {
 
     FormFactorChecker getFormFactorChecker(Context context);
 
-    LiveWallpaperStatusChecker getLiveWallpaperStatusChecker(Context context);
-
     LoggingOptInStatusProvider getLoggingOptInStatusProvider(Context context);
 
     NetworkStatusNotifier getNetworkStatusNotifier(Context context);

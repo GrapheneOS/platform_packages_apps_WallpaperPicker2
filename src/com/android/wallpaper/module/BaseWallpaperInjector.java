@@ -34,7 +34,6 @@ public abstract class BaseWallpaperInjector implements Injector {
     private Requester mRequester;
     private WallpaperManagerCompat mWallpaperManagerCompat;
     private CurrentWallpaperInfoFactory mCurrentWallpaperFactory;
-    private LiveWallpaperStatusChecker mLiveWallpaperStatusChecker;
     private NetworkStatusNotifier mNetworkStatusNotifier;
     private AlarmManagerWrapper mAlarmManagerWrapper;
     private ExploreIntentChecker mExploreIntentChecker;
@@ -107,15 +106,6 @@ public abstract class BaseWallpaperInjector implements Injector {
                     new DefaultCurrentWallpaperInfoFactory(context.getApplicationContext());
         }
         return mCurrentWallpaperFactory;
-    }
-
-    @Override
-    public synchronized LiveWallpaperStatusChecker getLiveWallpaperStatusChecker(Context context) {
-        if (mLiveWallpaperStatusChecker == null) {
-            mLiveWallpaperStatusChecker =
-                    new DefaultLiveWallpaperStatusChecker(context.getApplicationContext());
-        }
-        return mLiveWallpaperStatusChecker;
     }
 
     @Override
