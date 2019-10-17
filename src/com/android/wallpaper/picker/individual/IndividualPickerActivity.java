@@ -152,8 +152,8 @@ public class IndividualPickerActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            // Handle Up as a Global back since the only entry point to IndividualPickerActivity is from
-            // TopLevelPickerActivity.
+            // Handle Up as a Global back since the only entry point to IndividualPickerActivity is
+            // from TopLevelPickerActivity.
             onBackPressed();
             return true;
         }

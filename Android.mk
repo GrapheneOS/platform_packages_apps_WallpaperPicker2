@@ -53,7 +53,7 @@ LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/../../../external/subsampling-scale-image-vi
 LOCAL_PROGUARD_ENABLED := disabled
 
 LOCAL_SDK_VERSION := current
-LOCAL_MIN_SDK_VERSION := 21
+LOCAL_MIN_SDK_VERSION := 26
 LOCAL_MODULE := wallpaper-subsampling-scale-image-view
 LOCAL_MANIFEST_FILE := ../../../external/subsampling-scale-image-view/library/src/main/AndroidManifest.xml
 
@@ -118,3 +118,5 @@ LOCAL_PACKAGE_NAME := WallpaperPicker2
 LOCAL_JETIFIER_ENABLED := true
 
 include $(BUILD_PACKAGE)
+
+include $(call all-makefiles-under,$(LOCAL_PATH))

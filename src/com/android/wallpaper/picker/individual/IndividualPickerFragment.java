@@ -58,7 +58,6 @@ import com.android.wallpaper.model.WallpaperRotationInitializer;
 import com.android.wallpaper.model.WallpaperRotationInitializer.Listener;
 import com.android.wallpaper.model.WallpaperRotationInitializer.NetworkPreference;
 import com.android.wallpaper.model.WallpaperRotationInitializer.RotationInitializationState;
-import com.android.wallpaper.model.WallpaperRotationInitializer.RotationStateListener;
 import com.android.wallpaper.module.FormFactorChecker;
 import com.android.wallpaper.module.FormFactorChecker.FormFactor;
 import com.android.wallpaper.module.Injector;
@@ -441,7 +440,8 @@ public class IndividualPickerFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        WallpaperPreferences preferences = InjectorProvider.getInjector().getPreferences(getActivity());
+        WallpaperPreferences preferences = InjectorProvider.getInjector()
+                .getPreferences(getActivity());
         preferences.setLastAppActiveTimestamp(new Date().getTime());
 
         // Reset Glide memory settings to a "normal" level of usage since it may have been lowered in
@@ -537,31 +537,23 @@ public class IndividualPickerFragment extends Fragment
      * state of the user's device and binds the state of the current category's rotation to the "start
      * rotation" tile.
      */
-    private void refreshRotationHolder(final RotationHolder rotationHolder) {
+    private void refreshRotationHolder(RotationHolder rotationHolder) {
         mWallpaperRotationInitializer.fetchRotationInitializationState(getContext(),
-                new RotationStateListener() {
-                    @Override
-                    public void onRotationStateReceived(
-                            @RotationInitializationState final int rotationInitializationState) {
+                rotationState -> {
+                    // Update the UI state of the "start rotation" tile displayed on screen.
+                    // Do this in a Handler so it is scheduled at the end of the message queue.
+                    // This is necessary to ensure we do not remove or add data from the adapter
+                    // while the layout is still being computed. RecyclerView documentation
+                    // therefore recommends performing such changes in a Handler.
+                    new Handler().post(() -> {
+                        // A config change may have destroyed the activity since the refresh
+                        // started, so check for that to avoid an NPE.
+                        if (getActivity() == null) {
+                            return;
+                        }
 
-                        // Update the UI state of the "start rotation" tile displayed on screen. Do this in a
-                        // Handler so it is scheduled at the end of the message queue. This is necessary to
-                        // ensure we do not remove or add data from the adapter while the layout is still being
-                        // computed. RecyclerView documentation therefore recommends performing such changes in
-                        // a Handler.
-                        new android.os.Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                // A config change may have destroyed the activity since the refresh started, so
-                                // check for that to avoid an NPE.
-                                if (getActivity() == null) {
-                                    return;
-                                }
-
-                                rotationHolder.bindRotationInitializationState(rotationInitializationState);
-                            }
-                        });
-                    }
+                        rotationHolder.bindRotationInitializationState(rotationState);
+                    });
                 });
     }
 
@@ -723,10 +715,10 @@ public class IndividualPickerFragment extends Fragment
             super(itemView);
             itemView.setOnClickListener(this);
 
-            mTileLayout = (FrameLayout) itemView.findViewById(R.id.daily_refresh);
-            mRotationMessage = (TextView) itemView.findViewById(R.id.rotation_tile_message);
-            mRotationTitle = (TextView) itemView.findViewById(R.id.rotation_tile_title);
-            mRefreshIcon = (ImageView) itemView.findViewById(R.id.rotation_tile_refresh_icon);
+            mTileLayout = itemView.findViewById(R.id.daily_refresh);
+            mRotationMessage = itemView.findViewById(R.id.rotation_tile_message);
+            mRotationTitle = itemView.findViewById(R.id.rotation_tile_title);
+            mRefreshIcon = itemView.findViewById(R.id.rotation_tile_refresh_icon);
             mTileLayout.getLayoutParams().height = mTileSizePx.y;
 
             // If the feature flag for "dynamic start rotation tile" is not enabled, fall back to the
@@ -740,7 +732,8 @@ public class IndividualPickerFragment extends Fragment
                 mRotationMessage.setTextColor(
                         getResources().getColor(R.color.rotation_tile_enabled_subtitle_text_color));
                 mRefreshIcon.setColorFilter(
-                        getResources().getColor(R.color.rotation_tile_enabled_refresh_icon_color), Mode.SRC_IN);
+                        getResources().getColor(R.color.rotation_tile_enabled_refresh_icon_color),
+                        Mode.SRC_IN);
                 return;
             }
 
