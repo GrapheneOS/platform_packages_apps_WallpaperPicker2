@@ -72,25 +72,22 @@ public class TestWallpaperPersister implements WallpaperPersister {
     public void setIndividualWallpaper(final WallpaperInfo wallpaperInfo, Asset asset,
             @Nullable final Rect cropRect, final float scale, final @Destination int destination,
             final WallpaperPersister.SetWallpaperCallback callback) {
-        asset.decodeBitmap(50, 50, new BitmapReceiver() {
-            @Override
-            public void onBitmapDecoded(@Nullable Bitmap bitmap) {
-                if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
-                    mPendingHomeWallpaper = bitmap;
-                    mPrefs.setHomeWallpaperAttributions(wallpaperInfo.getAttributions(mAppContext));
-                    mPrefs.setWallpaperPresentationMode(
-                            WallpaperPreferences.PRESENTATION_MODE_STATIC);
-                    mPrefs.setHomeWallpaperRemoteId(wallpaperInfo.getWallpaperId());
-                }
-                if (destination == DEST_LOCK_SCREEN || destination == DEST_BOTH) {
-                    mPendingLockWallpaper = bitmap;
-                    mPrefs.setLockWallpaperAttributions(wallpaperInfo.getAttributions(mAppContext));
-                }
-                mDestination = destination;
-                mCallback = callback;
-                mCropRect = cropRect;
-                mScale = scale;
+        asset.decodeBitmap(50, 50, bitmap -> {
+            if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
+                mPendingHomeWallpaper = bitmap;
+                mPrefs.setHomeWallpaperAttributions(wallpaperInfo.getAttributions(mAppContext));
+                mPrefs.setWallpaperPresentationMode(
+                        WallpaperPreferences.PRESENTATION_MODE_STATIC);
+                mPrefs.setHomeWallpaperRemoteId(wallpaperInfo.getWallpaperId());
             }
+            if (destination == DEST_LOCK_SCREEN || destination == DEST_BOTH) {
+                mPendingLockWallpaper = bitmap;
+                mPrefs.setLockWallpaperAttributions(wallpaperInfo.getAttributions(mAppContext));
+            }
+            mDestination = destination;
+            mCallback = callback;
+            mCropRect = cropRect;
+            mScale = scale;
         });
     }
 

@@ -50,7 +50,7 @@ import android.widget.FrameLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
-import androidx.test.filters.LargeTest;
+import androidx.test.filters.MediumTest;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -88,7 +88,7 @@ import java.util.List;
  * Tests for {@link IndividualPickerActivity}.
  */
 @RunWith(AndroidJUnit4ClassRunner.class)
-@LargeTest
+@MediumTest
 public class IndividualPickerActivityTest {
 
     private static final String EXTRA_WALLPAPER_INFO =
