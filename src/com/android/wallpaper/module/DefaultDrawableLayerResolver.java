@@ -15,23 +15,19 @@
  */
 package com.android.wallpaper.module;
 
-import com.android.wallpaper.model.LiveWallpaperInfo;
-import com.android.wallpaper.model.WallpaperInfo;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 
 /**
- * Default implementation of {@link LiveWallpaperInfoFactory} that just creates
- * {@link LiveWallpaperInfo}.
+ * Default implementation of {@link DrawableLayerResolver}
  */
-public class DefaultLiveWallpaperInfoFactory implements LiveWallpaperInfoFactory {
+public class DefaultDrawableLayerResolver implements DrawableLayerResolver {
 
+    /**
+     * Picks and returns the top most layer of the given {@link LayerDrawable}
+     */
     @Override
-    public WallpaperInfo getLiveWallpaperInfo(android.app.WallpaperInfo info) {
-        return new LiveWallpaperInfo(info);
-    }
-
-    @Override
-    public WallpaperInfo getLiveWallpaperInfo(android.app.WallpaperInfo info,
-            boolean shouldShowTitle) {
-        return new LiveWallpaperInfo(info, shouldShowTitle);
+    public Drawable resolveLayer(LayerDrawable layerDrawable) {
+        return layerDrawable.getDrawable(layerDrawable.getNumberOfLayers() - 1);
     }
 }
