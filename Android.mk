@@ -71,6 +71,7 @@ LOCAL_STATIC_ANDROID_LIBRARIES := \
     androidx.appcompat_appcompat \
     androidx.cardview_cardview \
     androidx.recyclerview_recyclerview \
+    androidx.slice_slice-view \
     androidx-constraintlayout_constraintlayout \
     com.google.android.material_material \
     androidx.exifinterface_exifinterface \
@@ -113,7 +114,15 @@ LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 LOCAL_PROGUARD_ENABLED := disabled
 
-LOCAL_SDK_VERSION := system_current
+LOCAL_PRIVILEGED_MODULE := true
+
+ifneq (,$(wildcard frameworks/base))
+  LOCAL_PRIVATE_PLATFORM_APIS := true
+else
+  LOCAL_SDK_VERSION := system_current
+  LOCAL_STATIC_JAVA_LIBRARIES += libSharedWallpaper
+endif
+
 LOCAL_PACKAGE_NAME := WallpaperPicker2
 LOCAL_JETIFIER_ENABLED := true
 

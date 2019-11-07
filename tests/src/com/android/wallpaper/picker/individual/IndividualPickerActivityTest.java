@@ -21,7 +21,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.intending;
-import static androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasShortClassName;
+import static androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
@@ -194,7 +194,7 @@ public class IndividualPickerActivityTest {
         onView(withId(R.id.wallpaper_grid)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, click()));
         intended(allOf(
-                hasComponent(hasShortClassName(".picker.PreviewActivity")),
+                hasComponent(hasClassName("com.android.wallpaper.picker.PreviewActivity")),
                 hasExtra(equalTo(EXTRA_WALLPAPER_INFO), equalTo(sWallpaperInfo1))));
 
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
