@@ -245,7 +245,7 @@ public class LiveWallpaperInfo extends WallpaperInfo {
         return wallpaperInfos;
     }
 
-    static boolean isSystemApp(ApplicationInfo appInfo) {
+    private static boolean isSystemApp(ApplicationInfo appInfo) {
         return (appInfo.flags & (ApplicationInfo.FLAG_SYSTEM
                 | ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)) != 0;
     }
@@ -333,9 +333,14 @@ public class LiveWallpaperInfo extends WallpaperInfo {
     @Override
     public void showPreview(Activity srcActivity, InlinePreviewIntentFactory factory,
                             int requestCode) {
-        Intent preview = new Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
-        preview.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, mInfo.getComponent());
-        ActivityUtils.startActivityForResultSafely(srcActivity, preview, requestCode);
+        //Only use internal live picker if available, otherwise, default to the Framework one
+        if (factory.shouldUseInternalLivePicker(srcActivity)) {
+            srcActivity.startActivityForResult(factory.newIntent(srcActivity, this), requestCode);
+        } else {
+            Intent preview = new Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
+            preview.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, mInfo.getComponent());
+            ActivityUtils.startActivityForResultSafely(srcActivity, preview, requestCode);
+        }
     }
 
     @Override
