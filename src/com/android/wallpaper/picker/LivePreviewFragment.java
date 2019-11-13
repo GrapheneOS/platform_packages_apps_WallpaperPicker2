@@ -82,7 +82,6 @@ public class LivePreviewFragment extends PreviewFragment {
 
     private static final String KEY_ACTION_DELETE_LIVE_WALLPAPER = "action_delete_live_wallpaper";
     private static final String EXTRA_LIVE_WALLPAPER_INFO = "android.live_wallpaper.info";
-    private static final int LOADING_TIME_MS = 200;
 
     /**
      * Instance of {@link WallpaperConnection} used to bind to the live wallpaper service to show
@@ -157,7 +156,7 @@ public class LivePreviewFragment extends PreviewFragment {
         Activity activity = requireActivity();
 
         mLoadingScrim = view.findViewById(R.id.loading);
-        setUpLoadingIndicator(LOADING_TIME_MS);
+        setUpLoadingIndicator();
 
         mWallpaperConnection = new WallpaperConnection(mWallpaperIntent, activity,
                 getWallpaperConnectionListener());
@@ -565,11 +564,8 @@ public class LivePreviewFragment extends PreviewFragment {
                         .setInterpolator(AnimationUtils.loadInterpolator(mActivity,
                                 android.R.interpolator.fast_out_linear_in))
                         .withEndAction(() -> {
-                            if (mLoadingIndicator != null) {
-                                mLoadingIndicator.setVisibility(View.GONE);
-                            }
-                            if (mProgressDrawable != null) {
-                                mProgressDrawable.stop();
+                            if (mLoadingProgressBar != null) {
+                                mLoadingProgressBar.hide();
                             }
                             mLoadingScrim.setVisibility(View.INVISIBLE);
                             populateInfoPage(mInfoPageController);
