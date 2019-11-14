@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources.NotFoundException;
+import android.content.res.TypedArray;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -38,7 +39,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.CallSuper;
@@ -60,7 +60,6 @@ import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.UserEventLogger;
-import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
@@ -72,8 +71,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Fragment which displays the UI for previewing an individual wallpaper and its attribution
- * information.
+ * Base Fragment to display the UI for previewing an individual wallpaper
  */
 public abstract class PreviewFragment extends Fragment implements
         SetWallpaperDialogFragment.Listener, SetWallpaperErrorDialogFragment.Listener,
@@ -123,9 +121,7 @@ public abstract class PreviewFragment extends Fragment implements
     protected WallpaperInfo mWallpaper;
     protected WallpaperSetter mWallpaperSetter;
     protected UserEventLogger mUserEventLogger;
-    protected LinearLayout mBottomSheet;
-    protected Button mExploreButton;
-    protected Button mSetWallpaperButton;
+    protected ViewGroup mBottomSheet;
 
     protected CheckBox mPreview;
 
@@ -141,6 +137,13 @@ public abstract class PreviewFragment extends Fragment implements
      */
     private SetWallpaperErrorDialogFragment mStagedSetWallpaperErrorDialogFragment;
     private LoadWallpaperErrorDialogFragment mStagedLoadWallpaperErrorDialogFragment;
+
+    protected static int getAttrColor(Context context, int attr) {
+        TypedArray ta = context.obtainStyledAttributes(new int[]{attr});
+        int colorAccent = ta.getColor(0, 0);
+        ta.recycle();
+        return colorAccent;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -214,8 +217,7 @@ public abstract class PreviewFragment extends Fragment implements
         /* bottom */ 0);
 
         mBottomSheet = view.findViewById(getBottomSheetResId());
-        mExploreButton = view.findViewById(getExploreButtonResId());
-        mSetWallpaperButton = view.findViewById(getSetWallpaperButtonResId());
+        setUpBottomSheetView(mBottomSheet);
 
         // Workaround as we don't have access to bottomDialogCornerRadius, mBottomSheet radii are
         // set to dialogCornerRadius by default.
@@ -228,23 +230,17 @@ public abstract class PreviewFragment extends Fragment implements
         bottomSheetBackground.setCornerRadii(radii);
         mBottomSheet.setBackground(bottomSheetBackground);
 
-        mBottomSheetInitialState = (savedInstanceState == null)
-                ? STATE_EXPANDED
-                : savedInstanceState.getInt(KEY_BOTTOM_SHEET_STATE,
-                        STATE_EXPANDED);
+        mBottomSheetInitialState = (savedInstanceState == null) ? STATE_EXPANDED
+                : savedInstanceState.getInt(KEY_BOTTOM_SHEET_STATE, STATE_EXPANDED);
         setUpBottomSheetListeners();
 
         return view;
     }
 
-    @IdRes
-    protected abstract int getSetWallpaperButtonResId();
+    protected abstract void setUpBottomSheetView(ViewGroup bottomSheet);
 
     @IdRes
     protected abstract int getBottomSheetResId();
-
-    @IdRes
-    protected abstract int getExploreButtonResId();
 
     protected int getDeviceDefaultTheme() {
         return android.R.style.Theme_DeviceDefault;
@@ -315,7 +311,7 @@ public abstract class PreviewFragment extends Fragment implements
         }
     }
 
-    private void setPreviewBehavior(final View v) {
+    private void setPreviewBehavior(View v) {
         CheckBox checkbox = (CheckBox) v;
         BottomSheetBehavior<?> behavior = BottomSheetBehavior.from(mBottomSheet);
 
@@ -326,26 +322,26 @@ public abstract class PreviewFragment extends Fragment implements
         }
     }
 
-    protected void setUpSetWallpaperButton() {
+    protected void setUpSetWallpaperButton(Button setWallpaperButton) {
         if (mPreviewMode == MODE_VIEW_ONLY) {
-            mSetWallpaperButton.setVisibility(View.GONE);
+            setWallpaperButton.setVisibility(View.GONE);
         } else {
-            mSetWallpaperButton.setVisibility(View.VISIBLE);
-            mSetWallpaperButton.setOnClickListener(this::onSetWallpaperClicked);
+            setWallpaperButton.setVisibility(View.VISIBLE);
+            setWallpaperButton.setOnClickListener(this::onSetWallpaperClicked);
         }
     }
 
-    protected void setUpExploreButton() {
-        mExploreButton.setVisibility(View.GONE);
+    protected void setUpExploreButton(Button exploreButton) {
+        exploreButton.setVisibility(View.GONE);
         if (mExploreIntent == null) {
             return;
         }
         Context context = requireContext();
-        mExploreButton.setVisibility(View.VISIBLE);
-        mExploreButton.setText(context.getString(
+        exploreButton.setVisibility(View.VISIBLE);
+        exploreButton.setText(context.getString(
                 mWallpaper.getActionLabelRes(context)));
 
-        mExploreButton.setOnClickListener(view -> {
+        exploreButton.setOnClickListener(view -> {
             mUserEventLogger.logActionClicked(mWallpaper.getCollectionId(context),
                     mWallpaper.getActionLabelRes(context));
 
@@ -414,12 +410,8 @@ public abstract class PreviewFragment extends Fragment implements
     }
 
     private void onSetWallpaperClicked(View button) {
-        if (BuildCompat.isAtLeastN()) {
-            mWallpaperSetter.requestDestination(getContext(), getFragmentManager(), this,
-                    mWallpaper instanceof LiveWallpaperInfo);
-        } else {
-            setCurrentWallpaper(WallpaperPersister.DEST_HOME_SCREEN);
-        }
+        mWallpaperSetter.requestDestination(getContext(), getFragmentManager(), this,
+                mWallpaper instanceof LiveWallpaperInfo);
     }
 
     private void setUpBottomSheetListeners() {
@@ -460,7 +452,7 @@ public abstract class PreviewFragment extends Fragment implements
     }
 
     protected void setBottomSheetContentAlpha(float alpha) {
-        mExploreButton.setAlpha(alpha);
+
     }
 
     /**

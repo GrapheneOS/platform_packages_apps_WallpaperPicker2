@@ -21,7 +21,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
@@ -34,6 +33,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -58,7 +58,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.util.List;
 
 /**
- * Fragment which displays the UI for previewing an individual wallpaper and its attribution
+ * Fragment which displays the UI for previewing an individual static wallpaper and its attribution
  * information.
  */
 public class ImagePreviewFragment extends PreviewFragment {
@@ -70,6 +70,9 @@ public class ImagePreviewFragment extends PreviewFragment {
     private TextView mAttributionTitle;
     private TextView mAttributionSubtitle1;
     private TextView mAttributionSubtitle2;
+    private Button mExploreButton;
+    private Button mSetWallpaperButton;
+
     private Point mDefaultCropSurfaceSize;
     private Point mScreenSize;
     private Point mRawWallpaperSize; // Native size of wallpaper image.
@@ -94,13 +97,6 @@ public class ImagePreviewFragment extends PreviewFragment {
         return fragment;
     }
 
-    private static int getAttrColor(Context context, int attr) {
-        TypedArray ta = context.obtainStyledAttributes(new int[]{attr});
-        int colorAccent = ta.getColor(0, 0);
-        ta.recycle();
-        return colorAccent;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,22 +105,12 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.fragment_preview;
+        return R.layout.fragment_image_preview;
     }
 
     @Override
     protected int getBottomSheetResId() {
         return R.id.bottom_sheet;
-    }
-
-    @Override
-    protected int getSetWallpaperButtonResId() {
-        return R.id.preview_attribution_pane_set_wallpaper_button;
-    }
-
-    @Override
-    protected int getExploreButtonResId() {
-        return R.id.preview_attribution_pane_explore_button;
     }
 
     @Override
@@ -141,6 +127,8 @@ public class ImagePreviewFragment extends PreviewFragment {
         mAttributionTitle = view.findViewById(R.id.preview_attribution_pane_title);
         mAttributionSubtitle1 = view.findViewById(R.id.preview_attribution_pane_subtitle1);
         mAttributionSubtitle2 = view.findViewById(R.id.preview_attribution_pane_subtitle2);
+        mExploreButton = view.findViewById(R.id.preview_attribution_pane_explore_button);
+        mSetWallpaperButton = view.findViewById(R.id.preview_attribution_pane_set_wallpaper_button);
 
         mLowResImageView = view.findViewById(R.id.low_res_image);
         mSpacer = view.findViewById(R.id.spacer);
@@ -183,7 +171,12 @@ public class ImagePreviewFragment extends PreviewFragment {
         return view;
     }
 
-    protected void setUpLoadingIndicator() {
+    @Override
+    protected void setUpBottomSheetView(ViewGroup bottomSheet) {
+        // Nothing needed here.
+    }
+
+    private void setUpLoadingIndicator() {
         Context context = requireContext();
         mProgressDrawable = new MaterialProgressDrawable(context.getApplicationContext(),
                 mLoadingIndicator);
@@ -209,20 +202,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                 }
             }
         }, 500);
-    }
-
-    protected int getDeviceDefaultTheme() {
-        return android.R.style.Theme_DeviceDefault;
-    }
-
-    @Override
-    public void onSet(int destination) {
-        setCurrentWallpaper(destination);
-    }
-
-    @Override
-    public void onClickTryAgain(@Destination int wallpaperDestination) {
-        setCurrentWallpaper(wallpaperDestination);
     }
 
     @Override
@@ -252,7 +231,7 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     @Override
     protected void setBottomSheetContentAlpha(float alpha) {
-        super.setBottomSheetContentAlpha(alpha);
+        mExploreButton.setAlpha(alpha);
         mAttributionTitle.setAlpha(alpha);
         mAttributionSubtitle1.setAlpha(alpha);
         mAttributionSubtitle2.setAlpha(alpha);
@@ -278,9 +257,9 @@ public class ImagePreviewFragment extends PreviewFragment {
             mAttributionSubtitle2.setText(attributions.get(2));
         }
 
-        setUpSetWallpaperButton();
+        setUpSetWallpaperButton(mSetWallpaperButton);
 
-        setUpExploreButton();
+        setUpExploreButton(mExploreButton);
 
         if (mExploreButton.getVisibility() == View.VISIBLE
                 && mSetWallpaperButton.getVisibility() == View.VISIBLE) {

@@ -262,17 +262,28 @@ public class LiveWallpaperInfo extends WallpaperInfo {
     @Override
     public List<String> getAttributions(Context context) {
         List<String> attributions = new ArrayList<>();
-        CharSequence labelCharSeq = mInfo.loadLabel(context.getPackageManager());
+        PackageManager packageManager = context.getPackageManager();
+        CharSequence labelCharSeq = mInfo.loadLabel(packageManager);
         attributions.add(labelCharSeq == null ? null : labelCharSeq.toString());
 
         try {
-            CharSequence authorCharSeq = mInfo.loadAuthor(context.getPackageManager());
+            CharSequence authorCharSeq = mInfo.loadAuthor(packageManager);
             if (authorCharSeq != null) {
                 String author = authorCharSeq.toString();
                 attributions.add(author);
             }
         } catch (Resources.NotFoundException e) {
             // No author specified, so no other attribution to add.
+        }
+
+        try {
+            CharSequence descCharSeq = mInfo.loadDescription(packageManager);
+            if (descCharSeq != null) {
+                String desc = descCharSeq.toString();
+                attributions.add(desc);
+            }
+        } catch (Resources.NotFoundException e) {
+            // No description specified, so no other attribution to add.
         }
 
         return attributions;
@@ -292,6 +303,18 @@ public class LiveWallpaperInfo extends WallpaperInfo {
         }
 
         return null;
+    }
+
+    /**
+     * Get an optional description for the action button if provided by this LiveWallpaper.
+     */
+    @Nullable
+    public CharSequence getActionDescription(Context context) {
+        try {
+            return mInfo.loadContextDescription(context.getPackageManager());
+        } catch (Resources.NotFoundException e) {
+            return null;
+        }
     }
 
     @Override
