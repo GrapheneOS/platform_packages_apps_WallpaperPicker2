@@ -42,7 +42,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
-import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.util.ScreenSizeCalculator;
@@ -80,22 +79,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     private MaterialProgressDrawable mProgressDrawable;
     private ImageView mLowResImageView;
     private View mSpacer;
-
-    /**
-     * Creates and returns new instance of {@link ImagePreviewFragment} with the provided wallpaper
-     * set as an argument.
-     */
-    public static ImagePreviewFragment newInstance(
-            WallpaperInfo wallpaperInfo, @PreviewMode int mode, boolean testingModeEnabled) {
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_WALLPAPER, wallpaperInfo);
-        args.putInt(ARG_PREVIEW_MODE, mode);
-        args.putBoolean(ARG_TESTING_MODE_ENABLED, testingModeEnabled);
-
-        ImagePreviewFragment fragment = new ImagePreviewFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -19,12 +19,16 @@ import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.WallpaperColors;
+import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -36,11 +40,15 @@ import android.service.wallpaper.IWallpaperConnection;
 import android.service.wallpaper.IWallpaperEngine;
 import android.service.wallpaper.IWallpaperService;
 import android.service.wallpaper.WallpaperService;
+import android.service.wallpaper.WallpaperSettingsActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
@@ -89,6 +97,8 @@ public class LivePreviewFragment extends PreviewFragment {
     private WallpaperConnection mWallpaperConnection;
 
     private Intent mWallpaperIntent;
+    private Intent mDeleteIntent;
+    private Intent mSettingsIntent;
 
     private List<Pair<String, View>> mPages;
     private ImageView mLoadingIndicator;
@@ -105,22 +115,6 @@ public class LivePreviewFragment extends PreviewFragment {
     private View mLoadingScrim;
     private MaterialProgressDrawable mProgressDrawable;
 
-    /**
-     * Creates and returns new instance of {@link LivePreviewFragment} with the provided wallpaper
-     * set as an argument.
-     */
-    public static LivePreviewFragment newInstance(
-            LiveWallpaperInfo wallpaperInfo, @PreviewMode int mode, boolean testingModeEnabled) {
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_WALLPAPER, wallpaperInfo);
-        args.putInt(ARG_PREVIEW_MODE, mode);
-        args.putBoolean(ARG_TESTING_MODE_ENABLED, testingModeEnabled);
-
-        LivePreviewFragment fragment = new LivePreviewFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +122,31 @@ public class LivePreviewFragment extends PreviewFragment {
         mWallpaperIntent = new Intent(WallpaperService.SERVICE_INTERFACE)
                 .setClassName(info.getPackageName(), info.getServiceName());
         setUpExploreIntent(null);
+
+        android.app.WallpaperInfo currentWallpaper =
+                WallpaperManager.getInstance(requireContext()).getWallpaperInfo();
+        String deleteAction = getDeleteAction(info.getServiceInfo(),
+                (currentWallpaper == null) ? null : currentWallpaper.getServiceInfo());
+
+        if (!TextUtils.isEmpty(deleteAction)) {
+            mDeleteIntent = new Intent(deleteAction);
+            mDeleteIntent.setPackage(info.getPackageName());
+            mDeleteIntent.putExtra(EXTRA_LIVE_WALLPAPER_INFO, info);
+        }
+
+        String settingsActivity = info.getSettingsActivity();
+        if (settingsActivity != null) {
+            mSettingsIntent = new Intent();
+            mSettingsIntent.setComponent(new ComponentName(info.getPackageName(),
+                    settingsActivity));
+            mSettingsIntent.putExtra(WallpaperSettingsActivity.EXTRA_PREVIEW_MODE, true);
+            PackageManager pm = requireContext().getPackageManager();
+            ActivityInfo activityInfo = mSettingsIntent.resolveActivityInfo(pm, 0);
+            if (activityInfo == null) {
+                Log.i(TAG, "Couldn't find wallpaper settings activity: " + settingsActivity);
+                mSettingsIntent = null;
+            }
+        }
     }
 
     @Override
@@ -306,14 +325,20 @@ public class LivePreviewFragment extends PreviewFragment {
             mAttributionTitle.setText(attributions.get(0));
         }
 
-        if (attributions.size() > 1 && attributions.get(1) != null) {
-            mAttributionSubtitle1.setVisibility(View.VISIBLE);
-            mAttributionSubtitle1.setText(attributions.get(1));
-        }
+        if (mWallpaper.getWallpaperComponent().getShowMetadataInPreview()) {
 
-        if (attributions.size() > 2 && attributions.get(2) != null) {
-            mAttributionSubtitle2.setVisibility(View.VISIBLE);
-            mAttributionSubtitle2.setText(attributions.get(2));
+            if (attributions.size() > 1 && attributions.get(1) != null) {
+                mAttributionSubtitle1.setVisibility(View.VISIBLE);
+                mAttributionSubtitle1.setText(attributions.get(1));
+            }
+
+            if (attributions.size() > 2 && attributions.get(2) != null) {
+                mAttributionSubtitle2.setVisibility(View.VISIBLE);
+                mAttributionSubtitle2.setText(attributions.get(2));
+            }
+
+        } else {
+            mExploreIntent = null;
         }
 
         setUpSetWallpaperButton(mSetWallpaperButton);
@@ -435,6 +460,46 @@ public class LivePreviewFragment extends PreviewFragment {
         super.onPause();
         if (mWallpaperConnection != null) {
             mWallpaperConnection.setVisibility(false);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.configure).setVisible(mSettingsIntent != null);
+        menu.findItem(R.id.delete_wallpaper).setVisible(mDeleteIntent != null);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.configure) {
+            if (getActivity() != null) {
+                startActivity(mSettingsIntent);
+                return true;
+            }
+        } else if (id == R.id.delete_wallpaper) {
+            showDeleteConfirmDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showDeleteConfirmDialog() {
+        final AlertDialog alertDialog = new AlertDialog.Builder(
+                new ContextThemeWrapper(getContext(), getDeviceDefaultTheme()))
+                .setMessage(R.string.delete_wallpaper_confirmation)
+                .setPositiveButton(R.string.delete_live_wallpaper,
+                        (dialog, which) -> deleteLiveWallpaper())
+                .setNegativeButton(android.R.string.cancel, null /* listener */)
+                .create();
+        alertDialog.show();
+    }
+
+    private void deleteLiveWallpaper() {
+        if (mDeleteIntent != null) {
+            requireContext().startService(mDeleteIntent);
+            finishActivityWithResultOk();
         }
     }
 

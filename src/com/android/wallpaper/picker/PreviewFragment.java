@@ -100,6 +100,26 @@ public abstract class PreviewFragment extends Fragment implements
     public static final String ARG_WALLPAPER = "wallpaper";
     public static final String ARG_PREVIEW_MODE = "preview_mode";
     public static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
+
+    /**
+     * Creates and returns new instance of {@link ImagePreviewFragment} with the provided wallpaper
+     * set as an argument.
+     */
+    public static PreviewFragment newInstance(
+            WallpaperInfo wallpaperInfo, @PreviewMode int mode, boolean testingModeEnabled) {
+
+        boolean isLive = wallpaperInfo instanceof LiveWallpaperInfo;
+
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_WALLPAPER, wallpaperInfo);
+        args.putInt(ARG_PREVIEW_MODE, mode);
+        args.putBoolean(ARG_TESTING_MODE_ENABLED, testingModeEnabled);
+
+        PreviewFragment fragment = isLive ? new LivePreviewFragment() : new ImagePreviewFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     private static final String TAG_LOAD_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "load_wallpaper_error_dialog";
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
@@ -354,11 +374,11 @@ public abstract class PreviewFragment extends Fragment implements
         if (context == null) {
             return;
         }
-        ExploreIntentChecker intentChecker =
-                InjectorProvider.getInjector().getExploreIntentChecker(context);
         String actionUrl = mWallpaper.getActionUrl(context);
         if (actionUrl != null && !actionUrl.isEmpty()) {
             Uri exploreUri = Uri.parse(mWallpaper.getActionUrl(context));
+            ExploreIntentChecker intentChecker =
+                    InjectorProvider.getInjector().getExploreIntentChecker(context);
 
             intentChecker.fetchValidActionViewIntent(exploreUri, exploreIntent -> {
                 if (getActivity() == null) {
