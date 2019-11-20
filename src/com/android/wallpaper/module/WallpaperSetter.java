@@ -72,8 +72,9 @@ public class WallpaperSetter {
      * @param callback optional callback to be notified when the wallpaper is set.
      */
     public void setCurrentWallpaper(Activity containerActivity, WallpaperInfo wallpaper,
-            Asset wallpaperAsset, @Destination final int destination, float wallpaperScale,
-            @Nullable Rect cropRect, @Nullable SetWallpaperCallback callback) {
+            @Nullable Asset wallpaperAsset, @Destination final int destination,
+            float wallpaperScale, @Nullable Rect cropRect,
+            @Nullable SetWallpaperCallback callback) {
         if (wallpaper instanceof LiveWallpaperInfo) {
             setCurrentLiveWallpaper(containerActivity, (LiveWallpaperInfo) wallpaper, destination,
                     callback);
