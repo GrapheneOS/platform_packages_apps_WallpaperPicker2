@@ -126,6 +126,7 @@
     <dimen name="preview_attribution_pane_description_height">34dp</dimen>
     <dimen name="preview_attribution_pane_button_bottom_margin">8dp</dimen>
 
+    <dimen name="preview_gradient_background_height">256dp</dimen>
 
     <!-- Dimensions for the "start rotation" dialog. -->
     <dimen name="start_rotation_dialog_subhead_margin_top">19dp</dimen>
