@@ -111,6 +111,15 @@
     </style>
 
     <!-- Preview attribution pane styles -->
+    <style name="WallpaperPicker.BottomPaneStyle" parent="@android:style/Theme.DeviceDefault.Settings">
+        <item name="android:textColorPrimary">@color/material_white_100</item>
+        <item name="android:textColorSecondary">@color/white_70_alpha</item>
+        <item name="tabTextAppearance">@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps</item>
+        <item name="tabIndicatorColor">?android:attr/textColorPrimary</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabMaxWidth">0dp</item>
+    </style>
+
     <style name="preview_attribution_pane_title">
         <item name="android:textColor">@color/material_white_text</item>
         <item name="android:textSize">@dimen/abc_text_size_subhead_material</item>
@@ -119,6 +128,11 @@
     <style name="preview_attribution_pane_subtitle">
         <item name="android:textColor">@color/material_white_text</item>
         <item name="android:textSize">@dimen/abc_text_size_body_2_material</item>
+    </style>
+
+    <style name="WallpaperPicker.Preview.TextAppearance.NoAllCaps"
+        parent="@android:style/TextAppearance.DeviceDefault.Widget.TabWidget">
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <!-- Set wallpaper destination item -->
