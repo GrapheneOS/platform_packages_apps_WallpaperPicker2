@@ -15,8 +15,6 @@
  */
 package com.android.wallpaper.picker;
 
-import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
@@ -28,14 +26,11 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
@@ -46,15 +41,12 @@ import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.WallpaperCropUtils;
-import com.android.wallpaper.widget.MaterialProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-
-import java.util.List;
 
 /**
  * Fragment which displays the UI for previewing an individual static wallpaper and its attribution
@@ -63,22 +55,16 @@ import java.util.List;
 public class ImagePreviewFragment extends PreviewFragment {
 
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
+    private static final int LOADING_TIME_MS = 500;
 
     private SubsamplingScaleImageView mFullResImageView;
     private Asset mWallpaperAsset;
-    private TextView mAttributionTitle;
-    private TextView mAttributionSubtitle1;
-    private TextView mAttributionSubtitle2;
-    private Button mExploreButton;
-    private Button mSetWallpaperButton;
-
     private Point mDefaultCropSurfaceSize;
     private Point mScreenSize;
     private Point mRawWallpaperSize; // Native size of wallpaper image.
-    private ImageView mLoadingIndicator;
-    private MaterialProgressDrawable mProgressDrawable;
     private ImageView mLowResImageView;
-    private View mSpacer;
+
+    private InfoPageController mInfoPageController;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,9 +77,14 @@ public class ImagePreviewFragment extends PreviewFragment {
         return R.layout.fragment_image_preview;
     }
 
-    @Override
+
     protected int getBottomSheetResId() {
         return R.id.bottom_sheet;
+    }
+
+    @Override
+    protected int getLoadingIndicatorResId() {
+        return R.id.loading_indicator;
     }
 
     @Override
@@ -102,19 +93,13 @@ public class ImagePreviewFragment extends PreviewFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         Activity activity = requireActivity();
-        // Set toolbar as the action bar.
 
         mFullResImageView = view.findViewById(R.id.full_res_image);
-        mLoadingIndicator = view.findViewById(R.id.loading_indicator);
 
-        mAttributionTitle = view.findViewById(R.id.preview_attribution_pane_title);
-        mAttributionSubtitle1 = view.findViewById(R.id.preview_attribution_pane_subtitle1);
-        mAttributionSubtitle2 = view.findViewById(R.id.preview_attribution_pane_subtitle2);
-        mExploreButton = view.findViewById(R.id.preview_attribution_pane_explore_button);
-        mSetWallpaperButton = view.findViewById(R.id.preview_attribution_pane_set_wallpaper_button);
+        mInfoPageController = new InfoPageController(view.findViewById(R.id.page_info),
+                mPreviewMode);
 
         mLowResImageView = view.findViewById(R.id.low_res_image);
-        mSpacer = view.findViewById(R.id.spacer);
 
         // Trim some memory from Glide to make room for the full-size image in this fragment.
         Glide.get(activity).setMemoryCategory(MemoryCategory.LOW);
@@ -148,8 +133,7 @@ public class ImagePreviewFragment extends PreviewFragment {
             setUpExploreIntent(ImagePreviewFragment.this::initFullResView);
         });
 
-        // Configure loading indicator with a MaterialProgressDrawable.
-        setUpLoadingIndicator();
+        setUpLoadingIndicator(LOADING_TIME_MS);
 
         return view;
     }
@@ -159,32 +143,9 @@ public class ImagePreviewFragment extends PreviewFragment {
         // Nothing needed here.
     }
 
-    private void setUpLoadingIndicator() {
-        Context context = requireContext();
-        mProgressDrawable = new MaterialProgressDrawable(context.getApplicationContext(),
-                mLoadingIndicator);
-        mProgressDrawable.setAlpha(255);
-        mProgressDrawable.setBackgroundColor(getResources().getColor(R.color.material_white_100,
-                context.getTheme()));
-        mProgressDrawable.setColorSchemeColors(getAttrColor(
-                new ContextThemeWrapper(context, getDeviceDefaultTheme()),
-                android.R.attr.colorAccent));
-        mProgressDrawable.updateSizes(MaterialProgressDrawable.LARGE);
-        mLoadingIndicator.setImageDrawable(mProgressDrawable);
-
-        // We don't want to show the spinner every time we load an image if it loads quickly;
-        // instead, only start showing the spinner if loading the image has taken longer than half
-        // of a second.
-        mLoadingIndicator.postDelayed(() -> {
-            if (mFullResImageView != null && !mFullResImageView.hasImage()
-                    && !mTestingModeEnabled) {
-                mLoadingIndicator.setVisibility(View.VISIBLE);
-                mLoadingIndicator.setAlpha(1f);
-                if (mProgressDrawable != null) {
-                    mProgressDrawable.start();
-                }
-            }
-        }, 500);
+    @Override
+    protected boolean isLoaded() {
+        return mFullResImageView != null && mFullResImageView.hasImage();
     }
 
     @Override
@@ -214,63 +175,12 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     @Override
     protected void setBottomSheetContentAlpha(float alpha) {
-        mExploreButton.setAlpha(alpha);
-        mAttributionTitle.setAlpha(alpha);
-        mAttributionSubtitle1.setAlpha(alpha);
-        mAttributionSubtitle2.setAlpha(alpha);
+        mInfoPageController.setContentAlpha(alpha);
     }
 
-    private void populateAttributionPane() {
-        final Context context = getContext();
-
-        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-
-        List<String> attributions = mWallpaper.getAttributions(context);
-        if (attributions.size() > 0 && attributions.get(0) != null) {
-            mAttributionTitle.setText(attributions.get(0));
-        }
-
-        if (attributions.size() > 1 && attributions.get(1) != null) {
-            mAttributionSubtitle1.setVisibility(View.VISIBLE);
-            mAttributionSubtitle1.setText(attributions.get(1));
-        }
-
-        if (attributions.size() > 2 && attributions.get(2) != null) {
-            mAttributionSubtitle2.setVisibility(View.VISIBLE);
-            mAttributionSubtitle2.setText(attributions.get(2));
-        }
-
-        setUpSetWallpaperButton(mSetWallpaperButton);
-
-        setUpExploreButton(mExploreButton);
-
-        if (mExploreButton.getVisibility() == View.VISIBLE
-                && mSetWallpaperButton.getVisibility() == View.VISIBLE) {
-            mSpacer.setVisibility(View.VISIBLE);
-        } else {
-            mSpacer.setVisibility(View.GONE);
-        }
-
-        mBottomSheet.setVisibility(View.VISIBLE);
-
-        // Initialize the state of the BottomSheet based on the current state because if the initial
-        // and current state are the same, the state change listener won't fire and set the correct
-        // arrow asset and text alpha.
-        if (bottomSheetBehavior.getState() == STATE_EXPANDED) {
-            setPreviewChecked(false);
-            mAttributionTitle.setAlpha(1f);
-            mAttributionSubtitle1.setAlpha(1f);
-            mAttributionSubtitle2.setAlpha(1f);
-        } else {
-            setPreviewChecked(true);
-            mAttributionTitle.setAlpha(0f);
-            mAttributionSubtitle1.setAlpha(0f);
-            mAttributionSubtitle2.setAlpha(0f);
-        }
-
-        // Let the state change listener take care of animating a state change to the initial state
-        // if there's a state change.
-        bottomSheetBehavior.setState(mBottomSheetInitialState);
+    @Override
+    protected CharSequence getExploreButtonLabel(Context context) {
+        return context.getString(mWallpaper.getActionLabelRes(context));
     }
 
     /**
@@ -320,7 +230,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                     }
                     getActivity().invalidateOptionsMenu();
 
-                    populateAttributionPane();
+                    populateInfoPage(mInfoPageController);
                 });
     }
 

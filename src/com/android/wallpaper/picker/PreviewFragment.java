@@ -21,7 +21,6 @@ import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources.NotFoundException;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff.Mode;
@@ -30,15 +29,19 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.CallSuper;
@@ -63,6 +66,7 @@ import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
+import com.android.wallpaper.widget.MaterialProgressDrawable;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetBehavior.State;
@@ -78,7 +82,8 @@ public abstract class PreviewFragment extends Fragment implements
         LoadWallpaperErrorDialogFragment.Listener {
 
     /**
-     * User can view wallpaper and attributions in full screen, but "Set wallpaper" button is hidden.
+     * User can view wallpaper and attributions in full screen, but "Set wallpaper" button is
+     * hidden.
      */
     static final int MODE_VIEW_ONLY = 0;
 
@@ -142,6 +147,8 @@ public abstract class PreviewFragment extends Fragment implements
     protected WallpaperSetter mWallpaperSetter;
     protected UserEventLogger mUserEventLogger;
     protected ViewGroup mBottomSheet;
+    protected ImageView mLoadingIndicator;
+    protected MaterialProgressDrawable mProgressDrawable;
 
     protected CheckBox mPreview;
 
@@ -192,14 +199,11 @@ public abstract class PreviewFragment extends Fragment implements
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
 
-        List<String> attributions = mWallpaper.getAttributions(activity);
+        List<String> attributions = getAttributions(activity);
         if (attributions.size() > 0 && attributions.get(0) != null) {
             activity.setTitle(attributions.get(0));
         }
     }
-
-    @LayoutRes
-    protected abstract int getLayoutResId();
 
     @Override
     @CallSuper
@@ -236,6 +240,8 @@ public abstract class PreviewFragment extends Fragment implements
                         R.dimen.preview_toolbar_set_wallpaper_button_end_padding),
         /* bottom */ 0);
 
+        mLoadingIndicator = view.findViewById(getLoadingIndicatorResId());
+
         mBottomSheet = view.findViewById(getBottomSheetResId());
         setUpBottomSheetView(mBottomSheet);
 
@@ -257,10 +263,57 @@ public abstract class PreviewFragment extends Fragment implements
         return view;
     }
 
+    protected void populateInfoPage(InfoPageController infoPage) {
+        Context context = requireContext();
+
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+
+        List<String> attributions = getAttributions(context);
+        boolean showMetadata = shouldShowMetadataInPreview();
+        CharSequence exploreLabel = getExploreButtonLabel(context);
+
+        infoPage.populate(attributions, showMetadata, this::onSetWallpaperClicked,
+                exploreLabel,
+                (showMetadata && mExploreIntent != null) ? this::onExploreClicked : null);
+
+        mBottomSheet.setVisibility(View.VISIBLE);
+
+        // Initialize the state of the BottomSheet based on the current state because if the initial
+        // and current state are the same, the state change listener won't fire and set the correct
+        // arrow asset and text alpha.
+        if (mBottomSheetInitialState == STATE_EXPANDED) {
+            setPreviewChecked(false);
+            infoPage.setContentAlpha(1f);
+        } else {
+            setPreviewChecked(true);
+            infoPage.setContentAlpha(0f);
+        }
+
+        bottomSheetBehavior.setState(mBottomSheetInitialState);
+    }
+
+    protected List<String> getAttributions(Context context) {
+        return mWallpaper.getAttributions(context);
+    }
+
+    protected boolean shouldShowMetadataInPreview() {
+        android.app.WallpaperInfo wallpaperComponent = mWallpaper.getWallpaperComponent();
+        return wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
+    }
+
+    @Nullable
+    protected abstract CharSequence getExploreButtonLabel(Context context);
+
+    @LayoutRes
+    protected abstract int getLayoutResId();
+
     protected abstract void setUpBottomSheetView(ViewGroup bottomSheet);
 
     @IdRes
     protected abstract int getBottomSheetResId();
+
+    @IdRes
+    protected abstract int getLoadingIndicatorResId();
 
     protected int getDeviceDefaultTheme() {
         return android.R.style.Theme_DeviceDefault;
@@ -342,33 +395,6 @@ public abstract class PreviewFragment extends Fragment implements
         }
     }
 
-    protected void setUpSetWallpaperButton(Button setWallpaperButton) {
-        if (mPreviewMode == MODE_VIEW_ONLY) {
-            setWallpaperButton.setVisibility(View.GONE);
-        } else {
-            setWallpaperButton.setVisibility(View.VISIBLE);
-            setWallpaperButton.setOnClickListener(this::onSetWallpaperClicked);
-        }
-    }
-
-    protected void setUpExploreButton(Button exploreButton) {
-        exploreButton.setVisibility(View.GONE);
-        if (mExploreIntent == null) {
-            return;
-        }
-        Context context = requireContext();
-        exploreButton.setVisibility(View.VISIBLE);
-        exploreButton.setText(context.getString(
-                mWallpaper.getActionLabelRes(context)));
-
-        exploreButton.setOnClickListener(view -> {
-            mUserEventLogger.logActionClicked(mWallpaper.getCollectionId(context),
-                    mWallpaper.getActionLabelRes(context));
-
-            startActivity(mExploreIntent);
-        });
-    }
-
     protected void setUpExploreIntent(@Nullable Runnable callback) {
         Context context = getContext();
         if (context == null) {
@@ -396,6 +422,40 @@ public abstract class PreviewFragment extends Fragment implements
             }
         }
     }
+
+    /**
+     * Configure loading indicator with a MaterialProgressDrawable.
+     * We don't want to show the spinner every time we load an image if it loads quickly;
+     * instead, only start showing the spinner if loading the image has taken longer than the
+     * provided delayMs
+     * @param delayMs ms to wait before actually showing the loading indicator
+     */
+    protected void setUpLoadingIndicator(int delayMs) {
+        Context context = requireContext();
+        mProgressDrawable = new MaterialProgressDrawable(context.getApplicationContext(),
+                mLoadingIndicator);
+        mProgressDrawable.setAlpha(255);
+        mProgressDrawable.setBackgroundColor(getResources().getColor(R.color.material_white_100,
+                context.getTheme()));
+        mProgressDrawable.setColorSchemeColors(getAttrColor(
+                new ContextThemeWrapper(context, getDeviceDefaultTheme()),
+                android.R.attr.colorAccent));
+        mProgressDrawable.updateSizes(MaterialProgressDrawable.LARGE);
+        mLoadingIndicator.setImageDrawable(mProgressDrawable);
+
+
+        mLoadingIndicator.postDelayed(() -> {
+            if (!isLoaded() && !mTestingModeEnabled) {
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+                mLoadingIndicator.setAlpha(1f);
+                if (mProgressDrawable != null) {
+                    mProgressDrawable.start();
+                }
+            }
+        }, delayMs);
+    }
+
+    protected abstract boolean isLoaded();
 
     @Override
     public void onSet(int destination) {
@@ -429,9 +489,20 @@ public abstract class PreviewFragment extends Fragment implements
         outState.putInt(KEY_BOTTOM_SHEET_STATE, bottomSheetBehavior.getState());
     }
 
-    private void onSetWallpaperClicked(View button) {
+    protected void onSetWallpaperClicked(View button) {
         mWallpaperSetter.requestDestination(getContext(), getFragmentManager(), this,
                 mWallpaper instanceof LiveWallpaperInfo);
+    }
+
+    private void onExploreClicked(View button) {
+        if (getContext() == null) {
+            return;
+        }
+        Context context = getContext();
+        mUserEventLogger.logActionClicked(mWallpaper.getCollectionId(context),
+                mWallpaper.getActionLabelRes(context));
+
+        startActivity(mExploreIntent);
     }
 
     private void setUpBottomSheetListeners() {
@@ -530,14 +601,6 @@ public abstract class PreviewFragment extends Fragment implements
         }
     }
 
-    @IntDef({
-            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT,
-            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE,
-            ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT,
-            ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE})
-    private @interface ActivityInfoScreenOrientation {
-    }
-
     /**
      * Returns whether layout direction is RTL (or false for LTR). Since native RTL layout support
      * was added in API 17, returns false for versions lower than 17.
@@ -545,5 +608,95 @@ public abstract class PreviewFragment extends Fragment implements
     protected boolean isRtl() {
         return getResources().getConfiguration().getLayoutDirection()
                     == View.LAYOUT_DIRECTION_RTL;
+    }
+
+    protected static class InfoPageController {
+
+        public static View createView(LayoutInflater inflater) {
+            return inflater.inflate(R.layout.preview_page_info, null /* root */);
+        }
+
+        private final int mPreviewMode;
+        private final View mInfoPage;
+        private final TextView mAttributionTitle;
+        private final TextView mAttributionSubtitle1;
+        private final TextView mAttributionSubtitle2;
+        private final Button mExploreButton;
+        private final Button mSetWallpaperButton;
+        private final View mSpacer;
+
+        public InfoPageController(View infoPage, int previewMode) {
+            mInfoPage = infoPage;
+            mPreviewMode = previewMode;
+
+            mAttributionTitle = mInfoPage.findViewById(R.id.preview_attribution_pane_title);
+            mAttributionSubtitle1 = mInfoPage.findViewById(R.id.preview_attribution_pane_subtitle1);
+            mAttributionSubtitle2 = mInfoPage.findViewById(R.id.preview_attribution_pane_subtitle2);
+            mSpacer = mInfoPage.findViewById(R.id.spacer);
+
+            mExploreButton = mInfoPage.findViewById(R.id.preview_attribution_pane_explore_button);
+            mSetWallpaperButton = mInfoPage.findViewById(
+                    R.id.preview_attribution_pane_set_wallpaper_button);
+        }
+
+        public void populate(List<String> attributions, boolean showMetadata,
+                OnClickListener setWallpaperOnClickListener,
+                CharSequence exploreButtonLabel,
+                @Nullable OnClickListener exploreOnClickListener) {
+            if (attributions.size() > 0 && attributions.get(0) != null) {
+                mAttributionTitle.setText(attributions.get(0));
+            }
+
+            if (showMetadata) {
+                if (attributions.size() > 1 && attributions.get(1) != null) {
+                    mAttributionSubtitle1.setVisibility(View.VISIBLE);
+                    mAttributionSubtitle1.setText(attributions.get(1));
+                }
+
+                if (attributions.size() > 2 && attributions.get(2) != null) {
+                    mAttributionSubtitle2.setVisibility(View.VISIBLE);
+                    mAttributionSubtitle2.setText(attributions.get(2));
+                }
+            }
+            setUpSetWallpaperButton(setWallpaperOnClickListener);
+
+            setUpExploreButton(exploreButtonLabel, exploreOnClickListener);
+
+            if (mExploreButton.getVisibility() == View.VISIBLE
+                    && mSetWallpaperButton.getVisibility() == View.VISIBLE) {
+                mSpacer.setVisibility(View.VISIBLE);
+            } else {
+                mSpacer.setVisibility(View.GONE);
+            }
+        }
+
+        public void setContentAlpha(float alpha) {
+            mSetWallpaperButton.setAlpha(alpha);
+            mExploreButton.setAlpha(alpha);
+            mAttributionTitle.setAlpha(alpha);
+            mAttributionSubtitle1.setAlpha(alpha);
+            mAttributionSubtitle2.setAlpha(alpha);
+        }
+
+        private void setUpSetWallpaperButton(OnClickListener setWallpaperOnClickListener) {
+            if (mPreviewMode == MODE_VIEW_ONLY) {
+                mSetWallpaperButton.setVisibility(View.GONE);
+            } else {
+                mSetWallpaperButton.setVisibility(View.VISIBLE);
+                mSetWallpaperButton.setOnClickListener(setWallpaperOnClickListener);
+            }
+        }
+
+        private void setUpExploreButton(CharSequence label,
+                @Nullable OnClickListener exploreOnClickListener) {
+            mExploreButton.setVisibility(View.GONE);
+            if (exploreOnClickListener == null) {
+                return;
+            }
+            mExploreButton.setVisibility(View.VISIBLE);
+            mExploreButton.setText(label);
+
+            mExploreButton.setOnClickListener(exploreOnClickListener);
+        }
     }
 }
