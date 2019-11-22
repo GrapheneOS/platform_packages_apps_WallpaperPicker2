@@ -17,6 +17,7 @@ package com.android.wallpaper.util;
 
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.view.Display;
@@ -46,12 +47,14 @@ public final class WallpaperCropUtils {
         // At an aspect ratio of 16/10, the wallpaper parallax effect should span 1.2 * screen width
         // At an aspect ratio of 10/16, the wallpaper parallax effect should span 1.5 * screen width
         // We will use these two data points to extrapolate how much the wallpaper parallax effect
-        // to span (i.e., travel) at any aspect ratio. We use the following two linear formulas, where
+        // to span (i.e., travel) at any aspect ratio. We use the following two linear formulas,
+        // where
         // the coefficient on x is the aspect ratio (width/height):
         //   (16/10)x + y = 1.2
         //   (10/16)x + y = 1.5
         // We solve for x and y and end up with a final formula:
-        float x = (WALLPAPER_WIDTH_TO_SCREEN_RATIO_LANDSCAPE - WALLPAPER_WIDTH_TO_SCREEN_RATIO_PORTRAIT)
+        float x = (WALLPAPER_WIDTH_TO_SCREEN_RATIO_LANDSCAPE
+                - WALLPAPER_WIDTH_TO_SCREEN_RATIO_PORTRAIT)
                 / (ASPECT_RATIO_LANDSCAPE - ASPECT_RATIO_PORTRAIT);
         float y = WALLPAPER_WIDTH_TO_SCREEN_RATIO_PORTRAIT - x * ASPECT_RATIO_PORTRAIT;
         return x * aspectRatio + y;
@@ -94,17 +97,18 @@ public final class WallpaperCropUtils {
      *
      * @param outer      Size of outer rectangle as a Point (x,y).
      * @param inner      Size of inner rectangle as a Point (x,y).
-     * @param alignStart Whether the inner rectangle should be aligned to the start of the layout with
-     *                   the outer one and ignore horizontal centering.
+     * @param alignStart Whether the inner rectangle should be aligned to the start of the layout
+     *                   with the outer one and ignore horizontal centering.
      * @param isRtl      Whether the layout direction is RTL (or false for LTR).
-     * @return Position relative to the top left corner of the outer rectangle, where the size of each
-     * rectangle is represented by Points, in coordinates (x,y) relative to the outer rectangle
+     * @return Position relative to the top left corner of the outer rectangle, where the size of
+     * each rectangle is represented by Points, in coordinates (x,y) relative to the outer rectangle
      * where the top left corner is (0,0)
      * @throws IllegalArgumentException if inner rectangle is not contained within outer rectangle
-     *                                  which would return a position with at least one negative coordinate.
+     *                                  which would return a position with at least one negative
+     *                                  coordinate.
      */
     public static Point calculateCenterPosition(Point outer, Point inner, boolean alignStart,
-                                                boolean isRtl) {
+            boolean isRtl) {
         if (inner.x > outer.x || inner.y > outer.y) {
             throw new IllegalArgumentException("Inner rectangle " + inner + " should be contained"
                     + " completely within the outer rectangle " + outer + ".");
@@ -137,5 +141,29 @@ public final class WallpaperCropUtils {
             minZoom = inner.y / (float) outer.y;
         }
         return minZoom;
+    }
+
+    /**
+     * Resize the wallpaper size so it's new size fits in a outWidth by outHeight rectangle.
+     *
+     * @param wallpaperSize Rectangle with the current wallpaper size. It will be resized.
+     * @param outWidth      the width of the rectangle in which the wallpaperSize needs to fit.
+     * @param outHeight     the height of the rectangle in which the wallpaperSize needs to fit.
+     */
+    public static void fitToSize(Rect wallpaperSize, int outWidth, int outHeight) {
+        if (wallpaperSize.isEmpty()) {
+            return;
+        }
+        float maxSizeOut = Math.max(outWidth, outHeight);
+        float maxSizeIn = Math.max(wallpaperSize.width(), wallpaperSize.height());
+        float scale = maxSizeOut / maxSizeIn;
+
+        // Scale the wallpaper size
+        if (scale != 1.0f) {
+            wallpaperSize.left = (int) (wallpaperSize.left * scale + 0.5f);
+            wallpaperSize.top = (int) (wallpaperSize.top * scale + 0.5f);
+            wallpaperSize.right = (int) (wallpaperSize.right * scale + 0.5f);
+            wallpaperSize.bottom = (int) (wallpaperSize.bottom * scale + 0.5f);
+        }
     }
 }
