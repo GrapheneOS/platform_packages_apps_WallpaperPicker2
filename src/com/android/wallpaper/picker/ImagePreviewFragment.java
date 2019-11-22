@@ -55,7 +55,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 public class ImagePreviewFragment extends PreviewFragment {
 
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
-    private static final int LOADING_TIME_MS = 500;
 
     private SubsamplingScaleImageView mFullResImageView;
     private Asset mWallpaperAsset;
@@ -133,7 +132,7 @@ public class ImagePreviewFragment extends PreviewFragment {
             setUpExploreIntent(ImagePreviewFragment.this::initFullResView);
         });
 
-        setUpLoadingIndicator(LOADING_TIME_MS);
+        setUpLoadingIndicator();
 
         return view;
     }
@@ -159,8 +158,8 @@ public class ImagePreviewFragment extends PreviewFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mProgressDrawable != null) {
-            mProgressDrawable.stop();
+        if (mLoadingProgressBar != null) {
+            mLoadingProgressBar.hide();
         }
         mFullResImageView.recycle();
     }
@@ -209,8 +208,8 @@ public class ImagePreviewFragment extends PreviewFragment {
 
                     // Some of these may be null depending on if the Fragment is paused, stopped,
                     // or destroyed.
-                    if (mLoadingIndicator != null) {
-                        mLoadingIndicator.setVisibility(View.GONE);
+                    if (mLoadingProgressBar != null) {
+                        mLoadingProgressBar.hide();
                     }
                     // The page bitmap may be null if there was a decoding error, so show an
                     // error dialog.
@@ -224,9 +223,6 @@ public class ImagePreviewFragment extends PreviewFragment {
 
                         setDefaultWallpaperZoomAndScroll();
                         crossFadeInMosaicView();
-                    }
-                    if (mProgressDrawable != null) {
-                        mProgressDrawable.stop();
                     }
                     getActivity().invalidateOptionsMenu();
 
@@ -257,14 +253,14 @@ public class ImagePreviewFragment extends PreviewFragment {
                     }
                 });
 
-        mLoadingIndicator.animate()
+        mLoadingProgressBar.animate()
                 .alpha(0f)
                 .setDuration(shortAnimationDuration)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        if (mLoadingIndicator != null) {
-                            mLoadingIndicator.setVisibility(View.GONE);
+                        if (mLoadingProgressBar != null) {
+                            mLoadingProgressBar.hide();
                         }
                     }
                 });

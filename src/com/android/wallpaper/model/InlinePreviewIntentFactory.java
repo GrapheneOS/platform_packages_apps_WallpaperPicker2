@@ -30,7 +30,7 @@ public interface InlinePreviewIntentFactory {
      */
     default boolean shouldUseInternalLivePicker(Context context) {
         return false; // Disable always for now
-        //     ContextCompat.checkSelfPermission(context, BIND_WALLPAPER) == PERMISSION_GRANTED;
+            //ContextCompat.checkSelfPermission(context, BIND_WALLPAPER) == PERMISSION_GRANTED;
     }
 
     /**

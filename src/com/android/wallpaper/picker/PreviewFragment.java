@@ -21,10 +21,10 @@ import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.content.res.Resources.NotFoundException;
 import android.content.res.TypedArray;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.drawable.Drawable;
+import android.graphics.Insets;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,10 +37,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
+import android.view.WindowInsets;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,11 +51,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
-import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.ExploreIntentChecker;
@@ -66,7 +65,6 @@ import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
-import com.android.wallpaper.widget.MaterialProgressDrawable;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetBehavior.State;
@@ -147,8 +145,7 @@ public abstract class PreviewFragment extends Fragment implements
     protected WallpaperSetter mWallpaperSetter;
     protected UserEventLogger mUserEventLogger;
     protected ViewGroup mBottomSheet;
-    protected ImageView mLoadingIndicator;
-    protected MaterialProgressDrawable mProgressDrawable;
+    protected ContentLoadingProgressBar mLoadingProgressBar;
 
     protected CheckBox mPreview;
 
@@ -191,14 +188,6 @@ public abstract class PreviewFragment extends Fragment implements
 
         setHasOptionsMenu(true);
 
-        // Allow the layout to draw fullscreen even behind the status bar, so we can set as the status
-        // bar color a color that has a custom translucency in the theme.
-        Window window = activity.getWindow();
-        window.getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-
         List<String> attributions = getAttributions(activity);
         if (attributions.size() > 0 && attributions.get(0) != null) {
             activity.setTitle(attributions.get(0));
@@ -218,19 +207,8 @@ public abstract class PreviewFragment extends Fragment implements
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        // Use updated fancy arrow icon for O+.
-        if (BuildCompat.isAtLeastO()) {
-            Drawable navigationIcon = getResources().getDrawable(
-                    R.drawable.material_ic_arrow_back_black_24);
-
-            // This Drawable's state is shared across the app, so make a copy of it before applying a
-            // color tint as not to affect other clients elsewhere in the app.
-            navigationIcon = navigationIcon.getConstantState().newDrawable().mutate();
-            navigationIcon.setColorFilter(
-                    getResources().getColor(R.color.material_white_100), Mode.SRC_IN);
-            navigationIcon.setAutoMirrored(true);
-            toolbar.setNavigationIcon(navigationIcon);
-        }
+        toolbar.getNavigationIcon().setTint(getAttrColor(activity, android.R.attr.colorPrimary));
+        toolbar.getNavigationIcon().setAutoMirrored(true);
 
         ViewCompat.setPaddingRelative(toolbar,
         /* start */ getResources().getDimensionPixelSize(
@@ -240,7 +218,8 @@ public abstract class PreviewFragment extends Fragment implements
                         R.dimen.preview_toolbar_set_wallpaper_button_end_padding),
         /* bottom */ 0);
 
-        mLoadingIndicator = view.findViewById(getLoadingIndicatorResId());
+        mLoadingProgressBar = view.findViewById(getLoadingIndicatorResId());
+        mLoadingProgressBar.show();
 
         mBottomSheet = view.findViewById(getBottomSheetResId());
         setUpBottomSheetView(mBottomSheet);
@@ -259,6 +238,19 @@ public abstract class PreviewFragment extends Fragment implements
         mBottomSheetInitialState = (savedInstanceState == null) ? STATE_EXPANDED
                 : savedInstanceState.getInt(KEY_BOTTOM_SHEET_STATE, STATE_EXPANDED);
         setUpBottomSheetListeners();
+
+        view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
+            toolbar.setPadding(toolbar.getPaddingLeft(),
+                    toolbar.getPaddingTop() + windowInsets.getSystemWindowInsetTop(),
+                    toolbar.getPaddingRight(), toolbar.getBottom());
+            mBottomSheet.setPadding(mBottomSheet.getPaddingLeft(),
+                    mBottomSheet.getPaddingTop(), mBottomSheet.getPaddingRight(),
+                    mBottomSheet.getPaddingBottom() + windowInsets.getSystemWindowInsetBottom());
+            WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
+            builder.setSystemWindowInsets(Insets.of(windowInsets.getSystemWindowInsetLeft(),
+                    0, windowInsets.getStableInsetRight(), 0));
+            return builder.build();
+        });
 
         return view;
     }
@@ -425,34 +417,12 @@ public abstract class PreviewFragment extends Fragment implements
 
     /**
      * Configure loading indicator with a MaterialProgressDrawable.
-     * We don't want to show the spinner every time we load an image if it loads quickly;
-     * instead, only start showing the spinner if loading the image has taken longer than the
-     * provided delayMs
-     * @param delayMs ms to wait before actually showing the loading indicator
      */
-    protected void setUpLoadingIndicator(int delayMs) {
-        Context context = requireContext();
-        mProgressDrawable = new MaterialProgressDrawable(context.getApplicationContext(),
-                mLoadingIndicator);
-        mProgressDrawable.setAlpha(255);
-        mProgressDrawable.setBackgroundColor(getResources().getColor(R.color.material_white_100,
-                context.getTheme()));
-        mProgressDrawable.setColorSchemeColors(getAttrColor(
-                new ContextThemeWrapper(context, getDeviceDefaultTheme()),
-                android.R.attr.colorAccent));
-        mProgressDrawable.updateSizes(MaterialProgressDrawable.LARGE);
-        mLoadingIndicator.setImageDrawable(mProgressDrawable);
-
-
-        mLoadingIndicator.postDelayed(() -> {
-            if (!isLoaded() && !mTestingModeEnabled) {
-                mLoadingIndicator.setVisibility(View.VISIBLE);
-                mLoadingIndicator.setAlpha(1f);
-                if (mProgressDrawable != null) {
-                    mProgressDrawable.start();
-                }
-            }
-        }, delayMs);
+    protected void setUpLoadingIndicator() {
+        mLoadingProgressBar.setProgressTintList(ColorStateList.valueOf(getAttrColor(
+                new ContextThemeWrapper(requireContext(), getDeviceDefaultTheme()),
+                android.R.attr.colorAccent)));
+        mLoadingProgressBar.show();
     }
 
     protected abstract boolean isLoaded();
