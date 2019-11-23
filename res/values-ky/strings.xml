@@ -80,4 +80,9 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Ортосуна тууралап кесүү"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Чоюу"</string>
     <string name="preview" msgid="1774602101743861071">"Алдын ала көрүү"</string>
+    <string name="tab_info" msgid="818614080690111416">"Маалымат"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Ыңгайлаштыруу"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Жөндөөлөр…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Жок кылуу"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Бул тушкагаз телефонуңуздан өчүрүлсүнбү?"</string>
 </resources>
