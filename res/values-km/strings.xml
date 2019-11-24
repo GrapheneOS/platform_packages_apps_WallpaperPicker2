@@ -80,4 +80,9 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"ច្រឹប​កណ្តាល"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"ទាញ"</string>
     <string name="preview" msgid="1774602101743861071">"មើលសាកល្បង"</string>
+    <string name="tab_info" msgid="818614080690111416">"ព័ត៌មាន"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"ប្ដូរ​តាម​បំណង"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"ការកំណត់…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"លុប"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"លុប​ផ្ទាំងរូបភាពនេះ​ពី​ទូរសព្ទរបស់អ្នកដែរទេ?"</string>
 </resources>

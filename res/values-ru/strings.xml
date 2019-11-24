@@ -80,4 +80,9 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Заполнить"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Растянуть"</string>
     <string name="preview" msgid="1774602101743861071">"Предварительный просмотр"</string>
+    <string name="tab_info" msgid="818614080690111416">"Информация"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Настройка"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Настройки…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Удалить"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Удалить эти обои с телефона?"</string>
 </resources>
