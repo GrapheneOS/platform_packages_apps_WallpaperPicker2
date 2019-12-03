@@ -27,6 +27,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -44,7 +45,7 @@ public abstract class Asset {
      */
     protected static Drawable getPlaceholderDrawable(
             Context context, ImageView imageView, int placeholderColor) {
-        Point imageViewDimensions = getImageViewDimensions(imageView);
+        Point imageViewDimensions = getViewDimensions(imageView);
         Bitmap placeholderBitmap =
                 Bitmap.createBitmap(imageViewDimensions.x, imageViewDimensions.y, Config.ARGB_8888);
         placeholderBitmap.eraseColor(placeholderColor);
@@ -55,13 +56,10 @@ public abstract class Asset {
      * Returns the visible height and width in pixels of the provided ImageView, or if it hasn't been
      * laid out yet, then gets the absolute value of the layout params.
      */
-    private static Point getImageViewDimensions(ImageView imageView) {
-        int width = imageView.getWidth() > 0
-                ? imageView.getWidth()
-                : Math.abs(imageView.getLayoutParams().width);
-        int height = imageView.getHeight() > 0
-                ? imageView.getHeight()
-                : Math.abs(imageView.getLayoutParams().height);
+    private static Point getViewDimensions(View view) {
+        int width = view.getWidth() > 0 ? view.getWidth() : Math.abs(view.getLayoutParams().width);
+        int height = view.getHeight() > 0 ? view.getHeight()
+                : Math.abs(view.getLayoutParams().height);
 
         return new Point(width, height);
     }
@@ -191,7 +189,7 @@ public abstract class Asset {
             final int transitionDurationMillis,
             @Nullable final DrawableLoadedListener drawableLoadedListener,
             int placeholderColor) {
-        Point imageViewDimensions = getImageViewDimensions(imageView);
+        Point imageViewDimensions = getViewDimensions(imageView);
 
         // Transition from a placeholder ColorDrawable to the decoded bitmap when the ImageView in
         // question is empty.
@@ -275,7 +273,7 @@ public abstract class Asset {
      * Custom AsyncTask which returns a copy of the given bitmap which is center cropped and scaled to
      * fit in the given ImageView.
      */
-    protected static class CenterCropBitmapTask extends AsyncTask<Void, Void, Bitmap> {
+    public static class CenterCropBitmapTask extends AsyncTask<Void, Void, Bitmap> {
 
         private Bitmap mBitmap;
         private BitmapReceiver mBitmapReceiver;
@@ -283,12 +281,12 @@ public abstract class Asset {
         private int mImageViewWidth;
         private int mImageViewHeight;
 
-        public CenterCropBitmapTask(Bitmap bitmap, ImageView imageView,
+        public CenterCropBitmapTask(Bitmap bitmap, View view,
                                     BitmapReceiver bitmapReceiver) {
             mBitmap = bitmap;
             mBitmapReceiver = bitmapReceiver;
 
-            Point imageViewDimensions = getImageViewDimensions(imageView);
+            Point imageViewDimensions = getViewDimensions(view);
 
             mImageViewWidth = imageViewDimensions.x;
             mImageViewHeight = imageViewDimensions.y;
@@ -307,7 +305,8 @@ public abstract class Asset {
                     (float) bitmapHeight / measuredHeight);
 
             Bitmap scaledBitmap = Bitmap.createScaledBitmap(
-                    mBitmap, Math.round(bitmapWidth / scale), Math.round(bitmapHeight / scale), true);
+                    mBitmap, Math.round(bitmapWidth / scale), Math.round(bitmapHeight / scale),
+                    true);
 
             int horizontalGutterPx = Math.max(0, (scaledBitmap.getWidth() - measuredWidth) / 2);
             int verticalGutterPx = Math.max(0, (scaledBitmap.getHeight() - measuredHeight) / 2);
