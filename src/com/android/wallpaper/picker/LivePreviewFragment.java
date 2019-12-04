@@ -15,12 +15,11 @@
  */
 package com.android.wallpaper.picker;
 
-import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.WallpaperColors;
+import android.app.WallpaperInfo;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -53,9 +52,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,9 +66,7 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
-import com.android.wallpaper.widget.MaterialProgressDrawable;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -94,39 +88,30 @@ public class LivePreviewFragment extends PreviewFragment {
      * it in this preview fragment.
      * @see IWallpaperConnection
      */
-    private WallpaperConnection mWallpaperConnection;
+    protected WallpaperConnection mWallpaperConnection;
 
     private Intent mWallpaperIntent;
     private Intent mDeleteIntent;
     private Intent mSettingsIntent;
 
     private List<Pair<String, View>> mPages;
-    private ImageView mLoadingIndicator;
-    private TextView mAttributionTitle;
-    private TextView mAttributionSubtitle1;
-    private TextView mAttributionSubtitle2;
-    private Button mExploreButton;
-    private Button mSetWallpaperButton;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     private SliceView mSettingsSliceView;
     private LiveData<Slice> mSettingsLiveData;
-    private View mSpacer;
     private View mLoadingScrim;
-    private MaterialProgressDrawable mProgressDrawable;
+    private InfoPageController mInfoPageController;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         android.app.WallpaperInfo info = mWallpaper.getWallpaperComponent();
-        mWallpaperIntent = new Intent(WallpaperService.SERVICE_INTERFACE)
-                .setClassName(info.getPackageName(), info.getServiceName());
+        mWallpaperIntent = getWallpaperIntent(info);
         setUpExploreIntent(null);
 
         android.app.WallpaperInfo currentWallpaper =
                 WallpaperManager.getInstance(requireContext()).getWallpaperInfo();
-        String deleteAction = getDeleteAction(info.getServiceInfo(),
-                (currentWallpaper == null) ? null : currentWallpaper.getServiceInfo());
+        String deleteAction = getDeleteAction(info, currentWallpaper);
 
         if (!TextUtils.isEmpty(deleteAction)) {
             mDeleteIntent = new Intent(deleteAction);
@@ -134,7 +119,7 @@ public class LivePreviewFragment extends PreviewFragment {
             mDeleteIntent.putExtra(EXTRA_LIVE_WALLPAPER_INFO, info);
         }
 
-        String settingsActivity = info.getSettingsActivity();
+        String settingsActivity = getSettingsActivity(info);
         if (settingsActivity != null) {
             mSettingsIntent = new Intent();
             mSettingsIntent.setComponent(new ComponentName(info.getPackageName(),
@@ -149,6 +134,16 @@ public class LivePreviewFragment extends PreviewFragment {
         }
     }
 
+    @Nullable
+    protected String getSettingsActivity(WallpaperInfo info) {
+        return info.getSettingsActivity();
+    }
+
+    protected Intent getWallpaperIntent(WallpaperInfo info) {
+        return new Intent(WallpaperService.SERVICE_INTERFACE)
+                .setClassName(info.getPackageName(), info.getServiceName());
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -161,10 +156,10 @@ public class LivePreviewFragment extends PreviewFragment {
         Activity activity = requireActivity();
 
         mLoadingScrim = view.findViewById(R.id.loading);
-        mLoadingIndicator = view.findViewById(R.id.loading_indicator);
         setUpLoadingIndicator();
 
-        mWallpaperConnection = new WallpaperConnection(mWallpaperIntent, activity);
+        mWallpaperConnection = new WallpaperConnection(mWallpaperIntent, activity,
+                getWallpaperConnectionListener());
         container.post(() -> {
             if (!mWallpaperConnection.connect()) {
                 mWallpaperConnection = null;
@@ -253,45 +248,18 @@ public class LivePreviewFragment extends PreviewFragment {
         mViewPager.setCurrentItem(0);
     }
 
-    private void setUpLoadingIndicator() {
-        Context context = requireContext();
-        mProgressDrawable = new MaterialProgressDrawable(context.getApplicationContext(),
-                mLoadingIndicator);
-        mProgressDrawable.setAlpha(255);
-        mProgressDrawable.setBackgroundColor(getResources().getColor(R.color.material_white_100,
-                context.getTheme()));
-        mProgressDrawable.setColorSchemeColors(getAttrColor(
-                new ContextThemeWrapper(context, getDeviceDefaultTheme()),
-                android.R.attr.colorAccent));
-        mProgressDrawable.updateSizes(MaterialProgressDrawable.LARGE);
-        mLoadingIndicator.setImageDrawable(mProgressDrawable);
+    protected WallpaperConnectionListener getWallpaperConnectionListener() {
+        return null;
+    }
 
-        // We don't want to show the spinner every time we load a wallpaper if it loads quickly;
-        // instead, only start showing the spinner after 100 ms
-        mLoadingIndicator.postDelayed(() -> {
-            if ((mWallpaperConnection == null || !mWallpaperConnection.isEngineReady())
-                    && !mTestingModeEnabled) {
-                mLoadingIndicator.setVisibility(View.VISIBLE);
-                mLoadingIndicator.setAlpha(1f);
-                if (mProgressDrawable != null) {
-                    mProgressDrawable.start();
-                }
-            }
-        }, 100);
+    @Override
+    protected boolean isLoaded() {
+        return mWallpaperConnection != null && mWallpaperConnection.isEngineReady();
     }
 
     private void initInfoPage() {
-        View pageInfo = getLayoutInflater().inflate(R.layout.preview_page_info, null /* root */);
-
-        mAttributionTitle = pageInfo.findViewById(R.id.preview_attribution_pane_title);
-        mAttributionSubtitle1 = pageInfo.findViewById(R.id.preview_attribution_pane_subtitle1);
-        mAttributionSubtitle2 = pageInfo.findViewById(R.id.preview_attribution_pane_subtitle2);
-        mSpacer = pageInfo.findViewById(R.id.spacer);
-
-        mExploreButton = pageInfo.findViewById(R.id.preview_attribution_pane_explore_button);
-        mSetWallpaperButton = pageInfo.findViewById(
-                R.id.preview_attribution_pane_set_wallpaper_button);
-
+        View pageInfo = InfoPageController.createView(getLayoutInflater());
+        mInfoPageController = new InfoPageController(pageInfo, mPreviewMode);
         mPages.add(Pair.create(getString(R.string.tab_info), pageInfo));
     }
 
@@ -312,68 +280,23 @@ public class LivePreviewFragment extends PreviewFragment {
         mSettingsLiveData = SliceLiveData.fromUri(requireContext() /* context */, uriSettingsSlice);
         mSettingsLiveData.observeForever(mSettingsSliceView);
 
+        pageSettings.findViewById(R.id.preview_settings_pane_set_wallpaper_button)
+                .setOnClickListener(this::onSetWallpaperClicked);
+
         mPages.add(Pair.create(getResources().getString(R.string.tab_customize), pageSettings));
     }
 
-    private void populateAttributionPane() {
-        final Context context = getContext();
-
-        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-
-        List<String> attributions = mWallpaper.getAttributions(context);
-        if (attributions.size() > 0 && attributions.get(0) != null) {
-            mAttributionTitle.setText(attributions.get(0));
+    @Override
+    protected CharSequence getExploreButtonLabel(Context context) {
+        CharSequence exploreLabel = ((LiveWallpaperInfo) mWallpaper).getActionDescription(context);
+        if (TextUtils.isEmpty(exploreLabel)) {
+            exploreLabel = context.getString(mWallpaper.getActionLabelRes(context));
         }
-
-        if (mWallpaper.getWallpaperComponent().getShowMetadataInPreview()) {
-
-            if (attributions.size() > 1 && attributions.get(1) != null) {
-                mAttributionSubtitle1.setVisibility(View.VISIBLE);
-                mAttributionSubtitle1.setText(attributions.get(1));
-            }
-
-            if (attributions.size() > 2 && attributions.get(2) != null) {
-                mAttributionSubtitle2.setVisibility(View.VISIBLE);
-                mAttributionSubtitle2.setText(attributions.get(2));
-            }
-
-        } else {
-            mExploreIntent = null;
-        }
-
-        setUpSetWallpaperButton(mSetWallpaperButton);
-
-        setUpExploreButton(mExploreButton);
-
-        if (mExploreButton.getVisibility() == View.VISIBLE
-                && mSetWallpaperButton.getVisibility() == View.VISIBLE) {
-            mSpacer.setVisibility(View.VISIBLE);
-        } else {
-            mSpacer.setVisibility(View.GONE);
-        }
-
-        mBottomSheet.setVisibility(View.VISIBLE);
-
-        // Initialize the state of the BottomSheet based on the current state because if the initial
-        // and current state are the same, the state change listener won't fire and set the correct
-        // arrow asset and text alpha.
-        if (mBottomSheetInitialState == STATE_EXPANDED) {
-            setPreviewChecked(false);
-            mAttributionTitle.setAlpha(1f);
-            mAttributionSubtitle1.setAlpha(1f);
-            mAttributionSubtitle2.setAlpha(1f);
-        } else {
-            setPreviewChecked(true);
-            mAttributionTitle.setAlpha(0f);
-            mAttributionSubtitle1.setAlpha(0f);
-            mAttributionSubtitle2.setAlpha(0f);
-        }
-
-        bottomSheetBehavior.setState(mBottomSheetInitialState);
+        return exploreLabel;
     }
 
     @SuppressLint("NewApi") //Already checking with isAtLeastQ
-    private Uri getSettingsSliceUri(android.app.WallpaperInfo info) {
+    protected Uri getSettingsSliceUri(android.app.WallpaperInfo info) {
         if (BuildCompat.isAtLeastQ()) {
             return info.getSettingsSliceUri();
         }
@@ -388,6 +311,11 @@ public class LivePreviewFragment extends PreviewFragment {
     @Override
     protected int getBottomSheetResId() {
         return R.id.bottom_sheet;
+    }
+
+    @Override
+    protected int getLoadingIndicatorResId() {
+        return R.id.loading_indicator;
     }
 
     @Override
@@ -408,33 +336,20 @@ public class LivePreviewFragment extends PreviewFragment {
 
     @Override
     protected void setBottomSheetContentAlpha(float alpha) {
-        mExploreButton.setAlpha(alpha);
-        mAttributionTitle.setAlpha(alpha);
-        mAttributionSubtitle1.setAlpha(alpha);
-        mAttributionSubtitle2.setAlpha(alpha);
+        mInfoPageController.setContentAlpha(alpha);
     }
 
-    @Override
-    protected void setUpExploreButton(Button exploreButton) {
-        super.setUpExploreButton(exploreButton);
-        if (exploreButton.getVisibility() != View.VISIBLE) {
-            return;
-        }
-        Context context = requireContext();
-        CharSequence exploreLabel = ((LiveWallpaperInfo) mWallpaper).getActionDescription(context);
-        if (!TextUtils.isEmpty(exploreLabel)) {
-            exploreButton.setText(exploreLabel);
-        }
-    }
 
     @Nullable
-    private String getDeleteAction(ServiceInfo serviceInfo,
-            @Nullable ServiceInfo currentService) {
+    protected String getDeleteAction(android.app.WallpaperInfo wallpaperInfo,
+            @Nullable android.app.WallpaperInfo currentInfo) {
+        ServiceInfo serviceInfo = wallpaperInfo.getServiceInfo();
         if (!isPackagePreInstalled(serviceInfo.applicationInfo)) {
             Log.d(TAG, "This wallpaper is not pre-installed: " + serviceInfo.name);
             return null;
         }
 
+        ServiceInfo currentService = currentInfo == null ? null : currentInfo.getServiceInfo();
         // A currently set Live wallpaper should not be deleted.
         if (currentService != null && TextUtils.equals(serviceInfo.name, currentService.name)) {
             return null;
@@ -510,10 +425,27 @@ public class LivePreviewFragment extends PreviewFragment {
         return false;
     }
 
-    private class WallpaperConnection extends IWallpaperConnection.Stub
+    /**
+     * Interface to be notified of connect/disconnect events from {@link WallpaperConnection}
+     */
+    public interface WallpaperConnectionListener {
+        /**
+         * Called after the Wallpaper service has been bound.
+         */
+        void onConnected();
+
+        /**
+         * Called after the Wallpaper engine has been terminated and the service has been unbound.
+         */
+        void onDisconnected();
+    }
+
+    protected class WallpaperConnection extends IWallpaperConnection.Stub
             implements ServiceConnection {
+
         private final Activity mActivity;
         private final Intent mIntent;
+        private final WallpaperConnectionListener mListener;
         private IWallpaperService mService;
         private IWallpaperEngine mEngine;
         private boolean mConnected;
@@ -521,20 +453,26 @@ public class LivePreviewFragment extends PreviewFragment {
         private boolean mIsEngineVisible;
         private boolean mEngineReady;
 
-        WallpaperConnection(Intent intent, Activity activity) {
+        WallpaperConnection(Intent intent, Activity activity,
+                @Nullable WallpaperConnectionListener listener) {
             mActivity = activity;
             mIntent = intent;
+            mListener = listener;
         }
 
         public boolean connect() {
             synchronized (this) {
-                if (!mActivity.bindService(mIntent, this, Context.BIND_AUTO_CREATE)) {
+                if (!mActivity.bindService(mIntent, this,
+                        Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT)) {
                     return false;
                 }
 
                 mConnected = true;
-                return true;
             }
+            if (mListener != null) {
+                mListener.onConnected();
+            }
+            return true;
         }
 
         public void disconnect() {
@@ -555,6 +493,9 @@ public class LivePreviewFragment extends PreviewFragment {
                             + "It might have crashed, just ignoring.", e);
                 }
                 mService = null;
+            }
+            if (mListener != null) {
+                mListener.onDisconnected();
             }
         }
 
@@ -599,6 +540,10 @@ public class LivePreviewFragment extends PreviewFragment {
             }
         }
 
+        public IWallpaperEngine getEngine() {
+            return mEngine;
+        }
+
         public ParcelFileDescriptor setWallpaper(String name) {
             return null;
         }
@@ -619,14 +564,11 @@ public class LivePreviewFragment extends PreviewFragment {
                         .setInterpolator(AnimationUtils.loadInterpolator(mActivity,
                                 android.R.interpolator.fast_out_linear_in))
                         .withEndAction(() -> {
-                            if (mLoadingIndicator != null) {
-                                mLoadingIndicator.setVisibility(View.GONE);
-                            }
-                            if (mProgressDrawable != null) {
-                                mProgressDrawable.stop();
+                            if (mLoadingProgressBar != null) {
+                                mLoadingProgressBar.hide();
                             }
                             mLoadingScrim.setVisibility(View.INVISIBLE);
-                            populateAttributionPane();
+                            populateInfoPage(mInfoPageController);
                         });
             });
             mEngineReady = true;
