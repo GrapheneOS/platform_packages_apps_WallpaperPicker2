@@ -108,7 +108,9 @@
     </style>
 
     <!-- Individual components / Widgets -->
-    <style name="HeaderTextAppearance" parent="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title"/>
+    <style name="TitleTextAppearance" parent="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title"/>
+
+    <style name="SubtitleTextAppearance" parent="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Subtitle"/>
 
     <style name="ButtonStyle" parent="@android:style/Widget.DeviceDefault.Button.Colored">
         <item name="android:padding">16dp</item>
@@ -117,7 +119,6 @@
 
     <style name="OutlinedButtonStyle"  parent="@android:style/Widget.DeviceDefault.Button">
         <item name="android:background">@drawable/btn_transparent</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
