@@ -80,4 +80,9 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Cắt giữa"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Kéo dài"</string>
     <string name="preview" msgid="1774602101743861071">"Xem trước"</string>
+    <string name="tab_info" msgid="818614080690111416">"Thông tin"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Tùy chỉnh"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Cài đặt…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Xóa"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Bạn muốn xóa hình nền này khỏi điện thoại của mình?"</string>
 </resources>

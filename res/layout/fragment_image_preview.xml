@@ -33,13 +33,13 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent" />
 
-  <ImageView
-    android:id="@+id/loading_indicator"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:visibility="invisible"
-    android:fitsSystemWindows="false"/>
+  <androidx.core.widget.ContentLoadingProgressBar
+      android:id="@+id/loading_indicator"
+      style="@android:style/Widget.DeviceDefault.ProgressBar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:indeterminate="true"/>
 
   <FrameLayout
     android:layout_width="match_parent"
@@ -68,12 +68,17 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/preview_gradient_background_height"
+        android:layout_gravity="top"
+        android:background="@drawable/gradient_background"/>
     <androidx.appcompat.widget.Toolbar
-      android:id="@+id/toolbar"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_gravity="top"
-      style="@style/TranslucentToolbarStyle"/>
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        style="@style/TranslucentToolbarStyle"/>
 
   </FrameLayout>
 

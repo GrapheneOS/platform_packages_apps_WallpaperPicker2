@@ -80,4 +80,9 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Zentriert anpassen"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Strecken"</string>
     <string name="preview" msgid="1774602101743861071">"Vorschau"</string>
+    <string name="tab_info" msgid="818614080690111416">"Informationen"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Anpassen"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Einstellungen…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Löschen"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Diesen Hintergrund von deinem Smartphone löschen?"</string>
 </resources>

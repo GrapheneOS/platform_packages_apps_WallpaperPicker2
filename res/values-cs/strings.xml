@@ -80,4 +80,9 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Vycentrovat a oříznout"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Roztáhnout"</string>
     <string name="preview" msgid="1774602101743861071">"Náhled"</string>
+    <string name="tab_info" msgid="818614080690111416">"Informace"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Přizpůsobení"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Nastavení…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Smazat"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Smazat tapetu z telefonu?"</string>
 </resources>
