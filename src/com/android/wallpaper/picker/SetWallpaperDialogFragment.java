@@ -17,10 +17,12 @@ package com.android.wallpaper.picker;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
@@ -99,6 +101,14 @@ public class SetWallpaperDialogFragment extends DialogFragment {
         return dialog;
     }
 
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (mListener != null) {
+            mListener.onDialogDismissed();
+        }
+    }
+
     public void setHomeOptionAvailable(boolean homeAvailable) {
         mHomeAvailable = homeAvailable;
         updateButtonsVisibility();
@@ -132,5 +142,11 @@ public class SetWallpaperDialogFragment extends DialogFragment {
      */
     public interface Listener {
         void onSet(int destination);
+
+        /**
+         * Called when the dialog is closed, both because of dismissal and for a selection
+         * being set, so it'll be called even after onSet is called.
+         */
+        default void onDialogDismissed() {};
     }
 }

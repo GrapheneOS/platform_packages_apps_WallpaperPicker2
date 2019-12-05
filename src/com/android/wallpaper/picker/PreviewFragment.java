@@ -460,7 +460,7 @@ public abstract class PreviewFragment extends Fragment implements
     }
 
     protected void onSetWallpaperClicked(View button) {
-        mWallpaperSetter.requestDestination(getContext(), getFragmentManager(), this,
+        mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
                 mWallpaper instanceof LiveWallpaperInfo);
     }
 
