@@ -18,31 +18,47 @@ package com.android.wallpaper.asset;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Key;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 
 /**
  * Asset wrapping a drawable for a live wallpaper thumbnail.
  */
 public class LiveWallpaperThumbAsset extends Asset {
+    private static final String TAG = "LiveWallpaperThumbAsset";
+
     protected final Context mContext;
     protected final android.app.WallpaperInfo mInfo;
+    // The content Uri of thumbnail
+    protected Uri mUri;
+    private BitmapDrawable mThumbnailDrawable;
 
     public LiveWallpaperThumbAsset(Context context, android.app.WallpaperInfo info) {
         mContext = context.getApplicationContext();
         mInfo = info;
+    }
+
+    public LiveWallpaperThumbAsset(Context context, android.app.WallpaperInfo info, Uri uri) {
+        this(context, info);
+        mUri = uri;
     }
 
     @Override
@@ -72,11 +88,20 @@ public class LiveWallpaperThumbAsset extends Asset {
     @Override
     public void loadDrawable(Context context, ImageView imageView,
                              int placeholderColor) {
+        RequestOptions reqOptions;
+        if (mUri != null) {
+            reqOptions = RequestOptions.centerCropTransform().apply(RequestOptions
+                    .diskCacheStrategyOf(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true))
+                    .placeholder(new ColorDrawable(placeholderColor));
+        } else {
+            reqOptions = RequestOptions.centerCropTransform()
+                    .placeholder(new ColorDrawable(placeholderColor));
+        }
         Glide.with(context)
                 .asDrawable()
                 .load(LiveWallpaperThumbAsset.this)
-                .apply(RequestOptions.centerCropTransform()
-                        .placeholder(new ColorDrawable(placeholderColor)))
+                .apply(reqOptions)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView);
     }
@@ -93,6 +118,22 @@ public class LiveWallpaperThumbAsset extends Asset {
      * the main UI thread.
      */
     protected Drawable getThumbnailDrawable() {
+        if (mUri != null) {
+            if (mThumbnailDrawable != null) {
+                return mThumbnailDrawable;
+            }
+            try {
+                AssetFileDescriptor assetFileDescriptor =
+                        mContext.getContentResolver().openAssetFileDescriptor(mUri, "r");
+                if (assetFileDescriptor != null) {
+                    mThumbnailDrawable = new BitmapDrawable(mContext.getResources(),
+                            BitmapFactory.decodeStream(assetFileDescriptor.createInputStream()));
+                    return mThumbnailDrawable;
+                }
+            } catch (IOException e) {
+                Log.w(TAG, "Not found thumbnail from URI.");
+            }
+        }
         return mInfo.loadThumbnail(mContext.getPackageManager());
     }
 
