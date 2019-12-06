@@ -37,7 +37,7 @@
         android:forceHasOverlappingRendering="false"
         android:gravity="center"
         android:singleLine="true"
-        android:textAppearance="@style/HeaderTextAppearance"
+        android:textAppearance="@style/TitleTextAppearance"
         android:textColor="@color/material_white_100"/>
 
     <TextView
@@ -48,7 +48,7 @@
         android:layout_marginTop="@dimen/preview_attribution_pane_author_top_margin"
         android:forceHasOverlappingRendering="false"
         android:gravity="center"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Subtitle"
+        android:textAppearance="@style/SubtitleTextAppearance"
         android:textColor="@color/material_white_100"
         android:visibility="gone"/>
 
