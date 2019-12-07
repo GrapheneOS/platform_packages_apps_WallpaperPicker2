@@ -80,4 +80,9 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"居中裁剪"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"拉伸"</string>
     <string name="preview" msgid="1774602101743861071">"预览"</string>
+    <string name="tab_info" msgid="818614080690111416">"信息"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"自定义"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"设置…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"删除"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"要从您的手机上删除此壁纸吗？"</string>
 </resources>

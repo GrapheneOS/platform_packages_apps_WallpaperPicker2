@@ -80,4 +80,9 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Ritaglia al centro"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Allunga"</string>
     <string name="preview" msgid="1774602101743861071">"Anteprima"</string>
+    <string name="tab_info" msgid="818614080690111416">"Informazioni"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Personalizza"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Impostazioni…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Elimina"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Vuoi eliminare questo sfondo dal telefono?"</string>
 </resources>
