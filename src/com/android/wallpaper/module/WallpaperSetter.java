@@ -3,7 +3,6 @@ package com.android.wallpaper.module;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.WallpaperManager;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.os.Build.VERSION;
@@ -205,9 +204,9 @@ public class WallpaperSetter {
      * @param listener {@link SetWallpaperDialogFragment.Listener} that will receive the response.
      * @see Destination
      */
-    public void requestDestination(Context context, FragmentManager fragmentManager,
+    public void requestDestination(Activity activity, FragmentManager fragmentManager,
                                    Listener listener, boolean isLiveWallpaper) {
-        requestDestination(context, fragmentManager, R.string.set_wallpaper_dialog_message,
+        requestDestination(activity, fragmentManager, R.string.set_wallpaper_dialog_message,
                 listener, isLiveWallpaper);
     }
 
@@ -219,20 +218,34 @@ public class WallpaperSetter {
      * @param titleResId title for the dialog
      * @see Destination
      */
-    public void requestDestination(Context context, FragmentManager fragmentManager,
+    public void requestDestination(Activity activity, FragmentManager fragmentManager,
             @StringRes int titleResId, Listener listener, boolean isLiveWallpaper) {
         CurrentWallpaperInfoFactory factory = InjectorProvider.getInjector()
-                .getCurrentWallpaperFactory(context);
+                .getCurrentWallpaperFactory(activity);
+        saveAndLockScreenOrientation(activity);
+        Listener listenerWrapper = new Listener() {
+            @Override
+            public void onSet(int destination) {
+                if (listener != null) {
+                    listener.onSet(destination);
+                }
+            }
 
+            @Override
+            public void onDialogDismissed() {
+                restoreScreenOrientation(activity);
+            }
+        };
         factory.createCurrentWallpaperInfos((homeWallpaper, lockWallpaper, presentationMode) -> {
             SetWallpaperDialogFragment setWallpaperDialog = new SetWallpaperDialogFragment();
             setWallpaperDialog.setTitleResId(titleResId);
-            setWallpaperDialog.setListener(listener);
+            setWallpaperDialog.setListener(listenerWrapper);
             if (homeWallpaper instanceof LiveWallpaperInfo && lockWallpaper == null) {
                 if (isLiveWallpaper) {
                     // If lock wallpaper is live and we're setting a live wallpaper, we can only
                     // set it to both, so bypass the dialog.
                     listener.onSet(WallpaperPersister.DEST_BOTH);
+                    restoreScreenOrientation(activity);
                     return;
                 }
                 // if the lock wallpaper is a live wallpaper, we cannot set a home-only static one
