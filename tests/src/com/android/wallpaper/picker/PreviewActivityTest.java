@@ -17,12 +17,12 @@ package com.android.wallpaper.picker;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.pressBack;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
-import static junit.framework.TestCase.assertFalse;
 
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
@@ -445,12 +445,29 @@ public class PreviewActivityTest {
     }
 
     @Test
+    public void testShowSetWallpaperDialog_TemporarilyLocksScreenOrientation() {
+        launchActivityIntentWithMockWallpaper();
+        PreviewActivity activity = mActivityRule.getActivity();
+        assertNotEquals(ActivityInfo.SCREEN_ORIENTATION_LOCKED, activity.getRequestedOrientation());
+
+        // Show SetWallpaperDialog.
+        onView(withId(R.id.preview_attribution_pane_set_wallpaper_button)).perform(click());
+
+        assertEquals(ActivityInfo.SCREEN_ORIENTATION_LOCKED, activity.getRequestedOrientation());
+
+        // Press back to dismiss the dialog.
+        onView(isRoot()).perform(pressBack());
+
+        assertNotEquals(ActivityInfo.SCREEN_ORIENTATION_LOCKED, activity.getRequestedOrientation());
+    }
+
+    @Test
     public void testSetWallpaper_TemporarilyLocksScreenOrientation() throws Throwable {
         launchActivityIntentWithMockWallpaper();
         PreviewActivity activity = mActivityRule.getActivity();
+        assertNotEquals(ActivityInfo.SCREEN_ORIENTATION_LOCKED, activity.getRequestedOrientation());
 
-        assertFalse(activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LOCKED);
-
+        // Show SetWallpaperDialog.
         onView(withId(R.id.preview_attribution_pane_set_wallpaper_button)).perform(click());
 
         // Destination dialog is shown; click "Home screen".
@@ -461,8 +478,9 @@ public class PreviewActivityTest {
         // Finish setting the wallpaper to check that the screen orientation is no longer locked.
         finishSettingWallpaper();
 
-        assertNotEquals(activity.getRequestedOrientation(), ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+        assertNotEquals(ActivityInfo.SCREEN_ORIENTATION_LOCKED, activity.getRequestedOrientation());
     }
+
     @Test
     public void testShowsWallpaperAttribution() {
         launchActivityIntentWithMockWallpaper();
