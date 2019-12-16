@@ -62,7 +62,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     private Point mScreenSize;
     private Point mRawWallpaperSize; // Native size of wallpaper image.
     private ImageView mLowResImageView;
-
     private InfoPageController mInfoPageController;
 
     @Override
@@ -88,7 +87,7 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         Activity activity = requireActivity();
@@ -267,10 +266,10 @@ public class ImagePreviewFragment extends PreviewFragment {
     }
 
     /**
-     * Sets the default wallpaper zoom and scroll position based on a "crop surface"
-     * (with extra width to account for parallax) superimposed on the screen. Shows as much of the
-     * wallpaper as possible on the crop surface and align screen to crop surface such that the
-     * default preview matches what would be seen by the user in the left-most home screen.
+     * Sets the default wallpaper zoom and scroll position based on a "crop surface" (with extra
+     * width to account for parallax) superimposed on the screen. Shows as much of the wallpaper as
+     * possible on the crop surface and align screen to crop surface such that the default preview
+     * matches what would be seen by the user in the left-most home screen.
      *
      * <p>This method is called once in the Fragment lifecycle after the wallpaper asset has loaded
      * and rendered to the layout.
@@ -282,14 +281,6 @@ public class ImagePreviewFragment extends PreviewFragment {
         float minWallpaperZoom =
                 WallpaperCropUtils.calculateMinZoom(mRawWallpaperSize, mScreenSize);
 
-        Point screenToCropSurfacePosition = WallpaperCropUtils.calculateCenterPosition(
-                mDefaultCropSurfaceSize, mScreenSize, true /* alignStart */, isRtl());
-        Point zoomedWallpaperSize = new Point(
-                Math.round(mRawWallpaperSize.x * defaultWallpaperZoom),
-                Math.round(mRawWallpaperSize.y * defaultWallpaperZoom));
-        Point cropSurfaceToWallpaperPosition = WallpaperCropUtils.calculateCenterPosition(
-                zoomedWallpaperSize, mDefaultCropSurfaceSize, false /* alignStart */, isRtl());
-
         // Set min wallpaper zoom and max zoom on MosaicView widget.
         mFullResImageView.setMaxScale(Math.max(DEFAULT_WALLPAPER_MAX_ZOOM, defaultWallpaperZoom));
         mFullResImageView.setMinScale(minWallpaperZoom);
@@ -298,8 +289,6 @@ public class ImagePreviewFragment extends PreviewFragment {
         PointF centerPosition = new PointF(
                 mRawWallpaperSize.x / 2f,
                 mRawWallpaperSize.y / 2f);
-        centerPosition.offset(-(screenToCropSurfacePosition.x + cropSurfaceToWallpaperPosition.x),
-                -(screenToCropSurfacePosition.y + cropSurfaceToWallpaperPosition.y));
 
         mFullResImageView.setScaleAndCenter(minWallpaperZoom, centerPosition);
     }
@@ -316,7 +305,7 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         rect.set(0, 0, scaledWallpaperWidth, scaledWallpaperHeight);
 
-        Display defaultDisplay =  requireActivity().getWindowManager().getDefaultDisplay();
+        Display defaultDisplay = requireActivity().getWindowManager().getDefaultDisplay();
         Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(defaultDisplay);
         // Crop rect should start off as the visible screen and then include extra width and height
         // if available within wallpaper at the current zoom.
