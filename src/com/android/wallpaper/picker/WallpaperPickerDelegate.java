@@ -27,7 +27,6 @@ import android.service.wallpaper.WallpaperService;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.os.BuildCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
@@ -154,7 +153,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     }
 
     private void showCustomPhotoPicker() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         mActivity.startActivityForResult(intent, SHOW_CATEGORY_REQUEST_CODE);
     }
