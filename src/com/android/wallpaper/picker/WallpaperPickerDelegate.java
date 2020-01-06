@@ -153,7 +153,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     }
 
     private void showCustomPhotoPicker() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         mActivity.startActivityForResult(intent, SHOW_CATEGORY_REQUEST_CODE);
     }
