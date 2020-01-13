@@ -121,10 +121,6 @@ public class CategoryFragment extends ToolbarFragment {
     private static final String PERMISSION_READ_WALLPAPER_INTERNAL =
             "android.permission.READ_WALLPAPER_INTERNAL";
 
-    // This is a temporary flag to hide the incomplete scalable feature.
-    // TODO(b/146465322): Remove this flag when the scalable feature is complete.
-    private static final boolean ADD_SCALABLE_HEADER = false;
-
     private RecyclerView mImageGrid;
     private CategoryAdapter mAdapter;
     private ArrayList<Category> mCategories = new ArrayList<>();
