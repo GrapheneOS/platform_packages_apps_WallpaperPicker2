@@ -40,7 +40,10 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
-    <style name="WallpaperTheme.Preview" parent="@style/Theme.AppCompat.NoActionBar">
+    <style name="WallpaperTheme.Preview" parent="@android:style/Theme.DeviceDefault.Settings">
+        <item name="android:colorPrimary">@color/material_white_100</item>
+        <item name="colorPrimary">@color/material_white_100</item>
+        <item name="colorControlActivated">?attr/colorPrimary</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowDisablePreview">true</item>
@@ -51,10 +54,18 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
 
+        <item name="actionBarSize">?android:attr/actionBarSize</item>
+        <item name="homeAsUpIndicator">@drawable/material_ic_arrow_back_black_24</item>
+
+        <item name="selectableItemBackground">?android:attr/selectableItemBackground</item>
+        <item name="dialogPreferredPadding">24dp</item>
+        <item name="colorControlHighlight">@color/ripple_material_dark</item>
+        <item name="toolbarNavigationButtonStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
+
         <!-- Set status bar and navigation buttons to be translucent. -->
         <item name="android:colorPrimaryDark">@color/translucent_black</item>
-        <item name="android:statusBarColor">@color/translucent_black</item>
-        <item name="android:navigationBarColor">@color/translucent_black</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
 
         <!-- Apply borderless button style for the right ripple effect. -->
         <item name="borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
@@ -64,10 +75,20 @@
         </item>
     </style>
 
+    <style name="WallpaperTheme.DarkActionBar" parent="@style/WallpaperTheme.Preview">
+        <item name="colorControlNormal">?attr/colorPrimary</item>
+        <item name="colorButtonNormal">?attr/colorPrimary</item>
+        <item name="android:colorControlActivated">?attr/colorPrimary</item>
+        <item name="android:colorControlHighlight">?attr/colorPrimary</item>
+        <item name="actionMenuTextColor">?attr/colorPrimary</item>
+        <item name="android:actionMenuTextColor">?attr/colorPrimary</item>
+        <item name="android:actionMenuTextAppearance">@style/WallpaperPicker.Preview.TextAppearance.ActionBar</item>
+    </style>
+
     <!-- Toolbar -->
     <style name="TranslucentToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:theme">@style/WallpaperTheme.DarkActionBar</item>
     </style>
 
     <style name="RegularToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
@@ -100,9 +121,13 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="ActionBarCheckboxStyle" parent="@android:style/Widget.DeviceDefault.CompoundButton.CheckBox"/>
+    <style name="ActionBarCheckboxStyle" parent="@android:style/Widget.DeviceDefault.CompoundButton.CheckBox">
+        <item name="android:textColor">?android:attr/colorPrimary</item>
+    </style>
 
-    <style name="PreviewCheckboxDeviceTheme" parent="@android:style/Theme.DeviceDefault"/>
+    <style name="PreviewCheckboxDeviceTheme" parent="@android:style/Theme.DeviceDefault">
+        <item name="android:colorControlNormal">?android:attr/colorPrimary</item>
+    </style>
 
     <style name="select_wallpaper_header">
         <item name="android:textColor">@color/translucent_black_60_alpha</item>
@@ -111,6 +136,15 @@
     </style>
 
     <!-- Preview attribution pane styles -->
+    <style name="WallpaperPicker.BottomPaneStyle" parent="@android:style/Theme.DeviceDefault.Settings">
+        <item name="android:textColorPrimary">@color/material_white_100</item>
+        <item name="android:textColorSecondary">@color/white_70_alpha</item>
+        <item name="tabTextAppearance">@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps</item>
+        <item name="tabIndicatorColor">?android:attr/textColorPrimary</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabMaxWidth">0dp</item>
+    </style>
+
     <style name="preview_attribution_pane_title">
         <item name="android:textColor">@color/material_white_text</item>
         <item name="android:textSize">@dimen/abc_text_size_subhead_material</item>
@@ -119,6 +153,17 @@
     <style name="preview_attribution_pane_subtitle">
         <item name="android:textColor">@color/material_white_text</item>
         <item name="android:textSize">@dimen/abc_text_size_body_2_material</item>
+    </style>
+
+    <style name="WallpaperPicker.Preview.TextAppearance.NoAllCaps"
+        parent="@android:style/TextAppearance.DeviceDefault.Widget.TabWidget">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="WallpaperPicker.Preview.TextAppearance.ActionBar"
+        parent="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Menu">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/material_white_100</item>
     </style>
 
     <!-- Set wallpaper destination item -->

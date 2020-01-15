@@ -23,6 +23,16 @@ import android.content.Intent;
  * wallpaper, if appropriate for that wallpaper.
  */
 public interface InlinePreviewIntentFactory {
+
+    /**
+     * @return whether it's possible to use the internal live picker, or {@code false} to use the
+     * the Framework Activity.
+     */
+    default boolean shouldUseInternalLivePicker(Context context) {
+        return false; // Disable always for now
+            //ContextCompat.checkSelfPermission(context, BIND_WALLPAPER) == PERMISSION_GRANTED;
+    }
+
     /**
      * Gets an intent to show the preview activity for the given wallpaper.
      *
@@ -30,5 +40,5 @@ public interface InlinePreviewIntentFactory {
      * @param wallpaper
      * @return Intent to show the inline preview activity.
      */
-    public Intent newIntent(Context ctx, WallpaperInfo wallpaper);
+    Intent newIntent(Context ctx, WallpaperInfo wallpaper);
 }

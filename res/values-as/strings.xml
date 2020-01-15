@@ -80,4 +80,9 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"মধ্য অংশৰ পৰা কৰা ক্ৰপ"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"প্ৰসাৰিত"</string>
     <string name="preview" msgid="1774602101743861071">"পূৰ্বদৰ্শন"</string>
+    <string name="tab_info" msgid="818614080690111416">"তথ্য"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"কাষ্টমাইজ কৰক"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"ছেটিংসমূহ…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"মচক"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"এই ৱালপেপাৰখন আপোনাৰ ফ’নটোৰ পৰা মচিবনে?"</string>
 </resources>

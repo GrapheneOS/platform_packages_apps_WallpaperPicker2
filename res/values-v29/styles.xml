@@ -18,5 +18,6 @@
 <resources>
     <style name="PreviewCheckboxDeviceTheme" parent="@android:style/ThemeOverlay.DeviceDefault.Accent.DayNight">
         <item name="android:colorControlActivated">?android:attr/colorAccent</item>
+        <item name="android:colorControlNormal">?android:attr/colorPrimary</item>
     </style>
 </resources>

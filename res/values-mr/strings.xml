@@ -37,9 +37,9 @@
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"लॉक स्क्रीन"</string>
     <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"होम स्क्रीन आणि लॉक स्क्रीन"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"फिरती इमेज वॉलपेपर"</string>
-    <string name="permission_needed_explanation" msgid="139166837541426823">"येथे सध्याचा वॉलपेपर दाखवण्यासाठी, <xliff:g id="APP_NAME">%1$s</xliff:g> ला तुमच्या डिव्हाइसच्या स्टोरेजचा अॅक्सेस हवा आहे."</string>
-    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"येथे सध्याचा वॉलपेपर दाखवण्यासाठी, वॉलपेपरला तुमच्या डिव्हाइसच्या स्टोरेजचा अॅक्सेस हवा आहे.\n\nहे सेटिंग बदलण्यासाठी, वॉलपेपरच्या ॲप माहितीच्या परवानग्या भागावर जा."</string>
-    <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"अॅक्सेस द्या"</string>
+    <string name="permission_needed_explanation" msgid="139166837541426823">"येथे सध्याचा वॉलपेपर दाखवण्यासाठी, <xliff:g id="APP_NAME">%1$s</xliff:g> ला तुमच्या डिव्हाइसच्या स्टोरेजचा ॲक्सेस हवा आहे."</string>
+    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"येथे सध्याचा वॉलपेपर दाखवण्यासाठी, वॉलपेपरला तुमच्या डिव्हाइसच्या स्टोरेजचा ॲक्सेस हवा आहे.\n\nहे सेटिंग बदलण्यासाठी, वॉलपेपरच्या ॲप माहितीच्या परवानग्या भागावर जा."</string>
+    <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"ॲक्सेस द्या"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"फिरत्या वॉलपेपरसाठी लाइव्ह वॉलपेपर सेवा"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"दैनिक वॉलपेपर"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"चालू करण्यासाठी टॅप करा"</string>
@@ -53,7 +53,7 @@
     <string name="explore" msgid="7468719504199497281">"एक्सप्लोर करा"</string>
     <string name="next_wallpaper" msgid="3911873152952596232">"पुढील वॉलपेपर"</string>
     <string name="wallpaper_disabled_message" msgid="7309484130562148185">"या डिव्हाइसवर वॉलपेपर सेट करणे बंद केलेले आहे"</string>
-    <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"तुमच्या डिव्हाइस अॅडमिनिस्ट्रेटरने वॉलपेपर सेट करणे बंद केले आहे"</string>
+    <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"तुमच्या डिव्हाइस ॲडमिनिस्ट्रेटरने वॉलपेपर सेट करणे बंद केले आहे"</string>
     <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"वॉलपेपर यशस्वीरीत्या सेट झाला"</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"वॉलपेपर पाहण्यासाठी तुमच्याकडे इंटरनेट कनेक्शन असणे गरजेचे आहे. कृपया कनेक्ट करा आणि पुन्हा प्रयत्न करा."</string>
     <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"सध्या होम स्क्रीन वॉलपेपर थंबनेल सेट केले आहे"</string>
@@ -80,4 +80,9 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"मध्यभागी क्रॉप केलेले"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"ताणा"</string>
     <string name="preview" msgid="1774602101743861071">"पूर्वावलोकन करा"</string>
+    <string name="tab_info" msgid="818614080690111416">"माहिती"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"कस्टमाइझ करा"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"सेटिंग्ज…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"हटवा"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"तुमच्या फोनवरून हा वॉलपेपर हटवायचा आहे का?"</string>
 </resources>

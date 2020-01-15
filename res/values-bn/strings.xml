@@ -80,4 +80,9 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"সীমানার দিকে কাটছাঁট করা"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"প্রসারিত"</string>
     <string name="preview" msgid="1774602101743861071">"প্রিভিউ"</string>
+    <string name="tab_info" msgid="818614080690111416">"তথ্য"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"কাস্টমাইজ করুন"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"সেটিংস…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"মুছে দিন"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"আপনার ফোন থেকে এই ওয়ালপেপার মুছে ফেলতে চান?"</string>
 </resources>
