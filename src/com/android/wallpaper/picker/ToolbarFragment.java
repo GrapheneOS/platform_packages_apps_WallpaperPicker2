@@ -45,7 +45,7 @@ public abstract class ToolbarFragment extends Fragment implements OnMenuItemClic
     private static final String ARG_TITLE = "ToolbarFragment.title";
 
     // This is a temporary flag to hide the incomplete scalable feature.
-    // TODO(b/146465322): Remove this flag when the scalable feature is complete.
+    // TODO(b/147780560): Remove this flag when the scalable feature is complete.
     protected static final boolean ADD_SCALABLE_HEADER = false;
 
     /**
