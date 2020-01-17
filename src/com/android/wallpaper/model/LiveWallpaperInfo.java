@@ -358,4 +358,9 @@ public class LiveWallpaperInfo extends WallpaperInfo {
     public String getCollectionId(Context context) {
         return context.getString(R.string.live_wallpaper_collection_id);
     }
+
+    @Override
+    public String getWallpaperId() {
+        return mInfo.getServiceName();
+    }
 }
