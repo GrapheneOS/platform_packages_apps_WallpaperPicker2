@@ -128,6 +128,8 @@ public class CategoryFragment extends ToolbarFragment {
     private boolean mAwaitingCategories;
     private ProgressDialog mRefreshWallpaperProgressDialog;
     private boolean mTestingMode;
+    private ImageView mHomePreview;
+    private ImageView mLockscreenPreview;
 
     public CategoryFragment() {
     }
@@ -142,7 +144,17 @@ public class CategoryFragment extends ToolbarFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(
-                R.layout.fragment_category_picker, container, /* attachToRoot */ false);
+                ADD_SCALABLE_HEADER
+                ? R.layout.fragment_category_scalable_picker
+                : R.layout.fragment_category_picker, container, /* attachToRoot= */ false);
+
+        if (ADD_SCALABLE_HEADER) {
+            mHomePreview = view.findViewById(R.id.home_preview);
+            mLockscreenPreview = view.findViewById(R.id.lockscreen_preview);
+            mLockscreenPreview.setVisibility(
+                    LockWallpaperStatusChecker.isLockWallpaperSet(getContext())
+                            ? View.VISIBLE : View.GONE);
+        }
 
         mImageGrid = view.findViewById(R.id.category_grid);
         GridMarginDecoration.applyTo(mImageGrid);
@@ -329,6 +341,19 @@ public class CategoryFragment extends ToolbarFragment {
                                 ? CategoryAdapter.METADATA_VIEW_SINGLE_CARD
                                 : CategoryAdapter.METADATA_VIEW_TWO_CARDS;
                         mAdapter.setNumMetadataCards(numMetadataCards);
+
+                        if (ADD_SCALABLE_HEADER) {
+                            homeWallpaper.getThumbAsset(getActivity().getApplicationContext())
+                                    .loadDrawable(getActivity(),
+                                            mHomePreview,
+                                            getResources().getColor(R.color.secondary_color));
+                            if (lockWallpaper != null) {
+                                lockWallpaper.getThumbAsset(getActivity().getApplicationContext())
+                                        .loadDrawable(getActivity(),
+                                                mLockscreenPreview,
+                                                getResources().getColor(R.color.secondary_color));
+                            }
+                        }
 
                         // The MetadataHolder may be null if the RecyclerView has not yet created the view
                         // holder.

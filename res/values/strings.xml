@@ -315,4 +315,7 @@
 
     <!-- Confirmation dialog. Shown after user selects to delete one wallpaper. [CHAR LIMIT=NONE] -->
     <string name="delete_wallpaper_confirmation">Delete this wallpaper from your phone?</string>
+
+    <!-- The class name for the ScaleBehavior -->
+    <string name="scalable_container_behavior" translatable="false">com.android.wallpaper.picker.ScaleBehavior</string>
 </resources>

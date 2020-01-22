@@ -179,4 +179,9 @@
     <dimen name="disabled_by_admin_desktop_message_text_size">13sp</dimen>
     <dimen name="preview_bottom_sheet_corner_radius">?android:attr/dialogCornerRadius</dimen>
 
+    <!-- Dimensions for the minimum height of the scalable content container. -->
+    <dimen name="content_container_minimum_height">300dp</dimen>
+    <!-- Dimensions for the maximum height of the scalable content container. -->
+    <dimen name="content_container_maximum_height">400dp</dimen>
+
 </resources>
