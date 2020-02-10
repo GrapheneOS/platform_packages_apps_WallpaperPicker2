@@ -39,7 +39,7 @@ public class TileSizeCalculator {
     /**
      * The number of columns for a "fewer columns" configuration of the category tiles grid.
      */
-    private static final int CATEGORY_FEWER_COLUMNS = 2;
+    private static final int CATEGORY_FEWER_COLUMNS = 3;
 
     /**
      * The number of columns for a "more columns" configuration of the category tiles grid.
@@ -116,7 +116,7 @@ public class TileSizeCalculator {
         int windowWidthPx = getActivityWindowWidthPx(activity);
 
         int columnCount = getNumCategoryColumns(activity, windowWidthPx);
-        return getTileSize(appContext, columnCount, windowWidthPx);
+        return getSquareTileSize(appContext, columnCount, windowWidthPx);
     }
 
     /**
@@ -178,6 +178,24 @@ public class TileSizeCalculator {
                 * res.getDimensionPixelSize(R.dimen.grid_tile_aspect_height)
                 / res.getDimensionPixelSize(R.dimen.grid_tile_aspect_width));
         return new Point(widthPx, heightPx);
+    }
+
+    /**
+     * Returns the size of a grid tile with the given "fewer" count and "more" count, on the given
+     * display. The size is determined by these counts with the aspect ratio of 1:1 and is in units
+     * of px.
+     */
+    private static Point getSquareTileSize(Context context, int columnCount, int windowWidthPx) {
+        Resources res = context.getResources();
+        int gridPaddingPx = res.getDimensionPixelSize(R.dimen.grid_padding);
+        int gridEdgeSpacePx = res.getDimensionPixelSize(R.dimen.grid_edge_space);
+
+        int availableWidthPx = windowWidthPx
+                - gridPaddingPx * 2 * columnCount // Item's left and right padding * column count
+                - gridEdgeSpacePx * 2; // Grid view's left and right edge's space
+        int widthPx = Math.round((float) availableWidthPx / columnCount);
+
+        return new Point(widthPx, widthPx);
     }
 
     /**

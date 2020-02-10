@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -40,11 +41,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,7 +71,6 @@ import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
 import com.android.wallpaper.util.DisplayMetricsRetriever;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.TileSizeCalculator;
-import com.android.wallpaper.widget.GridMarginDecoration;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
@@ -157,7 +157,8 @@ public class CategoryFragment extends ToolbarFragment {
         }
 
         mImageGrid = view.findViewById(R.id.category_grid);
-        GridMarginDecoration.applyTo(mImageGrid);
+        mImageGrid.addItemDecoration(new GridPaddingDecoration(
+                getResources().getDimensionPixelSize(R.dimen.grid_padding)));
 
         mTileSizePx = TileSizeCalculator.getCategoryTileSize(getActivity());
 
@@ -877,7 +878,7 @@ public class CategoryFragment extends ToolbarFragment {
      */
     private class CategoryHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private Category mCategory;
-        private RelativeLayout mTileLayout;
+        private CardView mCategoryView;
         private ImageView mImageView;
         private ImageView mOverlayIconView;
         private TextView mTitleView;
@@ -886,12 +887,12 @@ public class CategoryFragment extends ToolbarFragment {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            mTileLayout = itemView.findViewById(R.id.tile);
+            mCategoryView = itemView.findViewById(R.id.category);
             mImageView = itemView.findViewById(R.id.image);
             mOverlayIconView = itemView.findViewById(R.id.overlay_icon);
             mTitleView = itemView.findViewById(R.id.category_title);
 
-            mTileLayout.getLayoutParams().height = mTileSizePx.y;
+            mCategoryView.getLayoutParams().height = mTileSizePx.y;
         }
 
         @Override
@@ -1153,6 +1154,25 @@ public class CategoryFragment extends ToolbarFragment {
                             })
                     .create();
             dialog.show();
+        }
+    }
+
+    private class GridPaddingDecoration extends RecyclerView.ItemDecoration {
+
+        private int mPadding;
+
+        GridPaddingDecoration(int padding) {
+            mPadding = padding;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                                   RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view) - NUM_NON_CATEGORY_VIEW_HOLDERS;
+            if (position >= 0) {
+                outRect.left = mPadding;
+                outRect.right = mPadding;
+            }
         }
     }
 }
