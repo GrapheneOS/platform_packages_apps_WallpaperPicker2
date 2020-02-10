@@ -58,6 +58,10 @@
         android:theme="@style/WallpaperTheme"
         android:resizeableActivity="false"
         android:parentActivityName="com.android.wallpaper.picker.TopLevelPickerActivity">
+      <intent-filter>
+        <action android:name="com.android.wallpaper.picker.DEEP_LINK" />
+        <category android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
     </activity>
 
     <activity android:name="com.android.wallpaper.picker.PreviewActivity"
