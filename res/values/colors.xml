@@ -33,4 +33,8 @@
 
     <color name="status_bar_color">@color/material_black_100</color>
     <color name="toolbar_color">#000000</color>
+
+    <color name="preview_pager_arrow_disabled">@android:color/darker_gray</color>
+    <color name="preview_pager_background">@color/secondary_color</color>
+    <color name="google_grey900">#202124</color>
 </resources>
