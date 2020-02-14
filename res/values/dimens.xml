@@ -201,4 +201,5 @@
     <dimen name="preview_card_padding">20dp</dimen>
     <dimen name="preview_pager_max_height">450dp</dimen>
     <dimen name="preview_pager_min_height">350dp</dimen>
+    <dimen name="preview_pager_height">450dp</dimen>
 </resources>

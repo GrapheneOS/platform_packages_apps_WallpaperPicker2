@@ -77,6 +77,7 @@ import com.android.wallpaper.widget.PreviewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -173,6 +174,20 @@ public class CategoryFragment extends ToolbarFragment {
         mImageGrid = view.findViewById(R.id.category_grid);
         mImageGrid.addItemDecoration(new GridPaddingDecoration(
                 getResources().getDimensionPixelSize(R.dimen.grid_padding)));
+        view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int left, int top, int right, int bottom,
+                                       int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                View toolBar = view.findViewById(R.id.toolbar);
+                int gridCollapsedHeight = view.getHeight()
+                        - toolBar.getHeight()
+                        - getResources().getDimensionPixelOffset(R.dimen.preview_pager_height);
+                BottomSheetBehavior.from(mImageGrid).setPeekHeight(gridCollapsedHeight);
+                mImageGrid.setMinimumHeight(gridCollapsedHeight);
+                mImageGrid.getLayoutParams().height = view.getHeight() - toolBar.getHeight();
+                view.removeOnLayoutChangeListener(this);
+            }
+        });
 
         mTileSizePx = TileSizeCalculator.getCategoryTileSize(getActivity());
 
