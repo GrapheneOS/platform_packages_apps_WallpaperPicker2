@@ -15,6 +15,9 @@
  */
 package com.android.wallpaper.picker.individual;
 
+import static com.android.wallpaper.picker.WallpaperPickerDelegate.PREVIEW_LIVE_WALLPAPER_REQUEST_CODE;
+import static com.android.wallpaper.picker.WallpaperPickerDelegate.PREVIEW_WALLPAPER_REQUEST_CODE;
+
 import android.app.Activity;
 import android.util.Log;
 import android.view.View;
@@ -33,8 +36,6 @@ import com.android.wallpaper.picker.PreviewActivity;
  */
 class PreviewIndividualHolder extends IndividualHolder implements View.OnClickListener {
     private static final String TAG = "PreviewIndividualHolder";
-    private static final int PREVIEW_WALLPAPER_REQUEST_CODE = 0;
-    private static final int PREVIEW_LIVE_WALLPAPER_REQUEST_CODE = 2;
 
     private WallpaperPersister mWallpaperPersister;
     private InlinePreviewIntentFactory mPreviewIntentFactory;

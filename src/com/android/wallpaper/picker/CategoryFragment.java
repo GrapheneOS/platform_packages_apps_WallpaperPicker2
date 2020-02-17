@@ -91,8 +91,6 @@ public class CategoryFragment extends ToolbarFragment implements CategorySelecto
         boolean isReadExternalStoragePermissionGranted();
 
         void showViewOnlyPreview(WallpaperInfo wallpaperInfo);
-
-        void show(String collectionId);
     }
 
     public static CategoryFragment newInstance(CharSequence title) {
@@ -217,7 +215,22 @@ public class CategoryFragment extends ToolbarFragment implements CategorySelecto
 
     @Override
     public void show(String collectionId) {
-        getFragmentHost().show(collectionId);
+        getChildFragmentManager()
+                .beginTransaction()
+                .replace(R.id.category_fragment_container,
+                        InjectorProvider.getInjector().getIndividualPickerFragment(collectionId))
+                .addToBackStack(null)
+                .commit();
+        getChildFragmentManager().executePendingTransactions();
+    }
+
+    /**
+     * Pops the child fragment from the stack if {@link CategoryFragment} is visible to the users.
+     *
+     * @return {@code true} if the child fragment is popped, {@code false} otherwise.
+     */
+    public boolean popChildFragment() {
+        return isVisible() && getChildFragmentManager().popBackStackImmediate();
     }
 
     /**
