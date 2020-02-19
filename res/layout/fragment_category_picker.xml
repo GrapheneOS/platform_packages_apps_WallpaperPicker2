@@ -13,25 +13,42 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:colorPrimary">
-    <include layout="@layout/section_header"/>
+
+    <include layout="@layout/section_header" />
+
+    <com.android.wallpaper.widget.PreviewPager
+        android:id="@+id/wallpaper_preview_pager"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/preview_pager_height"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:background="@color/preview_pager_background" />
+
+    <include
+        android:id="@+id/permission_needed"
+        layout="@layout/grid_item_permission_needed"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/preview_pager_height"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/category_grid"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:colorPrimary"
         android:clipToPadding="false"
         android:fitsSystemWindows="true"
-        android:paddingLeft="@dimen/grid_padding"
+        android:paddingHorizontal="@dimen/grid_edge_space"
         android:paddingTop="@dimen/grid_padding"
         android:scrollbarSize="@dimen/grid_padding"
+        android:scrollbarStyle="outsideOverlay"
         android:scrollbarThumbVertical="@color/scrollbar_thumb_color_dark"
         android:scrollbars="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/bottom_sheet_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

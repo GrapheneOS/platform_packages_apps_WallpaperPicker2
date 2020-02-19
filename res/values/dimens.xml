@@ -22,10 +22,13 @@
 
     <!-- Dimensions for "category" tiles. -->
     <dimen name="grid_item_category_label_padding">12dp</dimen>
+    <dimen name="grid_item_category_label_padding_top">12dp</dimen>
+    <dimen name="grid_item_category_label_padding_bottom">4dp</dimen>
     <dimen name="grid_item_category_overlay_icon_margin_bottom">24dp</dimen>
     <dimen name="grid_item_category_title_height">48dp</dimen>
     <dimen name="grid_tile_aspect_height">340dp</dimen>
     <dimen name="grid_tile_aspect_width">182dp</dimen>
+    <dimen name="grid_edge_space">8dp</dimen>
 
     <!-- Dimensions for individual wallpaper tiles. -->
     <dimen name="grid_item_individual_wallpaper_selected_inset">14dp</dimen>
@@ -184,4 +187,19 @@
     <!-- Dimensions for the maximum height of the scalable content container. -->
     <dimen name="content_container_maximum_height">400dp</dimen>
 
+    <!-- Dimensions for PreviewPager and PageIndicator. -->
+    <dimen name="preview_indicator_width">16dp</dimen>
+    <dimen name="preview_indicator_height">8dp</dimen>
+    <dimen name="indicator_container_height">48dp</dimen>
+    <dimen name="indicator_arrow_size">24dp</dimen>
+    <dimen name="indicator_arrow_touch_area_size">48dp</dimen>
+    <dimen name="indicator_arrow_container_margin_horizontal">4dp</dimen>
+    <dimen name="preview_page_gap">16dp</dimen>
+    <dimen name="preview_page_horizontal_margin">56dp</dimen>
+    <dimen name="preview_page_top_margin">16dp</dimen>
+    <dimen name="preview_page_bottom_margin">2dp</dimen>
+    <dimen name="preview_card_padding">20dp</dimen>
+    <dimen name="preview_pager_max_height">450dp</dimen>
+    <dimen name="preview_pager_min_height">350dp</dimen>
+    <dimen name="preview_pager_height">450dp</dimen>
 </resources>
