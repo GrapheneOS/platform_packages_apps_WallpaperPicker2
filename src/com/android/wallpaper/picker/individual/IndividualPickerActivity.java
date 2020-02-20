@@ -117,23 +117,31 @@ public class IndividualPickerActivity extends BaseActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         ((View) findViewById(R.id.fragment_container).getParent())
                 .setOnApplyWindowInsetsListener((view, windowInsets) -> {
-            view.setPadding(view.getPaddingLeft(), windowInsets.getSystemWindowInsetTop(),
-                    view.getPaddingRight(), view.getBottom());
-            // Consume only the top inset (status bar), to let other content in the Activity consume
-            // the nav bar (ie, by using "fitSystemWindows")
-            if (BuildCompat.isAtLeastQ()) {
-                WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
-                builder.setSystemWindowInsets(Insets.of(windowInsets.getSystemWindowInsetLeft(),
-                        0, windowInsets.getStableInsetRight(),
-                        windowInsets.getSystemWindowInsetBottom()));
-                return builder.build();
-            } else {
-                return windowInsets.replaceSystemWindowInsets(
-                        windowInsets.getSystemWindowInsetLeft(),
-                        0, windowInsets.getStableInsetRight(),
-                        windowInsets.getSystemWindowInsetBottom());
-            }
-        });
+                    view.setPadding(
+                            view.getPaddingLeft(),
+                            windowInsets.getSystemWindowInsetTop(),
+                            view.getPaddingRight(),
+                            view.getPaddingBottom());
+                    // Consume only the top inset (status bar),
+                    // to let other content in the Activity consume the nav bar
+                    // (ie, by using "fitSystemWindows")
+                    if (BuildCompat.isAtLeastQ()) {
+                        WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
+                        builder.setSystemWindowInsets(
+                                Insets.of(
+                                        windowInsets.getSystemWindowInsetLeft(),
+                                        /* top= */ 0,
+                                        windowInsets.getStableInsetRight(),
+                                        windowInsets.getSystemWindowInsetBottom()));
+                        return builder.build();
+                    } else {
+                        return windowInsets.replaceSystemWindowInsets(
+                                windowInsets.getSystemWindowInsetLeft(),
+                                /* top= */ 0,
+                                windowInsets.getStableInsetRight(),
+                                windowInsets.getSystemWindowInsetBottom());
+                    }
+                });
 
         if (fragment == null) {
             fragment = injector.getIndividualPickerFragment(mCategoryCollectionId);
