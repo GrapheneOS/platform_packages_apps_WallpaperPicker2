@@ -251,7 +251,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         findViewById(R.id.fragment_container)
                 .setOnApplyWindowInsetsListener((view, windowInsets) -> {
             view.setPadding(view.getPaddingLeft(), windowInsets.getSystemWindowInsetTop(),
-                    view.getPaddingRight(), view.getBottom());
+                    view.getPaddingRight(), view.getPaddingBottom());
             // Consume only the top inset (status bar), to let other content in the Activity consume
             // the nav bar (ie, by using "fitSystemWindows")
             if (BuildCompat.isAtLeastQ()) {

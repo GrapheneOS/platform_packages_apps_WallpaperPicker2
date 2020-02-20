@@ -156,7 +156,7 @@ public class IndividualPickerActivity extends BaseActivity {
                             view.getPaddingLeft(),
                             windowInsets.getSystemWindowInsetTop(),
                             view.getPaddingRight(),
-                            view.getBottom());
+                            view.getPaddingBottom());
                     // Consume only the top inset (status bar),
                     // to let other content in the Activity consume the nav bar
                     // (ie, by using "fitSystemWindows")
