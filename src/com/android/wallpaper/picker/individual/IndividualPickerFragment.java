@@ -15,6 +15,9 @@
  */
 package com.android.wallpaper.picker.individual;
 
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.CANCEL;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.ROTATION;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -78,6 +81,7 @@ import com.android.wallpaper.picker.WallpapersUiContainer;
 import com.android.wallpaper.picker.individual.SetIndividualHolder.OnSetListener;
 import com.android.wallpaper.util.DiskBasedLogger;
 import com.android.wallpaper.util.TileSizeCalculator;
+import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.GridMarginDecoration;
 
 import com.bumptech.glide.Glide;
@@ -85,6 +89,7 @@ import com.bumptech.glide.MemoryCategory;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
 
@@ -111,6 +116,11 @@ public class IndividualPickerFragment extends Fragment
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "individual_set_wallpaper_error_dialog";
     private static final String KEY_NIGHT_MODE = "IndividualPickerFragment.NIGHT_MODE";
+
+    /**
+     * A temporary flag to hide the bottom action bar feature.
+     */
+    private static final boolean TEMP_BOTTOM_ACTION_BAR_FEATURE = false;
 
     WallpaperPreferences mWallpaperPreferences;
     WallpaperChangedNotifier mWallpaperChangedNotifier;
@@ -193,6 +203,8 @@ public class IndividualPickerFragment extends Fragment
             }
         }
     };
+
+    private BottomActionBar mBottomActionBar;
 
     public static IndividualPickerFragment newInstance(String collectionId) {
         Bundle args = new Bundle();
@@ -361,7 +373,33 @@ public class IndividualPickerFragment extends Fragment
 
         setUpBottomSheet();
 
+        if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
+            mBottomActionBar = getActivity().findViewById(R.id.bottom_actionbar);
+
+            mBottomActionBar.setActionClickListener(CANCEL,
+                    unused -> getActivity().onBackPressed());
+            mBottomActionBar.setActionClickListener(ROTATION, unused -> {
+                DialogFragment startRotationDialogFragment = new StartRotationDialogFragment();
+                startRotationDialogFragment.setTargetFragment(
+                        IndividualPickerFragment.this, UNUSED_REQUEST_CODE);
+                startRotationDialogFragment.show(getFragmentManager(), TAG_START_ROTATION_DIALOG);
+            });
+
+            mBottomActionBar.setVisibility(View.VISIBLE);
+            mBottomActionBar.showActionsOnly(
+                    isRotationEnabled() ? EnumSet.of(CANCEL, ROTATION) : EnumSet.of(CANCEL));
+        }
+
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
+            mBottomActionBar.setVisibility(View.GONE);
+            mBottomActionBar.clearActionClickListeners();
+        }
+        super.onDestroyView();
     }
 
     @Override

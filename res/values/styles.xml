@@ -217,4 +217,9 @@
         <item name="cardBackgroundColor">?android:colorPrimary</item>
     </style>
 
+    <!-- Bottom action item -->
+    <style name="BottomActionItemStyle">
+        <item name="android:tint">@color/material_grey500</item>
+    </style>
+
 </resources>
