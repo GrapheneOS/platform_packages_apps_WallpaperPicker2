@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -40,15 +41,17 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+import androidx.viewpager.widget.PagerAdapter;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
@@ -70,10 +73,11 @@ import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
 import com.android.wallpaper.util.DisplayMetricsRetriever;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.TileSizeCalculator;
-import com.android.wallpaper.widget.GridMarginDecoration;
+import com.android.wallpaper.widget.PreviewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -108,7 +112,7 @@ public class CategoryFragment extends ToolbarFragment {
 
     // The number of ViewHolders that don't pertain to category tiles.
     // Currently 2: one for the metadata section and one for the "Select wallpaper" header.
-    private static final int NUM_NON_CATEGORY_VIEW_HOLDERS = 2;
+    private static final int NUM_NON_CATEGORY_VIEW_HOLDERS = 0;
 
     /**
      * The fixed RecyclerView.Adapter position of the ViewHolder for the initial item in the grid --
@@ -130,6 +134,8 @@ public class CategoryFragment extends ToolbarFragment {
     private boolean mTestingMode;
     private ImageView mHomePreview;
     private ImageView mLockscreenPreview;
+    private PreviewPager mPreviewPager;
+    private List<View> mWallPaperPreviews;
 
     public CategoryFragment() {
     }
@@ -148,28 +154,46 @@ public class CategoryFragment extends ToolbarFragment {
                 ? R.layout.fragment_category_scalable_picker
                 : R.layout.fragment_category_picker, container, /* attachToRoot= */ false);
 
-        if (ADD_SCALABLE_HEADER) {
-            mHomePreview = view.findViewById(R.id.home_preview);
-            mLockscreenPreview = view.findViewById(R.id.lockscreen_preview);
-            mLockscreenPreview.setVisibility(
-                    LockWallpaperStatusChecker.isLockWallpaperSet(getContext())
-                            ? View.VISIBLE : View.GONE);
+        mWallPaperPreviews = new ArrayList<>();
+        CardView homePreviewCard = (CardView) inflater.inflate(
+                R.layout.wallpaper_preview_card, null);
+        mHomePreview = homePreviewCard.findViewById(R.id.wallpaper_preview_image);
+        mWallPaperPreviews.add(homePreviewCard);
+
+        if (LockWallpaperStatusChecker.isLockWallpaperSet(getContext())) {
+            CardView lockscreenPreviewCard = (CardView) inflater.inflate(
+                    R.layout.wallpaper_preview_card, null);
+            mLockscreenPreview = lockscreenPreviewCard.findViewById(R.id.wallpaper_preview_image);
+            mWallPaperPreviews.add(lockscreenPreviewCard);
         }
 
+        mPreviewPager = view.findViewById(R.id.wallpaper_preview_pager);
+        mPreviewPager.setAdapter(new PreviewPagerAdapter(mWallPaperPreviews));
+        setupCurrentWallpaperPreview(view);
+
         mImageGrid = view.findViewById(R.id.category_grid);
-        GridMarginDecoration.applyTo(mImageGrid);
+        mImageGrid.addItemDecoration(new GridPaddingDecoration(
+                getResources().getDimensionPixelSize(R.dimen.grid_padding)));
+        view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int left, int top, int right, int bottom,
+                                       int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                View toolBar = view.findViewById(R.id.toolbar);
+                int gridCollapsedHeight = view.getHeight()
+                        - toolBar.getHeight()
+                        - getResources().getDimensionPixelOffset(R.dimen.preview_pager_height);
+                BottomSheetBehavior.from(mImageGrid).setPeekHeight(gridCollapsedHeight);
+                mImageGrid.setMinimumHeight(gridCollapsedHeight);
+                mImageGrid.getLayoutParams().height = view.getHeight() - toolBar.getHeight();
+                view.removeOnLayoutChangeListener(this);
+            }
+        });
 
         mTileSizePx = TileSizeCalculator.getCategoryTileSize(getActivity());
 
-        if (LockWallpaperStatusChecker.isLockWallpaperSet(getContext())) {
-            mAdapter.setNumMetadataCards(CategoryAdapter.METADATA_VIEW_TWO_CARDS);
-        } else {
-            mAdapter.setNumMetadataCards(CategoryAdapter.METADATA_VIEW_SINGLE_CARD);
-        }
         mImageGrid.setAdapter(mAdapter);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getNumColumns());
-        gridLayoutManager.setSpanSizeLookup(new CategorySpanSizeLookup(mAdapter));
         mImageGrid.setLayoutManager(gridLayoutManager);
         setUpToolbar(view);
         return view;
@@ -303,6 +327,70 @@ public class CategoryFragment extends ToolbarFragment {
         return hasReadWallpaperInternal || host.isReadExternalStoragePermissionGranted();
     }
 
+    private void showCurrentWallpaper(View rootView, boolean show) {
+        rootView.findViewById(R.id.wallpaper_preview_pager)
+                .setVisibility(show ? View.VISIBLE : View.GONE);
+        rootView.findViewById(R.id.permission_needed)
+                .setVisibility(show ? View.GONE : View.VISIBLE);
+    }
+
+    private void setupCurrentWallpaperPreview(View rootView) {
+        if (canShowCurrentWallpaper()) {
+            showCurrentWallpaper(rootView, true);
+        } else {
+            showCurrentWallpaper(rootView, false);
+
+            Button mAllowAccessButton = rootView
+                    .findViewById(R.id.permission_needed_allow_access_button);
+            mAllowAccessButton.setOnClickListener(view ->
+                    getFragmentHost().requestExternalStoragePermission(
+                            new PermissionChangedListener() {
+
+                                @Override
+                                public void onPermissionsGranted() {
+                                    showCurrentWallpaper(rootView, true);
+                                    mAdapter.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onPermissionsDenied(boolean dontAskAgain) {
+                                    if (!dontAskAgain) {
+                                        return;
+                                    }
+                                    showPermissionNeededDialog();
+                                }
+                            })
+            );
+
+            // Replace explanation text with text containing the Wallpapers app name which replaces
+            // the placeholder.
+            String appName = getString(R.string.app_name);
+            String explanation = getString(R.string.permission_needed_explanation, appName);
+            TextView explanationView = rootView.findViewById(R.id.permission_needed_explanation);
+            explanationView.setText(explanation);
+        }
+    }
+
+    private void showPermissionNeededDialog() {
+        String permissionNeededMessage = getString(
+                R.string.permission_needed_explanation_go_to_settings);
+        AlertDialog dialog = new AlertDialog.Builder(getActivity(), R.style.LightDialogTheme)
+                .setMessage(permissionNeededMessage)
+                .setPositiveButton(android.R.string.ok, /* onClickListener= */ null)
+                .setNegativeButton(
+                        R.string.settings_button_label,
+                        (dialogInterface, i) -> {
+                            Intent appInfoIntent = new Intent();
+                            appInfoIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package",
+                                    getActivity().getPackageName(), /* fragment= */ null);
+                            appInfoIntent.setData(uri);
+                            startActivityForResult(appInfoIntent, SETTINGS_APP_INFO_REQUEST_CODE);
+                        })
+                .create();
+        dialog.show();
+    }
+
     private CategoryFragmentHost getFragmentHost() {
         return (CategoryFragmentHost) getActivity();
     }
@@ -337,22 +425,25 @@ public class CategoryFragment extends ToolbarFragment {
                             return;
                         }
 
-                        int numMetadataCards = (lockWallpaper == null)
-                                ? CategoryAdapter.METADATA_VIEW_SINGLE_CARD
-                                : CategoryAdapter.METADATA_VIEW_TWO_CARDS;
-                        mAdapter.setNumMetadataCards(numMetadataCards);
-
-                        if (ADD_SCALABLE_HEADER) {
-                            homeWallpaper.getThumbAsset(getActivity().getApplicationContext())
+                        UserEventLogger eventLogger =
+                                InjectorProvider.getInjector().getUserEventLogger(getActivity());
+                        homeWallpaper.getThumbAsset(getActivity().getApplicationContext())
+                                .loadDrawable(getActivity(),
+                                        mHomePreview,
+                                        getResources().getColor(R.color.secondary_color));
+                        mHomePreview.setOnClickListener(view -> {
+                            getFragmentHost().showViewOnlyPreview(homeWallpaper);
+                            eventLogger.logCurrentWallpaperPreviewed();
+                        });
+                        if (lockWallpaper != null) {
+                            lockWallpaper.getThumbAsset(getActivity().getApplicationContext())
                                     .loadDrawable(getActivity(),
-                                            mHomePreview,
+                                            mLockscreenPreview,
                                             getResources().getColor(R.color.secondary_color));
-                            if (lockWallpaper != null) {
-                                lockWallpaper.getThumbAsset(getActivity().getApplicationContext())
-                                        .loadDrawable(getActivity(),
-                                                mLockscreenPreview,
-                                                getResources().getColor(R.color.secondary_color));
-                            }
+                            mLockscreenPreview.setOnClickListener(view -> {
+                                getFragmentHost().showViewOnlyPreview(lockWallpaper);
+                                eventLogger.logCurrentWallpaperPreviewed();
+                            });
                         }
 
                         // The MetadataHolder may be null if the RecyclerView has not yet created the view
@@ -877,7 +968,7 @@ public class CategoryFragment extends ToolbarFragment {
      */
     private class CategoryHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private Category mCategory;
-        private RelativeLayout mTileLayout;
+        private CardView mCategoryView;
         private ImageView mImageView;
         private ImageView mOverlayIconView;
         private TextView mTitleView;
@@ -886,12 +977,12 @@ public class CategoryFragment extends ToolbarFragment {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            mTileLayout = itemView.findViewById(R.id.tile);
+            mCategoryView = itemView.findViewById(R.id.category);
             mImageView = itemView.findViewById(R.id.image);
             mOverlayIconView = itemView.findViewById(R.id.overlay_icon);
             mTitleView = itemView.findViewById(R.id.category_title);
 
-            mTileLayout.getLayoutParams().height = mTileSizePx.y;
+            mCategoryView.getLayoutParams().height = mTileSizePx.y;
         }
 
         @Override
@@ -1002,45 +1093,17 @@ public class CategoryFragment extends ToolbarFragment {
      */
     private class CategoryAdapter extends RecyclerView.Adapter<ViewHolder>
             implements PermissionChangedListener {
-        public static final int METADATA_VIEW_SINGLE_CARD = 1;
-        public static final int METADATA_VIEW_TWO_CARDS = 2;
-        private static final int ITEM_VIEW_TYPE_METADATA = 1;
-        private static final int ITEM_VIEW_TYPE_SELECT_WALLPAPER_HEADER = 2;
         private static final int ITEM_VIEW_TYPE_CATEGORY = 3;
         private static final int ITEM_VIEW_TYPE_LOADING_INDICATOR = 4;
-        private static final int ITEM_VIEW_TYPE_PERMISSION_NEEDED = 5;
         private List<Category> mCategories;
-        private int mNumMetadataCards;
 
         public CategoryAdapter(List<Category> categories) {
             mCategories = categories;
-            mNumMetadataCards = METADATA_VIEW_SINGLE_CARD;
-        }
-
-        /**
-         * Sets the number of metadata cards to be shown in the metadata view holder. Updates the UI
-         * to reflect any changes in that number (e.g., a lock screen wallpaper has been set so we now
-         * need to show two cards).
-         */
-        public void setNumMetadataCards(int numMetadataCards) {
-            if (numMetadataCards != mNumMetadataCards && getItemCount() > 0) {
-                notifyItemChanged(0);
-            }
-
-            mNumMetadataCards = numMetadataCards;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position == 0) {
-                if (canShowCurrentWallpaper()) {
-                    return ITEM_VIEW_TYPE_METADATA;
-                } else {
-                    return ITEM_VIEW_TYPE_PERMISSION_NEEDED;
-                }
-            } else if (position == 1) {
-                return ITEM_VIEW_TYPE_SELECT_WALLPAPER_HEADER;
-            } else if (mAwaitingCategories && position == getItemCount() - 1) {
+            if (mAwaitingCategories && position == getItemCount() - 1) {
                 return ITEM_VIEW_TYPE_LOADING_INDICATOR;
             }
 
@@ -1053,20 +1116,6 @@ public class CategoryFragment extends ToolbarFragment {
             View view;
 
             switch (viewType) {
-                case ITEM_VIEW_TYPE_METADATA:
-                    if (mNumMetadataCards == METADATA_VIEW_SINGLE_CARD) {
-                        view = layoutInflater.inflate(
-                                R.layout.grid_item_single_metadata, parent, /* attachToRoot */ false);
-                        return new SingleWallpaperMetadataHolder(view);
-                    } else { // TWO_CARDS
-                        view = layoutInflater.inflate(
-                                R.layout.grid_item_both_metadata, parent, /* attachToRoot */ false);
-                        return new TwoWallpapersMetadataHolder(view);
-                    }
-                case ITEM_VIEW_TYPE_SELECT_WALLPAPER_HEADER:
-                    view = layoutInflater.inflate(
-                            R.layout.grid_item_select_wallpaper_header, parent, /* attachToRoot */ false);
-                    return new SelectWallpaperHeaderHolder(view);
                 case ITEM_VIEW_TYPE_LOADING_INDICATOR:
                     view = layoutInflater.inflate(
                             R.layout.grid_item_loading_indicator, parent, /* attachToRoot */ false);
@@ -1075,10 +1124,6 @@ public class CategoryFragment extends ToolbarFragment {
                     view = layoutInflater.inflate(
                             R.layout.grid_item_category, parent, /* attachToRoot */ false);
                     return new CategoryHolder(view);
-                case ITEM_VIEW_TYPE_PERMISSION_NEEDED:
-                    view = layoutInflater.inflate(
-                            R.layout.grid_item_permission_needed, parent, /* attachToRoot */ false);
-                    return new PermissionNeededHolder(view);
                 default:
                     Log.e(TAG, "Unsupported viewType " + viewType + " in CategoryAdapter");
                     return null;
@@ -1090,19 +1135,12 @@ public class CategoryFragment extends ToolbarFragment {
             int viewType = getItemViewType(position);
 
             switch (viewType) {
-                case ITEM_VIEW_TYPE_METADATA:
-                    refreshCurrentWallpapers((MetadataHolder) holder, false /* forceRefresh */);
-                    break;
-                case ITEM_VIEW_TYPE_SELECT_WALLPAPER_HEADER:
-                    // No op.
-                    break;
                 case ITEM_VIEW_TYPE_CATEGORY:
                     // Offset position to get category index to account for the non-category view holders.
                     Category category = mCategories.get(position - NUM_NON_CATEGORY_VIEW_HOLDERS);
                     ((CategoryHolder) holder).bindCategory(category);
                     break;
                 case ITEM_VIEW_TYPE_LOADING_INDICATOR:
-                case ITEM_VIEW_TYPE_PERMISSION_NEEDED:
                     // No op.
                     break;
                 default:
@@ -1153,6 +1191,58 @@ public class CategoryFragment extends ToolbarFragment {
                             })
                     .create();
             dialog.show();
+        }
+    }
+
+    private class GridPaddingDecoration extends RecyclerView.ItemDecoration {
+
+        private int mPadding;
+
+        GridPaddingDecoration(int padding) {
+            mPadding = padding;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                                   RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view) - NUM_NON_CATEGORY_VIEW_HOLDERS;
+            if (position >= 0) {
+                outRect.left = mPadding;
+                outRect.right = mPadding;
+            }
+        }
+    }
+
+    private class PreviewPagerAdapter extends PagerAdapter {
+
+        private List<View> mPages;
+
+        PreviewPagerAdapter(List<View> pages) {
+            mPages = pages;
+        }
+
+        @Override
+        public void destroyItem(@NonNull ViewGroup container, int position,
+                                @NonNull Object object) {
+            container.removeView((View) object);
+        }
+
+        @NonNull
+        @Override
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+            View view = mPages.get(position);
+            container.addView(view);
+            return view;
+        }
+
+        @Override
+        public int getCount() {
+            return mPages.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object o) {
+            return view == o;
         }
     }
 }
