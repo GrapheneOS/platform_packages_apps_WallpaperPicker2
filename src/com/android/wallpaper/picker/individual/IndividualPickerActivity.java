@@ -15,6 +15,9 @@
  */
 package com.android.wallpaper.picker.individual;
 
+import static com.android.wallpaper.picker.WallpaperPickerDelegate.PREVIEW_LIVE_WALLPAPER_REQUEST_CODE;
+import static com.android.wallpaper.picker.WallpaperPickerDelegate.PREVIEW_WALLPAPER_REQUEST_CODE;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -57,8 +60,6 @@ public class IndividualPickerActivity extends BaseActivity {
     private static final String EXTRA_CATEGORY_COLLECTION_ID =
             "com.android.wallpaper.category_collection_id";
     private static final String EXTRA_WALLPAPER_ID = "com.android.wallpaper.wallpaper_id";
-    private static final int PREVIEW_WALLPAPER_REQUEST_CODE = 0;
-    private static final int PREVIEW_LIVEWALLPAPER_REQUEST_CODE = 2;
     private static final String KEY_CATEGORY_COLLECTION_ID = "key_category_collection_id";
 
     private InlinePreviewIntentFactory mPreviewIntentFactory;
@@ -156,7 +157,7 @@ public class IndividualPickerActivity extends BaseActivity {
                             view.getPaddingLeft(),
                             windowInsets.getSystemWindowInsetTop(),
                             view.getPaddingRight(),
-                            view.getBottom());
+                            view.getPaddingBottom());
                     // Consume only the top inset (status bar),
                     // to let other content in the Activity consume the nav bar
                     // (ie, by using "fitSystemWindows")
@@ -203,7 +204,7 @@ public class IndividualPickerActivity extends BaseActivity {
 
         boolean shouldShowMessage = false;
         switch (requestCode) {
-            case PREVIEW_LIVEWALLPAPER_REQUEST_CODE:
+            case PREVIEW_LIVE_WALLPAPER_REQUEST_CODE:
                 shouldShowMessage = true;
             case PREVIEW_WALLPAPER_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
@@ -232,7 +233,7 @@ public class IndividualPickerActivity extends BaseActivity {
     public void showPreview(WallpaperInfo wallpaperInfo) {
         mWallpaperPersister.setWallpaperInfoInPreview(wallpaperInfo);
         wallpaperInfo.showPreview(this, mPreviewIntentFactory,
-                wallpaperInfo instanceof LiveWallpaperInfo ? PREVIEW_LIVEWALLPAPER_REQUEST_CODE
+                wallpaperInfo instanceof LiveWallpaperInfo ? PREVIEW_LIVE_WALLPAPER_REQUEST_CODE
                         : PREVIEW_WALLPAPER_REQUEST_CODE);
     }
 

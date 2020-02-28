@@ -226,6 +226,15 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     }
 
     @Override
+    public void onBackPressed() {
+        CategoryFragment categoryFragment = getCategoryFragment();
+        if (categoryFragment != null && categoryFragment.popChildFragment()) {
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     public void requestCustomPhotoPicker(PermissionChangedListener listener) {
         mDelegate.requestCustomPhotoPicker(listener);
     }
@@ -251,7 +260,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         findViewById(R.id.fragment_container)
                 .setOnApplyWindowInsetsListener((view, windowInsets) -> {
             view.setPadding(view.getPaddingLeft(), windowInsets.getSystemWindowInsetTop(),
-                    view.getPaddingRight(), view.getBottom());
+                    view.getPaddingRight(), view.getPaddingBottom());
             // Consume only the top inset (status bar), to let other content in the Activity consume
             // the nav bar (ie, by using "fitSystemWindows")
             if (BuildCompat.isAtLeastQ()) {
@@ -776,14 +785,6 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         mDelegate.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    /**
-     * Shows the picker activity for the given category.
-     */
-    @Override
-    public void show(String collectionId) {
-        mDelegate.show(collectionId);
     }
 
     private void reselectLastTab() {
