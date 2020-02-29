@@ -36,19 +36,11 @@
         android:layout_marginTop="?android:attr/actionBarSize"
         android:visibility="gone" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/category_grid"
+    <FrameLayout
+        android:id="@+id/category_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:colorPrimary"
-        android:clipToPadding="false"
-        android:fitsSystemWindows="true"
-        android:paddingHorizontal="@dimen/grid_edge_space"
-        android:paddingTop="@dimen/grid_padding"
-        android:scrollbarSize="@dimen/grid_padding"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbarThumbVertical="@color/scrollbar_thumb_color_dark"
-        android:scrollbars="vertical"
         app:layout_behavior="@string/bottom_sheet_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
