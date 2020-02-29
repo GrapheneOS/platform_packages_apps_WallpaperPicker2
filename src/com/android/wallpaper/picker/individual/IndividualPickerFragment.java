@@ -927,8 +927,7 @@ public class IndividualPickerFragment extends Fragment
                             }
                         });
             } else { // MOBILE
-                return new PreviewIndividualHolder(
-                        (IndividualPickerActivity) getActivity(), mTileSizePx.y, view);
+                return new PreviewIndividualHolder(getActivity(), mTileSizePx.y, view);
             }
         }
 
