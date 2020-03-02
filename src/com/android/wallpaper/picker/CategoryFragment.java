@@ -147,21 +147,14 @@ public class CategoryFragment extends ToolbarFragment implements CategorySelecto
         mPreviewPager.setAdapter(new PreviewPagerAdapter(mWallPaperPreviews));
         setupCurrentWallpaperPreview(view);
 
-        view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View view, int left, int top, int right, int bottom,
-                                       int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                View toolBar = view.findViewById(R.id.toolbar);
-                View fragmentContainer = view.findViewById(R.id.category_fragment_container);
-                int minimumHeight = view.getHeight()
-                        - toolBar.getHeight()
-                        - getResources().getDimensionPixelOffset(R.dimen.preview_pager_height);
-                BottomSheetBehavior.from(fragmentContainer).setPeekHeight(minimumHeight);
-                fragmentContainer.setMinimumHeight(minimumHeight);
-                fragmentContainer.getLayoutParams().height = view.getHeight() - toolBar.getHeight();
-                view.removeOnLayoutChangeListener(this);
-            }
-        });
+        view.findViewById(R.id.category_fragment_container)
+                .addOnLayoutChangeListener((fragmentContainer, left, top, right, bottom,
+                                            oldLeft, oldTop, oldRight, oldBottom) -> {
+                    int minimumHeight = fragmentContainer.getHeight()
+                            - getResources().getDimensionPixelOffset(R.dimen.preview_pager_height);
+                    BottomSheetBehavior.from(fragmentContainer).setPeekHeight(minimumHeight);
+                    fragmentContainer.setMinimumHeight(minimumHeight);
+                });
 
         setUpToolbar(view);
 
