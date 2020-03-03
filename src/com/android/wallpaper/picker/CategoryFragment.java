@@ -134,6 +134,7 @@ public class CategoryFragment extends ToolbarFragment
     private WallpaperConnection mWallpaperConnection;
     private CategorySelectorFragment mCategorySelectorFragment;
     private boolean mShowSelectedWallpaper;
+    private BottomSheetBehavior mBottomSheetBehavior;
 
     public CategoryFragment() {
         mCategorySelectorFragment = new CategorySelectorFragment();
@@ -187,17 +188,17 @@ public class CategoryFragment extends ToolbarFragment
         });
         setupCurrentWallpaperPreview(view);
 
-        view.findViewById(R.id.category_fragment_container)
-                .addOnLayoutChangeListener((fragmentContainer, left, top, right, bottom,
-                                            oldLeft, oldTop, oldRight, oldBottom) -> {
-                    int minimumHeight = fragmentContainer.getHeight()
-                            - mPreviewPager.getMeasuredHeight();
-                    BottomSheetBehavior.from(fragmentContainer).setPeekHeight(minimumHeight);
-                    fragmentContainer.setMinimumHeight(minimumHeight);
-                    ((CardView) mHomePreview.getParent())
-                            .setRadius(TileSizeCalculator.getPreviewCornerRadius(
-                                getActivity(), homePreviewCard.getMeasuredWidth()));
-                });
+        View fragmentContainer = view.findViewById(R.id.category_fragment_container);
+        mBottomSheetBehavior = BottomSheetBehavior.from(fragmentContainer);
+        fragmentContainer.addOnLayoutChangeListener((containerView, left, top, right, bottom,
+                                                     oldLeft, oldTop, oldRight, oldBottom) -> {
+            int minimumHeight = containerView.getHeight() - mPreviewPager.getMeasuredHeight();
+            mBottomSheetBehavior.setPeekHeight(minimumHeight);
+            containerView.setMinimumHeight(minimumHeight);
+            ((CardView) mHomePreview.getParent())
+                    .setRadius(TileSizeCalculator.getPreviewCornerRadius(
+                            getActivity(), homePreviewCard.getMeasuredWidth()));
+        });
 
         setUpToolbar(view);
 
@@ -298,6 +299,7 @@ public class CategoryFragment extends ToolbarFragment
             updateThumbnail(wallpaperInfo, mHomePreview, true);
             updateThumbnail(wallpaperInfo, mLockscreenPreview, false);
             mShowSelectedWallpaper = true;
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
     }
 
