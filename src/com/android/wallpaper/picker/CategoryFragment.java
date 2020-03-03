@@ -72,6 +72,7 @@ import com.android.wallpaper.module.WallpaperRotationRefresher.Listener;
 import com.android.wallpaper.picker.CategorySelectorFragment.CategorySelectorFragmentHost;
 import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
 import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
+import com.android.wallpaper.picker.individual.IndividualPickerFragment.ThumbnailUpdater;
 import com.android.wallpaper.util.DisplayMetricsRetriever;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.TileSizeCalculator;
@@ -91,7 +92,8 @@ import java.util.List;
 /**
  * Displays the Main UI for picking a category of wallpapers to choose from.
  */
-public class CategoryFragment extends ToolbarFragment implements CategorySelectorFragmentHost {
+public class CategoryFragment extends ToolbarFragment
+        implements CategorySelectorFragmentHost, ThumbnailUpdater {
 
     /**
      * Interface to be implemented by an Activity hosting a {@link CategoryFragment}
@@ -131,6 +133,7 @@ public class CategoryFragment extends ToolbarFragment implements CategorySelecto
     private List<View> mWallPaperPreviews;
     private WallpaperConnection mWallpaperConnection;
     private CategorySelectorFragment mCategorySelectorFragment;
+    private boolean mShowSelectedWallpaper;
 
     public CategoryFragment() {
         mCategorySelectorFragment = new CategorySelectorFragment();
@@ -223,7 +226,9 @@ public class CategoryFragment extends ToolbarFragment implements CategorySelecto
 
         // The wallpaper may have been set while this fragment was paused, so force refresh the current
         // wallpapers and presentation mode.
-        refreshCurrentWallpapers(/* MetadataHolder= */ null, /* forceRefresh= */ true);
+        if (!mShowSelectedWallpaper) {
+            refreshCurrentWallpapers(/* MetadataHolder= */ null, /* forceRefresh= */ true);
+        }
         if (mWallpaperConnection != null) {
             mWallpaperConnection.setVisibility(true);
         }
@@ -279,6 +284,27 @@ public class CategoryFragment extends ToolbarFragment implements CategorySelecto
                 .addToBackStack(null)
                 .commit();
         getChildFragmentManager().executePendingTransactions();
+    }
+
+    @Override
+    public void updateThumbnail(WallpaperInfo wallpaperInfo) {
+        new android.os.Handler().post(() -> {
+            // A config change may have destroyed the activity since the refresh started, so check
+            // for that.
+            if (getActivity() == null) {
+                return;
+            }
+
+            updateThumbnail(wallpaperInfo, mHomePreview, true);
+            updateThumbnail(wallpaperInfo, mLockscreenPreview, false);
+            mShowSelectedWallpaper = true;
+        });
+    }
+
+    @Override
+    public void restoreThumbnails() {
+        refreshCurrentWallpapers(/* MetadataHolder= */ null, /* forceRefresh= */ true);
+        mShowSelectedWallpaper = false;
     }
 
     /**
@@ -440,37 +466,8 @@ public class CategoryFragment extends ToolbarFragment implements CategorySelecto
                             return;
                         }
 
-                        UserEventLogger eventLogger =
-                                InjectorProvider.getInjector().getUserEventLogger(activity);
-
-                        homeWallpaper.getThumbAsset(activity.getApplicationContext())
-                                .loadDrawable(activity,
-                                        mHomePreview,
-                                        getResources().getColor(R.color.secondary_color));
-                        if (homeWallpaper instanceof LiveWallpaperInfo) {
-                            setUpLiveWallpaperPreview(homeWallpaper, mHomePreview,
-                                    new ColorDrawable(getResources().getColor(
-                                            R.color.secondary_color, activity.getTheme())));
-                        } else {
-                            if (mWallpaperConnection != null) {
-                                mWallpaperConnection.disconnect();
-                                mWallpaperConnection = null;
-                            }
-                        }
-                        mHomePreview.setOnClickListener(view -> {
-                            getFragmentHost().showViewOnlyPreview(homeWallpaper);
-                            eventLogger.logCurrentWallpaperPreviewed();
-                        });
-                        if (lockWallpaper != null) {
-                            lockWallpaper.getThumbAsset(activity.getApplicationContext())
-                                    .loadDrawable(activity,
-                                            mLockscreenPreview,
-                                            getResources().getColor(R.color.secondary_color));
-                            mLockscreenPreview.setOnClickListener(view -> {
-                                getFragmentHost().showViewOnlyPreview(lockWallpaper);
-                                eventLogger.logCurrentWallpaperPreviewed();
-                            });
-                        }
+                        updateThumbnail(homeWallpaper, mHomePreview, true);
+                        updateThumbnail(lockWallpaper, mLockscreenPreview, false);
 
                         // The MetadataHolder may be null if the RecyclerView has not yet created the view
                         // holder.
@@ -620,6 +617,43 @@ public class CategoryFragment extends ToolbarFragment implements CategorySelecto
         // In the "both metadata" configuration, wallpaper images minus the gutters account for the full
         // width of the device's screen.
         return metrics.widthPixels - (3 * getResources().getDimensionPixelSize(R.dimen.grid_padding));
+    }
+
+    private void updateThumbnail(WallpaperInfo wallpaperInfo, ImageView thumbnailView,
+                                 boolean isHomeWallpaper) {
+        if (wallpaperInfo == null) {
+            return;
+        }
+
+        if (thumbnailView == null) {
+            return;
+        }
+
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+
+        UserEventLogger eventLogger = InjectorProvider.getInjector().getUserEventLogger(activity);
+        wallpaperInfo.getThumbAsset(activity.getApplicationContext())
+                .loadDrawable(activity, thumbnailView,
+                        getResources().getColor(R.color.secondary_color));
+        if (isHomeWallpaper) {
+            if (wallpaperInfo instanceof LiveWallpaperInfo) {
+                setUpLiveWallpaperPreview(wallpaperInfo, thumbnailView,
+                        new ColorDrawable(getResources().getColor(
+                                R.color.secondary_color, activity.getTheme())));
+            } else {
+                if (mWallpaperConnection != null) {
+                    mWallpaperConnection.disconnect();
+                    mWallpaperConnection = null;
+                }
+            }
+        }
+        thumbnailView.setOnClickListener(view -> {
+            getFragmentHost().showViewOnlyPreview(wallpaperInfo);
+            eventLogger.logCurrentWallpaperPreviewed();
+        });
     }
 
     private interface MetadataHolder {

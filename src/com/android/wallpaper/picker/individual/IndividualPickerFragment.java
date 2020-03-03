@@ -122,6 +122,21 @@ public class IndividualPickerFragment extends Fragment
      */
     private static final boolean TEMP_BOTTOM_ACTION_BAR_FEATURE = false;
 
+    /**
+     * An interface for updating the thumbnail with the specific wallpaper.
+     */
+    public interface ThumbnailUpdater {
+        /**
+         * Updates the thumbnail with the specific wallpaper.
+         */
+        void updateThumbnail(WallpaperInfo wallpaperInfo);
+
+        /**
+         * Restores to the thumbnails of the wallpapers which were applied.
+         */
+        void restoreThumbnails();
+    }
+
     WallpaperPreferences mWallpaperPreferences;
     WallpaperChangedNotifier mWallpaperChangedNotifier;
     RecyclerView mImageGrid;
@@ -398,6 +413,7 @@ public class IndividualPickerFragment extends Fragment
         if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
             mBottomActionBar.setVisibility(View.GONE);
             mBottomActionBar.clearActionClickListeners();
+            restoreThumbnails();
         }
         super.onDestroyView();
     }
@@ -738,6 +754,20 @@ public class IndividualPickerFragment extends Fragment
         }
     }
 
+    private void updateThumbnail(WallpaperInfo wallpaperInfo) {
+        ThumbnailUpdater thumbnailUpdater = (ThumbnailUpdater) getParentFragment();
+        if (thumbnailUpdater != null) {
+            thumbnailUpdater.updateThumbnail(wallpaperInfo);
+        }
+    }
+
+    private void restoreThumbnails() {
+        ThumbnailUpdater thumbnailUpdater = (ThumbnailUpdater) getParentFragment();
+        if (thumbnailUpdater != null) {
+            thumbnailUpdater.restoreThumbnails();
+        }
+    }
+
     /**
      * ViewHolder subclass for "daily refresh" tile in the RecyclerView, only shown if rotation is
      * enabled for this category.
@@ -1071,6 +1101,11 @@ public class IndividualPickerFragment extends Fragment
             String wallpaperId = wallpaper.getWallpaperId();
             if (wallpaperId != null && wallpaperId.equals(prefs.getHomeWallpaperRemoteId())) {
                 mSelectedAdapterPosition = position;
+            }
+
+            if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
+                holder.itemView.findViewById(R.id.tile)
+                        .setOnClickListener(view -> updateThumbnail(wallpaper));
             }
         }
     }
