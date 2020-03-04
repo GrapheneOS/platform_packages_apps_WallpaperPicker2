@@ -15,12 +15,14 @@
  */
 package com.android.wallpaper.util;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.view.Display;
+import android.view.View;
 
 /**
  * Static utility methods for wallpaper cropping operations.
@@ -144,6 +146,57 @@ public final class WallpaperCropUtils {
     }
 
     /**
+     * Calculates {@link Rect} of the wallpaper which we want to crop to in physical pixel terms
+     * (i.e., scaled to current zoom).
+     *
+     * @param rawWallpaperSize        the size of the raw wallpaper as a Point (x,y).
+     * @param visibleRawWallpaperRect the area of the raw wallpaper which is expected to see.
+     * @param wallpaperZoom           the factor which is used to scale the raw wallpaper.
+     */
+    public static Rect calculateCropRect(Context context, Display display, Point rawWallpaperSize,
+                                         Rect visibleRawWallpaperRect, float wallpaperZoom) {
+        int scaledWallpaperWidth = (int) (rawWallpaperSize.x * wallpaperZoom);
+        int scaledWallpaperHeight = (int) (rawWallpaperSize.y * wallpaperZoom);
+        int scrollX = (int) (visibleRawWallpaperRect.left * wallpaperZoom);
+        int scrollY = (int) (visibleRawWallpaperRect.top * wallpaperZoom);
+
+        visibleRawWallpaperRect.set(0, 0, scaledWallpaperWidth, scaledWallpaperHeight);
+
+        Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(display);
+        // Crop rect should start off as the visible screen and then include extra width and height
+        // if available within wallpaper at the current zoom.
+        Rect cropRect = new Rect(scrollX, scrollY, scrollX + screenSize.x, scrollY + screenSize.y);
+
+        Point defaultCropSurfaceSize = WallpaperCropUtils.getDefaultCropSurfaceSize(
+                context.getResources(), display);
+        int extraWidth = defaultCropSurfaceSize.x - screenSize.x;
+        int extraHeightTopAndBottom = (int) ((defaultCropSurfaceSize.y - screenSize.y) / 2f);
+
+        // Try to increase size of screenRect to include extra width depending on the layout
+        // direction.
+        if (isRtl(context)) {
+            cropRect.left = Math.max(cropRect.left - extraWidth, visibleRawWallpaperRect.left);
+        } else {
+            cropRect.right = Math.min(cropRect.right + extraWidth, visibleRawWallpaperRect.right);
+        }
+
+        // Try to increase the size of the cropRect to to include extra height.
+        int availableExtraHeightTop = cropRect.top - Math.max(
+                visibleRawWallpaperRect.top,
+                cropRect.top - extraHeightTopAndBottom);
+        int availableExtraHeightBottom = Math.min(
+                visibleRawWallpaperRect.bottom,
+                cropRect.bottom + extraHeightTopAndBottom) - cropRect.bottom;
+
+        int availableExtraHeightTopAndBottom =
+                Math.min(availableExtraHeightTop, availableExtraHeightBottom);
+        cropRect.top -= availableExtraHeightTopAndBottom;
+        cropRect.bottom += availableExtraHeightTopAndBottom;
+
+        return cropRect;
+    }
+
+    /**
      * Resize the wallpaper size so it's new size fits in a outWidth by outHeight rectangle.
      *
      * @param wallpaperSize Rectangle with the current wallpaper size. It will be resized.
@@ -165,5 +218,14 @@ public final class WallpaperCropUtils {
             wallpaperSize.right = (int) (wallpaperSize.right * scale + 0.5f);
             wallpaperSize.bottom = (int) (wallpaperSize.bottom * scale + 0.5f);
         }
+    }
+
+    /**
+     * Returns whether layout direction is RTL (or false for LTR). Since native RTL layout support
+     * was added in API 17, returns false for versions lower than 17.
+     */
+    private static boolean isRtl(Context context) {
+        return context.getResources().getConfiguration().getLayoutDirection()
+                == View.LAYOUT_DIRECTION_RTL;
     }
 }
