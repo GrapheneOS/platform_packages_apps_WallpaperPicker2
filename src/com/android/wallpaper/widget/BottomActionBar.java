@@ -95,6 +95,20 @@ public class BottomActionBar extends FrameLayout {
         hideActions(EnumSet.complementOf(actions));
     }
 
+    /** Enables all the actions' {@link View}. */
+    public void enableActions() {
+        enableActions(true);
+    }
+
+    /** Disables all the actions' {@link View}. */
+    public void disableActions() {
+        enableActions(false);
+    }
+
+    private void enableActions(boolean enable) {
+        mActionList.forEach((bottomAction, view) -> view.setEnabled(enable));
+    }
+
     private void showActions(EnumSet<BottomAction> actions, boolean show) {
         actions.forEach(bottomAction ->
                 mActionList.get(bottomAction).setVisibility(show ? VISIBLE : GONE));
