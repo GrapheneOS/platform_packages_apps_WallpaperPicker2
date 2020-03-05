@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.wallpaper.module;
+package com.android.wallpaper.testing;
+
+import com.android.wallpaper.monitor.PerformanceMonitor;
 
 /**
- * Reads whether the application's live wallpaper service is set to the device.
+ * No-op performance monitor for test.
  */
-public interface LiveWallpaperStatusChecker {
+public class TestPerformanceMonitor implements PerformanceMonitor {
 
-    /**
-     * Returns whether the live wallpaper for daily wallpapers is set to the device.
-     */
-    boolean isNoBackupImageWallpaperSet();
+    @Override
+    public void recordFullResPreviewLoadedMemorySnapshot() {
+    }
 }

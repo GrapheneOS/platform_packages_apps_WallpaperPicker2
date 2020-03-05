@@ -80,4 +80,9 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"மையமாகச் செதுக்கு"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"திரையில் பொருந்தும்படி விரி"</string>
     <string name="preview" msgid="1774602101743861071">"மாதிரிக்காட்சி"</string>
+    <string name="tab_info" msgid="818614080690111416">"தகவல்"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"பிரத்தியேகமாக்கு"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"அமைப்புகள்…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"நீக்கு"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"மொபைலில் இருந்து இந்த வால்பேப்பரை நீக்கவா?"</string>
 </resources>

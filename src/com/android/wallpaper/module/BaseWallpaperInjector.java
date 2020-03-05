@@ -34,12 +34,10 @@ public abstract class BaseWallpaperInjector implements Injector {
     private Requester mRequester;
     private WallpaperManagerCompat mWallpaperManagerCompat;
     private CurrentWallpaperInfoFactory mCurrentWallpaperFactory;
-    private LiveWallpaperStatusChecker mLiveWallpaperStatusChecker;
     private NetworkStatusNotifier mNetworkStatusNotifier;
     private AlarmManagerWrapper mAlarmManagerWrapper;
     private ExploreIntentChecker mExploreIntentChecker;
     private SystemFeatureChecker mSystemFeatureChecker;
-    private RotatingWallpaperComponentChecker mRotatingWallpaperComponentChecker;
     private FormFactorChecker mFormFactorChecker;
     private PackageStatusNotifier mPackageStatusNotifier;
     private LiveWallpaperInfoFactory mLiveWallpaperInfoFactory;
@@ -111,15 +109,6 @@ public abstract class BaseWallpaperInjector implements Injector {
     }
 
     @Override
-    public synchronized LiveWallpaperStatusChecker getLiveWallpaperStatusChecker(Context context) {
-        if (mLiveWallpaperStatusChecker == null) {
-            mLiveWallpaperStatusChecker =
-                    new DefaultLiveWallpaperStatusChecker(context.getApplicationContext());
-        }
-        return mLiveWallpaperStatusChecker;
-    }
-
-    @Override
     public synchronized NetworkStatusNotifier getNetworkStatusNotifier(Context context) {
         if (mNetworkStatusNotifier == null) {
             mNetworkStatusNotifier = new DefaultNetworkStatusNotifier(context.getApplicationContext());
@@ -158,14 +147,6 @@ public abstract class BaseWallpaperInjector implements Injector {
             mSystemFeatureChecker = new DefaultSystemFeatureChecker();
         }
         return mSystemFeatureChecker;
-    }
-
-    @Override
-    public synchronized RotatingWallpaperComponentChecker getRotatingWallpaperComponentChecker() {
-        if (mRotatingWallpaperComponentChecker == null) {
-            mRotatingWallpaperComponentChecker = new DefaultRotatingWallpaperComponentChecker();
-        }
-        return mRotatingWallpaperComponentChecker;
     }
 
     @Override

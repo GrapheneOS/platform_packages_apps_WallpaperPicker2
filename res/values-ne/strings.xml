@@ -80,4 +80,9 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"मध्यभागमा क्रप गरिएको"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"तन्काइएको"</string>
     <string name="preview" msgid="1774602101743861071">"पूर्वावलोकन"</string>
+    <string name="tab_info" msgid="818614080690111416">"जानकारी"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"आफू अनुकूल पार्नुहोस्"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"सेटिङ…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"मेट्नुहोस्"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"तपाईंको फोनबाट यो वालपेपर मेटाउने हो?"</string>
 </resources>

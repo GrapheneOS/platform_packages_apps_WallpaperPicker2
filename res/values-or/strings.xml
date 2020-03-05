@@ -80,4 +80,9 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"ସେଣ୍ଟର୍ କ୍ରପ୍"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"ପ୍ରସାରିତ କରନ୍ତୁ"</string>
     <string name="preview" msgid="1774602101743861071">"ପ୍ରିଭ୍ୟୁ"</string>
+    <string name="tab_info" msgid="818614080690111416">"ସୂଚନା"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"କଷ୍ଟମାଇଜ୍ କରନ୍ତୁ"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"ସେଟିଂସ୍..."</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"ଡିଲିଟ୍ କରନ୍ତୁ"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"ଆପଣଙ୍କର ଫୋନ୍‌ରୁ ଏହି ୱାଲ୍‌ପେପର୍‌କୁ ଡିଲିଟ୍ କରିବେ କି?"</string>
 </resources>
