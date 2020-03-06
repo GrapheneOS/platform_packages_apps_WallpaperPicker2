@@ -838,9 +838,24 @@ public class IndividualPickerFragment extends Fragment
     }
 
     private void onWallpaperSelected(WallpaperInfo selectedWallpaperInfo) {
+        updateActivatedStatus(mSelectedWallpaperInfo, false);
+        updateActivatedStatus(selectedWallpaperInfo, true);
         updateBottomActions(selectedWallpaperInfo != null);
         updateThumbnail(selectedWallpaperInfo);
         mSelectedWallpaperInfo = selectedWallpaperInfo;
+    }
+
+    private void updateActivatedStatus(WallpaperInfo wallpaperInfo, boolean isActivated) {
+        int index = mWallpapers.indexOf(wallpaperInfo);
+        index = (isRotationEnabled() || mCategory.supportsCustomPhotos())
+                ? index + 1 : index;
+        ViewHolder holder = mImageGrid.findViewHolderForAdapterPosition(index);
+        if (holder != null) {
+            holder.itemView.setActivated(isActivated);
+        } else {
+            // Item is not visible, make sure the item is re-bound when it becomes visible.
+            mAdapter.notifyItemChanged(index);
+        }
     }
 
     /**
@@ -1025,6 +1040,9 @@ public class IndividualPickerFragment extends Fragment
         private ViewHolder createIndividualHolder(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.grid_item_image, parent, false);
+            if (!TEMP_BOTTOM_ACTION_BAR_FEATURE) {
+                view.findViewById(R.id.tile).setPadding(0, 0, 0, 0);
+            }
 
             if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
                 SelectionAnimator selectionAnimator =
@@ -1179,6 +1197,7 @@ public class IndividualPickerFragment extends Fragment
             }
 
             if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
+                holder.itemView.setActivated(wallpaper.equals(mSelectedWallpaperInfo));
                 holder.itemView.findViewById(R.id.tile).setOnClickListener(
                         view -> onWallpaperSelected(wallpaper));
             }
