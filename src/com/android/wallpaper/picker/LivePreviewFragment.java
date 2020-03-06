@@ -234,6 +234,7 @@ public class LivePreviewFragment extends PreviewFragment {
             @Override
             public void onPageSelected(int position) {
                 mViewPager.requestLayout();
+                logLiveWallpaperPageSelected(position);
             }
         });
 
@@ -246,6 +247,19 @@ public class LivePreviewFragment extends PreviewFragment {
             mTabLayout.setupWithViewPager(mViewPager);
         }
         mViewPager.setCurrentItem(0);
+    }
+
+    private void logLiveWallpaperPageSelected(int position) {
+        switch (position) {
+            case 0:
+                mUserEventLogger.logLiveWallpaperInfoSelected(
+                        mWallpaper.getCollectionId(getActivity()), mWallpaper.getWallpaperId());
+                break;
+            case 1:
+                mUserEventLogger.logLiveWallpaperCustomizeSelected(
+                        mWallpaper.getCollectionId(getActivity()), mWallpaper.getWallpaperId());
+                break;
+        }
     }
 
     protected WallpaperConnectionListener getWallpaperConnectionListener() {
