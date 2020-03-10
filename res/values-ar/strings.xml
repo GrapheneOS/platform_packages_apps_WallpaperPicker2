@@ -30,11 +30,11 @@
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"خلفية يومية"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"الشاشة الرئيسية وشاشة التأمين"</string>
     <string name="home_screen_message" msgid="106444102822522813">"الشاشة الرئيسية"</string>
-    <string name="lock_screen_message" msgid="1534506081955058013">"شاشة التأمين"</string>
+    <string name="lock_screen_message" msgid="1534506081955058013">"شاشة القفل"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"الشاشة الرئيسية وشاشة التأمين"</string>
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"تعيين كخلفية"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"الشاشة الرئيسية"</string>
-    <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"شاشة التأمين"</string>
+    <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"شاشة القفل"</string>
     <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"الشاشة الرئيسية وشاشة التأمين"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"خلفية الصور التي يتم عرضها بالتناوب"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"لعرض الخلفية الحالية هنا، يحتاج تطبيق <xliff:g id="APP_NAME">%1$s</xliff:g> إلى الوصول إلى مساحة تخزين الجهاز."</string>
@@ -62,10 +62,10 @@
     <string name="wallpaper_thumbnail" msgid="569931475923605974">"صورة مصغَّرة للخلفية"</string>
     <string name="explore_home_screen" msgid="8756346794535765482">"استكشاف خلفية الشاشة الرئيسية"</string>
     <string name="explore_lock_screen" msgid="268938342103703665">"استكشاف خلفية شاشة التأمين"</string>
-    <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"تحديث خلفية الشاشة الرئيسية اليومية"</string>
-    <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"تحديث الخلفية اليومية"</string>
-    <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"جارٍ تحديث الخلفية اليومية…"</string>
-    <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"تعذّر تحديث الخلفية اليومية. يُرجى التحقق من اتصالك بالشبكة وإعادة المحاولة."</string>
+    <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"إعادة تحميل خلفية الشاشة الرئيسية اليومية"</string>
+    <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"إعادة تحميل الخلفية اليومية"</string>
+    <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"تجري إعادة تحميل الخلفية اليومية…"</string>
+    <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"تعذّرت إعادة تحميل الخلفية اليومية. يُرجى التحقق من اتصالك بالشبكة وإعادة المحاولة."</string>
     <string name="collapse_attribution_panel" msgid="4367971404848122275">"تصغير لوحة معلومات الخلفية"</string>
     <string name="expand_attribution_panel" msgid="6975094181456095915">"توسيع لوحة معلومات الخلفية"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"خلفيات على الجهاز"</string>
@@ -80,4 +80,12 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"توسيط مع اقتصاص المساحة الزائدة"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"توسيع للعرض بملء الشاشة"</string>
     <string name="preview" msgid="1774602101743861071">"معاينة"</string>
+    <string name="tab_info" msgid="818614080690111416">"معلومات"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"تخصيص"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"الإعدادات…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"حذف"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"هل تريد حذف هذه الخلفية من هاتفك؟"</string>
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"الصفحة <xliff:g id="ID_1">%1$d</xliff:g> من <xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"الصفحة التالية"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"الصفحة السابقة"</string>
 </resources>

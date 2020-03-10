@@ -80,4 +80,12 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Prerje qendrore"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"E tendosur"</string>
     <string name="preview" msgid="1774602101743861071">"Shiko paraprakisht"</string>
+    <string name="tab_info" msgid="818614080690111416">"Informacione"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Personalizo"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Cilësimet…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Fshi"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Do ta fshish këtë imazh sfondi nga telefoni?"</string>
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"Faqja <xliff:g id="ID_1">%1$d</xliff:g> nga <xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"Para"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"Pas"</string>
 </resources>
