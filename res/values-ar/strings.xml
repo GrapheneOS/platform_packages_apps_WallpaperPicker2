@@ -62,10 +62,10 @@
     <string name="wallpaper_thumbnail" msgid="569931475923605974">"صورة مصغَّرة للخلفية"</string>
     <string name="explore_home_screen" msgid="8756346794535765482">"استكشاف خلفية الشاشة الرئيسية"</string>
     <string name="explore_lock_screen" msgid="268938342103703665">"استكشاف خلفية شاشة التأمين"</string>
-    <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"تحديث خلفية الشاشة الرئيسية اليومية"</string>
-    <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"تحديث الخلفية اليومية"</string>
-    <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"جارٍ تحديث الخلفية اليومية…"</string>
-    <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"تعذّر تحديث الخلفية اليومية. يُرجى التحقق من اتصالك بالشبكة وإعادة المحاولة."</string>
+    <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"إعادة تحميل خلفية الشاشة الرئيسية اليومية"</string>
+    <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"إعادة تحميل الخلفية اليومية"</string>
+    <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"تجري إعادة تحميل الخلفية اليومية…"</string>
+    <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"تعذّرت إعادة تحميل الخلفية اليومية. يُرجى التحقق من اتصالك بالشبكة وإعادة المحاولة."</string>
     <string name="collapse_attribution_panel" msgid="4367971404848122275">"تصغير لوحة معلومات الخلفية"</string>
     <string name="expand_attribution_panel" msgid="6975094181456095915">"توسيع لوحة معلومات الخلفية"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"خلفيات على الجهاز"</string>
