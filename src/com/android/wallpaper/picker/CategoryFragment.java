@@ -151,7 +151,7 @@ public class CategoryFragment extends ToolbarFragment implements CategorySelecto
                 .addOnLayoutChangeListener((fragmentContainer, left, top, right, bottom,
                                             oldLeft, oldTop, oldRight, oldBottom) -> {
                     int minimumHeight = fragmentContainer.getHeight()
-                            - getResources().getDimensionPixelOffset(R.dimen.preview_pager_height);
+                            - mPreviewPager.getMeasuredHeight();
                     BottomSheetBehavior.from(fragmentContainer).setPeekHeight(minimumHeight);
                     fragmentContainer.setMinimumHeight(minimumHeight);
                 });
