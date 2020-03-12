@@ -40,6 +40,12 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
+    <style name="WallpaperTheme.NoBackground">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
     <style name="WallpaperTheme.Preview" parent="@android:style/Theme.DeviceDefault.Settings">
         <item name="android:colorPrimary">@color/material_white_100</item>
         <item name="colorPrimary">@color/material_white_100</item>

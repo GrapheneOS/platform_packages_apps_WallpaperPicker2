@@ -32,7 +32,8 @@
             android:id="@+id/wallpaper_preview_pager"
             android:layout_width="match_parent"
             android:layout_height="@dimen/preview_pager_height"
-            android:background="@color/preview_pager_background" />
+            android:background="@color/preview_pager_background"
+            app:card_style="screen_aspect_ratio" />
 
         <include
             android:id="@+id/permission_needed"
