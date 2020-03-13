@@ -26,6 +26,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.Rect;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -35,13 +36,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -87,7 +88,6 @@ import com.android.wallpaper.picker.individual.SetIndividualHolder.OnSetListener
 import com.android.wallpaper.util.DiskBasedLogger;
 import com.android.wallpaper.util.TileSizeCalculator;
 import com.android.wallpaper.widget.BottomActionBar;
-import com.android.wallpaper.widget.GridMarginDecoration;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
@@ -395,7 +395,8 @@ public class IndividualPickerFragment extends Fragment
             updateImageGridPadding(false /* addExtraBottomSpace */);
             mImageGrid.setScrollBarSize(gridPaddingPx);
         }
-        GridMarginDecoration.applyTo(mImageGrid);
+        mImageGrid.addItemDecoration(new GridPaddingDecoration(
+                getResources().getDimensionPixelSize(R.dimen.grid_padding)));
 
         maybeSetUpImageGrid();
 
@@ -864,7 +865,7 @@ public class IndividualPickerFragment extends Fragment
      */
     private class RotationHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private FrameLayout mTileLayout;
+        private CardView mTileLayout;
         private TextView mRotationMessage;
         private TextView mRotationTitle;
         private ImageView mRefreshIcon;
@@ -936,7 +937,7 @@ public class IndividualPickerFragment extends Fragment
                             ? getResources().getColor(R.color.rotation_tile_not_enabled_refresh_icon_color)
                             : getResources().getColor(R.color.rotation_tile_enabled_refresh_icon_color);
 
-            mTileLayout.setBackgroundColor(newBackgroundColor);
+            mTileLayout.setCardBackgroundColor(newBackgroundColor);
             mRotationTitle.setTextColor(newTitleTextColor);
             mRotationMessage.setText(getResIdForRotationState(rotationState));
             mRotationMessage.setTextColor(newSubtitleTextColor);
@@ -1200,6 +1201,25 @@ public class IndividualPickerFragment extends Fragment
                 holder.itemView.setActivated(wallpaper.equals(mSelectedWallpaperInfo));
                 holder.itemView.findViewById(R.id.tile).setOnClickListener(
                         view -> onWallpaperSelected(wallpaper));
+            }
+        }
+    }
+
+    private class GridPaddingDecoration extends RecyclerView.ItemDecoration {
+
+        private int mPadding;
+
+        GridPaddingDecoration(int padding) {
+            mPadding = padding;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                                   RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view);
+            if (position >= 0) {
+                outRect.left = mPadding;
+                outRect.right = mPadding;
             }
         }
     }

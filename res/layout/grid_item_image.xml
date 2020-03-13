@@ -13,10 +13,14 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:contentDescription="@string/wallpaper_thumbnail">
+    android:layout_marginTop="8dp"
+    android:contentDescription="@string/wallpaper_thumbnail"
+    app:cardCornerRadius="?android:dialogCornerRadius"
+    app:cardElevation="0dp">
 
     <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/tile"
@@ -80,4 +84,4 @@
         android:src="@drawable/check_circle_blue"
         android:visibility="gone" />
 
-</FrameLayout>
+</androidx.cardview.widget.CardView>
