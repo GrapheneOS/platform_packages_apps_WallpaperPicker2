@@ -40,6 +40,12 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
+    <style name="WallpaperTheme.NoBackground">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
     <style name="WallpaperTheme.Preview" parent="@android:style/Theme.DeviceDefault.Settings">
         <item name="android:colorPrimary">@color/material_white_100</item>
         <item name="colorPrimary">@color/material_white_100</item>
@@ -209,6 +215,11 @@
         <item name="android:clipChildren">true</item>
         <item name="contentPadding">0dp</item>
         <item name="cardBackgroundColor">?android:colorPrimary</item>
+    </style>
+
+    <!-- Bottom action item -->
+    <style name="BottomActionItemStyle">
+        <item name="android:tint">@color/material_grey500</item>
     </style>
 
 </resources>
