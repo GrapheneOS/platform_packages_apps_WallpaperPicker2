@@ -17,5 +17,4 @@
 -->
 <resources>
     <color name="preview_pager_background">@color/google_grey900</color>
-    <color name="edit_background_base">@color/material_white_100</color>
 </resources>
