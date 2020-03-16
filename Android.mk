@@ -82,7 +82,8 @@ LOCAL_STATIC_JAVA_LIBRARIES := \
     wallpaper2-disklrucache-target \
     wallpaper2-gifdecoder-target \
     volley \
-    libbackup
+    libbackup \
+    SystemUISharedLib
 
 LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res
 

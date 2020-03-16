@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.content.pm.ActivityInfo;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import android.util.Log;
+import android.view.Display;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -21,7 +24,9 @@ import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment.Listener;
+import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.ThrowableAnalyzer;
+import com.android.wallpaper.util.WallpaperCropUtils;
 
 import com.bumptech.glide.Glide;
 
@@ -36,6 +41,7 @@ import java.util.Optional;
  */
 public class WallpaperSetter {
 
+    private static final String TAG = "WallpaperSetter";
     private static final String PROGRESS_DIALOG_NO_TITLE = null;
     private static final boolean PROGRESS_DIALOG_INDETERMINATE = true;
 
@@ -56,6 +62,38 @@ public class WallpaperSetter {
         mWallpaperPersister = wallpaperPersister;
         mPreferences = preferences;
         mUserEventLogger = userEventLogger;
+    }
+
+    /**
+     * Sets current wallpaper to the device with the minimum scale to fit the screen size.
+     *
+     * @param containerActivity main Activity that owns the current fragment
+     * @param wallpaper info for the actual wallpaper to set
+     * @param destination the wallpaper destination i.e. home vs. lockscreen vs. both.
+     * @param callback optional callback to be notified when the wallpaper is set.
+     */
+    public void setCurrentWallpaper(Activity containerActivity, WallpaperInfo wallpaper,
+                                    @Destination final int destination,
+                                    @Nullable SetWallpaperCallback callback) {
+        Asset wallpaperAsset = wallpaper.getAsset(containerActivity.getApplicationContext());
+        wallpaperAsset.decodeRawDimensions(containerActivity, dimensions -> {
+            if (dimensions == null) {
+                Log.e(TAG, "Raw wallpaper's dimensions are null");
+                return;
+            }
+
+            Display defaultDisplay = containerActivity.getWindowManager().getDefaultDisplay();
+            Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(defaultDisplay);
+            Rect visibleRawWallpaperRect =
+                    WallpaperCropUtils.calculateVisibleRect(dimensions, screenSize);
+            float wallpaperScale = WallpaperCropUtils.calculateMinZoom(dimensions, screenSize);
+            Rect cropRect = WallpaperCropUtils.calculateCropRect(
+                    containerActivity.getApplicationContext(), defaultDisplay,
+                    dimensions, visibleRawWallpaperRect, wallpaperScale);
+
+            setCurrentWallpaper(containerActivity, wallpaper, wallpaperAsset, destination,
+                    wallpaperScale, cropRect, callback);
+        });
     }
 
     /**
@@ -236,6 +274,9 @@ public class WallpaperSetter {
             public void onDialogDismissed(boolean withItemSelected) {
                 if (!withItemSelected) {
                     restoreScreenOrientationIfNeeded(activity);
+                }
+                if (listener != null) {
+                    listener.onDialogDismissed(withItemSelected);
                 }
             }
         };

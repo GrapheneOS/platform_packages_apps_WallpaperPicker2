@@ -22,7 +22,8 @@
         android:id="@+id/tile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/light_grey"
+        android:padding="@dimen/option_border_width"
+        android:background="@drawable/option_border"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground">
