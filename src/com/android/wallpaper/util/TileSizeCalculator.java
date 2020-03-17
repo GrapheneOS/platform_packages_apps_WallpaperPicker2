@@ -23,12 +23,14 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
+
+import com.android.systemui.shared.system.QuickStepContract;
 import com.android.wallpaper.R;
 import com.android.wallpaper.module.FormFactorChecker;
 import com.android.wallpaper.module.FormFactorChecker.FormFactor;
 import com.android.wallpaper.module.InjectorProvider;
 
-import androidx.annotation.NonNull;
 
 /**
  * Simple utility class that calculates tile sizes relative to the size of the display.
@@ -142,6 +144,15 @@ public class TileSizeCalculator {
         int columnCount = getNumColumns(
                 appContext, windowWidthPx, INDIVIDUAL_FEWER_COLUMNS, INDIVIDUAL_MORE_COLUMNS);
         return getTileSize(appContext, columnCount, windowWidthPx);
+    }
+
+    /**
+     * Returns the corner radius to use in a wallpaper preview view so that it's proportional
+     * to the screen's corner radius
+     */
+    public static float getPreviewCornerRadius(@NonNull Activity activity, int previewWidth) {
+        return QuickStepContract.getWindowCornerRadius(Resources.getSystem())
+                / ((float) getActivityWindowWidthPx(activity) / previewWidth);
     }
 
     /**
