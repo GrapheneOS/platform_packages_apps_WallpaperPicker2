@@ -82,14 +82,19 @@ LOCAL_STATIC_JAVA_LIBRARIES := \
     wallpaper2-disklrucache-target \
     wallpaper2-gifdecoder-target \
     volley \
-    libbackup
+    libbackup \
+    SystemUISharedLib
 
 LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res
 
 LOCAL_PROGUARD_ENABLED := disabled
 LOCAL_MANIFEST_FILE := AndroidManifest.xml
 
-LOCAL_SDK_VERSION := current
+ifneq (,$(wildcard frameworks/base))
+    LOCAL_PRIVATE_PLATFORM_APIS := true
+else
+    LOCAL_SDK_VERSION := current
+endif
 LOCAL_MODULE := WallpaperPicker2CommonDepsLib
 LOCAL_PRIVILEGED_MODULE := true
 

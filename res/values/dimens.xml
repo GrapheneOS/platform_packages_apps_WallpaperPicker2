@@ -202,4 +202,15 @@
     <dimen name="preview_pager_max_height">450dp</dimen>
     <dimen name="preview_pager_min_height">350dp</dimen>
     <dimen name="preview_pager_height">450dp</dimen>
+    <dimen name="system_rounded_corner">@*android:dimen/rounded_corner_radius_top</dimen>
+    <!-- The maximum height ratio of PreviewPager and its parent view. -->
+    <item name="preview_pager_maximum_height_ratio" format="float" type="dimen">0.7</item>
+
+    <!-- Dimensions for the bottom bar. -->
+    <dimen name="bottom_navbar_height">56dp</dimen>
+    <dimen name="bottom_action_bar_padding_horizontal">16dp</dimen>
+    <dimen name="bottom_action_bar_elevation">10dp</dimen>
+
+    <dimen name="option_border_width">2dp</dimen>
+    <dimen name="option_selected_border_width">3dp</dimen>
 </resources>

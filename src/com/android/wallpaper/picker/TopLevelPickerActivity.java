@@ -168,7 +168,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
 
         @WallpaperSupportLevel int wallpaperSupportLevel = mDelegate.getWallpaperSupportLevel();
         if (wallpaperSupportLevel != WallpaperDisabledFragment.SUPPORTED_CAN_SET) {
-            setContentView(R.layout.activity_single_fragment);
+            setContentView(R.layout.activity_top_level_picker);
 
             FragmentManager fm = getSupportFragmentManager();
             WallpaperDisabledFragment wallpaperDisabledFragment =
@@ -252,7 +252,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     }
 
     private void initializeMobile(boolean shouldForceRefresh) {
-        setContentView(R.layout.activity_single_fragment);
+        setContentView(R.layout.activity_top_level_picker);
         getWindow().getDecorView().setSystemUiVisibility(
                 getWindow().getDecorView().getSystemUiVisibility()
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
