@@ -18,26 +18,18 @@ package com.android.wallpaper.picker;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.WallpaperColors;
 import android.app.WallpaperInfo;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
 import android.service.wallpaper.IWallpaperConnection;
-import android.service.wallpaper.IWallpaperEngine;
-import android.service.wallpaper.IWallpaperService;
 import android.service.wallpaper.WallpaperService;
 import android.service.wallpaper.WallpaperSettingsActivity;
 import android.text.TextUtils;
@@ -50,7 +42,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager.LayoutParams;
 import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
@@ -66,6 +57,7 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
+import com.android.wallpaper.util.WallpaperConnection;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -76,7 +68,8 @@ import java.util.List;
  * Fragment which displays the UI for previewing an individual live wallpaper, its attribution
  * information and settings slices if available.
  */
-public class LivePreviewFragment extends PreviewFragment {
+public class LivePreviewFragment extends PreviewFragment implements
+        WallpaperConnection.WallpaperConnectionListener {
 
     private static final String TAG = "LivePreviewFragment";
 
@@ -159,7 +152,7 @@ public class LivePreviewFragment extends PreviewFragment {
         setUpLoadingIndicator();
 
         mWallpaperConnection = new WallpaperConnection(mWallpaperIntent, activity,
-                getWallpaperConnectionListener());
+                this, null);
         container.post(() -> {
             if (!mWallpaperConnection.connect()) {
                 mWallpaperConnection = null;
@@ -262,8 +255,21 @@ public class LivePreviewFragment extends PreviewFragment {
         }
     }
 
-    protected WallpaperConnectionListener getWallpaperConnectionListener() {
-        return null;
+    @Override
+    public void onEngineShown() {
+        mLoadingScrim.post(() -> mLoadingScrim.animate()
+                .alpha(0f)
+                .setDuration(220)
+                .setStartDelay(300)
+                .setInterpolator(AnimationUtils.loadInterpolator(getActivity(),
+                        android.R.interpolator.fast_out_linear_in))
+                .withEndAction(() -> {
+                    if (mLoadingProgressBar != null) {
+                        mLoadingProgressBar.hide();
+                    }
+                    mLoadingScrim.setVisibility(View.INVISIBLE);
+                    populateInfoPage(mInfoPageController);
+                }));
     }
 
     @Override
@@ -437,175 +443,5 @@ public class LivePreviewFragment extends PreviewFragment {
             return true;
         }
         return false;
-    }
-
-    /**
-     * Interface to be notified of connect/disconnect events from {@link WallpaperConnection}
-     */
-    public interface WallpaperConnectionListener {
-        /**
-         * Called after the Wallpaper service has been bound.
-         */
-        void onConnected();
-
-        /**
-         * Called after the Wallpaper engine has been terminated and the service has been unbound.
-         */
-        void onDisconnected();
-    }
-
-    protected class WallpaperConnection extends IWallpaperConnection.Stub
-            implements ServiceConnection {
-
-        private final Activity mActivity;
-        private final Intent mIntent;
-        private final WallpaperConnectionListener mListener;
-        private IWallpaperService mService;
-        private IWallpaperEngine mEngine;
-        private boolean mConnected;
-        private boolean mIsVisible;
-        private boolean mIsEngineVisible;
-        private boolean mEngineReady;
-
-        WallpaperConnection(Intent intent, Activity activity,
-                @Nullable WallpaperConnectionListener listener) {
-            mActivity = activity;
-            mIntent = intent;
-            mListener = listener;
-        }
-
-        public boolean connect() {
-            synchronized (this) {
-                if (!mActivity.bindService(mIntent, this,
-                        Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT)) {
-                    return false;
-                }
-
-                mConnected = true;
-            }
-            if (mListener != null) {
-                mListener.onConnected();
-            }
-            return true;
-        }
-
-        public void disconnect() {
-            synchronized (this) {
-                mConnected = false;
-                if (mEngine != null) {
-                    try {
-                        mEngine.destroy();
-                    } catch (RemoteException e) {
-                        // Ignore
-                    }
-                    mEngine = null;
-                }
-                try {
-                    mActivity.unbindService(this);
-                } catch (IllegalArgumentException e) {
-                    Log.w(TAG, "Can't unbind wallpaper service. "
-                            + "It might have crashed, just ignoring.", e);
-                }
-                mService = null;
-            }
-            if (mListener != null) {
-                mListener.onDisconnected();
-            }
-        }
-
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            if (mWallpaperConnection == this) {
-                mService = IWallpaperService.Stub.asInterface(service);
-                try {
-                    View root = mActivity.getWindow().getDecorView();
-                    int displayId = root.getDisplay().getDisplayId();
-                    mService.attach(this, root.getWindowToken(),
-                            LayoutParams.TYPE_APPLICATION_MEDIA,
-                            true, root.getWidth(), root.getHeight(),
-                            new Rect(0, 0, 0, 0), displayId);
-                } catch (RemoteException e) {
-                    Log.w(TAG, "Failed attaching wallpaper; clearing", e);
-                }
-            }
-        }
-
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-            mEngine = null;
-            if (mWallpaperConnection == this) {
-                Log.w(TAG, "Wallpaper service gone: " + name);
-            }
-        }
-
-        public void attachEngine(IWallpaperEngine engine, int displayId) {
-            synchronized (this) {
-                if (mConnected) {
-                    mEngine = engine;
-                    if (mIsVisible) {
-                        setEngineVisibility(true);
-                    }
-                } else {
-                    try {
-                        engine.destroy();
-                    } catch (RemoteException e) {
-                        // Ignore
-                    }
-                }
-            }
-        }
-
-        public IWallpaperEngine getEngine() {
-            return mEngine;
-        }
-
-        public ParcelFileDescriptor setWallpaper(String name) {
-            return null;
-        }
-
-        @Override
-        public void onWallpaperColorsChanged(WallpaperColors colors, int displayId)
-                throws RemoteException {
-
-        }
-
-        @Override
-        public void engineShown(IWallpaperEngine engine)  {
-            mLoadingScrim.post(() -> {
-                mLoadingScrim.animate()
-                        .alpha(0f)
-                        .setDuration(220)
-                        .setStartDelay(300)
-                        .setInterpolator(AnimationUtils.loadInterpolator(mActivity,
-                                android.R.interpolator.fast_out_linear_in))
-                        .withEndAction(() -> {
-                            if (mLoadingProgressBar != null) {
-                                mLoadingProgressBar.hide();
-                            }
-                            mLoadingScrim.setVisibility(View.INVISIBLE);
-                            populateInfoPage(mInfoPageController);
-                        });
-            });
-            mEngineReady = true;
-        }
-
-        public boolean isEngineReady() {
-            return mEngineReady;
-        }
-
-        public void setVisibility(boolean visible) {
-            mIsVisible = visible;
-            setEngineVisibility(visible);
-        }
-
-        private void setEngineVisibility(boolean visible) {
-            if (mEngine != null && visible != mIsEngineVisible) {
-                try {
-                    mEngine.setVisibility(visible);
-                    mIsEngineVisible = visible;
-                } catch (RemoteException e) {
-                    Log.w(TAG, "Failure setting wallpaper visibility ", e);
-                }
-            }
-        }
     }
 }

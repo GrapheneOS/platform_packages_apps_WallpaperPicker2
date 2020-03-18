@@ -133,7 +133,7 @@ public class IndividualPickerActivity extends BaseActivity {
     }
 
     private void initializeUI() {
-        setContentView(R.layout.activity_single_fragment_with_toolbar);
+        setContentView(R.layout.activity_individual_picker);
 
         // Set toolbar as the action bar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
