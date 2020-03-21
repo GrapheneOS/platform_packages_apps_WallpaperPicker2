@@ -79,8 +79,9 @@
         android:id="@+id/check_circle"
         android:layout_width="@dimen/grid_item_individual_wallpaper_check_circle_size"
         android:layout_height="@dimen/grid_item_individual_wallpaper_check_circle_size"
-        android:layout_marginStart="@dimen/grid_item_individual_wallpaper_check_circle_offset"
-        android:layout_marginTop="@dimen/grid_item_individual_wallpaper_check_circle_offset"
+        android:layout_gravity="bottom|right"
+        android:layout_marginEnd="@dimen/grid_item_individual_wallpaper_check_circle_offset"
+        android:layout_marginBottom="@dimen/grid_item_individual_wallpaper_check_circle_offset"
         android:src="@drawable/check_circle_blue"
         android:visibility="gone" />
 

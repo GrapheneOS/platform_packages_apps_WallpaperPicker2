@@ -343,7 +343,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, null,
                 destination, 0, null, new SetWallpaperCallback() {
                     @Override
-                    public void onSuccess() {
+                    public void onSuccess(com.android.wallpaper.model.WallpaperInfo wallpaperInfo) {
                         finishActivityWithResultOk();
                     }
 

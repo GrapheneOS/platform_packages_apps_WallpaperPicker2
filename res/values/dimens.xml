@@ -32,7 +32,7 @@
 
     <!-- Dimensions for individual wallpaper tiles. -->
     <dimen name="grid_item_individual_wallpaper_selected_inset">14dp</dimen>
-    <dimen name="grid_item_individual_wallpaper_check_circle_offset">6dp</dimen>
+    <dimen name="grid_item_individual_wallpaper_check_circle_offset">4dp</dimen>
     <dimen name="grid_item_individual_wallpaper_check_circle_size">24dp</dimen>
 
     <!-- Dimensions for "single metadata card" configuration. -->

@@ -226,7 +226,9 @@ public class IndividualPickerFragment extends Fragment
 
     private BottomActionBar mBottomActionBar;
     private WallpaperSetter mWallpaperSetter;
+    private WallpaperPersister mWallpaperPersister;
     private WallpaperInfo mSelectedWallpaperInfo;
+    private WallpaperInfo mAppliedWallpaperInfo;
 
     public static IndividualPickerFragment newInstance(String collectionId) {
         Bundle args = new Bundle();
@@ -285,8 +287,9 @@ public class IndividualPickerFragment extends Fragment
 
         mPackageStatusNotifier = injector.getPackageStatusNotifier(appContext);
 
+        mWallpaperPersister = injector.getWallpaperPersister(appContext);
         mWallpaperSetter = new WallpaperSetter(
-                injector.getWallpaperPersister(appContext),
+                mWallpaperPersister,
                 injector.getPreferences(appContext),
                 injector.getUserEventLogger(appContext),
                 false);
@@ -772,6 +775,7 @@ public class IndividualPickerFragment extends Fragment
             return;
         }
 
+        mWallpaperPersister.setWallpaperInfoInPreview(mSelectedWallpaperInfo);
         if (mSelectedWallpaperInfo instanceof LiveWallpaperInfo) {
             mWallpaperSetter.setCurrentWallpaper(getActivity(), mSelectedWallpaperInfo, null,
                     destination, 0, null, mSetWallpaperCallback);
@@ -784,9 +788,14 @@ public class IndividualPickerFragment extends Fragment
     private WallpaperPersister.SetWallpaperCallback mSetWallpaperCallback =
             new WallpaperPersister.SetWallpaperCallback() {
                 @Override
-                public void onSuccess() {
+                public void onSuccess(WallpaperInfo wallpaperInfo) {
                     // TODO(b/150913705): Show the snack bar.
                     mBottomActionBar.enableActions();
+                    updateAppliedStatus(mAppliedWallpaperInfo, false);
+                    updateAppliedStatus(wallpaperInfo, true);
+                    mAppliedWallpaperInfo = wallpaperInfo;
+
+                    mWallpaperPersister.onLiveWallpaperSet();
                 }
 
                 @Override
@@ -838,21 +847,46 @@ public class IndividualPickerFragment extends Fragment
         }
     }
 
-    private void onWallpaperSelected(WallpaperInfo selectedWallpaperInfo) {
-        updateActivatedStatus(mSelectedWallpaperInfo, false);
-        updateActivatedStatus(selectedWallpaperInfo, true);
+    private void onWallpaperSelected(@Nullable WallpaperInfo selectedWallpaperInfo) {
+        if (selectedWallpaperInfo == mSelectedWallpaperInfo) {
+            return;
+        }
+        updateActivatedStatus(mSelectedWallpaperInfo == null
+                ? mAppliedWallpaperInfo : mSelectedWallpaperInfo, false);
+        updateActivatedStatus(selectedWallpaperInfo == null
+                ? mAppliedWallpaperInfo : selectedWallpaperInfo, true);
         updateBottomActions(selectedWallpaperInfo != null);
         updateThumbnail(selectedWallpaperInfo);
         mSelectedWallpaperInfo = selectedWallpaperInfo;
     }
 
     private void updateActivatedStatus(WallpaperInfo wallpaperInfo, boolean isActivated) {
+        if (wallpaperInfo == null) {
+            return;
+        }
         int index = mWallpapers.indexOf(wallpaperInfo);
         index = (isRotationEnabled() || mCategory.supportsCustomPhotos())
                 ? index + 1 : index;
         ViewHolder holder = mImageGrid.findViewHolderForAdapterPosition(index);
         if (holder != null) {
             holder.itemView.setActivated(isActivated);
+        } else {
+            // Item is not visible, make sure the item is re-bound when it becomes visible.
+            mAdapter.notifyItemChanged(index);
+        }
+    }
+
+    private void updateAppliedStatus(WallpaperInfo wallpaperInfo, boolean isApplied) {
+        if (wallpaperInfo == null) {
+            return;
+        }
+        int index = mWallpapers.indexOf(wallpaperInfo);
+        index = (isRotationEnabled() || mCategory.supportsCustomPhotos())
+                ? index + 1 : index;
+        ViewHolder holder = mImageGrid.findViewHolderForAdapterPosition(index);
+        if (holder != null) {
+            holder.itemView.findViewById(R.id.check_circle)
+                    .setVisibility(isApplied ? View.VISIBLE : View.GONE);
         } else {
             // Item is not visible, make sure the item is re-bound when it becomes visible.
             mAdapter.notifyItemChanged(index);
@@ -1191,14 +1225,21 @@ public class IndividualPickerFragment extends Fragment
             WallpaperInfo wallpaper = mWallpapers.get(wallpaperIndex);
             ((IndividualHolder) holder).bindWallpaper(wallpaper);
             WallpaperPreferences prefs = InjectorProvider.getInjector().getPreferences(getContext());
+            String appliedWallpaperId = prefs.getHomeWallpaperRemoteId();
+            boolean isWallpaperApplied = wallpaper.getWallpaperId().equals(appliedWallpaperId);
+            boolean isWallpaperSelected = wallpaper.equals(mSelectedWallpaperInfo);
+            boolean hasUserSelectedWallpaper = mSelectedWallpaperInfo != null;
 
-            String wallpaperId = wallpaper.getWallpaperId();
-            if (wallpaperId != null && wallpaperId.equals(prefs.getHomeWallpaperRemoteId())) {
+            if (isWallpaperApplied) {
                 mSelectedAdapterPosition = position;
+                mAppliedWallpaperInfo = wallpaper;
             }
 
             if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
-                holder.itemView.setActivated(wallpaper.equals(mSelectedWallpaperInfo));
+                holder.itemView.setActivated(
+                        (isWallpaperApplied && !hasUserSelectedWallpaper) || isWallpaperSelected);
+                holder.itemView.findViewById(R.id.check_circle).setVisibility(
+                        isWallpaperApplied ? View.VISIBLE : View.GONE);
                 holder.itemView.findViewById(R.id.tile).setOnClickListener(
                         view -> onWallpaperSelected(wallpaper));
             }
