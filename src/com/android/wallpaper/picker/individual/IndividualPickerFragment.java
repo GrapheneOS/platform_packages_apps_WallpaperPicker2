@@ -22,6 +22,7 @@ import static com.android.wallpaper.widget.BottomActionBar.BottomAction.ROTATION
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
@@ -143,6 +144,19 @@ public class IndividualPickerFragment extends Fragment
         void restoreThumbnails();
     }
 
+    /**
+     * An interface for receiving the destination of the new applied wallpaper.
+     */
+    public interface WallpaperDestinationCallback {
+        /**
+         * Called when the destination of the wallpaper is set.
+         *
+         * @param destination the destination which a wallpaper may be set.
+         *                    See {@link Destination} for more details.
+         */
+        void onDestinationSet(@Destination int destination);
+    }
+
     WallpaperPreferences mWallpaperPreferences;
     WallpaperChangedNotifier mWallpaperChangedNotifier;
     RecyclerView mImageGrid;
@@ -230,6 +244,8 @@ public class IndividualPickerFragment extends Fragment
     private WallpaperPersister mWallpaperPersister;
     @Nullable private WallpaperInfo mSelectedWallpaperInfo;
     private WallpaperInfo mAppliedWallpaperInfo;
+    private WallpaperManager mWallpaperManager;
+    private int mWallpaperDestination;
 
     public static IndividualPickerFragment newInstance(String collectionId) {
         Bundle args = new Bundle();
@@ -238,6 +254,21 @@ public class IndividualPickerFragment extends Fragment
         IndividualPickerFragment fragment = new IndividualPickerFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    /**
+     * Highlights the applied wallpaper (if it exists) according to the destination a wallpaper
+     * would be set.
+     *
+     * @param wallpaperDestination the destination a wallpaper would be set.
+     *                             It will be either {@link Destination#DEST_HOME_SCREEN}
+     *                             or {@link Destination#DEST_LOCK_SCREEN}.
+     */
+    public void highlightAppliedWallpaper(@Destination int wallpaperDestination) {
+        mWallpaperDestination = wallpaperDestination;
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     private static int getResIdForRotationState(@RotationInitializationState int rotationState) {
@@ -283,6 +314,8 @@ public class IndividualPickerFragment extends Fragment
 
         mWallpaperChangedNotifier = WallpaperChangedNotifier.getInstance();
         mWallpaperChangedNotifier.registerListener(mWallpaperChangedListener);
+
+        mWallpaperManager = WallpaperManager.getInstance(appContext);
 
         mFormFactor = injector.getFormFactorChecker(appContext).getFormFactor();
 
@@ -784,6 +817,7 @@ public class IndividualPickerFragment extends Fragment
             mWallpaperSetter.setCurrentWallpaper(
                     getActivity(), mSelectedWallpaperInfo, destination, mSetWallpaperCallback);
         }
+        onWallpaperDestinationSet(destination);
     }
 
     private WallpaperPersister.SetWallpaperCallback mSetWallpaperCallback =
@@ -846,6 +880,16 @@ public class IndividualPickerFragment extends Fragment
         } else {
             thumbnailUpdater.restoreThumbnails();
         }
+    }
+
+    private void onWallpaperDestinationSet(int destination) {
+        WallpaperDestinationCallback wallpaperDestinationCallback =
+                (WallpaperDestinationCallback) getParentFragment();
+        if (wallpaperDestinationCallback == null) {
+            return;
+        }
+
+        wallpaperDestinationCallback.onDestinationSet(destination);
     }
 
     private void onWallpaperSelected(@Nullable WallpaperInfo newSelectedWallpaperInfo) {
@@ -1239,8 +1283,7 @@ public class IndividualPickerFragment extends Fragment
                     ? position - 1 : position;
             WallpaperInfo wallpaper = mWallpapers.get(wallpaperIndex);
             ((IndividualHolder) holder).bindWallpaper(wallpaper);
-            WallpaperPreferences prefs = InjectorProvider.getInjector().getPreferences(getContext());
-            String appliedWallpaperId = prefs.getHomeWallpaperRemoteId();
+            String appliedWallpaperId = getAppliedWallpaperId();
             boolean isWallpaperApplied = wallpaper.getWallpaperId().equals(appliedWallpaperId);
             boolean isWallpaperSelected = wallpaper.equals(mSelectedWallpaperInfo);
             boolean hasUserSelectedWallpaper = mSelectedWallpaperInfo != null;
@@ -1257,6 +1300,21 @@ public class IndividualPickerFragment extends Fragment
                         isWallpaperApplied ? View.VISIBLE : View.GONE);
                 holder.itemView.findViewById(R.id.tile).setOnClickListener(
                         view -> onWallpaperSelected(wallpaper));
+            }
+        }
+
+        private String getAppliedWallpaperId() {
+            WallpaperPreferences prefs =
+                    InjectorProvider.getInjector().getPreferences(getContext());
+            android.app.WallpaperInfo wallpaperInfo = mWallpaperManager.getWallpaperInfo();
+            boolean isDestinationBoth =
+                    mWallpaperManager.getWallpaperId(WallpaperManager.FLAG_LOCK) < 0;
+
+            if (isDestinationBoth || mWallpaperDestination == WallpaperPersister.DEST_HOME_SCREEN) {
+                return wallpaperInfo != null
+                        ? wallpaperInfo.getServiceName() : prefs.getHomeWallpaperRemoteId();
+            } else {
+                return prefs.getLockWallpaperRemoteId();
             }
         }
     }

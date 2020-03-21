@@ -74,6 +74,7 @@ import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.LockWallpaperStatusChecker;
 import com.android.wallpaper.module.UserEventLogger;
+import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
 import com.android.wallpaper.module.WallpaperRotationRefresher;
@@ -81,7 +82,9 @@ import com.android.wallpaper.module.WallpaperRotationRefresher.Listener;
 import com.android.wallpaper.picker.CategorySelectorFragment.CategorySelectorFragmentHost;
 import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
 import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
+import com.android.wallpaper.picker.individual.IndividualPickerFragment;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.ThumbnailUpdater;
+import com.android.wallpaper.picker.individual.IndividualPickerFragment.WallpaperDestinationCallback;
 import com.android.wallpaper.util.DisplayMetricsRetriever;
 import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
@@ -104,7 +107,7 @@ import java.util.List;
  * Displays the Main UI for picking a category of wallpapers to choose from.
  */
 public class CategoryFragment extends ToolbarFragment
-        implements CategorySelectorFragmentHost, ThumbnailUpdater {
+        implements CategorySelectorFragmentHost, ThumbnailUpdater, WallpaperDestinationCallback {
 
     /**
      * Interface to be implemented by an Activity hosting a {@link CategoryFragment}
@@ -146,9 +149,11 @@ public class CategoryFragment extends ToolbarFragment
     private List<View> mWallPaperPreviews;
     private WallpaperConnection mWallpaperConnection;
     private CategorySelectorFragment mCategorySelectorFragment;
+    private IndividualPickerFragment mIndividualPickerFragment;
     private boolean mShowSelectedWallpaper;
     private BottomSheetBehavior mBottomSheetBehavior;
     private PreviewUtils mPreviewUtils;
+    private int mSelectedPreviewPage;
 
     // Home workspace surface is behind the app window, and so must the home image wallpaper like
     // the live wallpaper. This view is rendered on mWallpaperSurface for home image wallpaper.
@@ -202,6 +207,10 @@ public class CategoryFragment extends ToolbarFragment
 
             @Override
             public void onPageSelected(int i) {
+                mSelectedPreviewPage = i;
+                if (mIndividualPickerFragment != null && mIndividualPickerFragment.isVisible()) {
+                    mIndividualPickerFragment.highlightAppliedWallpaper(i);
+                }
             }
 
             @Override
@@ -309,10 +318,12 @@ public class CategoryFragment extends ToolbarFragment
 
     @Override
     public void show(String collectionId) {
+        mIndividualPickerFragment =
+                InjectorProvider.getInjector().getIndividualPickerFragment(collectionId);
+        mIndividualPickerFragment.highlightAppliedWallpaper(mSelectedPreviewPage);
         getChildFragmentManager()
                 .beginTransaction()
-                .replace(R.id.category_fragment_container,
-                        InjectorProvider.getInjector().getIndividualPickerFragment(collectionId))
+                .replace(R.id.category_fragment_container, mIndividualPickerFragment)
                 .addToBackStack(null)
                 .commit();
         getChildFragmentManager().executePendingTransactions();
@@ -338,6 +349,14 @@ public class CategoryFragment extends ToolbarFragment
     public void restoreThumbnails() {
         refreshCurrentWallpapers(/* MetadataHolder= */ null, /* forceRefresh= */ true);
         mShowSelectedWallpaper = false;
+    }
+
+    @Override
+    public void onDestinationSet(@WallpaperPersister.Destination int destination) {
+        if (destination == WallpaperPersister.DEST_BOTH) {
+            return;
+        }
+        mPreviewPager.switchPreviewPage(destination);
     }
 
     /**
