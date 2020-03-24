@@ -423,7 +423,7 @@ public class IndividualPickerFragment extends Fragment
                         mSelectedWallpaperInfo instanceof LiveWallpaperInfo);
             });
 
-            mBottomActionBar.setVisibility(View.VISIBLE);
+            mBottomActionBar.show();
             mBottomActionBar.showActionsOnly(
                     isRotationEnabled() ? EnumSet.of(CANCEL, ROTATION) : EnumSet.of(CANCEL));
         }
@@ -434,7 +434,7 @@ public class IndividualPickerFragment extends Fragment
     @Override
     public void onDestroyView() {
         if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
-            mBottomActionBar.setVisibility(View.GONE);
+            mBottomActionBar.hide();
             mBottomActionBar.clearActionClickListeners();
             updateThumbnail(null);
         }

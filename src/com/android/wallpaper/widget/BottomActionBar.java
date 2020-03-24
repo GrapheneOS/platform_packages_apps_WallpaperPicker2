@@ -67,6 +67,16 @@ public class BottomActionBar extends FrameLayout {
         mActionList.forEach((bottomAction, view) -> view.setOnClickListener(null));
     }
 
+    /** Shows {@link BottomActionBar}. */
+    public void show() {
+        setVisibility(VISIBLE);
+    }
+
+    /** Hides {@link BottomActionBar}. */
+    public void hide() {
+        setVisibility(GONE);
+    }
+
     /**
      * Shows the specific actions.
      *
