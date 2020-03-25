@@ -36,6 +36,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -54,6 +56,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.android.systemui.shared.system.SurfaceViewRequestUtils;
 import com.android.wallpaper.R;
 import com.android.wallpaper.config.Flags;
 import com.android.wallpaper.model.Category;
@@ -74,6 +77,7 @@ import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
 import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.ThumbnailUpdater;
 import com.android.wallpaper.util.DisplayMetricsRetriever;
+import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.TileSizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
@@ -128,6 +132,7 @@ public class CategoryFragment extends ToolbarFragment
     private ProgressDialog mRefreshWallpaperProgressDialog;
     private boolean mTestingMode;
     private ImageView mHomePreview;
+    private SurfaceView mWorkspaceSurface;
     private ImageView mLockscreenPreview;
     private PreviewPager mPreviewPager;
     private List<View> mWallPaperPreviews;
@@ -135,6 +140,7 @@ public class CategoryFragment extends ToolbarFragment
     private CategorySelectorFragment mCategorySelectorFragment;
     private boolean mShowSelectedWallpaper;
     private BottomSheetBehavior mBottomSheetBehavior;
+    private PreviewUtils mPreviewUtils;
 
     public CategoryFragment() {
         mCategorySelectorFragment = new CategorySelectorFragment();
@@ -152,12 +158,14 @@ public class CategoryFragment extends ToolbarFragment
         CardView homePreviewCard = (CardView) inflater.inflate(
                 R.layout.wallpaper_preview_card, null);
         mHomePreview = homePreviewCard.findViewById(R.id.wallpaper_preview_image);
+        mWorkspaceSurface = homePreviewCard.findViewById(R.id.workspace_surface);
         mWallPaperPreviews.add(homePreviewCard);
 
         if (LockWallpaperStatusChecker.isLockWallpaperSet(getContext())) {
             CardView lockscreenPreviewCard = (CardView) inflater.inflate(
                     R.layout.wallpaper_preview_card, null);
             mLockscreenPreview = lockscreenPreviewCard.findViewById(R.id.wallpaper_preview_image);
+            lockscreenPreviewCard.findViewById(R.id.workspace_surface).setVisibility(View.GONE);
             mWallPaperPreviews.add(lockscreenPreviewCard);
         }
 
@@ -200,6 +208,9 @@ public class CategoryFragment extends ToolbarFragment
                             getActivity(), homePreviewCard.getMeasuredWidth()));
         });
 
+        mPreviewUtils = new PreviewUtils(getContext(),
+                getString(R.string.grid_control_metadata_name));
+
         setUpToolbar(view);
 
         getChildFragmentManager()
@@ -233,6 +244,7 @@ public class CategoryFragment extends ToolbarFragment
         if (mWallpaperConnection != null) {
             mWallpaperConnection.setVisibility(true);
         }
+        updateWorkspaceSurface();
     }
 
     @Override
@@ -655,6 +667,25 @@ public class CategoryFragment extends ToolbarFragment
         thumbnailView.setOnClickListener(view -> {
             getFragmentHost().showViewOnlyPreview(wallpaperInfo);
             eventLogger.logCurrentWallpaperPreviewed();
+        });
+    }
+
+    private void updateWorkspaceSurface() {
+        mWorkspaceSurface.setZOrderOnTop(true);
+        mWorkspaceSurface.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                Bundle bundle = SurfaceViewRequestUtils.createSurfaceBundle(mWorkspaceSurface);
+                if (mPreviewUtils.supportsPreview()) {
+                    mPreviewUtils.renderPreview(bundle);
+                }
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) { }
         });
     }
 
