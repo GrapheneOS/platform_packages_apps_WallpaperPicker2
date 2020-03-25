@@ -325,4 +325,9 @@
     <string name="next_page_content_description" msgid="5290226604542300962">Next</string>
     <!-- Content description of the previous button to bring user to the previous preview page. [CHAR LIMIT=NONE] -->
     <string name="previous_page_content_description" msgid="6025726405430262788">Previous</string>
+
+    <!--Name of metadata in the main launcher Activity which values contains the authority
+    corresponding to a ContentProvider in launcher to provide available grids and
+    allow for changing them -->
+    <string name="grid_control_metadata_name" translatable="false">com.android.launcher3.grid.control</string>
 </resources>
