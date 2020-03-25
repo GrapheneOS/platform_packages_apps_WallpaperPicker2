@@ -17,6 +17,7 @@ package com.android.wallpaper.picker.individual;
 
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.CANCEL;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMATION;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.ROTATION;
 
 import android.app.Activity;
@@ -227,7 +228,7 @@ public class IndividualPickerFragment extends Fragment
     private BottomActionBar mBottomActionBar;
     private WallpaperSetter mWallpaperSetter;
     private WallpaperPersister mWallpaperPersister;
-    private WallpaperInfo mSelectedWallpaperInfo;
+    @Nullable private WallpaperInfo mSelectedWallpaperInfo;
     private WallpaperInfo mAppliedWallpaperInfo;
 
     public static IndividualPickerFragment newInstance(String collectionId) {
@@ -829,9 +830,9 @@ public class IndividualPickerFragment extends Fragment
 
     private void updateBottomActions(boolean hasWallpaperSelected) {
         mBottomActionBar.showActions(
-                hasWallpaperSelected ? EnumSet.of(APPLY) : EnumSet.of(ROTATION));
+                hasWallpaperSelected ? EnumSet.of(APPLY, INFORMATION) : EnumSet.of(ROTATION));
         mBottomActionBar.hideActions(
-                hasWallpaperSelected ? EnumSet.of(ROTATION) : EnumSet.of(APPLY));
+                hasWallpaperSelected ? EnumSet.of(ROTATION) : EnumSet.of(APPLY, INFORMATION));
     }
 
     private void updateThumbnail(WallpaperInfo selectedWallpaperInfo) {
@@ -847,17 +848,26 @@ public class IndividualPickerFragment extends Fragment
         }
     }
 
-    private void onWallpaperSelected(@Nullable WallpaperInfo selectedWallpaperInfo) {
-        if (selectedWallpaperInfo == mSelectedWallpaperInfo) {
+    private void onWallpaperSelected(@Nullable WallpaperInfo newSelectedWallpaperInfo) {
+        if (mSelectedWallpaperInfo == newSelectedWallpaperInfo) {
             return;
         }
+        // Update current wallpaper.
         updateActivatedStatus(mSelectedWallpaperInfo == null
                 ? mAppliedWallpaperInfo : mSelectedWallpaperInfo, false);
-        updateActivatedStatus(selectedWallpaperInfo == null
-                ? mAppliedWallpaperInfo : selectedWallpaperInfo, true);
-        updateBottomActions(selectedWallpaperInfo != null);
-        updateThumbnail(selectedWallpaperInfo);
-        mSelectedWallpaperInfo = selectedWallpaperInfo;
+        // Update new selected wallpaper.
+        updateActivatedStatus(newSelectedWallpaperInfo == null
+                ? mAppliedWallpaperInfo : newSelectedWallpaperInfo, true);
+
+        mSelectedWallpaperInfo = newSelectedWallpaperInfo;
+        updateBottomActions(mSelectedWallpaperInfo != null);
+        updateThumbnail(mSelectedWallpaperInfo);
+        // Populate wallpaper info to bottom sheet page.
+        if (mSelectedWallpaperInfo != null) {
+            mBottomActionBar.populateInfoPage(
+                mSelectedWallpaperInfo.getAttributions(getContext()),
+                shouldShowMetadataInPreview(mSelectedWallpaperInfo));
+        }
     }
 
     private void updateActivatedStatus(WallpaperInfo wallpaperInfo, boolean isActivated) {
@@ -891,6 +901,11 @@ public class IndividualPickerFragment extends Fragment
             // Item is not visible, make sure the item is re-bound when it becomes visible.
             mAdapter.notifyItemChanged(index);
         }
+    }
+
+    private static boolean shouldShowMetadataInPreview(WallpaperInfo wallpaperInfo) {
+        android.app.WallpaperInfo wallpaperComponent = wallpaperInfo.getWallpaperComponent();
+        return wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
     }
 
     /**
