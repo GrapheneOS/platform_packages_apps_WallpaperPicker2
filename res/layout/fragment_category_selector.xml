@@ -21,7 +21,6 @@
     android:clipToPadding="false"
     android:fitsSystemWindows="true"
     android:paddingHorizontal="@dimen/grid_edge_space"
-    android:paddingTop="@dimen/grid_padding"
     android:scrollbarSize="@dimen/grid_padding"
     android:scrollbarStyle="outsideOverlay"
     android:scrollbarThumbVertical="@color/scrollbar_thumb_color_dark"
