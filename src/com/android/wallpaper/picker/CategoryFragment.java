@@ -33,6 +33,8 @@ import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.os.Message;
+import android.os.RemoteException;
 import android.provider.Settings;
 import android.service.wallpaper.WallpaperService;
 import android.util.DisplayMetrics;
@@ -61,7 +63,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.android.systemui.shared.system.SurfaceViewRequestUtils;
 import com.android.wallpaper.R;
 import com.android.wallpaper.config.Flags;
 import com.android.wallpaper.model.Category;
@@ -84,6 +85,7 @@ import com.android.wallpaper.picker.individual.IndividualPickerFragment.Thumbnai
 import com.android.wallpaper.util.DisplayMetricsRetriever;
 import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
+import com.android.wallpaper.util.SurfaceViewUtils;
 import com.android.wallpaper.util.TileSizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
@@ -720,20 +722,26 @@ public class CategoryFragment extends ToolbarFragment
         }
 
         @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        }
+        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
 
         @Override
-        public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
-        }
+        public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) { }
     };
 
     private final SurfaceHolder.Callback mWorkspaceSurfaceCallback = new SurfaceHolder.Callback() {
+
+        private Message mCallback;
+
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
-            Bundle bundle = SurfaceViewRequestUtils.createSurfaceBundle(mWorkspaceSurface);
             if (mPreviewUtils.supportsPreview()) {
-                mPreviewUtils.renderPreview(bundle);
+                Bundle result = mPreviewUtils.renderPreview(
+                        SurfaceViewUtils.createSurfaceViewRequest(mWorkspaceSurface));
+                if (result != null) {
+                    mWorkspaceSurface.setChildSurfacePackage(
+                            SurfaceViewUtils.getSurfacePackage(result));
+                    mCallback = SurfaceViewUtils.getCallback(result);
+                }
             }
         }
 
@@ -741,7 +749,17 @@ public class CategoryFragment extends ToolbarFragment
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
 
         @Override
-        public void surfaceDestroyed(SurfaceHolder holder) { }
+        public void surfaceDestroyed(SurfaceHolder holder) {
+            if (mCallback != null) {
+                try {
+                    mCallback.replyTo.send(mCallback);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } finally {
+                    mCallback = null;
+                }
+            }
+        }
     };
 
     private interface MetadataHolder {
