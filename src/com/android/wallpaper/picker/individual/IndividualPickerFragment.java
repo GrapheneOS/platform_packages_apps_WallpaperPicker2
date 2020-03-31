@@ -158,6 +158,18 @@ public class IndividualPickerFragment extends Fragment
         void onDestinationSet(@Destination int destination);
     }
 
+    /**
+     * The listener which will be notified when the wallpaper is selected.
+     */
+    public interface WallpaperSelectedListener {
+        /**
+         * Called when the wallpaper is selected.
+         *
+         * @param position the position of the selected wallpaper
+         */
+        void onWallpaperSelected(int position);
+    }
+
     WallpaperPreferences mWallpaperPreferences;
     WallpaperChangedNotifier mWallpaperChangedNotifier;
     RecyclerView mImageGrid;
@@ -247,6 +259,7 @@ public class IndividualPickerFragment extends Fragment
     private WallpaperInfo mAppliedWallpaperInfo;
     private WallpaperManager mWallpaperManager;
     private int mWallpaperDestination;
+    private WallpaperSelectedListener mWallpaperSelectedListener;
 
     public static IndividualPickerFragment newInstance(String collectionId) {
         Bundle args = new Bundle();
@@ -445,7 +458,7 @@ public class IndividualPickerFragment extends Fragment
 
             mBottomActionBar.setActionClickListener(CANCEL, unused -> {
                 if (mSelectedWallpaperInfo != null) {
-                    onWallpaperSelected(null);
+                    onWallpaperSelected(null, 0);
                     return;
                 }
                 getActivity().onBackPressed();
@@ -636,6 +649,29 @@ public class IndividualPickerFragment extends Fragment
 
     public void setWallpapersUiContainer(WallpapersUiContainer uiContainer) {
         mWallpapersUiContainer = uiContainer;
+    }
+
+    public void setOnWallpaperSelectedListener(
+            WallpaperSelectedListener wallpaperSelectedListener) {
+        mWallpaperSelectedListener = wallpaperSelectedListener;
+    }
+
+    /**
+     * Resizes the layout's height.
+     */
+    public void resizeLayout(int height) {
+        mImageGrid.getLayoutParams().height = height;
+        mImageGrid.requestLayout();
+    }
+
+    /**
+     * Scrolls to the specific item.
+     *
+     * @param position the position of the item
+     */
+    public void scrollToPosition(int position) {
+        ((GridLayoutManager) mImageGrid.getLayoutManager())
+                .scrollToPositionWithOffset(position, /* offset= */ 0);
     }
 
     /**
@@ -891,7 +927,8 @@ public class IndividualPickerFragment extends Fragment
         wallpaperDestinationCallback.onDestinationSet(destination);
     }
 
-    private void onWallpaperSelected(@Nullable WallpaperInfo newSelectedWallpaperInfo) {
+    private void onWallpaperSelected(@Nullable WallpaperInfo newSelectedWallpaperInfo,
+                                     int position) {
         if (mSelectedWallpaperInfo == newSelectedWallpaperInfo) {
             return;
         }
@@ -908,8 +945,12 @@ public class IndividualPickerFragment extends Fragment
         // Populate wallpaper info to bottom sheet page.
         if (mSelectedWallpaperInfo != null) {
             mBottomActionBar.populateInfoPage(
-                mSelectedWallpaperInfo.getAttributions(getContext()),
-                shouldShowMetadataInPreview(mSelectedWallpaperInfo));
+                    mSelectedWallpaperInfo.getAttributions(getContext()),
+                    shouldShowMetadataInPreview(mSelectedWallpaperInfo));
+        }
+
+        if (mWallpaperSelectedListener != null) {
+            mWallpaperSelectedListener.onWallpaperSelected(position);
         }
     }
 
@@ -1337,7 +1378,7 @@ public class IndividualPickerFragment extends Fragment
                 holder.itemView.findViewById(R.id.check_circle).setVisibility(
                         isWallpaperApplied ? View.VISIBLE : View.GONE);
                 holder.itemView.findViewById(R.id.tile).setOnClickListener(
-                        view -> onWallpaperSelected(wallpaper));
+                        view -> onWallpaperSelected(wallpaper, position));
             }
         }
     }

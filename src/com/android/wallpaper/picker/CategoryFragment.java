@@ -17,6 +17,9 @@ package com.android.wallpaper.picker;
 
 import static android.view.View.MeasureSpec.EXACTLY;
 import static android.view.View.MeasureSpec.makeMeasureSpec;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
+import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -156,13 +159,14 @@ public class CategoryFragment extends ToolbarFragment
     private CategorySelectorFragment mCategorySelectorFragment;
     private IndividualPickerFragment mIndividualPickerFragment;
     private boolean mShowSelectedWallpaper;
-    private BottomSheetBehavior mBottomSheetBehavior;
+    private BottomSheetBehavior<View> mBottomSheetBehavior;
     private PreviewUtils mPreviewUtils;
     private int mSelectedPreviewPage;
 
     // Home workspace surface is behind the app window, and so must the home image wallpaper like
     // the live wallpaper. This view is rendered on mWallpaperSurface for home image wallpaper.
     private ImageView mHomeImageWallpaper;
+    private boolean mIsCollapsingByUserSelecting;
 
     public CategoryFragment() {
         mCategorySelectorFragment = new CategorySelectorFragment();
@@ -226,6 +230,25 @@ public class CategoryFragment extends ToolbarFragment
 
         View fragmentContainer = view.findViewById(R.id.category_fragment_container);
         mBottomSheetBehavior = BottomSheetBehavior.from(fragmentContainer);
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (mIsCollapsingByUserSelecting) {
+                    mIsCollapsingByUserSelecting = newState != STATE_COLLAPSED;
+                    return;
+                }
+
+                if (mIndividualPickerFragment != null && mIndividualPickerFragment.isVisible()) {
+                    mIndividualPickerFragment.resizeLayout(newState == STATE_COLLAPSED
+                            ? mBottomSheetBehavior.getPeekHeight() : MATCH_PARENT);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
         fragmentContainer.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View containerView, int left, int top, int right,
@@ -335,6 +358,18 @@ public class CategoryFragment extends ToolbarFragment
         mIndividualPickerFragment =
                 InjectorProvider.getInjector().getIndividualPickerFragment(collectionId);
         mIndividualPickerFragment.highlightAppliedWallpaper(mSelectedPreviewPage);
+        mIndividualPickerFragment.setOnWallpaperSelectedListener(position -> {
+            // Scroll to the selected wallpaper and collapse the sheet if needed.
+            // Resize and scroll here because we want to let the RecyclerView's scrolling and
+            // BottomSheet's collapsing can be executed together instead of scrolling
+            // the RecyclerView after the BottomSheet is collapsed.
+            mIndividualPickerFragment.resizeLayout(mBottomSheetBehavior.getPeekHeight());
+            mIndividualPickerFragment.scrollToPosition(position);
+            if (mBottomSheetBehavior.getState() != STATE_COLLAPSED) {
+                mIsCollapsingByUserSelecting = true;
+                mBottomSheetBehavior.setState(STATE_COLLAPSED);
+            }
+        });
         getChildFragmentManager()
                 .beginTransaction()
                 .replace(R.id.category_fragment_container, mIndividualPickerFragment)
@@ -355,7 +390,6 @@ public class CategoryFragment extends ToolbarFragment
             updateThumbnail(wallpaperInfo, mHomePreview, true);
             updateThumbnail(wallpaperInfo, mLockscreenPreview, false);
             mShowSelectedWallpaper = true;
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
     }
 
