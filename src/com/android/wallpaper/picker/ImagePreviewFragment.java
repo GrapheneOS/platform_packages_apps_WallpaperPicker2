@@ -37,6 +37,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
+import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.util.ScreenSizeCalculator;
@@ -310,7 +311,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                 destination, mFullResImageView.getScale(), calculateCropRect(),
                 new SetWallpaperCallback() {
                     @Override
-                    public void onSuccess() {
+                    public void onSuccess(WallpaperInfo wallpaperInfo) {
                         finishActivityWithResultOk();
                     }
 
