@@ -15,8 +15,12 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
-    <color name="preview_pager_background">@color/google_grey900</color>
-    <color name="edit_background_base">@color/material_white_100</color>
-    <color name="action_bar_bottom_sheet_text_color">@color/material_white_100</color>
-</resources>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="rectangle">
+    <solid android:color="?android:colorPrimary"/>
+    <corners
+        android:bottomLeftRadius="0dp"
+        android:bottomRightRadius="0dp"
+        android:topLeftRadius="@dimen/preview_bottom_sheet_corner_radius"
+        android:topRightRadius="@dimen/preview_bottom_sheet_corner_radius"/>
+</shape>
