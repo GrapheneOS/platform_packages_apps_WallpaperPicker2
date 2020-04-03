@@ -24,6 +24,7 @@
     <dimen name="grid_item_category_label_padding">12dp</dimen>
     <dimen name="grid_item_category_label_padding_top">12dp</dimen>
     <dimen name="grid_item_category_label_padding_bottom">4dp</dimen>
+    <dimen name="grid_item_category_label_minimum_height">16dp</dimen>
     <dimen name="grid_item_category_overlay_icon_margin_bottom">24dp</dimen>
     <dimen name="grid_item_category_title_height">48dp</dimen>
     <dimen name="grid_tile_aspect_height">340dp</dimen>
@@ -32,7 +33,7 @@
 
     <!-- Dimensions for individual wallpaper tiles. -->
     <dimen name="grid_item_individual_wallpaper_selected_inset">14dp</dimen>
-    <dimen name="grid_item_individual_wallpaper_check_circle_offset">6dp</dimen>
+    <dimen name="grid_item_individual_wallpaper_check_circle_offset">4dp</dimen>
     <dimen name="grid_item_individual_wallpaper_check_circle_size">24dp</dimen>
 
     <!-- Dimensions for "single metadata card" configuration. -->
@@ -209,8 +210,10 @@
     <!-- Dimensions for the bottom bar. -->
     <dimen name="bottom_navbar_height">56dp</dimen>
     <dimen name="bottom_action_bar_padding_horizontal">16dp</dimen>
+    <dimen name="bottom_action_bar_padding_vertical">20dp</dimen>
     <dimen name="bottom_action_bar_elevation">10dp</dimen>
 
     <dimen name="option_border_width">2dp</dimen>
     <dimen name="option_selected_border_width">3dp</dimen>
+    <dimen name="option_title_font_text_size">12sp</dimen>
 </resources>
