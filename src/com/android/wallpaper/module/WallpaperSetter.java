@@ -147,10 +147,10 @@ public class WallpaperSetter {
                 wallpaper, wallpaperAsset, cropRect,
                 wallpaperScale, destination, new SetWallpaperCallback() {
                     @Override
-                    public void onSuccess() {
+                    public void onSuccess(WallpaperInfo wallpaperInfo) {
                         onWallpaperApplied(wallpaper, containerActivity);
                         if (callback != null) {
-                            callback.onSuccess();
+                            callback.onSuccess(wallpaper);
                         }
                     }
 
@@ -187,7 +187,7 @@ public class WallpaperSetter {
             }
             onWallpaperApplied(wallpaper, activity);
             if (callback != null) {
-                callback.onSuccess();
+                callback.onSuccess(wallpaper);
             }
         } catch (RuntimeException | IOException e) {
             onWallpaperApplyError(e, activity);
