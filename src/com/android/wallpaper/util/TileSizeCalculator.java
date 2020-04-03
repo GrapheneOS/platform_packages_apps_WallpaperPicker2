@@ -129,7 +129,7 @@ public class TileSizeCalculator {
         int windowWidthPx = getActivityWindowWidthPx(activity);
 
         int columnCount = getNumIndividualColumns(activity, windowWidthPx);
-        return getTileSize(appContext, columnCount, windowWidthPx);
+        return getSquareTileSize(appContext, columnCount, windowWidthPx);
     }
 
     /**
