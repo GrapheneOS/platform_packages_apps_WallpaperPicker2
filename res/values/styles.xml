@@ -222,4 +222,11 @@
         <item name="android:tint">@color/material_grey500</item>
     </style>
 
+    <!-- Option tiles -->
+    <style name="OptionTitleTextAppearance" parent="TitleTextAppearance">
+        <item name="android:textColor">@color/option_title_color</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/option_title_font_text_size</item>
+    </style>
+
 </resources>
