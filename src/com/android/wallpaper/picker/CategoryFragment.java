@@ -508,8 +508,6 @@ public class CategoryFragment extends ToolbarFragment
                     previewView.getBottom());
         }
 
-        LiveTileOverlay.INSTANCE.detach(previewView.getOverlay());
-
         Rect previewLocalRect = new Rect();
         Rect previewGlobalRect = new Rect();
         previewView.getLocalVisibleRect(previewLocalRect);
@@ -653,6 +651,7 @@ public class CategoryFragment extends ToolbarFragment
                 .loadDrawable(activity, thumbnailView,
                         getResources().getColor(R.color.secondary_color));
         if (isHomeWallpaper) {
+            LiveTileOverlay.INSTANCE.detach(thumbnailView.getOverlay());
             if (wallpaperInfo instanceof LiveWallpaperInfo) {
                 setUpLiveWallpaperPreview(wallpaperInfo, thumbnailView,
                         new ColorDrawable(getResources().getColor(
