@@ -54,6 +54,7 @@ public class TestWallpaperPersister implements WallpaperPersister {
     private float mScale;
     @WallpaperPosition
     private int mWallpaperPosition;
+    private WallpaperInfo mWallpaperInfo;
 
     public TestWallpaperPersister(Context appContext) {
         mAppContext = appContext;
@@ -64,6 +65,7 @@ public class TestWallpaperPersister implements WallpaperPersister {
         mCurrentLockWallpaper = null;
         mPendingHomeWallpaper = null;
         mPendingLockWallpaper = null;
+        mWallpaperInfo = null;
         mFailNextCall = false;
         mScale = -1.0f;
     }
@@ -88,6 +90,7 @@ public class TestWallpaperPersister implements WallpaperPersister {
             mCallback = callback;
             mCropRect = cropRect;
             mScale = scale;
+            mWallpaperInfo = wallpaperInfo;
         });
     }
 
@@ -110,6 +113,7 @@ public class TestWallpaperPersister implements WallpaperPersister {
                 mDestination = WallpaperPersister.DEST_BOTH;
                 mCallback = callback;
                 mWallpaperPosition = wallpaperPosition;
+                mWallpaperInfo = wallpaper;
             }
         });
     }
@@ -192,7 +196,7 @@ public class TestWallpaperPersister implements WallpaperPersister {
                 mCurrentLockWallpaper = mPendingLockWallpaper;
                 mPendingLockWallpaper = null;
             }
-            mCallback.onSuccess();
+            mCallback.onSuccess(mWallpaperInfo);
             mWallpaperChangedNotifier.notifyWallpaperChanged();
         }
     }

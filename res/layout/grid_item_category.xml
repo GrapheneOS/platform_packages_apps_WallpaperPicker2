@@ -27,15 +27,14 @@
         android:id="@+id/category_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginTop="@dimen/grid_item_category_label_padding_top"
+        android:layout_marginBottom="@dimen/grid_item_category_label_padding_bottom"
         android:background="@color/category_title_scrim_color"
-        android:gravity="center_horizontal|bottom"
-        android:paddingTop="@dimen/grid_item_category_label_padding_top"
-        android:paddingBottom="@dimen/grid_item_category_label_padding_bottom"
-        android:textAlignment="center"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title"
-        android:textColor="@color/category_title_text_color"
-        android:textSize="@dimen/abc_text_size_subhead_material"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:minHeight="@dimen/grid_item_category_label_minimum_height"
+        android:textAppearance="@style/OptionTitleTextAppearance"
         tools:text="Wallpaper category" />
 
     <androidx.cardview.widget.CardView
