@@ -212,6 +212,7 @@
     <dimen name="bottom_action_bar_padding_horizontal">16dp</dimen>
     <dimen name="bottom_action_bar_padding_vertical">20dp</dimen>
     <dimen name="bottom_action_bar_elevation">10dp</dimen>
+    <dimen name="bottom_action_icon_size">24dp</dimen>
 
     <dimen name="option_border_width">2dp</dimen>
     <dimen name="option_selected_border_width">3dp</dimen>

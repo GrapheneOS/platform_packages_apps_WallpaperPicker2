@@ -44,9 +44,10 @@ import java.util.Map;
 /** A {@code ViewGroup} which provides the specific actions for the user to interact with. */
 public class BottomActionBar extends FrameLayout {
 
+    // TODO(b/154299462): Separate downloadable related actions from WallpaperPicker.
     /** The action items in the bottom action bar. */
     public enum BottomAction {
-        CANCEL, ROTATION, INFORMATION, EDIT, APPLY,
+        CANCEL, ROTATION, DELETE, INFORMATION, EDIT, DOWNLOAD, PROGRESS, APPLY,
     }
 
     private final Map<BottomAction, View> mActionList = new EnumMap<>(BottomAction.class);
@@ -65,8 +66,11 @@ public class BottomActionBar extends FrameLayout {
 
         mActionList.put(BottomAction.CANCEL, findViewById(R.id.action_cancel));
         mActionList.put(BottomAction.ROTATION, findViewById(R.id.action_rotation));
+        mActionList.put(BottomAction.DELETE, findViewById(R.id.action_delete));
         mActionList.put(BottomAction.INFORMATION, findViewById(R.id.action_information));
         mActionList.put(BottomAction.EDIT, findViewById(R.id.action_edit));
+        mActionList.put(BottomAction.DOWNLOAD, findViewById(R.id.action_download));
+        mActionList.put(BottomAction.PROGRESS, findViewById(R.id.action_progress));
         mActionList.put(BottomAction.APPLY, findViewById(R.id.action_apply));
 
         ViewGroup bottomSheet = findViewById(R.id.action_bottom_sheet);
@@ -217,6 +221,30 @@ public class BottomActionBar extends FrameLayout {
 
     private void enableActions(boolean enable) {
         mActionList.forEach((bottomAction, view) -> view.setEnabled(enable));
+    }
+
+    /**
+     * Enables specified actions' {@link View}.
+     *
+     * @param actions the specified actions to enable their views
+     */
+    public void enableActions(EnumSet<BottomAction> actions) {
+        enableActions(/* enable= */ true, actions);
+    }
+
+    /**
+     * Disables specified actions' {@link View}.
+     *
+     * @param actions the specified actions to disable their views
+     */
+    public void disableActions(EnumSet<BottomAction> actions) {
+        enableActions(/* enable= */ false, actions);
+    }
+
+    private void enableActions(boolean enable, EnumSet<BottomAction> actions) {
+        actions.forEach(bottomAction -> {
+            mActionList.get(bottomAction).setEnabled(enable);
+        });
     }
 
     private void showActions(EnumSet<BottomAction> actions, boolean show) {
