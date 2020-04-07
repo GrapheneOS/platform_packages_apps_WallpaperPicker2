@@ -15,6 +15,9 @@
  */
 package com.android.wallpaper.picker;
 
+import static android.view.View.MeasureSpec.EXACTLY;
+import static android.view.View.MeasureSpec.makeMeasureSpec;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -36,6 +39,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.SurfaceControlViewHost;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -52,6 +56,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -133,6 +138,7 @@ public class CategoryFragment extends ToolbarFragment
     private boolean mTestingMode;
     private ImageView mHomePreview;
     private SurfaceView mWorkspaceSurface;
+    private SurfaceView mWallpaperSurface;
     private ImageView mLockscreenPreview;
     private PreviewPager mPreviewPager;
     private List<View> mWallPaperPreviews;
@@ -141,6 +147,10 @@ public class CategoryFragment extends ToolbarFragment
     private boolean mShowSelectedWallpaper;
     private BottomSheetBehavior mBottomSheetBehavior;
     private PreviewUtils mPreviewUtils;
+
+    // Home workspace surface is behind the app window, and so must the home image wallpaper like
+    // the live wallpaper. This view is rendered on mWallpaperSurface for home image wallpaper.
+    private ImageView mHomeImageWallpaper;
 
     public CategoryFragment() {
         mCategorySelectorFragment = new CategorySelectorFragment();
@@ -159,6 +169,7 @@ public class CategoryFragment extends ToolbarFragment
                 R.layout.wallpaper_preview_card, null);
         mHomePreview = homePreviewCard.findViewById(R.id.wallpaper_preview_image);
         mWorkspaceSurface = homePreviewCard.findViewById(R.id.workspace_surface);
+        mWallpaperSurface = homePreviewCard.findViewById(R.id.wallpaper_surface);
         mWallPaperPreviews.add(homePreviewCard);
 
         if (LockWallpaperStatusChecker.isLockWallpaperSet(getContext())) {
@@ -166,6 +177,7 @@ public class CategoryFragment extends ToolbarFragment
                     R.layout.wallpaper_preview_card, null);
             mLockscreenPreview = lockscreenPreviewCard.findViewById(R.id.wallpaper_preview_image);
             lockscreenPreviewCard.findViewById(R.id.workspace_surface).setVisibility(View.GONE);
+            lockscreenPreviewCard.findViewById(R.id.wallpaper_surface).setVisibility(View.GONE);
             mWallPaperPreviews.add(lockscreenPreviewCard);
         }
 
@@ -221,6 +233,12 @@ public class CategoryFragment extends ToolbarFragment
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        updateWallpaperSurface();
+        updateWorkspaceSurface();
+    }
+
+    @Override
     public CharSequence getDefaultTitle() {
         return getContext().getString(R.string.app_name);
     }
@@ -244,7 +262,6 @@ public class CategoryFragment extends ToolbarFragment
         if (mWallpaperConnection != null) {
             mWallpaperConnection.setVisibility(true);
         }
-        updateWorkspaceSurface();
     }
 
     @Override
@@ -647,8 +664,12 @@ public class CategoryFragment extends ToolbarFragment
         }
 
         UserEventLogger eventLogger = InjectorProvider.getInjector().getUserEventLogger(activity);
+
+        boolean renderInImageWallpaperSurface =
+                !(wallpaperInfo instanceof LiveWallpaperInfo) && isHomeWallpaper;
         wallpaperInfo.getThumbAsset(activity.getApplicationContext())
-                .loadDrawable(activity, thumbnailView,
+                .loadDrawable(activity,
+                        renderInImageWallpaperSurface ? mHomeImageWallpaper : thumbnailView,
                         getResources().getColor(R.color.secondary_color));
         if (isHomeWallpaper) {
             LiveTileOverlay.INSTANCE.detach(thumbnailView.getOverlay());
@@ -669,24 +690,59 @@ public class CategoryFragment extends ToolbarFragment
         });
     }
 
-    private void updateWorkspaceSurface() {
-        mWorkspaceSurface.setZOrderOnTop(true);
-        mWorkspaceSurface.getHolder().addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                Bundle bundle = SurfaceViewRequestUtils.createSurfaceBundle(mWorkspaceSurface);
-                if (mPreviewUtils.supportsPreview()) {
-                    mPreviewUtils.renderPreview(bundle);
-                }
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) { }
-        });
+    private void updateWallpaperSurface() {
+        mWallpaperSurface.getHolder().addCallback(mWallpaperSurfaceCallback);
     }
+
+    private void updateWorkspaceSurface() {
+        mWorkspaceSurface.setZOrderMediaOverlay(true);
+        mWorkspaceSurface.getHolder().addCallback(mWorkspaceSurfaceCallback);
+    }
+
+    private final SurfaceHolder.Callback mWallpaperSurfaceCallback = new SurfaceHolder.Callback() {
+
+        @Override
+        public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
+            if (mHomeImageWallpaper == null) {
+                mHomeImageWallpaper = new ImageView(getContext());
+                mHomeImageWallpaper.setBackgroundColor(
+                        ContextCompat.getColor(getContext(), R.color.primary_color));
+                mHomeImageWallpaper.measure(makeMeasureSpec(mHomePreview.getWidth(), EXACTLY),
+                        makeMeasureSpec(mHomePreview.getHeight(), EXACTLY));
+                mHomeImageWallpaper.layout(0, 0, mHomePreview.getWidth(), mHomePreview.getHeight());
+
+                SurfaceControlViewHost host = new SurfaceControlViewHost(getContext(),
+                        getContext().getDisplay(), mWallpaperSurface.getHostToken());
+                host.setView(mHomeImageWallpaper, mHomeImageWallpaper.getWidth(),
+                        mHomeImageWallpaper.getHeight());
+                mWallpaperSurface.setChildSurfacePackage(host.getSurfacePackage());
+            }
+        }
+
+        @Override
+        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        }
+
+        @Override
+        public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
+        }
+    };
+
+    private final SurfaceHolder.Callback mWorkspaceSurfaceCallback = new SurfaceHolder.Callback() {
+        @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+            Bundle bundle = SurfaceViewRequestUtils.createSurfaceBundle(mWorkspaceSurface);
+            if (mPreviewUtils.supportsPreview()) {
+                mPreviewUtils.renderPreview(bundle);
+            }
+        }
+
+        @Override
+        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
+
+        @Override
+        public void surfaceDestroyed(SurfaceHolder holder) { }
+    };
 
     private interface MetadataHolder {
         /**
