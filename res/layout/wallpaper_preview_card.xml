@@ -28,4 +28,9 @@
         android:id="@+id/workspace_surface"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <SurfaceView
+        android:id="@+id/wallpaper_surface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </androidx.cardview.widget.CardView>
