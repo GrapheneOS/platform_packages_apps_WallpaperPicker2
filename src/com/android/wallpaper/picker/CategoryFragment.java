@@ -41,6 +41,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.SurfaceControlViewHost;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -703,9 +704,12 @@ public class CategoryFragment extends ToolbarFragment
 
     private final SurfaceHolder.Callback mWallpaperSurfaceCallback = new SurfaceHolder.Callback() {
 
+        private Surface mLastSurface;
+
         @Override
-        public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
-            if (mHomeImageWallpaper == null) {
+        public void surfaceCreated(SurfaceHolder holder) {
+            if (mLastSurface != holder.getSurface()) {
+                mLastSurface = holder.getSurface();
                 mHomeImageWallpaper = new ImageView(getContext());
                 mHomeImageWallpaper.setBackgroundColor(
                         ContextCompat.getColor(getContext(), R.color.primary_color));
@@ -725,16 +729,18 @@ public class CategoryFragment extends ToolbarFragment
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
 
         @Override
-        public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) { }
+        public void surfaceDestroyed(SurfaceHolder holder) { }
     };
 
     private final SurfaceHolder.Callback mWorkspaceSurfaceCallback = new SurfaceHolder.Callback() {
 
+        private Surface mLastSurface;
         private Message mCallback;
 
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
-            if (mPreviewUtils.supportsPreview()) {
+            if (mPreviewUtils.supportsPreview() && mLastSurface != holder.getSurface()) {
+                mLastSurface = holder.getSurface();
                 Bundle result = mPreviewUtils.renderPreview(
                         SurfaceViewUtils.createSurfaceViewRequest(mWorkspaceSurface));
                 if (result != null) {
