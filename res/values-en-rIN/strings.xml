@@ -80,4 +80,12 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Centre crop"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Stretch"</string>
     <string name="preview" msgid="1774602101743861071">"Preview"</string>
+    <string name="tab_info" msgid="818614080690111416">"Info"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Customise"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Settings…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Delete"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Delete this wallpaper from your phone?"</string>
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"Page <xliff:g id="ID_1">%1$d</xliff:g> of <xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"Next"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"Previous"</string>
 </resources>

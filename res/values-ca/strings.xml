@@ -42,7 +42,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Permet l\'accés"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Servei de fons de pantalla animats per a fons de pantalla rotatius"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Fons de pantalla diari"</string>
-    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Toca per activar la funció"</string>
+    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Toca per activar"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"El fons de pantalla canviarà automàticament cada dia. Per completar la configuració, toca &lt;strong&gt;Estableix el fons de pantalla&lt;/strong&gt; a la pantalla següent."</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Baixa els propers fons de pantalla només per Wi-Fi"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Continua"</string>
@@ -80,4 +80,12 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Centra i retalla"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Amplia"</string>
     <string name="preview" msgid="1774602101743861071">"Previsualitza"</string>
+    <string name="tab_info" msgid="818614080690111416">"Informació"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Personalitza"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Configuració…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Suprimeix"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Vols suprimir aquest fons de pantalla del telèfon?"</string>
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"Pàgina <xliff:g id="ID_1">%1$d</xliff:g> de <xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"Següent"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"Anterior"</string>
 </resources>
