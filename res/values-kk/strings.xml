@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Тұсқағаз санаттары"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Тұсқағаз орнату"</string>
+    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Тұсқағаз етіп орнату"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Тұсқағаз орнатылуда…"</string>
     <string name="try_again" msgid="8278874823700921234">"Қайталау"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Тұсқағаз орнатылмады."</string>
@@ -32,7 +32,7 @@
     <string name="home_screen_message" msgid="106444102822522813">"Негізгі экран"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Құлыпталған экран"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Негізгі және құлыпталған экран"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Тұсқағаз орнату"</string>
+    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Тұсқағаз етіп орнату"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Негізгі экран"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Құлыпталған экран"</string>
     <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Негізгі экран және құлыпталған экран"</string>

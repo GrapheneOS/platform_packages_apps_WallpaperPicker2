@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"桌布類別"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"設定「桌布」"</string>
+    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"設定桌布"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"正在設定桌布…"</string>
     <string name="try_again" msgid="8278874823700921234">"再試一次"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"無法設定桌布。"</string>

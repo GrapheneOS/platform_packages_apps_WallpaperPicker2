@@ -42,7 +42,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Permet l\'accés"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Servei de fons de pantalla animats per a fons de pantalla rotatius"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Fons de pantalla diari"</string>
-    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Toca per activar la funció"</string>
+    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Toca per activar"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"El fons de pantalla canviarà automàticament cada dia. Per completar la configuració, toca &lt;strong&gt;Estableix el fons de pantalla&lt;/strong&gt; a la pantalla següent."</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Baixa els propers fons de pantalla només per Wi-Fi"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Continua"</string>

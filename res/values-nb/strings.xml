@@ -79,5 +79,5 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Midtstilt"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Midtstilt beskjæring"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Strekk"</string>
-    <string name="preview" msgid="1774602101743861071">"Ta en forhåndskikk"</string>
+    <string name="preview" msgid="1774602101743861071">"Se forhåndsvisning"</string>
 </resources>

@@ -28,14 +28,14 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"يتعذّر تحميل الخلفية. قد تكون الصورة تالفة أو غير متاحة."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"الخلفية المختارة حاليًا"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"خلفية يومية"</string>
-    <string name="wallpaper_destination_both" msgid="1124197176741944063">"الشاشة الرئيسية وشاشة التأمين"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"الشاشة الرئيسية وشاشة القفل"</string>
     <string name="home_screen_message" msgid="106444102822522813">"الشاشة الرئيسية"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"شاشة القفل"</string>
-    <string name="home_and_lock_short_label" msgid="2937922943541927983">"الشاشة الرئيسية وشاشة التأمين"</string>
+    <string name="home_and_lock_short_label" msgid="2937922943541927983">"الشاشة الرئيسية وشاشة القفل"</string>
     <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"تعيين كخلفية"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"الشاشة الرئيسية"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"شاشة القفل"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"الشاشة الرئيسية وشاشة التأمين"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"الشاشة الرئيسية وشاشة القفل"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"خلفية الصور التي يتم عرضها بالتناوب"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"لعرض الخلفية الحالية هنا، يحتاج تطبيق <xliff:g id="APP_NAME">%1$s</xliff:g> إلى الوصول إلى مساحة تخزين الجهاز."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"لعرض الخلفية الحالية هنا، يحتاج تطبيق \"الخلفيات\" إلى الدخول إلى مساحة تخزين جهازك.\n\nلتغيير هذا الإعداد، انتقل إلى \"منطقة الأذونات\" في المعلومات التي يقدّمها تطبيق \"الخلفيات\"."</string>
@@ -57,11 +57,11 @@
     <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"تم تعيين الخلفية بنجاح."</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"يلزمك الاتصال بالإنترنت للاطّلاع على الخلفيات. يُرجى الاتصال وإعادة المحاولة."</string>
     <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"صورة مصغَّرة لخلفية الشاشة الرئيسية المعيَّنة حاليًا"</string>
-    <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"صورة مصغَّرة لخلفية شاشة التأمين المعيَّنة حاليًا"</string>
+    <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"صورة مصغَّرة لخلفية شاشة القفل المعيَّنة حاليًا"</string>
     <string name="currently_set_wallpaper_thumbnail" msgid="8651887838745545107">"صورة مصغَّرة لخلفية الشاشة المعيَّنة حاليًا"</string>
     <string name="wallpaper_thumbnail" msgid="569931475923605974">"صورة مصغَّرة للخلفية"</string>
     <string name="explore_home_screen" msgid="8756346794535765482">"استكشاف خلفية الشاشة الرئيسية"</string>
-    <string name="explore_lock_screen" msgid="268938342103703665">"استكشاف خلفية شاشة التأمين"</string>
+    <string name="explore_lock_screen" msgid="268938342103703665">"استكشاف خلفية شاشة القفل"</string>
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"إعادة تحميل خلفية الشاشة الرئيسية اليومية"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"إعادة تحميل الخلفية اليومية"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"تجري إعادة تحميل الخلفية اليومية…"</string>

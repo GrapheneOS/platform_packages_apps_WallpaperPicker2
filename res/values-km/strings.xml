@@ -42,7 +42,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"ផ្តល់សិទិ្ធ​ចូលប្រើ"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"សេវាកម្មផ្ទាំងរូបភាពរស់រវើកសម្រាប់បង្វិលផ្ទាំងរូបភាព"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"ផ្ទាំងរូបភាពប្រចាំថ្ងៃ"</string>
-    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"ប៉ះដើម្បីបើក"</string>
+    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"ចុចដើម្បីបើក"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Wallpaper នឹង​ផ្លាស់​ប្ដូរ​ដោយស្វ័យ​ប្រវត្តិ​ជារៀងរាល់ថ្ងៃ។ ដើម្បី​បញ្ចប់​ការ​រៀបចំ សូម​ចុច &lt;strong&gt;កំណត់​ផ្ទាំងរូបភាព&lt;/strong&gt; នៅលើ​អេក្រង់​បន្ទាប់។"</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"ទាញយកផ្ទាំងរូបភាពនៅពេលក្រោយតាមរយៈ Wi-Fi តែប៉ុណ្ណោះ"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"បន្ត"</string>
