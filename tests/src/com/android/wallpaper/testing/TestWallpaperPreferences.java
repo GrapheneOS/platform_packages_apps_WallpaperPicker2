@@ -45,6 +45,7 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     private int mLockWallpaperManagerId;
     private String mLockActionUrl;
     private String mLockCollectionId;
+    private String mLockWallpaperRemoteId;
 
     private List<Long> mDailyRotations;
     private long mDailyWallpaperEnabledTimestamp;
@@ -297,6 +298,16 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     @Override
     public void setLockWallpaperId(int lockWallpaperId) {
         mLockWallpaperManagerId = lockWallpaperId;
+    }
+
+    @Override
+    public String getLockWallpaperRemoteId() {
+        return mLockWallpaperRemoteId;
+    }
+
+    @Override
+    public void setLockWallpaperRemoteId(String wallpaperRemoteId) {
+        mLockWallpaperRemoteId = wallpaperRemoteId;
     }
 
     @Override
