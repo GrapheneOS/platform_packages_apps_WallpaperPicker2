@@ -159,6 +159,10 @@ public class BottomActionBar extends FrameLayout {
         }
     }
 
+    /** Returns {@code true} if visible. */
+    public boolean isVisible() {
+        return getVisibility() == VISIBLE;
+    }
 
     /** Shows {@link BottomActionBar}. */
     public void show() {
