@@ -465,6 +465,19 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
+    public String getLockWallpaperRemoteId() {
+        return mNoBackupPrefs.getString(
+                NoBackupKeys.KEY_LOCK_WALLPAPER_REMOTE_ID, null);
+    }
+
+    @Override
+    public void setLockWallpaperRemoteId(String wallpaperRemoteId) {
+        mNoBackupPrefs.edit().putString(
+                NoBackupKeys.KEY_LOCK_WALLPAPER_REMOTE_ID, wallpaperRemoteId)
+                .apply();
+    }
+
+    @Override
     public long getLockWallpaperHashCode() {
         return mSharedPrefs.getLong(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_HASH_CODE, 0);
     }

@@ -784,6 +784,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                     mWallpaper.getActionIconRes(mAppContext));
             mWallpaperPreferences.setLockWallpaperCollectionId(
                     mWallpaper.getCollectionId(mAppContext));
+            mWallpaperPreferences.setLockWallpaperRemoteId(mWallpaper.getWallpaperId());
 
             // Save the lock wallpaper image's hash code as well for the sake of backup & restore
             // because WallpaperManager-generated IDs are specific to a physical device and
