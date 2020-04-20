@@ -52,8 +52,9 @@ public class PreviewUtils {
     }
 
     /** Render preview under the current grid option. */
-    public void renderPreview(Bundle bundle) {
-        mContext.getContentResolver().call(getUri(PREVIEW), METHOD_GET_PREVIEW, null, bundle);
+    public Bundle renderPreview(Bundle bundle) {
+        return mContext.getContentResolver().call(getUri(PREVIEW), METHOD_GET_PREVIEW, null,
+                bundle);
     }
 
     /** Easy way to generate a Uri with the provider info from this class. */
