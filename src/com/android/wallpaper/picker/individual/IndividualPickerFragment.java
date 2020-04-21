@@ -46,7 +46,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
@@ -78,6 +77,7 @@ import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
 import com.android.wallpaper.picker.BaseActivity;
+import com.android.wallpaper.picker.BottomActionBarFragment;
 import com.android.wallpaper.picker.CurrentWallpaperBottomSheetPresenter;
 import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
 import com.android.wallpaper.picker.RotationStarter;
@@ -104,7 +104,7 @@ import java.util.Random;
 /**
  * Displays the Main UI for picking an individual wallpaper image.
  */
-public class IndividualPickerFragment extends Fragment
+public class IndividualPickerFragment extends BottomActionBarFragment
         implements RotationStarter, StartRotationErrorDialogFragment.Listener,
         CurrentWallpaperBottomSheetPresenter.RefreshListener,
         SetWallpaperErrorDialogFragment.Listener, SetWallpaperDialogFragment.Listener {
@@ -449,18 +449,13 @@ public class IndividualPickerFragment extends Fragment
                 getResources().getDimensionPixelSize(R.dimen.grid_padding)));
 
         maybeSetUpImageGrid();
-
         setUpBottomSheet();
-        setupBottomActionBar();
-
         return view;
     }
 
     @Override
     public void onDestroyView() {
         if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
-            mBottomActionBar.hide();
-            mBottomActionBar.clearActionClickListeners();
             updateThumbnail(null);
         }
         super.onDestroyView();
@@ -538,10 +533,12 @@ public class IndividualPickerFragment extends Fragment
         });
     }
 
-    void setupBottomActionBar() {
+    @Override
+    protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
-            mBottomActionBar = getActivity().findViewById(R.id.bottom_actionbar);
-
+            mBottomActionBar = bottomActionBar;
+            mBottomActionBar.showActionsOnly(
+                    isRotationEnabled() ? EnumSet.of(CANCEL, ROTATION) : EnumSet.of(CANCEL));
             mBottomActionBar.setActionClickListener(CANCEL, unused -> {
                 if (mSelectedWallpaperInfo != null) {
                     onWallpaperSelected(null, 0);
@@ -560,10 +557,7 @@ public class IndividualPickerFragment extends Fragment
                 mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
                         mSelectedWallpaperInfo instanceof LiveWallpaperInfo);
             });
-
             mBottomActionBar.show();
-            mBottomActionBar.showActionsOnly(
-                    isRotationEnabled() ? EnumSet.of(CANCEL, ROTATION) : EnumSet.of(CANCEL));
         }
     }
 
@@ -900,10 +894,10 @@ public class IndividualPickerFragment extends Fragment
     }
 
     void updateBottomActions(boolean hasWallpaperSelected) {
-        mBottomActionBar.showActions(
-                hasWallpaperSelected ? EnumSet.of(APPLY, INFORMATION) : EnumSet.of(ROTATION));
-        mBottomActionBar.hideActions(
-                hasWallpaperSelected ? EnumSet.of(ROTATION) : EnumSet.of(APPLY, INFORMATION));
+        mBottomActionBar.showActionsOnly(
+                hasWallpaperSelected
+                    ? EnumSet.of(CANCEL, INFORMATION, APPLY)
+                    : EnumSet.of(CANCEL, ROTATION));
     }
 
     private void updateThumbnail(WallpaperInfo selectedWallpaperInfo) {
