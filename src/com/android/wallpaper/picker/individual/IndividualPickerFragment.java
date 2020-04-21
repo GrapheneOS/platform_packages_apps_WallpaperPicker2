@@ -96,7 +96,6 @@ import com.bumptech.glide.MemoryCategory;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -537,8 +536,11 @@ public class IndividualPickerFragment extends BottomActionBarFragment
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
             mBottomActionBar = bottomActionBar;
-            mBottomActionBar.showActionsOnly(
-                    isRotationEnabled() ? EnumSet.of(CANCEL, ROTATION) : EnumSet.of(CANCEL));
+            if (isRotationEnabled()) {
+                mBottomActionBar.showActionsOnly(CANCEL, ROTATION);
+            } else {
+                mBottomActionBar.showActionsOnly(CANCEL);
+            }
             mBottomActionBar.setActionClickListener(CANCEL, unused -> {
                 if (mSelectedWallpaperInfo != null) {
                     onWallpaperSelected(null, 0);
@@ -894,10 +896,11 @@ public class IndividualPickerFragment extends BottomActionBarFragment
     }
 
     void updateBottomActions(boolean hasWallpaperSelected) {
-        mBottomActionBar.showActionsOnly(
-                hasWallpaperSelected
-                    ? EnumSet.of(CANCEL, INFORMATION, APPLY)
-                    : EnumSet.of(CANCEL, ROTATION));
+        if (hasWallpaperSelected) {
+            mBottomActionBar.showActionsOnly(CANCEL, INFORMATION, APPLY);
+        } else {
+            mBottomActionBar.showActionsOnly(CANCEL, ROTATION);
+        }
     }
 
     private void updateThumbnail(WallpaperInfo selectedWallpaperInfo) {
