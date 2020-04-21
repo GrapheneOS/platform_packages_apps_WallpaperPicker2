@@ -22,6 +22,7 @@ import static com.android.wallpaper.widget.BottomActionBar.BottomAction.ROTATION
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
@@ -97,6 +98,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -141,6 +143,31 @@ public class IndividualPickerFragment extends Fragment
          * Restores to the thumbnails of the wallpapers which were applied.
          */
         void restoreThumbnails();
+    }
+
+    /**
+     * An interface for receiving the destination of the new applied wallpaper.
+     */
+    public interface WallpaperDestinationCallback {
+        /**
+         * Called when the destination of the wallpaper is set.
+         *
+         * @param destination the destination which a wallpaper may be set.
+         *                    See {@link Destination} for more details.
+         */
+        void onDestinationSet(@Destination int destination);
+    }
+
+    /**
+     * The listener which will be notified when the wallpaper is selected.
+     */
+    public interface WallpaperSelectedListener {
+        /**
+         * Called when the wallpaper is selected.
+         *
+         * @param position the position of the selected wallpaper
+         */
+        void onWallpaperSelected(int position);
     }
 
     WallpaperPreferences mWallpaperPreferences;
@@ -230,6 +257,9 @@ public class IndividualPickerFragment extends Fragment
     private WallpaperPersister mWallpaperPersister;
     @Nullable private WallpaperInfo mSelectedWallpaperInfo;
     private WallpaperInfo mAppliedWallpaperInfo;
+    private WallpaperManager mWallpaperManager;
+    private int mWallpaperDestination;
+    private WallpaperSelectedListener mWallpaperSelectedListener;
 
     public static IndividualPickerFragment newInstance(String collectionId) {
         Bundle args = new Bundle();
@@ -238,6 +268,21 @@ public class IndividualPickerFragment extends Fragment
         IndividualPickerFragment fragment = new IndividualPickerFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    /**
+     * Highlights the applied wallpaper (if it exists) according to the destination a wallpaper
+     * would be set.
+     *
+     * @param wallpaperDestination the destination a wallpaper would be set.
+     *                             It will be either {@link Destination#DEST_HOME_SCREEN}
+     *                             or {@link Destination#DEST_LOCK_SCREEN}.
+     */
+    public void highlightAppliedWallpaper(@Destination int wallpaperDestination) {
+        mWallpaperDestination = wallpaperDestination;
+        if (mWallpapers != null) {
+            refreshAppliedWallpaper();
+        }
     }
 
     private static int getResIdForRotationState(@RotationInitializationState int rotationState) {
@@ -283,6 +328,8 @@ public class IndividualPickerFragment extends Fragment
 
         mWallpaperChangedNotifier = WallpaperChangedNotifier.getInstance();
         mWallpaperChangedNotifier.registerListener(mWallpaperChangedListener);
+
+        mWallpaperManager = WallpaperManager.getInstance(appContext);
 
         mFormFactor = injector.getFormFactorChecker(appContext).getFormFactor();
 
@@ -411,7 +458,7 @@ public class IndividualPickerFragment extends Fragment
 
             mBottomActionBar.setActionClickListener(CANCEL, unused -> {
                 if (mSelectedWallpaperInfo != null) {
-                    onWallpaperSelected(null);
+                    onWallpaperSelected(null, 0);
                     return;
                 }
                 getActivity().onBackPressed();
@@ -604,6 +651,29 @@ public class IndividualPickerFragment extends Fragment
         mWallpapersUiContainer = uiContainer;
     }
 
+    public void setOnWallpaperSelectedListener(
+            WallpaperSelectedListener wallpaperSelectedListener) {
+        mWallpaperSelectedListener = wallpaperSelectedListener;
+    }
+
+    /**
+     * Resizes the layout's height.
+     */
+    public void resizeLayout(int height) {
+        mImageGrid.getLayoutParams().height = height;
+        mImageGrid.requestLayout();
+    }
+
+    /**
+     * Scrolls to the specific item.
+     *
+     * @param position the position of the item
+     */
+    public void scrollToPosition(int position) {
+        ((GridLayoutManager) mImageGrid.getLayoutManager())
+                .scrollToPositionWithOffset(position, /* offset= */ 0);
+    }
+
     /**
      * Enable a test mode of operation -- in which certain UI features are disabled to allow for
      * UI tests to run correctly. Works around issue in ProgressDialog currently where the dialog
@@ -784,6 +854,7 @@ public class IndividualPickerFragment extends Fragment
             mWallpaperSetter.setCurrentWallpaper(
                     getActivity(), mSelectedWallpaperInfo, destination, mSetWallpaperCallback);
         }
+        onWallpaperDestinationSet(destination);
     }
 
     private WallpaperPersister.SetWallpaperCallback mSetWallpaperCallback =
@@ -792,9 +863,7 @@ public class IndividualPickerFragment extends Fragment
                 public void onSuccess(WallpaperInfo wallpaperInfo) {
                     // TODO(b/150913705): Show the snack bar.
                     mBottomActionBar.enableActions();
-                    updateAppliedStatus(mAppliedWallpaperInfo, false);
-                    updateAppliedStatus(wallpaperInfo, true);
-                    mAppliedWallpaperInfo = wallpaperInfo;
+                    refreshAppliedWallpaper();
 
                     mWallpaperPersister.onLiveWallpaperSet();
                 }
@@ -848,7 +917,18 @@ public class IndividualPickerFragment extends Fragment
         }
     }
 
-    private void onWallpaperSelected(@Nullable WallpaperInfo newSelectedWallpaperInfo) {
+    private void onWallpaperDestinationSet(int destination) {
+        WallpaperDestinationCallback wallpaperDestinationCallback =
+                (WallpaperDestinationCallback) getParentFragment();
+        if (wallpaperDestinationCallback == null) {
+            return;
+        }
+
+        wallpaperDestinationCallback.onDestinationSet(destination);
+    }
+
+    private void onWallpaperSelected(@Nullable WallpaperInfo newSelectedWallpaperInfo,
+                                     int position) {
         if (mSelectedWallpaperInfo == newSelectedWallpaperInfo) {
             return;
         }
@@ -865,8 +945,12 @@ public class IndividualPickerFragment extends Fragment
         // Populate wallpaper info to bottom sheet page.
         if (mSelectedWallpaperInfo != null) {
             mBottomActionBar.populateInfoPage(
-                mSelectedWallpaperInfo.getAttributions(getContext()),
-                shouldShowMetadataInPreview(mSelectedWallpaperInfo));
+                    mSelectedWallpaperInfo.getAttributions(getContext()),
+                    shouldShowMetadataInPreview(mSelectedWallpaperInfo));
+        }
+
+        if (mWallpaperSelectedListener != null) {
+            mWallpaperSelectedListener.onWallpaperSelected(position);
         }
     }
 
@@ -906,6 +990,45 @@ public class IndividualPickerFragment extends Fragment
     private static boolean shouldShowMetadataInPreview(WallpaperInfo wallpaperInfo) {
         android.app.WallpaperInfo wallpaperComponent = wallpaperInfo.getWallpaperComponent();
         return wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
+    }
+
+    private void refreshAppliedWallpaper() {
+        // Clear the check mark and blue border(if it shows) of the old applied wallpaper.
+        showCheckMarkAndBorderForAppliedWallpaper(false);
+
+        // Update to the new applied wallpaper.
+        String appliedWallpaperId = getAppliedWallpaperId();
+        Optional<WallpaperInfo> wallpaperInfoOptional = mWallpapers
+                .stream()
+                .filter(wallpaper -> wallpaper.getWallpaperId() != null)
+                .filter(wallpaper -> wallpaper.getWallpaperId().equals(appliedWallpaperId))
+                .findFirst();
+        mAppliedWallpaperInfo = wallpaperInfoOptional.orElse(null);
+
+        // Set the check mark and blue border(if user doesn't select) of the new applied wallpaper.
+        showCheckMarkAndBorderForAppliedWallpaper(true);
+    }
+
+    private String getAppliedWallpaperId() {
+        WallpaperPreferences prefs =
+                InjectorProvider.getInjector().getPreferences(getContext());
+        android.app.WallpaperInfo wallpaperInfo = mWallpaperManager.getWallpaperInfo();
+        boolean isDestinationBoth =
+                mWallpaperManager.getWallpaperId(WallpaperManager.FLAG_LOCK) < 0;
+
+        if (isDestinationBoth || mWallpaperDestination == WallpaperPersister.DEST_HOME_SCREEN) {
+            return wallpaperInfo != null
+                    ? wallpaperInfo.getServiceName() : prefs.getHomeWallpaperRemoteId();
+        } else {
+            return prefs.getLockWallpaperRemoteId();
+        }
+    }
+
+    private void showCheckMarkAndBorderForAppliedWallpaper(boolean show) {
+        updateAppliedStatus(mAppliedWallpaperInfo, show);
+        if (mSelectedWallpaperInfo == null) {
+            updateActivatedStatus(mAppliedWallpaperInfo, show);
+        }
     }
 
     /**
@@ -1239,8 +1362,7 @@ public class IndividualPickerFragment extends Fragment
                     ? position - 1 : position;
             WallpaperInfo wallpaper = mWallpapers.get(wallpaperIndex);
             ((IndividualHolder) holder).bindWallpaper(wallpaper);
-            WallpaperPreferences prefs = InjectorProvider.getInjector().getPreferences(getContext());
-            String appliedWallpaperId = prefs.getHomeWallpaperRemoteId();
+            String appliedWallpaperId = getAppliedWallpaperId();
             boolean isWallpaperApplied = wallpaper.getWallpaperId().equals(appliedWallpaperId);
             boolean isWallpaperSelected = wallpaper.equals(mSelectedWallpaperInfo);
             boolean hasUserSelectedWallpaper = mSelectedWallpaperInfo != null;
@@ -1256,7 +1378,7 @@ public class IndividualPickerFragment extends Fragment
                 holder.itemView.findViewById(R.id.check_circle).setVisibility(
                         isWallpaperApplied ? View.VISIBLE : View.GONE);
                 holder.itemView.findViewById(R.id.tile).setOnClickListener(
-                        view -> onWallpaperSelected(wallpaper));
+                        view -> onWallpaperSelected(wallpaper, position));
             }
         }
     }

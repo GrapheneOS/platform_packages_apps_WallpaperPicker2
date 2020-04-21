@@ -206,6 +206,15 @@ public class PreviewPager extends LinearLayout {
         mExternalPageListener = listener;
     }
 
+    /**
+     * Switches to the specific preview page.
+     *
+     * @param index preview page index to select
+     */
+    public void switchPreviewPage(int index) {
+        mViewPager.setCurrentItem(index);
+    }
+
     private void initIndicator() {
         mPageIndicator.setNumPages(mAdapter.getCount());
         mPageIndicator.setLocation(mViewPager.getCurrentItem());
