@@ -227,6 +227,7 @@
         <item name="android:textColor">@color/option_title_color</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">@dimen/option_title_font_text_size</item>
+        <item name="android:lineHeight">@dimen/option_title_line_height</item>
     </style>
 
 </resources>
