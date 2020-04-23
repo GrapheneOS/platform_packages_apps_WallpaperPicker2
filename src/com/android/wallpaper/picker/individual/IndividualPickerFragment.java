@@ -859,7 +859,8 @@ public class IndividualPickerFragment extends BottomActionBarFragment
             new WallpaperPersister.SetWallpaperCallback() {
                 @Override
                 public void onSuccess(WallpaperInfo wallpaperInfo) {
-                    // TODO(b/150913705): Show the snack bar.
+                    Toast.makeText(getActivity(), R.string.wallpaper_set_successfully_message,
+                            Toast.LENGTH_SHORT).show();
                     mBottomActionBar.enableActions();
                     refreshAppliedWallpaper();
 
