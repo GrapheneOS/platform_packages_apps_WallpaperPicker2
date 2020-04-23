@@ -541,13 +541,6 @@ public class IndividualPickerFragment extends BottomActionBarFragment
             } else {
                 mBottomActionBar.showActionsOnly(CANCEL);
             }
-            mBottomActionBar.setActionClickListener(CANCEL, unused -> {
-                if (mSelectedWallpaperInfo != null) {
-                    onWallpaperSelected(null, 0);
-                    return;
-                }
-                getActivity().onBackPressed();
-            });
             mBottomActionBar.setActionClickListener(ROTATION, unused -> {
                 DialogFragment startRotationDialogFragment = new StartRotationDialogFragment();
                 startRotationDialogFragment.setTargetFragment(
@@ -613,7 +606,6 @@ public class IndividualPickerFragment extends BottomActionBarFragment
                 }
             }
         }
-
     }
 
     @Override
@@ -638,6 +630,15 @@ public class IndividualPickerFragment extends BottomActionBarFragment
     @Override
     public void retryStartRotation(@NetworkPreference int networkPreference) {
         startRotation(networkPreference);
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (mSelectedWallpaperInfo != null) {
+            onWallpaperSelected(null, 0);
+            return true;
+        }
+        return false;
     }
 
     public void setCurrentWallpaperBottomSheetPresenter(
