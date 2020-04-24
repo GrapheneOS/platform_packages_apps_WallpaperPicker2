@@ -116,7 +116,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
     /**
      * A temporary flag to hide the bottom action bar feature.
      */
-    static final boolean TEMP_BOTTOM_ACTION_BAR_FEATURE = false;
+    static final boolean TEMP_BOTTOM_ACTION_BAR_FEATURE = true;
 
     private static final String TAG = "IndividualPickerFrgmnt";
     private static final int UNUSED_REQUEST_CODE = 1;
