@@ -87,6 +87,32 @@ public class PreviewPager extends LinearLayout {
         mMaxHeightRatio = ratioValue.getFloat();
 
         mViewPager = findViewById(R.id.preview_viewpager);
+        mViewPager.setPageTransformer(false, (view, position) -> {
+            int origin = mViewPager.getPaddingStart();
+            int leftBoundary = -view.getWidth();
+            int rightBoundary = mViewPager.getWidth();
+            int pageWidth = view.getWidth();
+            int offset = (int) (pageWidth * position);
+
+            //               left      origin     right
+            //             boundary              boundary
+            // ---------------|----------|----------|----------
+            // Cover alpha:  1.0         0         1.0
+            float alpha;
+            if (offset <= leftBoundary || offset >= rightBoundary) {
+                alpha = 1.0f;
+            } else if (offset <= origin) {
+                // offset in (leftBoundary, origin]
+                alpha = (float) Math.abs(offset - origin) / Math.abs(leftBoundary - origin);
+            } else {
+                // offset in (origin, rightBoundary)
+                alpha = (float) Math.abs(offset - origin) / Math.abs(rightBoundary - origin);
+            }
+            View cover = view.findViewById(R.id.fade_cover);
+            if (cover != null) {
+                view.findViewById(R.id.fade_cover).setAlpha(alpha);
+            }
+        }, LAYER_TYPE_NONE);
         mViewPager.setPageMargin(res.getDimensionPixelOffset(R.dimen.preview_page_gap));
         mViewPager.setClipToPadding(false);
         if (mPageStyle == STYLE_PEEKING) {
