@@ -110,7 +110,7 @@ import java.util.List;
 /**
  * Displays the Main UI for picking a category of wallpapers to choose from.
  */
-public class CategoryFragment extends ToolbarFragment
+public class CategoryFragment extends AppbarFragment
         implements CategorySelectorFragmentHost, ThumbnailUpdater, WallpaperDestinationCallback {
 
     private final Rect mPreviewLocalRect = new Rect();
@@ -131,7 +131,7 @@ public class CategoryFragment extends ToolbarFragment
 
     public static CategoryFragment newInstance(CharSequence title) {
         CategoryFragment fragment = new CategoryFragment();
-        fragment.setArguments(ToolbarFragment.createArguments(title));
+        fragment.setArguments(AppbarFragment.createArguments(title));
         return fragment;
     }
 
@@ -735,12 +735,8 @@ public class CategoryFragment extends ToolbarFragment
 
         UserEventLogger eventLogger = InjectorProvider.getInjector().getUserEventLogger(activity);
 
-        boolean renderInImageWallpaperSurface =
-                !(wallpaperInfo instanceof LiveWallpaperInfo) && isHomeWallpaper;
-        wallpaperInfo.getThumbAsset(activity.getApplicationContext())
-                .loadDrawable(activity,
-                        renderInImageWallpaperSurface ? mHomeImageWallpaper : thumbnailView,
-                        getResources().getColor(R.color.secondary_color));
+        wallpaperInfo.getThumbAsset(activity.getApplicationContext()).loadDrawable(activity,
+                mHomeImageWallpaper, getResources().getColor(R.color.secondary_color));
         if (isHomeWallpaper) {
             LiveTileOverlay.INSTANCE.detach(thumbnailView.getOverlay());
             if (wallpaperInfo instanceof LiveWallpaperInfo) {
