@@ -79,6 +79,8 @@ public abstract class PreviewFragment extends Fragment implements
         SetWallpaperDialogFragment.Listener, SetWallpaperErrorDialogFragment.Listener,
         LoadWallpaperErrorDialogFragment.Listener {
 
+    protected static final boolean USE_NEW_UI = true;
+
     /**
      * User can view wallpaper and attributions in full screen, but "Set wallpaper" button is
      * hidden.
@@ -210,13 +212,15 @@ public abstract class PreviewFragment extends Fragment implements
         toolbar.getNavigationIcon().setTint(getAttrColor(activity, android.R.attr.colorPrimary));
         toolbar.getNavigationIcon().setAutoMirrored(true);
 
-        ViewCompat.setPaddingRelative(toolbar,
-        /* start */ getResources().getDimensionPixelSize(
-                        R.dimen.preview_toolbar_up_button_start_padding),
-        /* top */ 0,
-        /* end */ getResources().getDimensionPixelSize(
-                        R.dimen.preview_toolbar_set_wallpaper_button_end_padding),
-        /* bottom */ 0);
+        if (!USE_NEW_UI) {
+            ViewCompat.setPaddingRelative(toolbar,
+                    /* start */ getResources().getDimensionPixelSize(
+                            R.dimen.preview_toolbar_up_button_start_padding),
+                    /* top */ 0,
+                    /* end */ getResources().getDimensionPixelSize(
+                            R.dimen.preview_toolbar_set_wallpaper_button_end_padding),
+                    /* bottom */ 0);
+        }
 
         mLoadingProgressBar = view.findViewById(getLoadingIndicatorResId());
         mLoadingProgressBar.show();
@@ -239,18 +243,21 @@ public abstract class PreviewFragment extends Fragment implements
                 : savedInstanceState.getInt(KEY_BOTTOM_SHEET_STATE, STATE_EXPANDED);
         setUpBottomSheetListeners();
 
-        view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
-            toolbar.setPadding(toolbar.getPaddingLeft(),
-                    toolbar.getPaddingTop() + windowInsets.getSystemWindowInsetTop(),
-                    toolbar.getPaddingRight(), toolbar.getPaddingBottom());
-            mBottomSheet.setPadding(mBottomSheet.getPaddingLeft(),
-                    mBottomSheet.getPaddingTop(), mBottomSheet.getPaddingRight(),
-                    mBottomSheet.getPaddingBottom() + windowInsets.getSystemWindowInsetBottom());
-            WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
-            builder.setSystemWindowInsets(Insets.of(windowInsets.getSystemWindowInsetLeft(),
-                    0, windowInsets.getStableInsetRight(), 0));
-            return builder.build();
-        });
+        if (!USE_NEW_UI) {
+            view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
+                toolbar.setPadding(toolbar.getPaddingLeft(),
+                        toolbar.getPaddingTop() + windowInsets.getSystemWindowInsetTop(),
+                        toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+                mBottomSheet.setPadding(mBottomSheet.getPaddingLeft(),
+                        mBottomSheet.getPaddingTop(), mBottomSheet.getPaddingRight(),
+                        mBottomSheet.getPaddingBottom()
+                                + windowInsets.getSystemWindowInsetBottom());
+                WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
+                builder.setSystemWindowInsets(Insets.of(windowInsets.getSystemWindowInsetLeft(),
+                        0, windowInsets.getStableInsetRight(), 0));
+                return builder.build();
+            });
+        }
 
         return view;
     }
@@ -578,6 +585,11 @@ public abstract class PreviewFragment extends Fragment implements
     protected boolean isRtl() {
         return getResources().getConfiguration().getLayoutDirection()
                     == View.LAYOUT_DIRECTION_RTL;
+    }
+
+    protected static boolean shouldShowMetadataInPreview(WallpaperInfo wallpaperInfo) {
+        android.app.WallpaperInfo wallpaperComponent = wallpaperInfo.getWallpaperComponent();
+        return wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
     }
 
     protected static class InfoPageController {
