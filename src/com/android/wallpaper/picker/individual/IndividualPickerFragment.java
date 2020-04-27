@@ -16,7 +16,6 @@
 package com.android.wallpaper.picker.individual;
 
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
-import static com.android.wallpaper.widget.BottomActionBar.BottomAction.CANCEL;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMATION;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.ROTATION;
 
@@ -537,9 +536,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
             mBottomActionBar = bottomActionBar;
             if (isRotationEnabled()) {
-                mBottomActionBar.showActionsOnly(CANCEL, ROTATION);
-            } else {
-                mBottomActionBar.showActionsOnly(CANCEL);
+                mBottomActionBar.showActionsOnly(ROTATION);
             }
             mBottomActionBar.setActionClickListener(ROTATION, unused -> {
                 DialogFragment startRotationDialogFragment = new StartRotationDialogFragment();
@@ -899,9 +896,9 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
     void updateBottomActions(boolean hasWallpaperSelected) {
         if (hasWallpaperSelected) {
-            mBottomActionBar.showActionsOnly(CANCEL, INFORMATION, APPLY);
+            mBottomActionBar.showActionsOnly(INFORMATION, APPLY);
         } else {
-            mBottomActionBar.showActionsOnly(CANCEL, ROTATION);
+            mBottomActionBar.showActionsOnly(ROTATION);
         }
     }
 
