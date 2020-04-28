@@ -18,6 +18,7 @@ package com.android.wallpaper.widget;
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
@@ -57,7 +58,7 @@ public class BottomActionBar extends FrameLayout {
     // TODO(b/154299462): Separate downloadable related actions from WallpaperPicker.
     /** The action items in the bottom action bar. */
     public enum BottomAction {
-        CANCEL, ROTATION, DELETE, INFORMATION, EDIT, DOWNLOAD, PROGRESS, APPLY,
+        ROTATION, DELETE, INFORMATION, EDIT, CUSTOMIZE, DOWNLOAD, PROGRESS, APPLY,
     }
 
     private final Map<BottomAction, View> mActionMap = new EnumMap<>(BottomAction.class);
@@ -74,11 +75,11 @@ public class BottomActionBar extends FrameLayout {
         mAttributionSubtitle1 = findViewById(R.id.preview_attribution_pane_subtitle1);
         mAttributionSubtitle2 = findViewById(R.id.preview_attribution_pane_subtitle2);
 
-        mActionMap.put(BottomAction.CANCEL, findViewById(R.id.action_cancel));
         mActionMap.put(BottomAction.ROTATION, findViewById(R.id.action_rotation));
         mActionMap.put(BottomAction.DELETE, findViewById(R.id.action_delete));
         mActionMap.put(BottomAction.INFORMATION, findViewById(R.id.action_information));
         mActionMap.put(BottomAction.EDIT, findViewById(R.id.action_edit));
+        mActionMap.put(BottomAction.CUSTOMIZE, findViewById(R.id.action_customize));
         mActionMap.put(BottomAction.DOWNLOAD, findViewById(R.id.action_download));
         mActionMap.put(BottomAction.PROGRESS, findViewById(R.id.action_progress));
         mActionMap.put(BottomAction.APPLY, findViewById(R.id.action_apply));
@@ -133,9 +134,15 @@ public class BottomActionBar extends FrameLayout {
         mActionMap.get(bottomAction).setOnClickListener(actionClickListener);
     }
 
+    /** Binds the cancel button to back key. */
+    public void bindBackButtonToSystemBackKey(Activity activity) {
+        findViewById(R.id.action_back).setOnClickListener(v -> activity.onBackPressed());
+    }
+
     /** Clears all the actions' click listeners */
     public void clearActionClickListeners() {
         mActionMap.forEach((bottomAction, view) -> view.setOnClickListener(null));
+        findViewById(R.id.action_back).setOnClickListener(null);
     }
 
     /**

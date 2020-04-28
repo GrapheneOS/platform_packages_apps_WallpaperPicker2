@@ -63,6 +63,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -407,6 +408,17 @@ public class CategoryFragment extends AppbarFragment
         mPreviewPager.switchPreviewPage(destination);
     }
 
+    @Override
+    public boolean onBackPressed() {
+        Fragment childFragment = getChildFragmentManager().findFragmentById(
+                R.id.category_fragment_container);
+        if (childFragment instanceof BottomActionBarFragment
+                && ((BottomActionBarFragment) childFragment).onBackPressed()) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Pops the child fragment from the stack if {@link CategoryFragment} is visible to the users.
      *
@@ -735,11 +747,18 @@ public class CategoryFragment extends AppbarFragment
 
         UserEventLogger eventLogger = InjectorProvider.getInjector().getUserEventLogger(activity);
 
-        wallpaperInfo.getThumbAsset(activity.getApplicationContext()).loadDrawable(activity,
-                mHomeImageWallpaper, getResources().getColor(R.color.secondary_color));
+        boolean renderInImageWallpaperSurface =
+                !(wallpaperInfo instanceof LiveWallpaperInfo) && isHomeWallpaper;
+        wallpaperInfo.getThumbAsset(activity.getApplicationContext())
+                .loadPreviewImage(activity,
+                        renderInImageWallpaperSurface ? mHomeImageWallpaper : thumbnailView,
+                        getResources().getColor(R.color.secondary_color));
         if (isHomeWallpaper) {
             LiveTileOverlay.INSTANCE.detach(thumbnailView.getOverlay());
             if (wallpaperInfo instanceof LiveWallpaperInfo) {
+                wallpaperInfo.getThumbAsset(activity.getApplicationContext()).loadPreviewImage(
+                        activity, mHomeImageWallpaper,
+                        getResources().getColor(R.color.secondary_color));
                 setUpLiveWallpaperPreview(wallpaperInfo, thumbnailView,
                         new ColorDrawable(getResources().getColor(
                                 R.color.secondary_color, activity.getTheme())));

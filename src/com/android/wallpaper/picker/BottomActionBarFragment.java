@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.picker;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
@@ -39,11 +40,12 @@ public class BottomActionBarFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mBottomActionBar = ((BottomActionBarHost) getActivity()).getBottomActionBar();
-
-        // Do something common for BottomActionBar when the fragment is attached.
-
-        onBottomActionBarReady(mBottomActionBar);
+        Activity activity = getActivity();
+        if (activity instanceof BottomActionBarHost) {
+            mBottomActionBar = ((BottomActionBarHost) activity).getBottomActionBar();
+            mBottomActionBar.bindBackButtonToSystemBackKey(activity);
+            onBottomActionBarReady(mBottomActionBar);
+        }
     }
 
     @Override
