@@ -103,13 +103,12 @@
             app:layout_constraintEnd_toStartOf="@id/action_edit"
             app:layout_constraintStart_toEndOf="@id/action_delete" />
 
-        <!-- TODO(b/155043943): Update the image once we get it. -->
         <ImageView
             android:id="@+id/action_edit"
             android:layout_width="@dimen/bottom_action_button_size"
             android:layout_height="@dimen/bottom_action_button_size"
             android:padding="@dimen/bottom_action_button_padding"
-            android:src="@drawable/stretch_grey"
+            android:src="@drawable/ic_pan_zoom_24dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/bottom_action_bar_edit"
             android:visibility="gone"
