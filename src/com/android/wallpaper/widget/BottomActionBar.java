@@ -18,6 +18,7 @@ package com.android.wallpaper.widget;
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
@@ -36,20 +37,31 @@ import com.android.wallpaper.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback;
 
+import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /** A {@code ViewGroup} which provides the specific actions for the user to interact with. */
 public class BottomActionBar extends FrameLayout {
 
-    /** The action items in the bottom action bar. */
-    public enum BottomAction {
-        CANCEL, ROTATION, INFORMATION, EDIT, APPLY,
+    /**
+     * Interface to be implemented by an Activity hosting a {@link BottomActionBar}
+     */
+    public interface BottomActionBarHost {
+        /** Gets {@link BottomActionBar}. */
+        BottomActionBar getBottomActionBar();
     }
 
-    private final Map<BottomAction, View> mActionList = new EnumMap<>(BottomAction.class);
+    // TODO(b/154299462): Separate downloadable related actions from WallpaperPicker.
+    /** The action items in the bottom action bar. */
+    public enum BottomAction {
+        ROTATION, DELETE, INFORMATION, EDIT, CUSTOMIZE, DOWNLOAD, PROGRESS, APPLY,
+    }
+
+    private final Map<BottomAction, View> mActionMap = new EnumMap<>(BottomAction.class);
     private final BottomSheetBehavior<ViewGroup> mBottomSheetBehavior;
     private final TextView mAttributionTitle;
     private final TextView mAttributionSubtitle1;
@@ -63,11 +75,14 @@ public class BottomActionBar extends FrameLayout {
         mAttributionSubtitle1 = findViewById(R.id.preview_attribution_pane_subtitle1);
         mAttributionSubtitle2 = findViewById(R.id.preview_attribution_pane_subtitle2);
 
-        mActionList.put(BottomAction.CANCEL, findViewById(R.id.action_cancel));
-        mActionList.put(BottomAction.ROTATION, findViewById(R.id.action_rotation));
-        mActionList.put(BottomAction.INFORMATION, findViewById(R.id.action_information));
-        mActionList.put(BottomAction.EDIT, findViewById(R.id.action_edit));
-        mActionList.put(BottomAction.APPLY, findViewById(R.id.action_apply));
+        mActionMap.put(BottomAction.ROTATION, findViewById(R.id.action_rotation));
+        mActionMap.put(BottomAction.DELETE, findViewById(R.id.action_delete));
+        mActionMap.put(BottomAction.INFORMATION, findViewById(R.id.action_information));
+        mActionMap.put(BottomAction.EDIT, findViewById(R.id.action_edit));
+        mActionMap.put(BottomAction.CUSTOMIZE, findViewById(R.id.action_customize));
+        mActionMap.put(BottomAction.DOWNLOAD, findViewById(R.id.action_download));
+        mActionMap.put(BottomAction.PROGRESS, findViewById(R.id.action_progress));
+        mActionMap.put(BottomAction.APPLY, findViewById(R.id.action_apply));
 
         ViewGroup bottomSheet = findViewById(R.id.action_bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -116,12 +131,18 @@ public class BottomActionBar extends FrameLayout {
      */
     public void setActionClickListener(
             BottomAction bottomAction, OnClickListener actionClickListener) {
-        mActionList.get(bottomAction).setOnClickListener(actionClickListener);
+        mActionMap.get(bottomAction).setOnClickListener(actionClickListener);
+    }
+
+    /** Binds the cancel button to back key. */
+    public void bindBackButtonToSystemBackKey(Activity activity) {
+        findViewById(R.id.action_back).setOnClickListener(v -> activity.onBackPressed());
     }
 
     /** Clears all the actions' click listeners */
     public void clearActionClickListeners() {
-        mActionList.forEach((bottomAction, view) -> view.setOnClickListener(null));
+        mActionMap.forEach((bottomAction, view) -> view.setOnClickListener(null));
+        findViewById(R.id.action_back).setOnClickListener(null);
     }
 
     /**
@@ -179,8 +200,10 @@ public class BottomActionBar extends FrameLayout {
      *
      * @param actions the specific actions
      */
-    public void showActions(EnumSet<BottomAction> actions) {
-        showActions(actions, true);
+    public void showActions(BottomAction... actions) {
+        for (BottomAction action : actions) {
+            mActionMap.get(action).setVisibility(VISIBLE);
+        }
     }
 
     /**
@@ -188,10 +211,13 @@ public class BottomActionBar extends FrameLayout {
      *
      * @param actions the specific actions
      */
-    public void hideActions(EnumSet<BottomAction> actions) {
-        showActions(actions, false);
-        if (actions.contains(BottomAction.INFORMATION)) {
-            mBottomSheetBehavior.setState(STATE_COLLAPSED);
+    public void hideActions(BottomAction... actions) {
+        for (BottomAction action : actions) {
+            mActionMap.get(action).setVisibility(GONE);
+
+            if (BottomAction.INFORMATION.equals(action)) {
+                mBottomSheetBehavior.setState(STATE_COLLAPSED);
+            }
         }
     }
 
@@ -200,28 +226,64 @@ public class BottomActionBar extends FrameLayout {
      *
      * @param actions the specific actions which will be shown. Others will be hidden.
      */
-    public void showActionsOnly(EnumSet<BottomAction> actions) {
-        showActions(actions);
-        hideActions(EnumSet.complementOf(actions));
+    public void showActionsOnly(BottomAction... actions) {
+        final Set<BottomAction> actionsSet = new HashSet<>(Arrays.asList(actions));
+
+        mActionMap.forEach((action, view) -> {
+            if (actionsSet.contains(action)) {
+                showActions(action);
+            } else {
+                hideActions(action);
+            }
+        });
+    }
+
+    /**
+     * All actions will be hidden.
+     */
+    public void hideAllActions() {
+        showActionsOnly(/* No actions to show */);
     }
 
     /** Enables all the actions' {@link View}. */
     public void enableActions() {
-        enableActions(true);
+        mActionMap.forEach((bottomAction, view) -> view.setEnabled(true));
     }
 
     /** Disables all the actions' {@link View}. */
     public void disableActions() {
-        enableActions(false);
+        mActionMap.forEach((bottomAction, view) -> view.setEnabled(false));
     }
 
-    private void enableActions(boolean enable) {
-        mActionList.forEach((bottomAction, view) -> view.setEnabled(enable));
+    /**
+     * Enables specified actions' {@link View}.
+     *
+     * @param actions the specified actions to enable their views
+     */
+    public void enableActions(BottomAction... actions) {
+        for (BottomAction action : actions) {
+            mActionMap.get(action).setEnabled(true);
+        }
     }
 
-    private void showActions(EnumSet<BottomAction> actions, boolean show) {
-        actions.forEach(bottomAction ->
-                mActionList.get(bottomAction).setVisibility(show ? VISIBLE : GONE));
+    /**
+     * Disables specified actions' {@link View}.
+     *
+     * @param actions the specified actions to disable their views
+     */
+    public void disableActions(BottomAction... actions) {
+        for (BottomAction action : actions) {
+            mActionMap.get(action).setEnabled(false);
+        }
+    }
+
+    /** Resets {@link BottomActionBar}. */
+    public void reset() {
+        hide();
+        hideAllActions();
+        clearActionClickListeners();
+        enableActions();
+        resetInfoPage();
     }
 
     private void resetInfoPage() {
