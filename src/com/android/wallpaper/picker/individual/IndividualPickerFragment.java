@@ -89,6 +89,7 @@ import com.android.wallpaper.picker.individual.SetIndividualHolder.OnSetListener
 import com.android.wallpaper.util.DiskBasedLogger;
 import com.android.wallpaper.util.TileSizeCalculator;
 import com.android.wallpaper.widget.BottomActionBar;
+import com.android.wallpaper.widget.WallpaperInfoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
@@ -207,6 +208,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
     };
     PackageStatusNotifier.Listener mAppStatusListener;
     BottomActionBar mBottomActionBar;
+    WallpaperInfoView mWallpaperInfoView;
     @Nullable WallpaperInfo mSelectedWallpaperInfo;
 
     private ProgressDialog mProgressDialog;
@@ -549,6 +551,11 @@ public class IndividualPickerFragment extends BottomActionBarFragment
                 mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
                         mSelectedWallpaperInfo instanceof LiveWallpaperInfo);
             });
+
+            mWallpaperInfoView =
+                    (WallpaperInfoView) mBottomActionBar.inflateViewToBottomSheetAndBindAction(
+                            R.layout.wallpaper_info_view, R.id.wallpaper_info, INFORMATION);
+
             mBottomActionBar.show();
         }
     }
@@ -941,8 +948,8 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         updateBottomActions(mSelectedWallpaperInfo != null);
         updateThumbnail(mSelectedWallpaperInfo);
         // Populate wallpaper info to bottom sheet page.
-        if (mSelectedWallpaperInfo != null) {
-            mBottomActionBar.populateInfoPage(
+        if (mSelectedWallpaperInfo != null && mWallpaperInfoView != null) {
+            mWallpaperInfoView.populateWallpaperInfo(
                     mSelectedWallpaperInfo.getAttributions(getContext()),
                     shouldShowMetadataInPreview(mSelectedWallpaperInfo));
         }

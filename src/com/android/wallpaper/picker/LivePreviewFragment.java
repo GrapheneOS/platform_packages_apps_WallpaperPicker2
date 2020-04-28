@@ -71,6 +71,7 @@ import com.android.wallpaper.util.TileSizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.LiveTileOverlay;
+import com.android.wallpaper.widget.WallpaperInfoView;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -113,6 +114,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     private InfoPageController mInfoPageController;
     private ImageView mHomePreview;
     private BottomActionBar mBottomActionBar;
+    private WallpaperInfoView mWallpaperInfoView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -338,9 +340,11 @@ public class LivePreviewFragment extends PreviewFragment implements
                                         mLoadingProgressBar.hide();
                                     }
                                     mLoadingScrim.setVisibility(View.GONE);
-                                    mBottomActionBar.populateInfoPage(
-                                            mWallpaper.getAttributions(getContext()),
-                                            shouldShowMetadataInPreview());
+                                    if (mWallpaperInfoView != null) {
+                                        mWallpaperInfoView.populateWallpaperInfo(
+                                                mWallpaper.getAttributions(getContext()),
+                                                shouldShowMetadataInPreview());
+                                    }
                                 }));
                         final Drawable placeholder = previewView.getDrawable() == null
                                 ? new ColorDrawable(getResources().getColor(R.color.secondary_color,
@@ -379,6 +383,9 @@ public class LivePreviewFragment extends PreviewFragment implements
             mBottomActionBar.showActionsOnly(INFORMATION, CUSTOMIZE, APPLY);
             mBottomActionBar.setActionClickListener(APPLY, unused ->
                     this.onSetWallpaperClicked(null));
+            mWallpaperInfoView =
+                    (WallpaperInfoView) mBottomActionBar.inflateViewToBottomSheetAndBindAction(
+                            R.layout.wallpaper_info_view, R.id.wallpaper_info, INFORMATION);
             mBottomActionBar.show();
         }
     }
