@@ -24,12 +24,13 @@ import android.widget.TextView;
 import androidx.annotation.MenuRes;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener;
-import androidx.fragment.app.Fragment;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.widget.BottomActionBar;
 
 /**
- * Base class for Fragments that own a {@link Toolbar} widget.
+ * Base class for Fragments that own a {@link Toolbar} widget and a {@link BottomActionBar}.
+ *
  * A Fragment extending this class is expected to have a {@link Toolbar} in its root view, with id
  * {@link R.id#toolbar}, which can optionally have a TextView with id custom_toolbar_title for
  * the title.
@@ -39,8 +40,10 @@ import com.android.wallpaper.R;
  * used as title.
  *
  * @see #setArguments(Bundle)
+ * @see BottomActionBarFragment
  */
-public abstract class ToolbarFragment extends Fragment implements OnMenuItemClickListener {
+public abstract class AppbarFragment extends BottomActionBarFragment
+        implements OnMenuItemClickListener {
 
     private static final String ARG_TITLE = "ToolbarFragment.title";
 

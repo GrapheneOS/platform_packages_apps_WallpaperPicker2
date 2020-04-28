@@ -71,10 +71,10 @@ import java.util.List;
 public class LivePreviewFragment extends PreviewFragment implements
         WallpaperConnection.WallpaperConnectionListener {
 
-    private static final String TAG = "LivePreviewFragment";
+    public static final String EXTRA_LIVE_WALLPAPER_INFO = "android.live_wallpaper.info";
+    public static final String KEY_ACTION_DELETE_LIVE_WALLPAPER = "action_delete_live_wallpaper";
 
-    private static final String KEY_ACTION_DELETE_LIVE_WALLPAPER = "action_delete_live_wallpaper";
-    private static final String EXTRA_LIVE_WALLPAPER_INFO = "android.live_wallpaper.info";
+    private static final String TAG = "LivePreviewFragment";
 
     /**
      * Instance of {@link WallpaperConnection} used to bind to the live wallpaper service to show
