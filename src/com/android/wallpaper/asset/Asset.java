@@ -286,6 +286,10 @@ public abstract class Asset {
                     new BitmapCropper.Callback() {
                         @Override
                         public void onBitmapCropped(Bitmap croppedBitmap) {
+                            // Since the size of the cropped bitmap may not exactly the same with
+                            // image view(maybe has 1px or 2px difference),
+                            // so set CENTER_CROP to let the bitmap to fit the image view.
+                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                             if (!needsTransition) {
                                 imageView.setImageBitmap(croppedBitmap);
                                 return;
@@ -347,7 +351,20 @@ public abstract class Asset {
     }
 
     protected void adjustCropRect(Context context, Point assetDimensions, Rect cropRect) {
+        float centerX = cropRect.centerX();
+        float centerY = cropRect.centerY();
+        float width = cropRect.width();
+        float height = cropRect.height();
+        // TODO(b/154783188): Use the new system UI's API to get the maximum scale
+        //  when the API is available.
+        float systemWallpaperMaxScale = WallpaperCropUtils.getSystemWallpaperMaximumScale();
 
+        // Adjust the rect according to the system wallpaper's maximum scale.
+        int left = (int) (centerX - (width / 2) / systemWallpaperMaxScale);
+        int top = (int) (centerY - (height / 2) / systemWallpaperMaxScale);
+        int right = (int) (centerX + (width / 2) / systemWallpaperMaxScale);
+        int bottom = (int) (centerY + (height / 2) / systemWallpaperMaxScale);
+        cropRect.set(left, top, right, bottom);
     }
 
     /**
