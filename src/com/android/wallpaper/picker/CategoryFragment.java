@@ -177,9 +177,7 @@ public class CategoryFragment extends AppbarFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(
-                ADD_SCALABLE_HEADER
-                ? R.layout.fragment_category_scalable_picker
-                : R.layout.fragment_category_picker, container, /* attachToRoot= */ false);
+                R.layout.fragment_category_picker, container, /* attachToRoot= */ false);
 
         mWallPaperPreviews = new ArrayList<>();
         CardView homePreviewCard = (CardView) inflater.inflate(
