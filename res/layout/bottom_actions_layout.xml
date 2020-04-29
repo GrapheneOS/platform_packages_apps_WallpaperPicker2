@@ -34,6 +34,7 @@
             android:background="@drawable/bottom_sheet_background"
             android:theme="@style/WallpaperPicker.BottomPaneStyle"
             android:elevation="@dimen/bottom_action_bar_elevation"
+            android:visibility="gone"
             app:behavior_peekHeight="@dimen/preview_attribution_pane_collapsed_height"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
             <include layout="@layout/bottom_action_bar_preview_info"/>
