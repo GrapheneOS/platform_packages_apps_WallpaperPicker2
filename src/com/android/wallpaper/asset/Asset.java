@@ -355,9 +355,7 @@ public abstract class Asset {
         float centerY = cropRect.centerY();
         float width = cropRect.width();
         float height = cropRect.height();
-        // TODO(b/154783188): Use the new system UI's API to get the maximum scale
-        //  when the API is available.
-        float systemWallpaperMaxScale = WallpaperCropUtils.getSystemWallpaperMaximumScale();
+        float systemWallpaperMaxScale = WallpaperCropUtils.getSystemWallpaperMaximumScale(context);
 
         // Adjust the rect according to the system wallpaper's maximum scale.
         int left = (int) (centerX - (width / 2) / systemWallpaperMaxScale);
