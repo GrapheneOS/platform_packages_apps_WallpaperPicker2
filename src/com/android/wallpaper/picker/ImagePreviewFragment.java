@@ -65,6 +65,7 @@ import com.android.wallpaper.util.SurfaceViewUtils;
 import com.android.wallpaper.util.TileSizeCalculator;
 import com.android.wallpaper.util.WallpaperCropUtils;
 import com.android.wallpaper.widget.BottomActionBar;
+import com.android.wallpaper.widget.WallpaperInfoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
@@ -105,6 +106,7 @@ public class ImagePreviewFragment extends PreviewFragment {
     private View mTabs;
     private PreviewUtils mPreviewUtils;
     private BottomActionBar mBottomActionBar;
+    private WallpaperInfoView mWallpaperInfoView;
     private InfoPageController mInfoPageController;
 
     @Override
@@ -153,6 +155,9 @@ public class ImagePreviewFragment extends PreviewFragment {
             mPreviewUtils = new PreviewUtils(getContext(),
                     getString(R.string.grid_control_metadata_name));
             mBottomActionBar = view.findViewById(R.id.bottom_actionbar);
+            mWallpaperInfoView =
+                    (WallpaperInfoView) mBottomActionBar.inflateViewToBottomSheetAndBindAction(
+                            R.layout.wallpaper_info_view, R.id.wallpaper_info, INFORMATION);
             mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
             mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
             mBottomActionBar.show();
@@ -295,7 +300,7 @@ public class ImagePreviewFragment extends PreviewFragment {
 
                     if (USE_NEW_UI) {
                         if (mWallpaper != null) {
-                            mBottomActionBar.populateInfoPage(
+                            mWallpaperInfoView.populateWallpaperInfo(
                                     mWallpaper.getAttributions(getContext()),
                                     shouldShowMetadataInPreview(mWallpaper));
                         }
