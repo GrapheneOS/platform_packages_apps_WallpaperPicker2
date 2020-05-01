@@ -79,6 +79,8 @@ public abstract class PreviewFragment extends Fragment implements
         SetWallpaperDialogFragment.Listener, SetWallpaperErrorDialogFragment.Listener,
         LoadWallpaperErrorDialogFragment.Listener {
 
+    protected static final boolean USE_NEW_UI = true;
+
     /**
      * User can view wallpaper and attributions in full screen, but "Set wallpaper" button is
      * hidden.
@@ -590,6 +592,11 @@ public abstract class PreviewFragment extends Fragment implements
     protected boolean isRtl() {
         return getResources().getConfiguration().getLayoutDirection()
                     == View.LAYOUT_DIRECTION_RTL;
+    }
+
+    protected static boolean shouldShowMetadataInPreview(WallpaperInfo wallpaperInfo) {
+        android.app.WallpaperInfo wallpaperComponent = wallpaperInfo.getWallpaperComponent();
+        return wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
     }
 
     protected static class InfoPageController {
