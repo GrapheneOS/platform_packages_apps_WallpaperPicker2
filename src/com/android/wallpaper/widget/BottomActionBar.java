@@ -177,7 +177,10 @@ public class BottomActionBar extends FrameLayout {
             throw new IllegalStateException(
                     "Had already set a click listener to button: " + bottomAction);
         }
-        buttonView.setOnClickListener(actionClickListener);
+        buttonView.setOnClickListener(view -> {
+            updateSelectedState(bottomAction, !view.isSelected());
+            actionClickListener.onClick(view);
+        });
     }
 
     /** Binds the cancel button to back key. */
@@ -280,6 +283,10 @@ public class BottomActionBar extends FrameLayout {
         for (BottomAction action : actions) {
             mActionMap.get(action).setEnabled(false);
         }
+    }
+
+    public boolean isActionSelected(BottomAction action) {
+        return mActionMap.get(action).isSelected();
     }
 
     /** Resets {@link BottomActionBar}. */
