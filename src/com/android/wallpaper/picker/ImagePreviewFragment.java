@@ -299,10 +299,8 @@ public class ImagePreviewFragment extends PreviewFragment {
                     getActivity().invalidateOptionsMenu();
 
                     if (USE_NEW_UI) {
-                        if (mWallpaper != null) {
-                            mWallpaperInfoView.populateWallpaperInfo(
-                                    mWallpaper.getAttributions(getContext()),
-                                    shouldShowMetadataInPreview(mWallpaper));
+                        if (mWallpaperInfoView != null && mWallpaper != null) {
+                            mWallpaperInfoView.populateWallpaperInfo(mWallpaper);
                         }
                     } else {
                         populateInfoPage(mInfoPageController);

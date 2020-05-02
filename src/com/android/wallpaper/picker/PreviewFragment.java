@@ -273,7 +273,9 @@ public abstract class PreviewFragment extends Fragment implements
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 
         List<String> attributions = getAttributions(context);
-        boolean showMetadata = shouldShowMetadataInPreview();
+        android.app.WallpaperInfo wallpaperComponent = mWallpaper.getWallpaperComponent();
+        boolean showMetadata =
+                wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
         CharSequence exploreLabel = getExploreButtonLabel(context);
 
         infoPage.populate(attributions, showMetadata, this::onSetWallpaperClicked,
@@ -298,11 +300,6 @@ public abstract class PreviewFragment extends Fragment implements
 
     protected List<String> getAttributions(Context context) {
         return mWallpaper.getAttributions(context);
-    }
-
-    protected boolean shouldShowMetadataInPreview() {
-        android.app.WallpaperInfo wallpaperComponent = mWallpaper.getWallpaperComponent();
-        return wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
     }
 
     @Nullable
@@ -590,11 +587,6 @@ public abstract class PreviewFragment extends Fragment implements
     protected boolean isRtl() {
         return getResources().getConfiguration().getLayoutDirection()
                     == View.LAYOUT_DIRECTION_RTL;
-    }
-
-    protected static boolean shouldShowMetadataInPreview(WallpaperInfo wallpaperInfo) {
-        android.app.WallpaperInfo wallpaperComponent = wallpaperInfo.getWallpaperComponent();
-        return wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
     }
 
     protected static class InfoPageController {

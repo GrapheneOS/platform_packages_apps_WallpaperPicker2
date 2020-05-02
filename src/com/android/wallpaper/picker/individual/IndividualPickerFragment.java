@@ -947,11 +947,9 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         mSelectedWallpaperInfo = newSelectedWallpaperInfo;
         updateBottomActions(mSelectedWallpaperInfo != null);
         updateThumbnail(mSelectedWallpaperInfo);
-        // Populate wallpaper info to bottom sheet page.
+        // Populate wallpaper info into view.
         if (mSelectedWallpaperInfo != null && mWallpaperInfoView != null) {
-            mWallpaperInfoView.populateWallpaperInfo(
-                    mSelectedWallpaperInfo.getAttributions(getContext()),
-                    shouldShowMetadataInPreview(mSelectedWallpaperInfo));
+            mWallpaperInfoView.populateWallpaperInfo(mSelectedWallpaperInfo);
         }
 
         if (mWallpaperSelectedListener != null) {
@@ -990,11 +988,6 @@ public class IndividualPickerFragment extends BottomActionBarFragment
             // Item is not visible, make sure the item is re-bound when it becomes visible.
             mAdapter.notifyItemChanged(index);
         }
-    }
-
-    private static boolean shouldShowMetadataInPreview(WallpaperInfo wallpaperInfo) {
-        android.app.WallpaperInfo wallpaperComponent = wallpaperInfo.getWallpaperComponent();
-        return wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
     }
 
     private void refreshAppliedWallpaper() {
