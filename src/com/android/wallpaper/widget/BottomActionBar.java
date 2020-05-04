@@ -102,6 +102,10 @@ public class BottomActionBar extends FrameLayout {
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (mSelectedAction == null) {
+                    return;
+                }
+
                 if (newState == STATE_COLLAPSED) {
                     updateSelectedState(mSelectedAction, /* selected= */ false);
                     mSelectedAction = null;
@@ -142,13 +146,13 @@ public class BottomActionBar extends FrameLayout {
 
         setActionClickListener(action, unused -> {
             mContentViewMap.forEach((a, v) -> v.setVisibility(a.equals(action) ? VISIBLE : GONE));
-            BottomAction previousHighlightButton = mSelectedAction;
+            BottomAction previousSelectedButton = mSelectedAction;
             mSelectedAction = action;
             // If the bottom sheet is expanding with a highlight button, then clicking another
             // action button to show bottom sheet will only update the content for expanding bottom
             // sheet, and update the highlight button.
-            if (previousHighlightButton != null && !action.equals(previousHighlightButton)) {
-                updateSelectedState(previousHighlightButton, /* selected= */ false);
+            if (previousSelectedButton != null && !action.equals(previousSelectedButton)) {
+                updateSelectedState(previousSelectedButton, /* selected= */ false);
                 updateSelectedState(mSelectedAction, /* selected= */ true);
                 return;
             }
