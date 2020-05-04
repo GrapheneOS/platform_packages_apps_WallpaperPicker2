@@ -168,6 +168,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         void onWallpaperSelected(int position);
     }
 
+    WallpaperPersister mWallpaperPersister;
     WallpaperPreferences mWallpaperPreferences;
     WallpaperChangedNotifier mWallpaperChangedNotifier;
     RecyclerView mImageGrid;
@@ -254,7 +255,6 @@ public class IndividualPickerFragment extends BottomActionBarFragment
     };
 
     private WallpaperSetter mWallpaperSetter;
-    private WallpaperPersister mWallpaperPersister;
     private WallpaperInfo mAppliedWallpaperInfo;
     private WallpaperManager mWallpaperManager;
     private int mWallpaperDestination;
