@@ -28,8 +28,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Message;
-import android.os.RemoteException;
 import android.provider.Settings;
 import android.service.wallpaper.WallpaperService;
 import android.text.format.DateFormat;
@@ -70,9 +68,7 @@ import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.ThumbnailUpdater;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.WallpaperDestinationCallback;
-import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.SizeCalculator;
-import com.android.wallpaper.util.SurfaceViewUtils;
 import com.android.wallpaper.util.TimeTicker;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
@@ -131,6 +127,7 @@ public class CategoryFragment extends AppbarFragment
     private String mDatePattern;
     private ImageView mHomePreview;
     private SurfaceView mWorkspaceSurface;
+    private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     private SurfaceView mWallpaperSurface;
     private ImageView mLockscreenPreview;
     private PreviewPager mPreviewPager;
@@ -140,7 +137,6 @@ public class CategoryFragment extends AppbarFragment
     private IndividualPickerFragment mIndividualPickerFragment;
     private boolean mShowSelectedWallpaper;
     private BottomSheetBehavior<View> mBottomSheetBehavior;
-    private PreviewUtils mPreviewUtils;
     private int mSelectedPreviewPage;
 
     // The wallpaper information which is currently shown on the home preview.
@@ -171,6 +167,8 @@ public class CategoryFragment extends AppbarFragment
                 R.layout.wallpaper_preview_card, null);
         mHomePreview = homePreviewCard.findViewById(R.id.wallpaper_preview_image);
         mWorkspaceSurface = homePreviewCard.findViewById(R.id.workspace_surface);
+        mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(
+                mWorkspaceSurface, getContext());
         mWallpaperSurface = homePreviewCard.findViewById(R.id.wallpaper_surface);
         mWallPaperPreviews.add(homePreviewCard);
 
@@ -278,8 +276,6 @@ public class CategoryFragment extends AppbarFragment
             }
         });
 
-        mPreviewUtils = new PreviewUtils(getContext(),
-                getString(R.string.grid_control_metadata_name));
         mDatePattern = DateFormat.getBestDateTimePattern(Locale.getDefault(), DEFAULT_DATE_PATTERN);
 
         setUpToolbar(view);
@@ -725,42 +721,6 @@ public class CategoryFragment extends AppbarFragment
 
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) { }
-    };
-
-    private final SurfaceHolder.Callback mWorkspaceSurfaceCallback = new SurfaceHolder.Callback() {
-
-        private Surface mLastSurface;
-        private Message mCallback;
-
-        @Override
-        public void surfaceCreated(SurfaceHolder holder) {
-            if (mPreviewUtils.supportsPreview() && mLastSurface != holder.getSurface()) {
-                mLastSurface = holder.getSurface();
-                Bundle result = mPreviewUtils.renderPreview(
-                        SurfaceViewUtils.createSurfaceViewRequest(mWorkspaceSurface));
-                if (result != null) {
-                    mWorkspaceSurface.setChildSurfacePackage(
-                            SurfaceViewUtils.getSurfacePackage(result));
-                    mCallback = SurfaceViewUtils.getCallback(result);
-                }
-            }
-        }
-
-        @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
-
-        @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {
-            if (mCallback != null) {
-                try {
-                    mCallback.replyTo.send(mCallback);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                } finally {
-                    mCallback = null;
-                }
-            }
-        }
     };
 
     private class PreviewPagerAdapter extends PagerAdapter {

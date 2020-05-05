@@ -22,11 +22,11 @@ import android.graphics.Rect;
 import android.os.ParcelFileDescriptor;
 import android.os.ParcelFileDescriptor.AutoCloseInputStream;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.compat.WallpaperManagerCompat.WallpaperLocation;
+import com.android.wallpaper.util.WallpaperCropUtils;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Key;
@@ -101,16 +101,7 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
 
     @Override
     protected void adjustCropRect(Context context, Point assetDimensions, Rect cropRect) {
-        boolean isRtl = context.getResources().getConfiguration().getLayoutDirection()
-                == View.LAYOUT_DIRECTION_RTL;
-        if (isRtl) {
-            // Get the far right visible rect of source image
-            cropRect.offsetTo(assetDimensions.x - cropRect.width(), 0);
-        } else {
-            // Get the far left visible rect of source image
-            cropRect.offsetTo(0, 0);
-        }
-        super.adjustCropRect(context, assetDimensions, cropRect);
+        WallpaperCropUtils.adjustCurrentWallpaperCropRect(context, assetDimensions, cropRect);
     }
 
     public Key getKey() {
