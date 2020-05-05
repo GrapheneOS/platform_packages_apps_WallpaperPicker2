@@ -338,17 +338,26 @@ public abstract class PreviewFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        if (USE_NEW_UI) {
+            return;
+        }
         inflater.inflate(R.menu.preview_menu, menu);
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        if (USE_NEW_UI) {
+            return;
+        }
         setupPreviewMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (USE_NEW_UI) {
+            return false;
+        }
         int id = item.getItemId();
         if (id == android.R.id.home) {
             // The Preview screen has multiple entry points. It could be opened from either

@@ -386,11 +386,31 @@ public class LivePreviewFragment extends PreviewFragment implements
         if (USE_NEW_UI) {
             mBottomActionBar = bottomActionBar;
             mBottomActionBar.showActionsOnly(INFORMATION, CUSTOMIZE, APPLY);
+            mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
             mBottomActionBar.setActionClickListener(APPLY, unused ->
                     this.onSetWallpaperClicked(null));
             mWallpaperInfoView =
                     (WallpaperInfoView) mBottomActionBar.inflateViewToBottomSheetAndBindAction(
                             R.layout.wallpaper_info_view, R.id.wallpaper_info, INFORMATION);
+            final Uri uriSettingsSlice = getSettingsSliceUri(mWallpaper.getWallpaperComponent());
+            if (uriSettingsSlice != null) {
+                View previewPage = LayoutInflater.from(getContext())
+                        .inflate(R.layout.preview_customize_settings, null);
+                mSettingsSliceView = previewPage.findViewById(R.id.settings_slice);
+                mSettingsSliceView.setMode(SliceView.MODE_LARGE);
+                mSettingsSliceView.setScrollable(false);
+                mSettingsLiveData = SliceLiveData.fromUri(requireContext(), uriSettingsSlice);
+                mSettingsLiveData.observeForever(mSettingsSliceView);
+                mBottomActionBar.attachViewToBottomSheetAndBindAction(previewPage, CUSTOMIZE);
+            } else {
+                if (mSettingsIntent != null) {
+                    mBottomActionBar.setActionClickListener(CUSTOMIZE, listener ->
+                            startActivity(mSettingsIntent)
+                    );
+                } else {
+                    mBottomActionBar.hideActions(CUSTOMIZE);
+                }
+            }
             mBottomActionBar.show();
         }
     }
@@ -554,12 +574,18 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        if (USE_NEW_UI) {
+            return;
+        }
         menu.findItem(R.id.configure).setVisible(mSettingsIntent != null);
         menu.findItem(R.id.delete_wallpaper).setVisible(mDeleteIntent != null);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (USE_NEW_UI) {
+            return false;
+        }
         int id = item.getItemId();
         if (id == R.id.configure) {
             if (getActivity() != null) {
