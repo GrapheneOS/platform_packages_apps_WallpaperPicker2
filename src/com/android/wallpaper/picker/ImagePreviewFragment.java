@@ -46,11 +46,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentActivity;
 
@@ -85,9 +83,9 @@ public class ImagePreviewFragment extends PreviewFragment {
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
 
     private static final int MODE_DEFAULT = 0;
-    private static final int MODE_SHOW_TABS = 1;
+    private static final int MODE_EDITING = 1;
 
-    @IntDef({MODE_DEFAULT, MODE_SHOW_TABS})
+    @IntDef({MODE_DEFAULT, MODE_EDITING})
     @Retention(RetentionPolicy.SOURCE)
     private @interface Mode {}
 
@@ -97,6 +95,7 @@ public class ImagePreviewFragment extends PreviewFragment {
     private Asset mWallpaperAsset;
     private Point mDefaultCropSurfaceSize;
     private Point mScreenSize;
+    private DisplayMetrics mDisplayMetrics;
     private Point mRawWallpaperSize; // Native size of wallpaper image.
     private ImageView mLowResImageView;
     private TouchForwardingLayout mTouchForwardingLayout;
@@ -138,14 +137,10 @@ public class ImagePreviewFragment extends PreviewFragment {
         Activity activity = requireActivity();
         mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
                 activity.getWindowManager().getDefaultDisplay());
+        mDisplayMetrics = getResources().getDisplayMetrics();
 
         mLowResImageView = view.findViewById(R.id.low_res_image);
         if (USE_NEW_UI) {
-            // TODO: Switch to use AppbarFragment functionality to setTitle when switching
-            // PreviewFragment to extend AppbarFragment
-            Toolbar toolbar = view.findViewById(R.id.toolbar);
-            TextView toolbarTitleView = toolbar.findViewById(R.id.custom_toolbar_title);
-            toolbarTitleView.setText((R.string.preview));
             // TODO: Consider moving some part of this to the base class when live preview is ready.
             mTouchForwardingLayout = view.findViewById(R.id.touch_forwarding_layout);
             mWorkspaceContainer = mTouchForwardingLayout.findViewById(R.id.workspace_container);
@@ -160,6 +155,16 @@ public class ImagePreviewFragment extends PreviewFragment {
                             R.layout.wallpaper_info_view, R.id.wallpaper_info, INFORMATION);
             mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
             mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
+            mBottomActionBar.setActionClickListener(EDIT, v -> {
+                setEditingEnabled(mBottomActionBar.isActionSelected(EDIT));
+                view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
+                        makeMeasureSpec(mScreenSize.y, EXACTLY));
+                setupPreview();
+            });
+            mBottomActionBar.setActionClickListener(APPLY, v -> {
+                onSetWallpaperClicked(v);
+                setEditingEnabled(false);
+            });
             mBottomActionBar.show();
             view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
                     makeMeasureSpec(mScreenSize.y, EXACTLY));
@@ -259,6 +264,7 @@ public class ImagePreviewFragment extends PreviewFragment {
      * initializing a zoom-scroll observer and click listener.
      */
     private void initFullResView() {
+        mFullResImageView.setEnabled(!USE_NEW_UI);
         mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
 
         // Set a solid black "page bitmap" so MosaicView draws a black background while waiting
@@ -378,11 +384,18 @@ public class ImagePreviewFragment extends PreviewFragment {
         float wallpaperZoom = mFullResImageView.getScale();
         Context context = requireContext().getApplicationContext();
         Display defaultDisplay = requireActivity().getWindowManager().getDefaultDisplay();
-        Rect rect = new Rect();
-        mFullResImageView.visibleFileRect(rect);
+
+        Rect result = new Rect();
+        if (USE_NEW_UI) {
+            Rect src = new Rect();
+            mWorkspaceSurface.getGlobalVisibleRect(src);
+            mFullResImageView.viewToFileRect(src, result);
+        } else {
+            mFullResImageView.visibleFileRect(result);
+        }
 
         return WallpaperCropUtils.calculateCropRect(context, defaultDisplay, mRawWallpaperSize,
-                rect, wallpaperZoom);
+                result, wallpaperZoom);
     }
 
     @Override
@@ -405,6 +418,8 @@ public class ImagePreviewFragment extends PreviewFragment {
     private void renderWorkspaceSurface() {
         mWorkspaceSurface.setZOrderMediaOverlay(true);
         mWorkspaceSurface.getHolder().addCallback(mWorkspaceSurfaceCallback);
+        mWorkspaceSurface.getHolder().setFixedSize(mDisplayMetrics.widthPixels,
+                mDisplayMetrics.heightPixels);
     }
 
     private void renderImageWallpaper() {
@@ -482,21 +497,17 @@ public class ImagePreviewFragment extends PreviewFragment {
     // TODO(chriscsli): Investigate the possibility of moving this to the base class.
     private void setupPreview() {
         if (USE_NEW_UI) {
-            mTabs.setVisibility(mMode == MODE_SHOW_TABS ? View.VISIBLE : View.GONE);
-
-            final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
             int containerWidth = mWorkspaceContainer.getMeasuredWidth();
             int containerHeight = mWorkspaceContainer.getMeasuredHeight();
 
-            int topPadding = dpToPx(24, displayMetrics.density);
-            int bottomPadding = dpToPx(getBottomPaddingInDp(), displayMetrics.density);
+            int topPadding = dpToPx(24, mDisplayMetrics.density);
+            int bottomPadding = dpToPx(getBottomPaddingInDp(), mDisplayMetrics.density);
             double horizontalPadding = containerWidth
                     - (containerHeight - topPadding - bottomPadding) * 1.0
-                            * displayMetrics.widthPixels / displayMetrics.heightPixels;
+                            * mDisplayMetrics.widthPixels / mDisplayMetrics.heightPixels;
             int leftPadding = (int) horizontalPadding / 2;
             int rightPadding = (int) horizontalPadding - leftPadding;
-            mWorkspaceContainer.setPaddingRelative(leftPadding, topPadding, rightPadding,
-                    bottomPadding);
+            mWorkspaceContainer.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
             ((CardView) mWorkspaceSurface.getParent())
                     .setRadius(TileSizeCalculator.getPreviewCornerRadius(
                             getActivity(),
@@ -506,12 +517,19 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     private int getBottomPaddingInDp() {
         switch (mMode) {
-            case MODE_SHOW_TABS:
+            case MODE_EDITING:
                 return 0;
             case MODE_DEFAULT:
             default:
                 return 32;
         }
+    }
+
+    private void setEditingEnabled(boolean enabled) {
+        mFullResImageView.setPanEnabled(enabled);
+        mFullResImageView.setZoomEnabled(enabled);
+        mMode = enabled ? MODE_EDITING : MODE_DEFAULT;
+        mTabs.setVisibility(mMode == MODE_EDITING ? View.VISIBLE : View.GONE);
     }
 
     private static int dpToPx(int dp, float density) {
