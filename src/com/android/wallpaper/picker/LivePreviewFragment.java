@@ -31,6 +31,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
@@ -67,6 +68,7 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
+import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.widget.BottomActionBar;
@@ -112,6 +114,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     private LiveData<Slice> mSettingsLiveData;
     private View mLoadingScrim;
     private InfoPageController mInfoPageController;
+    private Point mScreenSize;
     private ImageView mHomePreview;
     private BottomActionBar mBottomActionBar;
     private WallpaperInfoView mWallpaperInfoView;
@@ -176,16 +179,31 @@ public class LivePreviewFragment extends PreviewFragment implements
         mLoadingScrim = view.findViewById(R.id.loading);
         setUpLoadingIndicator();
 
+        mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
+                activity.getWindowManager().getDefaultDisplay());
         if (USE_NEW_UI) {
             ViewGroup viewGroup = view.findViewById(R.id.live_wallpaper_preview);
             CardView homePreviewCard = viewGroup.findViewById(R.id.wallpaper_full_preview_card);
             mHomePreview = homePreviewCard.findViewById(R.id.wallpaper_preview_image);
             view.addOnLayoutChangeListener((thisView, left, top, right, bottom,
-                    oldLeft, oldTop, oldRight, oldBottom) ->
-                    ((CardView) mHomePreview.getParent())
-                            .setRadius(SizeCalculator.getPreviewCornerRadius(
-                                    getActivity(), homePreviewCard.getMeasuredWidth()))
-            );
+                    oldLeft, oldTop, oldRight, oldBottom) -> {
+                float screenAspectRatio = (float) mScreenSize.y / mScreenSize.x;
+                int measuredViewHeight = viewGroup.getMeasuredHeight();
+                int measuredViewWidth = viewGroup.getMeasuredWidth();
+                int absoluteViewWidth = (int) ((measuredViewHeight - viewGroup.getPaddingBottom()
+                        - viewGroup.getPaddingTop()) / screenAspectRatio);
+                int horizontalPadding = (measuredViewWidth - absoluteViewWidth) / 2;
+                viewGroup.setPaddingRelative(
+                        horizontalPadding,
+                        viewGroup.getPaddingTop(),
+                        horizontalPadding,
+                        viewGroup.getPaddingBottom());
+                repositionPreview(mHomePreview);
+
+                ((CardView) mHomePreview.getParent())
+                        .setRadius(SizeCalculator.getPreviewCornerRadius(
+                                getActivity(), homePreviewCard.getMeasuredWidth()));
+            });
             // TODO(chriscsli): Integrate SurfaceView utilities of home screen
             setupCurrentWallpaperPreview(view);
             previewLiveWallpaper(container, mHomePreview);
@@ -201,6 +219,17 @@ public class LivePreviewFragment extends PreviewFragment implements
         }
 
         return view;
+    }
+
+    private void repositionPreview(ImageView previewView) {
+        previewView.getLocationOnScreen(mLivePreviewLocation);
+        mPreviewGlobalRect.set(0, 0, previewView.getMeasuredWidth(),
+                previewView.getMeasuredHeight());
+        mPreviewLocalRect.set(mPreviewGlobalRect);
+        mPreviewGlobalRect.offset(mLivePreviewLocation[0], mLivePreviewLocation[1]);
+        if (mWallpaperConnection != null) {
+            mWallpaperConnection.updatePreviewPosition(mPreviewGlobalRect);
+        }
     }
 
     private void setupCurrentWallpaperPreview(View view) {
@@ -321,11 +350,7 @@ public class LivePreviewFragment extends PreviewFragment implements
             thumbnail.setBounds(previewView.getLeft(), previewView.getTop(), previewView.getRight(),
                     previewView.getBottom());
         }
-        previewView.getLocationOnScreen(mLivePreviewLocation);
-        mPreviewGlobalRect.set(0, 0, previewView.getMeasuredWidth(),
-                previewView.getMeasuredHeight());
-        mPreviewLocalRect.set(mPreviewGlobalRect);
-        mPreviewGlobalRect.offset(mLivePreviewLocation[0], mLivePreviewLocation[1]);
+        repositionPreview(previewView);
 
         mWallpaperConnection = new WallpaperConnection(
                 getWallpaperIntent(homeWallpaper.getWallpaperComponent()), activity,
