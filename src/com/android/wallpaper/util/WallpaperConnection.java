@@ -34,8 +34,6 @@ import android.view.WindowManager.LayoutParams;
 
 import androidx.annotation.Nullable;
 
-import java.lang.reflect.Method;
-
 /**
  * Implementation of {@link IWallpaperConnection} that handles communication with a
  * {@link android.service.wallpaper.WallpaperService}
@@ -53,7 +51,6 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     private boolean mIsVisible;
     private boolean mIsEngineVisible;
     private boolean mEngineReady;
-    private Method mScalePreviewMethod;
 
     /**
      * @param intent used to bind the wallpaper service
@@ -167,16 +164,17 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
 
     private void updateEnginePosition() {
         if (mWallpaperPreviewRect != null) {
-            // TODO(santie): switch to regular method call once SDK is sync'ed
+            // TODO(santie): replace with proper surface resizing when the API is available
+            View decorView = mActivity.getWindow().getDecorView();
+            int availw = decorView.getWidth();
+            int availh = decorView.getHeight();
             try {
-                if (mScalePreviewMethod == null) {
-                    mScalePreviewMethod =
-                            mEngine.getClass().getMethod("scalePreview", Rect.class);
-                    mScalePreviewMethod.setAccessible(true);
-                }
-                mScalePreviewMethod.invoke(mEngine, mWallpaperPreviewRect);
-            } catch (Exception e) {
-                Log.e(TAG, "Couldn't call scalePreview method on WallpaperEngine", e);
+                mEngine.setDisplayPadding(
+                        new Rect(-mWallpaperPreviewRect.left, -mWallpaperPreviewRect.top,
+                                mWallpaperPreviewRect.right - availw,
+                                mWallpaperPreviewRect.bottom - availh));
+            } catch (RemoteException e) {
+                Log.e(TAG, "Couldn't set preview padding", e);
             }
         }
     }

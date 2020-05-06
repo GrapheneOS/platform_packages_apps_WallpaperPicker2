@@ -17,9 +17,6 @@ package com.android.wallpaper.picker;
 
 import static android.view.View.MeasureSpec.EXACTLY;
 import static android.view.View.MeasureSpec.makeMeasureSpec;
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-
-import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -36,15 +33,12 @@ import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.os.Message;
-import android.os.RemoteException;
 import android.provider.Settings;
 import android.service.wallpaper.WallpaperService;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.SurfaceControlViewHost;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -63,11 +57,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.android.systemui.shared.system.SurfaceViewRequestUtils;
 import com.android.wallpaper.R;
 import com.android.wallpaper.config.Flags;
 import com.android.wallpaper.model.Category;
@@ -79,7 +73,6 @@ import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.LockWallpaperStatusChecker;
 import com.android.wallpaper.module.UserEventLogger;
-import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
 import com.android.wallpaper.module.WallpaperRotationRefresher;
@@ -87,13 +80,10 @@ import com.android.wallpaper.module.WallpaperRotationRefresher.Listener;
 import com.android.wallpaper.picker.CategorySelectorFragment.CategorySelectorFragmentHost;
 import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
 import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
-import com.android.wallpaper.picker.individual.IndividualPickerFragment;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.ThumbnailUpdater;
-import com.android.wallpaper.picker.individual.IndividualPickerFragment.WallpaperDestinationCallback;
 import com.android.wallpaper.util.DisplayMetricsRetriever;
 import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
-import com.android.wallpaper.util.SurfaceViewUtils;
 import com.android.wallpaper.util.TileSizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
@@ -111,12 +101,8 @@ import java.util.List;
 /**
  * Displays the Main UI for picking a category of wallpapers to choose from.
  */
-public class CategoryFragment extends AppbarFragment
-        implements CategorySelectorFragmentHost, ThumbnailUpdater, WallpaperDestinationCallback {
-
-    private final Rect mPreviewLocalRect = new Rect();
-    private final Rect mPreviewGlobalRect = new Rect();
-    private final int[] mLivePreviewLocation = new int[2];
+public class CategoryFragment extends ToolbarFragment
+        implements CategorySelectorFragmentHost, ThumbnailUpdater {
 
     /**
      * Interface to be implemented by an Activity hosting a {@link CategoryFragment}
@@ -132,7 +118,7 @@ public class CategoryFragment extends AppbarFragment
 
     public static CategoryFragment newInstance(CharSequence title) {
         CategoryFragment fragment = new CategoryFragment();
-        fragment.setArguments(AppbarFragment.createArguments(title));
+        fragment.setArguments(ToolbarFragment.createArguments(title));
         return fragment;
     }
 
@@ -158,16 +144,13 @@ public class CategoryFragment extends AppbarFragment
     private List<View> mWallPaperPreviews;
     private WallpaperConnection mWallpaperConnection;
     private CategorySelectorFragment mCategorySelectorFragment;
-    private IndividualPickerFragment mIndividualPickerFragment;
     private boolean mShowSelectedWallpaper;
-    private BottomSheetBehavior<View> mBottomSheetBehavior;
+    private BottomSheetBehavior mBottomSheetBehavior;
     private PreviewUtils mPreviewUtils;
-    private int mSelectedPreviewPage;
 
     // Home workspace surface is behind the app window, and so must the home image wallpaper like
     // the live wallpaper. This view is rendered on mWallpaperSurface for home image wallpaper.
     private ImageView mHomeImageWallpaper;
-    private boolean mIsCollapsingByUserSelecting;
 
     public CategoryFragment() {
         mCategorySelectorFragment = new CategorySelectorFragment();
@@ -217,10 +200,6 @@ public class CategoryFragment extends AppbarFragment
 
             @Override
             public void onPageSelected(int i) {
-                mSelectedPreviewPage = i;
-                if (mIndividualPickerFragment != null && mIndividualPickerFragment.isVisible()) {
-                    mIndividualPickerFragment.highlightAppliedWallpaper(i);
-                }
             }
 
             @Override
@@ -231,42 +210,15 @@ public class CategoryFragment extends AppbarFragment
 
         View fragmentContainer = view.findViewById(R.id.category_fragment_container);
         mBottomSheetBehavior = BottomSheetBehavior.from(fragmentContainer);
-        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (mIsCollapsingByUserSelecting) {
-                    mIsCollapsingByUserSelecting = newState != STATE_COLLAPSED;
-                    return;
-                }
-
-                if (mIndividualPickerFragment != null && mIndividualPickerFragment.isVisible()) {
-                    mIndividualPickerFragment.resizeLayout(newState == STATE_COLLAPSED
-                            ? mBottomSheetBehavior.getPeekHeight() : MATCH_PARENT);
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-            }
+        fragmentContainer.addOnLayoutChangeListener((containerView, left, top, right, bottom,
+                                                     oldLeft, oldTop, oldRight, oldBottom) -> {
+            int minimumHeight = containerView.getHeight() - mPreviewPager.getMeasuredHeight();
+            mBottomSheetBehavior.setPeekHeight(minimumHeight);
+            containerView.setMinimumHeight(minimumHeight);
+            ((CardView) mHomePreview.getParent())
+                    .setRadius(TileSizeCalculator.getPreviewCornerRadius(
+                            getActivity(), homePreviewCard.getMeasuredWidth()));
         });
-        fragmentContainer.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View containerView, int left, int top, int right,
-                    int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                int minimumHeight = containerView.getHeight() - mPreviewPager.getMeasuredHeight();
-                mBottomSheetBehavior.setPeekHeight(minimumHeight);
-                containerView.setMinimumHeight(minimumHeight);
-                ((CardView) mHomePreview.getParent())
-                        .setRadius(TileSizeCalculator.getPreviewCornerRadius(
-                                getActivity(), homePreviewCard.getMeasuredWidth()));
-                if (mLockscreenPreview != null) {
-                    ((CardView) mLockscreenPreview.getParent())
-                            .setRadius(TileSizeCalculator.getPreviewCornerRadius(
-                                    getActivity(), mLockscreenPreview.getMeasuredWidth()));
-                }
-                fragmentContainer.removeOnLayoutChangeListener(this);
-            }});
 
         mPreviewUtils = new PreviewUtils(getContext(),
                 getString(R.string.grid_control_metadata_name));
@@ -323,7 +275,6 @@ public class CategoryFragment extends AppbarFragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        LiveTileOverlay.INSTANCE.detach(mHomePreview.getOverlay());
         if (mWallpaperConnection != null) {
             mWallpaperConnection.disconnect();
             mWallpaperConnection = null;
@@ -356,24 +307,10 @@ public class CategoryFragment extends AppbarFragment
 
     @Override
     public void show(String collectionId) {
-        mIndividualPickerFragment =
-                InjectorProvider.getInjector().getIndividualPickerFragment(collectionId);
-        mIndividualPickerFragment.highlightAppliedWallpaper(mSelectedPreviewPage);
-        mIndividualPickerFragment.setOnWallpaperSelectedListener(position -> {
-            // Scroll to the selected wallpaper and collapse the sheet if needed.
-            // Resize and scroll here because we want to let the RecyclerView's scrolling and
-            // BottomSheet's collapsing can be executed together instead of scrolling
-            // the RecyclerView after the BottomSheet is collapsed.
-            mIndividualPickerFragment.resizeLayout(mBottomSheetBehavior.getPeekHeight());
-            mIndividualPickerFragment.scrollToPosition(position);
-            if (mBottomSheetBehavior.getState() != STATE_COLLAPSED) {
-                mIsCollapsingByUserSelecting = true;
-                mBottomSheetBehavior.setState(STATE_COLLAPSED);
-            }
-        });
         getChildFragmentManager()
                 .beginTransaction()
-                .replace(R.id.category_fragment_container, mIndividualPickerFragment)
+                .replace(R.id.category_fragment_container,
+                        InjectorProvider.getInjector().getIndividualPickerFragment(collectionId))
                 .addToBackStack(null)
                 .commit();
         getChildFragmentManager().executePendingTransactions();
@@ -391,6 +328,7 @@ public class CategoryFragment extends AppbarFragment
             updateThumbnail(wallpaperInfo, mHomePreview, true);
             updateThumbnail(wallpaperInfo, mLockscreenPreview, false);
             mShowSelectedWallpaper = true;
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
     }
 
@@ -398,25 +336,6 @@ public class CategoryFragment extends AppbarFragment
     public void restoreThumbnails() {
         refreshCurrentWallpapers(/* MetadataHolder= */ null, /* forceRefresh= */ true);
         mShowSelectedWallpaper = false;
-    }
-
-    @Override
-    public void onDestinationSet(@WallpaperPersister.Destination int destination) {
-        if (destination == WallpaperPersister.DEST_BOTH) {
-            return;
-        }
-        mPreviewPager.switchPreviewPage(destination);
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        Fragment childFragment = getChildFragmentManager().findFragmentById(
-                R.id.category_fragment_container);
-        if (childFragment instanceof BottomActionBarFragment
-                && ((BottomActionBarFragment) childFragment).onBackPressed()) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -606,12 +525,10 @@ public class CategoryFragment extends AppbarFragment
                     previewView.getBottom());
         }
 
-        previewView.getLocationOnScreen(mLivePreviewLocation);
-        mPreviewGlobalRect.set(0, 0, previewView.getMeasuredWidth(),
-                previewView.getMeasuredHeight());
-        mPreviewLocalRect.set(mPreviewGlobalRect);
-        mPreviewGlobalRect.offset(mLivePreviewLocation[0], mLivePreviewLocation[1]);
-
+        Rect previewLocalRect = new Rect();
+        Rect previewGlobalRect = new Rect();
+        previewView.getLocalVisibleRect(previewLocalRect);
+        previewView.getGlobalVisibleRect(previewGlobalRect);
         mWallpaperConnection = new WallpaperConnection(
                 getWallpaperIntent(homeWallpaper.getWallpaperComponent()), activity,
                 new WallpaperConnectionListener() {
@@ -624,20 +541,21 @@ public class CategoryFragment extends AppbarFragment
                         LiveTileOverlay.INSTANCE.setForegroundDrawable(placeholder);
                         LiveTileOverlay.INSTANCE.attach(previewView.getOverlay());
                         previewView.animate()
-                                .setStartDelay(50)
-                                .setDuration(200)
+                                .setStartDelay(400)
+                                .setDuration(400)
                                 .setInterpolator(AnimationUtils.loadInterpolator(getContext(),
                                         android.R.interpolator.fast_out_linear_in))
                                 .setUpdateListener(value -> placeholder.setAlpha(
                                         (int) (MAX_ALPHA * (1 - value.getAnimatedFraction()))))
                                 .withEndAction(() -> {
                                     LiveTileOverlay.INSTANCE.setForegroundDrawable(null);
+
                                 }).start();
 
                     }
-                }, mPreviewGlobalRect);
+                }, previewGlobalRect);
 
-        LiveTileOverlay.INSTANCE.update(new RectF(mPreviewLocalRect),
+        LiveTileOverlay.INSTANCE.update(new RectF(previewLocalRect),
                 ((CardView) previewView.getParent()).getRadius());
 
         mWallpaperConnection.setVisibility(true);
@@ -750,15 +668,12 @@ public class CategoryFragment extends AppbarFragment
         boolean renderInImageWallpaperSurface =
                 !(wallpaperInfo instanceof LiveWallpaperInfo) && isHomeWallpaper;
         wallpaperInfo.getThumbAsset(activity.getApplicationContext())
-                .loadPreviewImage(activity,
+                .loadDrawable(activity,
                         renderInImageWallpaperSurface ? mHomeImageWallpaper : thumbnailView,
                         getResources().getColor(R.color.secondary_color));
         if (isHomeWallpaper) {
             LiveTileOverlay.INSTANCE.detach(thumbnailView.getOverlay());
             if (wallpaperInfo instanceof LiveWallpaperInfo) {
-                wallpaperInfo.getThumbAsset(activity.getApplicationContext()).loadPreviewImage(
-                        activity, mHomeImageWallpaper,
-                        getResources().getColor(R.color.secondary_color));
                 setUpLiveWallpaperPreview(wallpaperInfo, thumbnailView,
                         new ColorDrawable(getResources().getColor(
                                 R.color.secondary_color, activity.getTheme())));
@@ -786,12 +701,9 @@ public class CategoryFragment extends AppbarFragment
 
     private final SurfaceHolder.Callback mWallpaperSurfaceCallback = new SurfaceHolder.Callback() {
 
-        private Surface mLastSurface;
-
         @Override
-        public void surfaceCreated(SurfaceHolder holder) {
-            if (mLastSurface != holder.getSurface()) {
-                mLastSurface = holder.getSurface();
+        public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
+            if (mHomeImageWallpaper == null) {
                 mHomeImageWallpaper = new ImageView(getContext());
                 mHomeImageWallpaper.setBackgroundColor(
                         ContextCompat.getColor(getContext(), R.color.primary_color));
@@ -808,46 +720,28 @@ public class CategoryFragment extends AppbarFragment
         }
 
         @Override
+        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        }
+
+        @Override
+        public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
+        }
+    };
+
+    private final SurfaceHolder.Callback mWorkspaceSurfaceCallback = new SurfaceHolder.Callback() {
+        @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+            Bundle bundle = SurfaceViewRequestUtils.createSurfaceBundle(mWorkspaceSurface);
+            if (mPreviewUtils.supportsPreview()) {
+                mPreviewUtils.renderPreview(bundle);
+            }
+        }
+
+        @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
 
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) { }
-    };
-
-    private final SurfaceHolder.Callback mWorkspaceSurfaceCallback = new SurfaceHolder.Callback() {
-
-        private Surface mLastSurface;
-        private Message mCallback;
-
-        @Override
-        public void surfaceCreated(SurfaceHolder holder) {
-            if (mPreviewUtils.supportsPreview() && mLastSurface != holder.getSurface()) {
-                mLastSurface = holder.getSurface();
-                Bundle result = mPreviewUtils.renderPreview(
-                        SurfaceViewUtils.createSurfaceViewRequest(mWorkspaceSurface));
-                if (result != null) {
-                    mWorkspaceSurface.setChildSurfacePackage(
-                            SurfaceViewUtils.getSurfacePackage(result));
-                    mCallback = SurfaceViewUtils.getCallback(result);
-                }
-            }
-        }
-
-        @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
-
-        @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {
-            if (mCallback != null) {
-                try {
-                    mCallback.replyTo.send(mCallback);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                } finally {
-                    mCallback = null;
-                }
-            }
-        }
     };
 
     private interface MetadataHolder {

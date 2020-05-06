@@ -316,22 +316,6 @@
     <!-- Confirmation dialog. Shown after user selects to delete one wallpaper. [CHAR LIMIT=NONE] -->
     <string name="delete_wallpaper_confirmation">Delete this wallpaper from your phone?</string>
 
-    <!-- Content description of back button on the bottom action bar. [CHAR LIMIT=30] -->
-    <string name="bottom_action_bar_back">Back</string>
-
-    <!-- Content description of edit button on the bottom action bar. [CHAR LIMIT=30] -->
-    <string name="bottom_action_bar_edit">Edit</string>
-
-    <!-- TODO(b/154299462): Separate downloadable related actions from WallpaperPicker. -->
-    <!-- Content description of download button on the bottom action bar. [CHAR LIMIT=30] -->
-    <string name="bottom_action_bar_download">Download</string>
-
-    <!-- Content description of "slideshow wallpaper" button on the bottom action bar. [CHAR LIMIT=30] -->
-    <string name="bottom_action_bar_slideshow_wallpaper">Slideshow Wallpaper</string>
-
-    <!-- Content description of apply button on the bottom action bar. [CHAR LIMIT=30] -->
-    <string name="bottom_action_bar_apply">Apply</string>
-
     <!-- The class name for the ScaleBehavior -->
     <string name="scalable_container_behavior" translatable="false">com.android.wallpaper.picker.ScaleBehavior</string>
 
