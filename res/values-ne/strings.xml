@@ -75,7 +75,7 @@
     <string name="my_photos_category_title" msgid="4294567122144565273">"मेरा तस्बिरहरू"</string>
     <string name="my_photos_generic_wallpaper_title" msgid="7002867526154631172">"मेरो तस्बिर"</string>
     <string name="fallback_wallpaper_title" msgid="6154655421012506001">"वालपेपर"</string>
-    <string name="app_not_found" msgid="4431461707854088231">"अनुप्रयोग स्थापित छैन।"</string>
+    <string name="app_not_found" msgid="4431461707854088231">"एप स्थापित छैन।"</string>
     <string name="center_wallpaper_position" msgid="4166894762352288883">"मध्यभाग"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"मध्यभागमा क्रप गरिएको"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"तन्काइएको"</string>
