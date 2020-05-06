@@ -49,7 +49,7 @@
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"ପ୍ରଥମ ୱାଲପେପର୍ ଡାଉନଲୋଡ୍ ହେଉଛି…"</string>
     <string name="start_rotation_error_message" msgid="3053799836719618972">"ପ୍ରଥମ ୱାଲପେପର୍‌କୁ ଡାଉନଲୋଡ୍ କରିବାରେ ଅସମର୍ଥ। ଦୟାକରି ଆପଣଙ୍କର ନେଟୱର୍କ ସେଟିଙ୍ଗକୁ ଯାଞ୍ଚ କରିବା ସହିତ ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।"</string>
     <string name="start_rotation_dialog_body" msgid="7903554799046364916">"ସ୍ଵଚାଳିତ ଭାବେ ପ୍ରତିଦିନ ୱାଲପେପର୍ ପରିବର୍ତ୍ତନ ହେବ"</string>
-    <string name="settings_button_label" msgid="8724734130079207955">"ସେଟିଙ୍ଗ"</string>
+    <string name="settings_button_label" msgid="8724734130079207955">"ସେଟିଂସ୍"</string>
     <string name="explore" msgid="7468719504199497281">"ଖୋଜନ୍ତୁ"</string>
     <string name="next_wallpaper" msgid="3911873152952596232">"ପରବର୍ତ୍ତୀ ୱାଲପେପର୍"</string>
     <string name="wallpaper_disabled_message" msgid="7309484130562148185">"ଏହି ଡିଭାଇସ୍‌ରେ ୱାଲପେପର୍‌ର ସେଟିଙ୍ଗକୁ ଅକ୍ଷମ କରାଯାଇଛି"</string>
