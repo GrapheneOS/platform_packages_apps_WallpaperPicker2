@@ -223,6 +223,13 @@
     <dimen name="bottom_action_icon_size">24dp</dimen>
     <dimen name="bottom_action_bar_bottom_sheet_margin_top">2dp</dimen>
 
+    <dimen name="wallpaper_info_pane_top_padding">20dp</dimen>
+    <dimen name="wallpaper_info_pane_bottom_padding">18dp</dimen>
+    <dimen name="wallpaper_info_pane_horizontal_padding">24dp</dimen>
+    <dimen name="wallpaper_info_pane_subtitle1_top_margin">12dp</dimen>
+    <dimen name="wallpaper_info_pane_explore_button_top_margin">12dp</dimen>
+    <dimen name="wallpaper_info_pane_title_height">48dp</dimen>
+
     <dimen name="option_border_width">2dp</dimen>
     <dimen name="option_selected_border_width">3dp</dimen>
     <dimen name="option_title_font_text_size">12sp</dimen>

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 
      Copyright (C) 2020 The Android Open Source Project
 
@@ -18,44 +17,55 @@
 <com.android.wallpaper.widget.WallpaperInfoView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/wallpaper_info"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingHorizontal="@dimen/preview_attribution_pane_horizontal_padding"
-    android:paddingVertical="@dimen/bottom_action_bar_preview_info_padding_vertical"
+    android:paddingHorizontal="@dimen/wallpaper_info_pane_horizontal_padding"
+    android:paddingTop="@dimen/wallpaper_info_pane_top_padding"
+    android:paddingBottom="@dimen/wallpaper_info_pane_bottom_padding"
     android:theme="@style/WallpaperPicker.BottomPaneStyle">
 
-  <TextView
-      android:id="@+id/wallpaper_info_title"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:minHeight="@dimen/preview_attribution_pane_title_height"
-      android:ellipsize="end"
-      android:gravity="center"
-      android:lineHeight="24dp"
-      android:singleLine="true"
-      android:textAppearance="@style/TitleTextAppearance"
-      android:textColor="@color/action_bar_bottom_sheet_text_color"/>
+    <TextView
+        android:id="@+id/wallpaper_info_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:lineHeight="24dp"
+        android:minHeight="@dimen/wallpaper_info_pane_title_height"
+        android:singleLine="true"
+        android:textAppearance="@style/TitleTextAppearance"
+        android:textColor="@color/action_bar_bottom_sheet_text_color" />
 
-  <TextView
-      android:id="@+id/wallpaper_info_subtitle1"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center"
-      android:layout_marginTop="@dimen/preview_attribution_pane_inner_spacer_height"
-      android:textAppearance="@style/SubtitleTextAppearance"
-      android:textColor="@color/action_bar_bottom_sheet_text_color"
-      android:lineHeight="16dp"
-      android:visibility="gone"/>
+    <TextView
+        android:id="@+id/wallpaper_info_subtitle1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/wallpaper_info_pane_subtitle1_top_margin"
+        android:gravity="center"
+        android:lineHeight="18dp"
+        android:textAppearance="@style/SubtitleTextAppearance"
+        android:textColor="@color/action_bar_bottom_sheet_text_color"
+        android:visibility="gone" />
 
-  <TextView
-      android:id="@+id/wallpaper_info_subtitle2"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center_horizontal"
-      android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-      android:textSize="14dp"
-      android:lineHeight="16dp"
-      android:textColor="@color/action_bar_bottom_sheet_text_color"
-      android:visibility="gone"/>
+    <TextView
+        android:id="@+id/wallpaper_info_subtitle2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:lineHeight="20dp"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        android:textColor="@color/action_bar_bottom_sheet_text_color"
+        android:textSize="14dp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/wallpaper_info_explore_button"
+        style="@style/OutlinedButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/wallpaper_info_pane_explore_button_top_margin"
+        android:text="@string/explore"
+        android:visibility="gone" />
 </com.android.wallpaper.widget.WallpaperInfoView>

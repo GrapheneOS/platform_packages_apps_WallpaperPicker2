@@ -121,7 +121,11 @@ public class LivePreviewFragment extends PreviewFragment implements
         super.onCreate(savedInstanceState);
         android.app.WallpaperInfo info = mWallpaper.getWallpaperComponent();
         mWallpaperIntent = getWallpaperIntent(info);
-        setUpExploreIntent(null);
+        if (USE_NEW_UI) {
+            setUpExploreIntentAndLabel(null);
+        } else {
+            setUpExploreIntent(null);
+        }
 
         android.app.WallpaperInfo currentWallpaper =
                 WallpaperManager.getInstance(requireContext()).getWallpaperInfo();
@@ -185,8 +189,7 @@ public class LivePreviewFragment extends PreviewFragment implements
             // TODO(chriscsli): Integrate SurfaceView utilities of home screen
             setupCurrentWallpaperPreview(view);
             previewLiveWallpaper(container, mHomePreview);
-            mBottomActionBar = view.findViewById(R.id.bottom_actionbar);
-            onBottomActionBarReady(mBottomActionBar);
+            onBottomActionBarReady(view.findViewById(R.id.bottom_actionbar));
         } else {
             mWallpaperConnection = new WallpaperConnection(mWallpaperIntent, activity,
                     this, null);
@@ -341,7 +344,11 @@ public class LivePreviewFragment extends PreviewFragment implements
                                     }
                                     mLoadingScrim.setVisibility(View.GONE);
                                     if (mWallpaperInfoView != null) {
-                                        mWallpaperInfoView.populateWallpaperInfo(mWallpaper);
+                                        mWallpaperInfoView.populateWallpaperInfo(
+                                                mWallpaper,
+                                                mActionLabel,
+                                                mExploreIntent,
+                                                LivePreviewFragment.this::onExploreClicked);
                                     }
                                 }));
                         final Drawable placeholder = previewView.getDrawable() == null
