@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Insets;
-import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -441,12 +440,12 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
      * Returns the width (in physical px) to use for the "currently set wallpaper" thumbnail.
      */
     private int getSingleWallpaperImageWidthPx() {
-        Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(
-                getWindowManager().getDefaultDisplay());
+        final float screenAspectRatio =
+                ScreenSizeCalculator.getInstance().getScreenAspectRatio(this);
 
         int height = getResources().getDimensionPixelSize(
                 R.dimen.current_wallpaper_bottom_sheet_thumb_height);
-        return height * screenSize.x / screenSize.y;
+        return (int) (height / screenAspectRatio);
     }
 
     /**

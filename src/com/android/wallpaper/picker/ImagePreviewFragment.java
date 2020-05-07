@@ -506,8 +506,9 @@ public class ImagePreviewFragment extends PreviewFragment {
             int containerWidth = mWorkspaceContainer.getMeasuredWidth();
             int containerHeight = mWorkspaceContainer.getMeasuredHeight();
 
-            int topPadding = dpToPx(24, mDisplayMetrics.density);
-            int bottomPadding = dpToPx(getBottomPaddingInDp(), mDisplayMetrics.density);
+            int topPadding = getResources().getDimensionPixelSize(
+                    R.dimen.full_preview_page_default_padding_top);
+            int bottomPadding = getBottomPaddingInDp();
             double horizontalPadding = containerWidth
                     - (containerHeight - topPadding - bottomPadding) * 1.0
                             * mDisplayMetrics.widthPixels / mDisplayMetrics.heightPixels;
@@ -524,10 +525,12 @@ public class ImagePreviewFragment extends PreviewFragment {
     private int getBottomPaddingInDp() {
         switch (mMode) {
             case MODE_EDITING:
-                return 0;
+                return getResources().getDimensionPixelSize(
+                        R.dimen.full_preview_page_editing_padding_bottom);
             case MODE_DEFAULT:
             default:
-                return 32;
+                return getResources().getDimensionPixelSize(
+                        R.dimen.full_preview_page_default_padding_bottom);
         }
     }
 
@@ -536,9 +539,5 @@ public class ImagePreviewFragment extends PreviewFragment {
         mFullResImageView.setZoomEnabled(enabled);
         mMode = enabled ? MODE_EDITING : MODE_DEFAULT;
         mTabs.setVisibility(mMode == MODE_EDITING ? View.VISIBLE : View.GONE);
-    }
-
-    private static int dpToPx(int dp, float density) {
-        return (int) (dp * density + 0.5f);
     }
 }

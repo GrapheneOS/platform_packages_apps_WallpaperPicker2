@@ -35,16 +35,16 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/live_preview_card_height"
             android:background="@color/preview_pager_background"
-            android:paddingTop="@dimen/live_preview_card_padding_top"
-            android:paddingBottom="@dimen/live_preview_card_padding_bottom" />
+            android:paddingTop="@dimen/full_preview_page_default_padding_top"
+            android:paddingBottom="@dimen/full_preview_page_default_padding_bottom" />
 
         <include
             android:id="@+id/permission_needed"
             layout="@layout/grid_item_permission_needed"
             android:layout_width="match_parent"
             android:layout_height="@dimen/live_preview_card_height"
-            android:paddingTop="@dimen/live_preview_card_padding_top"
-            android:paddingBottom="@dimen/live_preview_card_padding_bottom"
+            android:paddingTop="@dimen/full_preview_page_default_padding_top"
+            android:paddingBottom="@dimen/full_preview_page_default_padding_bottom"
             android:visibility="gone" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

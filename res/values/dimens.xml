@@ -207,9 +207,12 @@
     <!-- The maximum height ratio of PreviewPager and its parent view. -->
     <item name="preview_pager_maximum_height_ratio" format="float" type="dimen">0.7</item>
 
-    <!-- Dimensions for live wallpaper preview -->
-    <dimen name="live_preview_card_padding_top">24dp</dimen>
-    <dimen name="live_preview_card_padding_bottom">24dp</dimen>
+    <!-- Dimensions for full preview page -->
+    <dimen name="full_preview_page_default_padding_top">24dp</dimen>
+    <dimen name="full_preview_page_default_padding_bottom">32dp</dimen>
+    <dimen name="full_preview_page_editing_padding_bottom">0dp</dimen>
+
+    <!-- Dimensions for full preview page -->
     <dimen name="live_preview_card_height">690dp</dimen>
 
     <!-- Dimensions for the bottom bar. -->
