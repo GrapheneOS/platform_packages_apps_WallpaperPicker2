@@ -258,8 +258,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                 getWindow().getDecorView().getSystemUiVisibility()
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        findViewById(R.id.fragment_container)
-                .setOnApplyWindowInsetsListener((view, windowInsets) -> {
+        View fragmentContainer = findViewById(R.id.fragment_container);
+        fragmentContainer.setOnApplyWindowInsetsListener((view, windowInsets) -> {
             view.setPadding(view.getPaddingLeft(), windowInsets.getSystemWindowInsetTop(),
                     view.getPaddingRight(), view.getPaddingBottom());
             // Consume only the top inset (status bar), to let other content in the Activity consume
@@ -275,6 +275,17 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                         windowInsets.getSystemWindowInsetLeft(),
                         0, windowInsets.getStableInsetRight(),
                         windowInsets.getSystemWindowInsetBottom());
+            }
+        });
+
+        FrameLayout.LayoutParams layoutParams =
+                (FrameLayout.LayoutParams) fragmentContainer.getLayoutParams();
+        int bottomActionBarHeight = getResources()
+                .getDimensionPixelSize(R.dimen.bottom_navbar_height);
+        BottomActionBar bottomActionBar = findViewById(R.id.bottom_actionbar);
+        bottomActionBar.addVisibilityChangeListener(isVisible -> {
+            if (layoutParams != null) {
+                layoutParams.bottomMargin = isVisible ? bottomActionBarHeight : 0;
             }
         });
 

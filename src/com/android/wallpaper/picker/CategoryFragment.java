@@ -251,7 +251,6 @@ public class CategoryFragment extends AppbarFragment
                             .setRadius(SizeCalculator.getPreviewCornerRadius(
                                     getActivity(), mLockscreenPreview.getMeasuredWidth()));
                 }
-                fragmentContainer.removeOnLayoutChangeListener(this);
             }});
 
         mPreviewUtils = new PreviewUtils(getContext(),
