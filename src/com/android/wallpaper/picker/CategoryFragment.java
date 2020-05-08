@@ -89,8 +89,8 @@ import com.android.wallpaper.picker.individual.IndividualPickerFragment.Wallpape
 import com.android.wallpaper.util.DisplayMetricsRetriever;
 import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
+import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.SurfaceViewUtils;
-import com.android.wallpaper.util.TileSizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
 import com.android.wallpaper.widget.LiveTileOverlay;
@@ -270,11 +270,11 @@ public class CategoryFragment extends AppbarFragment
                 mBottomSheetBehavior.setPeekHeight(minimumHeight);
                 containerView.setMinimumHeight(minimumHeight);
                 ((CardView) mHomePreview.getParent())
-                        .setRadius(TileSizeCalculator.getPreviewCornerRadius(
+                        .setRadius(SizeCalculator.getPreviewCornerRadius(
                                 getActivity(), homePreviewCard.getMeasuredWidth()));
                 if (mLockscreenPreview != null) {
                     ((CardView) mLockscreenPreview.getParent())
-                            .setRadius(TileSizeCalculator.getPreviewCornerRadius(
+                            .setRadius(SizeCalculator.getPreviewCornerRadius(
                                     getActivity(), mLockscreenPreview.getMeasuredWidth()));
                 }
                 fragmentContainer.removeOnLayoutChangeListener(this);
