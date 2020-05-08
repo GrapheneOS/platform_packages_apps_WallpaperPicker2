@@ -19,19 +19,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 /**
  * Activity that displays a view-only preview of a specific wallpaper.
  */
 public class ViewOnlyPreviewActivity extends BasePreviewActivity {
 
+    public static boolean USE_NEW_UI = true;
     /**
      * Returns a new Intent with the provided WallpaperInfo instance put as an extra.
      */

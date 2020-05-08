@@ -25,7 +25,6 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources.NotFoundException;
 import android.content.res.TypedArray;
 import android.graphics.Insets;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -65,6 +64,7 @@ import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
+import com.android.wallpaper.util.SizeCalculator;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetBehavior.State;
@@ -103,6 +103,8 @@ public abstract class PreviewFragment extends Fragment implements
     public static final String ARG_WALLPAPER = "wallpaper";
     public static final String ARG_PREVIEW_MODE = "preview_mode";
     public static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
+
+    protected static final boolean USE_NEW_UI = ViewOnlyPreviewActivity.USE_NEW_UI;
 
     /**
      * Creates and returns new instance of {@link ImagePreviewFragment} with the provided wallpaper
@@ -154,6 +156,7 @@ public abstract class PreviewFragment extends Fragment implements
     protected int mBottomSheetInitialState;
 
     protected Intent mExploreIntent;
+    protected CharSequence mActionLabel;
 
     /**
      * Staged error dialog fragments that were unable to be shown when the hosting activity didn't
@@ -202,21 +205,28 @@ public abstract class PreviewFragment extends Fragment implements
 
         // Set toolbar as the action bar.
         Toolbar toolbar = view.findViewById(R.id.toolbar);
+        if (USE_NEW_UI) {
+            TextView titleTextView = toolbar.findViewById(R.id.custom_toolbar_title);
+            if (titleTextView != null) {
+                titleTextView.setText(R.string.preview);
+            }
+        }
         AppCompatActivity activity = (AppCompatActivity) requireActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-
         toolbar.getNavigationIcon().setTint(getAttrColor(activity, android.R.attr.colorPrimary));
         toolbar.getNavigationIcon().setAutoMirrored(true);
 
-        ViewCompat.setPaddingRelative(toolbar,
-        /* start */ getResources().getDimensionPixelSize(
-                        R.dimen.preview_toolbar_up_button_start_padding),
-        /* top */ 0,
-        /* end */ getResources().getDimensionPixelSize(
-                        R.dimen.preview_toolbar_set_wallpaper_button_end_padding),
-        /* bottom */ 0);
+        if (!USE_NEW_UI) {
+            ViewCompat.setPaddingRelative(toolbar,
+                    /* start */ getResources().getDimensionPixelSize(
+                            R.dimen.preview_toolbar_up_button_start_padding),
+                    /* top */ 0,
+                    /* end */ getResources().getDimensionPixelSize(
+                            R.dimen.preview_toolbar_set_wallpaper_button_end_padding),
+                    /* bottom */ 0);
+        }
 
         mLoadingProgressBar = view.findViewById(getLoadingIndicatorResId());
         mLoadingProgressBar.show();
@@ -224,33 +234,27 @@ public abstract class PreviewFragment extends Fragment implements
         mBottomSheet = view.findViewById(getBottomSheetResId());
         setUpBottomSheetView(mBottomSheet);
 
-        // Workaround as we don't have access to bottomDialogCornerRadius, mBottomSheet radii are
-        // set to dialogCornerRadius by default.
-        GradientDrawable bottomSheetBackground = (GradientDrawable) mBottomSheet.getBackground();
-        float[] radii = bottomSheetBackground.getCornerRadii();
-        for (int i = 0; i < radii.length; i++) {
-            radii[i]*=2f;
-        }
-        bottomSheetBackground = ((GradientDrawable)bottomSheetBackground.mutate());
-        bottomSheetBackground.setCornerRadii(radii);
-        mBottomSheet.setBackground(bottomSheetBackground);
+        SizeCalculator.adjustBackgroundCornerRadius(mBottomSheet);
 
         mBottomSheetInitialState = (savedInstanceState == null) ? STATE_EXPANDED
                 : savedInstanceState.getInt(KEY_BOTTOM_SHEET_STATE, STATE_EXPANDED);
         setUpBottomSheetListeners();
 
-        view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
-            toolbar.setPadding(toolbar.getPaddingLeft(),
-                    toolbar.getPaddingTop() + windowInsets.getSystemWindowInsetTop(),
-                    toolbar.getPaddingRight(), toolbar.getPaddingBottom());
-            mBottomSheet.setPadding(mBottomSheet.getPaddingLeft(),
-                    mBottomSheet.getPaddingTop(), mBottomSheet.getPaddingRight(),
-                    mBottomSheet.getPaddingBottom() + windowInsets.getSystemWindowInsetBottom());
-            WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
-            builder.setSystemWindowInsets(Insets.of(windowInsets.getSystemWindowInsetLeft(),
-                    0, windowInsets.getStableInsetRight(), 0));
-            return builder.build();
-        });
+        if (!USE_NEW_UI) {
+            view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
+                toolbar.setPadding(toolbar.getPaddingLeft(),
+                        toolbar.getPaddingTop() + windowInsets.getSystemWindowInsetTop(),
+                        toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+                mBottomSheet.setPadding(mBottomSheet.getPaddingLeft(),
+                        mBottomSheet.getPaddingTop(), mBottomSheet.getPaddingRight(),
+                        mBottomSheet.getPaddingBottom()
+                                + windowInsets.getSystemWindowInsetBottom());
+                WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
+                builder.setSystemWindowInsets(Insets.of(windowInsets.getSystemWindowInsetLeft(),
+                        0, windowInsets.getStableInsetRight(), 0));
+                return builder.build();
+            });
+        }
 
         return view;
     }
@@ -261,7 +265,9 @@ public abstract class PreviewFragment extends Fragment implements
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 
         List<String> attributions = getAttributions(context);
-        boolean showMetadata = shouldShowMetadataInPreview();
+        android.app.WallpaperInfo wallpaperComponent = mWallpaper.getWallpaperComponent();
+        boolean showMetadata =
+                wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
         CharSequence exploreLabel = getExploreButtonLabel(context);
 
         infoPage.populate(attributions, showMetadata, this::onSetWallpaperClicked,
@@ -286,11 +292,6 @@ public abstract class PreviewFragment extends Fragment implements
 
     protected List<String> getAttributions(Context context) {
         return mWallpaper.getAttributions(context);
-    }
-
-    protected boolean shouldShowMetadataInPreview() {
-        android.app.WallpaperInfo wallpaperComponent = mWallpaper.getWallpaperComponent();
-        return wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
     }
 
     @Nullable
@@ -387,6 +388,23 @@ public abstract class PreviewFragment extends Fragment implements
         }
     }
 
+    protected void setUpExploreIntentAndLabel(@Nullable Runnable callback) {
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+
+        WallpaperInfoHelper.loadExploreIntent(context, mWallpaper,
+                (actionLabel, exploreIntent) -> {
+                    mActionLabel = actionLabel;
+                    mExploreIntent = exploreIntent;
+                    if (callback != null) {
+                        callback.run();
+                    }
+                }
+        );
+    }
+
     protected void setUpExploreIntent(@Nullable Runnable callback) {
         Context context = getContext();
         if (context == null) {
@@ -464,7 +482,7 @@ public abstract class PreviewFragment extends Fragment implements
                 mWallpaper instanceof LiveWallpaperInfo);
     }
 
-    private void onExploreClicked(View button) {
+    protected void onExploreClicked(View button) {
         if (getContext() == null) {
             return;
         }
