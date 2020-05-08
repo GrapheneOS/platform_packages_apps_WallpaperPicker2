@@ -215,7 +215,7 @@ public class CategoryFragment extends AppbarFragment
         });
         setupCurrentWallpaperPreview(view);
 
-        View fragmentContainer = view.findViewById(R.id.category_fragment_container);
+        ViewGroup fragmentContainer = view.findViewById(R.id.category_fragment_container);
         mBottomSheetBehavior = BottomSheetBehavior.from(fragmentContainer);
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -252,6 +252,16 @@ public class CategoryFragment extends AppbarFragment
                                     getActivity(), mLockscreenPreview.getMeasuredWidth()));
                 }
             }});
+        fragmentContainer.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+            @Override
+            public void onChildViewAdded(View parent, View child) {
+                child.requestApplyInsets();
+            }
+
+            @Override
+            public void onChildViewRemoved(View parent, View child) {
+            }
+        });
 
         mPreviewUtils = new PreviewUtils(getContext(),
                 getString(R.string.grid_control_metadata_name));

@@ -120,6 +120,12 @@ public class BottomActionBar extends FrameLayout {
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
         });
+
+        setOnApplyWindowInsetsListener((v, windowInsets) -> {
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(),
+                    windowInsets.getSystemWindowInsetBottom());
+            return windowInsets;
+        });
     }
 
     @Override

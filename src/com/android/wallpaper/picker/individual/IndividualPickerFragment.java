@@ -453,6 +453,11 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         }
         mImageGrid.addItemDecoration(new GridPaddingDecoration(
                 getResources().getDimensionPixelSize(R.dimen.grid_padding)));
+        mImageGrid.setOnApplyWindowInsetsListener((v, windowInsets) -> {
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(),
+                    windowInsets.getSystemWindowInsetBottom());
+            return windowInsets;
+        });
 
         maybeSetUpImageGrid();
         setUpBottomSheet();
