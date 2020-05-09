@@ -228,6 +228,12 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
 
     @Override
     public void onBackPressed() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment instanceof BottomActionBarFragment
+                && ((BottomActionBarFragment) fragment).onBackPressed()) {
+            return;
+        }
+
         CategoryFragment categoryFragment = getCategoryFragment();
         if (categoryFragment != null && categoryFragment.popChildFragment()) {
             return;
