@@ -15,6 +15,13 @@
  */
 package com.android.wallpaper.picker;
 
+import static android.view.View.MeasureSpec.EXACTLY;
+import static android.view.View.MeasureSpec.makeMeasureSpec;
+
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.EDIT;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMATION;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
@@ -26,13 +33,23 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Message;
+import android.os.RemoteException;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Surface;
+import android.view.SurfaceControlViewHost;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
@@ -40,14 +57,22 @@ import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
+import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
+import com.android.wallpaper.util.SizeCalculator;
+import com.android.wallpaper.util.SurfaceViewUtils;
 import com.android.wallpaper.util.WallpaperCropUtils;
+import com.android.wallpaper.widget.BottomActionBar;
+import com.android.wallpaper.widget.WallpaperInfoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Fragment which displays the UI for previewing an individual static wallpaper and its attribution
@@ -57,12 +82,30 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
 
+    private static final int MODE_DEFAULT = 0;
+    private static final int MODE_EDITING = 1;
+
+    @IntDef({MODE_DEFAULT, MODE_EDITING})
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface Mode {}
+
+    private @Mode int mMode = MODE_DEFAULT;
+
     private SubsamplingScaleImageView mFullResImageView;
     private Asset mWallpaperAsset;
     private Point mDefaultCropSurfaceSize;
     private Point mScreenSize;
+    private DisplayMetrics mDisplayMetrics;
     private Point mRawWallpaperSize; // Native size of wallpaper image.
     private ImageView mLowResImageView;
+    private TouchForwardingLayout mTouchForwardingLayout;
+    private FrameLayout mWorkspaceContainer;
+    private SurfaceView mWorkspaceSurface;
+    private SurfaceView mWallpaperSurface;
+    private View mTabs;
+    private PreviewUtils mPreviewUtils;
+    private BottomActionBar mBottomActionBar;
+    private WallpaperInfoView mWallpaperInfoView;
     private InfoPageController mInfoPageController;
 
     @Override
@@ -73,7 +116,7 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.fragment_image_preview;
+        return USE_NEW_UI ? R.layout.fragment_image_preview_v2 : R.layout.fragment_image_preview;
     }
 
 
@@ -92,21 +135,55 @@ public class ImagePreviewFragment extends PreviewFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         Activity activity = requireActivity();
+        mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
+                activity.getWindowManager().getDefaultDisplay());
+        mDisplayMetrics = getResources().getDisplayMetrics();
 
-        mFullResImageView = view.findViewById(R.id.full_res_image);
+        mLowResImageView = view.findViewById(R.id.low_res_image);
+        if (USE_NEW_UI) {
+            // TODO: Consider moving some part of this to the base class when live preview is ready.
+            mTouchForwardingLayout = view.findViewById(R.id.touch_forwarding_layout);
+            mWorkspaceContainer = mTouchForwardingLayout.findViewById(R.id.workspace_container);
+            mWorkspaceSurface = mWorkspaceContainer.findViewById(R.id.workspace_surface);
+            mWallpaperSurface = view.findViewById(R.id.wallpaper_surface);
+            mTabs = view.findViewById(R.id.tabs_container);
+            mPreviewUtils = new PreviewUtils(getContext(),
+                    getString(R.string.grid_control_metadata_name));
+            mBottomActionBar = view.findViewById(R.id.bottom_actionbar);
+            mWallpaperInfoView =
+                    (WallpaperInfoView) mBottomActionBar.inflateViewToBottomSheetAndBindAction(
+                            R.layout.wallpaper_info_view, R.id.wallpaper_info, INFORMATION);
+            mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
+            mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
+            mBottomActionBar.setActionClickListener(EDIT, v -> {
+                setEditingEnabled(mBottomActionBar.isActionSelected(EDIT));
+                view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
+                        makeMeasureSpec(mScreenSize.y, EXACTLY));
+                setupPreview();
+            });
+            mBottomActionBar.setActionClickListener(APPLY, v -> {
+                onSetWallpaperClicked(v);
+                setEditingEnabled(false);
+            });
+            mBottomActionBar.show();
+            view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
+                    makeMeasureSpec(mScreenSize.y, EXACTLY));
+
+            renderImageWallpaper();
+            setupPreview();
+            renderWorkspaceSurface();
+        } else {
+            mFullResImageView = view.findViewById(R.id.full_res_image);
+        }
 
         mInfoPageController = new InfoPageController(view.findViewById(R.id.page_info),
                 mPreviewMode);
-
-        mLowResImageView = view.findViewById(R.id.low_res_image);
 
         // Trim some memory from Glide to make room for the full-size image in this fragment.
         Glide.get(activity).setMemoryCategory(MemoryCategory.LOW);
 
         mDefaultCropSurfaceSize = WallpaperCropUtils.getDefaultCropSurfaceSize(
                 getResources(), activity.getWindowManager().getDefaultDisplay());
-        mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
-                activity.getWindowManager().getDefaultDisplay());
 
         // Load a low-res placeholder image if there's a thumbnail available from the asset that can
         // be shown to the user more quickly than the full-sized image.
@@ -129,7 +206,12 @@ public class ImagePreviewFragment extends PreviewFragment {
             }
 
             mRawWallpaperSize = dimensions;
-            setUpExploreIntent(ImagePreviewFragment.this::initFullResView);
+
+            if (USE_NEW_UI) {
+                setUpExploreIntentAndLabel(ImagePreviewFragment.this::initFullResView);
+            } else {
+                setUpExploreIntent(ImagePreviewFragment.this::initFullResView);
+            }
         });
 
         setUpLoadingIndicator();
@@ -187,6 +269,7 @@ public class ImagePreviewFragment extends PreviewFragment {
      * initializing a zoom-scroll observer and click listener.
      */
     private void initFullResView() {
+        mFullResImageView.setEnabled(!USE_NEW_UI);
         mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
 
         // Set a solid black "page bitmap" so MosaicView draws a black background while waiting
@@ -226,7 +309,14 @@ public class ImagePreviewFragment extends PreviewFragment {
                     }
                     getActivity().invalidateOptionsMenu();
 
-                    populateInfoPage(mInfoPageController);
+                    if (USE_NEW_UI) {
+                        if (mWallpaperInfoView != null && mWallpaper != null) {
+                            mWallpaperInfoView.populateWallpaperInfo(mWallpaper, mActionLabel,
+                                    mExploreIntent, this::onExploreClicked);
+                        }
+                    } else {
+                        populateInfoPage(mInfoPageController);
+                    }
                 });
     }
 
@@ -280,7 +370,9 @@ public class ImagePreviewFragment extends PreviewFragment {
         float defaultWallpaperZoom =
                 WallpaperCropUtils.calculateMinZoom(mRawWallpaperSize, mDefaultCropSurfaceSize);
         float minWallpaperZoom =
-                WallpaperCropUtils.calculateMinZoom(mRawWallpaperSize, mScreenSize);
+                WallpaperCropUtils.calculateMinZoom(mRawWallpaperSize,
+                        USE_NEW_UI ? new Point(mTouchForwardingLayout.getWidth(),
+                                mTouchForwardingLayout.getHeight()) : mScreenSize);
 
         // Set min wallpaper zoom and max zoom on MosaicView widget.
         mFullResImageView.setMaxScale(Math.max(DEFAULT_WALLPAPER_MAX_ZOOM, defaultWallpaperZoom));
@@ -298,11 +390,18 @@ public class ImagePreviewFragment extends PreviewFragment {
         float wallpaperZoom = mFullResImageView.getScale();
         Context context = requireContext().getApplicationContext();
         Display defaultDisplay = requireActivity().getWindowManager().getDefaultDisplay();
-        Rect rect = new Rect();
-        mFullResImageView.visibleFileRect(rect);
+
+        Rect result = new Rect();
+        if (USE_NEW_UI) {
+            Rect src = new Rect();
+            mWorkspaceSurface.getGlobalVisibleRect(src);
+            mFullResImageView.viewToFileRect(src, result);
+        } else {
+            mFullResImageView.visibleFileRect(result);
+        }
 
         return WallpaperCropUtils.calculateCropRect(context, defaultDisplay, mRawWallpaperSize,
-                rect, wallpaperZoom);
+                result, wallpaperZoom);
     }
 
     @Override
@@ -320,5 +419,126 @@ public class ImagePreviewFragment extends PreviewFragment {
                         showSetWallpaperErrorDialog(destination);
                     }
                 });
+    }
+
+    private void renderWorkspaceSurface() {
+        mWorkspaceSurface.setZOrderMediaOverlay(true);
+        mWorkspaceSurface.getHolder().addCallback(mWorkspaceSurfaceCallback);
+        mWorkspaceSurface.getHolder().setFixedSize(mDisplayMetrics.widthPixels,
+                mDisplayMetrics.heightPixels);
+    }
+
+    private void renderImageWallpaper() {
+        mWallpaperSurface.getHolder().addCallback(mWallpaperSurfaceCallback);
+    }
+
+    // TODO(tracyzhou): Refactor this into a utility class.
+    private final SurfaceHolder.Callback mWorkspaceSurfaceCallback = new SurfaceHolder.Callback() {
+
+        private Surface mLastSurface;
+        private Message mCallback;
+
+        @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+            if (mPreviewUtils.supportsPreview() && mLastSurface != holder.getSurface()) {
+                mLastSurface = holder.getSurface();
+                Bundle result = mPreviewUtils.renderPreview(
+                        SurfaceViewUtils.createSurfaceViewRequest(mWorkspaceSurface));
+                if (result != null) {
+                    mWorkspaceSurface.setChildSurfacePackage(
+                            SurfaceViewUtils.getSurfacePackage(result));
+                    mCallback = SurfaceViewUtils.getCallback(result);
+                }
+            }
+        }
+
+        @Override
+        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
+
+        @Override
+        public void surfaceDestroyed(SurfaceHolder holder) {
+            if (mCallback != null) {
+                try {
+                    mCallback.replyTo.send(mCallback);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } finally {
+                    mCallback = null;
+                }
+            }
+        }
+    };
+
+    // TODO(tracyzhou): Refactor this into a utility class.
+    private final SurfaceHolder.Callback mWallpaperSurfaceCallback = new SurfaceHolder.Callback() {
+
+        private Surface mLastSurface;
+
+        @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+            if (mLastSurface != holder.getSurface()) {
+                mLastSurface = holder.getSurface();
+                mFullResImageView = new SubsamplingScaleImageView(getContext());
+                mFullResImageView.measure(makeMeasureSpec(mWallpaperSurface.getWidth(), EXACTLY),
+                        makeMeasureSpec(mWallpaperSurface.getHeight(), EXACTLY));
+                mFullResImageView.layout(0, 0, mWallpaperSurface.getWidth(),
+                        mWallpaperSurface.getHeight());
+                mTouchForwardingLayout.setView(mFullResImageView);
+
+                SurfaceControlViewHost host = new SurfaceControlViewHost(getContext(),
+                        getContext().getDisplay(), mWallpaperSurface.getHostToken());
+                host.setView(mFullResImageView, mFullResImageView.getWidth(),
+                        mFullResImageView.getHeight());
+                mWallpaperSurface.setChildSurfacePackage(host.getSurfacePackage());
+            }
+        }
+
+        @Override
+        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
+
+        @Override
+        public void surfaceDestroyed(SurfaceHolder holder) { }
+    };
+
+    // TODO(chriscsli): Investigate the possibility of moving this to the base class.
+    private void setupPreview() {
+        if (USE_NEW_UI) {
+            int containerWidth = mWorkspaceContainer.getMeasuredWidth();
+            int containerHeight = mWorkspaceContainer.getMeasuredHeight();
+
+            int topPadding = dpToPx(24, mDisplayMetrics.density);
+            int bottomPadding = dpToPx(getBottomPaddingInDp(), mDisplayMetrics.density);
+            double horizontalPadding = containerWidth
+                    - (containerHeight - topPadding - bottomPadding) * 1.0
+                            * mDisplayMetrics.widthPixels / mDisplayMetrics.heightPixels;
+            int leftPadding = (int) horizontalPadding / 2;
+            int rightPadding = (int) horizontalPadding - leftPadding;
+            mWorkspaceContainer.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
+            ((CardView) mWorkspaceSurface.getParent())
+                    .setRadius(SizeCalculator.getPreviewCornerRadius(
+                            getActivity(),
+                            (int) (mWorkspaceContainer.getMeasuredWidth() - horizontalPadding)));
+        }
+    }
+
+    private int getBottomPaddingInDp() {
+        switch (mMode) {
+            case MODE_EDITING:
+                return 0;
+            case MODE_DEFAULT:
+            default:
+                return 32;
+        }
+    }
+
+    private void setEditingEnabled(boolean enabled) {
+        mFullResImageView.setPanEnabled(enabled);
+        mFullResImageView.setZoomEnabled(enabled);
+        mMode = enabled ? MODE_EDITING : MODE_DEFAULT;
+        mTabs.setVisibility(mMode == MODE_EDITING ? View.VISIBLE : View.GONE);
+    }
+
+    private static int dpToPx(int dp, float density) {
+        return (int) (dp * density + 0.5f);
     }
 }

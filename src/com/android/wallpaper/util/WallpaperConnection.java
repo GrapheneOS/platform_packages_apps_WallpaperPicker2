@@ -34,7 +34,7 @@ import android.view.WindowManager.LayoutParams;
 
 import androidx.annotation.Nullable;
 
-import java.lang.reflect.Method;
+import com.android.systemui.shared.system.WallpaperEngineCompat;
 
 /**
  * Implementation of {@link IWallpaperConnection} that handles communication with a
@@ -53,7 +53,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     private boolean mIsVisible;
     private boolean mIsEngineVisible;
     private boolean mEngineReady;
-    private Method mScalePreviewMethod;
+    private WallpaperEngineCompat mEngineCompat;
 
     /**
      * @param intent used to bind the wallpaper service
@@ -103,6 +103,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
                     // Ignore
                 }
                 mEngine = null;
+                mEngineCompat = null;
             }
             try {
                 mActivity.unbindService(this);
@@ -141,6 +142,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     public void onServiceDisconnected(ComponentName name) {
         mService = null;
         mEngine = null;
+        mEngineCompat = null;
         Log.w(TAG, "Wallpaper service gone: " + name);
     }
 
@@ -151,6 +153,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
         synchronized (this) {
             if (mConnected) {
                 mEngine = engine;
+                mEngineCompat = new WallpaperEngineCompat(mEngine);
                 updateEnginePosition();
                 if (mIsVisible) {
                     setEngineVisibility(true);
@@ -166,18 +169,8 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     }
 
     private void updateEnginePosition() {
-        if (mWallpaperPreviewRect != null) {
-            // TODO(santie): switch to regular method call once SDK is sync'ed
-            try {
-                if (mScalePreviewMethod == null) {
-                    mScalePreviewMethod =
-                            mEngine.getClass().getMethod("scalePreview", Rect.class);
-                    mScalePreviewMethod.setAccessible(true);
-                }
-                mScalePreviewMethod.invoke(mEngine, mWallpaperPreviewRect);
-            } catch (Exception e) {
-                Log.e(TAG, "Couldn't call scalePreview method on WallpaperEngine", e);
-            }
+        if (mWallpaperPreviewRect != null && mEngineCompat != null) {
+            mEngineCompat.scalePreview(mWallpaperPreviewRect);
         }
     }
 
@@ -215,9 +208,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
      */
     public void updatePreviewPosition(Rect positionGlobalRect) {
         mWallpaperPreviewRect = positionGlobalRect;
-        if (mEngine != null) {
-            updateEnginePosition();
-        }
+        updateEnginePosition();
     }
 
     /**

@@ -15,6 +15,10 @@
  */
 package com.android.wallpaper.picker;
 
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.CUSTOMIZE;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMATION;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,6 +31,10 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.service.wallpaper.IWallpaperConnection;
@@ -43,9 +51,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.lifecycle.LiveData;
 import androidx.slice.Slice;
 import androidx.slice.widget.SliceLiveData;
@@ -57,7 +67,11 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
+import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
+import com.android.wallpaper.widget.BottomActionBar;
+import com.android.wallpaper.widget.LiveTileOverlay;
+import com.android.wallpaper.widget.WallpaperInfoView;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -83,6 +97,10 @@ public class LivePreviewFragment extends PreviewFragment implements
      */
     protected WallpaperConnection mWallpaperConnection;
 
+    private final int[] mLivePreviewLocation = new int[2];
+    private final Rect mPreviewLocalRect = new Rect();
+    private final Rect mPreviewGlobalRect = new Rect();
+
     private Intent mWallpaperIntent;
     private Intent mDeleteIntent;
     private Intent mSettingsIntent;
@@ -94,13 +112,20 @@ public class LivePreviewFragment extends PreviewFragment implements
     private LiveData<Slice> mSettingsLiveData;
     private View mLoadingScrim;
     private InfoPageController mInfoPageController;
+    private ImageView mHomePreview;
+    private BottomActionBar mBottomActionBar;
+    private WallpaperInfoView mWallpaperInfoView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         android.app.WallpaperInfo info = mWallpaper.getWallpaperComponent();
         mWallpaperIntent = getWallpaperIntent(info);
-        setUpExploreIntent(null);
+        if (USE_NEW_UI) {
+            setUpExploreIntentAndLabel(null);
+        } else {
+            setUpExploreIntent(null);
+        }
 
         android.app.WallpaperInfo currentWallpaper =
                 WallpaperManager.getInstance(requireContext()).getWallpaperInfo();
@@ -151,15 +176,42 @@ public class LivePreviewFragment extends PreviewFragment implements
         mLoadingScrim = view.findViewById(R.id.loading);
         setUpLoadingIndicator();
 
-        mWallpaperConnection = new WallpaperConnection(mWallpaperIntent, activity,
-                this, null);
-        container.post(() -> {
-            if (!mWallpaperConnection.connect()) {
-                mWallpaperConnection = null;
-            }
-        });
+        if (USE_NEW_UI) {
+            ViewGroup viewGroup = view.findViewById(R.id.live_wallpaper_preview);
+            CardView homePreviewCard = viewGroup.findViewById(R.id.wallpaper_full_preview_card);
+            mHomePreview = homePreviewCard.findViewById(R.id.wallpaper_preview_image);
+            view.addOnLayoutChangeListener((thisView, left, top, right, bottom,
+                    oldLeft, oldTop, oldRight, oldBottom) ->
+                    ((CardView) mHomePreview.getParent())
+                            .setRadius(SizeCalculator.getPreviewCornerRadius(
+                                    getActivity(), homePreviewCard.getMeasuredWidth()))
+            );
+            // TODO(chriscsli): Integrate SurfaceView utilities of home screen
+            setupCurrentWallpaperPreview(view);
+            previewLiveWallpaper(container, mHomePreview);
+            onBottomActionBarReady(view.findViewById(R.id.bottom_actionbar));
+        } else {
+            mWallpaperConnection = new WallpaperConnection(mWallpaperIntent, activity,
+                    this, null);
+            container.post(() -> {
+                if (!mWallpaperConnection.connect()) {
+                    mWallpaperConnection = null;
+                }
+            });
+        }
 
         return view;
+    }
+
+    private void setupCurrentWallpaperPreview(View view) {
+        showCurrentWallpaper(view, /* show= */ true);
+    }
+
+    private void showCurrentWallpaper(View rootView, boolean show) {
+        rootView.findViewById(R.id.live_wallpaper_preview)
+                .setVisibility(show ? View.VISIBLE : View.GONE);
+        rootView.findViewById(R.id.permission_needed)
+                .setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -178,6 +230,9 @@ public class LivePreviewFragment extends PreviewFragment implements
 
     @Override
     protected void setUpBottomSheetView(ViewGroup bottomSheet) {
+        if (USE_NEW_UI) {
+            return;
+        }
 
         initInfoPage();
         initSettingsPage();
@@ -240,6 +295,104 @@ public class LivePreviewFragment extends PreviewFragment implements
             mTabLayout.setupWithViewPager(mViewPager);
         }
         mViewPager.setCurrentItem(0);
+    }
+
+    private void previewLiveWallpaper(ViewGroup container, ImageView thumbnailView) {
+        container.post(() -> {
+            // TODO(chriscsli): Add thumbnail preview for wallpaper binding failed case
+            LiveTileOverlay.INSTANCE.detach(thumbnailView.getOverlay());
+
+            setUpLiveWallpaperPreview(mWallpaper, thumbnailView,
+                    new ColorDrawable(getResources().getColor(
+                            R.color.secondary_color, getActivity().getTheme())));
+        });
+    }
+
+    private void setUpLiveWallpaperPreview(com.android.wallpaper.model.WallpaperInfo homeWallpaper,
+            ImageView previewView, Drawable thumbnail) {
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        if (mWallpaperConnection != null) {
+            mWallpaperConnection.disconnect();
+        }
+        if (thumbnail != null) {
+            thumbnail.setBounds(previewView.getLeft(), previewView.getTop(), previewView.getRight(),
+                    previewView.getBottom());
+        }
+        previewView.getLocationOnScreen(mLivePreviewLocation);
+        mPreviewGlobalRect.set(0, 0, previewView.getMeasuredWidth(),
+                previewView.getMeasuredHeight());
+        mPreviewLocalRect.set(mPreviewGlobalRect);
+        mPreviewGlobalRect.offset(mLivePreviewLocation[0], mLivePreviewLocation[1]);
+
+        mWallpaperConnection = new WallpaperConnection(
+                getWallpaperIntent(homeWallpaper.getWallpaperComponent()), activity,
+                new WallpaperConnection.WallpaperConnectionListener() {
+                    @Override
+                    public void onEngineShown() {
+                        mLoadingScrim.post(() -> mLoadingScrim.animate()
+                                .alpha(0f)
+                                .setDuration(220)
+                                .setStartDelay(300)
+                                .setInterpolator(AnimationUtils.loadInterpolator(getActivity(),
+                                        android.R.interpolator.fast_out_linear_in))
+                                .withEndAction(() -> {
+                                    if (mLoadingProgressBar != null) {
+                                        mLoadingProgressBar.hide();
+                                    }
+                                    mLoadingScrim.setVisibility(View.GONE);
+                                    if (mWallpaperInfoView != null) {
+                                        mWallpaperInfoView.populateWallpaperInfo(
+                                                mWallpaper,
+                                                mActionLabel,
+                                                mExploreIntent,
+                                                LivePreviewFragment.this::onExploreClicked);
+                                    }
+                                }));
+                        final Drawable placeholder = previewView.getDrawable() == null
+                                ? new ColorDrawable(getResources().getColor(R.color.secondary_color,
+                                activity.getTheme()))
+                                : previewView.getDrawable();
+                        LiveTileOverlay.INSTANCE.setForegroundDrawable(placeholder);
+                        LiveTileOverlay.INSTANCE.attach(previewView.getOverlay());
+                        previewView.animate()
+                                .setStartDelay(50)
+                                .setDuration(200)
+                                .setInterpolator(AnimationUtils.loadInterpolator(getContext(),
+                                        android.R.interpolator.fast_out_linear_in))
+                                .setUpdateListener(value -> placeholder.setAlpha(
+                                        (int) (255 * (1 - value.getAnimatedFraction()))))
+                                .withEndAction(() -> {
+                                    LiveTileOverlay.INSTANCE.setForegroundDrawable(null);
+                                }).start();
+                    }
+                }, mPreviewGlobalRect);
+
+        LiveTileOverlay.INSTANCE.update(new RectF(mPreviewLocalRect),
+                ((CardView) previewView.getParent()).getRadius());
+
+        mWallpaperConnection.setVisibility(true);
+        previewView.post(() -> {
+            if (!mWallpaperConnection.connect()) {
+                mWallpaperConnection = null;
+                LiveTileOverlay.INSTANCE.detach(previewView.getOverlay());
+            }
+        });
+    }
+
+    protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
+        if (USE_NEW_UI) {
+            mBottomActionBar = bottomActionBar;
+            mBottomActionBar.showActionsOnly(INFORMATION, CUSTOMIZE, APPLY);
+            mBottomActionBar.setActionClickListener(APPLY, unused ->
+                    this.onSetWallpaperClicked(null));
+            mWallpaperInfoView =
+                    (WallpaperInfoView) mBottomActionBar.inflateViewToBottomSheetAndBindAction(
+                            R.layout.wallpaper_info_view, R.id.wallpaper_info, INFORMATION);
+            mBottomActionBar.show();
+        }
     }
 
     private void logLiveWallpaperPageSelected(int position) {
@@ -325,7 +478,7 @@ public class LivePreviewFragment extends PreviewFragment implements
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.fragment_live_preview;
+        return USE_NEW_UI ? R.layout.fragment_live_preview_v2 : R.layout.fragment_live_preview;
     }
 
     @Override

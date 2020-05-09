@@ -47,10 +47,6 @@ public abstract class AppbarFragment extends BottomActionBarFragment
 
     private static final String ARG_TITLE = "ToolbarFragment.title";
 
-    // This is a temporary flag to hide the incomplete scalable feature.
-    // TODO(b/147780560): Remove this flag when the scalable feature is complete.
-    protected static final boolean ADD_SCALABLE_HEADER = false;
-
     /**
      * Returns a newly created {@link Bundle} containing the given title as an argument.
      * If set as a ToolbarFragment's arguments bundle, this will be used to set up the title of
