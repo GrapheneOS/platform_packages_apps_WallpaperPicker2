@@ -46,7 +46,7 @@ import com.android.wallpaper.model.Category;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.util.DisplayMetricsRetriever;
-import com.android.wallpaper.util.TileSizeCalculator;
+import com.android.wallpaper.util.SizeCalculator;
 
 import com.bumptech.glide.Glide;
 
@@ -104,7 +104,7 @@ public class CategorySelectorFragment extends Fragment {
         mImageGrid.addItemDecoration(new GridPaddingDecoration(
                 getResources().getDimensionPixelSize(R.dimen.grid_padding)));
 
-        mTileSizePx = TileSizeCalculator.getCategoryTileSize(getActivity());
+        mTileSizePx = SizeCalculator.getCategoryTileSize(getActivity());
 
         mImageGrid.setAdapter(mAdapter);
 
@@ -184,7 +184,7 @@ public class CategorySelectorFragment extends Fragment {
 
     private int getNumColumns() {
         Activity activity = getActivity();
-        return activity == null ? 0 : TileSizeCalculator.getNumCategoryColumns(activity);
+        return activity == null ? 0 : SizeCalculator.getNumCategoryColumns(activity);
     }
 
 
