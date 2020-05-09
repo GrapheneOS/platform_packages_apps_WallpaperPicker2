@@ -332,9 +332,6 @@
     <!-- Content description of apply button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_apply">Apply</string>
 
-    <!-- The class name for the ScaleBehavior -->
-    <string name="scalable_container_behavior" translatable="false">com.android.wallpaper.picker.ScaleBehavior</string>
-
     <!-- Accessibility label for paging indicator in theme picker preview [CHAR LIMIT=NONE] -->
     <string name="accessibility_preview_pager" msgid="3548503287402185430">Page <xliff:g name="current_page" example="1">%1$d</xliff:g> of <xliff:g name="num_pages" example="2">%2$d</xliff:g></string>
     <!-- Content description of the next button to bring user to the next preview page.[CHAR LIMIT=NONE] -->
