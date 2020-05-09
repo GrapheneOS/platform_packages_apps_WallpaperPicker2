@@ -125,7 +125,7 @@
 
     <style name="OutlinedButtonStyle"  parent="@android:style/Widget.DeviceDefault.Button">
         <item name="android:background">@drawable/btn_transparent</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">?android:attr/colorAccent</item>
     </style>
 
     <style name="ActionBarCheckboxStyle" parent="@android:style/Widget.DeviceDefault.CompoundButton.CheckBox">
