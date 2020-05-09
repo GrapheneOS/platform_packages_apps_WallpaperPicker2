@@ -19,8 +19,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.graphics.drawable.GradientDrawable;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
@@ -33,9 +35,10 @@ import com.android.wallpaper.module.InjectorProvider;
 
 
 /**
- * Simple utility class that calculates tile sizes relative to the size of the display.
+ * Simple utility class that calculates various sizes relative to the display or current
+ * configuration.
  */
-public class TileSizeCalculator {
+public class SizeCalculator {
     private static final int COLUMN_COUNT_THRESHOLD_DP = 732;
 
     /**
@@ -61,13 +64,13 @@ public class TileSizeCalculator {
     private static final int INDIVIDUAL_MORE_COLUMNS = 4;
 
     // Suppress default constructor for noninstantiability.
-    private TileSizeCalculator() {
-        throw new AssertionError("Can't initialize a TileSizeCalculator.");
+    private SizeCalculator() {
+        throw new AssertionError("Can't initialize a SizeCalculator.");
     }
 
     /**
-     * Returns the number of columns for a grid of category tiles. Selects from fewer and more columns
-     * based on the width of the activity.
+     * Returns the number of columns for a grid of category tiles. Selects from fewer and more
+     * columns based on the width of the activity.
      */
     public static int getNumCategoryColumns(@NonNull Activity activity) {
         int windowWidthPx = getActivityWindowWidthPx(activity);
@@ -84,7 +87,8 @@ public class TileSizeCalculator {
     }
 
     private static int getNumCategoryColumns(Activity activity, int windowWidthPx) {
-        return getNumColumns(activity, windowWidthPx, CATEGORY_FEWER_COLUMNS, CATEGORY_MORE_COLUMNS);
+        return getNumColumns(activity, windowWidthPx, CATEGORY_FEWER_COLUMNS,
+                CATEGORY_MORE_COLUMNS);
     }
 
     private static int getNumIndividualColumns(Activity activity, int windowWidthPx) {
@@ -94,7 +98,8 @@ public class TileSizeCalculator {
 
     private static int getNumColumns(
             Context context, int windowWidthPx, int fewerCount, int moreCount) {
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager)
+                context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
 
         DisplayMetrics metrics = DisplayMetricsRetriever.getInstance()
@@ -138,8 +143,9 @@ public class TileSizeCalculator {
      * individual tile size when an activity takes up the entire screen's width.
      */
     public static Point getSuggestedThumbnailSize(@NonNull Context appContext) {
-        // Category tiles are larger than individual tiles, so get the number of columns for categories
-        // and then calculate a tile size for when the app window takes up the entire display.
+        // Category tiles are larger than individual tiles, so get the number of columns for
+        // categories and then calculate a tile size for when the app window takes up the entire
+        // display.
         int windowWidthPx = getDeviceDisplayWidthPx(appContext);
         int columnCount = getNumColumns(
                 appContext, windowWidthPx, INDIVIDUAL_FEWER_COLUMNS, INDIVIDUAL_MORE_COLUMNS);
@@ -178,8 +184,8 @@ public class TileSizeCalculator {
             gridPaddingPx = res.getDimensionPixelSize(R.dimen.grid_padding_desktop);
         }
 
-        // Note: don't need to multiply by density because getting the dimension from resources already
-        // does that.
+        // Note: don't need to multiply by density because getting the dimension from resources
+        // already does that.
         int guttersWidthPx = (columnCount + 1) * gridPaddingPx;
         int availableWidthPx = windowWidthPx - guttersWidthPx;
 
@@ -233,5 +239,30 @@ public class TileSizeCalculator {
         defaultDisplay.getSize(outPoint);
 
         return outPoint.x;
+    }
+
+    /**
+     * Adjusts the corner radius of the given view by doubling their current values
+     *
+     * @param view whose background is set to a GradientDrawable
+     */
+    public static void adjustBackgroundCornerRadius(View view) {
+        GradientDrawable background = (GradientDrawable) view.getBackground();
+        // Using try/catch because currently GradientDrawable has a bug where when the radii array
+        // is null, instead of getCornerRadii returning null, it throws NPE.
+        try {
+            float[] radii = background.getCornerRadii();
+            if (radii == null) {
+                return;
+            }
+            for (int i = 0; i < radii.length; i++) {
+                radii[i] *= 2f;
+            }
+            background = ((GradientDrawable) background.mutate());
+            background.setCornerRadii(radii);
+            view.setBackground(background);
+        } catch (NullPointerException e) {
+            //Ignore in this case, since it means the radius was 0.
+        }
     }
 }

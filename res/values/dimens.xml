@@ -207,6 +207,11 @@
     <!-- The maximum height ratio of PreviewPager and its parent view. -->
     <item name="preview_pager_maximum_height_ratio" format="float" type="dimen">0.7</item>
 
+    <!-- Dimensions for live wallpaper preview -->
+    <dimen name="live_preview_card_padding_top">24dp</dimen>
+    <dimen name="live_preview_card_padding_bottom">24dp</dimen>
+    <dimen name="live_preview_card_height">690dp</dimen>
+
     <!-- Dimensions for the bottom bar. -->
     <dimen name="bottom_navbar_height">76dp</dimen>
     <dimen name="bottom_action_bar_padding_horizontal">4dp</dimen>
@@ -216,6 +221,14 @@
     <dimen name="bottom_action_button_size">48dp</dimen>
     <dimen name="bottom_action_button_padding">12dp</dimen>
     <dimen name="bottom_action_icon_size">24dp</dimen>
+    <dimen name="bottom_action_bar_bottom_sheet_margin_top">2dp</dimen>
+
+    <dimen name="wallpaper_info_pane_top_padding">20dp</dimen>
+    <dimen name="wallpaper_info_pane_bottom_padding">18dp</dimen>
+    <dimen name="wallpaper_info_pane_horizontal_padding">24dp</dimen>
+    <dimen name="wallpaper_info_pane_subtitle1_top_margin">12dp</dimen>
+    <dimen name="wallpaper_info_pane_explore_button_top_margin">12dp</dimen>
+    <dimen name="wallpaper_info_pane_title_height">48dp</dimen>
 
     <dimen name="option_border_width">2dp</dimen>
     <dimen name="option_selected_border_width">3dp</dimen>

@@ -20,19 +20,19 @@ import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.util.SizeCalculator;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback;
@@ -40,7 +40,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCa
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -62,18 +61,20 @@ public class BottomActionBar extends FrameLayout {
     }
 
     private final Map<BottomAction, View> mActionMap = new EnumMap<>(BottomAction.class);
+    private final Map<BottomAction, View> mContentViewMap = new EnumMap<>(BottomAction.class);
+
+    private final ViewGroup mBottomSheetView;
     private final BottomSheetBehavior<ViewGroup> mBottomSheetBehavior;
-    private final TextView mAttributionTitle;
-    private final TextView mAttributionSubtitle1;
-    private final TextView mAttributionSubtitle2;
+
+    /**
+     * For updating the selected state of expanding bottom sheet, the corresponding action button
+     * will be set to selected state.
+     */
+    private BottomAction mSelectedAction;
 
     public BottomActionBar(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.bottom_actions_layout, this, true);
-
-        mAttributionTitle = findViewById(R.id.preview_attribution_pane_title);
-        mAttributionSubtitle1 = findViewById(R.id.preview_attribution_pane_subtitle1);
-        mAttributionSubtitle2 = findViewById(R.id.preview_attribution_pane_subtitle2);
 
         mActionMap.put(BottomAction.ROTATION, findViewById(R.id.action_rotation));
         mActionMap.put(BottomAction.DELETE, findViewById(R.id.action_delete));
@@ -84,32 +85,25 @@ public class BottomActionBar extends FrameLayout {
         mActionMap.put(BottomAction.PROGRESS, findViewById(R.id.action_progress));
         mActionMap.put(BottomAction.APPLY, findViewById(R.id.action_apply));
 
-        ViewGroup bottomSheet = findViewById(R.id.action_bottom_sheet);
-        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        mBottomSheetView = findViewById(R.id.action_bottom_sheet);
+        SizeCalculator.adjustBackgroundCornerRadius(mBottomSheetView);
+
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetView);
         mBottomSheetBehavior.setState(STATE_COLLAPSED);
-
-        // Workaround as we don't have access to bottomDialogCornerRadius, mBottomSheet radii are
-        // set to dialogCornerRadius by default.
-        GradientDrawable bottomSheetBackground = (GradientDrawable) bottomSheet.getBackground();
-        float[] radii = bottomSheetBackground.getCornerRadii();
-        for (int i = 0; i < radii.length; i++) {
-            radii[i]*=2f;
-        }
-        bottomSheetBackground = ((GradientDrawable)bottomSheetBackground.mutate());
-        bottomSheetBackground.setCornerRadii(radii);
-        bottomSheet.setBackground(bottomSheetBackground);
-
-        ImageView informationIcon = findViewById(R.id.action_information);
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (mSelectedAction == null) {
+                    return;
+                }
+
                 if (newState == STATE_COLLAPSED) {
-                    informationIcon.setColorFilter(getContext().getColor(R.color.material_grey500));
+                    updateSelectedState(mSelectedAction, /* selected= */ false);
+                    mSelectedAction = null;
                 } else if (newState == STATE_EXPANDED) {
-                    informationIcon.setColorFilter(getContext().getColor(R.color.accent_color));
+                    updateSelectedState(mSelectedAction, /* selected= */ true);
                 }
             }
-
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
         });
@@ -124,6 +118,44 @@ public class BottomActionBar extends FrameLayout {
     }
 
     /**
+     * Inflates a content view to the bottom sheet, and binds with a {@code BottomAction} to
+     * expand/collapse the bottom sheet.
+     *
+     * @param contentLayoutId the layout res to be inflected on the bottom sheet
+     * @param contentViewId the view id of the inflected content view
+     * @param action the action button to be bound to expand/collapse the bottom sheet
+     * @return the view of {@param contentViewId}
+     */
+    public View inflateViewToBottomSheetAndBindAction(
+            @LayoutRes int contentLayoutId, @IdRes int contentViewId, BottomAction action) {
+        View contentView = LayoutInflater
+                .from(getContext())
+                .inflate(contentLayoutId, mBottomSheetView)
+                .findViewById(contentViewId);
+        contentView.setVisibility(GONE);
+        mContentViewMap.put(action, contentView);
+
+        setActionClickListener(action, unused -> {
+            mContentViewMap.forEach((a, v) -> v.setVisibility(a.equals(action) ? VISIBLE : GONE));
+            BottomAction previousSelectedButton = mSelectedAction;
+            mSelectedAction = action;
+            // If the bottom sheet is expanding with a highlight button, then clicking another
+            // action button to show bottom sheet will only update the content for expanding bottom
+            // sheet, and update the highlight button.
+            if (previousSelectedButton != null && !action.equals(previousSelectedButton)) {
+                updateSelectedState(previousSelectedButton, /* selected= */ false);
+                updateSelectedState(mSelectedAction, /* selected= */ true);
+                return;
+            }
+            mBottomSheetBehavior.setState(mBottomSheetBehavior.getState() == STATE_COLLAPSED
+                    ? STATE_EXPANDED
+                    : STATE_COLLAPSED);
+        });
+
+        return contentView;
+    }
+
+    /**
      * Sets the click listener to the specific action.
      *
      * @param bottomAction the specific action
@@ -131,53 +163,20 @@ public class BottomActionBar extends FrameLayout {
      */
     public void setActionClickListener(
             BottomAction bottomAction, OnClickListener actionClickListener) {
-        mActionMap.get(bottomAction).setOnClickListener(actionClickListener);
+        View buttonView = mActionMap.get(bottomAction);
+        if (buttonView.hasOnClickListeners()) {
+            throw new IllegalStateException(
+                    "Had already set a click listener to button: " + bottomAction);
+        }
+        buttonView.setOnClickListener(view -> {
+            updateSelectedState(bottomAction, !view.isSelected());
+            actionClickListener.onClick(view);
+        });
     }
 
     /** Binds the cancel button to back key. */
     public void bindBackButtonToSystemBackKey(Activity activity) {
         findViewById(R.id.action_back).setOnClickListener(v -> activity.onBackPressed());
-    }
-
-    /** Clears all the actions' click listeners */
-    public void clearActionClickListeners() {
-        mActionMap.forEach((bottomAction, view) -> view.setOnClickListener(null));
-        findViewById(R.id.action_back).setOnClickListener(null);
-    }
-
-    /**
-     * Populates attributions(wallpaper info) to the information page.
-     *
-     * <p>Once get called, the {@link OnClickListener} to show/hide the information page will be
-     * set for the {@code BottomAction.INFORMATION}.
-     */
-    public void populateInfoPage(List<String> attributions, boolean showMetadata) {
-        resetInfoPage();
-
-        // Ensure the ClickListener can work normally if has info been populated, since it could be
-        // removed by #clearActionClickListeners.
-        setActionClickListener(BottomAction.INFORMATION, unused ->
-            mBottomSheetBehavior.setState(mBottomSheetBehavior.getState() == STATE_COLLAPSED
-                ? STATE_EXPANDED
-                : STATE_COLLAPSED
-            )
-        );
-
-        if (attributions.size() > 0 && attributions.get(0) != null) {
-            mAttributionTitle.setText(attributions.get(0));
-        }
-
-        if (showMetadata) {
-            if (attributions.size() > 1 && attributions.get(1) != null) {
-                mAttributionSubtitle1.setVisibility(View.VISIBLE);
-                mAttributionSubtitle1.setText(attributions.get(1));
-            }
-
-            if (attributions.size() > 2 && attributions.get(2) != null) {
-                mAttributionSubtitle2.setVisibility(View.VISIBLE);
-                mAttributionSubtitle2.setText(attributions.get(2));
-            }
-        }
     }
 
     /** Returns {@code true} if visible. */
@@ -215,7 +214,7 @@ public class BottomActionBar extends FrameLayout {
         for (BottomAction action : actions) {
             mActionMap.get(action).setVisibility(GONE);
 
-            if (BottomAction.INFORMATION.equals(action)) {
+            if (action.equals(mSelectedAction)) {
                 mBottomSheetBehavior.setState(STATE_COLLAPSED);
             }
         }
@@ -247,12 +246,12 @@ public class BottomActionBar extends FrameLayout {
 
     /** Enables all the actions' {@link View}. */
     public void enableActions() {
-        mActionMap.forEach((bottomAction, view) -> view.setEnabled(true));
+        enableActions(BottomAction.values());
     }
 
     /** Disables all the actions' {@link View}. */
     public void disableActions() {
-        mActionMap.forEach((bottomAction, view) -> view.setEnabled(false));
+        disableActions(BottomAction.values());
     }
 
     /**
@@ -277,22 +276,29 @@ public class BottomActionBar extends FrameLayout {
         }
     }
 
+    public boolean isActionSelected(BottomAction action) {
+        return mActionMap.get(action).isSelected();
+    }
+
     /** Resets {@link BottomActionBar}. */
     public void reset() {
         hide();
         hideAllActions();
         clearActionClickListeners();
         enableActions();
-        resetInfoPage();
+        mActionMap.forEach(
+                (action, view) -> updateSelectedState(action, /* selected= */ false));
+        mBottomSheetView.removeAllViews();
+        mContentViewMap.clear();
     }
 
-    private void resetInfoPage() {
-        mAttributionTitle.setText(null);
+    /** Clears all the actions' click listeners */
+    private void clearActionClickListeners() {
+        mActionMap.forEach((bottomAction, view) -> view.setOnClickListener(null));
+        findViewById(R.id.action_back).setOnClickListener(null);
+    }
 
-        mAttributionSubtitle1.setText(null);
-        mAttributionSubtitle1.setVisibility(GONE);
-
-        mAttributionSubtitle2.setText(null);
-        mAttributionSubtitle2.setVisibility(GONE);
+    private void updateSelectedState(BottomAction action, boolean selected) {
+        mActionMap.get(action).setSelected(selected);
     }
 }
