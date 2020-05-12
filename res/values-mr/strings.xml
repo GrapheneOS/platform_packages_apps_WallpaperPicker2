@@ -42,7 +42,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"ॲक्सेस द्या"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"फिरत्या वॉलपेपरसाठी लाइव्ह वॉलपेपर सेवा"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"दैनिक वॉलपेपर"</string>
-    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"चालू करण्यासाठी टॅप करा"</string>
+    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"सुरू करण्यासाठी टॅप करा"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"वॉलपेपर दररोज आपोआप बदलेल. सेटअप पूर्ण करण्यासाठी, पुढील स्क्रीनवर &lt;strong&gt;वॉलपेपर सेट करा&lt;/strong&gt; वर टॅप करा."</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"भविष्यातील वॉलपेपर फक्त वाय-फायवरून डाउनलोड करा"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"सुरू ठेवा"</string>
