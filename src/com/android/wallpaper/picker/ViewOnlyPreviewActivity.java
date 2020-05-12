@@ -44,6 +44,9 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (USE_NEW_UI) {
+            setTheme(R.style.WallpaperTheme);
+        }
         setContentView(R.layout.activity_preview);
     }
 
