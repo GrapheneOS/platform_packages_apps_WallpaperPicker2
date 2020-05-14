@@ -32,6 +32,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.service.wallpaper.WallpaperService;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceControlViewHost;
@@ -72,6 +73,7 @@ import com.android.wallpaper.picker.individual.IndividualPickerFragment.Wallpape
 import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.SurfaceViewUtils;
+import com.android.wallpaper.util.TimeTicker;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
 import com.android.wallpaper.widget.LiveTileOverlay;
@@ -82,8 +84,11 @@ import com.bumptech.glide.MemoryCategory;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Displays the Main UI for picking a category of wallpapers to choose from.
@@ -120,6 +125,10 @@ public class CategoryFragment extends AppbarFragment
     private static final String PERMISSION_READ_WALLPAPER_INTERNAL =
             "android.permission.READ_WALLPAPER_INTERNAL";
 
+    private static final String TIME_PATTERN = "h:mm";
+    private static final String DEFAULT_DATE_PATTERN = "EEE, MMM d";
+
+    private String mDatePattern;
     private ImageView mHomePreview;
     private SurfaceView mWorkspaceSurface;
     private SurfaceView mWallpaperSurface;
@@ -143,6 +152,9 @@ public class CategoryFragment extends AppbarFragment
     // the live wallpaper. This view is rendered on mWallpaperSurface for home image wallpaper.
     private ImageView mHomeImageWallpaper;
     private boolean mIsCollapsingByUserSelecting;
+    private TimeTicker mTicker;
+    private TextView mLockTime;
+    private TextView mLockDate;
 
     public CategoryFragment() {
         mCategorySelectorFragment = new CategorySelectorFragment();
@@ -167,6 +179,9 @@ public class CategoryFragment extends AppbarFragment
         mLockscreenPreview = lockscreenPreviewCard.findViewById(R.id.wallpaper_preview_image);
         lockscreenPreviewCard.findViewById(R.id.workspace_surface).setVisibility(View.GONE);
         lockscreenPreviewCard.findViewById(R.id.wallpaper_surface).setVisibility(View.GONE);
+        lockscreenPreviewCard.findViewById(R.id.lock_overlay).setVisibility(View.VISIBLE);
+        mLockTime = lockscreenPreviewCard.findViewById(R.id.lock_time);
+        mLockDate = lockscreenPreviewCard.findViewById(R.id.lock_date);
         mWallPaperPreviews.add(lockscreenPreviewCard);
 
         mPreviewPager = view.findViewById(R.id.wallpaper_preview_pager);
@@ -263,6 +278,7 @@ public class CategoryFragment extends AppbarFragment
 
         mPreviewUtils = new PreviewUtils(getContext(),
                 getString(R.string.grid_control_metadata_name));
+        mDatePattern = DateFormat.getBestDateTimePattern(Locale.getDefault(), DEFAULT_DATE_PATTERN);
 
         setUpToolbar(view);
 
@@ -288,6 +304,9 @@ public class CategoryFragment extends AppbarFragment
     public void onResume() {
         super.onResume();
 
+        mTicker = TimeTicker.registerNewReceiver(getContext(), this::updateDateTime);
+        updateDateTime();
+
         WallpaperPreferences preferences = InjectorProvider.getInjector().getPreferences(getActivity());
         preferences.setLastAppActiveTimestamp(new Date().getTime());
 
@@ -310,6 +329,9 @@ public class CategoryFragment extends AppbarFragment
         super.onPause();
         if (mWallpaperConnection != null) {
             mWallpaperConnection.setVisibility(false);
+        }
+        if (getContext() != null) {
+            getContext().unregisterReceiver(mTicker);
         }
     }
 
@@ -443,6 +465,14 @@ public class CategoryFragment extends AppbarFragment
      */
     void doneFetchingCategories() {
         mCategorySelectorFragment.doneFetchingCategories();
+    }
+
+    private void updateDateTime() {
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        CharSequence time = DateFormat.format(TIME_PATTERN, calendar);
+        CharSequence date = DateFormat.format(mDatePattern, calendar);
+        mLockTime.setText(time);
+        mLockDate.setText(date);
     }
 
     private boolean canShowCurrentWallpaper() {
