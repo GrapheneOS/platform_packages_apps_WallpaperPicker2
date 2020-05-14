@@ -414,9 +414,9 @@ public class LivePreviewFragment extends PreviewFragment implements
             mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
             mBottomActionBar.setActionClickListener(APPLY, unused ->
                     this.onSetWallpaperClicked(null));
-            mWallpaperInfoView =
-                    (WallpaperInfoView) mBottomActionBar.inflateViewToBottomSheetAndBindAction(
-                            R.layout.wallpaper_info_view, R.id.wallpaper_info, INFORMATION);
+            mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
+                    .inflate(R.layout.wallpaper_info_view, /* root= */ null);
+            mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
             final Uri uriSettingsSlice = getSettingsSliceUri(mWallpaper.getWallpaperComponent());
             if (uriSettingsSlice != null) {
                 View previewPage = LayoutInflater.from(getContext())

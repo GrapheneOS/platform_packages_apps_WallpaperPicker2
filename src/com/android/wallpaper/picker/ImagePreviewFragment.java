@@ -150,9 +150,9 @@ public class ImagePreviewFragment extends PreviewFragment {
             mPreviewUtils = new PreviewUtils(getContext(),
                     getString(R.string.grid_control_metadata_name));
             mBottomActionBar = view.findViewById(R.id.bottom_actionbar);
-            mWallpaperInfoView =
-                    (WallpaperInfoView) mBottomActionBar.inflateViewToBottomSheetAndBindAction(
-                            R.layout.wallpaper_info_view, R.id.wallpaper_info, INFORMATION);
+            mWallpaperInfoView = (WallpaperInfoView)
+                    inflater.inflate(R.layout.wallpaper_info_view, /* root= */ null);
+            mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
             mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
             mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
             mBottomActionBar.setActionClickListener(EDIT, v -> {

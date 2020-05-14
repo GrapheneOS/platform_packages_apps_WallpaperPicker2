@@ -563,10 +563,9 @@ public class IndividualPickerFragment extends BottomActionBarFragment
                         mSelectedWallpaperInfo instanceof LiveWallpaperInfo);
             });
 
-            mWallpaperInfoView =
-                    (WallpaperInfoView) mBottomActionBar.inflateViewToBottomSheetAndBindAction(
-                            R.layout.wallpaper_info_view, R.id.wallpaper_info, INFORMATION);
-
+            mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
+                    .inflate(R.layout.wallpaper_info_view, /* root= */ null);
+            mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
             mBottomActionBar.show();
         }
     }
