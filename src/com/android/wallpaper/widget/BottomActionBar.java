@@ -165,6 +165,15 @@ public class BottomActionBar extends FrameLayout {
     }
 
     /**
+     * Expands or collapses bottom sheet.
+     *
+     * @param isExpand {@code true} if bottom sheet is to be expanded; {@code false} otherwise.
+     */
+    public void expandBottomSheet(boolean isExpand) {
+        mBottomSheetBehavior.setState(isExpand ? STATE_EXPANDED : STATE_COLLAPSED);
+    }
+
+    /**
      * Sets the click listener to the specific action.
      *
      * @param bottomAction the specific action

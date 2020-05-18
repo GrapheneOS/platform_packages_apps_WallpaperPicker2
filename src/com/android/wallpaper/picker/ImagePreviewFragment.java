@@ -507,7 +507,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                         makeMeasureSpec(mWallpaperSurface.getHeight(), EXACTLY));
                 wallpaperPreviewContainer.layout(0, 0, mWallpaperSurface.getWidth(),
                         mWallpaperSurface.getHeight());
-                mTouchForwardingLayout.setView(mFullResImageView);
+                mTouchForwardingLayout.setTargetView(mFullResImageView);
 
                 SurfaceControlViewHost host = new SurfaceControlViewHost(getContext(),
                         getContext().getDisplay(), mWallpaperSurface.getHostToken());
