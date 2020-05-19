@@ -15,6 +15,11 @@
  */
 package com.android.wallpaper.picker;
 
+import android.content.pm.ActivityInfo;
+import android.os.Bundle;
+
+import androidx.annotation.Nullable;
+
 /**
  * Abstract base class for a wallpaper full-screen preview activity.
  */
@@ -23,4 +28,10 @@ public abstract class BasePreviewActivity extends BaseActivity {
             "com.android.wallpaper.picker.wallpaper_info";
     public static final String EXTRA_TESTING_MODE_ENABLED =
             "com.android.wallpaper.picker.testing_mode_enabled";
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().setColorMode(ActivityInfo.COLOR_MODE_WIDE_COLOR_GAMUT);
+    }
 }
