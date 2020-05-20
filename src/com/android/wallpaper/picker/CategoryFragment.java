@@ -22,8 +22,10 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
 
 import android.app.Activity;
+import android.app.WallpaperColors;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
@@ -78,6 +80,7 @@ import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
 import com.android.wallpaper.widget.LiveTileOverlay;
 import com.android.wallpaper.widget.PreviewPager;
+import com.android.wallpaper.widget.WallpaperColorsLoader;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
@@ -153,6 +156,7 @@ public class CategoryFragment extends AppbarFragment
     private ImageView mHomeImageWallpaper;
     private boolean mIsCollapsingByUserSelecting;
     private TimeTicker mTicker;
+    private ImageView mLockIcon;
     private TextView mLockTime;
     private TextView mLockDate;
 
@@ -180,6 +184,7 @@ public class CategoryFragment extends AppbarFragment
         lockscreenPreviewCard.findViewById(R.id.workspace_surface).setVisibility(View.GONE);
         lockscreenPreviewCard.findViewById(R.id.wallpaper_surface).setVisibility(View.GONE);
         lockscreenPreviewCard.findViewById(R.id.lock_overlay).setVisibility(View.VISIBLE);
+        mLockIcon = lockscreenPreviewCard.findViewById(R.id.lock_icon);
         mLockTime = lockscreenPreviewCard.findViewById(R.id.lock_time);
         mLockDate = lockscreenPreviewCard.findViewById(R.id.lock_date);
         mWallPaperPreviews.add(lockscreenPreviewCard);
@@ -678,12 +683,28 @@ public class CategoryFragment extends AppbarFragment
             } else {
                 LiveTileOverlay.INSTANCE.detach(thumbnailView.getOverlay());
             }
+
+            WallpaperColorsLoader.getWallpaperColors(
+                    wallpaperInfo.getThumbAsset(getContext()),
+                    thumbnailView.getMeasuredWidth(),
+                    thumbnailView.getMeasuredHeight(),
+                    this::updateLockScreenPreviewColor);
         }
 
         thumbnailView.setOnClickListener(view -> {
             getFragmentHost().showViewOnlyPreview(wallpaperInfo);
             eventLogger.logCurrentWallpaperPreviewed();
         });
+    }
+
+    private void updateLockScreenPreviewColor(WallpaperColors colors) {
+        int color = getContext().getColor(
+                (colors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_TEXT) == 0
+                        ? R.color.text_color_light
+                        : R.color.text_color_dark);
+        mLockIcon.setImageTintList(ColorStateList.valueOf(color));
+        mLockDate.setTextColor(color);
+        mLockTime.setTextColor(color);
     }
 
     private void updateWallpaperSurface() {
