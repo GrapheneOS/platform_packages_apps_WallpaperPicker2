@@ -191,7 +191,8 @@ public class CategoryFragment extends AppbarFragment
             public void onPageScrolled(int position, float positionOffset,
                     int positionOffsetPixels) {
                 // For live wallpaper, show its thumbnail when scrolling.
-                if (mHomePreviewWallpaperInfo instanceof LiveWallpaperInfo) {
+                if (mWallpaperConnection != null && mWallpaperConnection.isEngineReady()
+                        && mHomePreviewWallpaperInfo instanceof LiveWallpaperInfo) {
                     if (positionOffset == 0.0f) {
                         // The page is not moved. Show live wallpaper.
                         mWallpaperSurface.setZOrderMediaOverlay(false);
@@ -201,7 +202,8 @@ public class CategoryFragment extends AppbarFragment
                     }
                 }
 
-                if (mLockPreviewWallpaperInfo instanceof LiveWallpaperInfo) {
+                if (mWallpaperConnection != null && mWallpaperConnection.isEngineReady()
+                        && mLockPreviewWallpaperInfo instanceof LiveWallpaperInfo) {
                     if (positionOffset == 0.0f) {
                         // The page is not moved. Show live wallpaper.
                         LiveTileOverlay.INSTANCE.attach(mLockscreenPreview.getOverlay());
