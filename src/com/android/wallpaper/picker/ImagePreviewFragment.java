@@ -32,6 +32,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -73,6 +74,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 public class ImagePreviewFragment extends PreviewFragment {
 
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
+
+    private final Handler mHandler = new Handler();
 
     private SubsamplingScaleImageView mFullResImageView;
     private Asset mWallpaperAsset;
@@ -183,9 +186,16 @@ public class ImagePreviewFragment extends PreviewFragment {
         // Load a low-res placeholder image if there's a thumbnail available from the asset that can
         // be shown to the user more quickly than the full-sized image.
         if (mWallpaperAsset.hasLowResDataSource()) {
-            mWallpaperAsset.loadLowResDrawable(activity, mLowResImageView, Color.BLACK,
-                    new WallpaperPreviewBitmapTransformation(activity.getApplicationContext(),
-                            isRtl()));
+            if (!USE_NEW_UI) {
+                mWallpaperAsset.loadLowResDrawable(activity, mLowResImageView, Color.BLACK,
+                        new WallpaperPreviewBitmapTransformation(
+                                activity.getApplicationContext(), isRtl()));
+            } else {
+                mHandler.post(() ->
+                        mWallpaperAsset.loadLowResDrawable(activity, mLowResImageView, Color.BLACK,
+                                new WallpaperPreviewBitmapTransformation(
+                                        activity.getApplicationContext(), isRtl())));
+            }
         }
 
         mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
