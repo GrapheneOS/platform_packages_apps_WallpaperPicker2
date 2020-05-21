@@ -26,8 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import androidx.annotation.IdRes;
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -54,6 +52,18 @@ public class BottomActionBar extends FrameLayout {
         BottomActionBar getBottomActionBar();
     }
 
+    /**
+     * The listener for {@link BottomActionBar} visibility change notification.
+     */
+    public interface VisibilityChangeListener {
+        /**
+         * Called when {@link BottomActionBar} visibility changes.
+         *
+         * @param isVisible {@code true} if it's visible; {@code false} otherwise.
+         */
+        void onVisibilityChange(boolean isVisible);
+    }
+
     // TODO(b/154299462): Separate downloadable related actions from WallpaperPicker.
     /** The action items in the bottom action bar. */
     public enum BottomAction {
@@ -65,6 +75,7 @@ public class BottomActionBar extends FrameLayout {
 
     private final ViewGroup mBottomSheetView;
     private final BottomSheetBehavior<ViewGroup> mBottomSheetBehavior;
+    private final Set<VisibilityChangeListener> mVisibilityChangeListeners = new HashSet<>();
 
     /**
      * For updating the selected state of expanding bottom sheet, the corresponding action button
@@ -107,6 +118,12 @@ public class BottomActionBar extends FrameLayout {
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
         });
+
+        setOnApplyWindowInsetsListener((v, windowInsets) -> {
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(),
+                    windowInsets.getSystemWindowInsetBottom());
+            return windowInsets;
+        });
     }
 
     @Override
@@ -115,26 +132,20 @@ public class BottomActionBar extends FrameLayout {
         if (!isVisible) {
             mBottomSheetBehavior.setState(STATE_COLLAPSED);
         }
+        mVisibilityChangeListeners.forEach(listener -> listener.onVisibilityChange(isVisible));
     }
 
     /**
-     * Inflates a content view to the bottom sheet, and binds with a {@code BottomAction} to
-     * expand/collapse the bottom sheet.
+     * Adds content view to the bottom sheet and binds with a {@code BottomAction} to
+     * expand / collapse the bottom sheet.
      *
-     * @param contentLayoutId the layout res to be inflected on the bottom sheet
-     * @param contentViewId the view id of the inflected content view
-     * @param action the action button to be bound to expand/collapse the bottom sheet
-     * @return the view of {@param contentViewId}
+     * @param contentView the view with content to be added on the bottom sheet
+     * @param action the action to be bound to expand / collapse the bottom sheet
      */
-    public View inflateViewToBottomSheetAndBindAction(
-            @LayoutRes int contentLayoutId, @IdRes int contentViewId, BottomAction action) {
-        View contentView = LayoutInflater
-                .from(getContext())
-                .inflate(contentLayoutId, mBottomSheetView)
-                .findViewById(contentViewId);
+    public void attachViewToBottomSheetAndBindAction(View contentView, BottomAction action) {
         contentView.setVisibility(GONE);
         mContentViewMap.put(action, contentView);
-
+        mBottomSheetView.addView(contentView);
         setActionClickListener(action, unused -> {
             mContentViewMap.forEach((a, v) -> v.setVisibility(a.equals(action) ? VISIBLE : GONE));
             BottomAction previousSelectedButton = mSelectedAction;
@@ -151,8 +162,6 @@ public class BottomActionBar extends FrameLayout {
                     ? STATE_EXPANDED
                     : STATE_COLLAPSED);
         });
-
-        return contentView;
     }
 
     /**
@@ -192,6 +201,19 @@ public class BottomActionBar extends FrameLayout {
     /** Hides {@link BottomActionBar}. */
     public void hide() {
         setVisibility(GONE);
+    }
+
+    /**
+     * Adds the visibility change listener.
+     *
+     * @param visibilityChangeListener the listener to be notified.
+     */
+    public void addVisibilityChangeListener(VisibilityChangeListener visibilityChangeListener) {
+        if (visibilityChangeListener == null) {
+            return;
+        }
+        mVisibilityChangeListeners.add(visibilityChangeListener);
+        visibilityChangeListener.onVisibilityChange(isVisible());
     }
 
     /**

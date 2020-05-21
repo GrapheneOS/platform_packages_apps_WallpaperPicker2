@@ -86,15 +86,6 @@
     <dimen name="select_wallpaper_header_height">48dp</dimen>
     <dimen name="select_wallpaper_header_margin_left">12dp</dimen>
 
-    <!-- Dimensions for "daily refresh" rotation tile in individual picker. -->
-    <dimen name="rotation_tile_padding_left">16dp</dimen>
-    <dimen name="rotation_tile_padding_right">16dp</dimen>
-    <dimen name="rotation_tile_title_size">14sp</dimen>
-    <dimen name="rotation_tile_textarea_margin_bottom">16dp</dimen>
-    <dimen name="rotation_tile_textarea_title_margin_bottom">2dp</dimen>
-    <dimen name="rotation_tile_textarea_subtitle_margin_left">4dp</dimen>
-    <dimen name="rotation_tile_refresh_icon_offset">-3dp</dimen>
-
     <!-- Dimensions for wallpaper tiles in individual picker when in desktop mode. -->
     <dimen name="tile_desktop_progress_bar_size">40dp</dimen>
 
@@ -197,7 +188,7 @@
     <dimen name="indicator_arrow_container_margin_horizontal">4dp</dimen>
     <dimen name="preview_page_gap">16dp</dimen>
     <dimen name="preview_page_horizontal_margin">56dp</dimen>
-    <dimen name="preview_page_top_margin">16dp</dimen>
+    <dimen name="preview_page_top_margin">30dp</dimen>
     <dimen name="preview_page_bottom_margin">2dp</dimen>
     <dimen name="preview_card_padding">20dp</dimen>
     <dimen name="preview_pager_max_height">450dp</dimen>
@@ -207,10 +198,10 @@
     <!-- The maximum height ratio of PreviewPager and its parent view. -->
     <item name="preview_pager_maximum_height_ratio" format="float" type="dimen">0.7</item>
 
-    <!-- Dimensions for live wallpaper preview -->
-    <dimen name="live_preview_card_padding_top">24dp</dimen>
-    <dimen name="live_preview_card_padding_bottom">24dp</dimen>
-    <dimen name="live_preview_card_height">690dp</dimen>
+    <!-- Dimensions for full preview page -->
+    <dimen name="full_preview_page_default_padding_top">24dp</dimen>
+    <dimen name="full_preview_page_default_padding_bottom">32dp</dimen>
+    <dimen name="full_preview_page_editing_padding_bottom">0dp</dimen>
 
     <!-- Dimensions for the bottom bar. -->
     <dimen name="bottom_navbar_height">76dp</dimen>
@@ -234,4 +225,7 @@
     <dimen name="option_selected_border_width">3dp</dimen>
     <dimen name="option_title_font_text_size">12sp</dimen>
     <dimen name="option_title_line_height">16dp</dimen>
+
+    <dimen name="lock_screen_preview_time_text_size">24sp</dimen>
+    <dimen name="lock_screen_preview_date_text_size">12sp</dimen>
 </resources>

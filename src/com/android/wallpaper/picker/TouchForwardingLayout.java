@@ -25,6 +25,7 @@ import android.widget.FrameLayout;
 public class TouchForwardingLayout extends FrameLayout {
 
     private View mView;
+    private boolean mForwardingEnabled;
 
     public TouchForwardingLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -32,7 +33,7 @@ public class TouchForwardingLayout extends FrameLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (mView != null) {
+        if (mView != null && mForwardingEnabled) {
             mView.dispatchTouchEvent(ev);
         }
         return true;
@@ -41,5 +42,9 @@ public class TouchForwardingLayout extends FrameLayout {
     /** Set the view that the touch events are routed to */
     public void setView(View view) {
         mView = view;
+    }
+
+    public void setForwardingEnabled(boolean forwardingEnabled) {
+        mForwardingEnabled = forwardingEnabled;
     }
 }
