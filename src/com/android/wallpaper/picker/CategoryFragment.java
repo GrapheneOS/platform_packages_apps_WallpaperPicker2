@@ -687,6 +687,7 @@ public class CategoryFragment extends AppbarFragment
             }
 
             WallpaperColorsLoader.getWallpaperColors(
+                    getContext(),
                     wallpaperInfo.getThumbAsset(getContext()),
                     thumbnailView.getMeasuredWidth(),
                     thumbnailView.getMeasuredHeight(),
