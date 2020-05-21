@@ -43,6 +43,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -59,6 +60,8 @@ import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperCropUtils;
 import com.android.wallpaper.widget.BottomActionBar;
+import com.android.wallpaper.widget.LockScreenOverlayUpdater;
+import com.android.wallpaper.widget.WallpaperColorsLoader;
 import com.android.wallpaper.widget.WallpaperInfoView;
 
 import com.bumptech.glide.Glide;
@@ -88,6 +91,8 @@ public class ImagePreviewFragment extends PreviewFragment {
     private SurfaceView mWorkspaceSurface;
     private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     private SurfaceView mWallpaperSurface;
+    private View mLockOverlay;
+    private LockScreenOverlayUpdater mLockScreenOverlayUpdater;
     private View mTabs;
     private BottomActionBar mBottomActionBar;
     private WallpaperInfoView mWallpaperInfoView;
@@ -142,6 +147,11 @@ public class ImagePreviewFragment extends PreviewFragment {
             mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(mWorkspaceSurface,
                     getContext());
             mWallpaperSurface = mContainer.findViewById(R.id.wallpaper_surface);
+            mLockOverlay = mContainer.findViewById(R.id.lock_overlay);
+            mLockScreenOverlayUpdater = new LockScreenOverlayUpdater(
+                    getContext(), mLockOverlay, getLifecycle());
+            mLockScreenOverlayUpdater.adjustOverlayLayout(true);
+
             mTabs = view.findViewById(R.id.tabs_container);
             View lock = mTabs.findViewById(R.id.lock);
             View home = mTabs.findViewById(R.id.home);
@@ -222,6 +232,19 @@ public class ImagePreviewFragment extends PreviewFragment {
         setUpLoadingIndicator();
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (USE_NEW_UI) {
+            WallpaperColorsLoader.getWallpaperColors(
+                    getContext(),
+                    mWallpaperAsset,
+                    mWallpaperSurface.getMeasuredWidth(),
+                    mWallpaperSurface.getMeasuredHeight(),
+                    mLockScreenOverlayUpdater::setColor);
+        }
     }
 
     @Override
@@ -510,10 +533,12 @@ public class ImagePreviewFragment extends PreviewFragment {
     private void showHomescreenPreview() {
         // TODO (b/156129610): Update the behavior here.
         mWorkspaceSurface.setVisibility(View.VISIBLE);
+        mLockOverlay.setVisibility(View.GONE);
     }
 
     private void showLockscreenPreview() {
         // TODO (b/156129610): Update the behavior here.
-        mWorkspaceSurface.setVisibility(View.INVISIBLE);
+        mWorkspaceSurface.setVisibility(View.GONE);
+        mLockOverlay.setVisibility(View.VISIBLE);
     }
 }
