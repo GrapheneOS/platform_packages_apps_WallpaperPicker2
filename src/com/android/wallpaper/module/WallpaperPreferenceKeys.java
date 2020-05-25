@@ -69,5 +69,6 @@ public class WallpaperPreferenceKeys {
         public static final String KEY_NUM_DAYS_DAILY_ROTATION_NOT_ATTEMPTED =
                 "num_days_daily_rotation_not_attempted";
         public static final String KEY_HOME_WALLPAPER_PACKAGE_NAME = "home_wallpaper_package_name";
+        public static final String KEY_HOME_WALLPAPER_SERVICE_NAME = "home_wallpaper_service_name";
     }
 }
