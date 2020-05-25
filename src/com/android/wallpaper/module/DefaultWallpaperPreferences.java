@@ -22,6 +22,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.module.WallpaperPreferenceKeys.NoBackupKeys;
@@ -150,6 +151,10 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
         if (mSharedPrefs.contains(NoBackupKeys.KEY_HOME_WALLPAPER_PACKAGE_NAME)) {
             editor.putString(NoBackupKeys.KEY_HOME_WALLPAPER_PACKAGE_NAME,
                     mSharedPrefs.getString(NoBackupKeys.KEY_HOME_WALLPAPER_PACKAGE_NAME, null));
+        }
+        if (mSharedPrefs.contains(NoBackupKeys.KEY_HOME_WALLPAPER_SERVICE_NAME)) {
+            editor.putString(NoBackupKeys.KEY_HOME_WALLPAPER_SERVICE_NAME,
+                    mSharedPrefs.getString(NoBackupKeys.KEY_HOME_WALLPAPER_SERVICE_NAME, null));
         }
 
         editor.apply();
@@ -317,6 +322,7 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
                 .remove(NoBackupKeys.KEY_HOME_WALLPAPER_PACKAGE_NAME)
                 .remove(NoBackupKeys.KEY_HOME_WALLPAPER_MANAGER_ID)
                 .remove(NoBackupKeys.KEY_HOME_WALLPAPER_REMOTE_ID)
+                .remove(NoBackupKeys.KEY_HOME_WALLPAPER_SERVICE_NAME)
                 .remove(NoBackupKeys.KEY_HOME_WALLPAPER_BASE_IMAGE_URL)
                 .remove(NoBackupKeys.KEY_HOME_WALLPAPER_BACKING_FILE)
                 .apply();
@@ -332,6 +338,19 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     public void setHomeWallpaperPackageName(String packageName) {
         mNoBackupPrefs.edit().putString(
                 NoBackupKeys.KEY_HOME_WALLPAPER_PACKAGE_NAME, packageName)
+                .apply();
+    }
+
+    @Override
+    public String getHomeWallpaperServiceName() {
+        return mNoBackupPrefs.getString(
+                NoBackupKeys.KEY_HOME_WALLPAPER_SERVICE_NAME, null);
+    }
+
+    @Override
+    public void setHomeWallpaperServiceName(@NonNull String serviceName) {
+        mNoBackupPrefs.edit().putString(
+                NoBackupKeys.KEY_HOME_WALLPAPER_SERVICE_NAME, serviceName)
                 .apply();
     }
 
@@ -502,12 +521,14 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_URL)
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_LABEL_RES)
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_ICON_RES)
+                .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_COLLECTION_ID)
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_HASH_CODE)
                 .apply();
 
         mNoBackupPrefs.edit()
                 .remove(NoBackupKeys.KEY_LOCK_WALLPAPER_MANAGER_ID)
                 .remove(NoBackupKeys.KEY_LOCK_WALLPAPER_BACKING_FILE)
+                .remove(NoBackupKeys.KEY_LOCK_WALLPAPER_REMOTE_ID)
                 .apply();
     }
 

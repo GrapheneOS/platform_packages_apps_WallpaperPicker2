@@ -35,6 +35,7 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     private long mHomeScreenBitmapHashCode;
     private int mHomeWallpaperManagerId;
     private String mHomeScreenPackageName;
+    private String mHomeScreenServiceName;
     private String mHomeActionUrl;
     private String mHomeBaseImageUrl;
     private String mHomeCollectionId;
@@ -191,6 +192,16 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     @Override
     public void setHomeWallpaperPackageName(String packageName) {
         mHomeScreenPackageName = packageName;
+    }
+
+    @Override
+    public String getHomeWallpaperServiceName() {
+        return mHomeScreenServiceName;
+    }
+
+    @Override
+    public void setHomeWallpaperServiceName(String serviceName) {
+        mHomeScreenServiceName = serviceName;
     }
 
     @Override
