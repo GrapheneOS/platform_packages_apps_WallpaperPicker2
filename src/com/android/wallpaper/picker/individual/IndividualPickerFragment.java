@@ -363,6 +363,12 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
     protected void onCategoryLoaded() {
         mWallpaperRotationInitializer = mCategory.getWallpaperRotationInitializer();
+        // Avoids the "rotation" action is not shown correctly
+        // in a rare case : onCategoryLoaded() is called after onBottomActionBarReady().
+        if (isRotationEnabled() && mBottomActionBar != null
+                && !mBottomActionBar.areActionsShown(ROTATION)) {
+            mBottomActionBar.showActions(ROTATION);
+        }
         fetchWallpapers(false);
 
         if (mCategory.supportsThirdParty()) {
