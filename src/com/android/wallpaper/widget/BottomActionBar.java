@@ -260,6 +260,20 @@ public class BottomActionBar extends FrameLayout {
     }
 
     /**
+     * Checks if the specific actions are shown.
+     *
+     * @param actions the specific actions to be verified
+     * @return {@code true} if the actions are shown; {@code false} otherwise
+     */
+    public boolean areActionsShown(BottomAction... actions) {
+        final Set<BottomAction> actionsSet = new HashSet<>(Arrays.asList(actions));
+        return actionsSet.stream().allMatch(bottomAction -> {
+            View view = mActionMap.get(bottomAction);
+            return view != null && view.getVisibility() == VISIBLE;
+        });
+    }
+
+    /**
      * All actions will be hidden.
      */
     public void hideAllActions() {
