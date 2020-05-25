@@ -37,15 +37,6 @@
 
     <color name="select_wallpaper_header_text_color">@color/textColorSecondary</color>
 
-    <color name="rotation_tile_enabled_background_color">@color/accent_color</color>
-    <color name="rotation_tile_enabled_title_text_color">@color/material_white_text</color>
-    <color name="rotation_tile_enabled_subtitle_text_color">@color/white_70_alpha</color>
-    <color name="rotation_tile_enabled_refresh_icon_color">@color/white_70_alpha</color>
-    <color name="rotation_tile_not_enabled_background_color">@color/secondary_color</color>
-    <color name="rotation_tile_not_enabled_title_text_color">@color/accent_color</color>
-    <color name="rotation_tile_not_enabled_subtitle_text_color">@color/black_54_alpha</color>
-    <color name="rotation_tile_not_enabled_refresh_icon_color">@color/black_54_alpha</color>
-
     <color name="individual_tile_title_scrim_color">@color/white_80_alpha</color>
     <color name="individual_tile_title_text_color">@color/textColorPrimary</color>
 

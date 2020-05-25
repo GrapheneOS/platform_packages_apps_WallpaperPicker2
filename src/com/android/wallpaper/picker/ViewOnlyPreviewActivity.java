@@ -17,6 +17,7 @@ package com.android.wallpaper.picker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -32,7 +33,7 @@ import com.android.wallpaper.module.InjectorProvider;
  */
 public class ViewOnlyPreviewActivity extends BasePreviewActivity {
 
-    public static boolean USE_NEW_UI = true;
+    public static boolean USE_NEW_UI = false;
     /**
      * Returns a new Intent with the provided WallpaperInfo instance put as an extra.
      */
@@ -44,6 +45,10 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (USE_NEW_UI) {
+            setTheme(R.style.WallpaperTheme);
+            getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        }
         setContentView(R.layout.activity_preview);
     }
 

@@ -545,6 +545,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                 .setHomeWallpaperAttributions(mWallpaperInfoInPreview.getAttributions(mAppContext));
         mWallpaperPreferences.setHomeWallpaperPackageName(
                 previewedWallpaperComponent.getPackageName());
+        mWallpaperPreferences.setHomeWallpaperServiceName(
+                previewedWallpaperComponent.getServiceName());
         mWallpaperPreferences.setHomeWallpaperCollectionId(
                 mWallpaperInfoInPreview.getCollectionId(mAppContext));
         mWallpaperPreferences.setWallpaperPresentationMode(

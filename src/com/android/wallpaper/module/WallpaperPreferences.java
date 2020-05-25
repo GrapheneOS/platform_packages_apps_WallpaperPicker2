@@ -143,6 +143,16 @@ public interface WallpaperPreferences {
     void setHomeWallpaperPackageName(String packageName);
 
     /**
+     * Gets the home wallpaper's service name, which is present for live wallpapers.
+     */
+    String getHomeWallpaperServiceName();
+
+    /**
+     * Sets the home wallpaper's service name, which is present for live wallpapers.
+     */
+    void setHomeWallpaperServiceName(String serviceName);
+
+    /**
      * Gets the home wallpaper's ID, which is provided by WallpaperManager for static wallpapers.
      */
     @TargetApi(Build.VERSION_CODES.N)
