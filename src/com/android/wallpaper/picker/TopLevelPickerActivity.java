@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Insets;
-import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -229,6 +228,12 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
 
     @Override
     public void onBackPressed() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment instanceof BottomActionBarFragment
+                && ((BottomActionBarFragment) fragment).onBackPressed()) {
+            return;
+        }
+
         CategoryFragment categoryFragment = getCategoryFragment();
         if (categoryFragment != null && categoryFragment.popChildFragment()) {
             return;
@@ -259,8 +264,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                 getWindow().getDecorView().getSystemUiVisibility()
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        findViewById(R.id.fragment_container)
-                .setOnApplyWindowInsetsListener((view, windowInsets) -> {
+        View fragmentContainer = findViewById(R.id.fragment_container);
+        fragmentContainer.setOnApplyWindowInsetsListener((view, windowInsets) -> {
             view.setPadding(view.getPaddingLeft(), windowInsets.getSystemWindowInsetTop(),
                     view.getPaddingRight(), view.getPaddingBottom());
             // Consume only the top inset (status bar), to let other content in the Activity consume
@@ -276,6 +281,17 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                         windowInsets.getSystemWindowInsetLeft(),
                         0, windowInsets.getStableInsetRight(),
                         windowInsets.getSystemWindowInsetBottom());
+            }
+        });
+
+        FrameLayout.LayoutParams layoutParams =
+                (FrameLayout.LayoutParams) fragmentContainer.getLayoutParams();
+        int bottomActionBarHeight = getResources()
+                .getDimensionPixelSize(R.dimen.bottom_navbar_height);
+        BottomActionBar bottomActionBar = findViewById(R.id.bottom_actionbar);
+        bottomActionBar.addVisibilityChangeListener(isVisible -> {
+            if (layoutParams != null) {
+                layoutParams.bottomMargin = isVisible ? bottomActionBarHeight : 0;
             }
         });
 
@@ -441,12 +457,12 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
      * Returns the width (in physical px) to use for the "currently set wallpaper" thumbnail.
      */
     private int getSingleWallpaperImageWidthPx() {
-        Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(
-                getWindowManager().getDefaultDisplay());
+        final float screenAspectRatio =
+                ScreenSizeCalculator.getInstance().getScreenAspectRatio(this);
 
         int height = getResources().getDimensionPixelSize(
                 R.dimen.current_wallpaper_bottom_sheet_thumb_height);
-        return height * screenSize.x / screenSize.y;
+        return (int) (height / screenAspectRatio);
     }
 
     /**
