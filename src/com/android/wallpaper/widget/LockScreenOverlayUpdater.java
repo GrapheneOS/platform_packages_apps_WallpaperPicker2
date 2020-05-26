@@ -31,9 +31,9 @@ import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 
 import com.android.wallpaper.R;
-import com.android.wallpaper.util.TimeTicker;
+import com.android.wallpaper.util.TimeUtils;
+import com.android.wallpaper.util.TimeUtils.TimeTicker;
 
-import java.text.FieldPosition;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -141,14 +141,7 @@ public class LockScreenOverlayUpdater implements LifecycleObserver {
 
     private void updateDateTime() {
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        StringBuffer time = new StringBuffer();
-        FieldPosition amPmPosition = new FieldPosition(java.text.DateFormat.Field.AM_PM);
-        DateFormat.getTimeFormat(mContext).format(calendar.getTime(), time, amPmPosition);
-        if (amPmPosition.getBeginIndex() > 0) {
-            time.delete(amPmPosition.getBeginIndex(), amPmPosition.getEndIndex());
-        }
-        CharSequence date = DateFormat.format(mDatePattern, calendar);
-        mLockTime.setText(time);
-        mLockDate.setText(date);
+        mLockTime.setText(TimeUtils.getFormattedTime(mContext, calendar));
+        mLockDate.setText(DateFormat.format(mDatePattern, calendar));
     }
 }
