@@ -113,10 +113,6 @@ public class IndividualPickerFragment extends BottomActionBarFragment
      */
     static final int SPECIAL_FIXED_TILE_ADAPTER_POSITION = 0;
     static final String ARG_CATEGORY_COLLECTION_ID = "category_collection_id";
-    /**
-     * A temporary flag to hide the bottom action bar feature.
-     */
-    static final boolean TEMP_BOTTOM_ACTION_BAR_FEATURE = true;
 
     private static final String TAG = "IndividualPickerFrgmnt";
     private static final int UNUSED_REQUEST_CODE = 1;
@@ -455,9 +451,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
     @Override
     public void onDestroyView() {
-        if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
-            updateThumbnail(null);
-        }
+        updateThumbnail(null);
         super.onDestroyView();
     }
 
@@ -535,34 +529,32 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
     @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
-        if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
-            mBottomActionBar = bottomActionBar;
-            if (isRotationEnabled()) {
-                mBottomActionBar.showActionsOnly(ROTATION);
-            }
-            mBottomActionBar.setActionClickListener(ROTATION, unused -> {
-                DialogFragment startRotationDialogFragment = new StartRotationDialogFragment();
-                startRotationDialogFragment.setTargetFragment(
-                        IndividualPickerFragment.this, UNUSED_REQUEST_CODE);
-                startRotationDialogFragment.show(getFragmentManager(), TAG_START_ROTATION_DIALOG);
-            });
-            mBottomActionBar.setActionClickListener(APPLY, unused -> {
-                mBottomActionBar.disableActions();
-                mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
-                        mSelectedWallpaperInfo instanceof LiveWallpaperInfo);
-            });
-
-            mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
-                    .inflate(R.layout.wallpaper_info_view, /* root= */ null);
-            mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
-            mBottomActionBar.setActionClickListener(EDIT, unused -> {
-                mWallpaperPersister.setWallpaperInfoInPreview(mSelectedWallpaperInfo);
-                mSelectedWallpaperInfo.showPreview(getActivity(),
-                        new PreviewActivity.PreviewActivityIntentFactory(),
-                        PREVIEW_WALLPAPER_REQUEST_CODE);
-            });
-            mBottomActionBar.show();
+        mBottomActionBar = bottomActionBar;
+        if (isRotationEnabled()) {
+            mBottomActionBar.showActionsOnly(ROTATION);
         }
+        mBottomActionBar.setActionClickListener(ROTATION, unused -> {
+            DialogFragment startRotationDialogFragment = new StartRotationDialogFragment();
+            startRotationDialogFragment.setTargetFragment(
+                    IndividualPickerFragment.this, UNUSED_REQUEST_CODE);
+            startRotationDialogFragment.show(getFragmentManager(), TAG_START_ROTATION_DIALOG);
+        });
+        mBottomActionBar.setActionClickListener(APPLY, unused -> {
+            mBottomActionBar.disableActions();
+            mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
+                    mSelectedWallpaperInfo instanceof LiveWallpaperInfo);
+        });
+
+        mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
+                .inflate(R.layout.wallpaper_info_view, /* root= */ null);
+        mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
+        mBottomActionBar.setActionClickListener(EDIT, unused -> {
+            mWallpaperPersister.setWallpaperInfoInPreview(mSelectedWallpaperInfo);
+            mSelectedWallpaperInfo.showPreview(getActivity(),
+                    new PreviewActivity.PreviewActivityIntentFactory(),
+                    PREVIEW_WALLPAPER_REQUEST_CODE);
+        });
+        mBottomActionBar.show();
     }
 
     @Override
@@ -1102,9 +1094,6 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         private ViewHolder createIndividualHolder(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.grid_item_image, parent, false);
-            if (!TEMP_BOTTOM_ACTION_BAR_FEATURE) {
-                view.findViewById(R.id.tile).setPadding(0, 0, 0, 0);
-            }
 
             if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
                 SelectionAnimator selectionAnimator =
@@ -1261,14 +1250,12 @@ public class IndividualPickerFragment extends BottomActionBarFragment
                 mAppliedWallpaperInfo = wallpaper;
             }
 
-            if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
-                holder.itemView.setActivated(
-                        (isWallpaperApplied && !hasUserSelectedWallpaper) || isWallpaperSelected);
-                holder.itemView.findViewById(R.id.check_circle).setVisibility(
-                        isWallpaperApplied ? View.VISIBLE : View.GONE);
-                holder.itemView.findViewById(R.id.tile).setOnClickListener(
-                        view -> onWallpaperSelected(wallpaper, position));
-            }
+            holder.itemView.setActivated(
+                    (isWallpaperApplied && !hasUserSelectedWallpaper) || isWallpaperSelected);
+            holder.itemView.findViewById(R.id.check_circle).setVisibility(
+                    isWallpaperApplied ? View.VISIBLE : View.GONE);
+            holder.itemView.findViewById(R.id.tile).setOnClickListener(
+                    view -> onWallpaperSelected(wallpaper, position));
         }
     }
 
