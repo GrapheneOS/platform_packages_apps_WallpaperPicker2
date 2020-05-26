@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-
-     Copyright (C) 2018 The Android Open Source Project
+     Copyright (C) 2020 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -17,12 +16,15 @@
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/preview_attribution_pane_horizontal_padding"
+    android:theme="@style/WallpaperPicker.CustomizationPaneStyle">
 
-    <include
-        android:id="@+id/wallpaper_full_preview_card"
-        layout="@layout/wallpaper_preview_card" />
+    <androidx.slice.widget.SliceView
+        android:id="@+id/settings_slice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

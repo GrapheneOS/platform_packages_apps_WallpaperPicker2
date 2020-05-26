@@ -229,7 +229,12 @@ public class PreviewPager extends LinearLayout {
         updateIndicator(mViewPager.getCurrentItem());
     }
 
-    private boolean isRtl() {
+    /**
+     * Checks if it is in RTL mode.
+     *
+     * @return {@code true} if it's in RTL mode; {@code false} otherwise.
+     */
+    public boolean isRtl() {
         if (ViewCompat.isLayoutDirectionResolved(mViewPager)) {
             return ViewCompat.getLayoutDirection(mViewPager) == ViewCompat.LAYOUT_DIRECTION_RTL;
         }

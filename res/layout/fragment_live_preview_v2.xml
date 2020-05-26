@@ -14,95 +14,107 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:colorPrimary"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/section_header" />
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="?android:colorPrimary">
-
-        <com.android.wallpaper.widget.WallpaperPreviewCard
-            android:id="@+id/live_wallpaper_preview"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/live_preview_card_height"
-            android:background="@color/preview_pager_background"
-            android:paddingTop="@dimen/live_preview_card_padding_top"
-            android:paddingBottom="@dimen/live_preview_card_padding_bottom" />
-
-        <include
-            android:id="@+id/permission_needed"
-            layout="@layout/grid_item_permission_needed"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/live_preview_card_height"
-            android:paddingTop="@dimen/live_preview_card_padding_top"
-            android:paddingBottom="@dimen/live_preview_card_padding_bottom"
-            android:visibility="gone" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        android:visibility="gone">
+        android:background="?android:colorPrimary"
+        android:layout_marginBottom="@dimen/bottom_navbar_height"
+        android:orientation="vertical">
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/coordinator_layout"
+        <include layout="@layout/section_header" />
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="?android:colorPrimary">
 
             <LinearLayout
-                android:id="@+id/bottom_sheet"
+                android:id="@+id/live_wallpaper_preview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/preview_bottom_sheet_background"
+                android:layout_height="match_parent"
+                android:background="@color/preview_pager_background"
                 android:orientation="vertical"
-                android:theme="@style/WallpaperPicker.BottomPaneStyle"
-                app:behavior_peekHeight="@dimen/preview_attribution_pane_collapsed_height"
-                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+                android:paddingTop="@dimen/full_preview_page_default_padding_top"
+                android:paddingBottom="@dimen/full_preview_page_default_padding_bottom">
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tablayout"
+                <include
+                    android:id="@+id/wallpaper_full_preview_card"
+                    layout="@layout/wallpaper_preview_card"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:tabIndicatorColor="?android:attr/textColorPrimary"
-                    app:tabTextAppearance="@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps" />
-
-                <com.android.wallpaper.widget.ConstraintViewPager
-                    android:id="@+id/viewpager"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent" />
             </LinearLayout>
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    </FrameLayout>
+            <include
+                android:id="@+id/permission_needed"
+                layout="@layout/grid_item_permission_needed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/full_preview_page_default_padding_top"
+                android:paddingBottom="@dimen/full_preview_page_default_padding_bottom"
+                android:visibility="gone" />
+        </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:forceHasOverlappingRendering="false">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:visibility="gone">
 
-        <androidx.core.widget.ContentLoadingProgressBar
-            android:id="@+id/loading_indicator"
-            style="@android:style/Widget.DeviceDefault.ProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminate="true" />
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/coordinator_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom">
 
-    </FrameLayout>
+                <LinearLayout
+                    android:id="@+id/bottom_sheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/preview_bottom_sheet_background"
+                    android:orientation="vertical"
+                    android:theme="@style/WallpaperPicker.BottomPaneStyle"
+                    app:behavior_peekHeight="@dimen/preview_attribution_pane_collapsed_height"
+                    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tablayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:tabIndicatorColor="?android:attr/textColorPrimary"
+                        app:tabTextAppearance="@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps" />
+
+                    <com.android.wallpaper.widget.ConstraintViewPager
+                        android:id="@+id/viewpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:forceHasOverlappingRendering="false">
+
+            <androidx.core.widget.ContentLoadingProgressBar
+                android:id="@+id/loading_indicator"
+                style="@android:style/Widget.DeviceDefault.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true" />
+        </FrameLayout>
+    </LinearLayout>
 
     <include layout="@layout/bottom_action_bar" />
-
-</LinearLayout>
+</FrameLayout>

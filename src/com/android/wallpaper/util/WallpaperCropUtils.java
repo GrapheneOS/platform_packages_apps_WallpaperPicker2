@@ -170,16 +170,62 @@ public final class WallpaperCropUtils {
         }
     }
 
+    public static void adjustCurrentWallpaperCropRect(Context context, Point assetDimensions,
+            Rect cropRect) {
+        boolean isRtl = context.getResources().getConfiguration().getLayoutDirection()
+                == View.LAYOUT_DIRECTION_RTL;
+        if (isRtl) {
+            // Get the far right visible rect of source image
+            cropRect.offsetTo(assetDimensions.x - cropRect.width(), 0);
+        } else {
+            // Get the far left visible rect of source image
+            cropRect.offsetTo(0, 0);
+        }
+        adjustCropRect(context, cropRect, true /* zoomIn */);
+    }
+
+    /** Adjust the crop rect by zooming in with systemWallpaperMaxScale. */
+    public static void adjustCropRect(Context context, Rect cropRect, boolean zoomIn) {
+        float centerX = cropRect.centerX();
+        float centerY = cropRect.centerY();
+        float width = cropRect.width();
+        float height = cropRect.height();
+        float systemWallpaperMaxScale = WallpaperCropUtils.getSystemWallpaperMaximumScale(context);
+        float scale = zoomIn ? systemWallpaperMaxScale : 1.0f / systemWallpaperMaxScale;
+
+        // Adjust the rect according to the system wallpaper's maximum scale.
+        int left = (int) (centerX - (width / 2) / scale);
+        int top = (int) (centerY - (height / 2) / scale);
+        int right = (int) (centerX + (width / 2) / scale);
+        int bottom = (int) (centerY + (height / 2) / scale);
+        cropRect.set(left, top, right, bottom);
+    }
+
+    /**
+     * Calculates {@link Rect} of the wallpaper which we want to crop to in physical pixel terms
+     * (i.e., scaled to current zoom) when the wallpaper is laid on a fullscreen view.
+     */
+    public static Rect calculateCropRect(Context context, Display display, Point rawWallpaperSize,
+            Rect visibleRawWallpaperRect, float wallpaperZoom) {
+        Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(display);
+        Point defaultCropSize = WallpaperCropUtils.getDefaultCropSurfaceSize(
+                context.getResources(), display);
+        return calculateCropRect(context, screenSize, defaultCropSize, rawWallpaperSize,
+                visibleRawWallpaperRect, wallpaperZoom);
+    }
+
     /**
      * Calculates {@link Rect} of the wallpaper which we want to crop to in physical pixel terms
      * (i.e., scaled to current zoom).
      *
+     * @param hostViewSize            the size of the view hosting the wallpaper as a Point (x,y).
+     * @param cropSize                the default size of the crop as a Point (x,y).
      * @param rawWallpaperSize        the size of the raw wallpaper as a Point (x,y).
      * @param visibleRawWallpaperRect the area of the raw wallpaper which is expected to see.
      * @param wallpaperZoom           the factor which is used to scale the raw wallpaper.
      */
-    public static Rect calculateCropRect(Context context, Display display, Point rawWallpaperSize,
-                                         Rect visibleRawWallpaperRect, float wallpaperZoom) {
+    public static Rect calculateCropRect(Context context, Point hostViewSize, Point cropSize,
+            Point rawWallpaperSize, Rect visibleRawWallpaperRect, float wallpaperZoom) {
         int scaledWallpaperWidth = (int) (rawWallpaperSize.x * wallpaperZoom);
         int scaledWallpaperHeight = (int) (rawWallpaperSize.y * wallpaperZoom);
         int scrollX = (int) (visibleRawWallpaperRect.left * wallpaperZoom);
@@ -187,15 +233,13 @@ public final class WallpaperCropUtils {
 
         visibleRawWallpaperRect.set(0, 0, scaledWallpaperWidth, scaledWallpaperHeight);
 
-        Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(display);
         // Crop rect should start off as the visible screen and then include extra width and height
         // if available within wallpaper at the current zoom.
-        Rect cropRect = new Rect(scrollX, scrollY, scrollX + screenSize.x, scrollY + screenSize.y);
+        Rect cropRect = new Rect(scrollX, scrollY, scrollX + hostViewSize.x,
+                scrollY + hostViewSize.y);
 
-        Point defaultCropSurfaceSize = WallpaperCropUtils.getDefaultCropSurfaceSize(
-                context.getResources(), display);
-        int extraWidth = defaultCropSurfaceSize.x - screenSize.x;
-        int extraHeightTopAndBottom = (int) ((defaultCropSurfaceSize.y - screenSize.y) / 2f);
+        int extraWidth = cropSize.x - hostViewSize.x;
+        int extraHeightTopAndBottom = (int) ((cropSize.y - hostViewSize.y) / 2f);
 
         // Try to increase size of screenRect to include extra width depending on the layout
         // direction.

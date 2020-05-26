@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Point;
-import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -38,13 +37,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,7 +50,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.Asset.DrawableLoadedListener;
-import com.android.wallpaper.config.Flags;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.CategoryProvider;
 import com.android.wallpaper.model.CategoryReceiver;
@@ -65,7 +60,6 @@ import com.android.wallpaper.model.WallpaperReceiver;
 import com.android.wallpaper.model.WallpaperRotationInitializer;
 import com.android.wallpaper.model.WallpaperRotationInitializer.Listener;
 import com.android.wallpaper.model.WallpaperRotationInitializer.NetworkPreference;
-import com.android.wallpaper.model.WallpaperRotationInitializer.RotationInitializationState;
 import com.android.wallpaper.module.FormFactorChecker;
 import com.android.wallpaper.module.FormFactorChecker.FormFactor;
 import com.android.wallpaper.module.Injector;
@@ -288,20 +282,6 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         }
     }
 
-    private static int getResIdForRotationState(@RotationInitializationState int rotationState) {
-        switch (rotationState) {
-            case WallpaperRotationInitializer.ROTATION_NOT_INITIALIZED:
-                return R.string.daily_refresh_tile_subtitle;
-            case WallpaperRotationInitializer.ROTATION_HOME_ONLY:
-                return R.string.home_screen_message;
-            case WallpaperRotationInitializer.ROTATION_HOME_AND_LOCK:
-                return R.string.home_and_lock_short_label;
-            default:
-                Log.e(TAG, "Unknown rotation intialization state: " + rotationState);
-                return R.string.home_screen_message;
-        }
-    }
-
     private void updateDesktopDailyRotationThumbnail(DesktopRotationHolder holder) {
         int wallpapersIndex = mRandom.nextInt(mWallpapers.size());
         Asset newThumbnailAsset = mWallpapers.get(wallpapersIndex).getThumbAsset(
@@ -383,6 +363,12 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
     protected void onCategoryLoaded() {
         mWallpaperRotationInitializer = mCategory.getWallpaperRotationInitializer();
+        // Avoids the "rotation" action is not shown correctly
+        // in a rare case : onCategoryLoaded() is called after onBottomActionBarReady().
+        if (isRotationEnabled() && mBottomActionBar != null
+                && !mBottomActionBar.areActionsShown(ROTATION)) {
+            mBottomActionBar.showActions(ROTATION);
+        }
         fetchWallpapers(false);
 
         if (mCategory.supportsThirdParty()) {
@@ -453,6 +439,11 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         }
         mImageGrid.addItemDecoration(new GridPaddingDecoration(
                 getResources().getDimensionPixelSize(R.dimen.grid_padding)));
+        mImageGrid.setOnApplyWindowInsetsListener((v, windowInsets) -> {
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(),
+                    windowInsets.getSystemWindowInsetBottom());
+            return windowInsets;
+        });
 
         maybeSetUpImageGrid();
         setUpBottomSheet();
@@ -558,10 +549,9 @@ public class IndividualPickerFragment extends BottomActionBarFragment
                         mSelectedWallpaperInfo instanceof LiveWallpaperInfo);
             });
 
-            mWallpaperInfoView =
-                    (WallpaperInfoView) mBottomActionBar.inflateViewToBottomSheetAndBindAction(
-                            R.layout.wallpaper_info_view, R.id.wallpaper_info, INFORMATION);
-
+            mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
+                    .inflate(R.layout.wallpaper_info_view, /* root= */ null);
+            mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
             mBottomActionBar.show();
         }
     }
@@ -596,25 +586,10 @@ public class IndividualPickerFragment extends BottomActionBarFragment
             mStagedSetWallpaperErrorDialogFragment = null;
         }
 
-        if (isRotationEnabled()) {
-            if (mFormFactor == FormFactorChecker.FORM_FACTOR_MOBILE) {
-                // Refresh the state of the "start rotation" in case something changed the current daily
-                // rotation while this fragment was paused.
-                RotationHolder rotationHolder = (RotationHolder) mImageGrid
-                        .findViewHolderForAdapterPosition(
-                                SPECIAL_FIXED_TILE_ADAPTER_POSITION);
-                // The RotationHolder may be null if the RecyclerView has not created the view
-                // holder yet.
-                if (rotationHolder != null && Flags.dynamicStartRotationTileEnabled) {
-                    refreshRotationHolder(rotationHolder);
-                }
-            } else if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
-                if (mWasUpdateRunnableRun && !mWallpapers.isEmpty()) {
-                    // Must be resuming from a previously stopped state, so re-schedule the update of the
-                    // daily wallpapers tile thumbnail.
-                    mUpdateDailyWallpaperThumbRunnable.run();
-                }
-            }
+        if (shouldShowRotationTile() && mWasUpdateRunnableRun && !mWallpapers.isEmpty()) {
+            // Must be resuming from a previously stopped state, so re-schedule the update of the
+            // daily wallpapers tile thumbnail.
+            mUpdateDailyWallpaperThumbRunnable.run();
         }
     }
 
@@ -692,31 +667,6 @@ public class IndividualPickerFragment extends BottomActionBarFragment
      */
     void setTestingMode(boolean testingMode) {
         mTestingMode = testingMode;
-    }
-
-    /**
-     * Asynchronously fetches the refreshed rotation initialization state that is up to date with the
-     * state of the user's device and binds the state of the current category's rotation to the "start
-     * rotation" tile.
-     */
-    private void refreshRotationHolder(RotationHolder rotationHolder) {
-        mWallpaperRotationInitializer.fetchRotationInitializationState(getContext(),
-                rotationState -> {
-                    // Update the UI state of the "start rotation" tile displayed on screen.
-                    // Do this in a Handler so it is scheduled at the end of the message queue.
-                    // This is necessary to ensure we do not remove or add data from the adapter
-                    // while the layout is still being computed. RecyclerView documentation
-                    // therefore recommends performing such changes in a Handler.
-                    new Handler().post(() -> {
-                        // A config change may have destroyed the activity since the refresh
-                        // started, so check for that to avoid an NPE.
-                        if (getActivity() == null) {
-                            return;
-                        }
-
-                        rotationHolder.bindRotationInitializationState(rotationState);
-                    });
-                });
     }
 
     @Override
@@ -846,7 +796,6 @@ public class IndividualPickerFragment extends BottomActionBarFragment
     public void onCurrentWallpaperRefreshed() {
         mCurrentWallpaperBottomSheetPresenter.setCurrentWallpapersExpanded(true);
     }
-
 
     @Override
     public void onSet(int destination) {
@@ -985,7 +934,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
             return;
         }
         int index = mWallpapers.indexOf(wallpaperInfo);
-        index = (isRotationEnabled() || mCategory.supportsCustomPhotos())
+        index = (shouldShowRotationTile() || mCategory.supportsCustomPhotos())
                 ? index + 1 : index;
         ViewHolder holder = mImageGrid.findViewHolderForAdapterPosition(index);
         if (holder != null) {
@@ -1001,7 +950,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
             return;
         }
         int index = mWallpapers.indexOf(wallpaperInfo);
-        index = (isRotationEnabled() || mCategory.supportsCustomPhotos())
+        index = (shouldShowRotationTile() || mCategory.supportsCustomPhotos())
                 ? index + 1 : index;
         ViewHolder holder = mImageGrid.findViewHolderForAdapterPosition(index);
         if (holder != null) {
@@ -1052,90 +1001,8 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         }
     }
 
-    /**
-     * ViewHolder subclass for "daily refresh" tile in the RecyclerView, only shown if rotation is
-     * enabled for this category.
-     */
-    private class RotationHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        private CardView mTileLayout;
-        private TextView mRotationMessage;
-        private TextView mRotationTitle;
-        private ImageView mRefreshIcon;
-
-        RotationHolder(View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(this);
-
-            mTileLayout = itemView.findViewById(R.id.daily_refresh);
-            mRotationMessage = itemView.findViewById(R.id.rotation_tile_message);
-            mRotationTitle = itemView.findViewById(R.id.rotation_tile_title);
-            mRefreshIcon = itemView.findViewById(R.id.rotation_tile_refresh_icon);
-            mTileLayout.getLayoutParams().height = mTileSizePx.y;
-
-            // If the feature flag for "dynamic start rotation tile" is not enabled, fall back to the
-            // static UI with a blue accent color background and "Tap to turn on" text.
-            if (!Flags.dynamicStartRotationTileEnabled) {
-                mTileLayout.setBackgroundColor(
-                        getResources().getColor(R.color.rotation_tile_enabled_background_color));
-                mRotationMessage.setText(R.string.daily_refresh_tile_subtitle);
-                mRotationTitle.setTextColor(
-                        getResources().getColor(R.color.rotation_tile_enabled_title_text_color));
-                mRotationMessage.setTextColor(
-                        getResources().getColor(R.color.rotation_tile_enabled_subtitle_text_color));
-                mRefreshIcon.setColorFilter(
-                        getResources().getColor(R.color.rotation_tile_enabled_refresh_icon_color),
-                        Mode.SRC_IN);
-                return;
-            }
-
-            // Initialize the state of the "start rotation" tile (i.e., whether it is gray or blue to
-            // indicate if rotation is turned on for the current category) with last-known rotation state
-            // that could be stale. The last-known rotation state is correct in most cases and is a good
-            // starting point but may not be accurate if the user set a wallpaper through a 3rd party app
-            // while this app was paused.
-            int rotationState = mWallpaperRotationInitializer.getRotationInitializationStateDirty(
-                    getContext());
-            bindRotationInitializationState(rotationState);
-        }
-
-        @Override
-        public void onClick(View v) {
-            DialogFragment startRotationDialogFragment = new StartRotationDialogFragment();
-            startRotationDialogFragment.setTargetFragment(
-                    IndividualPickerFragment.this, UNUSED_REQUEST_CODE);
-            startRotationDialogFragment.show(getFragmentManager(), TAG_START_ROTATION_DIALOG);
-        }
-
-        /**
-         * Binds the provided rotation initialization state to the RotationHolder and updates the tile's
-         * UI to be in sync with the state (i.e., message and color appropriately reflect the state to
-         * the user).
-         */
-        void bindRotationInitializationState(@RotationInitializationState int rotationState) {
-            int newBackgroundColor =
-                    (rotationState == WallpaperRotationInitializer.ROTATION_NOT_INITIALIZED)
-                            ? getResources().getColor(R.color.rotation_tile_not_enabled_background_color)
-                            : getResources().getColor(R.color.rotation_tile_enabled_background_color);
-            int newTitleTextColor =
-                    (rotationState == WallpaperRotationInitializer.ROTATION_NOT_INITIALIZED)
-                            ? getResources().getColor(R.color.rotation_tile_not_enabled_title_text_color)
-                            : getResources().getColor(R.color.rotation_tile_enabled_title_text_color);
-            int newSubtitleTextColor =
-                    (rotationState == WallpaperRotationInitializer.ROTATION_NOT_INITIALIZED)
-                            ? getResources().getColor(R.color.rotation_tile_not_enabled_subtitle_text_color)
-                            : getResources().getColor(R.color.rotation_tile_enabled_subtitle_text_color);
-            int newRefreshIconColor =
-                    (rotationState == WallpaperRotationInitializer.ROTATION_NOT_INITIALIZED)
-                            ? getResources().getColor(R.color.rotation_tile_not_enabled_refresh_icon_color)
-                            : getResources().getColor(R.color.rotation_tile_enabled_refresh_icon_color);
-
-            mTileLayout.setCardBackgroundColor(newBackgroundColor);
-            mRotationTitle.setTextColor(newTitleTextColor);
-            mRotationMessage.setText(getResIdForRotationState(rotationState));
-            mRotationMessage.setTextColor(newSubtitleTextColor);
-            mRefreshIcon.setColorFilter(newRefreshIconColor, Mode.SRC_IN);
-        }
+    private boolean shouldShowRotationTile() {
+        return mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP && isRotationEnabled();
     }
 
     /**
@@ -1174,7 +1041,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
         @Override
         public int getItemViewType(int position) {
-            if (isRotationEnabled() && position == SPECIAL_FIXED_TILE_ADAPTER_POSITION) {
+            if (shouldShowRotationTile() && position == SPECIAL_FIXED_TILE_ADAPTER_POSITION) {
                 return ITEM_VIEW_TYPE_ROTATION;
             }
 
@@ -1209,26 +1076,18 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
         @Override
         public int getItemCount() {
-            return (isRotationEnabled() || mCategory.supportsCustomPhotos())
+            return (shouldShowRotationTile() || mCategory.supportsCustomPhotos())
                     ? mWallpapers.size() + 1
                     : mWallpapers.size();
         }
 
         private ViewHolder createRotationHolder(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view;
-
-            if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
-                view = layoutInflater.inflate(R.layout.grid_item_rotation_desktop, parent, false);
-                SelectionAnimator selectionAnimator =
-                        new CheckmarkSelectionAnimator(getActivity(), view);
-                return new DesktopRotationHolder(
-                        getActivity(), mTileSizePx.y, view, selectionAnimator,
-                        IndividualPickerFragment.this);
-            } else { // MOBILE
-                view = layoutInflater.inflate(R.layout.grid_item_rotation, parent, false);
-                return new RotationHolder(view);
-            }
+            View view = layoutInflater.inflate(R.layout.grid_item_rotation_desktop, parent, false);
+            SelectionAnimator selectionAnimator =
+                    new CheckmarkSelectionAnimator(getActivity(), view);
+            return new DesktopRotationHolder(getActivity(), mTileSizePx.y, view, selectionAnimator,
+                    IndividualPickerFragment.this);
         }
 
         private ViewHolder createIndividualHolder(ViewGroup parent) {
@@ -1379,7 +1238,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         }
 
         void onBindIndividualHolder(ViewHolder holder, int position) {
-            int wallpaperIndex = (isRotationEnabled() || mCategory.supportsCustomPhotos())
+            int wallpaperIndex = (shouldShowRotationTile() || mCategory.supportsCustomPhotos())
                     ? position - 1 : position;
             WallpaperInfo wallpaper = mWallpapers.get(wallpaperIndex);
             ((IndividualHolder) holder).bindWallpaper(wallpaper);
