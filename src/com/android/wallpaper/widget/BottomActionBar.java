@@ -67,7 +67,21 @@ public class BottomActionBar extends FrameLayout {
     // TODO(b/154299462): Separate downloadable related actions from WallpaperPicker.
     /** The action items in the bottom action bar. */
     public enum BottomAction {
-        ROTATION, DELETE, INFORMATION, EDIT, CUSTOMIZE, DOWNLOAD, PROGRESS, APPLY,
+        ROTATION, DELETE, INFORMATION(true), EDIT, CUSTOMIZE(true), DOWNLOAD, PROGRESS, APPLY;
+
+        private final boolean mExpandable;
+
+        BottomAction() {
+            this(/* expandable= */ false);
+        }
+
+        BottomAction(boolean expandable) {
+            mExpandable = expandable;
+        }
+
+        public boolean isExpandable() {
+            return mExpandable;
+        }
     }
 
     private final Map<BottomAction, View> mActionMap = new EnumMap<>(BottomAction.class);
@@ -77,10 +91,10 @@ public class BottomActionBar extends FrameLayout {
     private final BottomSheetBehavior<ViewGroup> mBottomSheetBehavior;
     private final Set<VisibilityChangeListener> mVisibilityChangeListeners = new HashSet<>();
 
-    /**
-     * For updating the selected state of expanding bottom sheet, the corresponding action button
-     * will be set to selected state.
-     */
+    // Track the current bottom sheet action which the content of the bottom sheet view
+    // corresponds to
+    private BottomAction mCurrentBottomSheetAction;
+    // The current selected action in the BottomActionBar, can be null when no action is selected.
     private BottomAction mSelectedAction;
 
     public BottomActionBar(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -104,19 +118,18 @@ public class BottomActionBar extends FrameLayout {
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (mSelectedAction == null) {
+                if (mCurrentBottomSheetAction == null) {
                     return;
                 }
 
                 if (newState == STATE_COLLAPSED) {
-                    updateSelectedState(mSelectedAction, /* selected= */ false);
-                    mSelectedAction = null;
+                    updateSelectedState(mCurrentBottomSheetAction, /* selected= */ false);
                 } else if (newState == STATE_EXPANDED) {
-                    updateSelectedState(mSelectedAction, /* selected= */ true);
+                    updateSelectedState(mCurrentBottomSheetAction, /* selected= */ true);
                 }
             }
             @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) { }
         });
 
         setOnApplyWindowInsetsListener((v, windowInsets) -> {
@@ -147,20 +160,8 @@ public class BottomActionBar extends FrameLayout {
         mContentViewMap.put(action, contentView);
         mBottomSheetView.addView(contentView);
         setActionClickListener(action, unused -> {
+            mCurrentBottomSheetAction = action;
             mContentViewMap.forEach((a, v) -> v.setVisibility(a.equals(action) ? VISIBLE : GONE));
-            BottomAction previousSelectedButton = mSelectedAction;
-            mSelectedAction = action;
-            // If the bottom sheet is expanding with a highlight button, then clicking another
-            // action button to show bottom sheet will only update the content for expanding bottom
-            // sheet, and update the highlight button.
-            if (previousSelectedButton != null && !action.equals(previousSelectedButton)) {
-                updateSelectedState(previousSelectedButton, /* selected= */ false);
-                updateSelectedState(mSelectedAction, /* selected= */ true);
-                return;
-            }
-            mBottomSheetBehavior.setState(mBottomSheetBehavior.getState() == STATE_COLLAPSED
-                    ? STATE_EXPANDED
-                    : STATE_COLLAPSED);
         });
     }
 
@@ -187,7 +188,24 @@ public class BottomActionBar extends FrameLayout {
                     "Had already set a click listener to button: " + bottomAction);
         }
         buttonView.setOnClickListener(view -> {
-            updateSelectedState(bottomAction, !view.isSelected());
+            if (mSelectedAction != null) {
+                updateSelectedState(mSelectedAction, /* selected= */ false);
+                if (mSelectedAction.isExpandable()) {
+                    mBottomSheetBehavior.setState(STATE_COLLAPSED);
+                }
+            }
+
+            if (bottomAction == mSelectedAction) {
+                // Deselect the selected action.
+                mSelectedAction = null;
+            } else {
+                // Select a different action from the current selected action.
+                mSelectedAction = bottomAction;
+                updateSelectedState(mSelectedAction, /* selected= */ true);
+                if (mSelectedAction.isExpandable()) {
+                    mBottomSheetBehavior.setState(STATE_EXPANDED);
+                }
+            }
             actionClickListener.onClick(view);
         });
     }
@@ -245,7 +263,7 @@ public class BottomActionBar extends FrameLayout {
         for (BottomAction action : actions) {
             mActionMap.get(action).setVisibility(GONE);
 
-            if (action.equals(mSelectedAction)) {
+            if (action.isExpandable() && mSelectedAction == action) {
                 mBottomSheetBehavior.setState(STATE_COLLAPSED);
             }
         }
