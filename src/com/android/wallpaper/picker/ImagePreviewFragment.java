@@ -94,7 +94,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     private View mLockOverlay;
     private LockScreenOverlayUpdater mLockScreenOverlayUpdater;
     private View mTabs;
-    private BottomActionBar mBottomActionBar;
     private WallpaperInfoView mWallpaperInfoView;
     private InfoPageController mInfoPageController;
 
@@ -157,20 +156,8 @@ public class ImagePreviewFragment extends PreviewFragment {
             View home = mTabs.findViewById(R.id.home);
             lock.setOnClickListener(v -> showLockscreenPreview());
             home.setOnClickListener(v -> showHomescreenPreview());
-            mBottomActionBar = view.findViewById(R.id.bottom_actionbar);
-            mWallpaperInfoView = (WallpaperInfoView)
-                    inflater.inflate(R.layout.wallpaper_info_view, /* root= */ null);
-            mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
-            mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
-            mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
-            mBottomActionBar.setActionClickListener(EDIT, v -> {
-                setEditingEnabled(mBottomActionBar.isActionSelected(EDIT));
-            });
-            mBottomActionBar.setActionClickListener(APPLY, v -> {
-                onSetWallpaperClicked(v);
-                setEditingEnabled(false);
-            });
-            mBottomActionBar.show();
+
+            onBottomActionBarReady(mBottomActionBar);
             view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
                     makeMeasureSpec(mScreenSize.y, EXACTLY));
 
@@ -283,6 +270,28 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         outState.putInt(KEY_BOTTOM_SHEET_STATE, bottomSheetBehavior.getState());
+    }
+
+    @Override
+    protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
+        if (USE_NEW_UI) {
+            super.onBottomActionBarReady(bottomActionBar);
+
+            mWallpaperInfoView = (WallpaperInfoView)
+                    LayoutInflater.from(getContext()).inflate(
+                            R.layout.wallpaper_info_view, /* root= */null);
+            mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
+            mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
+            mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
+            mBottomActionBar.setActionClickListener(EDIT, v -> {
+                setEditingEnabled(mBottomActionBar.isActionSelected(EDIT));
+            });
+            mBottomActionBar.setActionClickListener(APPLY, v -> {
+                onSetWallpaperClicked(v);
+                setEditingEnabled(false);
+            });
+            mBottomActionBar.show();
+        }
     }
 
     @Override
