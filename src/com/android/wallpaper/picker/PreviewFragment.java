@@ -53,7 +53,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
@@ -78,7 +77,7 @@ import java.util.List;
 /**
  * Base Fragment to display the UI for previewing an individual wallpaper
  */
-public abstract class PreviewFragment extends Fragment implements
+public abstract class PreviewFragment extends AppbarFragment implements
         SetWallpaperDialogFragment.Listener, SetWallpaperErrorDialogFragment.Listener,
         LoadWallpaperErrorDialogFragment.Listener {
 
@@ -267,6 +266,7 @@ public abstract class PreviewFragment extends Fragment implements
         return view;
     }
 
+    @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         // TODO: Extract the common code here.
     }
