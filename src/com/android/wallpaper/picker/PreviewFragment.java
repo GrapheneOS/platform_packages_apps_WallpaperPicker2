@@ -26,19 +26,14 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources.NotFoundException;
 import android.content.res.TypedArray;
-import android.graphics.Insets;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -51,7 +46,6 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.ViewCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.FragmentActivity;
 
@@ -105,8 +99,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     public static final String ARG_WALLPAPER = "wallpaper";
     public static final String ARG_PREVIEW_MODE = "preview_mode";
     public static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
-
-    protected static final boolean USE_NEW_UI = ViewOnlyPreviewActivity.USE_NEW_UI;
 
     /**
      * Creates and returns new instance of {@link ImagePreviewFragment} with the provided wallpaper
@@ -208,12 +200,11 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
         // Set toolbar as the action bar.
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        if (USE_NEW_UI) {
-            TextView titleTextView = toolbar.findViewById(R.id.custom_toolbar_title);
-            if (titleTextView != null) {
-                titleTextView.setText(R.string.preview);
-            }
+        TextView titleTextView = toolbar.findViewById(R.id.custom_toolbar_title);
+        if (titleTextView != null) {
+            titleTextView.setText(R.string.preview);
         }
+
         AppCompatActivity activity = (AppCompatActivity) requireActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -221,47 +212,18 @@ public abstract class PreviewFragment extends AppbarFragment implements
         toolbar.getNavigationIcon().setTint(getAttrColor(activity, android.R.attr.colorPrimary));
         toolbar.getNavigationIcon().setAutoMirrored(true);
 
-        if (!USE_NEW_UI) {
-            ViewCompat.setPaddingRelative(toolbar,
-                    /* start */ getResources().getDimensionPixelSize(
-                            R.dimen.preview_toolbar_up_button_start_padding),
-                    /* top */ 0,
-                    /* end */ getResources().getDimensionPixelSize(
-                            R.dimen.preview_toolbar_set_wallpaper_button_end_padding),
-                    /* bottom */ 0);
-        }
-
         mLoadingProgressBar = view.findViewById(getLoadingIndicatorResId());
         mLoadingProgressBar.show();
 
-        if (USE_NEW_UI) {
-            mBottomActionBar = view.findViewById(R.id.bottom_actionbar);
-        }
+        mBottomActionBar = view.findViewById(R.id.bottom_actionbar);
 
         mBottomSheet = view.findViewById(getBottomSheetResId());
-        setUpBottomSheetView(mBottomSheet);
 
         SizeCalculator.adjustBackgroundCornerRadius(mBottomSheet);
 
         mBottomSheetInitialState = (savedInstanceState == null) ? STATE_EXPANDED
                 : savedInstanceState.getInt(KEY_BOTTOM_SHEET_STATE, STATE_EXPANDED);
         setUpBottomSheetListeners();
-
-        if (!USE_NEW_UI) {
-            view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
-                toolbar.setPadding(toolbar.getPaddingLeft(),
-                        toolbar.getPaddingTop() + windowInsets.getSystemWindowInsetTop(),
-                        toolbar.getPaddingRight(), toolbar.getPaddingBottom());
-                mBottomSheet.setPadding(mBottomSheet.getPaddingLeft(),
-                        mBottomSheet.getPaddingTop(), mBottomSheet.getPaddingRight(),
-                        mBottomSheet.getPaddingBottom()
-                                + windowInsets.getSystemWindowInsetBottom());
-                WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
-                builder.setSystemWindowInsets(Insets.of(windowInsets.getSystemWindowInsetLeft(),
-                        0, windowInsets.getStableInsetRight(), 0));
-                return builder.build();
-            });
-        }
 
         return view;
     }
@@ -312,8 +274,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     @LayoutRes
     protected abstract int getLayoutResId();
 
-    protected abstract void setUpBottomSheetView(ViewGroup bottomSheet);
-
     @IdRes
     protected abstract int getBottomSheetResId();
 
@@ -347,65 +307,12 @@ public abstract class PreviewFragment extends AppbarFragment implements
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (USE_NEW_UI) {
-            return;
-        }
-        inflater.inflate(R.menu.preview_menu, menu);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        if (USE_NEW_UI) {
-            return;
-        }
-        setupPreviewMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (USE_NEW_UI) {
-            return false;
-        }
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            // The Preview screen has multiple entry points. It could be opened from either
-            // the IndividualPreviewActivity, the "My photos" selection (by way of
-            // TopLevelPickerActivity), or from a system "crop and set wallpaper" intent.
-            // Therefore, handle the Up button as a global Back.
-            requireActivity().onBackPressed();
-            return true;
-        }
-
-        return false;
-    }
-
-    private void setupPreviewMenu(Menu menu) {
-        mPreview = (CheckBox) menu.findItem(R.id.preview).getActionView();
-        mPreview.setChecked(mBottomSheetInitialState == STATE_COLLAPSED);
-        mPreview.setOnClickListener(this::setPreviewBehavior);
-    }
-
     protected void setPreviewChecked(boolean checked) {
         if (mPreview != null) {
             mPreview.setChecked(checked);
             int resId = checked ? R.string.expand_attribution_panel
                     : R.string.collapse_attribution_panel;
             mPreview.setContentDescription(getResources().getString(resId));
-        }
-    }
-
-    private void setPreviewBehavior(View v) {
-        CheckBox checkbox = (CheckBox) v;
-        BottomSheetBehavior<?> behavior = BottomSheetBehavior.from(mBottomSheet);
-
-        if (checkbox.isChecked()) {
-            behavior.setState(STATE_COLLAPSED);
-        } else {
-            behavior.setState(STATE_EXPANDED);
         }
     }
 
@@ -473,9 +380,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
     @Override
     public void onDialogDismissed(boolean withItemSelected) {
-        if (USE_NEW_UI) {
-            mBottomActionBar.setActionSelected(APPLY, false /* selected */);
-        }
+        mBottomActionBar.setActionSelected(APPLY, false /* selected */);
     }
 
     @Override

@@ -48,9 +48,6 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -59,14 +56,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.LiveData;
 import androidx.slice.Slice;
 import androidx.slice.widget.SliceLiveData;
 import androidx.slice.widget.SliceView;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.android.wallpaper.R;
@@ -139,11 +134,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         super.onCreate(savedInstanceState);
         android.app.WallpaperInfo info = mWallpaper.getWallpaperComponent();
         mWallpaperIntent = getWallpaperIntent(info);
-        if (USE_NEW_UI) {
-            setUpExploreIntentAndLabel(null);
-        } else {
-            setUpExploreIntent(null);
-        }
+        setUpExploreIntentAndLabel(null);
 
         String deleteAction = getDeleteAction(info);
         if (!TextUtils.isEmpty(deleteAction)) {
@@ -193,48 +184,39 @@ public class LivePreviewFragment extends PreviewFragment implements
 
         mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
                 activity.getWindowManager().getDefaultDisplay());
-        if (USE_NEW_UI) {
-            mViewGroup = view.findViewById(R.id.live_wallpaper_preview);
-            mHomePreviewCard = mViewGroup.findViewById(R.id.wallpaper_full_preview_card);
-            mTouchForwardingLayout = view.findViewById(R.id.touch_forwarding_layout);
-            mHomePreview = mHomePreviewCard.findViewById(R.id.wallpaper_preview_image);
-            mTouchForwardingLayout.setTargetView(mHomePreview);
-            mTouchForwardingLayout.setForwardingEnabled(true);
-            mLockScreenOverlay = mViewGroup.findViewById(R.id.lock_overlay);
-            mLockScreenOverlayUpdater =
-                    new LockScreenOverlayUpdater(getContext(), mLockScreenOverlay, getLifecycle());
-            mLockScreenOverlayUpdater.adjustOverlayLayout(/* isFullScreen= */ true);
-            mTab = view.findViewById(R.id.tabs_container);
-            mHomeTextView = mTab.findViewById(R.id.home);
-            mHomeTextView.setTextColor(
-                    getResources().getColorStateList(R.color.bottom_action_button_color_tint,
-                            getContext().getTheme()));
-            mLockTextView = mTab.findViewById(R.id.lock);
-            mLockTextView.setTextColor(
-                    getResources().getColorStateList(R.color.bottom_action_button_color_tint,
-                            getContext().getTheme()));
-            mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
-            mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(
-                    mWorkspaceSurface, getContext());
-            updateScreenTab(/* isHomeSelected= */ true);
-            view.addOnLayoutChangeListener((thisView, left, top, right, bottom,
-                    oldLeft, oldTop, oldRight, oldBottom) ->
-                    setupPreview()
-            );
-            setupCurrentWallpaperPreview(view);
-            previewLiveWallpaper(container, mHomePreview);
-            setupPreview();
-            renderWorkspaceSurface();
-            onBottomActionBarReady(mBottomActionBar);
-        } else {
-            mWallpaperConnection = new WallpaperConnection(mWallpaperIntent, activity,
-                    this, null);
-            container.post(() -> {
-                if (!mWallpaperConnection.connect()) {
-                    mWallpaperConnection = null;
-                }
-            });
-        }
+
+        mViewGroup = view.findViewById(R.id.live_wallpaper_preview);
+        mHomePreviewCard = mViewGroup.findViewById(R.id.wallpaper_full_preview_card);
+        mTouchForwardingLayout = view.findViewById(R.id.touch_forwarding_layout);
+        mHomePreview = mHomePreviewCard.findViewById(R.id.wallpaper_preview_image);
+        mTouchForwardingLayout.setTargetView(mHomePreview);
+        mTouchForwardingLayout.setForwardingEnabled(true);
+        mLockScreenOverlay = mViewGroup.findViewById(R.id.lock_overlay);
+        mLockScreenOverlayUpdater =
+                new LockScreenOverlayUpdater(getContext(), mLockScreenOverlay, getLifecycle());
+        mLockScreenOverlayUpdater.adjustOverlayLayout(/* isFullScreen= */ true);
+        mTab = view.findViewById(R.id.tabs_container);
+        mHomeTextView = mTab.findViewById(R.id.home);
+        mHomeTextView.setTextColor(
+                getResources().getColorStateList(R.color.bottom_action_button_color_tint,
+                        getContext().getTheme()));
+        mLockTextView = mTab.findViewById(R.id.lock);
+        mLockTextView.setTextColor(
+                getResources().getColorStateList(R.color.bottom_action_button_color_tint,
+                        getContext().getTheme()));
+        mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
+        mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(
+                mWorkspaceSurface, getContext());
+        updateScreenTab(/* isHomeSelected= */ true);
+        view.addOnLayoutChangeListener((thisView, left, top, right, bottom,
+                oldLeft, oldTop, oldRight, oldBottom) ->
+                setupPreview()
+        );
+        setupCurrentWallpaperPreview(view);
+        previewLiveWallpaper(container, mHomePreview);
+        setupPreview();
+        renderWorkspaceSurface();
+        onBottomActionBarReady(mBottomActionBar);
 
         return view;
     }
@@ -247,30 +229,28 @@ public class LivePreviewFragment extends PreviewFragment implements
     }
 
     private void setupPreview() {
-        if (USE_NEW_UI) {
-            float screenAspectRatio = (float) mScreenSize.y / mScreenSize.x;
-            int measuredViewHeight = mViewGroup.getMeasuredHeight();
-            int measuredViewWidth = mViewGroup.getMeasuredWidth();
-            int absoluteViewWidth = (int) ((measuredViewHeight - mViewGroup.getPaddingBottom()
-                    - mViewGroup.getPaddingTop()) / screenAspectRatio);
-            int horizontalPadding = (measuredViewWidth - absoluteViewWidth) / 2;
-            mViewGroup.setPaddingRelative(
-                    horizontalPadding,
-                    mViewGroup.getPaddingTop(),
-                    horizontalPadding,
-                    mViewGroup.getPaddingBottom());
-            mHomeTextView.setOnClickListener(view ->
-                    updateScreenTab(/* isHomeSelected= */ true)
-            );
-            mLockTextView.setOnClickListener(view ->
-                    updateScreenTab(/* isHomeSelected= */ false)
-            );
-            repositionPreview(mHomePreview);
+        float screenAspectRatio = (float) mScreenSize.y / mScreenSize.x;
+        int measuredViewHeight = mViewGroup.getMeasuredHeight();
+        int measuredViewWidth = mViewGroup.getMeasuredWidth();
+        int absoluteViewWidth = (int) ((measuredViewHeight - mViewGroup.getPaddingBottom()
+                - mViewGroup.getPaddingTop()) / screenAspectRatio);
+        int horizontalPadding = (measuredViewWidth - absoluteViewWidth) / 2;
+        mViewGroup.setPaddingRelative(
+                horizontalPadding,
+                mViewGroup.getPaddingTop(),
+                horizontalPadding,
+                mViewGroup.getPaddingBottom());
+        mHomeTextView.setOnClickListener(view ->
+                updateScreenTab(/* isHomeSelected= */ true)
+        );
+        mLockTextView.setOnClickListener(view ->
+                updateScreenTab(/* isHomeSelected= */ false)
+        );
+        repositionPreview(mHomePreview);
 
-            ((CardView) mHomePreview.getParent())
-                    .setRadius(SizeCalculator.getPreviewCornerRadius(
-                            getActivity(), mHomePreviewCard.getMeasuredWidth()));
-        }
+        ((CardView) mHomePreview.getParent())
+                .setRadius(SizeCalculator.getPreviewCornerRadius(
+                        getActivity(), mHomePreviewCard.getMeasuredWidth()));
     }
 
     private void repositionPreview(ImageView previewView) {
@@ -331,79 +311,10 @@ public class LivePreviewFragment extends PreviewFragment implements
             mWallpaperConnection.disconnect();
         }
         mWallpaperConnection = null;
-        if (USE_NEW_UI) {
-            mWorkspaceSurfaceCallback.cleanUp();
-        }
+
+        mWorkspaceSurfaceCallback.cleanUp();
+
         super.onDestroy();
-    }
-
-    @Override
-    protected void setUpBottomSheetView(ViewGroup bottomSheet) {
-        if (USE_NEW_UI) {
-            return;
-        }
-
-        initInfoPage();
-        initSettingsPage();
-
-        mViewPager = bottomSheet.findViewById(R.id.viewpager);
-        mTabLayout = bottomSheet.findViewById(R.id.tablayout);
-
-        // Create PagerAdapter
-        final PagerAdapter pagerAdapter = new PagerAdapter() {
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                final View page = mPages.get(position).second;
-                container.addView(page);
-                return page;
-            }
-
-            @Override
-            public void destroyItem(@NonNull ViewGroup container, int position,
-                    @NonNull Object object) {
-                if (object instanceof View) {
-                    container.removeView((View) object);
-                }
-            }
-
-            @Override
-            public int getCount() {
-                return mPages.size();
-            }
-
-            @Override
-            public CharSequence getPageTitle(int position) {
-                try {
-                    return mPages.get(position).first;
-                } catch (IndexOutOfBoundsException e) {
-                    return null;
-                }
-            }
-
-            @Override
-            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-                return (view == object);
-            }
-        };
-
-        // Add OnPageChangeListener to re-measure ViewPager's height
-        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                mViewPager.requestLayout();
-                logLiveWallpaperPageSelected(position);
-            }
-        });
-
-        // Set PagerAdapter
-        mViewPager.setAdapter(pagerAdapter);
-
-        // Make TabLayout visible if there are more than one page
-        if (mPages.size() > 1) {
-            mTabLayout.setVisibility(View.VISIBLE);
-            mTabLayout.setupWithViewPager(mViewPager);
-        }
-        mViewPager.setCurrentItem(0);
     }
 
     private void previewLiveWallpaper(ViewGroup container, ImageView thumbnailView) {
@@ -495,43 +406,41 @@ public class LivePreviewFragment extends PreviewFragment implements
     }
 
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
-        if (USE_NEW_UI) {
-            super.onBottomActionBarReady(bottomActionBar);
-            mBottomActionBar.showActionsOnly(INFORMATION, DELETE, CUSTOMIZE, APPLY);
-            mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
-            mBottomActionBar.setActionClickListener(APPLY, unused ->
-                    this.onSetWallpaperClicked(null));
-            mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
-                    .inflate(R.layout.wallpaper_info_view, /* root= */ null);
-            mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
-            final Uri uriSettingsSlice = getSettingsSliceUri(mWallpaper.getWallpaperComponent());
-            if (uriSettingsSlice != null) {
-                View previewPage = LayoutInflater.from(getContext())
-                        .inflate(R.layout.preview_customize_settings, null);
-                mSettingsSliceView = previewPage.findViewById(R.id.settings_slice);
-                mSettingsSliceView.setMode(SliceView.MODE_LARGE);
-                mSettingsSliceView.setScrollable(false);
-                mSettingsLiveData = SliceLiveData.fromUri(requireContext(), uriSettingsSlice);
-                mSettingsLiveData.observeForever(mSettingsSliceView);
-                mBottomActionBar.attachViewToBottomSheetAndBindAction(previewPage, CUSTOMIZE);
+        super.onBottomActionBarReady(bottomActionBar);
+        mBottomActionBar.showActionsOnly(INFORMATION, DELETE, CUSTOMIZE, APPLY);
+        mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
+        mBottomActionBar.setActionClickListener(APPLY, unused ->
+                this.onSetWallpaperClicked(null));
+        mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
+                .inflate(R.layout.wallpaper_info_view, /* root= */ null);
+        mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
+        final Uri uriSettingsSlice = getSettingsSliceUri(mWallpaper.getWallpaperComponent());
+        if (uriSettingsSlice != null) {
+            View previewPage = LayoutInflater.from(getContext())
+                    .inflate(R.layout.preview_customize_settings, null);
+            mSettingsSliceView = previewPage.findViewById(R.id.settings_slice);
+            mSettingsSliceView.setMode(SliceView.MODE_LARGE);
+            mSettingsSliceView.setScrollable(false);
+            mSettingsLiveData = SliceLiveData.fromUri(requireContext(), uriSettingsSlice);
+            mSettingsLiveData.observeForever(mSettingsSliceView);
+            mBottomActionBar.attachViewToBottomSheetAndBindAction(previewPage, CUSTOMIZE);
+        } else {
+            if (mSettingsIntent != null) {
+                mBottomActionBar.setActionClickListener(CUSTOMIZE, listener ->
+                        startActivity(mSettingsIntent));
             } else {
-                if (mSettingsIntent != null) {
-                    mBottomActionBar.setActionClickListener(CUSTOMIZE, listener ->
-                            startActivity(mSettingsIntent));
-                } else {
-                    mBottomActionBar.hideActions(CUSTOMIZE);
-                }
+                mBottomActionBar.hideActions(CUSTOMIZE);
             }
-
-            final String deleteAction = getDeleteAction(mWallpaper.getWallpaperComponent());
-            if (TextUtils.isEmpty(deleteAction)) {
-                mBottomActionBar.hideActions(DELETE);
-            } else {
-                mBottomActionBar.setActionClickListener(DELETE, listener ->
-                        showDeleteConfirmDialog());
-            }
-            mBottomActionBar.show();
         }
+
+        final String deleteAction = getDeleteAction(mWallpaper.getWallpaperComponent());
+        if (TextUtils.isEmpty(deleteAction)) {
+            mBottomActionBar.hideActions(DELETE);
+        } else {
+            mBottomActionBar.setActionClickListener(DELETE, listener ->
+                    showDeleteConfirmDialog());
+        }
+        mBottomActionBar.show();
     }
 
     private void logLiveWallpaperPageSelected(int position) {
@@ -617,7 +526,7 @@ public class LivePreviewFragment extends PreviewFragment implements
 
     @Override
     protected int getLayoutResId() {
-        return USE_NEW_UI ? R.layout.fragment_live_preview_v2 : R.layout.fragment_live_preview;
+        return R.layout.fragment_live_preview_v2;
     }
 
     @Override
@@ -689,34 +598,6 @@ public class LivePreviewFragment extends PreviewFragment implements
         if (mWallpaperConnection != null) {
             mWallpaperConnection.setVisibility(false);
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (USE_NEW_UI) {
-            return;
-        }
-        menu.findItem(R.id.configure).setVisible(mSettingsIntent != null);
-        menu.findItem(R.id.delete_wallpaper).setVisible(mDeleteIntent != null);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (USE_NEW_UI) {
-            return false;
-        }
-        int id = item.getItemId();
-        if (id == R.id.configure) {
-            if (getActivity() != null) {
-                startActivity(mSettingsIntent);
-                return true;
-            }
-        } else if (id == R.id.delete_wallpaper) {
-            showDeleteConfirmDialog();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void showDeleteConfirmDialog() {
