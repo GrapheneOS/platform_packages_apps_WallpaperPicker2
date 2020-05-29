@@ -108,6 +108,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     private NetworkStatusNotifier mNetworkStatusNotifier;
     private NetworkStatusNotifier.Listener mNetworkStatusListener;
     private WallpaperPersister mWallpaperPersister;
+    private WallpaperPreferences mWallpaperPreferences;
     private boolean mWasCustomPhotoWallpaperSet;
     @WallpaperPosition
     private int mCustomPhotoWallpaperPosition;
@@ -305,6 +306,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         if (fragment == null) {
             // App launch specific logic: log the "app launched" event and set up daily logging.
             mUserEventLogger.logAppLaunched();
+            mWallpaperPreferences.incrementAppLaunched();
             DailyLoggingAlarmScheduler.setAlarm(getApplicationContext());
 
             CategoryFragment newFragment = CategoryFragment.newInstance(
@@ -367,6 +369,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         if (fragment == null) {
             // App launch specific logic: log the "app launched" event and set up daily logging.
             mUserEventLogger.logAppLaunched();
+            mWallpaperPreferences.incrementAppLaunched();
             DailyLoggingAlarmScheduler.setAlarm(getApplicationContext());
         }
 
