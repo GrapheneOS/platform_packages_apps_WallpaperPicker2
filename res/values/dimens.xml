@@ -202,6 +202,9 @@
     <dimen name="full_preview_page_default_padding_top">24dp</dimen>
     <dimen name="full_preview_page_default_padding_bottom">32dp</dimen>
     <dimen name="full_preview_page_editing_padding_bottom">0dp</dimen>
+    <dimen name="full_preview_page_tab_height">64dp</dimen>
+    <dimen name="full_preview_page_tab_padding_top">20dp</dimen>
+    <dimen name="full_preview_page_tab_padding_bottom">20dp</dimen>
 
     <!-- Dimensions for the bottom bar. -->
     <dimen name="bottom_navbar_height">76dp</dimen>
@@ -226,6 +229,10 @@
     <dimen name="option_title_font_text_size">12sp</dimen>
     <dimen name="option_title_line_height">16dp</dimen>
 
+    <dimen name="lock_screen_preview_lock_icon_size">24dp</dimen>
     <dimen name="lock_screen_preview_time_text_size">24sp</dimen>
     <dimen name="lock_screen_preview_date_text_size">12sp</dimen>
+    <dimen name="lock_screen_full_preview_lock_icon_size">32dp</dimen>
+    <dimen name="lock_screen_full_preview_time_text_size">48sp</dimen>
+    <dimen name="lock_screen_full_preview_date_text_size">16sp</dimen>
 </resources>

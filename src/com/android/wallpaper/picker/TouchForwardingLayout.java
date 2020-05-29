@@ -40,7 +40,7 @@ public class TouchForwardingLayout extends FrameLayout {
     }
 
     /** Set the view that the touch events are routed to */
-    public void setView(View view) {
+    public void setTargetView(View view) {
         mView = view;
     }
 
