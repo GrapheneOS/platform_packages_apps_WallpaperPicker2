@@ -16,12 +16,14 @@
 package com.android.wallpaper.widget;
 
 import android.app.WallpaperColors;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.android.wallpaper.asset.Asset;
+import com.android.wallpaper.asset.BitmapCachingAsset;
 
 /** A class to load the {@link WallpaperColors} from wallpaper {@link Asset}. */
 public class WallpaperColorsLoader {
@@ -39,9 +41,10 @@ public class WallpaperColorsLoader {
     }
 
     /** Gets the {@link WallpaperColors} from the wallpaper {@link Asset}. */
-    public static void getWallpaperColors(@NonNull Asset asset, int targetWidth, int targetHeight,
+    public static void getWallpaperColors(Context context, @NonNull Asset asset,
+                                          int targetWidth, int targetHeight,
                                           @NonNull Callback callback) {
-        asset.decodeBitmap(targetWidth, targetHeight, bitmap -> {
+        new BitmapCachingAsset(context, asset).decodeBitmap(targetWidth, targetHeight, bitmap -> {
             if (bitmap != null) {
                 boolean shouldRecycle = false;
                 if (bitmap.getConfig() == Bitmap.Config.HARDWARE) {
