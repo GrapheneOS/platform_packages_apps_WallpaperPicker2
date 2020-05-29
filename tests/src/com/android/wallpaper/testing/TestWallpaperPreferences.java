@@ -15,19 +15,31 @@
  */
 package com.android.wallpaper.testing;
 
+import static com.android.wallpaper.module.WallpaperPersister.DEST_BOTH;
+import static com.android.wallpaper.module.WallpaperPersister.DEST_HOME_SCREEN;
+import static com.android.wallpaper.module.WallpaperPersister.DEST_LOCK_SCREEN;
+
 import androidx.annotation.Nullable;
 
+import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Test implementation of the WallpaperPreferences interface. Just keeps prefs in memory.
  */
 public class TestWallpaperPreferences implements WallpaperPreferences {
 
+    private int mAppLaunchCount;
+    private int mFirstLaunchDate;
+    private int mFirstWallpaperApplyDate;
     @PresentationMode
     private int mWallpaperPresentationMode;
 
@@ -202,6 +214,7 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     @Override
     public void setHomeWallpaperServiceName(String serviceName) {
         mHomeScreenServiceName = serviceName;
+        setFirstWallpaperApplyDateIfNeeded();
     }
 
     @Override
@@ -222,6 +235,7 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     @Override
     public void setHomeWallpaperRemoteId(String wallpaperRemoteId) {
         mHomeWallpaperRemoteId = wallpaperRemoteId;
+        setFirstWallpaperApplyDateIfNeeded();
     }
 
     @Override
@@ -319,6 +333,7 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     @Override
     public void setLockWallpaperRemoteId(String wallpaperRemoteId) {
         mLockWallpaperRemoteId = wallpaperRemoteId;
+        setFirstWallpaperApplyDateIfNeeded();
     }
 
     @Override
@@ -475,5 +490,75 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     @Override
     public void resetNumDaysDailyRotationNotAttempted() {
         mNumDaysDailyRotationNotAttempted = 0;
+    }
+
+
+    @Override
+    public int getAppLaunchCount() {
+        return mAppLaunchCount;
+    }
+
+    private void setAppLaunchCount(int count) {
+        mAppLaunchCount = count;
+    }
+
+    @Override
+    public int getFirstLaunchDateSinceSetup() {
+        return mFirstLaunchDate;
+    }
+
+    private void setFirstLaunchDateSinceSetup(int firstLaunchDate) {
+        mFirstLaunchDate = firstLaunchDate;
+    }
+
+    @Override
+    public int getFirstWallpaperApplyDateSinceSetup() {
+        return mFirstWallpaperApplyDate;
+    }
+
+    private void setFirstWallpaperApplyDateSinceSetup(int firstWallpaperApplyDate) {
+        mFirstWallpaperApplyDate = firstWallpaperApplyDate;
+    }
+
+    @Override
+    public void incrementAppLaunched() {
+        if (getFirstLaunchDateSinceSetup() == 0) {
+            setFirstLaunchDateSinceSetup(getCurrentDate());
+        }
+
+        int appLaunchCount = getAppLaunchCount();
+        if (appLaunchCount < Integer.MAX_VALUE) {
+            setAppLaunchCount(appLaunchCount + 1);
+        }
+    }
+
+    private void setFirstWallpaperApplyDateIfNeeded() {
+        if (getFirstWallpaperApplyDateSinceSetup() == 0) {
+            setFirstWallpaperApplyDateSinceSetup(getCurrentDate());
+        }
+    }
+
+    @Override
+    public void updateDailyWallpaperSet(@Destination int destination, String collectionId,
+            String wallpaperId) {
+        // Assign wallpaper info by destination.
+        if (destination == DEST_HOME_SCREEN) {
+            setHomeWallpaperCollectionId(collectionId);
+            setHomeWallpaperRemoteId(wallpaperId);
+        } else if (destination == DEST_LOCK_SCREEN) {
+            setLockWallpaperCollectionId(collectionId);
+            setLockWallpaperRemoteId(wallpaperId);
+        } else if (destination == DEST_BOTH) {
+            setHomeWallpaperCollectionId(collectionId);
+            setHomeWallpaperRemoteId(wallpaperId);
+            setLockWallpaperCollectionId(collectionId);
+            setLockWallpaperRemoteId(wallpaperId);
+        }
+    }
+
+    private int getCurrentDate() {
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.US);
+        return Integer.parseInt(format.format(calendar.getTime()));
     }
 }
