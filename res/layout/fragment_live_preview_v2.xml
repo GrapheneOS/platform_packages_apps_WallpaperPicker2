@@ -18,86 +18,79 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?android:colorPrimary">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:colorPrimary"
         android:layout_marginBottom="@dimen/bottom_navbar_height"
         android:orientation="vertical">
 
         <include layout="@layout/section_header" />
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="?android:colorPrimary">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <FrameLayout
                 android:id="@+id/live_wallpaper_preview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:background="@color/fullscreen_preview_background"
-                android:orientation="vertical"
                 android:paddingTop="@dimen/full_preview_page_default_padding_top"
                 android:paddingBottom="@dimen/full_preview_page_editing_padding_bottom">
 
                 <com.android.wallpaper.picker.TouchForwardingLayout
                     android:id="@+id/touch_forwarding_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false">
 
                     <include
                         android:id="@+id/wallpaper_full_preview_card"
                         layout="@layout/wallpaper_preview_card"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:clipToPadding="false" />
                 </com.android.wallpaper.picker.TouchForwardingLayout>
+            </FrameLayout>
 
-                <LinearLayout
-                    android:id="@+id/tabs_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/fullscreen_preview_background"
-                    android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/tabs_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/fullscreen_preview_background"
+                android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/home"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/full_preview_page_tab_height"
-                        android:layout_weight="1"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/full_preview_page_tab_padding_top"
-                        android:paddingBottom="@dimen/full_preview_page_tab_padding_bottom"
-                        android:text="@string/home_screen_message"
-                        android:textAppearance="@style/SubtitleTextAppearance" />
-                    <TextView
-                        android:id="@+id/lock"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/full_preview_page_tab_height"
-                        android:layout_weight="1"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/full_preview_page_tab_padding_top"
-                        android:paddingBottom="@dimen/full_preview_page_tab_padding_bottom"
-                        android:text="@string/lock_screen_message"
-                        android:textAppearance="@style/SubtitleTextAppearance" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/home"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/full_preview_page_tab_height"
+                    android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/full_preview_page_tab_padding_top"
+                    android:paddingBottom="@dimen/full_preview_page_tab_padding_bottom"
+                    android:text="@string/home_screen_message"
+                    android:textAppearance="@style/SubtitleTextAppearance" />
+                <TextView
+                    android:id="@+id/lock"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/full_preview_page_tab_height"
+                    android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/full_preview_page_tab_padding_top"
+                    android:paddingBottom="@dimen/full_preview_page_tab_padding_bottom"
+                    android:text="@string/lock_screen_message"
+                    android:textAppearance="@style/SubtitleTextAppearance" />
             </LinearLayout>
 
-            <include
-                android:id="@+id/permission_needed"
-                layout="@layout/grid_item_permission_needed"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="@dimen/full_preview_page_default_padding_top"
-                android:paddingBottom="@dimen/full_preview_page_editing_padding_bottom"
-                android:visibility="gone" />
-        </FrameLayout>
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
