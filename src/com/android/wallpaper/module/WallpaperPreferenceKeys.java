@@ -43,6 +43,11 @@ public class WallpaperPreferenceKeys {
      * Preferences with these keys should not be backed up
      */
     public interface NoBackupKeys {
+        public static final String KEY_APP_LAUNCH_COUNT = "app_launch_count";
+        public static final String KEY_FIRST_LAUNCH_DATE_SINCE_SETUP =
+                "first_launch_date_since_setup";
+        public static final String KEY_FIRST_WALLPAPER_APPLY_DATE_SINCE_SETUP =
+                "first_wallpaper_apply_date_since_setup";
         public static final String KEY_HOME_WALLPAPER_BASE_IMAGE_URL =
                 "home_wallpaper_base_image_url";
         public static final String KEY_HOME_WALLPAPER_MANAGER_ID = "home_wallpaper_id";
