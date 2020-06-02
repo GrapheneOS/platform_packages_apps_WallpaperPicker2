@@ -107,10 +107,20 @@
                     android:layout_height="wrap_content"
                     android:background="@color/fullscreen_preview_background"
                     android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/home"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:gravity="center"
+                        android:text="@string/home_screen_message" />
 
                     <TextView
                         android:id="@+id/lock"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="64dp"
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackgroundBorderless"
@@ -119,16 +129,6 @@
                         android:gravity="center"
                         android:text="@string/lock_screen_message" />
 
-                    <TextView
-                        android:id="@+id/home"
-                        android:layout_width="wrap_content"
-                        android:layout_height="64dp"
-                        android:layout_weight="1"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:paddingTop="20dp"
-                        android:paddingBottom="20dp"
-                        android:gravity="center"
-                        android:text="@string/home_screen_message" />
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>

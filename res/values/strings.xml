@@ -343,4 +343,7 @@
     corresponding to a ContentProvider in launcher to provide available grids and
     allow for changing them -->
     <string name="grid_control_metadata_name" translatable="false">com.android.launcher3.grid.control</string>
+
+    <!-- Title of the tool bar in the wallpaper picker. [CHAR LIMIT=19] -->
+    <string name="wallpaper_title">Wallpaper</string>
 </resources>
