@@ -96,6 +96,8 @@ public class ImagePreviewFragment extends PreviewFragment {
     private View mTabs;
     private WallpaperInfoView mWallpaperInfoView;
     private InfoPageController mInfoPageController;
+    private View mLock;
+    private View mHome;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -151,10 +153,11 @@ public class ImagePreviewFragment extends PreviewFragment {
         mLockScreenOverlayUpdater.adjustOverlayLayout(true);
 
         mTabs = view.findViewById(R.id.tabs_container);
-        View lock = mTabs.findViewById(R.id.lock);
-        View home = mTabs.findViewById(R.id.home);
-        lock.setOnClickListener(v -> showLockscreenPreview());
-        home.setOnClickListener(v -> showHomescreenPreview());
+        mLock = mTabs.findViewById(R.id.lock);
+        mHome = mTabs.findViewById(R.id.home);
+        mLock.setOnClickListener(v -> updateScreenPreview(/* isHomeSelected= */ false));
+        mHome.setOnClickListener(v -> updateScreenPreview(/* isHomeSelected= */ true));
+        updateScreenPreview(/* isHomeSelected= */ true);
 
         onBottomActionBarReady(mBottomActionBar);
         view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
@@ -493,13 +496,10 @@ public class ImagePreviewFragment extends PreviewFragment {
         mTouchForwardingLayout.setForwardingEnabled(enabled);
     }
 
-    private void showHomescreenPreview() {
-        mWorkspaceSurface.setVisibility(View.VISIBLE);
-        mLockOverlay.setVisibility(View.GONE);
-    }
-
-    private void showLockscreenPreview() {
-        mWorkspaceSurface.setVisibility(View.GONE);
-        mLockOverlay.setVisibility(View.VISIBLE);
+    private void updateScreenPreview(boolean isHomeSelected) {
+        mHome.setSelected(isHomeSelected);
+        mLock.setSelected(!isHomeSelected);
+        mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.GONE);
+        mLockOverlay.setVisibility(isHomeSelected ? View.GONE : View.VISIBLE);
     }
 }
