@@ -611,7 +611,7 @@ public class CategoryFragment extends AppbarFragment
 
         mWallpaperConnection.setVisibility(true);
         previewView.post(() -> {
-            if (!mWallpaperConnection.connect()) {
+            if (mWallpaperConnection != null && !mWallpaperConnection.connect()) {
                 mWallpaperConnection = null;
                 LiveTileOverlay.INSTANCE.detach(previewView.getOverlay());
             }
