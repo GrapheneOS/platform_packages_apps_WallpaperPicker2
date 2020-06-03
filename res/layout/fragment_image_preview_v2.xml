@@ -77,6 +77,8 @@
                         android:id="@+id/touch_forwarding_layout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/full_preview_page_editing_padding_bottom"
+                        android:clipToPadding="false"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
