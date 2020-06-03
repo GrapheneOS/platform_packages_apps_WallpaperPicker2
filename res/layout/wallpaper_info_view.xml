@@ -32,7 +32,6 @@
         android:ellipsize="end"
         android:gravity="center"
         android:lineHeight="24dp"
-        android:minHeight="@dimen/wallpaper_info_pane_title_height"
         android:singleLine="true"
         android:textAppearance="@style/TitleTextAppearance"
         android:textColor="@color/action_bar_bottom_sheet_text_color" />
@@ -42,21 +41,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/wallpaper_info_pane_subtitle1_top_margin"
+        android:lineHeight="20dp"
         android:gravity="center"
-        android:lineHeight="18dp"
-        android:textAppearance="@style/SubtitleTextAppearance"
         android:textColor="@color/action_bar_bottom_sheet_text_color"
+        android:textSize="16sp"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/wallpaper_info_subtitle2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/wallpaper_info_pane_subtitle2_top_margin"
+        android:lineHeight="16dp"
         android:gravity="center"
-        android:lineHeight="20dp"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         android:textColor="@color/action_bar_bottom_sheet_text_color"
-        android:textSize="14dp"
+        android:textSize="12sp"
         android:visibility="gone" />
 
     <Button
