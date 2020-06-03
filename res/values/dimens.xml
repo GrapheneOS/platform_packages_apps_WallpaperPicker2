@@ -30,11 +30,18 @@
     <dimen name="grid_tile_aspect_height">340dp</dimen>
     <dimen name="grid_tile_aspect_width">182dp</dimen>
     <dimen name="grid_edge_space">8dp</dimen>
+    <dimen name="category_grid_padding_top">4dp</dimen>
+    <dimen name="category_grid_padding_bottom">16dp</dimen>
 
     <!-- Dimensions for individual wallpaper tiles. -->
     <dimen name="grid_item_individual_wallpaper_selected_inset">14dp</dimen>
     <dimen name="grid_item_individual_wallpaper_check_circle_offset">4dp</dimen>
     <dimen name="grid_item_individual_wallpaper_check_circle_size">24dp</dimen>
+    <dimen name="grid_item_individual_padding_top">8dp</dimen>
+    <dimen name="grid_item_individual_label_padding_top">4dp</dimen>
+    <dimen name="grid_item_individual_label_padding_bottom">4dp</dimen>
+    <dimen name="wallpaper_grid_padding_top">16dp</dimen>
+    <dimen name="wallpaper_grid_padding_bottom">24dp</dimen>
 
     <!-- Dimensions for "single metadata card" configuration. -->
     <dimen name="single_metadata_card_elevation">2dp</dimen>
@@ -218,9 +225,10 @@
     <dimen name="bottom_action_bar_bottom_sheet_margin_top">2dp</dimen>
 
     <dimen name="wallpaper_info_pane_top_padding">20dp</dimen>
-    <dimen name="wallpaper_info_pane_bottom_padding">18dp</dimen>
+    <dimen name="wallpaper_info_pane_bottom_padding">24dp</dimen>
     <dimen name="wallpaper_info_pane_horizontal_padding">24dp</dimen>
-    <dimen name="wallpaper_info_pane_subtitle1_top_margin">12dp</dimen>
+    <dimen name="wallpaper_info_pane_subtitle1_top_margin">14dp</dimen>
+    <dimen name="wallpaper_info_pane_subtitle2_top_margin">4dp</dimen>
     <dimen name="wallpaper_info_pane_explore_button_top_margin">12dp</dimen>
     <dimen name="wallpaper_info_pane_title_height">48dp</dimen>
 

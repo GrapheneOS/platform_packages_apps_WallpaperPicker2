@@ -128,10 +128,13 @@ public class DefaultCategoryProvider implements CategoryProvider {
     protected static class FetchCategoriesTask extends AsyncTask<Void, Category, Void> {
         private CategoryReceiver mReceiver;
         protected final Context mAppContext;
+        protected final PartnerProvider mPartnerProvider;
 
         public FetchCategoriesTask(CategoryReceiver receiver, Context context) {
             mReceiver = receiver;
             mAppContext = context.getApplicationContext();
+            mPartnerProvider = InjectorProvider.getInjector().getPartnerProvider(
+                    mAppContext);
         }
 
         @Override
@@ -207,9 +210,7 @@ public class DefaultCategoryProvider implements CategoryProvider {
         private Category getOnDeviceCategory() {
             List<WallpaperInfo> onDeviceWallpapers = new ArrayList<>();
 
-            PartnerProvider partnerProvider = InjectorProvider.getInjector().getPartnerProvider(
-                    mAppContext);
-            if (!partnerProvider.shouldHideDefaultWallpaper()) {
+            if (!mPartnerProvider.shouldHideDefaultWallpaper()) {
                 DefaultWallpaperInfo defaultWallpaperInfo = new DefaultWallpaperInfo();
                 onDeviceWallpapers.add(defaultWallpaperInfo);
             }
