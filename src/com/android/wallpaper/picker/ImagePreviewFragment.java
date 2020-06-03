@@ -212,12 +212,8 @@ public class ImagePreviewFragment extends PreviewFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        WallpaperColorsLoader.getWallpaperColors(
-                getContext(),
-                mWallpaperAsset,
-                mWallpaperSurface.getMeasuredWidth(),
-                mWallpaperSurface.getMeasuredHeight(),
+        WallpaperColorsLoader.getWallpaperColors(getContext(),
+                mWallpaper.getThumbAsset(getContext()),
                 mLockScreenOverlayUpdater::setColor);
     }
 
