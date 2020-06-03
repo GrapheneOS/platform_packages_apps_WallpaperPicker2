@@ -379,6 +379,11 @@ public class CategoryFragment extends AppbarFragment
     }
 
     @Override
+    public void setToolbarTitle(CharSequence title) {
+        setTitle(title);
+    }
+
+    @Override
     public void updateThumbnail(WallpaperInfo wallpaperInfo) {
         new android.os.Handler().post(() -> {
             // A config change may have destroyed the activity since the refresh started, so check

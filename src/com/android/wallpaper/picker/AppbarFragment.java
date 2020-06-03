@@ -101,7 +101,7 @@ public abstract class AppbarFragment extends BottomActionBarFragment
         return null;
     }
 
-    private void setTitle(CharSequence title) {
+    protected void setTitle(CharSequence title) {
         if (mToolbar == null) {
             return;
         }
