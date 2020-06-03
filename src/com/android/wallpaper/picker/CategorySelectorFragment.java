@@ -81,6 +81,11 @@ public class CategorySelectorFragment extends Fragment {
          * @param collectionId the id of the category
          */
         void show(String collectionId);
+
+        /**
+         * Sets the title in the toolbar.
+         */
+        void setToolbarTitle(CharSequence title);
     }
 
     private RecyclerView mImageGrid;
@@ -115,6 +120,7 @@ public class CategorySelectorFragment extends Fragment {
                     windowInsets.getSystemWindowInsetBottom());
             return windowInsets;
         });
+        getCategorySelectorFragmentHost().setToolbarTitle(getText(R.string.wallpaper_title));
 
         return view;
     }
@@ -241,6 +247,7 @@ public class CategorySelectorFragment extends Fragment {
             }
 
             getCategorySelectorFragmentHost().show(mCategory.getCollectionId());
+            getCategorySelectorFragmentHost().setToolbarTitle(mCategory.getTitle());
         }
 
         /**

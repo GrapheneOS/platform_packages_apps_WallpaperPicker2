@@ -19,22 +19,22 @@ import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.WallpaperInfo;
 
 import java.util.List;
 
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
-
 /**
  * Base class for ViewHolders for individual wallpaper tiles.
  */
 abstract class IndividualHolder extends ViewHolder {
     protected Activity mActivity;
-    protected RelativeLayout mTileLayout;
+    protected View mTileLayout;
+    protected View mWallpaperContainer;
     protected ImageView mThumbnailView;
     protected ImageView mOverlayIconView;
     protected TextView mTitleView;
@@ -44,13 +44,13 @@ abstract class IndividualHolder extends ViewHolder {
         super(itemView);
 
         mActivity = hostActivity;
-        mTileLayout = (RelativeLayout) itemView.findViewById(R.id.tile);
+        mTileLayout = itemView.findViewById(R.id.tile);
         mThumbnailView = (ImageView) itemView.findViewById(R.id.thumbnail);
         mOverlayIconView = (ImageView) itemView.findViewById(R.id.overlay_icon);
         mTitleView = (TextView) itemView.findViewById(R.id.title);
+        mWallpaperContainer = itemView.findViewById(R.id.wallpaper_container);
 
-        mTileLayout.getLayoutParams().height = tileHeightPx;
-        itemView.getLayoutParams().height = tileHeightPx;
+        mWallpaperContainer.getLayoutParams().height = tileHeightPx;
     }
 
     /**

@@ -820,12 +820,11 @@ public class IndividualPickerFragment extends BottomActionBarFragment
             new WallpaperPersister.SetWallpaperCallback() {
                 @Override
                 public void onSuccess(WallpaperInfo wallpaperInfo) {
+                    mWallpaperPersister.onLiveWallpaperSet();
                     Toast.makeText(getActivity(), R.string.wallpaper_set_successfully_message,
                             Toast.LENGTH_SHORT).show();
-                    mBottomActionBar.enableActions();
-                    refreshAppliedWallpaper();
-
-                    mWallpaperPersister.onLiveWallpaperSet();
+                    getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    getActivity().finish();
                 }
 
                 @Override
