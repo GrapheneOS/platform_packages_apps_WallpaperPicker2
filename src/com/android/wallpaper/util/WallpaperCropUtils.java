@@ -17,6 +17,8 @@ package com.android.wallpaper.util;
 
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.Rect;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.view.Display;
@@ -137,5 +139,92 @@ public final class WallpaperCropUtils {
             minZoom = inner.y / (float) outer.y;
         }
         return minZoom;
+    }
+
+    /**
+     * Calculates the center position of a wallpaper of the given size, based on a "crop surface"
+     * (with extra width to account for parallax) superimposed on the screen. Trying to show as
+     * much of the wallpaper as possible on the crop surface and align screen to crop surface such
+     * that the centered wallpaper matches what would be seen by the user in the left-most home
+     * screen.
+     *
+     * @param wallpaperSize full size of the wallpaper
+     * @param cropSurfaceSize ideal crop size
+     *          @see #getDefaultCropSurfaceSize(Resources, Display)
+     * @param screenSize size of the display
+     * @param defaultWallpaperScale default scale the wallpaper is set to
+     * @param isRtl whether we're in RTL mode
+     * @return a point corresponding to the position of wallpaper that should be in the center
+     *      of the screen.
+     */
+    public static PointF calculateDefaultCenter(Point wallpaperSize, Point cropSurfaceSize,
+            Point screenSize, float defaultWallpaperScale, boolean isRtl) {
+        Point screenToCropSurfacePosition = calculateCenterPosition(
+                cropSurfaceSize, screenSize, true /* alignStart */, isRtl);
+        Point zoomedWallpaperSize = new Point(
+                Math.round(wallpaperSize.x * defaultWallpaperScale),
+                Math.round(wallpaperSize.y * defaultWallpaperScale));
+        Point cropSurfaceToWallpaperPosition = calculateCenterPosition(
+                zoomedWallpaperSize, cropSurfaceSize, false /* alignStart */, isRtl);
+
+        // Set center to composite positioning between scaled wallpaper and screen.
+        PointF centerPosition = new PointF(
+                wallpaperSize.x / 2f,
+                wallpaperSize.y / 2f);
+        centerPosition.offset(-(screenToCropSurfacePosition.x + cropSurfaceToWallpaperPosition.x),
+                -(screenToCropSurfacePosition.y + cropSurfaceToWallpaperPosition.y));
+        return centerPosition;
+    }
+
+    /**
+     * Calculates the rectangle to crop a wallpaper of the given size, and considering the given
+     * scrollX and scrollY offsets
+     * @param wallpaperZoom zoom applied to the raw wallpaper image
+     * @param wallpaperSize full ("raw") wallpaper size
+     * @param defaultCropSurfaceSize @see #getDefaultCropSurfaceSize(Resources, Display)
+     * @param screenSize size of the display
+     * @param scrollX x-axis offset the cropping area from the wallpaper's 0,0 position
+     * @param scrollY y-axis offset the cropping area from the wallpaper's 0,0 position
+     * @param isRtl whether we're in RTL mode
+     * @return a Rect representing the area of the wallpaper to crop.
+     */
+    public static Rect calculateCropRect(float wallpaperZoom, Point wallpaperSize,
+            Point defaultCropSurfaceSize, Point screenSize, int scrollX, int scrollY,
+            boolean isRtl) {
+        // Calculate Rect of wallpaper in physical pixel terms (i.e., scaled to current zoom).
+        int scaledWallpaperWidth = (int) (wallpaperSize.x * wallpaperZoom);
+        int scaledWallpaperHeight = (int) (wallpaperSize.y * wallpaperZoom);
+        Rect rect = new Rect();
+        rect.set(0, 0, scaledWallpaperWidth, scaledWallpaperHeight);
+
+        // Crop rect should start off as the visible screen and then include extra width and height
+        // if available within wallpaper at the current zoom.
+        Rect cropRect = new Rect(scrollX, scrollY, scrollX + screenSize.x, scrollY + screenSize.y);
+
+        int extraWidth = defaultCropSurfaceSize.x - screenSize.x;
+        int extraHeightTopAndBottom = (int) ((defaultCropSurfaceSize.y - screenSize.y) / 2f);
+
+        // Try to increase size of screenRect to include extra width depending on the layout
+        // direction.
+        if (isRtl) {
+            cropRect.left = Math.max(cropRect.left - extraWidth, rect.left);
+        } else {
+            cropRect.right = Math.min(cropRect.right + extraWidth, rect.right);
+        }
+
+        // Try to increase the size of the cropRect to to include extra height.
+        int availableExtraHeightTop = cropRect.top - Math.max(
+                rect.top,
+                cropRect.top - extraHeightTopAndBottom);
+        int availableExtraHeightBottom = Math.min(
+                rect.bottom,
+                cropRect.bottom + extraHeightTopAndBottom) - cropRect.bottom;
+
+        int availableExtraHeightTopAndBottom =
+                Math.min(availableExtraHeightTop, availableExtraHeightBottom);
+        cropRect.top -= availableExtraHeightTopAndBottom;
+        cropRect.bottom += availableExtraHeightTopAndBottom;
+
+        return cropRect;
     }
 }
