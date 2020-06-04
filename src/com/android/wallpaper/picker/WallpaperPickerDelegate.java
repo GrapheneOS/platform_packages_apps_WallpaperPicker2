@@ -453,7 +453,10 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
                 imageWallpaper.showPreview(mActivity, getPreviewIntentFactory(),
                         PREVIEW_WALLPAPER_REQUEST_CODE);
                 return false;
+            case VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE:
+                // Fall through.
             case PREVIEW_WALLPAPER_REQUEST_CODE:
+                // Fall through.
             case PREVIEW_LIVE_WALLPAPER_REQUEST_CODE:
                 // User previewed and selected a wallpaper, so finish this activity.
                 mWallpaperPersister.onLiveWallpaperSet();
