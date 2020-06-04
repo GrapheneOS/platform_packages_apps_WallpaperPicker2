@@ -17,7 +17,6 @@ package com.android.wallpaper.picker;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -44,8 +43,6 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.WallpaperTheme);
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
         setContentView(R.layout.activity_preview);
     }
 

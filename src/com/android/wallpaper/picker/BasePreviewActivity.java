@@ -16,9 +16,12 @@
 package com.android.wallpaper.picker;
 
 import android.content.pm.ActivityInfo;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+
+import com.android.wallpaper.R;
 
 /**
  * Abstract base class for a wallpaper full-screen preview activity.
@@ -33,5 +36,7 @@ public abstract class BasePreviewActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setColorMode(ActivityInfo.COLOR_MODE_WIDE_COLOR_GAMUT);
+        setTheme(R.style.WallpaperTheme);
+        getWindow().setFormat(PixelFormat.TRANSLUCENT);
     }
 }
