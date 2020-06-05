@@ -330,6 +330,8 @@ public class CategoryFragment extends AppbarFragment
             mWallpaperConnection = null;
         }
         mPreviewPager.setAdapter(null);
+        mWallPaperPreviews.forEach(view -> ((ViewGroup) view).removeAllViews());
+        mWallPaperPreviews.clear();
     }
 
     @Override
@@ -708,7 +710,7 @@ public class CategoryFragment extends AppbarFragment
         public void surfaceDestroyed(SurfaceHolder holder) { }
     };
 
-    private class PreviewPagerAdapter extends PagerAdapter {
+    private static class PreviewPagerAdapter extends PagerAdapter {
 
         private List<View> mPages;
 
