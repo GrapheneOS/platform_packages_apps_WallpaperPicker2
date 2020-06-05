@@ -102,7 +102,7 @@ public class CategoryFragment extends AppbarFragment
 
         boolean isReadExternalStoragePermissionGranted();
 
-        void showViewOnlyPreview(WallpaperInfo wallpaperInfo);
+        void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome);
     }
 
     public static CategoryFragment newInstance(CharSequence title) {
@@ -665,8 +665,9 @@ public class CategoryFragment extends AppbarFragment
                         mLockScreenOverlayUpdater::setColor);
         }
 
+
         ((View) thumbnailView.getParent()).setOnClickListener(view -> {
-            getFragmentHost().showViewOnlyPreview(wallpaperInfo);
+            getFragmentHost().showViewOnlyPreview(wallpaperInfo, isHomeWallpaper);
             eventLogger.logCurrentWallpaperPreviewed();
         });
     }

@@ -194,7 +194,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
         mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(
                 mWorkspaceSurface, getContext());
-        updateScreenTab(/* isHomeSelected= */ true);
+        updateScreenTab(/* isHomeSelected= */ mViewAsHome);
         view.addOnLayoutChangeListener((thisView, left, top, right, bottom,
                 oldLeft, oldTop, oldRight, oldBottom) ->
                 setupPreview()

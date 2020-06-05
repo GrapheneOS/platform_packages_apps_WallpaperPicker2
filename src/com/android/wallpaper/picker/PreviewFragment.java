@@ -89,20 +89,22 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
     public static final String ARG_WALLPAPER = "wallpaper";
     public static final String ARG_PREVIEW_MODE = "preview_mode";
+    public static final String ARG_VIEW_AS_HOME = "view_as_home";
     public static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
 
     /**
      * Creates and returns new instance of {@link ImagePreviewFragment} with the provided wallpaper
      * set as an argument.
      */
-    public static PreviewFragment newInstance(
-            WallpaperInfo wallpaperInfo, @PreviewMode int mode, boolean testingModeEnabled) {
+    public static PreviewFragment newInstance(WallpaperInfo wallpaperInfo, @PreviewMode int mode,
+            boolean viewAsHome, boolean testingModeEnabled) {
 
         boolean isLive = wallpaperInfo instanceof LiveWallpaperInfo;
 
         Bundle args = new Bundle();
         args.putParcelable(ARG_WALLPAPER, wallpaperInfo);
         args.putInt(ARG_PREVIEW_MODE, mode);
+        args.putBoolean(ARG_VIEW_AS_HOME, viewAsHome);
         args.putBoolean(ARG_TESTING_MODE_ENABLED, testingModeEnabled);
 
         PreviewFragment fragment = isLive ? new LivePreviewFragment() : new ImagePreviewFragment();
@@ -119,6 +121,8 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
     @PreviewMode
     protected int mPreviewMode;
+
+    protected boolean mViewAsHome;
 
     /**
      * When true, enables a test mode of operation -- in which certain UI features are disabled to
@@ -165,6 +169,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
         //noinspection ResourceType
         mPreviewMode = getArguments().getInt(ARG_PREVIEW_MODE);
+        mViewAsHome = getArguments().getBoolean(ARG_VIEW_AS_HOME);
         mTestingModeEnabled = getArguments().getBoolean(ARG_TESTING_MODE_ENABLED);
         mWallpaperSetter = new WallpaperSetter(injector.getWallpaperPersister(appContext),
                 injector.getPreferences(appContext), mUserEventLogger, mTestingModeEnabled);
