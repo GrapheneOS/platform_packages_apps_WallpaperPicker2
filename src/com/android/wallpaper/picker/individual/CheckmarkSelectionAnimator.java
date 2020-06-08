@@ -149,7 +149,8 @@ public class CheckmarkSelectionAnimator implements SelectionAnimator {
         int insetPx = mAppContext.getResources().getDimensionPixelSize(
                 R.dimen.grid_item_individual_wallpaper_selected_inset);
         mTile.setPadding(insetPx, insetPx, insetPx, insetPx);
-        mCheckCircle.setImageDrawable(mAppContext.getDrawable(R.drawable.check_circle_blue));
+        mCheckCircle.setImageDrawable(
+                mAppContext.getDrawable(R.drawable.check_circle_accent_24dp));
         mCheckCircle.setVisibility(View.VISIBLE);
         mCheckCircle.setAlpha(1f);
         mLoadingIndicatorContainer.setVisibility(View.GONE);
@@ -182,7 +183,8 @@ public class CheckmarkSelectionAnimator implements SelectionAnimator {
         ObjectAnimator paddingAnimator = ObjectAnimator.ofMultiInt(mTile, "padding", values);
         ObjectAnimator checkCircleAlphaAnimator = ObjectAnimator.ofFloat(mCheckCircle, "alpha", 0f, 1f);
 
-        mCheckCircle.setImageDrawable(mAppContext.getDrawable(R.drawable.check_circle_blue));
+        mCheckCircle.setImageDrawable(
+                mAppContext.getDrawable(R.drawable.check_circle_accent_24dp));
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(paddingAnimator, checkCircleAlphaAnimator);
