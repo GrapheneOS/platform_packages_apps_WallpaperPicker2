@@ -665,7 +665,7 @@ public class CategoryFragment extends AppbarFragment
                         mLockScreenOverlayUpdater::setColor);
         }
 
-        thumbnailView.setOnClickListener(view -> {
+        ((View) thumbnailView.getParent()).setOnClickListener(view -> {
             getFragmentHost().showViewOnlyPreview(wallpaperInfo);
             eventLogger.logCurrentWallpaperPreviewed();
         });

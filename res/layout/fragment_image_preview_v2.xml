@@ -83,23 +83,7 @@
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <SurfaceView
-                                android:id="@+id/wallpaper_surface"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
-
-                            <SurfaceView
-                                android:id="@+id/workspace_surface"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
-
-                            <include layout="@layout/lock_screen_overlay" android:visibility="gone" />
-                        </androidx.cardview.widget.CardView>
+                        <include layout="@layout/wallpaper_preview_card" />
                     </com.android.wallpaper.picker.TouchForwardingLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
