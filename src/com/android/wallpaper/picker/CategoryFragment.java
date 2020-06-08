@@ -118,6 +118,9 @@ public class CategoryFragment extends AppbarFragment
     private static final String PERMISSION_READ_WALLPAPER_INTERNAL =
             "android.permission.READ_WALLPAPER_INTERNAL";
 
+    private static final boolean NEW_SCROLL_INTERACTION =
+            IndividualPickerFragment.NEW_SCROLL_INTERACTION;
+
     private ImageView mHomePreview;
     private SurfaceView mWorkspaceSurface;
     private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
@@ -225,25 +228,29 @@ public class CategoryFragment extends AppbarFragment
 
         ViewGroup fragmentContainer = view.findViewById(R.id.category_fragment_container);
         mBottomSheetBehavior = BottomSheetBehavior.from(fragmentContainer);
-        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (mIsCollapsingByUserSelecting) {
-                    mIsCollapsingByUserSelecting = newState != STATE_COLLAPSED;
-                    return;
-                }
+        if (!NEW_SCROLL_INTERACTION) {
+            mBottomSheetBehavior.setBottomSheetCallback(
+                    new BottomSheetBehavior.BottomSheetCallback() {
+                        @Override
+                        public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                            if (mIsCollapsingByUserSelecting) {
+                                mIsCollapsingByUserSelecting = newState != STATE_COLLAPSED;
+                                return;
+                            }
 
-                if (mIndividualPickerFragment != null && mIndividualPickerFragment.isVisible()) {
-                    mIndividualPickerFragment.resizeLayout(newState == STATE_COLLAPSED
-                            ? mBottomSheetBehavior.getPeekHeight() : MATCH_PARENT);
-                }
-            }
+                            if (mIndividualPickerFragment != null
+                                    && mIndividualPickerFragment.isVisible()) {
+                                mIndividualPickerFragment.resizeLayout(newState == STATE_COLLAPSED
+                                        ? mBottomSheetBehavior.getPeekHeight() : MATCH_PARENT);
+                            }
+                        }
 
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                        @Override
+                        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
 
-            }
-        });
+                        }
+                    });
+        }
         fragmentContainer.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View containerView, int left, int top, int right,
