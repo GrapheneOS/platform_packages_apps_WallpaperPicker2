@@ -87,6 +87,11 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
 
             mConnected = true;
         }
+
+        if (mListener != null) {
+            mListener.onConnected();
+        }
+
         return true;
     }
 
