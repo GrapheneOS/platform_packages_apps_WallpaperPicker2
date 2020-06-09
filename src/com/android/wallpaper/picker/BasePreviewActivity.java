@@ -29,6 +29,8 @@ import com.android.wallpaper.R;
 public abstract class BasePreviewActivity extends BaseActivity {
     public static final String EXTRA_WALLPAPER_INFO =
             "com.android.wallpaper.picker.wallpaper_info";
+    public static final String EXTRA_VIEW_AS_HODE =
+            "com.android.wallpaper.picker.view_as_home";
     public static final String EXTRA_TESTING_MODE_ENABLED =
             "com.android.wallpaper.picker.testing_mode_enabled";
 

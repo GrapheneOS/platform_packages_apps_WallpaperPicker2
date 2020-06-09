@@ -69,10 +69,11 @@ public interface Injector {
     WallpaperRotationRefresher getWallpaperRotationRefresher();
 
     Fragment getPreviewFragment(
-        Context context,
-        WallpaperInfo wallpaperInfo,
-        @PreviewMode int mode,
-        boolean testingModeEnabled);
+            Context context,
+            WallpaperInfo wallpaperInfo,
+            @PreviewMode int mode,
+            boolean viewAsHome,
+            boolean testingModeEnabled);
 
     PackageStatusNotifier getPackageStatusNotifier(Context context);
 
