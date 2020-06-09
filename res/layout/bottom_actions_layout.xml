@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bottom_sheet_background"
             android:theme="@style/WallpaperPicker.BottomPaneStyle"
+            android:clickable="true"
             android:elevation="@dimen/bottom_action_bar_elevation"
             android:layout_marginTop="@dimen/bottom_action_bar_bottom_sheet_margin_top"
             app:behavior_peekHeight="@dimen/preview_attribution_pane_collapsed_height"
