@@ -53,6 +53,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.LiveWallpaperInfo;
+import com.android.wallpaper.model.WallpaperCategory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory;
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory.WallpaperInfoCallback;
@@ -103,6 +104,8 @@ public class CategoryFragment extends AppbarFragment
         boolean isReadExternalStoragePermissionGranted();
 
         void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome);
+
+        void show(String collectionId);
     }
 
     public static CategoryFragment newInstance(CharSequence title) {
@@ -367,9 +370,13 @@ public class CategoryFragment extends AppbarFragment
     }
 
     @Override
-    public void show(String collectionId) {
-        mIndividualPickerFragment =
-                InjectorProvider.getInjector().getIndividualPickerFragment(collectionId);
+    public void show(Category category) {
+        if (!(category instanceof WallpaperCategory)) {
+            getFragmentHost().show(category.getCollectionId());
+            return;
+        }
+        mIndividualPickerFragment = InjectorProvider.getInjector()
+                .getIndividualPickerFragment(category.getCollectionId());
         mIndividualPickerFragment.highlightAppliedWallpaper(mSelectedPreviewPage);
         mIndividualPickerFragment.setOnWallpaperSelectedListener(position -> {
             // Scroll to the selected wallpaper and collapse the sheet if needed.

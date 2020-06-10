@@ -804,6 +804,11 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     }
 
     @Override
+    public void show(String collectionId) {
+        mDelegate.show(collectionId);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         mDelegate.onRequestPermissionsResult(requestCode, permissions, grantResults);
