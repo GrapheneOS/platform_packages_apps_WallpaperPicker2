@@ -62,7 +62,7 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity {
             Intent intent = getIntent();
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
             boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
-            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HODE, false);
+            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HODE, true);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context */ this,
                     wallpaper,
