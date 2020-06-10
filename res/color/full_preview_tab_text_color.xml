@@ -17,7 +17,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_selected="false"
-        android:color="?android:attr/textColorSecondary"/>
+        android:color="@color/full_preview_tab_unselected_text_color"/>
     <item
         android:state_selected="true"
         android:color="?android:colorAccent" />
