@@ -124,6 +124,11 @@ public class TestUserEventLogger implements UserEventLogger {
         // No-op
     }
 
+    @Override
+    public void logSnapshot() {
+        // No-op
+    }
+
     public int getNumCategorySelectedEvents() {
         return mNumCategorySelectedEvents;
     }

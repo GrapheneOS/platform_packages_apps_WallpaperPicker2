@@ -210,7 +210,12 @@ public class PreviewPager extends LinearLayout {
      * Call this method to set the {@link PagerAdapter} backing the {@link ViewPager} in this
      * widget.
      */
-    public void setAdapter(PagerAdapter adapter) {
+    public void setAdapter(@Nullable PagerAdapter adapter) {
+        if (adapter == null) {
+            mAdapter = null;
+            mViewPager.setAdapter(null);
+            return;
+        }
         int initialPage = 0;
         if (mViewPager.getAdapter() != null) {
             initialPage = isRtl() ? mAdapter.getCount() - 1 - mViewPager.getCurrentItem()

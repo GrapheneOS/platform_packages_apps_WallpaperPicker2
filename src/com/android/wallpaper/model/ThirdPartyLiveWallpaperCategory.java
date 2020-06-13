@@ -18,18 +18,22 @@ package com.android.wallpaper.model;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
-public class LiveWallpaperCategory extends WallpaperCategory {
+/**
+ * Category listing third party live wallpapers the user might have installed.
+ */
+public class ThirdPartyLiveWallpaperCategory extends WallpaperCategory {
 
-    private final List<String> mExcludedPackages;
+    private final Set<String> mExcludedPackages;
 
-    public LiveWallpaperCategory(String title, String collectionId, List<WallpaperInfo> wallpapers,
-        int priority, @Nullable List<String> excludedLiveWallpaperPackageNames) {
+    public ThirdPartyLiveWallpaperCategory(String title, String collectionId,
+            List<WallpaperInfo> wallpapers,
+            int priority, @Nullable Set<String> excludedLiveWallpaperPackageNames) {
         super(title, collectionId, wallpapers, priority);
         mExcludedPackages = excludedLiveWallpaperPackageNames;
     }
@@ -68,13 +72,13 @@ public class LiveWallpaperCategory extends WallpaperCategory {
 
     private class FetchLiveWallpapersTask extends AsyncTask<Void, Void, Void> {
 
-        final private Context mContext;
-        final private List<WallpaperInfo> mCategoryWallpapers;
-        @Nullable final private List<String> mExcludedPackages;
-        @Nullable final private WallpaperReceiver mReceiver;
+        private final Context mContext;
+        private final List<WallpaperInfo> mCategoryWallpapers;
+        @Nullable private final Set<String> mExcludedPackages;
+        @Nullable private final WallpaperReceiver mReceiver;
 
-        public FetchLiveWallpapersTask(Context context, List<WallpaperInfo> wallpapers,
-                @Nullable List<String> excludedPackages, @Nullable WallpaperReceiver receiver) {
+        FetchLiveWallpapersTask(Context context, List<WallpaperInfo> wallpapers,
+                @Nullable Set<String> excludedPackages, @Nullable WallpaperReceiver receiver) {
             mContext = context;
             mCategoryWallpapers = wallpapers;
             mExcludedPackages = excludedPackages;

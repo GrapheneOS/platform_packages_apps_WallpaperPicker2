@@ -107,6 +107,9 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         implements RotationStarter, StartRotationErrorDialogFragment.Listener,
         CurrentWallpaperBottomSheetPresenter.RefreshListener,
         SetWallpaperErrorDialogFragment.Listener, SetWallpaperDialogFragment.Listener {
+
+    public static final boolean NEW_SCROLL_INTERACTION = true;
+
     /**
      * Position of a special tile that doesn't belong to an individual wallpaper of the category,
      * such as "my photos" or "daily rotation".
@@ -451,7 +454,9 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
     @Override
     public void onDestroyView() {
-        updateThumbnail(null);
+        if (!NEW_SCROLL_INTERACTION) {
+            updateThumbnail(null);
+        }
         super.onDestroyView();
     }
 
@@ -1253,8 +1258,10 @@ public class IndividualPickerFragment extends BottomActionBarFragment
                     (isWallpaperApplied && !hasUserSelectedWallpaper) || isWallpaperSelected);
             holder.itemView.findViewById(R.id.check_circle).setVisibility(
                     isWallpaperApplied ? View.VISIBLE : View.GONE);
-            holder.itemView.findViewById(R.id.tile).setOnClickListener(
-                    view -> onWallpaperSelected(wallpaper, position));
+            if (!NEW_SCROLL_INTERACTION) {
+                holder.itemView.findViewById(R.id.tile).setOnClickListener(
+                        view -> onWallpaperSelected(wallpaper, position));
+            }
         }
     }
 
