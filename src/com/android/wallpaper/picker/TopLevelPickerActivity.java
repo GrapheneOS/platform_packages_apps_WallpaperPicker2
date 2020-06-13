@@ -799,8 +799,13 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     /**
      * Shows the view-only preview activity for the given wallpaper.
      */
-    public void showViewOnlyPreview(WallpaperInfo wallpaperInfo) {
-        mDelegate.showViewOnlyPreview(wallpaperInfo);
+    public void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome) {
+        mDelegate.showViewOnlyPreview(wallpaperInfo, isViewAsHome);
+    }
+
+    @Override
+    public void show(String collectionId) {
+        mDelegate.show(collectionId);
     }
 
     @Override

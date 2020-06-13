@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2019 The Android Open Source Project
+     Copyright (C) 2020 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_selected="false"
-        android:color="@color/bottom_bar_icon_unchecked_color" />
+        android:color="@color/full_preview_tab_unselected_text_color"/>
     <item
         android:state_selected="true"
         android:color="?android:colorAccent" />

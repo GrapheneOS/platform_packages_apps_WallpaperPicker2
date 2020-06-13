@@ -20,16 +20,16 @@ import android.content.res.Resources;
 import com.bumptech.glide.load.Key;
 
 /**
- * Image asset representing a Nexus stub APK resource.
+ * Image asset representing a Partner stub APK resource.
  */
-public final class NexusStaticAsset extends ResourceAsset {
+public final class SystemStaticAsset extends ResourceAsset {
     private final String mResName;
 
     /**
      * @param res   Resources containing the asset.
      * @param resId Resource ID referencing the asset.
      */
-    public NexusStaticAsset(Resources res, int resId, String resName) {
+    public SystemStaticAsset(Resources res, int resId, String resName) {
         super(res, resId);
         mResName = resName;
     }
@@ -43,12 +43,12 @@ public final class NexusStaticAsset extends ResourceAsset {
     }
 
     /**
-     * Glide caching key for resources from Nexus stub APK.
+     * Glide caching key for resources from System stub APK.
      */
     private static class PackageResourceKey extends ResourceAsset.PackageResourceKey {
         private String mResName;
 
-        public PackageResourceKey(Resources res, int resId, String resName) {
+        PackageResourceKey(Resources res, int resId, String resName) {
             super(res, resId);
             mResName = resName;
         }

@@ -78,9 +78,9 @@ public class CategorySelectorFragment extends Fragment {
         /**
          * Shows the wallpaper page of the specific category.
          *
-         * @param collectionId the id of the category
+         * @param category the wallpaper's {@link Category}
          */
-        void show(String collectionId);
+        void show(Category category);
 
         /**
          * Sets the title in the toolbar.
@@ -246,7 +246,7 @@ public class CategorySelectorFragment extends Fragment {
                 return;
             }
 
-            getCategorySelectorFragmentHost().show(mCategory.getCollectionId());
+            getCategorySelectorFragmentHost().show(mCategory);
             getCategorySelectorFragmentHost().setToolbarTitle(mCategory.getTitle());
         }
 

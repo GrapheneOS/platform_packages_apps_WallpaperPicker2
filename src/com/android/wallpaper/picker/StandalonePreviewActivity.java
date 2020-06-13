@@ -23,15 +23,15 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.ImageWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.UserEventLogger;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 /**
  * Activity that displays a preview of a specific wallpaper and provides the ability to set the
@@ -123,6 +123,7 @@ public class StandalonePreviewActivity extends BasePreviewActivity {
                 /* context */ this,
                 wallpaper,
                 PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
+                /* viewAsHome= */ true,
                 testingModeEnabled);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, fragment)

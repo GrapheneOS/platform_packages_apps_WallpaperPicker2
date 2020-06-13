@@ -169,11 +169,13 @@ public class BottomActionBar extends FrameLayout {
      */
     public void attachViewToBottomSheetAndBindAction(View contentView, BottomAction action) {
         contentView.setVisibility(GONE);
+        contentView.setFocusable(true);
         mContentViewMap.put(action, contentView);
         mBottomSheetView.addView(contentView);
-        setActionClickListener(action, unused -> {
+        setActionClickListener(action, actionView -> {
             mCurrentBottomSheetAction = action;
             mContentViewMap.forEach((a, v) -> v.setVisibility(a.equals(action) ? VISIBLE : GONE));
+            mBottomSheetView.setAccessibilityTraversalAfter(actionView.getId());
         });
     }
 
