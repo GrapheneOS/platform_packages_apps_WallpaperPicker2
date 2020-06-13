@@ -111,6 +111,11 @@ public abstract class AppbarFragment extends BottomActionBarFragment
         } else {
             mToolbar.setTitle(title);
         }
+
+        // Set Activity title to make TalkBack announce title after updating toolbar title.
+        if (getActivity() != null) {
+            getActivity().setTitle(title);
+        }
     }
 
     @Override

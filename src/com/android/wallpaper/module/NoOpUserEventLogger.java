@@ -65,6 +65,10 @@ public class NoOpUserEventLogger implements UserEventLogger {
     }
 
     @Override
+    public void logSnapshot() {
+    }
+
+    @Override
     public void logWallpaperSet(String collectionId, String wallpaperId) {
     }
 

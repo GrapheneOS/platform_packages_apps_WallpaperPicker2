@@ -346,4 +346,7 @@
 
     <!-- Title of the tool bar in the wallpaper picker. [CHAR LIMIT=19] -->
     <string name="wallpaper_title">Wallpaper</string>
+
+    <!-- Content description of wallpaper preview card. [CHAR_LIMIT=30]-->
+    <string name="wallpaper_preview_card_content_description">Wallpaper preview</string>
 </resources>

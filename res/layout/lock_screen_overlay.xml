@@ -19,7 +19,8 @@
     android:id="@+id/lock_overlay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_24_alpha">
+    android:background="@color/black_24_alpha"
+    android:importantForAccessibility="noHideDescendants">
 
     <ImageView
         android:id="@+id/lock_icon"
