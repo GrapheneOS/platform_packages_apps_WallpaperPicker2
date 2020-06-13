@@ -18,45 +18,47 @@ package com.android.wallpaper.widget;
 import android.app.WallpaperColors;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.BitmapCachingAsset;
+import com.android.wallpaper.util.ScreenSizeCalculator;
 
 /** A class to load the {@link WallpaperColors} from wallpaper {@link Asset}. */
 public class WallpaperColorsLoader {
     private static final String TAG = "WallpaperColorsLoader";
 
-    /** Callback of loading {@link WallpaperColors}. */
+    /** Callback of loading a {@link WallpaperColors}. */
     public interface Callback {
-        /** Gets called when {@link WallpaperColors} parsing is succeed. */
-        void onSuccess(WallpaperColors colors);
-
-        /** Gets called when {@link WallpaperColors} parsing is failed. */
-        default void onFailure() {
-            Log.i(TAG, "Can't get wallpaper colors from a null bitmap.");
-        }
+        /** Gets called when a {@link WallpaperColors} is loaded. */
+        void onLoaded(@Nullable WallpaperColors colors);
     }
 
     /** Gets the {@link WallpaperColors} from the wallpaper {@link Asset}. */
     public static void getWallpaperColors(Context context, @NonNull Asset asset,
-                                          int targetWidth, int targetHeight,
                                           @NonNull Callback callback) {
-        new BitmapCachingAsset(context, asset).decodeBitmap(targetWidth, targetHeight, bitmap -> {
+        Display display = context.getSystemService(WindowManager.class).getDefaultDisplay();
+        Point screen = ScreenSizeCalculator.getInstance().getScreenSize(display);
+        new BitmapCachingAsset(context, asset).decodeBitmap(screen.y / 2, screen.x / 2, bitmap -> {
             if (bitmap != null) {
                 boolean shouldRecycle = false;
                 if (bitmap.getConfig() == Bitmap.Config.HARDWARE) {
                     bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
                     shouldRecycle = true;
                 }
-                callback.onSuccess(WallpaperColors.fromBitmap(bitmap));
+                callback.onLoaded(WallpaperColors.fromBitmap(bitmap));
                 if (shouldRecycle) {
                     bitmap.recycle();
                 }
             } else {
-                callback.onFailure();
+                Log.i(TAG, "Can't get wallpaper colors from a null bitmap, uses null color.");
+                callback.onLoaded(null);
             }
         });
     }

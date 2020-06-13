@@ -75,7 +75,7 @@
         android:layout_height="@dimen/grid_item_individual_wallpaper_check_circle_size"
         android:layout_marginStart="@dimen/grid_item_individual_wallpaper_check_circle_offset"
         android:layout_marginTop="@dimen/grid_item_individual_wallpaper_check_circle_offset"
-        android:src="@drawable/check_circle_blue"
+        android:src="@drawable/check_circle_accent_24dp"
         android:visibility="gone" />
 
 </FrameLayout>

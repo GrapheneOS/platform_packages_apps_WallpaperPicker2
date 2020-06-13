@@ -76,6 +76,11 @@ public interface UserEventLogger {
      */
     void logLiveWallpaperCustomizeSelected(String collectionId, String wallpaperId);
 
+    /**
+     * Log current existing snapshot data.
+     */
+    void logSnapshot();
+
     void logWallpaperSet(String collectionId, String wallpaperId);
 
     void logWallpaperSetResult(@WallpaperSetResult int result);

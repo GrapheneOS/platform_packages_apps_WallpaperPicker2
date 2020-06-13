@@ -24,14 +24,14 @@ import com.android.wallpaper.asset.Asset;
  * A placeholder {@link Category} with only id and title (and no content).
  * Typically used to display partially loaded categories.
  */
-public class EmptyCategory extends Category {
+public class PlaceholderCategory extends Category {
 
     /**
      * Constructs an EmptyCategory object.
      *
      * @see Category#Category(String, String, int)
      */
-    public EmptyCategory(String title, String collectionId, int priority) {
+    public PlaceholderCategory(String title, String collectionId, int priority) {
         super(title, collectionId, priority);
     }
 
