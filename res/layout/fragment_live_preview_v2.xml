@@ -18,37 +18,36 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?android:colorPrimary">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:colorPrimary"
         android:layout_marginBottom="@dimen/bottom_navbar_height"
         android:orientation="vertical">
 
         <include layout="@layout/section_header" />
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="?android:colorPrimary">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <FrameLayout
                 android:id="@+id/live_wallpaper_preview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:background="@color/fullscreen_preview_background"
-                android:orientation="vertical"
-                android:paddingTop="@dimen/full_preview_page_default_padding_top"
-                android:paddingBottom="@dimen/full_preview_page_editing_padding_bottom">
+                android:paddingTop="@dimen/full_preview_page_default_padding_top">
 
                 <com.android.wallpaper.picker.TouchForwardingLayout
                     android:id="@+id/touch_forwarding_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:layout_height="match_parent"
+                    android:paddingBottom="@dimen/full_preview_page_editing_padding_bottom"
+                    android:clipToPadding="false">
 
                     <include
                         android:id="@+id/wallpaper_full_preview_card"
@@ -56,87 +55,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
                 </com.android.wallpaper.picker.TouchForwardingLayout>
+            </FrameLayout>
 
-                <LinearLayout
-                    android:id="@+id/tabs_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/fullscreen_preview_background"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/home"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/full_preview_page_tab_height"
-                        android:layout_weight="1"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/full_preview_page_tab_padding_top"
-                        android:paddingBottom="@dimen/full_preview_page_tab_padding_bottom"
-                        android:text="@string/home_screen_message"
-                        android:textAppearance="@style/SubtitleTextAppearance" />
-                    <TextView
-                        android:id="@+id/lock"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/full_preview_page_tab_height"
-                        android:layout_weight="1"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/full_preview_page_tab_padding_top"
-                        android:paddingBottom="@dimen/full_preview_page_tab_padding_bottom"
-                        android:text="@string/lock_screen_message"
-                        android:textAppearance="@style/SubtitleTextAppearance" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <include
-                android:id="@+id/permission_needed"
-                layout="@layout/grid_item_permission_needed"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="@dimen/full_preview_page_default_padding_top"
-                android:paddingBottom="@dimen/full_preview_page_editing_padding_bottom"
-                android:visibility="gone" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            android:visibility="gone">
-
-            <androidx.coordinatorlayout.widget.CoordinatorLayout
-                android:id="@+id/coordinator_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom">
-
-                <LinearLayout
-                    android:id="@+id/bottom_sheet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/preview_bottom_sheet_background"
-                    android:orientation="vertical"
-                    android:theme="@style/WallpaperPicker.BottomPaneStyle"
-                    app:behavior_peekHeight="@dimen/preview_attribution_pane_collapsed_height"
-                    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
-                    <com.google.android.material.tabs.TabLayout
-                        android:id="@+id/tablayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        app:tabIndicatorColor="?android:attr/textColorPrimary"
-                        app:tabTextAppearance="@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps" />
-
-                    <com.android.wallpaper.widget.ConstraintViewPager
-                        android:id="@+id/viewpager"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-            </androidx.coordinatorlayout.widget.CoordinatorLayout>
-        </FrameLayout>
+            <include layout="@layout/full_preview_tabs" />
+        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/loading"

@@ -88,7 +88,7 @@
             android:layout_gravity="bottom|right"
             android:layout_marginEnd="@dimen/grid_item_individual_wallpaper_check_circle_offset"
             android:layout_marginBottom="@dimen/grid_item_individual_wallpaper_check_circle_offset"
-            android:src="@drawable/check_circle_blue"
+            android:src="@drawable/check_circle_accent_24dp"
             android:visibility="gone" />
 
     </androidx.cardview.widget.CardView>

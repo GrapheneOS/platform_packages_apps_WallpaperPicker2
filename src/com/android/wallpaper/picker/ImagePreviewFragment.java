@@ -33,7 +33,6 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceControlViewHost;
@@ -68,7 +67,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 /**
  * Fragment which displays the UI for previewing an individual static wallpaper and its attribution
@@ -95,7 +93,8 @@ public class ImagePreviewFragment extends PreviewFragment {
     private LockScreenOverlayUpdater mLockScreenOverlayUpdater;
     private View mTabs;
     private WallpaperInfoView mWallpaperInfoView;
-    private InfoPageController mInfoPageController;
+    private View mLock;
+    private View mHome;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,11 +105,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     @Override
     protected int getLayoutResId() {
         return R.layout.fragment_image_preview_v2;
-    }
-
-
-    protected int getBottomSheetResId() {
-        return R.id.bottom_sheet;
     }
 
     @Override
@@ -151,10 +145,10 @@ public class ImagePreviewFragment extends PreviewFragment {
         mLockScreenOverlayUpdater.adjustOverlayLayout(true);
 
         mTabs = view.findViewById(R.id.tabs_container);
-        View lock = mTabs.findViewById(R.id.lock);
-        View home = mTabs.findViewById(R.id.home);
-        lock.setOnClickListener(v -> showLockscreenPreview());
-        home.setOnClickListener(v -> showHomescreenPreview());
+        mLock = mTabs.findViewById(R.id.lock);
+        mHome = mTabs.findViewById(R.id.home);
+        mLock.setOnClickListener(v -> updateScreenPreview(/* isHomeSelected= */ false));
+        mHome.setOnClickListener(v -> updateScreenPreview(/* isHomeSelected= */ true));
 
         onBottomActionBarReady(mBottomActionBar);
         view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
@@ -165,9 +159,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                         activity, mContainer.getMeasuredWidth()));
         renderImageWallpaper();
         renderWorkspaceSurface();
-
-        mInfoPageController = new InfoPageController(view.findViewById(R.id.page_info),
-                mPreviewMode);
+        updateScreenPreview(/* isHomeSelected= */ mViewAsHome);
 
         // Trim some memory from Glide to make room for the full-size image in this fragment.
         Glide.get(activity).setMemoryCategory(MemoryCategory.LOW);
@@ -209,12 +201,8 @@ public class ImagePreviewFragment extends PreviewFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        WallpaperColorsLoader.getWallpaperColors(
-                getContext(),
-                mWallpaperAsset,
-                mWallpaperSurface.getMeasuredWidth(),
-                mWallpaperSurface.getMeasuredHeight(),
+        WallpaperColorsLoader.getWallpaperColors(getContext(),
+                mWallpaper.getThumbAsset(getContext()),
                 mLockScreenOverlayUpdater::setColor);
     }
 
@@ -243,14 +231,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        outState.putInt(KEY_BOTTOM_SHEET_STATE, bottomSheetBehavior.getState());
-    }
-
-    @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
 
@@ -271,11 +251,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                 });
         mBottomActionBar.setActionClickListener(APPLY, v -> onSetWallpaperClicked(v));
         mBottomActionBar.show();
-    }
-
-    @Override
-    protected void setBottomSheetContentAlpha(float alpha) {
-        mInfoPageController.setContentAlpha(alpha);
     }
 
     @Override
@@ -388,8 +363,10 @@ public class ImagePreviewFragment extends PreviewFragment {
         Point crop = new Point(cropWidth, cropHeight);
         Rect visibleRawWallpaperRect =
                 WallpaperCropUtils.calculateVisibleRect(mRawWallpaperSize, crop);
-        WallpaperCropUtils.adjustCurrentWallpaperCropRect(getContext(), mRawWallpaperSize,
-                visibleRawWallpaperRect);
+
+        final PointF centerPosition = WallpaperCropUtils.calculateDefaultCenter(requireContext(),
+                mRawWallpaperSize, visibleRawWallpaperRect);
+
         Point visibleRawWallpaperSize = new Point(visibleRawWallpaperRect.width(),
                 visibleRawWallpaperRect.height());
 
@@ -397,8 +374,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                 visibleRawWallpaperSize, crop);
         final float minWallpaperZoom = defaultWallpaperZoom;
 
-        final PointF centerPosition = new PointF(visibleRawWallpaperRect.centerX(),
-                visibleRawWallpaperRect.centerY());
 
         // Set min wallpaper zoom and max zoom on MosaicView widget.
         mFullResImageView.setMaxScale(Math.max(DEFAULT_WALLPAPER_MAX_ZOOM, defaultWallpaperZoom));
@@ -411,7 +386,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     private Rect calculateCropRect() {
         float wallpaperZoom = mFullResImageView.getScale();
         Context context = requireContext().getApplicationContext();
-        Display defaultDisplay = requireActivity().getWindowManager().getDefaultDisplay();
 
         Rect visibleFileRect = new Rect();
         mFullResImageView.visibleFileRect(visibleFileRect);
@@ -493,13 +467,10 @@ public class ImagePreviewFragment extends PreviewFragment {
         mTouchForwardingLayout.setForwardingEnabled(enabled);
     }
 
-    private void showHomescreenPreview() {
-        mWorkspaceSurface.setVisibility(View.VISIBLE);
-        mLockOverlay.setVisibility(View.GONE);
-    }
-
-    private void showLockscreenPreview() {
-        mWorkspaceSurface.setVisibility(View.GONE);
-        mLockOverlay.setVisibility(View.VISIBLE);
+    private void updateScreenPreview(boolean isHomeSelected) {
+        mHome.setSelected(isHomeSelected);
+        mLock.setSelected(!isHomeSelected);
+        mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.GONE);
+        mLockOverlay.setVisibility(isHomeSelected ? View.GONE : View.VISIBLE);
     }
 }

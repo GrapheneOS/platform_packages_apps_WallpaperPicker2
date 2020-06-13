@@ -314,7 +314,9 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     /**
      * Shows the view-only preview activity for the given wallpaper.
      */
-    public void showViewOnlyPreview(WallpaperInfo wallpaperInfo) {
+    public void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome) {
+        ((ViewOnlyPreviewActivityIntentFactory) mViewOnlyPreviewIntentFactory).setAsHomePreview(
+                /* isHomeAndLockPreviews= */ true, isViewAsHome);
         wallpaperInfo.showPreview(
                 mActivity, mViewOnlyPreviewIntentFactory,
                 VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE);

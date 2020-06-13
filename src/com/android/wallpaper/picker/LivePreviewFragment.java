@@ -62,7 +62,6 @@ import androidx.lifecycle.LiveData;
 import androidx.slice.Slice;
 import androidx.slice.widget.SliceLiveData;
 import androidx.slice.widget.SliceView;
-import androidx.viewpager.widget.ViewPager;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.compat.BuildCompat;
@@ -75,8 +74,6 @@ import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.LiveTileOverlay;
 import com.android.wallpaper.widget.LockScreenOverlayUpdater;
 import com.android.wallpaper.widget.WallpaperInfoView;
-
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,13 +101,10 @@ public class LivePreviewFragment extends PreviewFragment implements
     private final Rect mPreviewLocalRect = new Rect();
     private final Rect mPreviewGlobalRect = new Rect();
 
-    private Intent mWallpaperIntent;
     private Intent mDeleteIntent;
     private Intent mSettingsIntent;
 
     private List<Pair<String, View>> mPages;
-    private ViewPager mViewPager;
-    private TabLayout mTabLayout;
     private SliceView mSettingsSliceView;
     private LiveData<Slice> mSettingsLiveData;
     private View mLoadingScrim;
@@ -133,7 +127,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         android.app.WallpaperInfo info = mWallpaper.getWallpaperComponent();
-        mWallpaperIntent = getWallpaperIntent(info);
         setUpExploreIntentAndLabel(null);
 
         String deleteAction = getDeleteAction(info);
@@ -197,17 +190,11 @@ public class LivePreviewFragment extends PreviewFragment implements
         mLockScreenOverlayUpdater.adjustOverlayLayout(/* isFullScreen= */ true);
         mTab = view.findViewById(R.id.tabs_container);
         mHomeTextView = mTab.findViewById(R.id.home);
-        mHomeTextView.setTextColor(
-                getResources().getColorStateList(R.color.bottom_action_button_color_tint,
-                        getContext().getTheme()));
         mLockTextView = mTab.findViewById(R.id.lock);
-        mLockTextView.setTextColor(
-                getResources().getColorStateList(R.color.bottom_action_button_color_tint,
-                        getContext().getTheme()));
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
         mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(
                 mWorkspaceSurface, getContext());
-        updateScreenTab(/* isHomeSelected= */ true);
+        updateScreenTab(/* isHomeSelected= */ mViewAsHome);
         view.addOnLayoutChangeListener((thisView, left, top, right, bottom,
                 oldLeft, oldTop, oldRight, oldBottom) ->
                 setupPreview()
@@ -296,8 +283,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     private void showCurrentWallpaper(View rootView, boolean show) {
         rootView.findViewById(R.id.live_wallpaper_preview)
                 .setVisibility(show ? View.VISIBLE : View.GONE);
-        rootView.findViewById(R.id.permission_needed)
-                .setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -443,19 +428,6 @@ public class LivePreviewFragment extends PreviewFragment implements
         mBottomActionBar.show();
     }
 
-    private void logLiveWallpaperPageSelected(int position) {
-        switch (position) {
-            case 0:
-                mUserEventLogger.logLiveWallpaperInfoSelected(
-                        mWallpaper.getCollectionId(getActivity()), mWallpaper.getWallpaperId());
-                break;
-            case 1:
-                mUserEventLogger.logLiveWallpaperCustomizeSelected(
-                        mWallpaper.getCollectionId(getActivity()), mWallpaper.getWallpaperId());
-                break;
-        }
-    }
-
     @Override
     public void onEngineShown() {
         mLoadingScrim.post(() -> mLoadingScrim.animate()
@@ -476,35 +448,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     protected boolean isLoaded() {
         return mWallpaperConnection != null && mWallpaperConnection.isEngineReady();
-    }
-
-    private void initInfoPage() {
-        View pageInfo = InfoPageController.createView(getLayoutInflater());
-        mInfoPageController = new InfoPageController(pageInfo, mPreviewMode);
-        mPages.add(Pair.create(getString(R.string.tab_info), pageInfo));
-    }
-
-    private void initSettingsPage() {
-        final Uri uriSettingsSlice = getSettingsSliceUri(mWallpaper.getWallpaperComponent());
-        if (uriSettingsSlice == null) {
-            return;
-        }
-
-        final View pageSettings = getLayoutInflater().inflate(R.layout.preview_page_settings,
-                null /* root */);
-
-        mSettingsSliceView = pageSettings.findViewById(R.id.settings_slice);
-        mSettingsSliceView.setMode(SliceView.MODE_LARGE);
-        mSettingsSliceView.setScrollable(false);
-
-        // Set LiveData for SliceView
-        mSettingsLiveData = SliceLiveData.fromUri(requireContext() /* context */, uriSettingsSlice);
-        mSettingsLiveData.observeForever(mSettingsSliceView);
-
-        pageSettings.findViewById(R.id.preview_settings_pane_set_wallpaper_button)
-                .setOnClickListener(this::onSetWallpaperClicked);
-
-        mPages.add(Pair.create(getResources().getString(R.string.tab_customize), pageSettings));
     }
 
     @Override
@@ -530,11 +473,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     }
 
     @Override
-    protected int getBottomSheetResId() {
-        return R.id.bottom_sheet;
-    }
-
-    @Override
     protected int getLoadingIndicatorResId() {
         return R.id.loading_indicator;
     }
@@ -554,12 +492,6 @@ public class LivePreviewFragment extends PreviewFragment implements
                     }
                 });
     }
-
-    @Override
-    protected void setBottomSheetContentAlpha(float alpha) {
-        mInfoPageController.setContentAlpha(alpha);
-    }
-
 
     @Nullable
     protected String getDeleteAction(android.app.WallpaperInfo wallpaperInfo) {
@@ -597,6 +529,15 @@ public class LivePreviewFragment extends PreviewFragment implements
         super.onPause();
         if (mWallpaperConnection != null) {
             mWallpaperConnection.setVisibility(false);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mWallpaperConnection != null) {
+            mWallpaperConnection.disconnect();
+            mWallpaperConnection = null;
         }
     }
 

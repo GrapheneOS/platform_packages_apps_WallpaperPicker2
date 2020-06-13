@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.MainThread;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
@@ -98,13 +99,12 @@ public class LockScreenOverlayUpdater implements LifecycleObserver {
      * Sets the content's color based on the wallpaper's {@link WallpaperColors}.
      *
      * @param colors the {@link WallpaperColors} of the wallpaper which the lock screen overlay
-     *               will attach to
+     *               will attach to, or {@code null} to use light color as default
      */
-    public void setColor(WallpaperColors colors) {
-        int color = mContext.getColor(
-                (colors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_TEXT) == 0
-                        ? R.color.text_color_light
-                        : R.color.text_color_dark);
+    public void setColor(@Nullable WallpaperColors colors) {
+        int color = mContext.getColor(colors == null
+                || (colors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_TEXT) == 0
+                ? R.color.text_color_light : R.color.text_color_dark);
         mLockIcon.setImageTintList(ColorStateList.valueOf(color));
         mLockDate.setTextColor(color);
         mLockTime.setTextColor(color);
