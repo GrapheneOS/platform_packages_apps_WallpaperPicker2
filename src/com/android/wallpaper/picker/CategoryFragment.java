@@ -53,6 +53,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.LiveWallpaperInfo;
+import com.android.wallpaper.model.WallpaperCategory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory;
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory.WallpaperInfoCallback;
@@ -69,7 +70,6 @@ import com.android.wallpaper.picker.individual.IndividualPickerFragment.Thumbnai
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.WallpaperDestinationCallback;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
-import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
 import com.android.wallpaper.widget.LiveTileOverlay;
 import com.android.wallpaper.widget.LockScreenOverlayUpdater;
 import com.android.wallpaper.widget.PreviewPager;
@@ -103,7 +103,9 @@ public class CategoryFragment extends AppbarFragment
 
         boolean isReadExternalStoragePermissionGranted();
 
-        void showViewOnlyPreview(WallpaperInfo wallpaperInfo);
+        void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome);
+
+        void show(String collectionId);
     }
 
     public static CategoryFragment newInstance(CharSequence title) {
@@ -118,6 +120,9 @@ public class CategoryFragment extends AppbarFragment
 
     private static final String PERMISSION_READ_WALLPAPER_INTERNAL =
             "android.permission.READ_WALLPAPER_INTERNAL";
+
+    private static final boolean NEW_SCROLL_INTERACTION =
+            IndividualPickerFragment.NEW_SCROLL_INTERACTION;
 
     private ImageView mHomePreview;
     private SurfaceView mWorkspaceSurface;
@@ -187,7 +192,8 @@ public class CategoryFragment extends AppbarFragment
                 // For live wallpaper, show its thumbnail when scrolling.
                 if (mWallpaperConnection != null && mWallpaperConnection.isEngineReady()
                         && mHomePreviewWallpaperInfo instanceof LiveWallpaperInfo) {
-                    if (positionOffset == 0.0f) {
+                    if (positionOffset == 0.0f || positionOffset == 1.0f
+                            || positionOffsetPixels == 0) {
                         // The page is not moved. Show live wallpaper.
                         mWallpaperSurface.setZOrderMediaOverlay(false);
                     } else {
@@ -198,7 +204,8 @@ public class CategoryFragment extends AppbarFragment
 
                 if (mWallpaperConnection != null && mWallpaperConnection.isEngineReady()
                         && mLockPreviewWallpaperInfo instanceof LiveWallpaperInfo) {
-                    if (positionOffset == 0.0f) {
+                    if (positionOffset == 0.0f || positionOffset == 1.0f
+                            || positionOffsetPixels == 0) {
                         // The page is not moved. Show live wallpaper.
                         LiveTileOverlay.INSTANCE.attach(mLockscreenPreview.getOverlay());
                     } else {
@@ -226,30 +233,36 @@ public class CategoryFragment extends AppbarFragment
 
         ViewGroup fragmentContainer = view.findViewById(R.id.category_fragment_container);
         mBottomSheetBehavior = BottomSheetBehavior.from(fragmentContainer);
-        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (mIsCollapsingByUserSelecting) {
-                    mIsCollapsingByUserSelecting = newState != STATE_COLLAPSED;
-                    return;
-                }
+        if (!NEW_SCROLL_INTERACTION) {
+            fragmentContainer.getLayoutParams().height = MATCH_PARENT;
+            mBottomSheetBehavior.setBottomSheetCallback(
+                    new BottomSheetBehavior.BottomSheetCallback() {
+                        @Override
+                        public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                            if (mIsCollapsingByUserSelecting) {
+                                mIsCollapsingByUserSelecting = newState != STATE_COLLAPSED;
+                                return;
+                            }
 
-                if (mIndividualPickerFragment != null && mIndividualPickerFragment.isVisible()) {
-                    mIndividualPickerFragment.resizeLayout(newState == STATE_COLLAPSED
-                            ? mBottomSheetBehavior.getPeekHeight() : MATCH_PARENT);
-                }
-            }
+                            if (mIndividualPickerFragment != null
+                                    && mIndividualPickerFragment.isVisible()) {
+                                mIndividualPickerFragment.resizeLayout(newState == STATE_COLLAPSED
+                                        ? mBottomSheetBehavior.getPeekHeight() : MATCH_PARENT);
+                            }
+                        }
 
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                        @Override
+                        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
 
-            }
-        });
+                        }
+                    });
+        }
+        View rootContainer = view.findViewById(R.id.root_container);
         fragmentContainer.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View containerView, int left, int top, int right,
                     int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                int minimumHeight = containerView.getHeight() - mPreviewPager.getMeasuredHeight();
+                int minimumHeight = rootContainer.getHeight() - mPreviewPager.getMeasuredHeight();
                 mBottomSheetBehavior.setPeekHeight(minimumHeight);
                 containerView.setMinimumHeight(minimumHeight);
                 ((CardView) mHomePreview.getParent())
@@ -322,6 +335,15 @@ public class CategoryFragment extends AppbarFragment
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        if (mWallpaperConnection != null) {
+            mWallpaperConnection.disconnect();
+            mWallpaperConnection = null;
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         LiveTileOverlay.INSTANCE.detach(mHomePreview.getOverlay());
@@ -330,6 +352,9 @@ public class CategoryFragment extends AppbarFragment
             mWallpaperConnection.disconnect();
             mWallpaperConnection = null;
         }
+        mPreviewPager.setAdapter(null);
+        mWallPaperPreviews.forEach(view -> ((ViewGroup) view).removeAllViews());
+        mWallPaperPreviews.clear();
     }
 
     @Override
@@ -354,9 +379,13 @@ public class CategoryFragment extends AppbarFragment
     }
 
     @Override
-    public void show(String collectionId) {
-        mIndividualPickerFragment =
-                InjectorProvider.getInjector().getIndividualPickerFragment(collectionId);
+    public void show(Category category) {
+        if (!(category instanceof WallpaperCategory)) {
+            getFragmentHost().show(category.getCollectionId());
+            return;
+        }
+        mIndividualPickerFragment = InjectorProvider.getInjector()
+                .getIndividualPickerFragment(category.getCollectionId());
         mIndividualPickerFragment.highlightAppliedWallpaper(mSelectedPreviewPage);
         mIndividualPickerFragment.setOnWallpaperSelectedListener(position -> {
             // Scroll to the selected wallpaper and collapse the sheet if needed.
@@ -599,19 +628,14 @@ public class CategoryFragment extends AppbarFragment
 
         mWallpaperConnection = new WallpaperConnection(
                 getWallpaperIntent(homeWallpaper.getWallpaperComponent()), activity,
-                new WallpaperConnectionListener() {
-                    @Override
-                    public void onEngineShown() {
-
-                    }
-                }, mPreviewGlobalRect);
+                /* listener= */ null, mPreviewGlobalRect);
 
         LiveTileOverlay.INSTANCE.update(new RectF(mPreviewLocalRect),
                 ((CardView) previewView.getParent()).getRadius());
 
         mWallpaperConnection.setVisibility(true);
         previewView.post(() -> {
-            if (!mWallpaperConnection.connect()) {
+            if (mWallpaperConnection != null && !mWallpaperConnection.connect()) {
                 mWallpaperConnection = null;
                 LiveTileOverlay.INSTANCE.detach(previewView.getOverlay());
             }
@@ -663,15 +687,14 @@ public class CategoryFragment extends AppbarFragment
             }
 
             WallpaperColorsLoader.getWallpaperColors(
-                    getContext(),
-                    wallpaperInfo.getThumbAsset(getContext()),
-                    thumbnailView.getMeasuredWidth(),
-                    thumbnailView.getMeasuredHeight(),
-                    mLockScreenOverlayUpdater::setColor);
+                        activity,
+                        wallpaperInfo.getThumbAsset(activity),
+                        mLockScreenOverlayUpdater::setColor);
         }
 
-        thumbnailView.setOnClickListener(view -> {
-            getFragmentHost().showViewOnlyPreview(wallpaperInfo);
+
+        ((View) thumbnailView.getParent()).setOnClickListener(view -> {
+            getFragmentHost().showViewOnlyPreview(wallpaperInfo, isHomeWallpaper);
             eventLogger.logCurrentWallpaperPreviewed();
         });
     }
@@ -715,7 +738,7 @@ public class CategoryFragment extends AppbarFragment
         public void surfaceDestroyed(SurfaceHolder holder) { }
     };
 
-    private class PreviewPagerAdapter extends PagerAdapter {
+    private static class PreviewPagerAdapter extends PagerAdapter {
 
         private List<View> mPages;
 

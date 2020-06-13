@@ -17,16 +17,12 @@ package com.android.wallpaper.picker;
 
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
 
-import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
-import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources.NotFoundException;
 import android.content.res.TypedArray;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -52,18 +48,13 @@ import androidx.fragment.app.FragmentActivity;
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
-import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
-import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.widget.BottomActionBar;
-
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetBehavior.State;
 
 import java.util.Date;
 import java.util.List;
@@ -98,20 +89,22 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
     public static final String ARG_WALLPAPER = "wallpaper";
     public static final String ARG_PREVIEW_MODE = "preview_mode";
+    public static final String ARG_VIEW_AS_HOME = "view_as_home";
     public static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
 
     /**
      * Creates and returns new instance of {@link ImagePreviewFragment} with the provided wallpaper
      * set as an argument.
      */
-    public static PreviewFragment newInstance(
-            WallpaperInfo wallpaperInfo, @PreviewMode int mode, boolean testingModeEnabled) {
+    public static PreviewFragment newInstance(WallpaperInfo wallpaperInfo, @PreviewMode int mode,
+            boolean viewAsHome, boolean testingModeEnabled) {
 
         boolean isLive = wallpaperInfo instanceof LiveWallpaperInfo;
 
         Bundle args = new Bundle();
         args.putParcelable(ARG_WALLPAPER, wallpaperInfo);
         args.putInt(ARG_PREVIEW_MODE, mode);
+        args.putBoolean(ARG_VIEW_AS_HOME, viewAsHome);
         args.putBoolean(ARG_TESTING_MODE_ENABLED, testingModeEnabled);
 
         PreviewFragment fragment = isLive ? new LivePreviewFragment() : new ImagePreviewFragment();
@@ -125,10 +118,11 @@ public abstract class PreviewFragment extends AppbarFragment implements
             "set_wallpaper_error_dialog";
     private static final int UNUSED_REQUEST_CODE = 1;
     private static final String TAG = "PreviewFragment";
-    static final String KEY_BOTTOM_SHEET_STATE = "key_bottom_sheet_state";
 
     @PreviewMode
     protected int mPreviewMode;
+
+    protected boolean mViewAsHome;
 
     /**
      * When true, enables a test mode of operation -- in which certain UI features are disabled to
@@ -140,15 +134,10 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected WallpaperInfo mWallpaper;
     protected WallpaperSetter mWallpaperSetter;
     protected UserEventLogger mUserEventLogger;
-    protected ViewGroup mBottomSheet;
     protected BottomActionBar mBottomActionBar;
     protected ContentLoadingProgressBar mLoadingProgressBar;
 
     protected CheckBox mPreview;
-
-    @SuppressWarnings("RestrictTo")
-    @State
-    protected int mBottomSheetInitialState;
 
     protected Intent mExploreIntent;
     protected CharSequence mActionLabel;
@@ -180,6 +169,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
         //noinspection ResourceType
         mPreviewMode = getArguments().getInt(ARG_PREVIEW_MODE);
+        mViewAsHome = getArguments().getBoolean(ARG_VIEW_AS_HOME);
         mTestingModeEnabled = getArguments().getBoolean(ARG_TESTING_MODE_ENABLED);
         mWallpaperSetter = new WallpaperSetter(injector.getWallpaperPersister(appContext),
                 injector.getPreferences(appContext), mUserEventLogger, mTestingModeEnabled);
@@ -217,14 +207,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
         mBottomActionBar = view.findViewById(R.id.bottom_actionbar);
 
-        mBottomSheet = view.findViewById(getBottomSheetResId());
-
-        SizeCalculator.adjustBackgroundCornerRadius(mBottomSheet);
-
-        mBottomSheetInitialState = (savedInstanceState == null) ? STATE_EXPANDED
-                : savedInstanceState.getInt(KEY_BOTTOM_SHEET_STATE, STATE_EXPANDED);
-        setUpBottomSheetListeners();
-
         return view;
     }
 
@@ -236,8 +218,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected void populateInfoPage(InfoPageController infoPage) {
         Context context = requireContext();
 
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-
         List<String> attributions = getAttributions(context);
         android.app.WallpaperInfo wallpaperComponent = mWallpaper.getWallpaperComponent();
         boolean showMetadata =
@@ -247,21 +227,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
         infoPage.populate(attributions, showMetadata, this::onSetWallpaperClicked,
                 exploreLabel,
                 (showMetadata && mExploreIntent != null) ? this::onExploreClicked : null);
-
-        mBottomSheet.setVisibility(View.VISIBLE);
-
-        // Initialize the state of the BottomSheet based on the current state because if the initial
-        // and current state are the same, the state change listener won't fire and set the correct
-        // arrow asset and text alpha.
-        if (mBottomSheetInitialState == STATE_EXPANDED) {
-            setPreviewChecked(false);
-            infoPage.setContentAlpha(1f);
-        } else {
-            setPreviewChecked(true);
-            infoPage.setContentAlpha(0f);
-        }
-
-        bottomSheetBehavior.setState(mBottomSheetInitialState);
     }
 
     protected List<String> getAttributions(Context context) {
@@ -273,9 +238,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
     @LayoutRes
     protected abstract int getLayoutResId();
-
-    @IdRes
-    protected abstract int getBottomSheetResId();
 
     @IdRes
     protected abstract int getLoadingIndicatorResId();
@@ -333,34 +295,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
         );
     }
 
-    protected void setUpExploreIntent(@Nullable Runnable callback) {
-        Context context = getContext();
-        if (context == null) {
-            return;
-        }
-        String actionUrl = mWallpaper.getActionUrl(context);
-        if (actionUrl != null && !actionUrl.isEmpty()) {
-            Uri exploreUri = Uri.parse(mWallpaper.getActionUrl(context));
-            ExploreIntentChecker intentChecker =
-                    InjectorProvider.getInjector().getExploreIntentChecker(context);
-
-            intentChecker.fetchValidActionViewIntent(exploreUri, exploreIntent -> {
-                if (getActivity() == null) {
-                    return;
-                }
-
-                mExploreIntent = exploreIntent;
-                if (callback != null) {
-                    callback.run();
-                }
-            });
-        } else {
-            if (callback != null) {
-                callback.run();
-            }
-        }
-    }
-
     /**
      * Configure loading indicator with a MaterialProgressDrawable.
      */
@@ -402,14 +336,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
         mWallpaperSetter.cleanUp();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        outState.putInt(KEY_BOTTOM_SHEET_STATE, bottomSheetBehavior.getState());
-    }
-
     protected void onSetWallpaperClicked(View button) {
         mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
                 mWallpaper instanceof LiveWallpaperInfo);
@@ -424,47 +350,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
                 mWallpaper.getActionLabelRes(context));
 
         startActivity(mExploreIntent);
-    }
-
-    private void setUpBottomSheetListeners() {
-        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(View bottomSheet, int newState) {
-                // Don't respond to lingering state change events occurring after the fragment has
-                // already been detached from the activity. Else, IllegalStateException may occur
-                // when trying to fetch resources.
-                if (getActivity() == null) {
-                    return;
-                }
-                switch (newState) {
-                    case STATE_COLLAPSED:
-                        setPreviewChecked(true /* checked */);
-                        break;
-                    case STATE_EXPANDED:
-                        setPreviewChecked(false /* checked */);
-                        break;
-                    default:
-                        Log.v(TAG, "Ignoring BottomSheet state: " + newState);
-                }
-            }
-
-            @Override
-            public void onSlide(View bottomSheet, float slideOffset) {
-                float alpha;
-                if (slideOffset >= 0) {
-                    alpha = slideOffset;
-                } else {
-                    alpha = 1f - slideOffset;
-                }
-                setBottomSheetContentAlpha(alpha);
-            }
-        });
-    }
-
-    protected void setBottomSheetContentAlpha(float alpha) {
-
     }
 
     /**
