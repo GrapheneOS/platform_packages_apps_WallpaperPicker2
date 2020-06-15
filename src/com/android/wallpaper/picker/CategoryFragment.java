@@ -676,16 +676,21 @@ public class CategoryFragment extends AppbarFragment
 
         boolean renderInImageWallpaperSurface =
                 !(wallpaperInfo instanceof LiveWallpaperInfo) && isHomeWallpaper;
-        wallpaperInfo.getThumbAsset(activity.getApplicationContext())
-                .loadPreviewImage(activity,
-                        renderInImageWallpaperSurface ? mHomeImageWallpaper : thumbnailView,
-                        getResources().getColor(R.color.secondary_color));
+        ImageView imageView = renderInImageWallpaperSurface ? mHomeImageWallpaper : thumbnailView;
+        if (imageView != null) {
+            wallpaperInfo.getThumbAsset(activity.getApplicationContext())
+                    .loadPreviewImage(activity, imageView,
+                            getResources().getColor(R.color.secondary_color));
+        }
+
         if (isHomeWallpaper) {
             LiveTileOverlay.INSTANCE.detach(thumbnailView.getOverlay());
             if (wallpaperInfo instanceof LiveWallpaperInfo) {
-                wallpaperInfo.getThumbAsset(activity.getApplicationContext()).loadPreviewImage(
-                        activity, mHomeImageWallpaper,
-                        getResources().getColor(R.color.secondary_color));
+                if(mHomeImageWallpaper != null) {
+                    wallpaperInfo.getThumbAsset(activity.getApplicationContext()).loadPreviewImage(
+                            activity, mHomeImageWallpaper,
+                            getResources().getColor(R.color.secondary_color));
+                }
                 setUpLiveWallpaperPreview(wallpaperInfo);
             } else {
                 if (mWallpaperConnection != null) {
