@@ -77,6 +77,8 @@ public class ImagePreviewFragment extends PreviewFragment {
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
 
     private final Handler mHandler = new Handler();
+    private final WallpaperSurfaceCallback mWallpaperSurfaceCallback =
+            new WallpaperSurfaceCallback();
 
     private SubsamplingScaleImageView mFullResImageView;
     private Asset mWallpaperAsset;
@@ -227,6 +229,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         }
         mFullResImageView.recycle();
 
+        mWallpaperSurfaceCallback.cleanUp();
         mWorkspaceSurfaceCallback.cleanUp();
     }
 
@@ -425,10 +428,10 @@ public class ImagePreviewFragment extends PreviewFragment {
         mWallpaperSurface.getHolder().addCallback(mWallpaperSurfaceCallback);
     }
 
-    // TODO(tracyzhou): Refactor this into a utility class.
-    private final SurfaceHolder.Callback mWallpaperSurfaceCallback = new SurfaceHolder.Callback() {
+    private class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
 
         private Surface mLastSurface;
+        private SurfaceControlViewHost mHost;
 
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
@@ -448,11 +451,12 @@ public class ImagePreviewFragment extends PreviewFragment {
                         mWallpaperSurface.getHeight());
                 mTouchForwardingLayout.setTargetView(mFullResImageView);
 
-                SurfaceControlViewHost host = new SurfaceControlViewHost(getContext(),
+                cleanUp();
+                mHost = new SurfaceControlViewHost(getContext(),
                         getContext().getDisplay(), mWallpaperSurface.getHostToken());
-                host.setView(wallpaperPreviewContainer, wallpaperPreviewContainer.getWidth(),
+                mHost.setView(wallpaperPreviewContainer, wallpaperPreviewContainer.getWidth(),
                         wallpaperPreviewContainer.getHeight());
-                mWallpaperSurface.setChildSurfacePackage(host.getSurfacePackage());
+                mWallpaperSurface.setChildSurfacePackage(mHost.getSurfacePackage());
             }
         }
 
@@ -461,6 +465,13 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) { }
+
+        public void cleanUp() {
+            if (mHost != null) {
+                mHost.release();
+                mHost = null;
+            }
+        }
     };
 
     private void setEditingEnabled(boolean enabled) {

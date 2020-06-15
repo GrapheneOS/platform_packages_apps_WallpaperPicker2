@@ -93,6 +93,8 @@ public class CategoryFragment extends AppbarFragment
     private final Rect mPreviewLocalRect = new Rect();
     private final Rect mPreviewGlobalRect = new Rect();
     private final int[] mLivePreviewLocation = new int[2];
+    private final WallpaperSurfaceCallback mWallpaperSurfaceCallback =
+            new WallpaperSurfaceCallback();
 
     /**
      * Interface to be implemented by an Activity hosting a {@link CategoryFragment}
@@ -348,6 +350,7 @@ public class CategoryFragment extends AppbarFragment
         super.onDestroyView();
         LiveTileOverlay.INSTANCE.detach(mHomePreview.getOverlay());
         LiveTileOverlay.INSTANCE.detach(mLockscreenPreview.getOverlay());
+        mWallpaperSurfaceCallback.cleanUp();
         if (mWallpaperConnection != null) {
             mWallpaperConnection.disconnect();
             mWallpaperConnection = null;
@@ -708,9 +711,10 @@ public class CategoryFragment extends AppbarFragment
         mWorkspaceSurface.getHolder().addCallback(mWorkspaceSurfaceCallback);
     }
 
-    private final SurfaceHolder.Callback mWallpaperSurfaceCallback = new SurfaceHolder.Callback() {
+    private class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
 
         private Surface mLastSurface;
+        private SurfaceControlViewHost mHost;
 
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
@@ -723,11 +727,12 @@ public class CategoryFragment extends AppbarFragment
                         makeMeasureSpec(mHomePreview.getHeight(), EXACTLY));
                 mHomeImageWallpaper.layout(0, 0, mHomePreview.getWidth(), mHomePreview.getHeight());
 
-                SurfaceControlViewHost host = new SurfaceControlViewHost(getContext(),
+                cleanUp();
+                mHost = new SurfaceControlViewHost(getContext(),
                         getContext().getDisplay(), mWallpaperSurface.getHostToken());
-                host.setView(mHomeImageWallpaper, mHomeImageWallpaper.getWidth(),
+                mHost.setView(mHomeImageWallpaper, mHomeImageWallpaper.getWidth(),
                         mHomeImageWallpaper.getHeight());
-                mWallpaperSurface.setChildSurfacePackage(host.getSurfacePackage());
+                mWallpaperSurface.setChildSurfacePackage(mHost.getSurfacePackage());
             }
         }
 
@@ -736,6 +741,13 @@ public class CategoryFragment extends AppbarFragment
 
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) { }
+
+        public void cleanUp() {
+            if (mHost != null) {
+                mHost.release();
+                mHost = null;
+            }
+        }
     };
 
     private static class PreviewPagerAdapter extends PagerAdapter {
