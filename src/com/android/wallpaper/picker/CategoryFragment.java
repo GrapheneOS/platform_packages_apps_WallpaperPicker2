@@ -413,6 +413,18 @@ public class CategoryFragment extends AppbarFragment
     }
 
     @Override
+    public void expandBottomSheet() {
+        if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
+    }
+
+    @Override
+    public int getBottomSheetState() {
+        return mBottomSheetBehavior.getState();
+    }
+
+    @Override
     public void updateThumbnail(WallpaperInfo wallpaperInfo) {
         new android.os.Handler().post(() -> {
             // A config change may have destroyed the activity since the refresh started, so check
