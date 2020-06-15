@@ -200,7 +200,6 @@ public class LivePreviewFragment extends PreviewFragment implements
                 setupPreview()
         );
         setupCurrentWallpaperPreview(view);
-        previewLiveWallpaper(container, mHomePreview);
         setupPreview();
         renderWorkspaceSurface();
         onBottomActionBarReady(mBottomActionBar);
@@ -302,8 +301,8 @@ public class LivePreviewFragment extends PreviewFragment implements
         super.onDestroy();
     }
 
-    private void previewLiveWallpaper(ViewGroup container, ImageView thumbnailView) {
-        container.post(() -> {
+    private void previewLiveWallpaper(ImageView thumbnailView) {
+        thumbnailView.post(() -> {
             mWallpaper.getThumbAsset(requireActivity().getApplicationContext()).loadPreviewImage(
                     requireActivity(), thumbnailView,
                     getResources().getColor(R.color.secondary_color));
@@ -378,7 +377,7 @@ public class LivePreviewFragment extends PreviewFragment implements
 
         mWallpaperConnection.setVisibility(true);
         previewView.post(() -> {
-            if (!mWallpaperConnection.connect()) {
+            if (mWallpaperConnection != null && !mWallpaperConnection.connect()) {
                 mWallpaperConnection = null;
                 LiveTileOverlay.INSTANCE.detach(previewView.getOverlay());
             }
@@ -514,6 +513,12 @@ public class LivePreviewFragment extends PreviewFragment implements
             return metaData.getString(KEY_ACTION_DELETE_LIVE_WALLPAPER);
         }
         return null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        previewLiveWallpaper(mHomePreview);
     }
 
     @Override
