@@ -409,7 +409,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                 new SetWallpaperCallback() {
                     @Override
                     public void onSuccess(WallpaperInfo wallpaperInfo) {
-                        finishActivityWithResultOk();
+                        finishActivity(/* success= */ true);
                     }
 
                     @Override

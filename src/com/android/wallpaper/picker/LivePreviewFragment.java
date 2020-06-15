@@ -46,7 +46,6 @@ import android.service.wallpaper.WallpaperSettingsActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -96,6 +95,9 @@ public class LivePreviewFragment extends PreviewFragment implements
      * @see IWallpaperConnection
      */
     protected WallpaperConnection mWallpaperConnection;
+    protected WallpaperInfoView mWallpaperInfoView;
+    protected CardView mHomePreviewCard;
+    protected ImageView mHomePreview;
 
     private final int[] mLivePreviewLocation = new int[2];
     private final Rect mPreviewLocalRect = new Rect();
@@ -111,13 +113,10 @@ public class LivePreviewFragment extends PreviewFragment implements
     private InfoPageController mInfoPageController;
     private Point mScreenSize;
     private ViewGroup mViewGroup;
-    private CardView mHomePreviewCard;
     private TouchForwardingLayout mTouchForwardingLayout;
-    private ImageView mHomePreview;
     private View mTab;
     private TextView mHomeTextView;
     private TextView mLockTextView;
-    private WallpaperInfoView mWallpaperInfoView;
     private SurfaceView mWorkspaceSurface;
     private ViewGroup mLockScreenOverlay;
     private LockScreenOverlayUpdater mLockScreenOverlayUpdater;
@@ -329,6 +328,13 @@ public class LivePreviewFragment extends PreviewFragment implements
         }
         repositionPreview(previewView);
 
+        if (mWallpaperInfoView != null) {
+            mWallpaperInfoView.populateWallpaperInfo(
+                    mWallpaper,
+                    mActionLabel,
+                    mExploreIntent,
+                    LivePreviewFragment.this::onExploreClicked);
+        }
         mWallpaperConnection = new WallpaperConnection(
                 getWallpaperIntent(homeWallpaper.getWallpaperComponent()), activity,
                 new WallpaperConnection.WallpaperConnectionListener() {
@@ -345,13 +351,6 @@ public class LivePreviewFragment extends PreviewFragment implements
                                         mLoadingProgressBar.hide();
                                     }
                                     mLoadingScrim.setVisibility(View.GONE);
-                                    if (mWallpaperInfoView != null) {
-                                        mWallpaperInfoView.populateWallpaperInfo(
-                                                mWallpaper,
-                                                mActionLabel,
-                                                mExploreIntent,
-                                                LivePreviewFragment.this::onExploreClicked);
-                                    }
                                 }));
                         final Drawable placeholder = previewView.getDrawable() == null
                                 ? new ColorDrawable(getResources().getColor(R.color.secondary_color,
@@ -482,7 +481,7 @@ public class LivePreviewFragment extends PreviewFragment implements
                 destination, 0, null, new SetWallpaperCallback() {
                     @Override
                     public void onSuccess(com.android.wallpaper.model.WallpaperInfo wallpaperInfo) {
-                        finishActivityWithResultOk();
+                        finishActivity(/* success= */ true);
                     }
 
                     @Override
@@ -547,8 +546,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     }
 
     private void showDeleteConfirmDialog() {
-        final AlertDialog alertDialog = new AlertDialog.Builder(
-                new ContextThemeWrapper(getContext(), getDeviceDefaultTheme()))
+        final AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setMessage(R.string.delete_wallpaper_confirmation)
                 .setPositiveButton(R.string.delete_live_wallpaper,
                         (dialog, which) -> deleteLiveWallpaper())
@@ -560,7 +558,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     private void deleteLiveWallpaper() {
         if (mDeleteIntent != null) {
             requireContext().startService(mDeleteIntent);
-            finishActivityWithResultOk();
+            finishActivity(/* success= */ false);
         }
     }
 
