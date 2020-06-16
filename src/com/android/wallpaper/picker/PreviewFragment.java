@@ -241,7 +241,7 @@ public abstract class PreviewFragment extends Fragment implements
 
         view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
             toolbar.setPadding(toolbar.getPaddingLeft(),
-                    toolbar.getPaddingTop() + windowInsets.getSystemWindowInsetTop(),
+                    windowInsets.getSystemWindowInsetTop(),
                     toolbar.getPaddingRight(), toolbar.getPaddingBottom());
             mBottomSheet.setPadding(mBottomSheet.getPaddingLeft(),
                     mBottomSheet.getPaddingTop(), mBottomSheet.getPaddingRight(),
