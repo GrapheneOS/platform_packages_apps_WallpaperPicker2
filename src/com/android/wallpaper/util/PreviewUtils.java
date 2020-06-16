@@ -17,9 +17,13 @@ package com.android.wallpaper.util;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 /** Util class for wallpaper preview. */
 public class PreviewUtils {
@@ -28,12 +32,23 @@ public class PreviewUtils {
     private static final String METHOD_GET_PREVIEW = "get_preview";
 
     private final Context mContext;
+    private final String mProviderAuthority;
     private final ProviderInfo mProviderInfo;
 
     public PreviewUtils(Context context, String authorityMetadataKey) {
         mContext = context;
-        mProviderInfo = mContext.getPackageManager().resolveContentProvider(
-                authorityMetadataKey, 0);
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME);
+
+        ResolveInfo info = context.getPackageManager().resolveActivity(homeIntent,
+                PackageManager.MATCH_DEFAULT_ONLY | PackageManager.GET_META_DATA);
+        if (info != null && info.activityInfo != null && info.activityInfo.metaData != null) {
+            mProviderAuthority = info.activityInfo.metaData.getString(authorityMetadataKey);
+        } else {
+            mProviderAuthority = null;
+        }
+        // TODO: check permissions if needed
+        mProviderInfo = TextUtils.isEmpty(mProviderAuthority) ? null
+                : mContext.getPackageManager().resolveContentProvider(mProviderAuthority, 0);
     }
 
     /** Render preview under the current grid option. */
