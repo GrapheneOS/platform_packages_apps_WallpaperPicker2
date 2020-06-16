@@ -622,7 +622,13 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
     @Override
     public void onStartRotationDialogDismiss(@NonNull DialogInterface dialog) {
-        mBottomActionBar.deselectAction(ROTATION);
+        // TODO(b/159310028): Refactor fragment layer to make it able to restore from config change.
+        // This is to handle config change with StartRotationDialog popup,  the StartRotationDialog
+        // still holds a reference to the destroyed Fragment and is calling
+        // onStartRotationDialogDismissed on that destroyed Fragment.
+        if (mBottomActionBar != null) {
+            mBottomActionBar.deselectAction(ROTATION);
+        }
     }
 
     @Override
