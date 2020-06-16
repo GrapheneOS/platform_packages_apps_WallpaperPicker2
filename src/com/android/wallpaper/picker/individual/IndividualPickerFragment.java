@@ -25,6 +25,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
@@ -106,7 +107,8 @@ import java.util.Random;
 public class IndividualPickerFragment extends BottomActionBarFragment
         implements RotationStarter, StartRotationErrorDialogFragment.Listener,
         CurrentWallpaperBottomSheetPresenter.RefreshListener,
-        SetWallpaperErrorDialogFragment.Listener, SetWallpaperDialogFragment.Listener {
+        SetWallpaperErrorDialogFragment.Listener, SetWallpaperDialogFragment.Listener,
+        StartRotationDialogFragment.Listener {
 
     public static final boolean NEW_SCROLL_INTERACTION = true;
 
@@ -616,6 +618,11 @@ public class IndividualPickerFragment extends BottomActionBarFragment
             mPackageStatusNotifier.removeListener(mAppStatusListener);
         }
         mWallpaperSetter.cleanUp();
+    }
+
+    @Override
+    public void onStartRotationDialogDismiss(@NonNull DialogInterface dialog) {
+        mBottomActionBar.setActionSelected(ROTATION, false /* selected */);
     }
 
     @Override

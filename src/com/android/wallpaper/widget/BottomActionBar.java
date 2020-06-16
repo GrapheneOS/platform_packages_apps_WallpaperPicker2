@@ -131,11 +131,11 @@ public class BottomActionBar extends FrameLayout {
 
                 // Enable all buttons when queue is not processing.
                 enableActions();
-                if (mSelectedAction == null) {
+                if (!isExpandable(mSelectedAction)) {
                     return;
                 }
-                // Ensure the button state should be the same as bottom sheet state to catch up the
-                // state change from dragging or some unexpected bottom sheet state changes.
+                // Ensure the button state is the same as bottom sheet state to catch up the state
+                // change from dragging or some unexpected bottom sheet state changes.
                 if (newState == STATE_COLLAPSED) {
                     updateSelectedState(mSelectedAction, /* selected= */ false);
                 } else if (newState == STATE_EXPANDED) {
@@ -462,7 +462,8 @@ public class BottomActionBar extends FrameLayout {
         /**
          * Returns {@code true} if the queue is processing. For example, if the bottom sheet is
          * going with expanded-collapsed-expanded, it would return {@code true} until last expanded
-         * state is finished. */
+         * state is finished.
+         */
         public boolean isQueueProcessing() {
             return mIsQueueProcessing;
         }
