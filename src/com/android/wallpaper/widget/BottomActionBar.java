@@ -92,7 +92,7 @@ public class BottomActionBar extends FrameLayout {
     private final Set<VisibilityChangeListener> mVisibilityChangeListeners = new HashSet<>();
 
     // The current selected action in the BottomActionBar, can be null when no action is selected.
-    private BottomAction mSelectedAction;
+    @Nullable private BottomAction mSelectedAction;
 
     public BottomActionBar(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -311,7 +311,7 @@ public class BottomActionBar extends FrameLayout {
     public void showActionsOnly(BottomAction... actions) {
         final Set<BottomAction> actionsSet = new HashSet<>(Arrays.asList(actions));
 
-        mActionMap.forEach((action, view) -> {
+        mActionMap.keySet().forEach(action -> {
             if (actionsSet.contains(action)) {
                 showActions(action);
             } else {
@@ -381,23 +381,24 @@ public class BottomActionBar extends FrameLayout {
         return mActionMap.get(action).isSelected();
     }
 
-    /** Resets {@link BottomActionBar}. */
+    /** Resets {@link BottomActionBar} to initial state. */
     public void reset() {
+        // Not visible by default, see res/layout/bottom_action_bar.xml
         hide();
+        // All actions are hide and enabled by default, see res/layout/bottom_action_bar.xml
         hideAllActions();
-        clearActionClickListeners();
         enableActions();
+        // Clears all the actions' click listeners
+        mActionMap.values().forEach(v -> v.setOnClickListener(null));
+        findViewById(R.id.action_back).setOnClickListener(null);
+        // Deselect all buttons.
         mActionMap.keySet().forEach(a -> updateSelectedState(a, /* selected= */ false));
-        mBottomSheetView.removeAllViews();
+        // Clear values.
         mContentViewMap.clear();
+        mActionSelectedListeners.clear();
+        mBottomSheetView.removeAllViews();
         mBottomSheetBehavior.reset();
         mSelectedAction = null;
-    }
-
-    /** Clears all the actions' click listeners */
-    private void clearActionClickListeners() {
-        mActionMap.forEach((bottomAction, view) -> view.setOnClickListener(null));
-        findViewById(R.id.action_back).setOnClickListener(null);
     }
 
     private void updateSelectedState(BottomAction bottomAction, boolean selected) {
