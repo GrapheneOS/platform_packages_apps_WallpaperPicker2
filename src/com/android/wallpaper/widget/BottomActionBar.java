@@ -35,7 +35,9 @@ import com.android.wallpaper.util.SizeCalculator;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -77,21 +79,7 @@ public class BottomActionBar extends FrameLayout {
     // TODO(b/154299462): Separate downloadable related actions from WallpaperPicker.
     /** The action items in the bottom action bar. */
     public enum BottomAction {
-        ROTATION, DELETE, INFORMATION(true), EDIT, CUSTOMIZE(true), DOWNLOAD, PROGRESS, APPLY;
-
-        private final boolean mExpandable;
-
-        BottomAction() {
-            this(/* expandable= */ false);
-        }
-
-        BottomAction(boolean expandable) {
-            mExpandable = expandable;
-        }
-
-        public boolean isExpandable() {
-            return mExpandable;
-        }
+        ROTATION, DELETE, INFORMATION, EDIT, CUSTOMIZE, DOWNLOAD, PROGRESS, APPLY
     }
 
     private final Map<BottomAction, View> mActionMap = new EnumMap<>(BottomAction.class);
@@ -100,12 +88,9 @@ public class BottomActionBar extends FrameLayout {
             new EnumMap<>(BottomAction.class);
 
     private final ViewGroup mBottomSheetView;
-    private final BottomSheetBehavior<ViewGroup> mBottomSheetBehavior;
+    private final QueueStateBottomSheetBehavior<ViewGroup> mBottomSheetBehavior;
     private final Set<VisibilityChangeListener> mVisibilityChangeListeners = new HashSet<>();
 
-    // Track the current bottom sheet action which the content of the bottom sheet view
-    // corresponds to
-    private BottomAction mCurrentBottomSheetAction;
     // The current selected action in the BottomActionBar, can be null when no action is selected.
     private BottomAction mSelectedAction;
 
@@ -125,19 +110,36 @@ public class BottomActionBar extends FrameLayout {
         mBottomSheetView = findViewById(R.id.action_bottom_sheet);
         SizeCalculator.adjustBackgroundCornerRadius(mBottomSheetView);
 
-        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetView);
+        mBottomSheetBehavior = (QueueStateBottomSheetBehavior<ViewGroup>) BottomSheetBehavior.from(
+                mBottomSheetView);
         mBottomSheetBehavior.setState(STATE_COLLAPSED);
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (mCurrentBottomSheetAction == null) {
+                if (mBottomSheetBehavior.isQueueProcessing()) {
+                    // Avoid button and bottom sheet mismatching from quick tapping buttons when
+                    // bottom sheet is changing state.
+                    disableActions();
+                    // If bottom sheet is going with expanded-collapsed-expanded, the new content
+                    // will be updated in collapsed state. The first state change from expanded to
+                    // collapsed should still show the previous content view.
+                    if (mSelectedAction != null && newState == STATE_COLLAPSED) {
+                        updateContentViewFor(mSelectedAction);
+                    }
                     return;
                 }
 
+                // Enable all buttons when queue is not processing.
+                enableActions();
+                if (mSelectedAction == null) {
+                    return;
+                }
+                // Ensure the button state should be the same as bottom sheet state to catch up the
+                // state change from dragging or some unexpected bottom sheet state changes.
                 if (newState == STATE_COLLAPSED) {
-                    updateSelectedState(mCurrentBottomSheetAction, /* selected= */ false);
+                    updateSelectedState(mSelectedAction, /* selected= */ false);
                 } else if (newState == STATE_EXPANDED) {
-                    updateSelectedState(mCurrentBottomSheetAction, /* selected= */ true);
+                    updateSelectedState(mSelectedAction, /* selected= */ true);
                 }
             }
             @Override
@@ -155,7 +157,8 @@ public class BottomActionBar extends FrameLayout {
     public void onVisibilityAggregated(boolean isVisible) {
         super.onVisibilityAggregated(isVisible);
         if (!isVisible) {
-            mBottomSheetBehavior.setState(STATE_COLLAPSED);
+            hideBottomSheetAndDeselectButtonIfExpanded();
+            mBottomSheetBehavior.reset();
         }
         mVisibilityChangeListeners.forEach(listener -> listener.onVisibilityChange(isVisible));
     }
@@ -173,19 +176,16 @@ public class BottomActionBar extends FrameLayout {
         mContentViewMap.put(action, contentView);
         mBottomSheetView.addView(contentView);
         setActionClickListener(action, actionView -> {
-            mCurrentBottomSheetAction = action;
-            mContentViewMap.forEach((a, v) -> v.setVisibility(a.equals(action) ? VISIBLE : GONE));
+            if (mBottomSheetBehavior.getState() == STATE_COLLAPSED) {
+                updateContentViewFor(action);
+            }
             mBottomSheetView.setAccessibilityTraversalAfter(actionView.getId());
         });
     }
 
-    /**
-     * Expands or collapses bottom sheet.
-     *
-     * @param isExpand {@code true} if bottom sheet is to be expanded; {@code false} otherwise.
-     */
-    public void expandBottomSheet(boolean isExpand) {
-        mBottomSheetBehavior.setState(isExpand ? STATE_EXPANDED : STATE_COLLAPSED);
+    /** Collapses the bottom sheet. */
+    public void collapseBottomSheetIfExpanded() {
+        hideBottomSheetAndDeselectButtonIfExpanded();
     }
 
     /**
@@ -202,11 +202,14 @@ public class BottomActionBar extends FrameLayout {
                     "Had already set a click listener to button: " + bottomAction);
         }
         buttonView.setOnClickListener(view -> {
-            if (mSelectedAction != null) {
+            if (mSelectedAction != null && isActionSelected(mSelectedAction)) {
                 updateSelectedState(mSelectedAction, /* selected= */ false);
-                if (mSelectedAction.isExpandable()) {
-                    mBottomSheetBehavior.setState(STATE_COLLAPSED);
+                if (isExpandable(mSelectedAction)) {
+                    mBottomSheetBehavior.enqueue(STATE_COLLAPSED);
                 }
+            } else {
+                // Error handling, set to null if the action is not selected.
+                mSelectedAction = null;
             }
 
             if (bottomAction == mSelectedAction) {
@@ -216,11 +219,12 @@ public class BottomActionBar extends FrameLayout {
                 // Select a different action from the current selected action.
                 mSelectedAction = bottomAction;
                 updateSelectedState(mSelectedAction, /* selected= */ true);
-                if (mSelectedAction.isExpandable()) {
-                    mBottomSheetBehavior.setState(STATE_EXPANDED);
+                if (isExpandable(mSelectedAction)) {
+                    mBottomSheetBehavior.enqueue(STATE_EXPANDED);
                 }
             }
             actionClickListener.onClick(view);
+            mBottomSheetBehavior.processQueueForStateChange();
         });
     }
 
@@ -293,8 +297,8 @@ public class BottomActionBar extends FrameLayout {
         for (BottomAction action : actions) {
             mActionMap.get(action).setVisibility(GONE);
 
-            if (action.isExpandable() && mSelectedAction == action) {
-                mBottomSheetBehavior.setState(STATE_COLLAPSED);
+            if (isExpandable(action) && mSelectedAction == action) {
+                hideBottomSheetAndDeselectButtonIfExpanded();
             }
         }
     }
@@ -383,10 +387,11 @@ public class BottomActionBar extends FrameLayout {
         hideAllActions();
         clearActionClickListeners();
         enableActions();
-        mActionMap.forEach(
-                (action, view) -> updateSelectedState(action, /* selected= */ false));
+        mActionMap.keySet().forEach(a -> updateSelectedState(a, /* selected= */ false));
         mBottomSheetView.removeAllViews();
         mContentViewMap.clear();
+        mBottomSheetBehavior.reset();
+        mSelectedAction = null;
     }
 
     /** Clears all the actions' click listeners */
@@ -406,5 +411,98 @@ public class BottomActionBar extends FrameLayout {
             listener.onActionSelected(selected);
         }
         bottomActionView.setSelected(selected);
+    }
+
+    private void hideBottomSheetAndDeselectButtonIfExpanded() {
+        if (isExpandable(mSelectedAction) && mBottomSheetBehavior.getState() == STATE_EXPANDED) {
+            mBottomSheetBehavior.setState(STATE_COLLAPSED);
+            updateSelectedState(mSelectedAction, /* selected= */ false);
+            mSelectedAction = null;
+        }
+    }
+
+    private void updateContentViewFor(BottomAction action) {
+        mContentViewMap.forEach((a, v) -> v.setVisibility(a.equals(action) ? VISIBLE : GONE));
+    }
+
+    private boolean isExpandable(BottomAction action) {
+        return action != null && mContentViewMap.containsKey(action);
+    }
+
+    /** A {@link BottomSheetBehavior} that can process a queue of bottom sheet states.*/
+    public static class QueueStateBottomSheetBehavior<V extends View>
+            extends BottomSheetBehavior<V> {
+
+        private final Deque<Integer> mStateQueue = new ArrayDeque<>();
+        private boolean mIsQueueProcessing;
+
+        public QueueStateBottomSheetBehavior(Context context, @Nullable AttributeSet attrs) {
+            super(context, attrs);
+            // Binds the default callback for processing queue.
+            setBottomSheetCallback(null);
+        }
+
+        /** Enqueues the bottom sheet states. */
+        public void enqueue(int state) {
+            if (!mStateQueue.isEmpty() && mStateQueue.getLast() == state) {
+                return;
+            }
+            mStateQueue.add(state);
+        }
+
+        /** Processes the queue of bottom sheet state that was set via {@link #enqueue}. */
+        public void processQueueForStateChange() {
+            if (mStateQueue.isEmpty()) {
+                return;
+            }
+            setState(mStateQueue.getFirst());
+            mIsQueueProcessing = true;
+        }
+
+        /**
+         * Returns {@code true} if the queue is processing. For example, if the bottom sheet is
+         * going with expanded-collapsed-expanded, it would return {@code true} until last expanded
+         * state is finished. */
+        public boolean isQueueProcessing() {
+            return mIsQueueProcessing;
+        }
+
+        /** Resets the queue state. */
+        public void reset() {
+            mStateQueue.clear();
+            mIsQueueProcessing = false;
+        }
+
+        @Override
+        public void setBottomSheetCallback(BottomSheetCallback callback) {
+            super.setBottomSheetCallback(new BottomSheetCallback() {
+                @Override
+                public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                    if (!mStateQueue.isEmpty()) {
+                        if (newState == mStateQueue.getFirst()) {
+                            mStateQueue.removeFirst();
+                            if (mStateQueue.isEmpty()) {
+                                mIsQueueProcessing = false;
+                            } else {
+                                setState(mStateQueue.getFirst());
+                            }
+                        } else {
+                            setState(mStateQueue.getFirst());
+                        }
+                    }
+
+                    if (callback != null) {
+                        callback.onStateChanged(bottomSheet, newState);
+                    }
+                }
+
+                @Override
+                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                    if (callback != null) {
+                        callback.onSlide(bottomSheet, slideOffset);
+                    }
+                }
+            });
+        }
     }
 }
