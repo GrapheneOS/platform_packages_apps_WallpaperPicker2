@@ -314,7 +314,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
     @Override
     public void onDialogDismissed(boolean withItemSelected) {
-        mBottomActionBar.setActionSelected(APPLY, false /* selected */);
+        mBottomActionBar.deselectAction(APPLY);
     }
 
     @Override
