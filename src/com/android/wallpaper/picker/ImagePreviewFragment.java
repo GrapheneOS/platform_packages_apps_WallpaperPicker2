@@ -267,7 +267,11 @@ public class ImagePreviewFragment extends PreviewFragment {
      */
     private void initFullResView() {
         setEditingEnabled(false);
-        mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
+        // Minimum scale will only be respected under this scale type.
+        mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
+        // When we set a minimum scale bigger than the scale with which the full image is shown,
+        // disallow user to pan outside the view we show the wallpaper in.
+        mFullResImageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
 
         // Set a solid black "page bitmap" so MosaicView draws a black background while waiting
         // for the image to load or a transparent one if a thumbnail already loaded.
