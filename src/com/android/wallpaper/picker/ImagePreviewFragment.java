@@ -178,7 +178,12 @@ public class ImagePreviewFragment extends PreviewFragment {
                                     activity.getApplicationContext(), isRtl())));
         }
 
+        mBottomActionBar.disableActions();
         mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
+            if (mBottomActionBar != null) {
+                mBottomActionBar.enableActions();
+            }
+
             // Don't continue loading the wallpaper if the Fragment is detached.
             if (getActivity() == null) {
                 return;
