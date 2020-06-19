@@ -71,6 +71,7 @@ import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.widget.BottomActionBar;
+import com.android.wallpaper.widget.BottomActionBar.AccessibilityCallback;
 import com.android.wallpaper.widget.LiveTileOverlay;
 import com.android.wallpaper.widget.LockScreenOverlayUpdater;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
@@ -407,6 +408,21 @@ public class LivePreviewFragment extends PreviewFragment implements
         mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
                 .inflate(R.layout.wallpaper_info_view, /* root= */ null);
         mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
+
+        // Update target view's accessibility param since it will be blocked by the bottom sheet
+        // when expanded.
+        mBottomActionBar.setAccessibilityCallback(new AccessibilityCallback() {
+            @Override
+            public void onBottomSheetCollapsed() {
+                mTab.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+            }
+
+            @Override
+            public void onBottomSheetExpanded() {
+                mTab.setImportantForAccessibility(
+                        View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+            }
+        });
         final Uri uriSettingsSlice = getSettingsSliceUri(mWallpaper.getWallpaperComponent());
         if (uriSettingsSlice != null) {
             View previewPage = LayoutInflater.from(getContext())
