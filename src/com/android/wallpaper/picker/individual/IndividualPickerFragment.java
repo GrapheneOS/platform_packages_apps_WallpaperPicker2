@@ -25,6 +25,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
@@ -90,6 +91,8 @@ import com.android.wallpaper.util.DiskBasedLogger;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.WallpaperInfoView;
+import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate;
+import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate.BottomSheetHost;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
@@ -106,7 +109,8 @@ import java.util.Random;
 public class IndividualPickerFragment extends BottomActionBarFragment
         implements RotationStarter, StartRotationErrorDialogFragment.Listener,
         CurrentWallpaperBottomSheetPresenter.RefreshListener,
-        SetWallpaperErrorDialogFragment.Listener, SetWallpaperDialogFragment.Listener {
+        SetWallpaperErrorDialogFragment.Listener, SetWallpaperDialogFragment.Listener,
+        StartRotationDialogFragment.Listener {
 
     public static final boolean NEW_SCROLL_INTERACTION = true;
 
@@ -447,6 +451,9 @@ public class IndividualPickerFragment extends BottomActionBarFragment
             return windowInsets;
         });
 
+        mImageGrid.setAccessibilityDelegateCompat(
+                new WallpaperPickerRecyclerViewAccessibilityDelegate(
+                        mImageGrid, (BottomSheetHost) getParentFragment(), getNumColumns()));
         maybeSetUpImageGrid();
         setUpBottomSheet();
         return view;
@@ -616,6 +623,17 @@ public class IndividualPickerFragment extends BottomActionBarFragment
             mPackageStatusNotifier.removeListener(mAppStatusListener);
         }
         mWallpaperSetter.cleanUp();
+    }
+
+    @Override
+    public void onStartRotationDialogDismiss(@NonNull DialogInterface dialog) {
+        // TODO(b/159310028): Refactor fragment layer to make it able to restore from config change.
+        // This is to handle config change with StartRotationDialog popup,  the StartRotationDialog
+        // still holds a reference to the destroyed Fragment and is calling
+        // onStartRotationDialogDismissed on that destroyed Fragment.
+        if (mBottomActionBar != null) {
+            mBottomActionBar.deselectAction(ROTATION);
+        }
     }
 
     @Override

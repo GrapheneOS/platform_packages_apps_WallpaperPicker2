@@ -49,7 +49,7 @@
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"ପ୍ରଥମ ୱାଲପେପର୍ ଡାଉନଲୋଡ୍ ହେଉଛି…"</string>
     <string name="start_rotation_error_message" msgid="3053799836719618972">"ପ୍ରଥମ ୱାଲପେପର୍‌କୁ ଡାଉନଲୋଡ୍ କରିବାରେ ଅସମର୍ଥ। ଦୟାକରି ଆପଣଙ୍କର ନେଟୱର୍କ ସେଟିଙ୍ଗକୁ ଯାଞ୍ଚ କରିବା ସହିତ ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।"</string>
     <string name="start_rotation_dialog_body" msgid="7903554799046364916">"ସ୍ଵଚାଳିତ ଭାବେ ପ୍ରତିଦିନ ୱାଲପେପର୍ ପରିବର୍ତ୍ତନ ହେବ"</string>
-    <string name="settings_button_label" msgid="8724734130079207955">"ସେଟିଙ୍ଗ"</string>
+    <string name="settings_button_label" msgid="8724734130079207955">"ସେଟିଂସ୍"</string>
     <string name="explore" msgid="7468719504199497281">"ଖୋଜନ୍ତୁ"</string>
     <string name="next_wallpaper" msgid="3911873152952596232">"ପରବର୍ତ୍ତୀ ୱାଲପେପର୍"</string>
     <string name="wallpaper_disabled_message" msgid="7309484130562148185">"ଏହି ଡିଭାଇସ୍‌ରେ ୱାଲପେପର୍‌ର ସେଟିଙ୍ଗକୁ ଅକ୍ଷମ କରାଯାଇଛି"</string>
@@ -80,4 +80,26 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"ସେଣ୍ଟର୍ କ୍ରପ୍"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"ପ୍ରସାରିତ କରନ୍ତୁ"</string>
     <string name="preview" msgid="1774602101743861071">"ପ୍ରିଭ୍ୟୁ"</string>
+    <string name="tab_info" msgid="818614080690111416">"ସୂଚନା"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"କଷ୍ଟମାଇଜ୍ କରନ୍ତୁ"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"ସେଟିଂସ୍..."</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"ଡିଲିଟ୍ କରନ୍ତୁ"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"ଆପଣଙ୍କର ଫୋନ୍‌ରୁ ଏହି ୱାଲ୍‌ପେପର୍‌କୁ ଡିଲିଟ୍ କରିବେ କି?"</string>
+    <!-- no translation found for bottom_action_bar_back (8237013112999946725) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_edit (1214742990893082138) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_download (3983122338076389421) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_slideshow_wallpaper (509770525179533154) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_apply (2983308349819178932) -->
+    <skip />
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"<xliff:g id="ID_2">%2$d</xliff:g> ମଧ୍ୟରୁ <xliff:g id="ID_1">%1$d</xliff:g> ପୃଷ୍ଠା"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"ପରବର୍ତ୍ତୀ"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"ପୂର୍ବବର୍ତ୍ତୀ"</string>
+    <!-- no translation found for wallpaper_title (6754214682228331092) -->
+    <skip />
+    <!-- no translation found for wallpaper_preview_card_content_description (6049261033541034584) -->
+    <skip />
 </resources>
