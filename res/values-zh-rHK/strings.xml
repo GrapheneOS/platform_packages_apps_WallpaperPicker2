@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"桌布類別"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"設定「桌布」"</string>
+    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"設定桌布"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"正在設定桌布…"</string>
     <string name="try_again" msgid="8278874823700921234">"再試一次"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"無法設定桌布。"</string>
@@ -80,4 +80,26 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"裁剪中間部分"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"延展"</string>
     <string name="preview" msgid="1774602101743861071">"預覽"</string>
+    <string name="tab_info" msgid="818614080690111416">"資訊"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"自訂"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"設定…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"刪除"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"要從手機中刪除此桌布嗎？"</string>
+    <!-- no translation found for bottom_action_bar_back (8237013112999946725) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_edit (1214742990893082138) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_download (3983122338076389421) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_slideshow_wallpaper (509770525179533154) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_apply (2983308349819178932) -->
+    <skip />
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"<xliff:g id="ID_2">%2$d</xliff:g> 頁中嘅第 <xliff:g id="ID_1">%1$d</xliff:g> 頁"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"繼續"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"返回"</string>
+    <!-- no translation found for wallpaper_title (6754214682228331092) -->
+    <skip />
+    <!-- no translation found for wallpaper_preview_card_content_description (6049261033541034584) -->
+    <skip />
 </resources>
