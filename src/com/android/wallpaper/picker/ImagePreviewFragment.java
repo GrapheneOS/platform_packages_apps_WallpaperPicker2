@@ -77,6 +77,8 @@ public class ImagePreviewFragment extends PreviewFragment {
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
 
     private final Handler mHandler = new Handler();
+    private final WallpaperSurfaceCallback mWallpaperSurfaceCallback =
+            new WallpaperSurfaceCallback();
 
     private SubsamplingScaleImageView mFullResImageView;
     private Asset mWallpaperAsset;
@@ -167,16 +169,12 @@ public class ImagePreviewFragment extends PreviewFragment {
         mDefaultCropSurfaceSize = WallpaperCropUtils.getDefaultCropSurfaceSize(
                 getResources(), activity.getWindowManager().getDefaultDisplay());
 
-        // Load a low-res placeholder image if there's a thumbnail available from the asset that can
-        // be shown to the user more quickly than the full-sized image.
-        if (mWallpaperAsset.hasLowResDataSource()) {
-            mHandler.post(() ->
-                    mWallpaperAsset.loadLowResDrawable(activity, mLowResImageView, Color.BLACK,
-                            new WallpaperPreviewBitmapTransformation(
-                                    activity.getApplicationContext(), isRtl())));
-        }
-
+        mBottomActionBar.disableActions();
         mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
+            if (mBottomActionBar != null) {
+                mBottomActionBar.enableActions();
+            }
+
             // Don't continue loading the wallpaper if the Fragment is detached.
             if (getActivity() == null) {
                 return;
@@ -227,6 +225,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         }
         mFullResImageView.recycle();
 
+        mWallpaperSurfaceCallback.cleanUp();
         mWorkspaceSurfaceCallback.cleanUp();
     }
 
@@ -243,13 +242,10 @@ public class ImagePreviewFragment extends PreviewFragment {
         mBottomActionBar.setActionClickListener(EDIT, v ->
                 setEditingEnabled(mBottomActionBar.isActionSelected(EDIT))
         );
-        mBottomActionBar.setActionSelectedListener(EDIT,
-                selected -> {
-                    if (!selected) {
-                        setEditingEnabled(false);
-                    }
-                });
-        mBottomActionBar.setActionClickListener(APPLY, v -> onSetWallpaperClicked(v));
+        mBottomActionBar.setActionSelectedListener(EDIT, this::setEditingEnabled);
+        mBottomActionBar.setActionClickListener(APPLY, this::onSetWallpaperClicked);
+        // Will trigger onActionSelected callback to update the editing state.
+        mBottomActionBar.setDefaultSelectedButton(EDIT);
         mBottomActionBar.show();
     }
 
@@ -263,8 +259,11 @@ public class ImagePreviewFragment extends PreviewFragment {
      * initializing a zoom-scroll observer and click listener.
      */
     private void initFullResView() {
-        setEditingEnabled(false);
-        mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
+        // Minimum scale will only be respected under this scale type.
+        mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
+        // When we set a minimum scale bigger than the scale with which the full image is shown,
+        // disallow user to pan outside the view we show the wallpaper in.
+        mFullResImageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
 
         // Set a solid black "page bitmap" so MosaicView draws a black background while waiting
         // for the image to load or a transparent one if a thumbnail already loaded.
@@ -406,7 +405,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                 new SetWallpaperCallback() {
                     @Override
                     public void onSuccess(WallpaperInfo wallpaperInfo) {
-                        finishActivityWithResultOk();
+                        finishActivity(/* success= */ true);
                     }
 
                     @Override
@@ -425,10 +424,10 @@ public class ImagePreviewFragment extends PreviewFragment {
         mWallpaperSurface.getHolder().addCallback(mWallpaperSurfaceCallback);
     }
 
-    // TODO(tracyzhou): Refactor this into a utility class.
-    private final SurfaceHolder.Callback mWallpaperSurfaceCallback = new SurfaceHolder.Callback() {
+    private class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
 
         private Surface mLastSurface;
+        private SurfaceControlViewHost mHost;
 
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
@@ -441,6 +440,14 @@ public class ImagePreviewFragment extends PreviewFragment {
                         R.layout.fullscreen_wallpaper_preview, null);
                 mFullResImageView = wallpaperPreviewContainer.findViewById(R.id.full_res_image);
                 mLowResImageView = wallpaperPreviewContainer.findViewById(R.id.low_res_image);
+                // Load a low-res placeholder image if there's a thumbnail available from the asset
+                // that can be shown to the user more quickly than the full-sized image.
+                if (mWallpaperAsset.hasLowResDataSource()) {
+                    Activity activity = requireActivity();
+                    mWallpaperAsset.loadLowResDrawable(activity, mLowResImageView, Color.BLACK,
+                            new WallpaperPreviewBitmapTransformation(
+                                    activity.getApplicationContext(), isRtl()));
+                }
                 wallpaperPreviewContainer.measure(
                         makeMeasureSpec(mWallpaperSurface.getWidth(), EXACTLY),
                         makeMeasureSpec(mWallpaperSurface.getHeight(), EXACTLY));
@@ -448,11 +455,12 @@ public class ImagePreviewFragment extends PreviewFragment {
                         mWallpaperSurface.getHeight());
                 mTouchForwardingLayout.setTargetView(mFullResImageView);
 
-                SurfaceControlViewHost host = new SurfaceControlViewHost(getContext(),
+                cleanUp();
+                mHost = new SurfaceControlViewHost(getContext(),
                         getContext().getDisplay(), mWallpaperSurface.getHostToken());
-                host.setView(wallpaperPreviewContainer, wallpaperPreviewContainer.getWidth(),
+                mHost.setView(wallpaperPreviewContainer, wallpaperPreviewContainer.getWidth(),
                         wallpaperPreviewContainer.getHeight());
-                mWallpaperSurface.setChildSurfacePackage(host.getSurfacePackage());
+                mWallpaperSurface.setChildSurfacePackage(mHost.getSurfacePackage());
             }
         }
 
@@ -461,6 +469,13 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) { }
+
+        public void cleanUp() {
+            if (mHost != null) {
+                mHost.release();
+                mHost = null;
+            }
+        }
     };
 
     private void setEditingEnabled(boolean enabled) {
