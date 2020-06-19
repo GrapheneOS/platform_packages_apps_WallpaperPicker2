@@ -35,7 +35,7 @@
             android:elevation="@dimen/bottom_action_bar_elevation"
             android:layout_marginTop="@dimen/bottom_action_bar_bottom_sheet_margin_top"
             app:behavior_peekHeight="@dimen/preview_attribution_pane_collapsed_height"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"/>
+            app:layout_behavior="com.android.wallpaper.widget.BottomActionBar$QueueStateBottomSheetBehavior"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <!--  Bottom Tabs  -->
