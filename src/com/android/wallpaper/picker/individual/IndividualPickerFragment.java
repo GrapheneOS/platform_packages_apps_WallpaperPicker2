@@ -91,6 +91,8 @@ import com.android.wallpaper.util.DiskBasedLogger;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.WallpaperInfoView;
+import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate;
+import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate.BottomSheetHost;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
@@ -449,6 +451,9 @@ public class IndividualPickerFragment extends BottomActionBarFragment
             return windowInsets;
         });
 
+        mImageGrid.setAccessibilityDelegateCompat(
+                new WallpaperPickerRecyclerViewAccessibilityDelegate(
+                        mImageGrid, (BottomSheetHost) getParentFragment(), getNumColumns()));
         maybeSetUpImageGrid();
         setUpBottomSheet();
         return view;

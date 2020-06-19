@@ -74,6 +74,7 @@ import com.android.wallpaper.widget.LiveTileOverlay;
 import com.android.wallpaper.widget.LockScreenOverlayUpdater;
 import com.android.wallpaper.widget.PreviewPager;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
+import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
@@ -88,7 +89,8 @@ import java.util.List;
  * Displays the Main UI for picking a category of wallpapers to choose from.
  */
 public class CategoryFragment extends AppbarFragment
-        implements CategorySelectorFragmentHost, ThumbnailUpdater, WallpaperDestinationCallback {
+        implements CategorySelectorFragmentHost, ThumbnailUpdater, WallpaperDestinationCallback,
+        WallpaperPickerRecyclerViewAccessibilityDelegate.BottomSheetHost {
 
     private final Rect mPreviewLocalRect = new Rect();
     private final Rect mPreviewGlobalRect = new Rect();
