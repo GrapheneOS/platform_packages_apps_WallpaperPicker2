@@ -21,18 +21,18 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Fon rasmi turkumlari"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Fonga rasm o‘rnatish"</string>
+    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Fon rasmi qilish"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Fonga rasm o‘rnatilmoqda…"</string>
     <string name="try_again" msgid="8278874823700921234">"Qaytadan"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Fonga rasm o‘rnatib bo‘lmadi."</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Fon rasmi yuklanmadi. Rasm buzilgan yoki mavjud emas."</string>
-    <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Hozirda o‘rnatilgan"</string>
+    <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Hozirda tanlangan"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Kunlik fon rasmi"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"Bosh ekran va ekran qulfi"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Bosh ekran"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Ekran qulfi"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Bosh ekran va ekran qulfi"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Fonga rasm o‘rnatish"</string>
+    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Fonga rasm tanlash"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Bosh ekran"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Ekran qulfi"</string>
     <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Bosh ekran va qulf ekrani"</string>
@@ -80,4 +80,26 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Markazlab qirqish"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Yoyish"</string>
     <string name="preview" msgid="1774602101743861071">"Razm solish"</string>
+    <string name="tab_info" msgid="818614080690111416">"Axborot"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Sozlash"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Sozlamalar…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Oʻchirish"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Bu fon rasmi telefoningizdan oʻchirib tashlansinmi?"</string>
+    <!-- no translation found for bottom_action_bar_back (8237013112999946725) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_edit (1214742990893082138) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_download (3983122338076389421) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_slideshow_wallpaper (509770525179533154) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_apply (2983308349819178932) -->
+    <skip />
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"Sahifa: <xliff:g id="ID_1">%1$d</xliff:g> / <xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"Keyingi"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"Avvalgisi"</string>
+    <!-- no translation found for wallpaper_title (6754214682228331092) -->
+    <skip />
+    <!-- no translation found for wallpaper_preview_card_content_description (6049261033541034584) -->
+    <skip />
 </resources>

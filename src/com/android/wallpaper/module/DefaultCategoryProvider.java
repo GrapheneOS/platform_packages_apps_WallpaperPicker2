@@ -70,7 +70,6 @@ public class DefaultCategoryProvider implements CategoryProvider {
     private static final int PRIORITY_ON_DEVICE = 200;
     private static final int PRIORITY_LIVE = 300;
     private static final int PRIORITY_THIRD_PARTY = 400;
-    protected static List<Category> sSystemStaticCategories;
     protected static List<Category> sSystemCategories;
 
     protected final Context mAppContext;
