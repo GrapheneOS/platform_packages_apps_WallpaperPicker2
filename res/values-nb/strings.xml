@@ -79,5 +79,27 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Midtstilt"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Midtstilt beskjæring"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Strekk"</string>
-    <string name="preview" msgid="1774602101743861071">"Ta en forhåndskikk"</string>
+    <string name="preview" msgid="1774602101743861071">"Se forhåndsvisning"</string>
+    <string name="tab_info" msgid="818614080690111416">"Informasjon"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Tilpass"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Innstillinger"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Slett"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Vil du slette denne bakgrunnen fra telefonen din?"</string>
+    <!-- no translation found for bottom_action_bar_back (8237013112999946725) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_edit (1214742990893082138) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_download (3983122338076389421) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_slideshow_wallpaper (509770525179533154) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_apply (2983308349819178932) -->
+    <skip />
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"Side <xliff:g id="ID_1">%1$d</xliff:g> av <xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"Neste"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"Forrige"</string>
+    <!-- no translation found for wallpaper_title (6754214682228331092) -->
+    <skip />
+    <!-- no translation found for wallpaper_preview_card_content_description (6049261033541034584) -->
+    <skip />
 </resources>

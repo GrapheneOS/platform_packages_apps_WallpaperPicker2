@@ -28,7 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Не удалось загрузить обои. Изображение повреждено или недоступно."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Установлено как обои"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Обои на каждый день"</string>
-    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Главный и заблокированный экраны"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Главный экран и заблокированный экран"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Главный экран"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Заблокированный экран"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Оба экрана"</string>
@@ -80,4 +80,26 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Заполнить"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Растянуть"</string>
     <string name="preview" msgid="1774602101743861071">"Предварительный просмотр"</string>
+    <string name="tab_info" msgid="818614080690111416">"Информация"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Настройка"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Настройки…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Удалить"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Удалить эти обои с телефона?"</string>
+    <!-- no translation found for bottom_action_bar_back (8237013112999946725) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_edit (1214742990893082138) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_download (3983122338076389421) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_slideshow_wallpaper (509770525179533154) -->
+    <skip />
+    <!-- no translation found for bottom_action_bar_apply (2983308349819178932) -->
+    <skip />
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"Страница <xliff:g id="ID_1">%1$d</xliff:g> из <xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"Следующая страница"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"Предыдущая страница"</string>
+    <!-- no translation found for wallpaper_title (6754214682228331092) -->
+    <skip />
+    <!-- no translation found for wallpaper_preview_card_content_description (6049261033541034584) -->
+    <skip />
 </resources>
