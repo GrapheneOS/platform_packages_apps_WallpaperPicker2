@@ -280,15 +280,10 @@ public class CategoryFragment extends AppbarFragment
                                     getActivity(), mLockscreenPreview.getMeasuredWidth()));
                 }
             }});
-        fragmentContainer.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
-            @Override
-            public void onChildViewAdded(View parent, View child) {
-                child.requestApplyInsets();
-            }
-
-            @Override
-            public void onChildViewRemoved(View parent, View child) {
-            }
+        fragmentContainer.setOnApplyWindowInsetsListener((v, windowInsets) -> {
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(),
+                    windowInsets.getSystemWindowInsetBottom());
+            return windowInsets;
         });
 
         setUpToolbar(view);
