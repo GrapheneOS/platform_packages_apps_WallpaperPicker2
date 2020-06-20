@@ -47,6 +47,8 @@ import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.util.DisplayMetricsRetriever;
 import com.android.wallpaper.util.SizeCalculator;
+import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate;
+import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate.BottomSheetHost;
 
 import com.bumptech.glide.Glide;
 
@@ -104,7 +106,6 @@ public class CategorySelectorFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category_selector, container,
                 /* attachToRoot= */ false);
-
         mImageGrid = view.findViewById(R.id.category_grid);
         mImageGrid.addItemDecoration(new GridPaddingDecoration(
                 getResources().getDimensionPixelSize(R.dimen.grid_padding)));
@@ -120,6 +121,9 @@ public class CategorySelectorFragment extends Fragment {
                     windowInsets.getSystemWindowInsetBottom());
             return windowInsets;
         });
+        mImageGrid.setAccessibilityDelegateCompat(
+                new WallpaperPickerRecyclerViewAccessibilityDelegate(
+                        mImageGrid, (BottomSheetHost) getParentFragment(), getNumColumns()));
         getCategorySelectorFragmentHost().setToolbarTitle(getText(R.string.wallpaper_title));
 
         return view;
