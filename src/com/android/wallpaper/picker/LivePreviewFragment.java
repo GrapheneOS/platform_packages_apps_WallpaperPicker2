@@ -23,6 +23,7 @@ import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMAT
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.WallpaperColors;
 import android.app.WallpaperInfo;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
@@ -55,7 +56,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.LiveData;
@@ -73,7 +73,6 @@ import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.LiveTileOverlay;
 import com.android.wallpaper.widget.LockScreenOverlayUpdater;
-import com.android.wallpaper.widget.WallpaperColorsLoader;
 import com.android.wallpaper.widget.WallpaperInfoView;
 
 import java.util.ArrayList;
@@ -206,14 +205,6 @@ public class LivePreviewFragment extends PreviewFragment implements
         onBottomActionBarReady(mBottomActionBar);
 
         return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        WallpaperColorsLoader.getWallpaperColors(getContext(),
-                mWallpaper.getThumbAsset(getContext()),
-                mLockScreenOverlayUpdater::setColor);
     }
 
     private void updateScreenTab(boolean isHomeSelected) {
@@ -378,6 +369,11 @@ public class LivePreviewFragment extends PreviewFragment implements
                                 .withEndAction(() -> {
                                     LiveTileOverlay.INSTANCE.setForegroundDrawable(null);
                                 }).start();
+                    }
+
+                    @Override
+                    public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
+                        mLockScreenOverlayUpdater.setColor(colors);
                     }
                 }, mPreviewGlobalRect);
 
