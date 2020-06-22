@@ -22,6 +22,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
 
 import android.app.Activity;
+import android.app.WallpaperColors;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
@@ -70,6 +71,7 @@ import com.android.wallpaper.picker.individual.IndividualPickerFragment.Thumbnai
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.WallpaperDestinationCallback;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
+import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
 import com.android.wallpaper.widget.LiveTileOverlay;
 import com.android.wallpaper.widget.LockScreenOverlayUpdater;
 import com.android.wallpaper.widget.PreviewPager;
@@ -646,7 +648,14 @@ public class CategoryFragment extends AppbarFragment
 
         mWallpaperConnection = new WallpaperConnection(
                 getWallpaperIntent(homeWallpaper.getWallpaperComponent()), activity,
-                /* listener= */ null, mPreviewGlobalRect);
+                new WallpaperConnectionListener() {
+                    @Override
+                    public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
+                        if (mLockPreviewWallpaperInfo instanceof LiveWallpaperInfo) {
+                            mLockScreenOverlayUpdater.setColor(colors);
+                        }
+                    }
+                }, mPreviewGlobalRect);
 
         LiveTileOverlay.INSTANCE.update(new RectF(mPreviewLocalRect),
                 ((CardView) previewView.getParent()).getRadius());
@@ -707,14 +716,13 @@ public class CategoryFragment extends AppbarFragment
                 LiveTileOverlay.INSTANCE.attach(thumbnailView.getOverlay());
             } else {
                 LiveTileOverlay.INSTANCE.detach(thumbnailView.getOverlay());
-            }
-
-            WallpaperColorsLoader.getWallpaperColors(
+                // Load wallpaper color from thumbnail for static wallpaper.
+                WallpaperColorsLoader.getWallpaperColors(
                         activity,
                         wallpaperInfo.getThumbAsset(activity),
                         mLockScreenOverlayUpdater::setColor);
+            }
         }
-
 
         ((View) thumbnailView.getParent()).setOnClickListener(view -> {
             getFragmentHost().showViewOnlyPreview(wallpaperInfo, isHomeWallpaper);
