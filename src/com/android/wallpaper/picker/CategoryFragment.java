@@ -46,6 +46,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
@@ -72,6 +73,7 @@ import com.android.wallpaper.picker.individual.IndividualPickerFragment.Wallpape
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
+import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.LiveTileOverlay;
 import com.android.wallpaper.widget.LockScreenOverlayUpdater;
 import com.android.wallpaper.widget.PreviewPager;
@@ -112,6 +114,8 @@ public class CategoryFragment extends AppbarFragment
         void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome);
 
         void show(String collectionId);
+
+        boolean isNavigationTabsContained();
     }
 
     public static CategoryFragment newInstance(CharSequence title) {
@@ -154,6 +158,7 @@ public class CategoryFragment extends AppbarFragment
     private ImageView mHomeImageWallpaper;
     private boolean mIsCollapsingByUserSelecting;
     private LockScreenOverlayUpdater mLockScreenOverlayUpdater;
+    private View mRootContainer;
 
     public CategoryFragment() {
         mCategorySelectorFragment = new CategorySelectorFragment();
@@ -263,12 +268,12 @@ public class CategoryFragment extends AppbarFragment
                         }
                     });
         }
-        View rootContainer = view.findViewById(R.id.root_container);
+        mRootContainer = view.findViewById(R.id.root_container);
         fragmentContainer.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View containerView, int left, int top, int right,
                     int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                int minimumHeight = rootContainer.getHeight() - mPreviewPager.getMeasuredHeight();
+                int minimumHeight = mRootContainer.getHeight() - mPreviewPager.getMeasuredHeight();
                 mBottomSheetBehavior.setPeekHeight(minimumHeight);
                 containerView.setMinimumHeight(minimumHeight);
                 ((CardView) mHomePreview.getParent())
@@ -297,8 +302,24 @@ public class CategoryFragment extends AppbarFragment
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         updateWallpaperSurface();
         updateWorkspaceSurface();
+    }
+
+    @Override
+    protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
+        if (getFragmentHost().isNavigationTabsContained()) {
+            return;
+        }
+        int bottomActionBarHeight = getResources()
+                .getDimensionPixelSize(R.dimen.bottom_navbar_height);
+        ConstraintLayout.LayoutParams layoutParams =
+                (ConstraintLayout.LayoutParams) mRootContainer.getLayoutParams();
+        if (layoutParams != null) {
+            bottomActionBar.addVisibilityChangeListener(isVisible ->
+                    layoutParams.bottomMargin = isVisible ? bottomActionBarHeight : 0);
+        }
     }
 
     @Override
