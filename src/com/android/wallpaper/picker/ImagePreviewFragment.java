@@ -59,6 +59,7 @@ import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperCropUtils;
 import com.android.wallpaper.widget.BottomActionBar;
+import com.android.wallpaper.widget.BottomActionBar.AccessibilityCallback;
 import com.android.wallpaper.widget.LockScreenOverlayUpdater;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
 import com.android.wallpaper.widget.WallpaperInfoView;
@@ -244,6 +245,22 @@ public class ImagePreviewFragment extends PreviewFragment {
         );
         mBottomActionBar.setActionSelectedListener(EDIT, this::setEditingEnabled);
         mBottomActionBar.setActionClickListener(APPLY, this::onSetWallpaperClicked);
+
+        // Update target view's accessibility param since it will be blocked by the bottom sheet
+        // when expanded.
+        mBottomActionBar.setAccessibilityCallback(new AccessibilityCallback() {
+            @Override
+            public void onBottomSheetCollapsed() {
+                mTabs.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+            }
+
+            @Override
+            public void onBottomSheetExpanded() {
+                mTabs.setImportantForAccessibility(
+                        View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+            }
+        });
+
         // Will trigger onActionSelected callback to update the editing state.
         mBottomActionBar.setDefaultSelectedButton(EDIT);
         mBottomActionBar.show();
