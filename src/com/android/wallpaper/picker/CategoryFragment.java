@@ -75,7 +75,7 @@ import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.LiveTileOverlay;
-import com.android.wallpaper.widget.LockScreenOverlayUpdater;
+import com.android.wallpaper.widget.LockScreenPreviewer;
 import com.android.wallpaper.widget.PreviewPager;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
 import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate;
@@ -157,7 +157,7 @@ public class CategoryFragment extends AppbarFragment
     // the live wallpaper. This view is rendered on mWallpaperSurface for home image wallpaper.
     private ImageView mHomeImageWallpaper;
     private boolean mIsCollapsingByUserSelecting;
-    private LockScreenOverlayUpdater mLockScreenOverlayUpdater;
+    private LockScreenPreviewer mLockScreenPreviewer;
     private View mRootContainer;
 
     public CategoryFragment() {
@@ -185,10 +185,11 @@ public class CategoryFragment extends AppbarFragment
         mLockscreenPreview = lockscreenPreviewCard.findViewById(R.id.wallpaper_preview_image);
         lockscreenPreviewCard.findViewById(R.id.workspace_surface).setVisibility(View.GONE);
         lockscreenPreviewCard.findViewById(R.id.wallpaper_surface).setVisibility(View.GONE);
-        View lockOverlay = lockscreenPreviewCard.findViewById(R.id.lock_overlay);
-        lockOverlay.setVisibility(View.VISIBLE);
-        mLockScreenOverlayUpdater = new LockScreenOverlayUpdater(
-                getContext(), lockOverlay, getLifecycle());
+        ViewGroup lockPreviewContainer = lockscreenPreviewCard.findViewById(
+                R.id.lock_screen_preview_container);
+        lockPreviewContainer.setVisibility(View.VISIBLE);
+        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getActivity(),
+                lockPreviewContainer);
         mWallPaperPreviews.add(lockscreenPreviewCard);
 
         mPreviewPager = view.findViewById(R.id.wallpaper_preview_pager);
@@ -670,7 +671,7 @@ public class CategoryFragment extends AppbarFragment
                     @Override
                     public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
                         if (mLockPreviewWallpaperInfo instanceof LiveWallpaperInfo) {
-                            mLockScreenOverlayUpdater.setColor(colors);
+                            mLockScreenPreviewer.setColor(colors);
                         }
                     }
                 }, mPreviewGlobalRect);
@@ -738,7 +739,7 @@ public class CategoryFragment extends AppbarFragment
                 WallpaperColorsLoader.getWallpaperColors(
                         activity,
                         wallpaperInfo.getThumbAsset(activity),
-                        mLockScreenOverlayUpdater::setColor);
+                        mLockScreenPreviewer::setColor);
             }
         }
 
