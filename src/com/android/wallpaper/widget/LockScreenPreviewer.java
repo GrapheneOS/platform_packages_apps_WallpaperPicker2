@@ -125,12 +125,29 @@ public class LockScreenPreviewer implements LifecycleObserver {
      *               will attach to, or {@code null} to use light color as default
      */
     public void setColor(@Nullable WallpaperColors colors) {
-        int color = mActivity.getColor(colors == null
-                || (colors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_TEXT) == 0
+        boolean useLightTextColor = colors == null
+                || (colors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_TEXT) == 0;
+        int color = mActivity.getColor(useLightTextColor
                 ? R.color.text_color_light : R.color.text_color_dark);
+        int textShadowColor = mActivity.getColor(useLightTextColor
+                ? R.color.smartspace_preview_shadow_color_dark
+                : R.color.smartspace_preview_shadow_color_transparent);
         mLockIcon.setImageTintList(ColorStateList.valueOf(color));
         mLockDate.setTextColor(color);
         mLockTime.setTextColor(color);
+
+        mLockDate.setShadowLayer(
+                mActivity.getResources().getDimension(
+                        R.dimen.smartspace_preview_key_ambient_shadow_blur),
+                /* dx = */ 0,
+                /* dy = */ 0,
+                textShadowColor);
+        mLockTime.setShadowLayer(
+                mActivity.getResources().getDimension(
+                        R.dimen.smartspace_preview_key_ambient_shadow_blur),
+                /* dx = */ 0,
+                /* dy = */ 0,
+                textShadowColor);
     }
 
     private void updateDateTime() {
