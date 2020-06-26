@@ -13,17 +13,19 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:clipChildren="false">
 
     <!--  Bottom Sheet  -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_above="@id/action_tabs"
+        android:elevation="@dimen/bottom_action_bar_elevation">
         <!-- Bottom sheet view should be a child view of CoordinatorLayout -->
         <FrameLayout
             android:id="@+id/action_bottom_sheet"
@@ -33,20 +35,22 @@
             android:theme="@style/WallpaperPicker.BottomPaneStyle"
             android:clickable="true"
             android:elevation="@dimen/bottom_action_bar_elevation"
-            android:layout_marginTop="@dimen/bottom_action_bar_bottom_sheet_margin_top"
             app:behavior_peekHeight="@dimen/preview_attribution_pane_collapsed_height"
-            app:layout_behavior="com.android.wallpaper.widget.BottomActionBar$QueueStateBottomSheetBehavior"/>
+            app:layout_behavior="com.android.wallpaper.widget.BottomActionBar$QueueStateBottomSheetBehavior" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <!--  Bottom Tabs  -->
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/action_tabs"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_navbar_height"
         android:paddingTop="@dimen/bottom_action_bar_padding_top"
         android:paddingHorizontal="@dimen/bottom_action_bar_padding_horizontal"
         android:clickable="true"
+        android:elevation="@dimen/bottom_action_bar_elevation"
         android:background="@color/bottom_bar_background_color"
         android:theme="@style/BottomActionItemStyle"
+        android:layout_alignParentBottom="true"
         android:layoutDirection="locale">
 
         <ImageView
@@ -172,4 +176,4 @@
             app:layout_constraintStart_toEndOf="@id/action_progress" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</LinearLayout>
+</RelativeLayout>
