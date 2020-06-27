@@ -76,6 +76,22 @@ public class BottomActionBar extends FrameLayout {
         void onActionSelected(boolean selected);
     }
 
+    /**
+     *  A Callback to notify the registrant to change it's accessibility param when
+     *  {@link BottomActionBar} state changes.
+     */
+    public interface AccessibilityCallback {
+        /**
+         * Called when {@link BottomActionBar} collapsed.
+         */
+        void onBottomSheetCollapsed();
+
+        /**
+         * Called when {@link BottomActionBar} expanded.
+         */
+        void onBottomSheetExpanded();
+    }
+
     // TODO(b/154299462): Separate downloadable related actions from WallpaperPicker.
     /** The action items in the bottom action bar. */
     public enum BottomAction {
@@ -93,6 +109,7 @@ public class BottomActionBar extends FrameLayout {
 
     // The current selected action in the BottomActionBar, can be null when no action is selected.
     @Nullable private BottomAction mSelectedAction;
+    @Nullable private AccessibilityCallback mAccessibilityCallback;
 
     public BottomActionBar(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -128,6 +145,8 @@ public class BottomActionBar extends FrameLayout {
                     }
                     return;
                 }
+
+                notifyAccessibilityCallback(newState);
 
                 // Enable all buttons when queue is not processing.
                 enableActions();
@@ -275,6 +294,15 @@ public class BottomActionBar extends FrameLayout {
         }
         mVisibilityChangeListeners.add(visibilityChangeListener);
         visibilityChangeListener.onVisibilityChange(isVisible());
+    }
+
+    /**
+     * Sets a AccessibilityCallback.
+     *
+     * @param accessibilityCallback the callback to be notified.
+     */
+    public void setAccessibilityCallback(@Nullable AccessibilityCallback accessibilityCallback) {
+        mAccessibilityCallback = accessibilityCallback;
     }
 
     /**
@@ -443,6 +471,18 @@ public class BottomActionBar extends FrameLayout {
 
     private boolean isExpandable(BottomAction action) {
         return action != null && mContentViewMap.containsKey(action);
+    }
+
+    private void notifyAccessibilityCallback(int state) {
+        if (mAccessibilityCallback == null) {
+            return;
+        }
+
+        if (state == STATE_COLLAPSED) {
+            mAccessibilityCallback.onBottomSheetCollapsed();
+        } else if (state == STATE_EXPANDED) {
+            mAccessibilityCallback.onBottomSheetExpanded();
+        }
     }
 
     /** A {@link BottomSheetBehavior} that can process a queue of bottom sheet states.*/

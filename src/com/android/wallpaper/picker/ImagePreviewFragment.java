@@ -59,7 +59,8 @@ import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperCropUtils;
 import com.android.wallpaper.widget.BottomActionBar;
-import com.android.wallpaper.widget.LockScreenOverlayUpdater;
+import com.android.wallpaper.widget.BottomActionBar.AccessibilityCallback;
+import com.android.wallpaper.widget.LockScreenPreviewer;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
 import com.android.wallpaper.widget.WallpaperInfoView;
 
@@ -91,8 +92,8 @@ public class ImagePreviewFragment extends PreviewFragment {
     private SurfaceView mWorkspaceSurface;
     private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     private SurfaceView mWallpaperSurface;
-    private View mLockOverlay;
-    private LockScreenOverlayUpdater mLockScreenOverlayUpdater;
+    private ViewGroup mLockPreviewContainer;
+    private LockScreenPreviewer mLockScreenPreviewer;
     private View mTabs;
     private WallpaperInfoView mWallpaperInfoView;
     private View mLock;
@@ -141,10 +142,9 @@ public class ImagePreviewFragment extends PreviewFragment {
         mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(mWorkspaceSurface,
                 getContext());
         mWallpaperSurface = mContainer.findViewById(R.id.wallpaper_surface);
-        mLockOverlay = mContainer.findViewById(R.id.lock_overlay);
-        mLockScreenOverlayUpdater = new LockScreenOverlayUpdater(
-                getContext(), mLockOverlay, getLifecycle());
-        mLockScreenOverlayUpdater.adjustOverlayLayout(true);
+        mLockPreviewContainer = mContainer.findViewById(R.id.lock_screen_preview_container);
+        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getActivity(),
+                mLockPreviewContainer);
 
         mTabs = view.findViewById(R.id.tabs_container);
         mLock = mTabs.findViewById(R.id.lock);
@@ -201,7 +201,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         super.onViewCreated(view, savedInstanceState);
         WallpaperColorsLoader.getWallpaperColors(getContext(),
                 mWallpaper.getThumbAsset(getContext()),
-                mLockScreenOverlayUpdater::setColor);
+                mLockScreenPreviewer::setColor);
     }
 
     @Override
@@ -244,6 +244,22 @@ public class ImagePreviewFragment extends PreviewFragment {
         );
         mBottomActionBar.setActionSelectedListener(EDIT, this::setEditingEnabled);
         mBottomActionBar.setActionClickListener(APPLY, this::onSetWallpaperClicked);
+
+        // Update target view's accessibility param since it will be blocked by the bottom sheet
+        // when expanded.
+        mBottomActionBar.setAccessibilityCallback(new AccessibilityCallback() {
+            @Override
+            public void onBottomSheetCollapsed() {
+                mTabs.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+            }
+
+            @Override
+            public void onBottomSheetExpanded() {
+                mTabs.setImportantForAccessibility(
+                        View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+            }
+        });
+
         // Will trigger onActionSelected callback to update the editing state.
         mBottomActionBar.setDefaultSelectedButton(EDIT);
         mBottomActionBar.show();
@@ -485,7 +501,7 @@ public class ImagePreviewFragment extends PreviewFragment {
     private void updateScreenPreview(boolean isHomeSelected) {
         mHome.setSelected(isHomeSelected);
         mLock.setSelected(!isHomeSelected);
-        mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.GONE);
-        mLockOverlay.setVisibility(isHomeSelected ? View.GONE : View.VISIBLE);
+        mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.INVISIBLE);
+        mLockPreviewContainer.setVisibility(isHomeSelected ? View.INVISIBLE : View.VISIBLE);
     }
 }
