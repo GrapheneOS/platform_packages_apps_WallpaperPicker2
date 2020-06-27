@@ -326,7 +326,7 @@
     <!-- Content description of download button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_download">Download</string>
 
-    <!-- Content description of "slideshow wallpaper" button on the bottom action bar. [CHAR LIMIT=30] -->
+    <!-- Content description of "slideshow wallpaper" button on the bottom action bar. [CHAR LIMIT=50] -->
     <string name="bottom_action_bar_slideshow_wallpaper">Slideshow Wallpaper</string>
 
     <!-- Content description of apply button on the bottom action bar. [CHAR LIMIT=30] -->
@@ -347,6 +347,6 @@
     <!-- Title of the tool bar in the wallpaper picker. [CHAR LIMIT=19] -->
     <string name="wallpaper_title">Wallpaper</string>
 
-    <!-- Content description of wallpaper preview card. [CHAR_LIMIT=30]-->
+    <!-- Content description of wallpaper preview card. [CHAR_LIMIT=40]-->
     <string name="wallpaper_preview_card_content_description">Wallpaper preview</string>
 </resources>

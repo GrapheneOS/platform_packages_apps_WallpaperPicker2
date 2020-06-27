@@ -116,11 +116,6 @@ public class CategorySelectorFragment extends Fragment {
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getNumColumns());
         mImageGrid.setLayoutManager(gridLayoutManager);
-        mImageGrid.setOnApplyWindowInsetsListener((v, windowInsets) -> {
-            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(),
-                    windowInsets.getSystemWindowInsetBottom());
-            return windowInsets;
-        });
         mImageGrid.setAccessibilityDelegateCompat(
                 new WallpaperPickerRecyclerViewAccessibilityDelegate(
                         mImageGrid, (BottomSheetHost) getParentFragment(), getNumColumns()));
