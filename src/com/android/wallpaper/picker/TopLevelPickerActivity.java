@@ -286,17 +286,6 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
             }
         });
 
-        FrameLayout.LayoutParams layoutParams =
-                (FrameLayout.LayoutParams) fragmentContainer.getLayoutParams();
-        int bottomActionBarHeight = getResources()
-                .getDimensionPixelSize(R.dimen.bottom_navbar_height);
-        BottomActionBar bottomActionBar = findViewById(R.id.bottom_actionbar);
-        bottomActionBar.addVisibilityChangeListener(isVisible -> {
-            if (layoutParams != null) {
-                layoutParams.bottomMargin = isVisible ? bottomActionBarHeight : 0;
-            }
-        });
-
         // Set toolbar as the action bar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -806,6 +795,11 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     @Override
     public void show(String collectionId) {
         mDelegate.show(collectionId);
+    }
+
+    @Override
+    public boolean isNavigationTabsContained() {
+        return false;
     }
 
     @Override

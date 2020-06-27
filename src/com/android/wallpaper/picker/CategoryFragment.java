@@ -22,6 +22,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
 
 import android.app.Activity;
+import android.app.WallpaperColors;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
@@ -45,6 +46,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
@@ -70,8 +72,10 @@ import com.android.wallpaper.picker.individual.IndividualPickerFragment.Thumbnai
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.WallpaperDestinationCallback;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
+import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
+import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.LiveTileOverlay;
-import com.android.wallpaper.widget.LockScreenOverlayUpdater;
+import com.android.wallpaper.widget.LockScreenPreviewer;
 import com.android.wallpaper.widget.PreviewPager;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
 import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate;
@@ -110,6 +114,8 @@ public class CategoryFragment extends AppbarFragment
         void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome);
 
         void show(String collectionId);
+
+        boolean isNavigationTabsContained();
     }
 
     public static CategoryFragment newInstance(CharSequence title) {
@@ -151,7 +157,8 @@ public class CategoryFragment extends AppbarFragment
     // the live wallpaper. This view is rendered on mWallpaperSurface for home image wallpaper.
     private ImageView mHomeImageWallpaper;
     private boolean mIsCollapsingByUserSelecting;
-    private LockScreenOverlayUpdater mLockScreenOverlayUpdater;
+    private LockScreenPreviewer mLockScreenPreviewer;
+    private View mRootContainer;
 
     public CategoryFragment() {
         mCategorySelectorFragment = new CategorySelectorFragment();
@@ -178,10 +185,11 @@ public class CategoryFragment extends AppbarFragment
         mLockscreenPreview = lockscreenPreviewCard.findViewById(R.id.wallpaper_preview_image);
         lockscreenPreviewCard.findViewById(R.id.workspace_surface).setVisibility(View.GONE);
         lockscreenPreviewCard.findViewById(R.id.wallpaper_surface).setVisibility(View.GONE);
-        View lockOverlay = lockscreenPreviewCard.findViewById(R.id.lock_overlay);
-        lockOverlay.setVisibility(View.VISIBLE);
-        mLockScreenOverlayUpdater = new LockScreenOverlayUpdater(
-                getContext(), lockOverlay, getLifecycle());
+        ViewGroup lockPreviewContainer = lockscreenPreviewCard.findViewById(
+                R.id.lock_screen_preview_container);
+        lockPreviewContainer.setVisibility(View.VISIBLE);
+        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getActivity(),
+                lockPreviewContainer);
         mWallPaperPreviews.add(lockscreenPreviewCard);
 
         mPreviewPager = view.findViewById(R.id.wallpaper_preview_pager);
@@ -261,12 +269,12 @@ public class CategoryFragment extends AppbarFragment
                         }
                     });
         }
-        View rootContainer = view.findViewById(R.id.root_container);
+        mRootContainer = view.findViewById(R.id.root_container);
         fragmentContainer.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View containerView, int left, int top, int right,
                     int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                int minimumHeight = rootContainer.getHeight() - mPreviewPager.getMeasuredHeight();
+                int minimumHeight = mRootContainer.getHeight() - mPreviewPager.getMeasuredHeight();
                 mBottomSheetBehavior.setPeekHeight(minimumHeight);
                 containerView.setMinimumHeight(minimumHeight);
                 ((CardView) mHomePreview.getParent())
@@ -278,15 +286,10 @@ public class CategoryFragment extends AppbarFragment
                                     getActivity(), mLockscreenPreview.getMeasuredWidth()));
                 }
             }});
-        fragmentContainer.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
-            @Override
-            public void onChildViewAdded(View parent, View child) {
-                child.requestApplyInsets();
-            }
-
-            @Override
-            public void onChildViewRemoved(View parent, View child) {
-            }
+        fragmentContainer.setOnApplyWindowInsetsListener((v, windowInsets) -> {
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(),
+                    windowInsets.getSystemWindowInsetBottom());
+            return windowInsets;
         });
 
         setUpToolbar(view);
@@ -300,8 +303,24 @@ public class CategoryFragment extends AppbarFragment
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         updateWallpaperSurface();
         updateWorkspaceSurface();
+    }
+
+    @Override
+    protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
+        if (getFragmentHost().isNavigationTabsContained()) {
+            return;
+        }
+        int bottomActionBarHeight = getResources()
+                .getDimensionPixelSize(R.dimen.bottom_navbar_height);
+        ConstraintLayout.LayoutParams layoutParams =
+                (ConstraintLayout.LayoutParams) mRootContainer.getLayoutParams();
+        if (layoutParams != null) {
+            bottomActionBar.addVisibilityChangeListener(isVisible ->
+                    layoutParams.bottomMargin = isVisible ? bottomActionBarHeight : 0);
+        }
     }
 
     @Override
@@ -353,6 +372,7 @@ public class CategoryFragment extends AppbarFragment
         LiveTileOverlay.INSTANCE.detach(mHomePreview.getOverlay());
         LiveTileOverlay.INSTANCE.detach(mLockscreenPreview.getOverlay());
         mWallpaperSurfaceCallback.cleanUp();
+        mWorkspaceSurfaceCallback.cleanUp();
         if (mWallpaperConnection != null) {
             mWallpaperConnection.disconnect();
             mWallpaperConnection = null;
@@ -516,8 +536,10 @@ public class CategoryFragment extends AppbarFragment
     }
 
     private void showCurrentWallpaper(View rootView, boolean show) {
+        // The category/wallpaper tiles page depends on the height of the preview pager.
+        // So if we want to hide the preview pager, we should use INVISIBLE instead of GONE.
         rootView.findViewById(R.id.wallpaper_preview_pager)
-                .setVisibility(show ? View.VISIBLE : View.GONE);
+                .setVisibility(show ? View.VISIBLE : View.INVISIBLE);
         rootView.findViewById(R.id.permission_needed)
                 .setVisibility(show ? View.GONE : View.VISIBLE);
     }
@@ -645,7 +667,14 @@ public class CategoryFragment extends AppbarFragment
 
         mWallpaperConnection = new WallpaperConnection(
                 getWallpaperIntent(homeWallpaper.getWallpaperComponent()), activity,
-                /* listener= */ null, mPreviewGlobalRect);
+                new WallpaperConnectionListener() {
+                    @Override
+                    public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
+                        if (mLockPreviewWallpaperInfo instanceof LiveWallpaperInfo) {
+                            mLockScreenPreviewer.setColor(colors);
+                        }
+                    }
+                }, mPreviewGlobalRect);
 
         LiveTileOverlay.INSTANCE.update(new RectF(mPreviewLocalRect),
                 ((CardView) previewView.getParent()).getRadius());
@@ -706,14 +735,13 @@ public class CategoryFragment extends AppbarFragment
                 LiveTileOverlay.INSTANCE.attach(thumbnailView.getOverlay());
             } else {
                 LiveTileOverlay.INSTANCE.detach(thumbnailView.getOverlay());
-            }
-
-            WallpaperColorsLoader.getWallpaperColors(
+                // Load wallpaper color from thumbnail for static wallpaper.
+                WallpaperColorsLoader.getWallpaperColors(
                         activity,
                         wallpaperInfo.getThumbAsset(activity),
-                        mLockScreenOverlayUpdater::setColor);
+                        mLockScreenPreviewer::setColor);
+            }
         }
-
 
         ((View) thumbnailView.getParent()).setOnClickListener(view -> {
             getFragmentHost().showViewOnlyPreview(wallpaperInfo, isHomeWallpaper);
