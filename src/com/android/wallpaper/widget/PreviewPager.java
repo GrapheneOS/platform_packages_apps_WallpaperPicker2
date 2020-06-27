@@ -22,7 +22,6 @@ import android.database.DataSetObserver;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -66,8 +65,6 @@ public class PreviewPager extends LinearLayout {
     private PagerAdapter mAdapter;
     private ViewPager.OnPageChangeListener mExternalPageListener;
     private float mScreenAspectRatio;
-    /** The maximum height ratio of PreviewPager and its parent view. */
-    private float mMaxHeightRatio;
 
     public PreviewPager(Context context) {
         this(context, null);
@@ -87,10 +84,6 @@ public class PreviewPager extends LinearLayout {
         mPageStyle = a.getInteger(R.styleable.PreviewPager_card_style, STYLE_PEEKING);
 
         a.recycle();
-
-        TypedValue ratioValue = new TypedValue();
-        res.getValue(R.dimen.preview_pager_maximum_height_ratio, ratioValue, true);
-        mMaxHeightRatio = ratioValue.getFloat();
 
         mViewPager = findViewById(R.id.preview_viewpager);
         mViewPager.setPageTransformer(false, (view, position) -> {
@@ -171,14 +164,6 @@ public class PreviewPager extends LinearLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        View parentView = (View) getParent();
-        float parentHeight = parentView != null ? parentView.getMeasuredHeight() : 0;
-        if (parentHeight > 0) {
-            int maxHeight = Math.min(MeasureSpec.getSize(heightMeasureSpec),
-                    (int) (parentHeight * mMaxHeightRatio));
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST);
-        }
-
         if (mPageStyle == STYLE_ASPECT_RATIO) {
             int availableWidth = MeasureSpec.getSize(widthMeasureSpec);
             int availableHeight = MeasureSpec.getSize(heightMeasureSpec);

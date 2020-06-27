@@ -197,10 +197,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
         AppCompatActivity activity = (AppCompatActivity) requireActivity();
         activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.getNavigationIcon().setTint(getAttrColor(activity, android.R.attr.colorPrimary));
-        toolbar.getNavigationIcon().setAutoMirrored(true);
 
         mLoadingProgressBar = view.findViewById(getLoadingIndicatorResId());
         mLoadingProgressBar.show();

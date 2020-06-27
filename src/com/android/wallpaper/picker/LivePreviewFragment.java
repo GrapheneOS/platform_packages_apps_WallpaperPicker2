@@ -23,6 +23,7 @@ import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMAT
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.WallpaperColors;
 import android.app.WallpaperInfo;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
@@ -70,8 +71,9 @@ import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.widget.BottomActionBar;
+import com.android.wallpaper.widget.BottomActionBar.AccessibilityCallback;
 import com.android.wallpaper.widget.LiveTileOverlay;
-import com.android.wallpaper.widget.LockScreenOverlayUpdater;
+import com.android.wallpaper.widget.LockScreenPreviewer;
 import com.android.wallpaper.widget.WallpaperInfoView;
 
 import java.util.ArrayList;
@@ -118,8 +120,8 @@ public class LivePreviewFragment extends PreviewFragment implements
     private TextView mHomeTextView;
     private TextView mLockTextView;
     private SurfaceView mWorkspaceSurface;
-    private ViewGroup mLockScreenOverlay;
-    private LockScreenOverlayUpdater mLockScreenOverlayUpdater;
+    private ViewGroup mLockPreviewContainer;
+    private LockScreenPreviewer mLockScreenPreviewer;
     private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
 
     @Override
@@ -183,10 +185,9 @@ public class LivePreviewFragment extends PreviewFragment implements
         mHomePreview = mHomePreviewCard.findViewById(R.id.wallpaper_preview_image);
         mTouchForwardingLayout.setTargetView(mHomePreview);
         mTouchForwardingLayout.setForwardingEnabled(true);
-        mLockScreenOverlay = mViewGroup.findViewById(R.id.lock_overlay);
-        mLockScreenOverlayUpdater =
-                new LockScreenOverlayUpdater(getContext(), mLockScreenOverlay, getLifecycle());
-        mLockScreenOverlayUpdater.adjustOverlayLayout(/* isFullScreen= */ true);
+        mLockPreviewContainer = mViewGroup.findViewById(R.id.lock_screen_preview_container);
+        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getActivity(),
+                mLockPreviewContainer);
         mTab = view.findViewById(R.id.tabs_container);
         mHomeTextView = mTab.findViewById(R.id.home);
         mLockTextView = mTab.findViewById(R.id.lock);
@@ -209,8 +210,8 @@ public class LivePreviewFragment extends PreviewFragment implements
     private void updateScreenTab(boolean isHomeSelected) {
         mHomeTextView.setSelected(isHomeSelected);
         mLockTextView.setSelected(!isHomeSelected);
-        mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.GONE);
-        mLockScreenOverlay.setVisibility(isHomeSelected ? View.GONE : View.VISIBLE);
+        mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.INVISIBLE);
+        mLockPreviewContainer.setVisibility(isHomeSelected ? View.INVISIBLE : View.VISIBLE);
     }
 
     private void setupPreview() {
@@ -369,6 +370,11 @@ public class LivePreviewFragment extends PreviewFragment implements
                                     LiveTileOverlay.INSTANCE.setForegroundDrawable(null);
                                 }).start();
                     }
+
+                    @Override
+                    public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
+                        mLockScreenPreviewer.setColor(colors);
+                    }
                 }, mPreviewGlobalRect);
 
         LiveTileOverlay.INSTANCE.update(new RectF(mPreviewLocalRect),
@@ -397,6 +403,21 @@ public class LivePreviewFragment extends PreviewFragment implements
         mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
                 .inflate(R.layout.wallpaper_info_view, /* root= */ null);
         mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
+
+        // Update target view's accessibility param since it will be blocked by the bottom sheet
+        // when expanded.
+        mBottomActionBar.setAccessibilityCallback(new AccessibilityCallback() {
+            @Override
+            public void onBottomSheetCollapsed() {
+                mTab.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+            }
+
+            @Override
+            public void onBottomSheetExpanded() {
+                mTab.setImportantForAccessibility(
+                        View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+            }
+        });
         final Uri uriSettingsSlice = getSettingsSliceUri(mWallpaper.getWallpaperComponent());
         if (uriSettingsSlice != null) {
             View previewPage = LayoutInflater.from(getContext())

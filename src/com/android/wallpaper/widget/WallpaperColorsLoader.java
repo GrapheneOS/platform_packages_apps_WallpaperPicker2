@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -40,9 +41,19 @@ public class WallpaperColorsLoader {
         void onLoaded(@Nullable WallpaperColors colors);
     }
 
+    // The max size should be at least 2 for storing home and lockscreen wallpaper if they are
+    // different.
+    private static LruCache<Asset, WallpaperColors> sCache = new LruCache<>(/* maxSize= */ 6);
+
     /** Gets the {@link WallpaperColors} from the wallpaper {@link Asset}. */
     public static void getWallpaperColors(Context context, @NonNull Asset asset,
                                           @NonNull Callback callback) {
+        WallpaperColors cached = sCache.get(asset);
+        if (cached != null) {
+            callback.onLoaded(cached);
+            return;
+        }
+
         Display display = context.getSystemService(WindowManager.class).getDefaultDisplay();
         Point screen = ScreenSizeCalculator.getInstance().getScreenSize(display);
         new BitmapCachingAsset(context, asset).decodeBitmap(screen.y / 2, screen.x / 2, bitmap -> {
@@ -52,7 +63,9 @@ public class WallpaperColorsLoader {
                     bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
                     shouldRecycle = true;
                 }
-                callback.onLoaded(WallpaperColors.fromBitmap(bitmap));
+                WallpaperColors colors = WallpaperColors.fromBitmap(bitmap);
+                sCache.put(asset, colors);
+                callback.onLoaded(colors);
                 if (shouldRecycle) {
                     bitmap.recycle();
                 }
