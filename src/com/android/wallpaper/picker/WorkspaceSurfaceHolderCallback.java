@@ -36,6 +36,8 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
     private Surface mLastSurface;
     private Message mCallback;
 
+    private boolean mNeedsToCleanUp;
+
     public WorkspaceSurfaceHolderCallback(SurfaceView workspaceSurface, Context context) {
         mWorkspaceSurface = workspaceSurface;
         mPreviewUtils = new PreviewUtils(context,
@@ -51,6 +53,10 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
                 mWorkspaceSurface.setChildSurfacePackage(
                         SurfaceViewUtils.getSurfacePackage(result));
                 mCallback = SurfaceViewUtils.getCallback(result);
+
+                if (mNeedsToCleanUp) {
+                    cleanUp();
+                }
             }
         }
     }
@@ -70,6 +76,8 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
             } finally {
                 mCallback = null;
             }
+        } else {
+            mNeedsToCleanUp = true;
         }
     }
 

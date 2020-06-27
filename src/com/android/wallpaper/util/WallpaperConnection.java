@@ -163,6 +163,14 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
                 if (mIsVisible) {
                     setEngineVisibility(true);
                 }
+
+                // Some wallpapers don't trigger #onWallpaperColorsChanged from remote. Requesting
+                // wallpaper color here to ensure the #onWallpaperColorsChanged would get called.
+                try {
+                    mEngine.requestWallpaperColors();
+                } catch (RemoteException e) {
+                    Log.w(TAG, "Failed requesting wallpaper colors", e);
+                }
             } else {
                 try {
                     engine.destroy();
@@ -195,7 +203,11 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
 
     @Override
     public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
-
+        mActivity.runOnUiThread(() -> {
+            if (mListener != null) {
+                mListener.onWallpaperColorsChanged(colors, displayId);
+            }
+        });
     }
 
     @Override
@@ -260,5 +272,10 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
          * Called after the wallpaper has been rendered for the first time.
          */
         default void onEngineShown() {}
+
+        /**
+         * Called after the wallpaper color is available or updated.
+         */
+        default void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {}
     }
 }
