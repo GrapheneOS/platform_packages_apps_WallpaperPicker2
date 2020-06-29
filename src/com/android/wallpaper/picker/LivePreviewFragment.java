@@ -569,6 +569,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     private void showDeleteConfirmDialog() {
         final AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setMessage(R.string.delete_wallpaper_confirmation)
+                .setOnDismissListener(dialog -> mBottomActionBar.deselectAction(DELETE))
                 .setPositiveButton(R.string.delete_live_wallpaper,
                         (dialog, which) -> deleteLiveWallpaper())
                 .setNegativeButton(android.R.string.cancel, null /* listener */)
