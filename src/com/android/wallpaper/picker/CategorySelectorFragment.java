@@ -194,7 +194,7 @@ public class CategorySelectorFragment extends Fragment {
 
     private int getNumColumns() {
         Activity activity = getActivity();
-        return activity == null ? 0 : SizeCalculator.getNumCategoryColumns(activity);
+        return activity == null ? 1 : SizeCalculator.getNumCategoryColumns(activity);
     }
 
 

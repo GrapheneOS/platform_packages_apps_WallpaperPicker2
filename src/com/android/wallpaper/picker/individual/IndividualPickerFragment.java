@@ -800,7 +800,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
     int getNumColumns() {
         Activity activity = getActivity();
-        return activity == null ? 0 : SizeCalculator.getNumIndividualColumns(activity);
+        return activity == null ? 1 : SizeCalculator.getNumIndividualColumns(activity);
     }
 
     /**
