@@ -339,11 +339,15 @@ public class LivePreviewFragment extends PreviewFragment implements
                 new WallpaperConnection.WallpaperConnectionListener() {
                     @Override
                     public void onEngineShown() {
+                        Context context = getContext();
+                        if (context == null) {
+                            return;
+                        }
                         mLoadingScrim.post(() -> mLoadingScrim.animate()
                                 .alpha(0f)
                                 .setDuration(250)
                                 .setStartDelay(200)
-                                .setInterpolator(AnimationUtils.loadInterpolator(getActivity(),
+                                .setInterpolator(AnimationUtils.loadInterpolator(context,
                                         android.R.interpolator.fast_out_linear_in))
                                 .withEndAction(() -> {
                                     if (mLoadingProgressBar != null) {
@@ -360,7 +364,7 @@ public class LivePreviewFragment extends PreviewFragment implements
                         previewView.animate()
                                 .setStartDelay(0)
                                 .setDuration(150)
-                                .setInterpolator(AnimationUtils.loadInterpolator(getContext(),
+                                .setInterpolator(AnimationUtils.loadInterpolator(context,
                                         android.R.interpolator.fast_out_linear_in))
                                 .setUpdateListener(value -> placeholder.setAlpha(
                                         (int) (255 * (1 - value.getAnimatedFraction()))))
