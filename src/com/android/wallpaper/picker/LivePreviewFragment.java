@@ -335,49 +335,10 @@ public class LivePreviewFragment extends PreviewFragment implements
         repositionPreview(previewView);
 
         mWallpaperConnection = new WallpaperConnection(
-                getWallpaperIntent(homeWallpaper.getWallpaperComponent()), activity,
-                new WallpaperConnection.WallpaperConnectionListener() {
-                    @Override
-                    public void onEngineShown() {
-                        Context context = getContext();
-                        if (context == null) {
-                            return;
-                        }
-                        mLoadingScrim.post(() -> mLoadingScrim.animate()
-                                .alpha(0f)
-                                .setDuration(250)
-                                .setStartDelay(200)
-                                .setInterpolator(AnimationUtils.loadInterpolator(context,
-                                        android.R.interpolator.fast_out_linear_in))
-                                .withEndAction(() -> {
-                                    if (mLoadingProgressBar != null) {
-                                        mLoadingProgressBar.hide();
-                                    }
-                                    mLoadingScrim.setVisibility(View.GONE);
-                                }));
-                        final Drawable placeholder = previewView.getDrawable() == null
-                                ? new ColorDrawable(getResources().getColor(R.color.secondary_color,
-                                activity.getTheme()))
-                                : previewView.getDrawable();
-                        LiveTileOverlay.INSTANCE.setForegroundDrawable(placeholder);
-                        LiveTileOverlay.INSTANCE.attach(previewView.getOverlay());
-                        previewView.animate()
-                                .setStartDelay(0)
-                                .setDuration(150)
-                                .setInterpolator(AnimationUtils.loadInterpolator(context,
-                                        android.R.interpolator.fast_out_linear_in))
-                                .setUpdateListener(value -> placeholder.setAlpha(
-                                        (int) (255 * (1 - value.getAnimatedFraction()))))
-                                .withEndAction(() -> {
-                                    LiveTileOverlay.INSTANCE.setForegroundDrawable(null);
-                                }).start();
-                    }
-
-                    @Override
-                    public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
-                        mLockScreenPreviewer.setColor(colors);
-                    }
-                }, mPreviewGlobalRect);
+                getWallpaperIntent(homeWallpaper.getWallpaperComponent()),
+                activity,
+                /* listener= */ this,
+                mPreviewGlobalRect);
 
         LiveTileOverlay.INSTANCE.update(new RectF(mPreviewLocalRect),
                 ((CardView) previewView.getParent()).getRadius());
@@ -457,19 +418,41 @@ public class LivePreviewFragment extends PreviewFragment implements
 
     @Override
     public void onEngineShown() {
+        Activity activity = getActivity();
+
         mLoadingScrim.post(() -> mLoadingScrim.animate()
                 .alpha(0f)
-                .setDuration(220)
-                .setStartDelay(300)
-                .setInterpolator(AnimationUtils.loadInterpolator(getActivity(),
+                .setDuration(250)
+                .setStartDelay(200)
+                .setInterpolator(AnimationUtils.loadInterpolator(activity,
                         android.R.interpolator.fast_out_linear_in))
                 .withEndAction(() -> {
                     if (mLoadingProgressBar != null) {
                         mLoadingProgressBar.hide();
                     }
-                    mLoadingScrim.setVisibility(View.INVISIBLE);
-                    populateInfoPage(mInfoPageController);
+                    mLoadingScrim.setVisibility(View.GONE);
                 }));
+        final Drawable placeholder = mHomePreview.getDrawable() == null
+                ? new ColorDrawable(getResources().getColor(R.color.secondary_color,
+                activity.getTheme()))
+                : mHomePreview.getDrawable();
+        LiveTileOverlay.INSTANCE.setForegroundDrawable(placeholder);
+        LiveTileOverlay.INSTANCE.attach(mHomePreview.getOverlay());
+        mHomePreview.animate()
+                .setStartDelay(0)
+                .setDuration(150)
+                .setInterpolator(AnimationUtils.loadInterpolator(activity,
+                        android.R.interpolator.fast_out_linear_in))
+                .setUpdateListener(value -> placeholder.setAlpha(
+                        (int) (255 * (1 - value.getAnimatedFraction()))))
+                .withEndAction(() -> {
+                    LiveTileOverlay.INSTANCE.setForegroundDrawable(null);
+                }).start();
+    }
+
+    @Override
+    public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
+        mLockScreenPreviewer.setColor(colors);
     }
 
     @Override
