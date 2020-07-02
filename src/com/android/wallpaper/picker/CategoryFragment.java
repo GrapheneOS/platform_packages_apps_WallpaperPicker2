@@ -146,7 +146,8 @@ public class CategoryFragment extends AppbarFragment
     private IndividualPickerFragment mIndividualPickerFragment;
     private boolean mShowSelectedWallpaper;
     private BottomSheetBehavior<View> mBottomSheetBehavior;
-    private int mSelectedPreviewPage;
+    // The index of Destination#DEST_HOME_SCREEN or Destination#DEST_LOCK_SCREEN
+    private int mWallpaperIndex;
 
     // The wallpaper information which is currently shown on the home preview.
     private WallpaperInfo mHomePreviewWallpaperInfo;
@@ -231,7 +232,9 @@ public class CategoryFragment extends AppbarFragment
 
             @Override
             public void onPageSelected(int i) {
-                mSelectedPreviewPage = i;
+                mWallpaperIndex = mPreviewPager.isRtl()
+                        ? (mWallPaperPreviews.size() - 1) - i
+                        : i;
                 if (mIndividualPickerFragment != null && mIndividualPickerFragment.isVisible()) {
                     mIndividualPickerFragment.highlightAppliedWallpaper(i);
                 }
@@ -411,7 +414,7 @@ public class CategoryFragment extends AppbarFragment
         }
         mIndividualPickerFragment = InjectorProvider.getInjector()
                 .getIndividualPickerFragment(category.getCollectionId());
-        mIndividualPickerFragment.highlightAppliedWallpaper(mSelectedPreviewPage);
+        mIndividualPickerFragment.highlightAppliedWallpaper(mWallpaperIndex);
         mIndividualPickerFragment.setOnWallpaperSelectedListener(position -> {
             // Scroll to the selected wallpaper and collapse the sheet if needed.
             // Resize and scroll here because we want to let the RecyclerView's scrolling and
@@ -658,7 +661,7 @@ public class CategoryFragment extends AppbarFragment
         if (mWallpaperConnection != null) {
             mWallpaperConnection.disconnect();
         }
-        ImageView previewView = mSelectedPreviewPage == 0 ? mHomePreview : mLockscreenPreview;
+        ImageView previewView = mWallpaperIndex == 0 ? mHomePreview : mLockscreenPreview;
         previewView.getLocationOnScreen(mLivePreviewLocation);
         mPreviewGlobalRect.set(0, 0, previewView.getMeasuredWidth(),
                 previewView.getMeasuredHeight());
