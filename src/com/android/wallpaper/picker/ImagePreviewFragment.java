@@ -68,6 +68,8 @@ import com.bumptech.glide.MemoryCategory;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
+import java.util.Locale;
+
 /**
  * Fragment which displays the UI for previewing an individual static wallpaper and its attribution
  * information.
@@ -131,7 +133,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         // Set aspect ratio on the preview card dynamically.
         ConstraintSet set = new ConstraintSet();
         set.clone(mContainer);
-        String ratio = String.format("%d:%d", mScreenSize.x, mScreenSize.y);
+        String ratio = String.format(Locale.US, "%d:%d", mScreenSize.x, mScreenSize.y);
         set.setDimensionRatio(mTouchForwardingLayout.getId(), ratio);
         set.applyTo(mContainer);
 
