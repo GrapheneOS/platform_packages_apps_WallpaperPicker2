@@ -90,10 +90,9 @@ public abstract class PreviewFragment extends AppbarFragment implements
      * Creates and returns new instance of {@link ImagePreviewFragment} with the provided wallpaper
      * set as an argument.
      */
-    public static PreviewFragment newInstance(Context context, WallpaperInfo wallpaperInfo,
-                                              @PreviewMode int mode, boolean viewAsHome,
-                                              boolean testingModeEnabled) {
-        Bundle args = AppbarFragment.createArguments(context.getString(R.string.preview));
+    public static PreviewFragment newInstance(WallpaperInfo wallpaperInfo, @PreviewMode int mode,
+            boolean viewAsHome, boolean testingModeEnabled) {
+        Bundle args = new Bundle();
         args.putParcelable(ARG_WALLPAPER, wallpaperInfo);
         args.putInt(ARG_PREVIEW_MODE, mode);
         args.putBoolean(ARG_VIEW_AS_HOME, viewAsHome);
@@ -283,6 +282,11 @@ public abstract class PreviewFragment extends AppbarFragment implements
     public void onDestroy() {
         super.onDestroy();
         mWallpaperSetter.cleanUp();
+    }
+
+    @Override
+    public CharSequence getDefaultTitle() {
+        return getContext().getString(R.string.preview);
     }
 
     protected void onSetWallpaperClicked(View button) {
