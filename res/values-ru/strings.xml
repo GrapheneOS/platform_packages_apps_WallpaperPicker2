@@ -28,7 +28,7 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Не удалось загрузить обои. Изображение повреждено или недоступно."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Установлено как обои"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Обои на каждый день"</string>
-    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Главный и заблокированный экраны"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Главный экран и заблокированный экран"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Главный экран"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Заблокированный экран"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Оба экрана"</string>

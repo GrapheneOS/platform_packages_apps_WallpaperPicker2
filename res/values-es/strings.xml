@@ -84,7 +84,7 @@
     <string name="tab_customize" msgid="2533745409174959960">"Personalizar"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Ajustes…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Eliminar"</string>
-    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"¿Quieres eliminar este fondo de pantalla de tu teléfono?"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"¿Eliminar este fondo de pantalla de tu teléfono?"</string>
     <string name="accessibility_preview_pager" msgid="1839869637405028575">"Página <xliff:g id="ID_1">%1$d</xliff:g> de <xliff:g id="ID_2">%2$d</xliff:g>"</string>
     <string name="next_page_content_description" msgid="6268461446679584152">"Siguiente"</string>
     <string name="previous_page_content_description" msgid="1138597031571078429">"Anterior"</string>
