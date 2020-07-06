@@ -23,27 +23,30 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.android.wallpaper.R;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.BottomActionBar.BottomActionBarHost;
 
 /**
  * Base class for Fragments that own a {@link BottomActionBar} widget.
  *
- * A Fragment extending this class is expected to have a {@link BottomActionBar} in its activity
+ * <p>A Fragment extending this class is expected to have a {@link BottomActionBar} in its activity
  * which is a {@link BottomActionBarHost}, which can handle lifecycle management of
  * {@link BottomActionBar} for extending fragment.
+ *
+ * <p>Or helping some fragments that own a {@link BottomActionBar} in fragment view to setup the
+ * common behavior for {@link BottomActionBar}.
  */
 public class BottomActionBarFragment extends Fragment {
 
-    private BottomActionBar mBottomActionBar;
+    @Nullable private BottomActionBar mBottomActionBar;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Activity activity = getActivity();
-        if (activity instanceof BottomActionBarHost) {
-            mBottomActionBar = ((BottomActionBarHost) activity).getBottomActionBar();
-            mBottomActionBar.bindBackButtonToSystemBackKey(activity);
+        mBottomActionBar = findBottomActionBar();
+        if (mBottomActionBar != null) {
+            mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
             onBottomActionBarReady(mBottomActionBar);
         }
     }
@@ -71,4 +74,18 @@ public class BottomActionBarFragment extends Fragment {
      * one interface to get {@link BottomActionBar}.
      */
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {}
+
+    @Nullable
+    private BottomActionBar findBottomActionBar() {
+        Activity activity = getActivity();
+        if (activity instanceof BottomActionBarHost) {
+            return ((BottomActionBarHost) activity).getBottomActionBar();
+        }
+
+        View root = getView();
+        if (root != null) {
+            return root.findViewById(R.id.bottom_actionbar);
+        }
+        return null;
+    }
 }
