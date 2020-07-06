@@ -28,11 +28,7 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.CallSuper;
@@ -40,8 +36,6 @@ import androidx.annotation.IdRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.FragmentActivity;
 
@@ -98,16 +92,14 @@ public abstract class PreviewFragment extends AppbarFragment implements
      */
     public static PreviewFragment newInstance(WallpaperInfo wallpaperInfo, @PreviewMode int mode,
             boolean viewAsHome, boolean testingModeEnabled) {
-
-        boolean isLive = wallpaperInfo instanceof LiveWallpaperInfo;
-
         Bundle args = new Bundle();
         args.putParcelable(ARG_WALLPAPER, wallpaperInfo);
         args.putInt(ARG_PREVIEW_MODE, mode);
         args.putBoolean(ARG_VIEW_AS_HOME, viewAsHome);
         args.putBoolean(ARG_TESTING_MODE_ENABLED, testingModeEnabled);
 
-        PreviewFragment fragment = isLive ? new LivePreviewFragment() : new ImagePreviewFragment();
+        PreviewFragment fragment = wallpaperInfo instanceof LiveWallpaperInfo
+                ? new LivePreviewFragment() : new ImagePreviewFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -137,8 +129,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected BottomActionBar mBottomActionBar;
     protected ContentLoadingProgressBar mLoadingProgressBar;
 
-    protected CheckBox mPreview;
-
     protected Intent mExploreIntent;
     protected CharSequence mActionLabel;
 
@@ -159,8 +149,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Activity activity = getActivity();
         Context appContext = getContext().getApplicationContext();
         Injector injector = InjectorProvider.getInjector();
 
@@ -176,6 +164,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
         setHasOptionsMenu(true);
 
+        Activity activity = getActivity();
         List<String> attributions = getAttributions(activity);
         if (attributions.size() > 0 && attributions.get(0) != null) {
             activity.setTitle(attributions.get(0));
@@ -187,51 +176,22 @@ public abstract class PreviewFragment extends AppbarFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutResId(), container, false);
-
-        // Set toolbar as the action bar.
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
-        TextView titleTextView = toolbar.findViewById(R.id.custom_toolbar_title);
-        if (titleTextView != null) {
-            titleTextView.setText(R.string.preview);
-        }
-
-        AppCompatActivity activity = (AppCompatActivity) requireActivity();
-        activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        setUpToolbar(view);
 
         mLoadingProgressBar = view.findViewById(getLoadingIndicatorResId());
         mLoadingProgressBar.show();
-
-        mBottomActionBar = view.findViewById(R.id.bottom_actionbar);
-
         return view;
     }
 
     @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
+        mBottomActionBar = bottomActionBar;
         // TODO: Extract the common code here.
-    }
-
-    protected void populateInfoPage(InfoPageController infoPage) {
-        Context context = requireContext();
-
-        List<String> attributions = getAttributions(context);
-        android.app.WallpaperInfo wallpaperComponent = mWallpaper.getWallpaperComponent();
-        boolean showMetadata =
-                wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
-        CharSequence exploreLabel = getExploreButtonLabel(context);
-
-        infoPage.populate(attributions, showMetadata, this::onSetWallpaperClicked,
-                exploreLabel,
-                (showMetadata && mExploreIntent != null) ? this::onExploreClicked : null);
     }
 
     protected List<String> getAttributions(Context context) {
         return mWallpaper.getAttributions(context);
     }
-
-    @Nullable
-    protected abstract CharSequence getExploreButtonLabel(Context context);
 
     @LayoutRes
     protected abstract int getLayoutResId();
@@ -263,15 +223,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
             mStagedSetWallpaperErrorDialogFragment.show(
                     requireFragmentManager(), TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT);
             mStagedSetWallpaperErrorDialogFragment = null;
-        }
-    }
-
-    protected void setPreviewChecked(boolean checked) {
-        if (mPreview != null) {
-            mPreview.setChecked(checked);
-            int resId = checked ? R.string.expand_attribution_panel
-                    : R.string.collapse_attribution_panel;
-            mPreview.setContentDescription(getResources().getString(resId));
         }
     }
 
@@ -331,6 +282,11 @@ public abstract class PreviewFragment extends AppbarFragment implements
     public void onDestroy() {
         super.onDestroy();
         mWallpaperSetter.cleanUp();
+    }
+
+    @Override
+    public CharSequence getDefaultTitle() {
+        return getContext().getString(R.string.preview);
     }
 
     protected void onSetWallpaperClicked(View button) {
@@ -413,95 +369,5 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected boolean isRtl() {
         return getResources().getConfiguration().getLayoutDirection()
                     == View.LAYOUT_DIRECTION_RTL;
-    }
-
-    protected static class InfoPageController {
-
-        public static View createView(LayoutInflater inflater) {
-            return inflater.inflate(R.layout.preview_page_info, null /* root */);
-        }
-
-        private final int mPreviewMode;
-        private final View mInfoPage;
-        private final TextView mAttributionTitle;
-        private final TextView mAttributionSubtitle1;
-        private final TextView mAttributionSubtitle2;
-        private final Button mExploreButton;
-        private final Button mSetWallpaperButton;
-        private final View mSpacer;
-
-        public InfoPageController(View infoPage, int previewMode) {
-            mInfoPage = infoPage;
-            mPreviewMode = previewMode;
-
-            mAttributionTitle = mInfoPage.findViewById(R.id.preview_attribution_pane_title);
-            mAttributionSubtitle1 = mInfoPage.findViewById(R.id.preview_attribution_pane_subtitle1);
-            mAttributionSubtitle2 = mInfoPage.findViewById(R.id.preview_attribution_pane_subtitle2);
-            mSpacer = mInfoPage.findViewById(R.id.spacer);
-
-            mExploreButton = mInfoPage.findViewById(R.id.preview_attribution_pane_explore_button);
-            mSetWallpaperButton = mInfoPage.findViewById(
-                    R.id.preview_attribution_pane_set_wallpaper_button);
-        }
-
-        public void populate(List<String> attributions, boolean showMetadata,
-                OnClickListener setWallpaperOnClickListener,
-                CharSequence exploreButtonLabel,
-                @Nullable OnClickListener exploreOnClickListener) {
-            if (attributions.size() > 0 && attributions.get(0) != null) {
-                mAttributionTitle.setText(attributions.get(0));
-            }
-
-            if (showMetadata) {
-                if (attributions.size() > 1 && attributions.get(1) != null) {
-                    mAttributionSubtitle1.setVisibility(View.VISIBLE);
-                    mAttributionSubtitle1.setText(attributions.get(1));
-                }
-
-                if (attributions.size() > 2 && attributions.get(2) != null) {
-                    mAttributionSubtitle2.setVisibility(View.VISIBLE);
-                    mAttributionSubtitle2.setText(attributions.get(2));
-                }
-            }
-            setUpSetWallpaperButton(setWallpaperOnClickListener);
-
-            setUpExploreButton(exploreButtonLabel, exploreOnClickListener);
-
-            if (mExploreButton.getVisibility() == View.VISIBLE
-                    && mSetWallpaperButton.getVisibility() == View.VISIBLE) {
-                mSpacer.setVisibility(View.VISIBLE);
-            } else {
-                mSpacer.setVisibility(View.GONE);
-            }
-        }
-
-        public void setContentAlpha(float alpha) {
-            mSetWallpaperButton.setAlpha(alpha);
-            mExploreButton.setAlpha(alpha);
-            mAttributionTitle.setAlpha(alpha);
-            mAttributionSubtitle1.setAlpha(alpha);
-            mAttributionSubtitle2.setAlpha(alpha);
-        }
-
-        private void setUpSetWallpaperButton(OnClickListener setWallpaperOnClickListener) {
-            if (mPreviewMode == MODE_VIEW_ONLY) {
-                mSetWallpaperButton.setVisibility(View.GONE);
-            } else {
-                mSetWallpaperButton.setVisibility(View.VISIBLE);
-                mSetWallpaperButton.setOnClickListener(setWallpaperOnClickListener);
-            }
-        }
-
-        private void setUpExploreButton(CharSequence label,
-                @Nullable OnClickListener exploreOnClickListener) {
-            mExploreButton.setVisibility(View.GONE);
-            if (exploreOnClickListener == null) {
-                return;
-            }
-            mExploreButton.setVisibility(View.VISIBLE);
-            mExploreButton.setText(label);
-
-            mExploreButton.setOnClickListener(exploreOnClickListener);
-        }
     }
 }
