@@ -66,8 +66,6 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Күнүмдүк тушкагазды жаңыртуу"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"Күнүмдүк тушкагаз жаңыртылууда…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"Күнүмдүк тушкагаз жаңыртылбай калды. Интернетке туташууңузду текшерип, дагы бир жолу аракет кылыңыз."</string>
-    <string name="collapse_attribution_panel" msgid="4367971404848122275">"Тушкагаздын маалымат панелин жыйыштыруу"</string>
-    <string name="expand_attribution_panel" msgid="6975094181456095915">"Тушкагаздын маалымат панелин жайып көрсөтүү"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"Түзмөктөгү тушкагаздар"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"Түзмөктө"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Android тушкагазы"</string>
@@ -85,21 +83,14 @@
     <string name="configure_wallpaper" msgid="849882179182976621">"Жөндөөлөр…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Жок кылуу"</string>
     <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Бул тушкагаз телефонуңуздан өчүрүлсүнбү?"</string>
-    <!-- no translation found for bottom_action_bar_back (8237013112999946725) -->
-    <skip />
-    <!-- no translation found for bottom_action_bar_edit (1214742990893082138) -->
-    <skip />
-    <!-- no translation found for bottom_action_bar_download (3983122338076389421) -->
-    <skip />
-    <!-- no translation found for bottom_action_bar_slideshow_wallpaper (509770525179533154) -->
-    <skip />
-    <!-- no translation found for bottom_action_bar_apply (2983308349819178932) -->
-    <skip />
+    <string name="bottom_action_bar_back" msgid="8237013112999946725">"Артка"</string>
+    <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Түзөтүү"</string>
+    <string name="bottom_action_bar_download" msgid="3983122338076389421">"Жүктөп алуу"</string>
+    <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Тушкагазды слайдшоу катары көрсөтүү"</string>
+    <string name="bottom_action_bar_apply" msgid="2983308349819178932">"Колдонуу"</string>
     <string name="accessibility_preview_pager" msgid="1839869637405028575">"<xliff:g id="ID_2">%2$d</xliff:g> ичинен <xliff:g id="ID_1">%1$d</xliff:g>-барак"</string>
     <string name="next_page_content_description" msgid="6268461446679584152">"Кийинки"</string>
     <string name="previous_page_content_description" msgid="1138597031571078429">"Мурунку"</string>
-    <!-- no translation found for wallpaper_title (6754214682228331092) -->
-    <skip />
-    <!-- no translation found for wallpaper_preview_card_content_description (6049261033541034584) -->
-    <skip />
+    <string name="wallpaper_title" msgid="6754214682228331092">"Тушкагаз"</string>
+    <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Тушкагазды алдын ала көрүү"</string>
 </resources>

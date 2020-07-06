@@ -66,8 +66,6 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"ଦୈନିକ ୱାଲପେପର୍‌କୁ ରିଫ୍ରେଶ୍ କରନ୍ତୁ"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"ଦୈନିକ ୱାଲପେପର୍ ରିଫ୍ରେଶ୍ ହେଉଛି…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"ଦୈନିକ ୱାଲପେପର୍‌କୁ ରିଫ୍ରେଶ କରିବାରେ ବିଫଳ ହୋଇଛି। ଦୟାକରି ଆପଣଙ୍କର ନେଟୱର୍କ କନେକ୍ସନ୍‍କୁ ଯାଞ୍ଚ କରିବା ସହିତ ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।"</string>
-    <string name="collapse_attribution_panel" msgid="4367971404848122275">"ୱାଲପେପର୍‌ ସୂଚନା ପ୍ୟାନେଲକୁ ସଂକୁଚିତ କରନ୍ତୁ"</string>
-    <string name="expand_attribution_panel" msgid="6975094181456095915">"ୱାଲପେପର୍‌ ସୂଚନା ପ୍ୟାନେଲ୍‌‍କୁ ବଢ଼ାନ୍ତୁ"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"ଅନ୍-ଡିଭାଇସ୍ ୱାଲପେପର୍"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"ଡିଭାଇସ୍‌ରେ"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Android ୱାଲପେପର୍"</string>
@@ -85,21 +83,14 @@
     <string name="configure_wallpaper" msgid="849882179182976621">"ସେଟିଂସ୍..."</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"ଡିଲିଟ୍ କରନ୍ତୁ"</string>
     <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"ଆପଣଙ୍କର ଫୋନ୍‌ରୁ ଏହି ୱାଲ୍‌ପେପର୍‌କୁ ଡିଲିଟ୍ କରିବେ କି?"</string>
-    <!-- no translation found for bottom_action_bar_back (8237013112999946725) -->
-    <skip />
-    <!-- no translation found for bottom_action_bar_edit (1214742990893082138) -->
-    <skip />
-    <!-- no translation found for bottom_action_bar_download (3983122338076389421) -->
-    <skip />
-    <!-- no translation found for bottom_action_bar_slideshow_wallpaper (509770525179533154) -->
-    <skip />
-    <!-- no translation found for bottom_action_bar_apply (2983308349819178932) -->
-    <skip />
+    <string name="bottom_action_bar_back" msgid="8237013112999946725">"ପଛକୁ ଫେରନ୍ତୁ"</string>
+    <string name="bottom_action_bar_edit" msgid="1214742990893082138">"ସମ୍ପାଦନ କରନ୍ତୁ"</string>
+    <string name="bottom_action_bar_download" msgid="3983122338076389421">"ଡାଉନଲୋଡ୍ କରନ୍ତୁ"</string>
+    <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"ୱାଲପେପରର ସ୍ଲାଇଡଶୋ"</string>
+    <string name="bottom_action_bar_apply" msgid="2983308349819178932">"ଲାଗୁ କରନ୍ତୁ"</string>
     <string name="accessibility_preview_pager" msgid="1839869637405028575">"<xliff:g id="ID_2">%2$d</xliff:g> ମଧ୍ୟରୁ <xliff:g id="ID_1">%1$d</xliff:g> ପୃଷ୍ଠା"</string>
     <string name="next_page_content_description" msgid="6268461446679584152">"ପରବର୍ତ୍ତୀ"</string>
     <string name="previous_page_content_description" msgid="1138597031571078429">"ପୂର୍ବବର୍ତ୍ତୀ"</string>
-    <!-- no translation found for wallpaper_title (6754214682228331092) -->
-    <skip />
-    <!-- no translation found for wallpaper_preview_card_content_description (6049261033541034584) -->
-    <skip />
+    <string name="wallpaper_title" msgid="6754214682228331092">"ୱାଲପେପର୍"</string>
+    <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"ୱାଲପେପରର ପ୍ରିଭ୍ୟୁ"</string>
 </resources>

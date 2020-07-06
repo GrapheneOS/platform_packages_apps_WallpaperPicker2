@@ -61,7 +61,7 @@ public class LockScreenPreviewer implements LifecycleObserver {
     public LockScreenPreviewer(Lifecycle lifecycle, Activity activity, ViewGroup previewContainer) {
         lifecycle.addObserver(this);
         mActivity = activity;
-        View contentView = LayoutInflater.from(activity).inflate(
+        View contentView = LayoutInflater.from(mActivity).inflate(
                 R.layout.lock_screen_preview, /* root= */ null);
         mLockIcon = contentView.findViewById(R.id.lock_icon);
         mLockTime = contentView.findViewById(R.id.lock_time);
@@ -70,8 +70,10 @@ public class LockScreenPreviewer implements LifecycleObserver {
 
         Display defaultDisplay = mActivity.getWindowManager().getDefaultDisplay();
         Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(defaultDisplay);
+
         Configuration config = mActivity.getResources().getConfiguration();
         final boolean directionLTR = config.getLayoutDirection() == View.LAYOUT_DIRECTION_LTR;
+
         View rootView = previewContainer.getRootView();
         rootView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -90,7 +92,7 @@ public class LockScreenPreviewer implements LifecycleObserver {
                 contentView.setScaleX(scale);
                 contentView.setScaleY(scale);
                 // The pivot point is centered by default, set to (0, 0).
-                contentView.setPivotX(directionLTR ? 0f : previewContainer.getMeasuredWidth());
+                contentView.setPivotX(directionLTR ? 0f : contentView.getMeasuredWidth());
                 contentView.setPivotY(0f);
 
                 previewContainer.removeAllViews();
