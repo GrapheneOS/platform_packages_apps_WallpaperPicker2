@@ -26,13 +26,13 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceControlViewHost;
@@ -69,6 +69,8 @@ import com.bumptech.glide.MemoryCategory;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
+import java.util.Locale;
+
 /**
  * Fragment which displays the UI for previewing an individual static wallpaper and its attribution
  * information.
@@ -77,13 +79,11 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
 
-    private final Handler mHandler = new Handler();
     private final WallpaperSurfaceCallback mWallpaperSurfaceCallback =
             new WallpaperSurfaceCallback();
 
     private SubsamplingScaleImageView mFullResImageView;
     private Asset mWallpaperAsset;
-    private Point mDefaultCropSurfaceSize;
     private Point mScreenSize;
     private Point mRawWallpaperSize; // Native size of wallpaper image.
     private ImageView mLowResImageView;
@@ -134,7 +134,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         // Set aspect ratio on the preview card dynamically.
         ConstraintSet set = new ConstraintSet();
         set.clone(mContainer);
-        String ratio = String.format("%d:%d", mScreenSize.x, mScreenSize.y);
+        String ratio = String.format(Locale.US, "%d:%d", mScreenSize.x, mScreenSize.y);
         set.setDimensionRatio(mTouchForwardingLayout.getId(), ratio);
         set.applyTo(mContainer);
 
@@ -152,7 +152,6 @@ public class ImagePreviewFragment extends PreviewFragment {
         mLock.setOnClickListener(v -> updateScreenPreview(/* isHomeSelected= */ false));
         mHome.setOnClickListener(v -> updateScreenPreview(/* isHomeSelected= */ true));
 
-        onBottomActionBarReady(mBottomActionBar);
         view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
                 makeMeasureSpec(mScreenSize.y, EXACTLY));
 
@@ -165,34 +164,7 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         // Trim some memory from Glide to make room for the full-size image in this fragment.
         Glide.get(activity).setMemoryCategory(MemoryCategory.LOW);
-
-        mDefaultCropSurfaceSize = WallpaperCropUtils.getDefaultCropSurfaceSize(
-                getResources(), activity.getWindowManager().getDefaultDisplay());
-
-        mBottomActionBar.disableActions();
-        mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
-            if (mBottomActionBar != null) {
-                mBottomActionBar.enableActions();
-            }
-
-            // Don't continue loading the wallpaper if the Fragment is detached.
-            if (getActivity() == null) {
-                return;
-            }
-
-            // Return early and show a dialog if dimensions are null (signaling a decoding error).
-            if (dimensions == null) {
-                showLoadWallpaperErrorDialog();
-                return;
-            }
-
-            mRawWallpaperSize = dimensions;
-
-            setUpExploreIntentAndLabel(ImagePreviewFragment.this::initFullResView);
-        });
-
         setUpLoadingIndicator();
-
         return view;
     }
 
@@ -238,7 +210,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                         R.layout.wallpaper_info_view, /* root= */null);
         mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
         mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
-        mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
         mBottomActionBar.setActionClickListener(EDIT, v ->
                 setEditingEnabled(mBottomActionBar.isActionSelected(EDIT))
         );
@@ -250,11 +221,14 @@ public class ImagePreviewFragment extends PreviewFragment {
         mBottomActionBar.setAccessibilityCallback(new AccessibilityCallback() {
             @Override
             public void onBottomSheetCollapsed() {
+                mContainer.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
                 mTabs.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
             }
 
             @Override
             public void onBottomSheetExpanded() {
+                mContainer.setImportantForAccessibility(
+                        View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
                 mTabs.setImportantForAccessibility(
                         View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
             }
@@ -263,11 +237,28 @@ public class ImagePreviewFragment extends PreviewFragment {
         // Will trigger onActionSelected callback to update the editing state.
         mBottomActionBar.setDefaultSelectedButton(EDIT);
         mBottomActionBar.show();
-    }
 
-    @Override
-    protected CharSequence getExploreButtonLabel(Context context) {
-        return context.getString(mWallpaper.getActionLabelRes(context));
+        mBottomActionBar.disableActions();
+        mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
+            if (mBottomActionBar != null) {
+                mBottomActionBar.enableActions();
+            }
+
+            // Don't continue loading the wallpaper if the Fragment is detached.
+            if (getActivity() == null) {
+                return;
+            }
+
+            // Return early and show a dialog if dimensions are null (signaling a decoding error).
+            if (dimensions == null) {
+                showLoadWallpaperErrorDialog();
+                return;
+            }
+
+            mRawWallpaperSize = dimensions;
+
+            setUpExploreIntentAndLabel(ImagePreviewFragment.this::initFullResView);
+        });
     }
 
     /**
@@ -407,9 +398,20 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         int cropWidth = mWorkspaceSurface.getMeasuredWidth();
         int cropHeight = mWorkspaceSurface.getMeasuredHeight();
+        int maxCrop = Math.max(cropWidth, cropHeight);
+        int minCrop = Math.min(cropWidth, cropHeight);
         Point hostViewSize = new Point(cropWidth, cropHeight);
+
+        // Workaround for now to force wallpapers designed to fit one screen size to not adjust for
+        // parallax scrolling (with an extra 1 pixel to account for rounding)
+        // TODO (santie): implement a better solution
+        boolean shouldForceScreenSize = mRawWallpaperSize.x - mScreenSize.x <= 1;
+        Resources res = context.getResources();
+        Point cropSurfaceSize = shouldForceScreenSize ? hostViewSize :
+                WallpaperCropUtils.calculateCropSurfaceSize(res, maxCrop, minCrop);
+
         Rect cropRect = WallpaperCropUtils.calculateCropRect(context, hostViewSize,
-                hostViewSize, mRawWallpaperSize, visibleFileRect, wallpaperZoom);
+                cropSurfaceSize, mRawWallpaperSize, visibleFileRect, wallpaperZoom);
         WallpaperCropUtils.adjustCropRect(context, cropRect, false /* zoomIn */);
         return cropRect;
     }

@@ -101,6 +101,7 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
 
     @Override
     protected void adjustCropRect(Context context, Point assetDimensions, Rect cropRect) {
+        cropRect.offsetTo(0, 0);
         WallpaperCropUtils.adjustCurrentWallpaperCropRect(context, assetDimensions, cropRect);
     }
 
