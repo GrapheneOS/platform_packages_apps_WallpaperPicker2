@@ -240,14 +240,6 @@
         Failed to refresh daily wallpaper. Please check your network connection and try again.
     </string>
 
-    <!-- Content description for a button letting the user collapse a visual panel showing info
-         about the wallpaper being previewed. [CHAR LIMIT=none] -->
-    <string name="collapse_attribution_panel">Collapse wallpaper info panel</string>
-
-    <!-- Content description for a button letting the user expand a visual panel showing info about
-         the wallpaper being previewed. [CHAR LIMIT=none] -->
-    <string name="expand_attribution_panel">Expand wallpaper info panel</string>
-
     <!-- Content -->
     <!-- Title of the collection of wallpapers stored on the device itself. [CHAR LIMIT=30] -->
     <string name="on_device_wallpapers_category_title">On-device wallpapers</string>
