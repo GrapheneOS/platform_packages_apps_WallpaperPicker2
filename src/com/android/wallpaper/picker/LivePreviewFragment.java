@@ -27,7 +27,6 @@ import android.app.WallpaperColors;
 import android.app.WallpaperInfo;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
@@ -46,7 +45,6 @@ import android.service.wallpaper.WallpaperService;
 import android.service.wallpaper.WallpaperSettingsActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -68,7 +66,6 @@ import androidx.slice.widget.SliceView;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.compat.BuildCompat;
-import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
@@ -79,8 +76,7 @@ import com.android.wallpaper.widget.LiveTileOverlay;
 import com.android.wallpaper.widget.LockScreenPreviewer;
 import com.android.wallpaper.widget.WallpaperInfoView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 
 /**
  * Fragment which displays the UI for previewing an individual live wallpaper, its attribution
@@ -111,11 +107,9 @@ public class LivePreviewFragment extends PreviewFragment implements
     private Intent mDeleteIntent;
     private Intent mSettingsIntent;
 
-    private List<Pair<String, View>> mPages;
     private SliceView mSettingsSliceView;
     private LiveData<Slice> mSettingsLiveData;
     private View mLoadingScrim;
-    private InfoPageController mInfoPageController;
     private Point mScreenSize;
     private ViewGroup mPreviewContainer;
     private TouchForwardingLayout mTouchForwardingLayout;
@@ -168,39 +162,37 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        mPages = new ArrayList<>();
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        if (view == null) {
-            return null;
-        }
-
-        Activity activity = requireActivity();
 
         mLoadingScrim = view.findViewById(R.id.loading);
         setUpLoadingIndicator();
 
+        Activity activity = requireActivity();
         mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
                 activity.getWindowManager().getDefaultDisplay());
 
         mPreviewContainer = view.findViewById(R.id.live_wallpaper_preview);
-        mHomePreviewCard = mPreviewContainer.findViewById(R.id.wallpaper_full_preview_card);
         mTouchForwardingLayout = view.findViewById(R.id.touch_forwarding_layout);
         // Set aspect ratio on the preview card.
         ConstraintSet set = new ConstraintSet();
         set.clone((ConstraintLayout) mPreviewContainer);
-        String ratio = String.format("%d:%d", mScreenSize.x, mScreenSize.y);
+        String ratio = String.format(Locale.US, "%d:%d", mScreenSize.x, mScreenSize.y);
         set.setDimensionRatio(mTouchForwardingLayout.getId(), ratio);
         set.applyTo((ConstraintLayout) mPreviewContainer);
 
+        mHomePreviewCard = mPreviewContainer.findViewById(R.id.wallpaper_full_preview_card);
         mHomePreview = mHomePreviewCard.findViewById(R.id.wallpaper_preview_image);
         mTouchForwardingLayout.setTargetView(mHomePreview);
         mTouchForwardingLayout.setForwardingEnabled(true);
         mLockPreviewContainer = mPreviewContainer.findViewById(R.id.lock_screen_preview_container);
-        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getActivity(),
+        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), activity,
                 mLockPreviewContainer);
         mTab = view.findViewById(R.id.tabs_container);
         mHomeTextView = mTab.findViewById(R.id.home);
         mLockTextView = mTab.findViewById(R.id.lock);
+        mHomeTextView.setOnClickListener(v -> updateScreenTab(/* isHomeSelected= */ true));
+        mLockTextView.setOnClickListener(v -> updateScreenTab(/* isHomeSelected= */ false));
+
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
         mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(
                 mWorkspaceSurface, getContext());
@@ -209,19 +201,18 @@ public class LivePreviewFragment extends PreviewFragment implements
             @Override
             public void onLayoutChange(View thisView, int left, int top, int right, int bottom,
                     int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                setupPreview();
+                mHomePreviewCard.setRadius(SizeCalculator.getPreviewCornerRadius(activity,
+                        mHomePreviewCard.getMeasuredWidth()));
                 view.removeOnLayoutChangeListener(this);
             }
         });
-        onBottomActionBarReady(mBottomActionBar);
-
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupCurrentWallpaperPreview(view);
+        setupCurrentWallpaperPreview();
         renderWorkspaceSurface();
     }
 
@@ -232,26 +223,6 @@ public class LivePreviewFragment extends PreviewFragment implements
         mLockPreviewContainer.setVisibility(isHomeSelected ? View.INVISIBLE : View.VISIBLE);
     }
 
-    private void setupPreview() {
-        mHomeTextView.setOnClickListener(view ->
-                updateScreenTab(/* isHomeSelected= */ true)
-        );
-        mLockTextView.setOnClickListener(view ->
-                updateScreenTab(/* isHomeSelected= */ false)
-        );
-        if (mWallpaperInfoView != null) {
-            mWallpaperInfoView.populateWallpaperInfo(
-                    mWallpaper,
-                    mActionLabel,
-                    mExploreIntent,
-                    LivePreviewFragment.this::onExploreClicked);
-        }
-
-        ((CardView) mHomePreview.getParent())
-                .setRadius(SizeCalculator.getPreviewCornerRadius(
-                        getActivity(), mHomePreviewCard.getMeasuredWidth()));
-    }
-
     private void repositionPreview(ImageView previewView) {
         previewView.getLocationOnScreen(mLivePreviewLocation);
         mPreviewGlobalRect.set(0, 0, previewView.getMeasuredWidth(),
@@ -260,7 +231,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         mPreviewGlobalRect.offset(mLivePreviewLocation[0], mLivePreviewLocation[1]);
     }
 
-    private void setupCurrentWallpaperPreview(View view) {
+    private void setupCurrentWallpaperPreview() {
         mHomePreview.setOnTouchListener((v, ev) -> {
             if (mWallpaperConnection != null && mWallpaperConnection.getEngine() != null) {
                 int action = ev.getActionMasked();
@@ -298,12 +269,9 @@ public class LivePreviewFragment extends PreviewFragment implements
         LiveTileOverlay.INSTANCE.detach(mHomePreview.getOverlay());
         if (mWallpaperConnection != null) {
             mWallpaperConnection.disconnect();
+            mWallpaperConnection = null;
         }
-        mWallpaperConnection = null;
-
         mWorkspaceSurfaceCallback.cleanUp();
-
-        super.onDestroy();
     }
 
     private void previewLiveWallpaper(ImageView thumbnailView) {
@@ -335,45 +303,10 @@ public class LivePreviewFragment extends PreviewFragment implements
         repositionPreview(previewView);
 
         mWallpaperConnection = new WallpaperConnection(
-                getWallpaperIntent(homeWallpaper.getWallpaperComponent()), activity,
-                new WallpaperConnection.WallpaperConnectionListener() {
-                    @Override
-                    public void onEngineShown() {
-                        mLoadingScrim.post(() -> mLoadingScrim.animate()
-                                .alpha(0f)
-                                .setDuration(250)
-                                .setStartDelay(200)
-                                .setInterpolator(AnimationUtils.loadInterpolator(getActivity(),
-                                        android.R.interpolator.fast_out_linear_in))
-                                .withEndAction(() -> {
-                                    if (mLoadingProgressBar != null) {
-                                        mLoadingProgressBar.hide();
-                                    }
-                                    mLoadingScrim.setVisibility(View.GONE);
-                                }));
-                        final Drawable placeholder = previewView.getDrawable() == null
-                                ? new ColorDrawable(getResources().getColor(R.color.secondary_color,
-                                activity.getTheme()))
-                                : previewView.getDrawable();
-                        LiveTileOverlay.INSTANCE.setForegroundDrawable(placeholder);
-                        LiveTileOverlay.INSTANCE.attach(previewView.getOverlay());
-                        previewView.animate()
-                                .setStartDelay(0)
-                                .setDuration(150)
-                                .setInterpolator(AnimationUtils.loadInterpolator(getContext(),
-                                        android.R.interpolator.fast_out_linear_in))
-                                .setUpdateListener(value -> placeholder.setAlpha(
-                                        (int) (255 * (1 - value.getAnimatedFraction()))))
-                                .withEndAction(() -> {
-                                    LiveTileOverlay.INSTANCE.setForegroundDrawable(null);
-                                }).start();
-                    }
-
-                    @Override
-                    public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
-                        mLockScreenPreviewer.setColor(colors);
-                    }
-                }, mPreviewGlobalRect);
+                getWallpaperIntent(homeWallpaper.getWallpaperComponent()),
+                activity,
+                /* listener= */ this,
+                mPreviewGlobalRect);
 
         LiveTileOverlay.INSTANCE.update(new RectF(mPreviewLocalRect),
                 ((CardView) previewView.getParent()).getRadius());
@@ -398,14 +331,15 @@ public class LivePreviewFragment extends PreviewFragment implements
         mWorkspaceSurface.getHolder().addCallback(mWorkspaceSurfaceCallback);
     }
 
+    @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar.showActionsOnly(INFORMATION, DELETE, CUSTOMIZE, APPLY);
-        mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
-        mBottomActionBar.setActionClickListener(APPLY, unused ->
-                this.onSetWallpaperClicked(null));
+        mBottomActionBar.setActionClickListener(APPLY, unused -> onSetWallpaperClicked(null));
         mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
                 .inflate(R.layout.wallpaper_info_view, /* root= */ null);
+        mWallpaperInfoView.populateWallpaperInfo(mWallpaper, mActionLabel, mExploreIntent,
+                this::onExploreClicked);
         mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
 
         // Update target view's accessibility param since it will be blocked by the bottom sheet
@@ -413,11 +347,15 @@ public class LivePreviewFragment extends PreviewFragment implements
         mBottomActionBar.setAccessibilityCallback(new AccessibilityCallback() {
             @Override
             public void onBottomSheetCollapsed() {
+                mPreviewContainer.setImportantForAccessibility(
+                        View.IMPORTANT_FOR_ACCESSIBILITY_YES);
                 mTab.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
             }
 
             @Override
             public void onBottomSheetExpanded() {
+                mPreviewContainer.setImportantForAccessibility(
+                        View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
                 mTab.setImportantForAccessibility(
                         View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
             }
@@ -453,33 +391,49 @@ public class LivePreviewFragment extends PreviewFragment implements
 
     @Override
     public void onEngineShown() {
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+
         mLoadingScrim.post(() -> mLoadingScrim.animate()
                 .alpha(0f)
-                .setDuration(220)
-                .setStartDelay(300)
-                .setInterpolator(AnimationUtils.loadInterpolator(getActivity(),
+                .setDuration(250)
+                .setStartDelay(200)
+                .setInterpolator(AnimationUtils.loadInterpolator(activity,
                         android.R.interpolator.fast_out_linear_in))
                 .withEndAction(() -> {
                     if (mLoadingProgressBar != null) {
                         mLoadingProgressBar.hide();
                     }
-                    mLoadingScrim.setVisibility(View.INVISIBLE);
-                    populateInfoPage(mInfoPageController);
+                    mLoadingScrim.setVisibility(View.GONE);
                 }));
+        final Drawable placeholder = mHomePreview.getDrawable() == null
+                ? new ColorDrawable(getResources().getColor(R.color.secondary_color,
+                activity.getTheme()))
+                : mHomePreview.getDrawable();
+        LiveTileOverlay.INSTANCE.setForegroundDrawable(placeholder);
+        LiveTileOverlay.INSTANCE.attach(mHomePreview.getOverlay());
+        mHomePreview.animate()
+                .setStartDelay(0)
+                .setDuration(150)
+                .setInterpolator(AnimationUtils.loadInterpolator(activity,
+                        android.R.interpolator.fast_out_linear_in))
+                .setUpdateListener(value -> placeholder.setAlpha(
+                        (int) (255 * (1 - value.getAnimatedFraction()))))
+                .withEndAction(() -> {
+                    LiveTileOverlay.INSTANCE.setForegroundDrawable(null);
+                }).start();
+    }
+
+    @Override
+    public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
+        mLockScreenPreviewer.setColor(colors);
     }
 
     @Override
     protected boolean isLoaded() {
         return mWallpaperConnection != null && mWallpaperConnection.isEngineReady();
-    }
-
-    @Override
-    protected CharSequence getExploreButtonLabel(Context context) {
-        CharSequence exploreLabel = ((LiveWallpaperInfo) mWallpaper).getActionDescription(context);
-        if (TextUtils.isEmpty(exploreLabel)) {
-            exploreLabel = context.getString(mWallpaper.getActionLabelRes(context));
-        }
-        return exploreLabel;
     }
 
     @SuppressLint("NewApi") //Already checking with isAtLeastQ
@@ -589,9 +543,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     }
 
     private boolean isPackagePreInstalled(ApplicationInfo info) {
-        if (info != null && (info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-            return true;
-        }
-        return false;
+        return info != null && (info.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
     }
 }
