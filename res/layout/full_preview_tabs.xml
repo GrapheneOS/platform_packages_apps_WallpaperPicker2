@@ -14,32 +14,29 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tabs_container"
+<com.google.android.material.tabs.TabLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/full_preview_tabs"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/full_preview_page_tab_height"
-    android:background="@color/fullscreen_preview_background"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content"
+    app:tabIndicatorColor="?android:colorAccent"
+    app:tabIndicatorFullWidth="false"
+    app:tabRippleColor="?android:colorControlHighlight"
+    app:tabSelectedTextColor="?android:colorAccent"
+    app:tabTextAppearance="@android:style/TextAppearance.Material.Body2"
+    app:tabTextColor="@color/full_preview_tab_unselected_text_color"
+    app:tabUnboundedRipple="true">
 
-    <com.android.wallpaper.widget.SelectedBoldTextView
+    <com.google.android.material.tabs.TabItem
         android:id="@+id/home"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:gravity="center"
-        android:paddingVertical="@dimen/full_preview_page_tab_padding_top"
-        android:text="@string/home_screen_message"
-        style="@style/SubtitleTextAppearance" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/home_screen_message" />
 
-    <com.android.wallpaper.widget.SelectedBoldTextView
+    <com.google.android.material.tabs.TabItem
         android:id="@+id/lock"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:gravity="center"
-        android:paddingVertical="@dimen/full_preview_page_tab_padding_top"
-        android:text="@string/lock_screen_message"
-        style="@style/SubtitleTextAppearance" />
-</LinearLayout>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/lock_screen_message" />
+</com.google.android.material.tabs.TabLayout>
