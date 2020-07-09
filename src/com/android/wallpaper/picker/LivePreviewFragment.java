@@ -52,7 +52,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -75,6 +74,8 @@ import com.android.wallpaper.widget.BottomActionBar.AccessibilityCallback;
 import com.android.wallpaper.widget.LiveTileOverlay;
 import com.android.wallpaper.widget.LockScreenPreviewer;
 import com.android.wallpaper.widget.WallpaperInfoView;
+
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.Locale;
 
@@ -113,9 +114,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     private Point mScreenSize;
     private ViewGroup mPreviewContainer;
     private TouchForwardingLayout mTouchForwardingLayout;
-    private View mTab;
-    private TextView mHomeTextView;
-    private TextView mLockTextView;
     private SurfaceView mWorkspaceSurface;
     private ViewGroup mLockPreviewContainer;
     private LockScreenPreviewer mLockScreenPreviewer;
@@ -187,16 +185,32 @@ public class LivePreviewFragment extends PreviewFragment implements
         mLockPreviewContainer = mPreviewContainer.findViewById(R.id.lock_screen_preview_container);
         mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), activity,
                 mLockPreviewContainer);
-        mTab = view.findViewById(R.id.tabs_container);
-        mHomeTextView = mTab.findViewById(R.id.home);
-        mLockTextView = mTab.findViewById(R.id.lock);
-        mHomeTextView.setOnClickListener(v -> updateScreenTab(/* isHomeSelected= */ true));
-        mLockTextView.setOnClickListener(v -> updateScreenTab(/* isHomeSelected= */ false));
-
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
         mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(
                 mWorkspaceSurface, getContext());
-        updateScreenTab(/* isHomeSelected= */ mViewAsHome);
+
+        TabLayout tabs = inflater.inflate(R.layout.full_preview_tabs,
+                view.findViewById(R.id.toolbar_tabs_container))
+                .findViewById(R.id.full_preview_tabs);
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                updateScreenPreview(tab.getPosition() == 0);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
+        // The TabLayout only contains below tabs, see: full_preview_tabs.xml
+        // 0. Home tab
+        // 1. Lock tab
+        tabs.getTabAt(mViewAsHome ? 0 : 1).select();
+        updateScreenPreview(mViewAsHome);
+
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View thisView, int left, int top, int right, int bottom,
@@ -216,9 +230,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         renderWorkspaceSurface();
     }
 
-    private void updateScreenTab(boolean isHomeSelected) {
-        mHomeTextView.setSelected(isHomeSelected);
-        mLockTextView.setSelected(!isHomeSelected);
+    private void updateScreenPreview(boolean isHomeSelected) {
         mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.INVISIBLE);
         mLockPreviewContainer.setVisibility(isHomeSelected ? View.INVISIBLE : View.VISIBLE);
     }
@@ -349,14 +361,11 @@ public class LivePreviewFragment extends PreviewFragment implements
             public void onBottomSheetCollapsed() {
                 mPreviewContainer.setImportantForAccessibility(
                         View.IMPORTANT_FOR_ACCESSIBILITY_YES);
-                mTab.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
             }
 
             @Override
             public void onBottomSheetExpanded() {
                 mPreviewContainer.setImportantForAccessibility(
-                        View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
-                mTab.setImportantForAccessibility(
                         View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
             }
         });
