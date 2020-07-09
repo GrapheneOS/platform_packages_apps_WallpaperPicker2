@@ -246,7 +246,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     private void setEngineVisibility(boolean visible) {
         if (mEngine != null && visible != mIsEngineVisible) {
             try {
-                mEngine.setVisibility(true);
+                mEngine.setVisibility(visible);
                 mIsEngineVisible = visible;
             } catch (RemoteException e) {
                 Log.w(TAG, "Failure setting wallpaper visibility ", e);
