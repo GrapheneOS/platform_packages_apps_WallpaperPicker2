@@ -68,6 +68,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.Locale;
 
@@ -94,10 +95,7 @@ public class ImagePreviewFragment extends PreviewFragment {
     private SurfaceView mWallpaperSurface;
     private ViewGroup mLockPreviewContainer;
     private LockScreenPreviewer mLockScreenPreviewer;
-    private View mTabs;
     private WallpaperInfoView mWallpaperInfoView;
-    private View mLock;
-    private View mHome;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,21 +144,35 @@ public class ImagePreviewFragment extends PreviewFragment {
         mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getActivity(),
                 mLockPreviewContainer);
 
-        mTabs = view.findViewById(R.id.tabs_container);
-        mLock = mTabs.findViewById(R.id.lock);
-        mHome = mTabs.findViewById(R.id.home);
-        mLock.setOnClickListener(v -> updateScreenPreview(/* isHomeSelected= */ false));
-        mHome.setOnClickListener(v -> updateScreenPreview(/* isHomeSelected= */ true));
+        TabLayout tabs = inflater.inflate(R.layout.full_preview_tabs,
+                view.findViewById(R.id.toolbar_tabs_container))
+                .findViewById(R.id.full_preview_tabs);
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                updateScreenPreview(tab.getPosition() == 0);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
+        // The TabLayout only contains below tabs, see: full_preview_tabs.xml
+        // 0. Home tab
+        // 1. Lock tab
+        tabs.getTabAt(mViewAsHome ? 0 : 1).select();
+        updateScreenPreview(mViewAsHome);
 
         view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
                 makeMeasureSpec(mScreenSize.y, EXACTLY));
-
         ((CardView) mWorkspaceSurface.getParent())
                 .setRadius(SizeCalculator.getPreviewCornerRadius(
                         activity, mContainer.getMeasuredWidth()));
         renderImageWallpaper();
         renderWorkspaceSurface();
-        updateScreenPreview(/* isHomeSelected= */ mViewAsHome);
 
         // Trim some memory from Glide to make room for the full-size image in this fragment.
         Glide.get(activity).setMemoryCategory(MemoryCategory.LOW);
@@ -222,14 +234,11 @@ public class ImagePreviewFragment extends PreviewFragment {
             @Override
             public void onBottomSheetCollapsed() {
                 mContainer.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
-                mTabs.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
             }
 
             @Override
             public void onBottomSheetExpanded() {
                 mContainer.setImportantForAccessibility(
-                        View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
-                mTabs.setImportantForAccessibility(
                         View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
             }
         });
@@ -501,8 +510,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     }
 
     private void updateScreenPreview(boolean isHomeSelected) {
-        mHome.setSelected(isHomeSelected);
-        mLock.setSelected(!isHomeSelected);
         mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.INVISIBLE);
         mLockPreviewContainer.setVisibility(isHomeSelected ? View.INVISIBLE : View.VISIBLE);
     }
