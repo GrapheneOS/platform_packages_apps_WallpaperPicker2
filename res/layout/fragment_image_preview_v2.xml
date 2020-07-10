@@ -60,37 +60,27 @@
                     android:indeterminate="true"/>
             </FrameLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:paddingVertical="@dimen/full_preview_page_default_padding_top"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:background="@color/fullscreen_preview_background">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/container"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:paddingTop="@dimen/full_preview_page_default_padding_top"
-                    android:background="@color/fullscreen_preview_background">
-
-                    <com.android.wallpaper.picker.TouchForwardingLayout
-                        android:id="@+id/touch_forwarding_layout"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/full_preview_page_editing_padding_bottom"
-                        android:clipToPadding="false"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent">
-                        <include layout="@layout/wallpaper_preview_card" />
-                    </com.android.wallpaper.picker.TouchForwardingLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <include layout="@layout/full_preview_tabs" />
-            </LinearLayout>
+                <com.android.wallpaper.picker.TouchForwardingLayout
+                    android:id="@+id/touch_forwarding_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
+                    <include layout="@layout/wallpaper_preview_card" />
+                </com.android.wallpaper.picker.TouchForwardingLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
-
     </LinearLayout>
 
     <include layout="@layout/bottom_action_bar" />
