@@ -123,7 +123,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         android.app.WallpaperInfo info = mWallpaper.getWallpaperComponent();
-        setUpExploreIntentAndLabel(null);
 
         String deleteAction = getDeleteAction(info);
         if (!TextUtils.isEmpty(deleteAction)) {
@@ -168,6 +167,12 @@ public class LivePreviewFragment extends PreviewFragment implements
         Activity activity = requireActivity();
         mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
                 activity.getWindowManager().getDefaultDisplay());
+
+        mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
+                .inflate(R.layout.wallpaper_info_view, /* root= */ null);
+        setUpExploreIntentAndLabel(
+                () -> mWallpaperInfoView.populateWallpaperInfo(mWallpaper, mActionLabel,
+                                mExploreIntent, this::onExploreClicked));
 
         mPreviewContainer = view.findViewById(R.id.live_wallpaper_preview);
         mTouchForwardingLayout = view.findViewById(R.id.touch_forwarding_layout);
@@ -348,10 +353,6 @@ public class LivePreviewFragment extends PreviewFragment implements
         super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar.showActionsOnly(INFORMATION, DELETE, CUSTOMIZE, APPLY);
         mBottomActionBar.setActionClickListener(APPLY, unused -> onSetWallpaperClicked(null));
-        mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
-                .inflate(R.layout.wallpaper_info_view, /* root= */ null);
-        mWallpaperInfoView.populateWallpaperInfo(mWallpaper, mActionLabel, mExploreIntent,
-                this::onExploreClicked);
         mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
 
         // Update target view's accessibility param since it will be blocked by the bottom sheet
