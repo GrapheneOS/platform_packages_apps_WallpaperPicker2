@@ -263,7 +263,7 @@ public final class WallpaperCropUtils {
         float centerY = cropRect.centerY();
         float width = cropRect.width();
         float height = cropRect.height();
-        float systemWallpaperMaxScale = WallpaperCropUtils.getSystemWallpaperMaximumScale(context);
+        float systemWallpaperMaxScale = getSystemWallpaperMaximumScale(context);
         float scale = zoomIn ? systemWallpaperMaxScale : 1.0f / systemWallpaperMaxScale;
 
         // Adjust the rect according to the system wallpaper's maximum scale.
@@ -274,6 +274,12 @@ public final class WallpaperCropUtils {
         cropRect.set(left, top, right, bottom);
     }
 
+    /** Adjust the given Point, representing a size by  systemWallpaperMaxScale. */
+    public static void scaleSize(Context context, Point size) {
+        float systemWallpaperMaxScale = getSystemWallpaperMaximumScale(context);
+        size.set((int) (size.x * systemWallpaperMaxScale),
+                (int) (size.y * systemWallpaperMaxScale));
+    }
     /**
      * Calculates {@link Rect} of the wallpaper which we want to crop to in physical pixel terms
      * (i.e., scaled to current zoom) when the wallpaper is laid on a fullscreen view.
