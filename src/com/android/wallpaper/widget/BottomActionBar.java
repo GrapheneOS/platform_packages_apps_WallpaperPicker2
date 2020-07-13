@@ -26,8 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import androidx.annotation.IdRes;
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -138,48 +136,6 @@ public class BottomActionBar extends FrameLayout {
     }
 
     /**
-     * Inflates a content view to the bottom sheet, and binds with a {@code BottomAction} to
-     * expand/collapse the bottom sheet.
-     *
-     * @param contentLayoutId the layout res to be inflected on the bottom sheet
-     * @param contentViewId the view id of the inflated content view
-     * @param action the action button to be bound to expand/collapse the bottom sheet
-     * @return the view of {@param contentViewId}
-     */
-    public View inflateViewToBottomSheetAndBindAction(
-            @LayoutRes int contentLayoutId, @IdRes int contentViewId, BottomAction action) {
-        View contentView = LayoutInflater
-                .from(getContext())
-                .inflate(contentLayoutId, mBottomSheetView)
-                .findViewById(contentViewId);
-        contentView.setVisibility(GONE);
-        mContentViewMap.put(action, contentView);
-
-        setActionClickListener(action, unused -> {
-            mContentViewMap.forEach((a, v) -> v.setVisibility(a.equals(action) ? VISIBLE : GONE));
-            updateSelectedAction(action);
-        });
-
-        return contentView;
-    }
-
-    private void updateSelectedAction(BottomAction action) {
-        BottomAction previousSelectedButton = mSelectedAction;
-        mSelectedAction = action;
-        // If the bottom sheet is expanding with a highlight button, then clicking another
-        // action button to show bottom sheet will only update the content for expanding bottom
-        // sheet, and update the highlight button.
-        if (previousSelectedButton != null && !action.equals(previousSelectedButton)) {
-            updateSelectedState(previousSelectedButton, /* selected= */ false);
-            updateSelectedState(mSelectedAction, /* selected= */ true);
-            return;
-        }
-        mBottomSheetBehavior.setState(mBottomSheetBehavior.getState() == STATE_COLLAPSED
-                ? STATE_EXPANDED
-                : STATE_COLLAPSED);
-    }
-
-    /**
      * Adds content view to the bottom sheet and binds with a {@code BottomAction} to
      * expand / collapse the bottom sheet.
      *
@@ -187,11 +143,24 @@ public class BottomActionBar extends FrameLayout {
      * @param action the action to be bound to expand / collapse the bottom sheet
      */
     public void attachViewToBottomSheetAndBindAction(View contentView, BottomAction action) {
+        contentView.setVisibility(GONE);
         mContentViewMap.put(action, contentView);
         mBottomSheetView.addView(contentView);
         setActionClickListener(action, unused -> {
             mContentViewMap.forEach((a, v) -> v.setVisibility(a.equals(action) ? VISIBLE : GONE));
-            updateSelectedAction(action);
+            BottomAction previousSelectedButton = mSelectedAction;
+            mSelectedAction = action;
+            // If the bottom sheet is expanding with a highlight button, then clicking another
+            // action button to show bottom sheet will only update the content for expanding bottom
+            // sheet, and update the highlight button.
+            if (previousSelectedButton != null && !action.equals(previousSelectedButton)) {
+                updateSelectedState(previousSelectedButton, /* selected= */ false);
+                updateSelectedState(mSelectedAction, /* selected= */ true);
+                return;
+            }
+            mBottomSheetBehavior.setState(mBottomSheetBehavior.getState() == STATE_COLLAPSED
+                    ? STATE_EXPANDED
+                    : STATE_COLLAPSED);
         });
     }
 
