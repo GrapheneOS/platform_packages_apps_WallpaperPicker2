@@ -104,30 +104,30 @@
                 <LinearLayout
                     android:id="@+id/tabs_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/full_preview_page_tab_height"
                     android:background="@color/fullscreen_preview_background"
                     android:orientation="horizontal">
                     <TextView
                         android:id="@+id/home"
                         android:layout_width="0dp"
-                        android:layout_height="64dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:paddingTop="20dp"
-                        android:paddingBottom="20dp"
+                        android:paddingVertical="@dimen/full_preview_page_tab_padding_top"
                         android:gravity="center"
-                        android:text="@string/home_screen_message" />
+                        android:text="@string/home_screen_message"
+                        android:textColor="@color/bottom_action_button_color_tint"/>
 
                     <TextView
                         android:id="@+id/lock"
                         android:layout_width="0dp"
-                        android:layout_height="64dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:paddingTop="20dp"
-                        android:paddingBottom="20dp"
+                        android:paddingVertical="@dimen/full_preview_page_tab_padding_top"
                         android:gravity="center"
-                        android:text="@string/lock_screen_message" />
+                        android:text="@string/lock_screen_message"
+                        android:textColor="@color/bottom_action_button_color_tint"/>
 
                 </LinearLayout>
             </LinearLayout>
