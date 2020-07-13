@@ -296,8 +296,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     private void showCurrentWallpaper(View rootView, boolean show) {
         rootView.findViewById(R.id.live_wallpaper_preview)
                 .setVisibility(show ? View.VISIBLE : View.GONE);
-        rootView.findViewById(R.id.permission_needed)
-                .setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
     @Override
