@@ -36,6 +36,7 @@
 
     <color name="preview_pager_arrow_disabled">@android:color/darker_gray</color>
     <color name="preview_pager_background">@color/secondary_color</color>
+    <color name="fullscreen_preview_background">@color/secondary_color</color>
     <color name="google_grey900">#202124</color>
 
     <color name="google_grey700">#5f6368</color>
