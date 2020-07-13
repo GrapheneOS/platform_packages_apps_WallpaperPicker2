@@ -114,6 +114,10 @@ public class IndividualPickerFragment extends Fragment
      */
     static final int SPECIAL_FIXED_TILE_ADAPTER_POSITION = 0;
     static final String ARG_CATEGORY_COLLECTION_ID = "category_collection_id";
+    /**
+     * A temporary flag to hide the bottom action bar feature.
+     */
+    static final boolean TEMP_BOTTOM_ACTION_BAR_FEATURE = false;
 
     private static final String TAG = "IndividualPickerFrgmnt";
     private static final int UNUSED_REQUEST_CODE = 1;
@@ -124,11 +128,6 @@ public class IndividualPickerFragment extends Fragment
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "individual_set_wallpaper_error_dialog";
     private static final String KEY_NIGHT_MODE = "IndividualPickerFragment.NIGHT_MODE";
-
-    /**
-     * A temporary flag to hide the bottom action bar feature.
-     */
-    private static final boolean TEMP_BOTTOM_ACTION_BAR_FEATURE = false;
 
     /**
      * An interface for updating the thumbnail with the specific wallpaper.
@@ -209,6 +208,8 @@ public class IndividualPickerFragment extends Fragment
         }
     };
     PackageStatusNotifier.Listener mAppStatusListener;
+    BottomActionBar mBottomActionBar;
+    @Nullable WallpaperInfo mSelectedWallpaperInfo;
 
     private ProgressDialog mProgressDialog;
     private boolean mTestingMode;
@@ -252,10 +253,8 @@ public class IndividualPickerFragment extends Fragment
         }
     };
 
-    private BottomActionBar mBottomActionBar;
     private WallpaperSetter mWallpaperSetter;
     private WallpaperPersister mWallpaperPersister;
-    @Nullable private WallpaperInfo mSelectedWallpaperInfo;
     private WallpaperInfo mAppliedWallpaperInfo;
     private WallpaperManager mWallpaperManager;
     private int mWallpaperDestination;
@@ -452,33 +451,7 @@ public class IndividualPickerFragment extends Fragment
         maybeSetUpImageGrid();
 
         setUpBottomSheet();
-
-        if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
-            mBottomActionBar = getActivity().findViewById(R.id.bottom_actionbar);
-
-            mBottomActionBar.setActionClickListener(CANCEL, unused -> {
-                if (mSelectedWallpaperInfo != null) {
-                    onWallpaperSelected(null, 0);
-                    return;
-                }
-                getActivity().onBackPressed();
-            });
-            mBottomActionBar.setActionClickListener(ROTATION, unused -> {
-                DialogFragment startRotationDialogFragment = new StartRotationDialogFragment();
-                startRotationDialogFragment.setTargetFragment(
-                        IndividualPickerFragment.this, UNUSED_REQUEST_CODE);
-                startRotationDialogFragment.show(getFragmentManager(), TAG_START_ROTATION_DIALOG);
-            });
-            mBottomActionBar.setActionClickListener(APPLY, unused -> {
-                mBottomActionBar.disableActions();
-                mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
-                        mSelectedWallpaperInfo instanceof LiveWallpaperInfo);
-            });
-
-            mBottomActionBar.show();
-            mBottomActionBar.showActionsOnly(
-                    isRotationEnabled() ? EnumSet.of(CANCEL, ROTATION) : EnumSet.of(CANCEL));
-        }
+        setupBottomActionBar();
 
         return view;
     }
@@ -563,6 +536,35 @@ public class IndividualPickerFragment extends Fragment
                 mHandler.postDelayed(mCurrentWallpaperBottomSheetExpandedRunnable, 100);
             }
         });
+    }
+
+    void setupBottomActionBar() {
+        if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
+            mBottomActionBar = getActivity().findViewById(R.id.bottom_actionbar);
+
+            mBottomActionBar.setActionClickListener(CANCEL, unused -> {
+                if (mSelectedWallpaperInfo != null) {
+                    onWallpaperSelected(null, 0);
+                    return;
+                }
+                getActivity().onBackPressed();
+            });
+            mBottomActionBar.setActionClickListener(ROTATION, unused -> {
+                DialogFragment startRotationDialogFragment = new StartRotationDialogFragment();
+                startRotationDialogFragment.setTargetFragment(
+                        IndividualPickerFragment.this, UNUSED_REQUEST_CODE);
+                startRotationDialogFragment.show(getFragmentManager(), TAG_START_ROTATION_DIALOG);
+            });
+            mBottomActionBar.setActionClickListener(APPLY, unused -> {
+                mBottomActionBar.disableActions();
+                mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
+                        mSelectedWallpaperInfo instanceof LiveWallpaperInfo);
+            });
+
+            mBottomActionBar.show();
+            mBottomActionBar.showActionsOnly(
+                    isRotationEnabled() ? EnumSet.of(CANCEL, ROTATION) : EnumSet.of(CANCEL));
+        }
     }
 
     @Override
@@ -897,7 +899,7 @@ public class IndividualPickerFragment extends Fragment
         }
     }
 
-    private void updateBottomActions(boolean hasWallpaperSelected) {
+    void updateBottomActions(boolean hasWallpaperSelected) {
         mBottomActionBar.showActions(
                 hasWallpaperSelected ? EnumSet.of(APPLY, INFORMATION) : EnumSet.of(ROTATION));
         mBottomActionBar.hideActions(
@@ -927,7 +929,7 @@ public class IndividualPickerFragment extends Fragment
         wallpaperDestinationCallback.onDestinationSet(destination);
     }
 
-    private void onWallpaperSelected(@Nullable WallpaperInfo newSelectedWallpaperInfo,
+    void onWallpaperSelected(@Nullable WallpaperInfo newSelectedWallpaperInfo,
                                      int position) {
         if (mSelectedWallpaperInfo == newSelectedWallpaperInfo) {
             return;
