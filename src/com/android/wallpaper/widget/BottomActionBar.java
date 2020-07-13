@@ -58,7 +58,7 @@ public class BottomActionBar extends FrameLayout {
     // TODO(b/154299462): Separate downloadable related actions from WallpaperPicker.
     /** The action items in the bottom action bar. */
     public enum BottomAction {
-        CANCEL, ROTATION, DELETE, INFORMATION, EDIT, DOWNLOAD, PROGRESS, APPLY,
+        ROTATION, DELETE, INFORMATION, EDIT, CUSTOMIZE, DOWNLOAD, PROGRESS, APPLY,
     }
 
     private final Map<BottomAction, View> mActionMap = new EnumMap<>(BottomAction.class);
@@ -75,11 +75,11 @@ public class BottomActionBar extends FrameLayout {
         mAttributionSubtitle1 = findViewById(R.id.preview_attribution_pane_subtitle1);
         mAttributionSubtitle2 = findViewById(R.id.preview_attribution_pane_subtitle2);
 
-        mActionMap.put(BottomAction.CANCEL, findViewById(R.id.action_cancel));
         mActionMap.put(BottomAction.ROTATION, findViewById(R.id.action_rotation));
         mActionMap.put(BottomAction.DELETE, findViewById(R.id.action_delete));
         mActionMap.put(BottomAction.INFORMATION, findViewById(R.id.action_information));
         mActionMap.put(BottomAction.EDIT, findViewById(R.id.action_edit));
+        mActionMap.put(BottomAction.CUSTOMIZE, findViewById(R.id.action_customize));
         mActionMap.put(BottomAction.DOWNLOAD, findViewById(R.id.action_download));
         mActionMap.put(BottomAction.PROGRESS, findViewById(R.id.action_progress));
         mActionMap.put(BottomAction.APPLY, findViewById(R.id.action_apply));
@@ -131,20 +131,18 @@ public class BottomActionBar extends FrameLayout {
      */
     public void setActionClickListener(
             BottomAction bottomAction, OnClickListener actionClickListener) {
-        if (BottomAction.CANCEL.equals(bottomAction)) {
-            throw new IllegalArgumentException("Can't set OnClickListener to cancel button");
-        }
         mActionMap.get(bottomAction).setOnClickListener(actionClickListener);
     }
 
     /** Binds the cancel button to back key. */
-    public void bindCancelButtonToBackKey(Activity activity) {
-        mActionMap.get(BottomAction.CANCEL).setOnClickListener(v -> activity.onBackPressed());
+    public void bindBackButtonToSystemBackKey(Activity activity) {
+        findViewById(R.id.action_back).setOnClickListener(v -> activity.onBackPressed());
     }
 
     /** Clears all the actions' click listeners */
     public void clearActionClickListeners() {
         mActionMap.forEach((bottomAction, view) -> view.setOnClickListener(null));
+        findViewById(R.id.action_back).setOnClickListener(null);
     }
 
     /**

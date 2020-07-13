@@ -40,7 +40,7 @@ public class BottomActionBarFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mBottomActionBar = ((BottomActionBarHost) getActivity()).getBottomActionBar();
-        mBottomActionBar.bindCancelButtonToBackKey(getActivity());
+        mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
         onBottomActionBarReady(mBottomActionBar);
     }
 

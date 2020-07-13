@@ -319,6 +319,9 @@
     <!-- Content description of back button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_back">Back</string>
 
+    <!-- Content description of edit button on the bottom action bar. [CHAR LIMIT=30] -->
+    <string name="bottom_action_bar_edit">Edit</string>
+
     <!-- TODO(b/154299462): Separate downloadable related actions from WallpaperPicker. -->
     <!-- Content description of download button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_download">Download</string>
