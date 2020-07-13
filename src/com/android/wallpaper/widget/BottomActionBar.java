@@ -44,6 +44,14 @@ import java.util.Map;
 /** A {@code ViewGroup} which provides the specific actions for the user to interact with. */
 public class BottomActionBar extends FrameLayout {
 
+    /**
+     * Interface to be implemented by an Activity hosting a {@link BottomActionBar}
+     */
+    public interface BottomActionBarHost {
+        /** Gets {@link BottomActionBar}. */
+        BottomActionBar getBottomActionBar();
+    }
+
     // TODO(b/154299462): Separate downloadable related actions from WallpaperPicker.
     /** The action items in the bottom action bar. */
     public enum BottomAction {
@@ -217,6 +225,15 @@ public class BottomActionBar extends FrameLayout {
     /** Disables all the actions' {@link View}. */
     public void disableActions() {
         enableActions(false);
+    }
+
+    /** Resets {@link BottomActionBar}. */
+    public void reset() {
+        hide();
+        showActionsOnly(EnumSet.noneOf(BottomAction.class));
+        clearActionClickListeners();
+        enableActions();
+        resetInfoPage();
     }
 
     private void enableActions(boolean enable) {
