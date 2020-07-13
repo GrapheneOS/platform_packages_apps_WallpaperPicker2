@@ -197,7 +197,7 @@
     <dimen name="indicator_arrow_container_margin_horizontal">4dp</dimen>
     <dimen name="preview_page_gap">16dp</dimen>
     <dimen name="preview_page_horizontal_margin">56dp</dimen>
-    <dimen name="preview_page_top_margin">16dp</dimen>
+    <dimen name="preview_page_top_margin">30dp</dimen>
     <dimen name="preview_page_bottom_margin">2dp</dimen>
     <dimen name="preview_card_padding">20dp</dimen>
     <dimen name="preview_pager_max_height">450dp</dimen>
