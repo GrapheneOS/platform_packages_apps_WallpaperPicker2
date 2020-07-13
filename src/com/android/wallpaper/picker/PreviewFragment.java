@@ -25,7 +25,6 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources.NotFoundException;
 import android.content.res.TypedArray;
 import android.graphics.Insets;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -65,6 +64,7 @@ import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
+import com.android.wallpaper.util.SizeCalculator;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetBehavior.State;
@@ -234,16 +234,7 @@ public abstract class PreviewFragment extends Fragment implements
         mBottomSheet = view.findViewById(getBottomSheetResId());
         setUpBottomSheetView(mBottomSheet);
 
-        // Workaround as we don't have access to bottomDialogCornerRadius, mBottomSheet radii are
-        // set to dialogCornerRadius by default.
-        GradientDrawable bottomSheetBackground = (GradientDrawable) mBottomSheet.getBackground();
-        float[] radii = bottomSheetBackground.getCornerRadii();
-        for (int i = 0; i < radii.length; i++) {
-            radii[i]*=2f;
-        }
-        bottomSheetBackground = ((GradientDrawable)bottomSheetBackground.mutate());
-        bottomSheetBackground.setCornerRadii(radii);
-        mBottomSheet.setBackground(bottomSheetBackground);
+        SizeCalculator.adjustBackgroundCornerRadius(mBottomSheet);
 
         mBottomSheetInitialState = (savedInstanceState == null) ? STATE_EXPANDED
                 : savedInstanceState.getInt(KEY_BOTTOM_SHEET_STATE, STATE_EXPANDED);

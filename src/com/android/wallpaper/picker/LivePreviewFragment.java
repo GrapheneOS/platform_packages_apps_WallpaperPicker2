@@ -67,7 +67,7 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
-import com.android.wallpaper.util.TileSizeCalculator;
+import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.LiveTileOverlay;
@@ -183,7 +183,7 @@ public class LivePreviewFragment extends PreviewFragment implements
             view.addOnLayoutChangeListener((thisView, left, top, right, bottom,
                     oldLeft, oldTop, oldRight, oldBottom) ->
                     ((CardView) mHomePreview.getParent())
-                            .setRadius(TileSizeCalculator.getPreviewCornerRadius(
+                            .setRadius(SizeCalculator.getPreviewCornerRadius(
                                     getActivity(), homePreviewCard.getMeasuredWidth()))
             );
             // TODO(chriscsli): Integrate SurfaceView utilities of home screen

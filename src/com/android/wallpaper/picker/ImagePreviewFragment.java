@@ -59,8 +59,8 @@ import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
+import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.SurfaceViewUtils;
-import com.android.wallpaper.util.TileSizeCalculator;
 import com.android.wallpaper.util.WallpaperCropUtils;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.WallpaperInfoView;
@@ -515,7 +515,7 @@ public class ImagePreviewFragment extends PreviewFragment {
             int rightPadding = (int) horizontalPadding - leftPadding;
             mWorkspaceContainer.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
             ((CardView) mWorkspaceSurface.getParent())
-                    .setRadius(TileSizeCalculator.getPreviewCornerRadius(
+                    .setRadius(SizeCalculator.getPreviewCornerRadius(
                             getActivity(),
                             (int) (mWorkspaceContainer.getMeasuredWidth() - horizontalPadding)));
         }

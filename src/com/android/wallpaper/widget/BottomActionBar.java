@@ -20,7 +20,6 @@ import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.util.SizeCalculator;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback;
@@ -86,16 +86,7 @@ public class BottomActionBar extends FrameLayout {
         mActionMap.put(BottomAction.APPLY, findViewById(R.id.action_apply));
 
         mBottomSheetView = findViewById(R.id.action_bottom_sheet);
-        // Workaround as we don't have access to bottomDialogCornerRadius, mBottomSheet radii are
-        // set to dialogCornerRadius by default.
-        GradientDrawable background = (GradientDrawable) mBottomSheetView.getBackground();
-        float[] radii = background.getCornerRadii();
-        for (int i = 0; i < radii.length; i++) {
-            radii[i] *= 2f;
-        }
-        background = ((GradientDrawable) background.mutate());
-        background.setCornerRadii(radii);
-        mBottomSheetView.setBackground(background);
+        SizeCalculator.adjustBackgroundCornerRadius(mBottomSheetView);
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetView);
         mBottomSheetBehavior.setState(STATE_COLLAPSED);

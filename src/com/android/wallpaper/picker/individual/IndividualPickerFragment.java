@@ -90,7 +90,7 @@ import com.android.wallpaper.picker.WallpaperInfoHelper;
 import com.android.wallpaper.picker.WallpapersUiContainer;
 import com.android.wallpaper.picker.individual.SetIndividualHolder.OnSetListener;
 import com.android.wallpaper.util.DiskBasedLogger;
-import com.android.wallpaper.util.TileSizeCalculator;
+import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.WallpaperInfoView;
 
@@ -443,7 +443,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_individual_picker, container, false);
 
-        mTileSizePx = TileSizeCalculator.getIndividualTileSize(getActivity());
+        mTileSizePx = SizeCalculator.getIndividualTileSize(getActivity());
 
         mImageGrid = (RecyclerView) view.findViewById(R.id.wallpaper_grid);
         if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
@@ -832,7 +832,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
     int getNumColumns() {
         Activity activity = getActivity();
-        return activity == null ? 0 : TileSizeCalculator.getNumIndividualColumns(activity);
+        return activity == null ? 0 : SizeCalculator.getNumIndividualColumns(activity);
     }
 
     /**
