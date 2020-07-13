@@ -36,7 +36,7 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
     private Surface mLastSurface;
     private Message mCallback;
 
-    WorkspaceSurfaceHolderCallback(SurfaceView workspaceSurface, Context context) {
+    public WorkspaceSurfaceHolderCallback(SurfaceView workspaceSurface, Context context) {
         mWorkspaceSurface = workspaceSurface;
         mPreviewUtils = new PreviewUtils(context,
                 context.getString(R.string.grid_control_metadata_name));
@@ -46,8 +46,7 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder holder) {
         if (mPreviewUtils.supportsPreview() && mLastSurface != holder.getSurface()) {
             mLastSurface = holder.getSurface();
-            Bundle result = mPreviewUtils.renderPreview(
-                    SurfaceViewUtils.createSurfaceViewRequest(mWorkspaceSurface));
+            Bundle result = renderPreview(mWorkspaceSurface);
             if (result != null) {
                 mWorkspaceSurface.setChildSurfacePackage(
                         SurfaceViewUtils.getSurfacePackage(result));
@@ -72,5 +71,14 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
                 mCallback = null;
             }
         }
+    }
+
+    public void resetLastSurface() {
+        mLastSurface = null;
+    }
+
+    protected Bundle renderPreview(SurfaceView workspaceSurface) {
+        return mPreviewUtils.renderPreview(
+                SurfaceViewUtils.createSurfaceViewRequest(workspaceSurface));
     }
 }
