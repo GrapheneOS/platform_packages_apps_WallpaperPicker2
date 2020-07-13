@@ -69,7 +69,6 @@ import com.android.wallpaper.picker.individual.IndividualPickerFragment.Thumbnai
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.WallpaperDestinationCallback;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
-import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
 import com.android.wallpaper.widget.LiveTileOverlay;
 import com.android.wallpaper.widget.LockScreenOverlayUpdater;
 import com.android.wallpaper.widget.PreviewPager;
@@ -599,12 +598,7 @@ public class CategoryFragment extends AppbarFragment
 
         mWallpaperConnection = new WallpaperConnection(
                 getWallpaperIntent(homeWallpaper.getWallpaperComponent()), activity,
-                new WallpaperConnectionListener() {
-                    @Override
-                    public void onEngineShown() {
-
-                    }
-                }, mPreviewGlobalRect);
+                /* listener= */ null, mPreviewGlobalRect);
 
         LiveTileOverlay.INSTANCE.update(new RectF(mPreviewLocalRect),
                 ((CardView) previewView.getParent()).getRadius());
