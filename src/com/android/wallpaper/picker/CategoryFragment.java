@@ -179,11 +179,9 @@ public class CategoryFragment extends AppbarFragment
                 if (mHomePreviewWallpaperInfo instanceof LiveWallpaperInfo) {
                     if (positionOffset == 0.0f) {
                         // The page is not moved. Show live wallpaper.
-                        mWorkspaceSurface.setZOrderMediaOverlay(true);
                         mWallpaperSurface.setZOrderMediaOverlay(false);
                     } else {
                         // The page is moving. Show live wallpaper's thumbnail.
-                        mWorkspaceSurface.setZOrderOnTop(true);
                         mWallpaperSurface.setZOrderMediaOverlay(true);
                     }
                 }
