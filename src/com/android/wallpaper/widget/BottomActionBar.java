@@ -54,6 +54,18 @@ public class BottomActionBar extends FrameLayout {
         BottomActionBar getBottomActionBar();
     }
 
+    /**
+     * The listener for {@link BottomActionBar} visibility change notification.
+     */
+    public interface VisibilityChangeListener {
+        /**
+         * Called when {@link BottomActionBar} visibility changes.
+         *
+         * @param isVisible {@code true} if it's visible; {@code false} otherwise.
+         */
+        void onVisibilityChange(boolean isVisible);
+    }
+
     // TODO(b/154299462): Separate downloadable related actions from WallpaperPicker.
     /** The action items in the bottom action bar. */
     public enum BottomAction {
@@ -65,6 +77,7 @@ public class BottomActionBar extends FrameLayout {
 
     private final ViewGroup mBottomSheetView;
     private final BottomSheetBehavior<ViewGroup> mBottomSheetBehavior;
+    private final Set<VisibilityChangeListener> mVisibilityChangeListeners = new HashSet<>();
 
     /**
      * For updating the selected state of expanding bottom sheet, the corresponding action button
@@ -115,6 +128,7 @@ public class BottomActionBar extends FrameLayout {
         if (!isVisible) {
             mBottomSheetBehavior.setState(STATE_COLLAPSED);
         }
+        mVisibilityChangeListeners.forEach(listener -> listener.onVisibilityChange(isVisible));
     }
 
     /**
@@ -192,6 +206,19 @@ public class BottomActionBar extends FrameLayout {
     /** Hides {@link BottomActionBar}. */
     public void hide() {
         setVisibility(GONE);
+    }
+
+    /**
+     * Adds the visibility change listener.
+     *
+     * @param visibilityChangeListener the listener to be notified.
+     */
+    public void addVisibilityChangeListener(VisibilityChangeListener visibilityChangeListener) {
+        if (visibilityChangeListener == null) {
+            return;
+        }
+        mVisibilityChangeListeners.add(visibilityChangeListener);
+        visibilityChangeListener.onVisibilityChange(isVisible());
     }
 
     /**
