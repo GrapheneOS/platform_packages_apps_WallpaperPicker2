@@ -735,12 +735,8 @@ public class CategoryFragment extends AppbarFragment
 
         UserEventLogger eventLogger = InjectorProvider.getInjector().getUserEventLogger(activity);
 
-        boolean renderInImageWallpaperSurface =
-                !(wallpaperInfo instanceof LiveWallpaperInfo) && isHomeWallpaper;
-        wallpaperInfo.getThumbAsset(activity.getApplicationContext())
-                .loadPreviewImage(activity,
-                        renderInImageWallpaperSurface ? mHomeImageWallpaper : thumbnailView,
-                        getResources().getColor(R.color.secondary_color));
+        wallpaperInfo.getThumbAsset(activity.getApplicationContext()).loadDrawable(activity,
+                mHomeImageWallpaper, getResources().getColor(R.color.secondary_color));
         if (isHomeWallpaper) {
             LiveTileOverlay.INSTANCE.detach(thumbnailView.getOverlay());
             if (wallpaperInfo instanceof LiveWallpaperInfo) {
