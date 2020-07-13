@@ -33,7 +33,6 @@ import com.android.wallpaper.module.InjectorProvider;
  */
 public class ViewOnlyPreviewActivity extends BasePreviewActivity {
 
-    public static boolean USE_NEW_UI = true;
     /**
      * Returns a new Intent with the provided WallpaperInfo instance put as an extra.
      */
@@ -45,10 +44,8 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (USE_NEW_UI) {
-            setTheme(R.style.WallpaperTheme);
-            getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        }
+        setTheme(R.style.WallpaperTheme);
+        getWindow().setFormat(PixelFormat.TRANSLUCENT);
         setContentView(R.layout.activity_preview);
     }
 
