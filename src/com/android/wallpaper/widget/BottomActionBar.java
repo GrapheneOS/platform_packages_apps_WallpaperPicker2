@@ -64,6 +64,16 @@ public class BottomActionBar extends FrameLayout {
         void onVisibilityChange(boolean isVisible);
     }
 
+    /** This listens to changes to an action view's selected state. */
+    public interface OnActionSelectedListener {
+
+        /**
+         * This is called when an action view's selected state changes.
+         * @param selected whether the action view is selected.
+         */
+        void onActionSelected(boolean selected);
+    }
+
     // TODO(b/154299462): Separate downloadable related actions from WallpaperPicker.
     /** The action items in the bottom action bar. */
     public enum BottomAction {
@@ -86,6 +96,8 @@ public class BottomActionBar extends FrameLayout {
 
     private final Map<BottomAction, View> mActionMap = new EnumMap<>(BottomAction.class);
     private final Map<BottomAction, View> mContentViewMap = new EnumMap<>(BottomAction.class);
+    private final Map<BottomAction, OnActionSelectedListener> mActionSelectedListeners =
+            new EnumMap<>(BottomAction.class);
 
     private final ViewGroup mBottomSheetView;
     private final BottomSheetBehavior<ViewGroup> mBottomSheetBehavior;
@@ -175,7 +187,7 @@ public class BottomActionBar extends FrameLayout {
     }
 
     /**
-     * Sets the click listener to the specific action.
+     * Sets a click listener to a specific action.
      *
      * @param bottomAction the specific action
      * @param actionClickListener the click listener for the action
@@ -208,6 +220,22 @@ public class BottomActionBar extends FrameLayout {
             }
             actionClickListener.onClick(view);
         });
+    }
+
+    /**
+     * Sets a selected listener to a specific action. This is triggered each time the bottom
+     * action's selected state changes.
+     *
+     * @param bottomAction the specific action
+     * @param actionSelectedListener the selected listener for the action
+     */
+    public void setActionSelectedListener(
+            BottomAction bottomAction, OnActionSelectedListener actionSelectedListener) {
+        if (mActionSelectedListeners.containsKey(bottomAction)) {
+            throw new IllegalStateException(
+                    "Had already set a selected listener to button: " + bottomAction);
+        }
+        mActionSelectedListeners.put(bottomAction, actionSelectedListener);
     }
 
     /** Binds the cancel button to back key. */
@@ -365,7 +393,16 @@ public class BottomActionBar extends FrameLayout {
         findViewById(R.id.action_back).setOnClickListener(null);
     }
 
-    private void updateSelectedState(BottomAction action, boolean selected) {
-        mActionMap.get(action).setSelected(selected);
+    private void updateSelectedState(BottomAction bottomAction, boolean selected) {
+        View bottomActionView = mActionMap.get(bottomAction);
+        if (bottomActionView.isSelected() == selected) {
+            return;
+        }
+
+        OnActionSelectedListener listener = mActionSelectedListeners.get(bottomAction);
+        if (listener != null) {
+            listener.onActionSelected(selected);
+        }
+        bottomActionView.setSelected(selected);
     }
 }

@@ -283,13 +283,16 @@ public class ImagePreviewFragment extends PreviewFragment {
             mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
             mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
             mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
-            mBottomActionBar.setActionClickListener(EDIT, v -> {
-                setEditingEnabled(mBottomActionBar.isActionSelected(EDIT));
-            });
-            mBottomActionBar.setActionClickListener(APPLY, v -> {
-                onSetWallpaperClicked(v);
-                setEditingEnabled(false);
-            });
+            mBottomActionBar.setActionClickListener(EDIT, v ->
+                setEditingEnabled(mBottomActionBar.isActionSelected(EDIT))
+            );
+            mBottomActionBar.setActionSelectedListener(EDIT,
+                    selected -> {
+                        if (!selected) {
+                            setEditingEnabled(false);
+                        }
+                    });
+            mBottomActionBar.setActionClickListener(APPLY, v -> onSetWallpaperClicked(v));
             mBottomActionBar.show();
         }
     }
