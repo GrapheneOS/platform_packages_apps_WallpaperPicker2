@@ -32,7 +32,7 @@ import com.android.wallpaper.module.InjectorProvider;
  */
 public class ViewOnlyPreviewActivity extends BasePreviewActivity {
 
-    public static boolean USE_NEW_UI = true;
+    public static boolean USE_NEW_UI = false;
     /**
      * Returns a new Intent with the provided WallpaperInfo instance put as an extra.
      */
