@@ -152,6 +152,14 @@
         <item name="tabMaxWidth">0dp</item>
     </style>
 
+    <!-- Preview customization pane styles -->
+    <style name="WallpaperPicker.CustomizationPaneStyle" parent="@android:style/Theme.DeviceDefault.Settings">
+        <item name="tabTextAppearance">@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps</item>
+        <item name="tabIndicatorColor">?android:attr/textColorPrimary</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabMaxWidth">0dp</item>
+    </style>
+
     <style name="preview_attribution_pane_title">
         <item name="android:textColor">@color/material_white_text</item>
         <item name="android:textSize">@dimen/abc_text_size_subhead_material</item>
