@@ -68,7 +68,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 /**
  * Fragment which displays the UI for previewing an individual static wallpaper and its attribution
@@ -95,7 +94,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     private LockScreenOverlayUpdater mLockScreenOverlayUpdater;
     private View mTabs;
     private WallpaperInfoView mWallpaperInfoView;
-    private InfoPageController mInfoPageController;
     private View mLock;
     private View mHome;
 
@@ -108,11 +106,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     @Override
     protected int getLayoutResId() {
         return R.layout.fragment_image_preview_v2;
-    }
-
-
-    protected int getBottomSheetResId() {
-        return R.id.bottom_sheet;
     }
 
     @Override
@@ -168,9 +161,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                         activity, mContainer.getMeasuredWidth()));
         renderImageWallpaper();
         renderWorkspaceSurface();
-
-        mInfoPageController = new InfoPageController(view.findViewById(R.id.page_info),
-                mPreviewMode);
 
         // Trim some memory from Glide to make room for the full-size image in this fragment.
         Glide.get(activity).setMemoryCategory(MemoryCategory.LOW);
@@ -242,14 +232,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        outState.putInt(KEY_BOTTOM_SHEET_STATE, bottomSheetBehavior.getState());
-    }
-
-    @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
 
@@ -270,11 +252,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                 });
         mBottomActionBar.setActionClickListener(APPLY, v -> onSetWallpaperClicked(v));
         mBottomActionBar.show();
-    }
-
-    @Override
-    protected void setBottomSheetContentAlpha(float alpha) {
-        mInfoPageController.setContentAlpha(alpha);
     }
 
     @Override
