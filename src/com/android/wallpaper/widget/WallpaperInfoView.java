@@ -21,9 +21,11 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.model.WallpaperInfo;
 
 import java.util.List;
 
@@ -47,7 +49,9 @@ public class WallpaperInfoView extends LinearLayout {
     }
 
     /** Populates wallpaper info. */
-    public void populateWallpaperInfo(List<String> attributions, boolean showMetadata) {
+    public void populateWallpaperInfo(@NonNull WallpaperInfo wallpaperInfo) {
+        final List<String> attributions = wallpaperInfo.getAttributions(getContext());
+
         // Reset
         mTitle.setText(null);
         mSubtitle1.setText(null);
@@ -59,7 +63,7 @@ public class WallpaperInfoView extends LinearLayout {
             mTitle.setText(attributions.get(0));
         }
 
-        if (showMetadata) {
+        if (shouldShowMetadata(wallpaperInfo)) {
             if (attributions.size() > 1 && attributions.get(1) != null) {
                 mSubtitle1.setVisibility(View.VISIBLE);
                 mSubtitle1.setText(attributions.get(1));
@@ -70,5 +74,10 @@ public class WallpaperInfoView extends LinearLayout {
                 mSubtitle2.setText(attributions.get(2));
             }
         }
+    }
+
+    private boolean shouldShowMetadata(WallpaperInfo wallpaperInfo) {
+        android.app.WallpaperInfo wallpaperComponent = wallpaperInfo.getWallpaperComponent();
+        return wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
     }
 }

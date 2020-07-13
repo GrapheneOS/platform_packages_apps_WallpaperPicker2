@@ -341,9 +341,7 @@ public class LivePreviewFragment extends PreviewFragment implements
                                     }
                                     mLoadingScrim.setVisibility(View.GONE);
                                     if (mWallpaperInfoView != null) {
-                                        mWallpaperInfoView.populateWallpaperInfo(
-                                                mWallpaper.getAttributions(getContext()),
-                                                shouldShowMetadataInPreview());
+                                        mWallpaperInfoView.populateWallpaperInfo(mWallpaper);
                                     }
                                 }));
                         final Drawable placeholder = previewView.getDrawable() == null
