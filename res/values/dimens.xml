@@ -208,10 +208,13 @@
     <item name="preview_pager_maximum_height_ratio" format="float" type="dimen">0.7</item>
 
     <!-- Dimensions for the bottom bar. -->
-    <dimen name="bottom_navbar_height">56dp</dimen>
-    <dimen name="bottom_action_bar_padding_horizontal">16dp</dimen>
-    <dimen name="bottom_action_bar_padding_vertical">20dp</dimen>
+    <dimen name="bottom_navbar_height">76dp</dimen>
+    <dimen name="bottom_action_bar_padding_horizontal">4dp</dimen>
+    <dimen name="bottom_action_bar_padding_top">6dp</dimen>
+    <dimen name="bottom_action_bar_preview_info_padding_vertical">20dp</dimen>
     <dimen name="bottom_action_bar_elevation">10dp</dimen>
+    <dimen name="bottom_action_button_size">48dp</dimen>
+    <dimen name="bottom_action_button_padding">12dp</dimen>
     <dimen name="bottom_action_icon_size">24dp</dimen>
 
     <dimen name="option_border_width">2dp</dimen>
