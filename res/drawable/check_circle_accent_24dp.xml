@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
-
      Copyright (C) 2020 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +13,12 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
-    <color name="preview_pager_background">@color/google_grey900</color>
-    <color name="edit_background_base">@color/material_white_100</color>
-    <color name="action_bar_bottom_sheet_text_color">@color/material_white_100</color>
-    <color name="selected_check_color">@color/material_black_100</color>
-</resources>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <size android:width="24dp" android:height="24dp" />
+            <solid android:color="?android:colorAccent" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/ic_check_24dp" android:gravity="fill" />
+</layer-list>
