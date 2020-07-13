@@ -212,9 +212,6 @@
     <dimen name="full_preview_page_default_padding_bottom">32dp</dimen>
     <dimen name="full_preview_page_editing_padding_bottom">0dp</dimen>
 
-    <!-- Dimensions for full preview page -->
-    <dimen name="live_preview_card_height">690dp</dimen>
-
     <!-- Dimensions for the bottom bar. -->
     <dimen name="bottom_navbar_height">76dp</dimen>
     <dimen name="bottom_action_bar_padding_horizontal">4dp</dimen>
