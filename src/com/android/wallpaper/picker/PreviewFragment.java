@@ -79,8 +79,6 @@ public abstract class PreviewFragment extends Fragment implements
         SetWallpaperDialogFragment.Listener, SetWallpaperErrorDialogFragment.Listener,
         LoadWallpaperErrorDialogFragment.Listener {
 
-    protected static final boolean USE_NEW_UI = true;
-
     /**
      * User can view wallpaper and attributions in full screen, but "Set wallpaper" button is
      * hidden.
