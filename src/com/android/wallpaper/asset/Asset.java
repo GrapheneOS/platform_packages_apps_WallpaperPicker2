@@ -351,18 +351,7 @@ public abstract class Asset {
     }
 
     protected void adjustCropRect(Context context, Point assetDimensions, Rect cropRect) {
-        float centerX = cropRect.centerX();
-        float centerY = cropRect.centerY();
-        float width = cropRect.width();
-        float height = cropRect.height();
-        float systemWallpaperMaxScale = WallpaperCropUtils.getSystemWallpaperMaximumScale(context);
-
-        // Adjust the rect according to the system wallpaper's maximum scale.
-        int left = (int) (centerX - (width / 2) / systemWallpaperMaxScale);
-        int top = (int) (centerY - (height / 2) / systemWallpaperMaxScale);
-        int right = (int) (centerX + (width / 2) / systemWallpaperMaxScale);
-        int bottom = (int) (centerY + (height / 2) / systemWallpaperMaxScale);
-        cropRect.set(left, top, right, bottom);
+        WallpaperCropUtils.adjustCropRect(context, cropRect, true /* zoomIn */);
     }
 
     /**
