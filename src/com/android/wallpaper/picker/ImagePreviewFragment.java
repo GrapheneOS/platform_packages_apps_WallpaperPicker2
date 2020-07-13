@@ -206,7 +206,12 @@ public class ImagePreviewFragment extends PreviewFragment {
             }
 
             mRawWallpaperSize = dimensions;
-            setUpExploreIntent(ImagePreviewFragment.this::initFullResView);
+
+            if (USE_NEW_UI) {
+                setUpExploreIntentAndLabel(ImagePreviewFragment.this::initFullResView);
+            } else {
+                setUpExploreIntent(ImagePreviewFragment.this::initFullResView);
+            }
         });
 
         setUpLoadingIndicator();
@@ -306,7 +311,8 @@ public class ImagePreviewFragment extends PreviewFragment {
 
                     if (USE_NEW_UI) {
                         if (mWallpaperInfoView != null && mWallpaper != null) {
-                            mWallpaperInfoView.populateWallpaperInfo(mWallpaper);
+                            mWallpaperInfoView.populateWallpaperInfo(mWallpaper, mActionLabel,
+                                    mExploreIntent, this::onExploreClicked);
                         }
                     } else {
                         populateInfoPage(mInfoPageController);

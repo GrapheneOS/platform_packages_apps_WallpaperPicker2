@@ -16,8 +16,10 @@
 package com.android.wallpaper.widget;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,10 +33,10 @@ import java.util.List;
 
 /** A view for displaying wallpaper info. */
 public class WallpaperInfoView extends LinearLayout {
-
     private TextView mTitle;
     private TextView mSubtitle1;
     private TextView mSubtitle2;
+    private Button mExploreButton;
 
     public WallpaperInfoView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -46,10 +48,14 @@ public class WallpaperInfoView extends LinearLayout {
         mTitle = findViewById(R.id.wallpaper_info_title);
         mSubtitle1 = findViewById(R.id.wallpaper_info_subtitle1);
         mSubtitle2 = findViewById(R.id.wallpaper_info_subtitle2);
+        mExploreButton = findViewById(R.id.wallpaper_info_explore_button);
     }
 
     /** Populates wallpaper info. */
-    public void populateWallpaperInfo(@NonNull WallpaperInfo wallpaperInfo) {
+    public void populateWallpaperInfo(@NonNull WallpaperInfo wallpaperInfo,
+                                      CharSequence actionLabel,
+                                      @Nullable Intent exploreIntent,
+                                      OnClickListener exploreButtonClickListener) {
         final List<String> attributions = wallpaperInfo.getAttributions(getContext());
 
         // Reset
@@ -58,6 +64,9 @@ public class WallpaperInfoView extends LinearLayout {
         mSubtitle1.setVisibility(View.GONE);
         mSubtitle2.setText(null);
         mSubtitle2.setVisibility(View.GONE);
+        mExploreButton.setText(null);
+        mExploreButton.setOnClickListener(null);
+        mExploreButton.setVisibility(View.GONE);
 
         if (attributions.size() > 0 && attributions.get(0) != null) {
             mTitle.setText(attributions.get(0));
@@ -72,6 +81,12 @@ public class WallpaperInfoView extends LinearLayout {
             if (attributions.size() > 2 && attributions.get(2) != null) {
                 mSubtitle2.setVisibility(View.VISIBLE);
                 mSubtitle2.setText(attributions.get(2));
+            }
+
+            if (exploreIntent != null) {
+                mExploreButton.setVisibility(View.VISIBLE);
+                mExploreButton.setText(actionLabel);
+                mExploreButton.setOnClickListener(exploreButtonClickListener);
             }
         }
     }

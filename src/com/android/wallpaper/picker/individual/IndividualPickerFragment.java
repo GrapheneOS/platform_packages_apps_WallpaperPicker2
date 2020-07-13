@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Point;
@@ -70,6 +71,7 @@ import com.android.wallpaper.module.FormFactorChecker.FormFactor;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.PackageStatusNotifier;
+import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperChangedNotifier;
 import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
@@ -84,6 +86,7 @@ import com.android.wallpaper.picker.SetWallpaperDialogFragment;
 import com.android.wallpaper.picker.SetWallpaperErrorDialogFragment;
 import com.android.wallpaper.picker.StartRotationDialogFragment;
 import com.android.wallpaper.picker.StartRotationErrorDialogFragment;
+import com.android.wallpaper.picker.WallpaperInfoHelper;
 import com.android.wallpaper.picker.WallpapersUiContainer;
 import com.android.wallpaper.picker.individual.SetIndividualHolder.OnSetListener;
 import com.android.wallpaper.util.DiskBasedLogger;
@@ -212,6 +215,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
     WallpaperInfoView mWallpaperInfoView;
     @Nullable WallpaperInfo mSelectedWallpaperInfo;
 
+    private UserEventLogger mUserEventLogger;
     private ProgressDialog mProgressDialog;
     private boolean mTestingMode;
     private CurrentWallpaperBottomSheetPresenter mCurrentWallpaperBottomSheetPresenter;
@@ -333,6 +337,8 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         mFormFactor = injector.getFormFactorChecker(appContext).getFormFactor();
 
         mPackageStatusNotifier = injector.getPackageStatusNotifier(appContext);
+
+        mUserEventLogger = injector.getUserEventLogger(appContext);
 
         mWallpaperPersister = injector.getWallpaperPersister(appContext);
         mWallpaperSetter = new WallpaperSetter(
@@ -949,12 +955,29 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         updateThumbnail(mSelectedWallpaperInfo);
         // Populate wallpaper info into view.
         if (mSelectedWallpaperInfo != null && mWallpaperInfoView != null) {
-            mWallpaperInfoView.populateWallpaperInfo(mSelectedWallpaperInfo);
+            WallpaperInfoHelper.loadExploreIntent(
+                    getContext(),
+                    mSelectedWallpaperInfo,
+                    (actionLabel, exploreIntent) ->
+                            mWallpaperInfoView.populateWallpaperInfo(
+                                    mSelectedWallpaperInfo, actionLabel, exploreIntent,
+                                    v -> onExploreClicked(exploreIntent)));
         }
 
         if (mWallpaperSelectedListener != null) {
             mWallpaperSelectedListener.onWallpaperSelected(position);
         }
+    }
+
+    private void onExploreClicked(Intent exploreIntent) {
+        if (getContext() == null) {
+            return;
+        }
+        Context context = getContext();
+        mUserEventLogger.logActionClicked(mSelectedWallpaperInfo.getCollectionId(context),
+                mSelectedWallpaperInfo.getActionLabelRes(context));
+
+        startActivity(exploreIntent);
     }
 
     private void updateActivatedStatus(WallpaperInfo wallpaperInfo, boolean isActivated) {

@@ -156,6 +156,7 @@ public abstract class PreviewFragment extends Fragment implements
     protected int mBottomSheetInitialState;
 
     protected Intent mExploreIntent;
+    protected CharSequence mActionLabel;
 
     /**
      * Staged error dialog fragments that were unable to be shown when the hosting activity didn't
@@ -396,6 +397,23 @@ public abstract class PreviewFragment extends Fragment implements
         }
     }
 
+    protected void setUpExploreIntentAndLabel(@Nullable Runnable callback) {
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+
+        WallpaperInfoHelper.loadExploreIntent(context, mWallpaper,
+                (actionLabel, exploreIntent) -> {
+                    mActionLabel = actionLabel;
+                    mExploreIntent = exploreIntent;
+                    if (callback != null) {
+                        callback.run();
+                    }
+                }
+        );
+    }
+
     protected void setUpExploreIntent(@Nullable Runnable callback) {
         Context context = getContext();
         if (context == null) {
@@ -473,7 +491,7 @@ public abstract class PreviewFragment extends Fragment implements
                 mWallpaper instanceof LiveWallpaperInfo);
     }
 
-    private void onExploreClicked(View button) {
+    protected void onExploreClicked(View button) {
         if (getContext() == null) {
             return;
         }
