@@ -329,6 +329,7 @@ public class CategoryFragment extends AppbarFragment
             mWallpaperConnection.disconnect();
             mWallpaperConnection = null;
         }
+        mPreviewPager.setAdapter(null);
     }
 
     @Override
