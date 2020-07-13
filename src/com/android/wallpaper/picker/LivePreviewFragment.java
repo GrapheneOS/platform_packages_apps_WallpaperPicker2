@@ -128,7 +128,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     private View mTab;
     private TextView mHomeTextView;
     private TextView mLockTextView;
-    private BottomActionBar mBottomActionBar;
     private WallpaperInfoView mWallpaperInfoView;
     private SurfaceView mWorkspaceSurface;
     private ViewGroup mLockScreenOverlay;
@@ -226,7 +225,7 @@ public class LivePreviewFragment extends PreviewFragment implements
             previewLiveWallpaper(container, mHomePreview);
             setupPreview();
             renderWorkspaceSurface();
-            onBottomActionBarReady(view.findViewById(R.id.bottom_actionbar));
+            onBottomActionBarReady(mBottomActionBar);
         } else {
             mWallpaperConnection = new WallpaperConnection(mWallpaperIntent, activity,
                     this, null);
@@ -497,7 +496,7 @@ public class LivePreviewFragment extends PreviewFragment implements
 
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         if (USE_NEW_UI) {
-            mBottomActionBar = bottomActionBar;
+            super.onBottomActionBarReady(bottomActionBar);
             mBottomActionBar.showActionsOnly(INFORMATION, DELETE, CUSTOMIZE, APPLY);
             mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
             mBottomActionBar.setActionClickListener(APPLY, unused ->

@@ -321,6 +321,10 @@ public class BottomActionBar extends FrameLayout {
         }
     }
 
+    public void setActionSelected(BottomAction action, boolean selected) {
+        mActionMap.get(action).setSelected(selected);
+    }
+
     public boolean isActionSelected(BottomAction action) {
         return mActionMap.get(action).isSelected();
     }

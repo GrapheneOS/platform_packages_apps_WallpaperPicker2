@@ -15,6 +15,8 @@
  */
 package com.android.wallpaper.picker;
 
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
+
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
 
@@ -65,6 +67,7 @@ import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
 import com.android.wallpaper.util.SizeCalculator;
+import com.android.wallpaper.widget.BottomActionBar;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetBehavior.State;
@@ -147,6 +150,7 @@ public abstract class PreviewFragment extends Fragment implements
     protected WallpaperSetter mWallpaperSetter;
     protected UserEventLogger mUserEventLogger;
     protected ViewGroup mBottomSheet;
+    protected BottomActionBar mBottomActionBar;
     protected ContentLoadingProgressBar mLoadingProgressBar;
 
     protected CheckBox mPreview;
@@ -231,6 +235,10 @@ public abstract class PreviewFragment extends Fragment implements
         mLoadingProgressBar = view.findViewById(getLoadingIndicatorResId());
         mLoadingProgressBar.show();
 
+        if (USE_NEW_UI) {
+            mBottomActionBar = view.findViewById(R.id.bottom_actionbar);
+        }
+
         mBottomSheet = view.findViewById(getBottomSheetResId());
         setUpBottomSheetView(mBottomSheet);
 
@@ -257,6 +265,10 @@ public abstract class PreviewFragment extends Fragment implements
         }
 
         return view;
+    }
+
+    protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
+        // TODO: Extract the common code here.
     }
 
     protected void populateInfoPage(InfoPageController infoPage) {
@@ -457,6 +469,13 @@ public abstract class PreviewFragment extends Fragment implements
     @Override
     public void onSet(int destination) {
         setCurrentWallpaper(destination);
+    }
+
+    @Override
+    public void onDialogDismissed(boolean withItemSelected) {
+        if (USE_NEW_UI) {
+            mBottomActionBar.setActionSelected(APPLY, false /* selected */);
+        }
     }
 
     @Override
