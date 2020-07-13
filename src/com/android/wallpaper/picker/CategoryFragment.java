@@ -651,11 +651,11 @@ public class CategoryFragment extends AppbarFragment
      * Returns the width to use for the home screen wallpaper in the "single metadata" configuration.
      */
     private int getSingleWallpaperImageWidth() {
-        Point screenSize = ScreenSizeCalculator.getInstance()
-                .getScreenSize(getActivity().getWindowManager().getDefaultDisplay());
-
-        int height = getResources().getDimensionPixelSize(R.dimen.single_metadata_card_layout_height);
-        return height * screenSize.x / screenSize.y;
+        final float screenAspectRatio =
+                ScreenSizeCalculator.getInstance().getScreenAspectRatio(getContext());
+        int height = getResources().getDimensionPixelSize(
+                R.dimen.single_metadata_card_layout_height);
+        return (int) (height / screenAspectRatio);
     }
 
     /**

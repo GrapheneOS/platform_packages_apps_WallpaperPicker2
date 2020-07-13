@@ -16,10 +16,8 @@
 package com.android.wallpaper.widget;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.android.wallpaper.R;
@@ -43,10 +41,7 @@ public class WallpaperPreviewCard extends LinearLayout {
     public WallpaperPreviewCard(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.wallpaper_preview_card_layout, this);
-        WindowManager windowManager = getContext().getSystemService(WindowManager.class);
-        Point screenSize = ScreenSizeCalculator.getInstance()
-                .getScreenSize(windowManager.getDefaultDisplay());
-        mScreenAspectRatio = (float) screenSize.y / screenSize.x;
+        mScreenAspectRatio = ScreenSizeCalculator.getInstance().getScreenAspectRatio(getContext());
     }
 
     @Override
