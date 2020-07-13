@@ -33,4 +33,11 @@
         android:id="@+id/wallpaper_surface"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <View
+        android:id="@+id/fade_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:background="@color/preview_pager_background" />
 </androidx.cardview.widget.CardView>
