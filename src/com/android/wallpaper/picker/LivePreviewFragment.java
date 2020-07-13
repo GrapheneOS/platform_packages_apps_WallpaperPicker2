@@ -197,13 +197,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         mLockScreenOverlayUpdater.adjustOverlayLayout(/* isFullScreen= */ true);
         mTab = view.findViewById(R.id.tabs_container);
         mHomeTextView = mTab.findViewById(R.id.home);
-        mHomeTextView.setTextColor(
-                getResources().getColorStateList(R.color.bottom_action_button_color_tint,
-                        getContext().getTheme()));
         mLockTextView = mTab.findViewById(R.id.lock);
-        mLockTextView.setTextColor(
-                getResources().getColorStateList(R.color.bottom_action_button_color_tint,
-                        getContext().getTheme()));
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
         mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(
                 mWorkspaceSurface, getContext());
