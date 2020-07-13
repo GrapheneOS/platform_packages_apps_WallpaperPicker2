@@ -30,8 +30,6 @@ import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -51,7 +49,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -77,7 +74,6 @@ import com.android.wallpaper.module.CurrentWallpaperInfoFactory;
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory.WallpaperInfoCallback;
 import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.InjectorProvider;
-import com.android.wallpaper.module.LockWallpaperStatusChecker;
 import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.module.WallpaperPreferences;
@@ -164,6 +160,11 @@ public class CategoryFragment extends AppbarFragment
     private PreviewUtils mPreviewUtils;
     private int mSelectedPreviewPage;
 
+    // The wallpaper information which is currently shown on the home preview.
+    private WallpaperInfo mHomePreviewWallpaperInfo;
+    // The wallpaper information which is currently shown on the lock preview.
+    private WallpaperInfo mLockPreviewWallpaperInfo;
+
     // Home workspace surface is behind the app window, and so must the home image wallpaper like
     // the live wallpaper. This view is rendered on mWallpaperSurface for home image wallpaper.
     private ImageView mHomeImageWallpaper;
@@ -187,29 +188,42 @@ public class CategoryFragment extends AppbarFragment
         mWallpaperSurface = homePreviewCard.findViewById(R.id.wallpaper_surface);
         mWallPaperPreviews.add(homePreviewCard);
 
-        if (LockWallpaperStatusChecker.isLockWallpaperSet(getContext())) {
-            CardView lockscreenPreviewCard = (CardView) inflater.inflate(
-                    R.layout.wallpaper_preview_card, null);
-            mLockscreenPreview = lockscreenPreviewCard.findViewById(R.id.wallpaper_preview_image);
-            lockscreenPreviewCard.findViewById(R.id.workspace_surface).setVisibility(View.GONE);
-            lockscreenPreviewCard.findViewById(R.id.wallpaper_surface).setVisibility(View.GONE);
-            mWallPaperPreviews.add(lockscreenPreviewCard);
-        }
+        CardView lockscreenPreviewCard = (CardView) inflater.inflate(
+                R.layout.wallpaper_preview_card, null);
+        mLockscreenPreview = lockscreenPreviewCard.findViewById(R.id.wallpaper_preview_image);
+        lockscreenPreviewCard.findViewById(R.id.workspace_surface).setVisibility(View.GONE);
+        lockscreenPreviewCard.findViewById(R.id.wallpaper_surface).setVisibility(View.GONE);
+        mWallPaperPreviews.add(lockscreenPreviewCard);
 
         mPreviewPager = view.findViewById(R.id.wallpaper_preview_pager);
         mPreviewPager.setAdapter(new PreviewPagerAdapter(mWallPaperPreviews));
         mPreviewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            int[] mLocation = new int[2];
-            Rect mHomePreviewRect = new Rect();
             @Override
             public void onPageScrolled(int position, float positionOffset,
                     int positionOffsetPixels) {
-                if (mWallpaperConnection != null) {
-                    mHomePreview.getLocationOnScreen(mLocation);
-                    mHomePreviewRect.set(0, 0, mHomePreview.getMeasuredWidth(),
-                            mHomePreview.getMeasuredHeight());
-                    mHomePreviewRect.offset(mLocation[0], mLocation[1]);
-                    mWallpaperConnection.updatePreviewPosition(mHomePreviewRect);
+                // For live wallpaper, show its thumbnail when scrolling.
+                if (mHomePreviewWallpaperInfo instanceof LiveWallpaperInfo) {
+                    if (positionOffset == 0.0f) {
+                        // The page is not moved. Show live wallpaper.
+                        mWorkspaceSurface.setZOrderMediaOverlay(true);
+                        mWallpaperSurface.setZOrderMediaOverlay(false);
+                    } else {
+                        // The page is moving. Show live wallpaper's thumbnail.
+                        mWorkspaceSurface.setZOrderOnTop(true);
+                        mWallpaperSurface.setZOrderMediaOverlay(true);
+                    }
+                }
+
+                if (mLockPreviewWallpaperInfo instanceof LiveWallpaperInfo) {
+                    if (positionOffset == 0.0f) {
+                        // The page is not moved. Show live wallpaper.
+                        LiveTileOverlay.INSTANCE.attach(mLockscreenPreview.getOverlay());
+                    } else {
+                        // The page is moving. Show live wallpaper's thumbnail.
+                        LiveTileOverlay.INSTANCE.detach(mLockscreenPreview.getOverlay());
+                    }
+                } else {
+                    LiveTileOverlay.INSTANCE.detach(mLockscreenPreview.getOverlay());
                 }
             }
 
@@ -322,6 +336,7 @@ public class CategoryFragment extends AppbarFragment
     public void onDestroyView() {
         super.onDestroyView();
         LiveTileOverlay.INSTANCE.detach(mHomePreview.getOverlay());
+        LiveTileOverlay.INSTANCE.detach(mLockscreenPreview.getOverlay());
         if (mWallpaperConnection != null) {
             mWallpaperConnection.disconnect();
             mWallpaperConnection = null;
@@ -386,8 +401,10 @@ public class CategoryFragment extends AppbarFragment
                 return;
             }
 
-            updateThumbnail(wallpaperInfo, mHomePreview, true);
-            updateThumbnail(wallpaperInfo, mLockscreenPreview, false);
+            mHomePreviewWallpaperInfo = wallpaperInfo;
+            mLockPreviewWallpaperInfo = wallpaperInfo;
+            updateThumbnail(mHomePreviewWallpaperInfo, mHomePreview, true);
+            updateThumbnail(mLockPreviewWallpaperInfo, mLockscreenPreview, false);
             mShowSelectedWallpaper = true;
         });
     }
@@ -545,6 +562,7 @@ public class CategoryFragment extends AppbarFragment
         return new Intent(WallpaperService.SERVICE_INTERFACE)
                 .setClassName(info.getPackageName(), info.getServiceName());
     }
+
     /**
      * Obtains the {@link WallpaperInfo} object(s) representing the wallpaper(s) currently set to the
      * device from the {@link CurrentWallpaperInfoFactory} and binds them to the provided
@@ -576,8 +594,11 @@ public class CategoryFragment extends AppbarFragment
                             return;
                         }
 
-                        updateThumbnail(homeWallpaper, mHomePreview, true);
-                        updateThumbnail(lockWallpaper, mLockscreenPreview, false);
+                        mHomePreviewWallpaperInfo = homeWallpaper;
+                        mLockPreviewWallpaperInfo =
+                                lockWallpaper == null ? homeWallpaper : lockWallpaper;
+                        updateThumbnail(mHomePreviewWallpaperInfo, mHomePreview, true);
+                        updateThumbnail(mLockPreviewWallpaperInfo, mLockscreenPreview, false);
 
                         // The MetadataHolder may be null if the RecyclerView has not yet created the view
                         // holder.
@@ -590,8 +611,7 @@ public class CategoryFragment extends AppbarFragment
         }, forceRefresh);
     }
 
-    private void setUpLiveWallpaperPreview(WallpaperInfo homeWallpaper, ImageView previewView,
-            Drawable thumbnail) {
+    private void setUpLiveWallpaperPreview(WallpaperInfo homeWallpaper) {
         Activity activity = getActivity();
         if (activity == null) {
             return;
@@ -599,11 +619,7 @@ public class CategoryFragment extends AppbarFragment
         if (mWallpaperConnection != null) {
             mWallpaperConnection.disconnect();
         }
-        if (thumbnail != null) {
-            thumbnail.setBounds(previewView.getLeft(), previewView.getTop(), previewView.getRight(),
-                    previewView.getBottom());
-        }
-
+        ImageView previewView = mSelectedPreviewPage == 0 ? mHomePreview : mLockscreenPreview;
         previewView.getLocationOnScreen(mLivePreviewLocation);
         mPreviewGlobalRect.set(0, 0, previewView.getMeasuredWidth(),
                 previewView.getMeasuredHeight());
@@ -615,22 +631,6 @@ public class CategoryFragment extends AppbarFragment
                 new WallpaperConnectionListener() {
                     @Override
                     public void onEngineShown() {
-                        final Drawable placeholder = previewView.getDrawable() == null
-                                ? new ColorDrawable(getResources().getColor(R.color.secondary_color,
-                                    activity.getTheme()))
-                                : previewView.getDrawable();
-                        LiveTileOverlay.INSTANCE.setForegroundDrawable(placeholder);
-                        LiveTileOverlay.INSTANCE.attach(previewView.getOverlay());
-                        previewView.animate()
-                                .setStartDelay(50)
-                                .setDuration(200)
-                                .setInterpolator(AnimationUtils.loadInterpolator(getContext(),
-                                        android.R.interpolator.fast_out_linear_in))
-                                .setUpdateListener(value -> placeholder.setAlpha(
-                                        (int) (MAX_ALPHA * (1 - value.getAnimatedFraction()))))
-                                .withEndAction(() -> {
-                                    LiveTileOverlay.INSTANCE.setForegroundDrawable(null);
-                                }).start();
 
                     }
                 }, mPreviewGlobalRect);
@@ -757,16 +757,22 @@ public class CategoryFragment extends AppbarFragment
                 wallpaperInfo.getThumbAsset(activity.getApplicationContext()).loadPreviewImage(
                         activity, mHomeImageWallpaper,
                         getResources().getColor(R.color.secondary_color));
-                setUpLiveWallpaperPreview(wallpaperInfo, thumbnailView,
-                        new ColorDrawable(getResources().getColor(
-                                R.color.secondary_color, activity.getTheme())));
+                setUpLiveWallpaperPreview(wallpaperInfo);
             } else {
                 if (mWallpaperConnection != null) {
                     mWallpaperConnection.disconnect();
                     mWallpaperConnection = null;
                 }
             }
+        } else {
+            // lock screen wallpaper
+            if (wallpaperInfo instanceof LiveWallpaperInfo) {
+                LiveTileOverlay.INSTANCE.attach(thumbnailView.getOverlay());
+            } else {
+                LiveTileOverlay.INSTANCE.detach(thumbnailView.getOverlay());
+            }
         }
+
         thumbnailView.setOnClickListener(view -> {
             getFragmentHost().showViewOnlyPreview(wallpaperInfo);
             eventLogger.logCurrentWallpaperPreviewed();
