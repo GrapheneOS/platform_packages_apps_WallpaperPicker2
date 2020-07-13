@@ -84,6 +84,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -188,6 +189,9 @@ public class CategoryFragment extends AppbarFragment
         mWallPaperPreviews.add(lockscreenPreviewCard);
 
         mPreviewPager = view.findViewById(R.id.wallpaper_preview_pager);
+        if (mPreviewPager.isRtl()) {
+            Collections.reverse(mWallPaperPreviews);
+        }
         mPreviewPager.setAdapter(new PreviewPagerAdapter(mWallPaperPreviews));
         mPreviewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
