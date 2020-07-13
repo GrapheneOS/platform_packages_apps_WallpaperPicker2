@@ -217,4 +217,5 @@
     <dimen name="option_border_width">2dp</dimen>
     <dimen name="option_selected_border_width">3dp</dimen>
     <dimen name="option_title_font_text_size">12sp</dimen>
+    <dimen name="option_title_line_height">16dp</dimen>
 </resources>
