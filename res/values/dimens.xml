@@ -30,6 +30,8 @@
     <dimen name="grid_tile_aspect_height">340dp</dimen>
     <dimen name="grid_tile_aspect_width">182dp</dimen>
     <dimen name="grid_edge_space">8dp</dimen>
+    <dimen name="category_grid_padding_top">4dp</dimen>
+    <dimen name="category_grid_padding_bottom">16dp</dimen>
 
     <!-- Dimensions for individual wallpaper tiles. -->
     <dimen name="grid_item_individual_wallpaper_selected_inset">14dp</dimen>
@@ -38,6 +40,8 @@
     <dimen name="grid_item_individual_padding_top">8dp</dimen>
     <dimen name="grid_item_individual_label_padding_top">4dp</dimen>
     <dimen name="grid_item_individual_label_padding_bottom">4dp</dimen>
+    <dimen name="wallpaper_grid_padding_top">16dp</dimen>
+    <dimen name="wallpaper_grid_padding_bottom">24dp</dimen>
 
     <!-- Dimensions for "single metadata card" configuration. -->
     <dimen name="single_metadata_card_elevation">2dp</dimen>
