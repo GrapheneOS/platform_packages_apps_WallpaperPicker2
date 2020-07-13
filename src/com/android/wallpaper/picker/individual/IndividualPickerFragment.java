@@ -98,6 +98,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -266,8 +267,8 @@ public class IndividualPickerFragment extends Fragment
      */
     public void highlightAppliedWallpaper(@Destination int wallpaperDestination) {
         mWallpaperDestination = wallpaperDestination;
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged();
+        if (mWallpapers != null) {
+            refreshAppliedWallpaper();
         }
     }
 
@@ -826,9 +827,7 @@ public class IndividualPickerFragment extends Fragment
                 public void onSuccess(WallpaperInfo wallpaperInfo) {
                     // TODO(b/150913705): Show the snack bar.
                     mBottomActionBar.enableActions();
-                    updateAppliedStatus(mAppliedWallpaperInfo, false);
-                    updateAppliedStatus(wallpaperInfo, true);
-                    mAppliedWallpaperInfo = wallpaperInfo;
+                    refreshAppliedWallpaper();
 
                     mWallpaperPersister.onLiveWallpaperSet();
                 }
@@ -950,6 +949,45 @@ public class IndividualPickerFragment extends Fragment
     private static boolean shouldShowMetadataInPreview(WallpaperInfo wallpaperInfo) {
         android.app.WallpaperInfo wallpaperComponent = wallpaperInfo.getWallpaperComponent();
         return wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
+    }
+
+    private void refreshAppliedWallpaper() {
+        // Clear the check mark and blue border(if it shows) of the old applied wallpaper.
+        showCheckMarkAndBorderForAppliedWallpaper(false);
+
+        // Update to the new applied wallpaper.
+        String appliedWallpaperId = getAppliedWallpaperId();
+        Optional<WallpaperInfo> wallpaperInfoOptional = mWallpapers
+                .stream()
+                .filter(wallpaper -> wallpaper.getWallpaperId() != null)
+                .filter(wallpaper -> wallpaper.getWallpaperId().equals(appliedWallpaperId))
+                .findFirst();
+        mAppliedWallpaperInfo = wallpaperInfoOptional.orElse(null);
+
+        // Set the check mark and blue border(if user doesn't select) of the new applied wallpaper.
+        showCheckMarkAndBorderForAppliedWallpaper(true);
+    }
+
+    private String getAppliedWallpaperId() {
+        WallpaperPreferences prefs =
+                InjectorProvider.getInjector().getPreferences(getContext());
+        android.app.WallpaperInfo wallpaperInfo = mWallpaperManager.getWallpaperInfo();
+        boolean isDestinationBoth =
+                mWallpaperManager.getWallpaperId(WallpaperManager.FLAG_LOCK) < 0;
+
+        if (isDestinationBoth || mWallpaperDestination == WallpaperPersister.DEST_HOME_SCREEN) {
+            return wallpaperInfo != null
+                    ? wallpaperInfo.getServiceName() : prefs.getHomeWallpaperRemoteId();
+        } else {
+            return prefs.getLockWallpaperRemoteId();
+        }
+    }
+
+    private void showCheckMarkAndBorderForAppliedWallpaper(boolean show) {
+        updateAppliedStatus(mAppliedWallpaperInfo, show);
+        if (mSelectedWallpaperInfo == null) {
+            updateActivatedStatus(mAppliedWallpaperInfo, show);
+        }
     }
 
     /**
@@ -1300,21 +1338,6 @@ public class IndividualPickerFragment extends Fragment
                         isWallpaperApplied ? View.VISIBLE : View.GONE);
                 holder.itemView.findViewById(R.id.tile).setOnClickListener(
                         view -> onWallpaperSelected(wallpaper));
-            }
-        }
-
-        private String getAppliedWallpaperId() {
-            WallpaperPreferences prefs =
-                    InjectorProvider.getInjector().getPreferences(getContext());
-            android.app.WallpaperInfo wallpaperInfo = mWallpaperManager.getWallpaperInfo();
-            boolean isDestinationBoth =
-                    mWallpaperManager.getWallpaperId(WallpaperManager.FLAG_LOCK) < 0;
-
-            if (isDestinationBoth || mWallpaperDestination == WallpaperPersister.DEST_HOME_SCREEN) {
-                return wallpaperInfo != null
-                        ? wallpaperInfo.getServiceName() : prefs.getHomeWallpaperRemoteId();
-            } else {
-                return prefs.getLockWallpaperRemoteId();
             }
         }
     }
