@@ -166,6 +166,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         mUserEventLogger = injector.getUserEventLogger(this);
         mNetworkStatusNotifier = injector.getNetworkStatusNotifier(this);
         mWallpaperPersister = injector.getWallpaperPersister(this);
+        mWallpaperPreferences = injector.getPreferences(this);
         mWasCustomPhotoWallpaperSet = false;
 
         @WallpaperSupportLevel int wallpaperSupportLevel = mDelegate.getWallpaperSupportLevel();
