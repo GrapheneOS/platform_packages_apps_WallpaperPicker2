@@ -221,6 +221,7 @@
     <dimen name="bottom_action_button_size">48dp</dimen>
     <dimen name="bottom_action_button_padding">12dp</dimen>
     <dimen name="bottom_action_icon_size">24dp</dimen>
+    <dimen name="bottom_action_bar_bottom_sheet_margin_top">2dp</dimen>
 
     <dimen name="option_border_width">2dp</dimen>
     <dimen name="option_selected_border_width">3dp</dimen>
