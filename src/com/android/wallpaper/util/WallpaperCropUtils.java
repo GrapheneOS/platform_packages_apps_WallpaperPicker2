@@ -243,6 +243,18 @@ public final class WallpaperCropUtils {
         }
     }
 
+    // TODO(b/154783188): Remove this method when new system UI's API is available.
+    /**
+     * Get the system wallpaper's maximum scale value.
+     */
+    public static float getSystemWallpaperMaximumScale() {
+        Resources system = Resources.getSystem();
+        return system.getFloat(system.getIdentifier(
+                /* name= */ "config_wallpaperMaxScale",
+                /* defType= */ "dimen",
+                /* defPackage= */ "android"));
+    }
+
     /**
      * Returns whether layout direction is RTL (or false for LTR). Since native RTL layout support
      * was added in API 17, returns false for versions lower than 17.

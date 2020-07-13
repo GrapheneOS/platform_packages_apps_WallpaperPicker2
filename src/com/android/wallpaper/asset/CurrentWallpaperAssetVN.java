@@ -110,6 +110,7 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
             // Get the far left visible rect of source image
             cropRect.offsetTo(0, 0);
         }
+        super.adjustCropRect(context, assetDimensions, cropRect);
     }
 
     public Key getKey() {
