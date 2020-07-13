@@ -18,6 +18,7 @@ package com.android.wallpaper.widget;
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
@@ -130,7 +131,15 @@ public class BottomActionBar extends FrameLayout {
      */
     public void setActionClickListener(
             BottomAction bottomAction, OnClickListener actionClickListener) {
+        if (BottomAction.CANCEL.equals(bottomAction)) {
+            throw new IllegalArgumentException("Can't set OnClickListener to cancel button");
+        }
         mActionMap.get(bottomAction).setOnClickListener(actionClickListener);
+    }
+
+    /** Binds the cancel button to back key. */
+    public void bindCancelButtonToBackKey(Activity activity) {
+        mActionMap.get(BottomAction.CANCEL).setOnClickListener(v -> activity.onBackPressed());
     }
 
     /** Clears all the actions' click listeners */

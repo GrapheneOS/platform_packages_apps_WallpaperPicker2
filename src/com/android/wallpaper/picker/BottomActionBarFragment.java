@@ -40,9 +40,7 @@ public class BottomActionBarFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mBottomActionBar = ((BottomActionBarHost) getActivity()).getBottomActionBar();
-
-        // Do something common for BottomActionBar when the fragment is attached.
-
+        mBottomActionBar.bindCancelButtonToBackKey(getActivity());
         onBottomActionBarReady(mBottomActionBar);
     }
 

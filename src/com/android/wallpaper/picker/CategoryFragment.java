@@ -63,6 +63,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -405,6 +406,17 @@ public class CategoryFragment extends AppbarFragment
             return;
         }
         mPreviewPager.switchPreviewPage(destination);
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        Fragment childFragment = getChildFragmentManager().findFragmentById(
+                R.id.category_fragment_container);
+        if (childFragment instanceof BottomActionBarFragment
+                && ((BottomActionBarFragment) childFragment).onBackPressed()) {
+            return true;
+        }
+        return false;
     }
 
     /**
