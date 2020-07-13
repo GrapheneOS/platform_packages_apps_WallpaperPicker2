@@ -15,7 +15,9 @@
  */
 package com.android.wallpaper.picker.individual;
 
+import static com.android.wallpaper.picker.WallpaperPickerDelegate.PREVIEW_WALLPAPER_REQUEST_CODE;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.EDIT;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMATION;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.ROTATION;
 
@@ -75,6 +77,7 @@ import com.android.wallpaper.picker.BaseActivity;
 import com.android.wallpaper.picker.BottomActionBarFragment;
 import com.android.wallpaper.picker.CurrentWallpaperBottomSheetPresenter;
 import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
+import com.android.wallpaper.picker.PreviewActivity;
 import com.android.wallpaper.picker.RotationStarter;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment;
 import com.android.wallpaper.picker.SetWallpaperErrorDialogFragment;
@@ -552,6 +555,12 @@ public class IndividualPickerFragment extends BottomActionBarFragment
             mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
                     .inflate(R.layout.wallpaper_info_view, /* root= */ null);
             mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
+            mBottomActionBar.setActionClickListener(EDIT, unused -> {
+                mWallpaperPersister.setWallpaperInfoInPreview(mSelectedWallpaperInfo);
+                mSelectedWallpaperInfo.showPreview(getActivity(),
+                        new PreviewActivity.PreviewActivityIntentFactory(),
+                        PREVIEW_WALLPAPER_REQUEST_CODE);
+            });
             mBottomActionBar.show();
         }
     }
@@ -858,7 +867,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
     void updateBottomActions(boolean hasWallpaperSelected) {
         if (hasWallpaperSelected) {
-            mBottomActionBar.showActionsOnly(INFORMATION, APPLY);
+            mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
         } else {
             mBottomActionBar.showActionsOnly(ROTATION);
         }
