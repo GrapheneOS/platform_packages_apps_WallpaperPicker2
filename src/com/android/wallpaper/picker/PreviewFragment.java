@@ -104,6 +104,8 @@ public abstract class PreviewFragment extends Fragment implements
     public static final String ARG_PREVIEW_MODE = "preview_mode";
     public static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
 
+    protected static final boolean USE_NEW_UI = ViewOnlyPreviewActivity.USE_NEW_UI;
+
     /**
      * Creates and returns new instance of {@link ImagePreviewFragment} with the provided wallpaper
      * set as an argument.
@@ -202,21 +204,28 @@ public abstract class PreviewFragment extends Fragment implements
 
         // Set toolbar as the action bar.
         Toolbar toolbar = view.findViewById(R.id.toolbar);
+        if (USE_NEW_UI) {
+            TextView titleTextView = toolbar.findViewById(R.id.custom_toolbar_title);
+            if (titleTextView != null) {
+                titleTextView.setText(R.string.preview);
+            }
+        }
         AppCompatActivity activity = (AppCompatActivity) requireActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-
         toolbar.getNavigationIcon().setTint(getAttrColor(activity, android.R.attr.colorPrimary));
         toolbar.getNavigationIcon().setAutoMirrored(true);
 
-        ViewCompat.setPaddingRelative(toolbar,
-        /* start */ getResources().getDimensionPixelSize(
-                        R.dimen.preview_toolbar_up_button_start_padding),
-        /* top */ 0,
-        /* end */ getResources().getDimensionPixelSize(
-                        R.dimen.preview_toolbar_set_wallpaper_button_end_padding),
-        /* bottom */ 0);
+        if (!USE_NEW_UI) {
+            ViewCompat.setPaddingRelative(toolbar,
+                    /* start */ getResources().getDimensionPixelSize(
+                            R.dimen.preview_toolbar_up_button_start_padding),
+                    /* top */ 0,
+                    /* end */ getResources().getDimensionPixelSize(
+                            R.dimen.preview_toolbar_set_wallpaper_button_end_padding),
+                    /* bottom */ 0);
+        }
 
         mLoadingProgressBar = view.findViewById(getLoadingIndicatorResId());
         mLoadingProgressBar.show();
@@ -239,18 +248,21 @@ public abstract class PreviewFragment extends Fragment implements
                 : savedInstanceState.getInt(KEY_BOTTOM_SHEET_STATE, STATE_EXPANDED);
         setUpBottomSheetListeners();
 
-        view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
-            toolbar.setPadding(toolbar.getPaddingLeft(),
-                    toolbar.getPaddingTop() + windowInsets.getSystemWindowInsetTop(),
-                    toolbar.getPaddingRight(), toolbar.getPaddingBottom());
-            mBottomSheet.setPadding(mBottomSheet.getPaddingLeft(),
-                    mBottomSheet.getPaddingTop(), mBottomSheet.getPaddingRight(),
-                    mBottomSheet.getPaddingBottom() + windowInsets.getSystemWindowInsetBottom());
-            WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
-            builder.setSystemWindowInsets(Insets.of(windowInsets.getSystemWindowInsetLeft(),
-                    0, windowInsets.getStableInsetRight(), 0));
-            return builder.build();
-        });
+        if (!USE_NEW_UI) {
+            view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
+                toolbar.setPadding(toolbar.getPaddingLeft(),
+                        toolbar.getPaddingTop() + windowInsets.getSystemWindowInsetTop(),
+                        toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+                mBottomSheet.setPadding(mBottomSheet.getPaddingLeft(),
+                        mBottomSheet.getPaddingTop(), mBottomSheet.getPaddingRight(),
+                        mBottomSheet.getPaddingBottom()
+                                + windowInsets.getSystemWindowInsetBottom());
+                WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
+                builder.setSystemWindowInsets(Insets.of(windowInsets.getSystemWindowInsetLeft(),
+                        0, windowInsets.getStableInsetRight(), 0));
+                return builder.build();
+            });
+        }
 
         return view;
     }

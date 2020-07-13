@@ -62,6 +62,7 @@ public class BottomActionBar extends FrameLayout {
     }
 
     private final Map<BottomAction, View> mActionMap = new EnumMap<>(BottomAction.class);
+    private final ViewGroup mBottomSheet;
     private final BottomSheetBehavior<ViewGroup> mBottomSheetBehavior;
     private final TextView mAttributionTitle;
     private final TextView mAttributionSubtitle1;
@@ -84,20 +85,20 @@ public class BottomActionBar extends FrameLayout {
         mActionMap.put(BottomAction.PROGRESS, findViewById(R.id.action_progress));
         mActionMap.put(BottomAction.APPLY, findViewById(R.id.action_apply));
 
-        ViewGroup bottomSheet = findViewById(R.id.action_bottom_sheet);
-        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        mBottomSheet = findViewById(R.id.action_bottom_sheet);
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setState(STATE_COLLAPSED);
 
         // Workaround as we don't have access to bottomDialogCornerRadius, mBottomSheet radii are
         // set to dialogCornerRadius by default.
-        GradientDrawable bottomSheetBackground = (GradientDrawable) bottomSheet.getBackground();
+        GradientDrawable bottomSheetBackground = (GradientDrawable) mBottomSheet.getBackground();
         float[] radii = bottomSheetBackground.getCornerRadii();
         for (int i = 0; i < radii.length; i++) {
             radii[i]*=2f;
         }
         bottomSheetBackground = ((GradientDrawable)bottomSheetBackground.mutate());
         bottomSheetBackground.setCornerRadii(radii);
-        bottomSheet.setBackground(bottomSheetBackground);
+        mBottomSheet.setBackground(bottomSheetBackground);
 
         ImageView informationIcon = findViewById(R.id.action_information);
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetCallback() {
@@ -156,12 +157,15 @@ public class BottomActionBar extends FrameLayout {
 
         // Ensure the ClickListener can work normally if has info been populated, since it could be
         // removed by #clearActionClickListeners.
-        setActionClickListener(BottomAction.INFORMATION, unused ->
+        setActionClickListener(BottomAction.INFORMATION, unused -> {
+            mBottomSheet.setVisibility(mBottomSheetBehavior.getState() == STATE_COLLAPSED
+                    ? VISIBLE
+                    : GONE);
             mBottomSheetBehavior.setState(mBottomSheetBehavior.getState() == STATE_COLLAPSED
-                ? STATE_EXPANDED
-                : STATE_COLLAPSED
-            )
-        );
+                    ? STATE_EXPANDED
+                    : STATE_COLLAPSED
+            );
+        });
 
         if (attributions.size() > 0 && attributions.get(0) != null) {
             mAttributionTitle.setText(attributions.get(0));
