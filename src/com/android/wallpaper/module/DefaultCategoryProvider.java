@@ -201,7 +201,7 @@ public class DefaultCategoryProvider implements CategoryProvider {
         /**
          * Publishes the device categories.
          */
-        protected void publishDeviceCategories() {
+        private void publishDeviceCategories() {
             if (sSystemCategories != null) {
                 for (int i = 0; i < sSystemCategories.size(); i++) {
                     publishProgress(sSystemCategories.get(i));
