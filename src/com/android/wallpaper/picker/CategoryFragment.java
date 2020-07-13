@@ -738,7 +738,7 @@ public class CategoryFragment extends ToolbarFragment
         boolean renderInImageWallpaperSurface =
                 !(wallpaperInfo instanceof LiveWallpaperInfo) && isHomeWallpaper;
         wallpaperInfo.getThumbAsset(activity.getApplicationContext())
-                .loadDrawable(activity,
+                .loadPreviewImage(activity,
                         renderInImageWallpaperSurface ? mHomeImageWallpaper : thumbnailView,
                         getResources().getColor(R.color.secondary_color));
         if (isHomeWallpaper) {
