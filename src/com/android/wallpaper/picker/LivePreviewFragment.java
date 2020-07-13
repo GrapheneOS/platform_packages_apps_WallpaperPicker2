@@ -17,6 +17,7 @@ package com.android.wallpaper.picker;
 
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.CUSTOMIZE;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.DELETE;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMATION;
 
 import android.annotation.SuppressLint;
@@ -145,10 +146,7 @@ public class LivePreviewFragment extends PreviewFragment implements
             setUpExploreIntent(null);
         }
 
-        android.app.WallpaperInfo currentWallpaper =
-                WallpaperManager.getInstance(requireContext()).getWallpaperInfo();
-        String deleteAction = getDeleteAction(info, currentWallpaper);
-
+        String deleteAction = getDeleteAction(info);
         if (!TextUtils.isEmpty(deleteAction)) {
             mDeleteIntent = new Intent(deleteAction);
             mDeleteIntent.setPackage(info.getPackageName());
@@ -500,7 +498,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         if (USE_NEW_UI) {
             mBottomActionBar = bottomActionBar;
-            mBottomActionBar.showActionsOnly(INFORMATION, CUSTOMIZE, APPLY);
+            mBottomActionBar.showActionsOnly(INFORMATION, DELETE, CUSTOMIZE, APPLY);
             mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
             mBottomActionBar.setActionClickListener(APPLY, unused ->
                     this.onSetWallpaperClicked(null));
@@ -520,11 +518,18 @@ public class LivePreviewFragment extends PreviewFragment implements
             } else {
                 if (mSettingsIntent != null) {
                     mBottomActionBar.setActionClickListener(CUSTOMIZE, listener ->
-                            startActivity(mSettingsIntent)
-                    );
+                            startActivity(mSettingsIntent));
                 } else {
                     mBottomActionBar.hideActions(CUSTOMIZE);
                 }
+            }
+
+            final String deleteAction = getDeleteAction(mWallpaper.getWallpaperComponent());
+            if (TextUtils.isEmpty(deleteAction)) {
+                mBottomActionBar.hideActions(DELETE);
+            } else {
+                mBottomActionBar.setActionClickListener(DELETE, listener ->
+                        showDeleteConfirmDialog());
             }
             mBottomActionBar.show();
         }
@@ -649,8 +654,9 @@ public class LivePreviewFragment extends PreviewFragment implements
 
 
     @Nullable
-    protected String getDeleteAction(android.app.WallpaperInfo wallpaperInfo,
-            @Nullable android.app.WallpaperInfo currentInfo) {
+    protected String getDeleteAction(android.app.WallpaperInfo wallpaperInfo) {
+        android.app.WallpaperInfo currentInfo =
+                WallpaperManager.getInstance(requireContext()).getWallpaperInfo();
         ServiceInfo serviceInfo = wallpaperInfo.getServiceInfo();
         if (!isPackagePreInstalled(serviceInfo.applicationInfo)) {
             Log.d(TAG, "This wallpaper is not pre-installed: " + serviceInfo.name);
