@@ -110,6 +110,10 @@ import java.util.List;
 public class CategoryFragment extends ToolbarFragment
         implements CategorySelectorFragmentHost, ThumbnailUpdater, WallpaperDestinationCallback {
 
+    private final Rect mPreviewLocalRect = new Rect();
+    private final Rect mPreviewGlobalRect = new Rect();
+    private final int[] mLivePreviewLocation = new int[2];
+
     /**
      * Interface to be implemented by an Activity hosting a {@link CategoryFragment}
      */
@@ -222,15 +226,23 @@ public class CategoryFragment extends ToolbarFragment
 
         View fragmentContainer = view.findViewById(R.id.category_fragment_container);
         mBottomSheetBehavior = BottomSheetBehavior.from(fragmentContainer);
-        fragmentContainer.addOnLayoutChangeListener((containerView, left, top, right, bottom,
-                                                     oldLeft, oldTop, oldRight, oldBottom) -> {
-            int minimumHeight = containerView.getHeight() - mPreviewPager.getMeasuredHeight();
-            mBottomSheetBehavior.setPeekHeight(minimumHeight);
-            containerView.setMinimumHeight(minimumHeight);
-            ((CardView) mHomePreview.getParent())
-                    .setRadius(TileSizeCalculator.getPreviewCornerRadius(
-                            getActivity(), homePreviewCard.getMeasuredWidth()));
-        });
+        fragmentContainer.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View containerView, int left, int top, int right,
+                    int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                int minimumHeight = containerView.getHeight() - mPreviewPager.getMeasuredHeight();
+                mBottomSheetBehavior.setPeekHeight(minimumHeight);
+                containerView.setMinimumHeight(minimumHeight);
+                ((CardView) mHomePreview.getParent())
+                        .setRadius(TileSizeCalculator.getPreviewCornerRadius(
+                                getActivity(), homePreviewCard.getMeasuredWidth()));
+                if (mLockscreenPreview != null) {
+                    ((CardView) mLockscreenPreview.getParent())
+                            .setRadius(TileSizeCalculator.getPreviewCornerRadius(
+                                    getActivity(), mLockscreenPreview.getMeasuredWidth()));
+                }
+                fragmentContainer.removeOnLayoutChangeListener(this);
+            }});
 
         mPreviewUtils = new PreviewUtils(getContext(),
                 getString(R.string.grid_control_metadata_name));
@@ -287,6 +299,7 @@ public class CategoryFragment extends ToolbarFragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        LiveTileOverlay.INSTANCE.detach(mHomePreview.getOverlay());
         if (mWallpaperConnection != null) {
             mWallpaperConnection.disconnect();
             mWallpaperConnection = null;
@@ -547,10 +560,12 @@ public class CategoryFragment extends ToolbarFragment
                     previewView.getBottom());
         }
 
-        Rect previewLocalRect = new Rect();
-        Rect previewGlobalRect = new Rect();
-        previewView.getLocalVisibleRect(previewLocalRect);
-        previewView.getGlobalVisibleRect(previewGlobalRect);
+        previewView.getLocationOnScreen(mLivePreviewLocation);
+        mPreviewGlobalRect.set(0, 0, previewView.getMeasuredWidth(),
+                previewView.getMeasuredHeight());
+        mPreviewLocalRect.set(mPreviewGlobalRect);
+        mPreviewGlobalRect.offset(mLivePreviewLocation[0], mLivePreviewLocation[1]);
+
         mWallpaperConnection = new WallpaperConnection(
                 getWallpaperIntent(homeWallpaper.getWallpaperComponent()), activity,
                 new WallpaperConnectionListener() {
@@ -563,21 +578,20 @@ public class CategoryFragment extends ToolbarFragment
                         LiveTileOverlay.INSTANCE.setForegroundDrawable(placeholder);
                         LiveTileOverlay.INSTANCE.attach(previewView.getOverlay());
                         previewView.animate()
-                                .setStartDelay(400)
-                                .setDuration(400)
+                                .setStartDelay(50)
+                                .setDuration(200)
                                 .setInterpolator(AnimationUtils.loadInterpolator(getContext(),
                                         android.R.interpolator.fast_out_linear_in))
                                 .setUpdateListener(value -> placeholder.setAlpha(
                                         (int) (MAX_ALPHA * (1 - value.getAnimatedFraction()))))
                                 .withEndAction(() -> {
                                     LiveTileOverlay.INSTANCE.setForegroundDrawable(null);
-
                                 }).start();
 
                     }
-                }, previewGlobalRect);
+                }, mPreviewGlobalRect);
 
-        LiveTileOverlay.INSTANCE.update(new RectF(previewLocalRect),
+        LiveTileOverlay.INSTANCE.update(new RectF(mPreviewLocalRect),
                 ((CardView) previewView.getParent()).getRadius());
 
         mWallpaperConnection.setVisibility(true);
