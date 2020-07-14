@@ -169,15 +169,6 @@ public class ImagePreviewFragment extends PreviewFragment {
         mDefaultCropSurfaceSize = WallpaperCropUtils.getDefaultCropSurfaceSize(
                 getResources(), activity.getWindowManager().getDefaultDisplay());
 
-        // Load a low-res placeholder image if there's a thumbnail available from the asset that can
-        // be shown to the user more quickly than the full-sized image.
-        if (mWallpaperAsset.hasLowResDataSource()) {
-            mHandler.post(() ->
-                    mWallpaperAsset.loadLowResDrawable(activity, mLowResImageView, Color.BLACK,
-                            new WallpaperPreviewBitmapTransformation(
-                                    activity.getApplicationContext(), isRtl())));
-        }
-
         mBottomActionBar.disableActions();
         mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
             if (mBottomActionBar != null) {
@@ -449,6 +440,14 @@ public class ImagePreviewFragment extends PreviewFragment {
                         R.layout.fullscreen_wallpaper_preview, null);
                 mFullResImageView = wallpaperPreviewContainer.findViewById(R.id.full_res_image);
                 mLowResImageView = wallpaperPreviewContainer.findViewById(R.id.low_res_image);
+                // Load a low-res placeholder image if there's a thumbnail available from the asset
+                // that can be shown to the user more quickly than the full-sized image.
+                if (mWallpaperAsset.hasLowResDataSource()) {
+                    Activity activity = requireActivity();
+                    mWallpaperAsset.loadLowResDrawable(activity, mLowResImageView, Color.BLACK,
+                            new WallpaperPreviewBitmapTransformation(
+                                    activity.getApplicationContext(), isRtl()));
+                }
                 wallpaperPreviewContainer.measure(
                         makeMeasureSpec(mWallpaperSurface.getWidth(), EXACTLY),
                         makeMeasureSpec(mWallpaperSurface.getHeight(), EXACTLY));
