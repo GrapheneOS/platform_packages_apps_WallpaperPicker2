@@ -359,16 +359,18 @@ public abstract class PreviewFragment extends AppbarFragment implements
      */
     protected abstract void setCurrentWallpaper(@Destination int destination);
 
-    protected void finishActivityWithResultOk() {
+    protected void finishActivity(boolean success) {
         Activity activity = requireActivity();
-        try {
-            Toast.makeText(activity,
-                    R.string.wallpaper_set_successfully_message, Toast.LENGTH_SHORT).show();
-        } catch (NotFoundException e) {
-            Log.e(TAG, "Could not show toast " + e);
+        if (success) {
+            try {
+                Toast.makeText(activity,
+                        R.string.wallpaper_set_successfully_message, Toast.LENGTH_SHORT).show();
+            } catch (NotFoundException e) {
+                Log.e(TAG, "Could not show toast " + e);
+            }
+            activity.setResult(Activity.RESULT_OK);
         }
         activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        activity.setResult(Activity.RESULT_OK);
         activity.finish();
     }
 
