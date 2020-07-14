@@ -32,7 +32,6 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceControlViewHost;
@@ -77,13 +76,11 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
 
-    private final Handler mHandler = new Handler();
     private final WallpaperSurfaceCallback mWallpaperSurfaceCallback =
             new WallpaperSurfaceCallback();
 
     private SubsamplingScaleImageView mFullResImageView;
     private Asset mWallpaperAsset;
-    private Point mDefaultCropSurfaceSize;
     private Point mScreenSize;
     private Point mRawWallpaperSize; // Native size of wallpaper image.
     private ImageView mLowResImageView;
@@ -152,7 +149,6 @@ public class ImagePreviewFragment extends PreviewFragment {
         mLock.setOnClickListener(v -> updateScreenPreview(/* isHomeSelected= */ false));
         mHome.setOnClickListener(v -> updateScreenPreview(/* isHomeSelected= */ true));
 
-        onBottomActionBarReady(mBottomActionBar);
         view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
                 makeMeasureSpec(mScreenSize.y, EXACTLY));
 
@@ -165,34 +161,7 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         // Trim some memory from Glide to make room for the full-size image in this fragment.
         Glide.get(activity).setMemoryCategory(MemoryCategory.LOW);
-
-        mDefaultCropSurfaceSize = WallpaperCropUtils.getDefaultCropSurfaceSize(
-                getResources(), activity.getWindowManager().getDefaultDisplay());
-
-        mBottomActionBar.disableActions();
-        mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
-            if (mBottomActionBar != null) {
-                mBottomActionBar.enableActions();
-            }
-
-            // Don't continue loading the wallpaper if the Fragment is detached.
-            if (getActivity() == null) {
-                return;
-            }
-
-            // Return early and show a dialog if dimensions are null (signaling a decoding error).
-            if (dimensions == null) {
-                showLoadWallpaperErrorDialog();
-                return;
-            }
-
-            mRawWallpaperSize = dimensions;
-
-            setUpExploreIntentAndLabel(ImagePreviewFragment.this::initFullResView);
-        });
-
         setUpLoadingIndicator();
-
         return view;
     }
 
@@ -238,7 +207,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                         R.layout.wallpaper_info_view, /* root= */null);
         mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
         mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
-        mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
         mBottomActionBar.setActionClickListener(EDIT, v ->
                 setEditingEnabled(mBottomActionBar.isActionSelected(EDIT))
         );
@@ -263,11 +231,28 @@ public class ImagePreviewFragment extends PreviewFragment {
         // Will trigger onActionSelected callback to update the editing state.
         mBottomActionBar.setDefaultSelectedButton(EDIT);
         mBottomActionBar.show();
-    }
 
-    @Override
-    protected CharSequence getExploreButtonLabel(Context context) {
-        return context.getString(mWallpaper.getActionLabelRes(context));
+        mBottomActionBar.disableActions();
+        mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
+            if (mBottomActionBar != null) {
+                mBottomActionBar.enableActions();
+            }
+
+            // Don't continue loading the wallpaper if the Fragment is detached.
+            if (getActivity() == null) {
+                return;
+            }
+
+            // Return early and show a dialog if dimensions are null (signaling a decoding error).
+            if (dimensions == null) {
+                showLoadWallpaperErrorDialog();
+                return;
+            }
+
+            mRawWallpaperSize = dimensions;
+
+            setUpExploreIntentAndLabel(ImagePreviewFragment.this::initFullResView);
+        });
     }
 
     /**

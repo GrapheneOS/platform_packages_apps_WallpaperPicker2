@@ -27,7 +27,6 @@ import android.app.WallpaperColors;
 import android.app.WallpaperInfo;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
@@ -46,7 +45,6 @@ import android.service.wallpaper.WallpaperService;
 import android.service.wallpaper.WallpaperSettingsActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -68,7 +66,6 @@ import androidx.slice.widget.SliceView;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.compat.BuildCompat;
-import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
@@ -78,9 +75,6 @@ import com.android.wallpaper.widget.BottomActionBar.AccessibilityCallback;
 import com.android.wallpaper.widget.LiveTileOverlay;
 import com.android.wallpaper.widget.LockScreenPreviewer;
 import com.android.wallpaper.widget.WallpaperInfoView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Fragment which displays the UI for previewing an individual live wallpaper, its attribution
@@ -111,11 +105,9 @@ public class LivePreviewFragment extends PreviewFragment implements
     private Intent mDeleteIntent;
     private Intent mSettingsIntent;
 
-    private List<Pair<String, View>> mPages;
     private SliceView mSettingsSliceView;
     private LiveData<Slice> mSettingsLiveData;
     private View mLoadingScrim;
-    private InfoPageController mInfoPageController;
     private Point mScreenSize;
     private ViewGroup mPreviewContainer;
     private TouchForwardingLayout mTouchForwardingLayout;
@@ -168,17 +160,12 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        mPages = new ArrayList<>();
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        if (view == null) {
-            return null;
-        }
-
-        Activity activity = requireActivity();
 
         mLoadingScrim = view.findViewById(R.id.loading);
         setUpLoadingIndicator();
 
+        Activity activity = requireActivity();
         mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
                 activity.getWindowManager().getDefaultDisplay());
 
@@ -196,7 +183,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         mTouchForwardingLayout.setTargetView(mHomePreview);
         mTouchForwardingLayout.setForwardingEnabled(true);
         mLockPreviewContainer = mPreviewContainer.findViewById(R.id.lock_screen_preview_container);
-        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getActivity(),
+        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), activity,
                 mLockPreviewContainer);
         mTab = view.findViewById(R.id.tabs_container);
         mHomeTextView = mTab.findViewById(R.id.home);
@@ -213,15 +200,13 @@ public class LivePreviewFragment extends PreviewFragment implements
                 view.removeOnLayoutChangeListener(this);
             }
         });
-        onBottomActionBarReady(mBottomActionBar);
-
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupCurrentWallpaperPreview(view);
+        setupCurrentWallpaperPreview();
         renderWorkspaceSurface();
     }
 
@@ -260,7 +245,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         mPreviewGlobalRect.offset(mLivePreviewLocation[0], mLivePreviewLocation[1]);
     }
 
-    private void setupCurrentWallpaperPreview(View view) {
+    private void setupCurrentWallpaperPreview() {
         mHomePreview.setOnTouchListener((v, ev) -> {
             if (mWallpaperConnection != null && mWallpaperConnection.getEngine() != null) {
                 int action = ev.getActionMasked();
@@ -298,12 +283,9 @@ public class LivePreviewFragment extends PreviewFragment implements
         LiveTileOverlay.INSTANCE.detach(mHomePreview.getOverlay());
         if (mWallpaperConnection != null) {
             mWallpaperConnection.disconnect();
+            mWallpaperConnection = null;
         }
-        mWallpaperConnection = null;
-
         mWorkspaceSurfaceCallback.cleanUp();
-
-        super.onDestroy();
     }
 
     private void previewLiveWallpaper(ImageView thumbnailView) {
@@ -363,10 +345,10 @@ public class LivePreviewFragment extends PreviewFragment implements
         mWorkspaceSurface.getHolder().addCallback(mWorkspaceSurfaceCallback);
     }
 
+    @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar.showActionsOnly(INFORMATION, DELETE, CUSTOMIZE, APPLY);
-        mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
         mBottomActionBar.setActionClickListener(APPLY, unused ->
                 this.onSetWallpaperClicked(null));
         mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
@@ -458,15 +440,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     protected boolean isLoaded() {
         return mWallpaperConnection != null && mWallpaperConnection.isEngineReady();
-    }
-
-    @Override
-    protected CharSequence getExploreButtonLabel(Context context) {
-        CharSequence exploreLabel = ((LiveWallpaperInfo) mWallpaper).getActionDescription(context);
-        if (TextUtils.isEmpty(exploreLabel)) {
-            exploreLabel = context.getString(mWallpaper.getActionLabelRes(context));
-        }
-        return exploreLabel;
     }
 
     @SuppressLint("NewApi") //Already checking with isAtLeastQ
@@ -576,9 +549,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     }
 
     private boolean isPackagePreInstalled(ApplicationInfo info) {
-        if (info != null && (info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-            return true;
-        }
-        return false;
+        return info != null && (info.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
     }
 }
