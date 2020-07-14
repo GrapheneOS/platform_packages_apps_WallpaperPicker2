@@ -401,6 +401,9 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     public void onEngineShown() {
         Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
 
         mLoadingScrim.post(() -> mLoadingScrim.animate()
                 .alpha(0f)
