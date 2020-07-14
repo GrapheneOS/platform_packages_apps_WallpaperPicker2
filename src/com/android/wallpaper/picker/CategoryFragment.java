@@ -535,8 +535,10 @@ public class CategoryFragment extends AppbarFragment
     }
 
     private void showCurrentWallpaper(View rootView, boolean show) {
+        // The category/wallpaper tiles page depends on the height of the preview pager.
+        // So if we want to hide the preview pager, we should use INVISIBLE instead of GONE.
         rootView.findViewById(R.id.wallpaper_preview_pager)
-                .setVisibility(show ? View.VISIBLE : View.GONE);
+                .setVisibility(show ? View.VISIBLE : View.INVISIBLE);
         rootView.findViewById(R.id.permission_needed)
                 .setVisibility(show ? View.GONE : View.VISIBLE);
     }
