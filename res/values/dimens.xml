@@ -236,10 +236,8 @@
     <dimen name="option_title_font_text_size">12sp</dimen>
     <dimen name="option_title_line_height">16dp</dimen>
 
-    <dimen name="lock_screen_preview_lock_icon_size">24dp</dimen>
-    <dimen name="lock_screen_preview_time_text_size">24sp</dimen>
-    <dimen name="lock_screen_preview_date_text_size">12sp</dimen>
-    <dimen name="lock_screen_full_preview_lock_icon_size">32dp</dimen>
-    <dimen name="lock_screen_full_preview_time_text_size">48sp</dimen>
-    <dimen name="lock_screen_full_preview_date_text_size">16sp</dimen>
+    <!-- The size of lock screen widget on the full screen. -->
+    <dimen name="lock_screen_preview_lock_icon_size">42dp</dimen>
+    <dimen name="lock_screen_preview_time_text_size">54dp</dimen>
+    <dimen name="lock_screen_preview_date_text_size">18dp</dimen>
 </resources>

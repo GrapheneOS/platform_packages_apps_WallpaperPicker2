@@ -36,7 +36,11 @@
         android:layout_height="match_parent"
         android:importantForAccessibility="noHideDescendants" />
 
-    <include layout="@layout/lock_screen_overlay" android:visibility="gone" />
+    <FrameLayout
+        android:id="@+id/lock_screen_preview_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:importantForAccessibility="noHideDescendants" />
 
     <View
         android:id="@+id/fade_cover"
