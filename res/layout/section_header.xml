@@ -35,4 +35,9 @@
             android:textAppearance="@style/TitleTextAppearance"/>
     </androidx.appcompat.widget.Toolbar>
 
+    <FrameLayout
+        android:id="@+id/toolbar_tabs_container"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
 </com.google.android.material.appbar.AppBarLayout>

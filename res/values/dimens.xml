@@ -208,10 +208,6 @@
     <!-- Dimensions for full preview page -->
     <dimen name="full_preview_page_default_padding_top">24dp</dimen>
     <dimen name="full_preview_page_default_padding_bottom">32dp</dimen>
-    <dimen name="full_preview_page_editing_padding_bottom">4dp</dimen>
-    <dimen name="full_preview_page_tab_height">64dp</dimen>
-    <dimen name="full_preview_page_tab_padding_top">20dp</dimen>
-    <dimen name="full_preview_page_tab_padding_bottom">20dp</dimen>
 
     <!-- Dimensions for the bottom bar. -->
     <dimen name="bottom_navbar_height">76dp</dimen>
