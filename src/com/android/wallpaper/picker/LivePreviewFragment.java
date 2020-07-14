@@ -111,6 +111,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     private LiveData<Slice> mSettingsLiveData;
     private View mLoadingScrim;
     private Point mScreenSize;
+    private ViewGroup mPreviewContainer;
     private TouchForwardingLayout mTouchForwardingLayout;
     private View mTab;
     private TextView mHomeTextView;
@@ -170,20 +171,20 @@ public class LivePreviewFragment extends PreviewFragment implements
         mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
                 activity.getWindowManager().getDefaultDisplay());
 
-        ConstraintLayout previewContainer = view.findViewById(R.id.live_wallpaper_preview);
+        mPreviewContainer = view.findViewById(R.id.live_wallpaper_preview);
         mTouchForwardingLayout = view.findViewById(R.id.touch_forwarding_layout);
         // Set aspect ratio on the preview card.
         ConstraintSet set = new ConstraintSet();
-        set.clone(previewContainer);
+        set.clone((ConstraintLayout) mPreviewContainer);
         String ratio = String.format(Locale.US, "%d:%d", mScreenSize.x, mScreenSize.y);
         set.setDimensionRatio(mTouchForwardingLayout.getId(), ratio);
-        set.applyTo(previewContainer);
+        set.applyTo((ConstraintLayout) mPreviewContainer);
 
-        mHomePreviewCard = previewContainer.findViewById(R.id.wallpaper_full_preview_card);
+        mHomePreviewCard = mPreviewContainer.findViewById(R.id.wallpaper_full_preview_card);
         mHomePreview = mHomePreviewCard.findViewById(R.id.wallpaper_preview_image);
         mTouchForwardingLayout.setTargetView(mHomePreview);
         mTouchForwardingLayout.setForwardingEnabled(true);
-        mLockPreviewContainer = previewContainer.findViewById(R.id.lock_screen_preview_container);
+        mLockPreviewContainer = mPreviewContainer.findViewById(R.id.lock_screen_preview_container);
         mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), activity,
                 mLockPreviewContainer);
         mTab = view.findViewById(R.id.tabs_container);
