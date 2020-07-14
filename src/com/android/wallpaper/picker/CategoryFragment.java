@@ -189,7 +189,8 @@ public class CategoryFragment extends AppbarFragment
                 // For live wallpaper, show its thumbnail when scrolling.
                 if (mWallpaperConnection != null && mWallpaperConnection.isEngineReady()
                         && mHomePreviewWallpaperInfo instanceof LiveWallpaperInfo) {
-                    if (positionOffset == 0.0f) {
+                    if (positionOffset == 0.0f || positionOffset == 1.0f
+                            || positionOffsetPixels == 0) {
                         // The page is not moved. Show live wallpaper.
                         mWallpaperSurface.setZOrderMediaOverlay(false);
                     } else {
@@ -200,7 +201,8 @@ public class CategoryFragment extends AppbarFragment
 
                 if (mWallpaperConnection != null && mWallpaperConnection.isEngineReady()
                         && mLockPreviewWallpaperInfo instanceof LiveWallpaperInfo) {
-                    if (positionOffset == 0.0f) {
+                    if (positionOffset == 0.0f || positionOffset == 1.0f
+                            || positionOffsetPixels == 0) {
                         // The page is not moved. Show live wallpaper.
                         LiveTileOverlay.INSTANCE.attach(mLockscreenPreview.getOverlay());
                     } else {
