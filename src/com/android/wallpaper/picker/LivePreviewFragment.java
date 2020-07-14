@@ -532,6 +532,15 @@ public class LivePreviewFragment extends PreviewFragment implements
         }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mWallpaperConnection != null) {
+            mWallpaperConnection.disconnect();
+            mWallpaperConnection = null;
+        }
+    }
+
     private void showDeleteConfirmDialog() {
         final AlertDialog alertDialog = new AlertDialog.Builder(
                 new ContextThemeWrapper(getContext(), getDeviceDefaultTheme()))

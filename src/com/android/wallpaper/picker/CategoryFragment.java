@@ -335,6 +335,15 @@ public class CategoryFragment extends AppbarFragment
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        if (mWallpaperConnection != null) {
+            mWallpaperConnection.disconnect();
+            mWallpaperConnection = null;
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         LiveTileOverlay.INSTANCE.detach(mHomePreview.getOverlay());
