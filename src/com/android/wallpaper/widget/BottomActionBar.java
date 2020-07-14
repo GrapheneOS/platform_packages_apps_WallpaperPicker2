@@ -474,7 +474,7 @@ public class BottomActionBar extends FrameLayout {
     }
 
     private void notifyAccessibilityCallback(int state) {
-        if (mAccessibilityCallback != null) {
+        if (mAccessibilityCallback == null) {
             return;
         }
 
