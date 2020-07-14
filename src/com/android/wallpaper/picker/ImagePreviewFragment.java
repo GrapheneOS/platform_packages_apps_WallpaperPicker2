@@ -33,7 +33,6 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceControlViewHost;
@@ -364,8 +363,10 @@ public class ImagePreviewFragment extends PreviewFragment {
         Point crop = new Point(cropWidth, cropHeight);
         Rect visibleRawWallpaperRect =
                 WallpaperCropUtils.calculateVisibleRect(mRawWallpaperSize, crop);
-        WallpaperCropUtils.adjustCurrentWallpaperCropRect(getContext(), mRawWallpaperSize,
-                visibleRawWallpaperRect);
+
+        final PointF centerPosition = WallpaperCropUtils.calculateDefaultCenter(requireContext(),
+                mRawWallpaperSize, visibleRawWallpaperRect);
+
         Point visibleRawWallpaperSize = new Point(visibleRawWallpaperRect.width(),
                 visibleRawWallpaperRect.height());
 
@@ -373,8 +374,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                 visibleRawWallpaperSize, crop);
         final float minWallpaperZoom = defaultWallpaperZoom;
 
-        final PointF centerPosition = new PointF(visibleRawWallpaperRect.centerX(),
-                visibleRawWallpaperRect.centerY());
 
         // Set min wallpaper zoom and max zoom on MosaicView widget.
         mFullResImageView.setMaxScale(Math.max(DEFAULT_WALLPAPER_MAX_ZOOM, defaultWallpaperZoom));
@@ -387,7 +386,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     private Rect calculateCropRect() {
         float wallpaperZoom = mFullResImageView.getScale();
         Context context = requireContext().getApplicationContext();
-        Display defaultDisplay = requireActivity().getWindowManager().getDefaultDisplay();
 
         Rect visibleFileRect = new Rect();
         mFullResImageView.visibleFileRect(visibleFileRect);
