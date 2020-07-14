@@ -211,7 +211,7 @@ public class TestInjector implements Injector {
     @Override
     public Fragment getPreviewFragment(Context context, WallpaperInfo wallpaperInfo, int mode,
             boolean viewAsHome, boolean testingModeEnabled) {
-        return ImagePreviewFragment.newInstance(context, wallpaperInfo, mode, viewAsHome,
+        return ImagePreviewFragment.newInstance(wallpaperInfo, mode, viewAsHome,
                 testingModeEnabled);
     }
 
