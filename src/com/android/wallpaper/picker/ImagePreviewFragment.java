@@ -150,7 +150,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         mHome = mTabs.findViewById(R.id.home);
         mLock.setOnClickListener(v -> updateScreenPreview(/* isHomeSelected= */ false));
         mHome.setOnClickListener(v -> updateScreenPreview(/* isHomeSelected= */ true));
-        updateScreenPreview(/* isHomeSelected= */ true);
+        updateScreenPreview(/* isHomeSelected= */ mViewAsHome);
 
         onBottomActionBarReady(mBottomActionBar);
         view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),

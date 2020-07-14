@@ -40,6 +40,11 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity {
                 .putExtra(EXTRA_WALLPAPER_INFO, wallpaper);
     }
 
+    protected static Intent newIntent(Context context, WallpaperInfo wallpaper,
+            boolean isVewAsHome) {
+        return newIntent(context, wallpaper).putExtra(EXTRA_VIEW_AS_HODE, isVewAsHome);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,10 +62,12 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity {
             Intent intent = getIntent();
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
             boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
+            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HODE, false);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context */ this,
                     wallpaper,
                     PreviewFragment.MODE_VIEW_ONLY,
+                    viewAsHome,
                     testingModeEnabled);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
@@ -72,9 +79,20 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity {
      * Implementation that provides an intent to start a PreviewActivity.
      */
     public static class ViewOnlyPreviewActivityIntentFactory implements InlinePreviewIntentFactory {
+        private boolean mIsHomeAndLockPreviews;
+        private boolean mIsViewAsHome;
+
         @Override
         public Intent newIntent(Context context, WallpaperInfo wallpaper) {
+            if (mIsHomeAndLockPreviews) {
+                return ViewOnlyPreviewActivity.newIntent(context, wallpaper, mIsViewAsHome);
+            }
             return ViewOnlyPreviewActivity.newIntent(context, wallpaper);
+        }
+
+        protected void setAsHomePreview(boolean isHomeAndLockPreview, boolean isViewAsHome) {
+            mIsHomeAndLockPreviews = isHomeAndLockPreview;
+            mIsViewAsHome = isViewAsHome;
         }
     }
 }
