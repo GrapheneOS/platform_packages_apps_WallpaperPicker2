@@ -26,6 +26,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -397,9 +398,20 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         int cropWidth = mWorkspaceSurface.getMeasuredWidth();
         int cropHeight = mWorkspaceSurface.getMeasuredHeight();
+        int maxCrop = Math.max(cropWidth, cropHeight);
+        int minCrop = Math.min(cropWidth, cropHeight);
         Point hostViewSize = new Point(cropWidth, cropHeight);
+
+        // Workaround for now to force wallpapers designed to fit one screen size to not adjust for
+        // parallax scrolling (with an extra 1 pixel to account for rounding)
+        // TODO (santie): implement a better solution
+        boolean shouldForceScreenSize = mRawWallpaperSize.x - mScreenSize.x <= 1;
+        Resources res = context.getResources();
+        Point cropSurfaceSize = shouldForceScreenSize ? hostViewSize :
+                WallpaperCropUtils.calculateCropSurfaceSize(res, maxCrop, minCrop);
+
         Rect cropRect = WallpaperCropUtils.calculateCropRect(context, hostViewSize,
-                hostViewSize, mRawWallpaperSize, visibleFileRect, wallpaperZoom);
+                cropSurfaceSize, mRawWallpaperSize, visibleFileRect, wallpaperZoom);
         WallpaperCropUtils.adjustCropRect(context, cropRect, false /* zoomIn */);
         return cropRect;
     }
