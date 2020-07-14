@@ -257,7 +257,7 @@ public class LivePreviewFragment extends PreviewFragment implements
             if (mWallpaperConnection != null && mWallpaperConnection.getEngine() != null) {
                 int action = ev.getActionMasked();
                 if (action == MotionEvent.ACTION_DOWN) {
-                    mBottomActionBar.expandBottomSheet(false);
+                    mBottomActionBar.collapseBottomSheetIfExpanded();
                 }
                 MotionEvent dup = MotionEvent.obtainNoHistory(ev);
                 try {
