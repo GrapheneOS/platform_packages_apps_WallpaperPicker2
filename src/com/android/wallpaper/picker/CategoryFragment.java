@@ -353,6 +353,7 @@ public class CategoryFragment extends AppbarFragment
         LiveTileOverlay.INSTANCE.detach(mHomePreview.getOverlay());
         LiveTileOverlay.INSTANCE.detach(mLockscreenPreview.getOverlay());
         mWallpaperSurfaceCallback.cleanUp();
+        mWorkspaceSurfaceCallback.cleanUp();
         if (mWallpaperConnection != null) {
             mWallpaperConnection.disconnect();
             mWallpaperConnection = null;
