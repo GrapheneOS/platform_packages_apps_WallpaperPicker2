@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerViewAccessibilityDelegate;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
@@ -49,6 +51,7 @@ import com.android.wallpaper.util.DisplayMetricsRetriever;
 import com.android.wallpaper.util.SizeCalculator;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +89,16 @@ public class CategorySelectorFragment extends Fragment {
          * Sets the title in the toolbar.
          */
         void setToolbarTitle(CharSequence title);
+
+        /**
+         * Expand the bottom sheet if it's not expanded.
+         */
+        void expandBottomSheet();
+
+        /**
+         * Get bottom sheet current state.
+         */
+        int getBottomSheetState();
     }
 
     private RecyclerView mImageGrid;
@@ -104,7 +117,6 @@ public class CategorySelectorFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category_selector, container,
                 /* attachToRoot= */ false);
-
         mImageGrid = view.findViewById(R.id.category_grid);
         mImageGrid.addItemDecoration(new GridPaddingDecoration(
                 getResources().getDimensionPixelSize(R.dimen.grid_padding)));
@@ -120,6 +132,8 @@ public class CategorySelectorFragment extends Fragment {
                     windowInsets.getSystemWindowInsetBottom());
             return windowInsets;
         });
+        mImageGrid.setAccessibilityDelegateCompat(
+                new CategoryRecyclerViewAccessibilityDelegate(mImageGrid));
         getCategorySelectorFragmentHost().setToolbarTitle(getText(R.string.wallpaper_title));
 
         return view;
@@ -449,6 +463,31 @@ public class CategorySelectorFragment extends Fragment {
             }
 
             return 1;
+        }
+    }
+
+    private class CategoryRecyclerViewAccessibilityDelegate
+            extends RecyclerViewAccessibilityDelegate {
+
+        CategoryRecyclerViewAccessibilityDelegate(@NonNull RecyclerView recyclerView) {
+            super(recyclerView);
+        }
+
+        @Override
+        public boolean onRequestSendAccessibilityEvent(
+                ViewGroup host, View child, AccessibilityEvent event) {
+            int itemPos;
+            if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
+                itemPos = mImageGrid.getChildLayoutPosition(child);
+
+                // Expand the bottom sheet when TB travel to second column.
+                if (getCategorySelectorFragmentHost() != null
+                        && (getCategorySelectorFragmentHost()).getBottomSheetState()
+                        != BottomSheetBehavior.STATE_EXPANDED && itemPos >= getNumColumns()) {
+                    (getCategorySelectorFragmentHost()).expandBottomSheet();
+                }
+            }
+            return super.onRequestSendAccessibilityEvent(host, child, event);
         }
     }
 }
