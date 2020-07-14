@@ -373,8 +373,23 @@ public class BottomActionBar extends FrameLayout {
         }
     }
 
-    public void setActionSelected(BottomAction action, boolean selected) {
-        mActionMap.get(action).setSelected(selected);
+    /** Sets a default selected action button. */
+    public void setDefaultSelectedButton(BottomAction action) {
+        if (mSelectedAction == null) {
+            mSelectedAction = action;
+            updateSelectedState(mSelectedAction, /* selected= */ true);
+        }
+    }
+
+    /** Deselects an action button. */
+    public void deselectAction(BottomAction action) {
+        if (isExpandable(action)) {
+            mBottomSheetBehavior.setState(STATE_COLLAPSED);
+        }
+        updateSelectedState(action, /* selected= */ false);
+        if (action == mSelectedAction) {
+            mSelectedAction = null;
+        }
     }
 
     public boolean isActionSelected(BottomAction action) {

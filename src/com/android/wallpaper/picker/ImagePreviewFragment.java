@@ -246,13 +246,10 @@ public class ImagePreviewFragment extends PreviewFragment {
         mBottomActionBar.setActionClickListener(EDIT, v ->
                 setEditingEnabled(mBottomActionBar.isActionSelected(EDIT))
         );
-        mBottomActionBar.setActionSelectedListener(EDIT,
-                selected -> {
-                    if (!selected) {
-                        setEditingEnabled(false);
-                    }
-                });
-        mBottomActionBar.setActionClickListener(APPLY, v -> onSetWallpaperClicked(v));
+        mBottomActionBar.setActionSelectedListener(EDIT, this::setEditingEnabled);
+        mBottomActionBar.setActionClickListener(APPLY, this::onSetWallpaperClicked);
+        // Will trigger onActionSelected callback to update the editing state.
+        mBottomActionBar.setDefaultSelectedButton(EDIT);
         mBottomActionBar.show();
     }
 
@@ -266,7 +263,6 @@ public class ImagePreviewFragment extends PreviewFragment {
      * initializing a zoom-scroll observer and click listener.
      */
     private void initFullResView() {
-        setEditingEnabled(false);
         // Minimum scale will only be respected under this scale type.
         mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
         // When we set a minimum scale bigger than the scale with which the full image is shown,

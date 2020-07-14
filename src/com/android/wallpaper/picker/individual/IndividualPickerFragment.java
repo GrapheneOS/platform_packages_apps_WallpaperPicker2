@@ -622,7 +622,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
     @Override
     public void onStartRotationDialogDismiss(@NonNull DialogInterface dialog) {
-        mBottomActionBar.setActionSelected(ROTATION, false /* selected */);
+        mBottomActionBar.deselectAction(ROTATION);
     }
 
     @Override
