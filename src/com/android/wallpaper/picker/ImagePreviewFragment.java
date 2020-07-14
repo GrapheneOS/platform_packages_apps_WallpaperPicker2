@@ -149,7 +149,6 @@ public class ImagePreviewFragment extends PreviewFragment {
         mHome = mTabs.findViewById(R.id.home);
         mLock.setOnClickListener(v -> updateScreenPreview(/* isHomeSelected= */ false));
         mHome.setOnClickListener(v -> updateScreenPreview(/* isHomeSelected= */ true));
-        updateScreenPreview(/* isHomeSelected= */ mViewAsHome);
 
         onBottomActionBarReady(mBottomActionBar);
         view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
@@ -160,6 +159,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                         activity, mContainer.getMeasuredWidth()));
         renderImageWallpaper();
         renderWorkspaceSurface();
+        updateScreenPreview(/* isHomeSelected= */ mViewAsHome);
 
         // Trim some memory from Glide to make room for the full-size image in this fragment.
         Glide.get(activity).setMemoryCategory(MemoryCategory.LOW);
