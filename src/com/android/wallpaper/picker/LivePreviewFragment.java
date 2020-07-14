@@ -76,6 +76,8 @@ import com.android.wallpaper.widget.LiveTileOverlay;
 import com.android.wallpaper.widget.LockScreenPreviewer;
 import com.android.wallpaper.widget.WallpaperInfoView;
 
+import java.util.Locale;
+
 /**
  * Fragment which displays the UI for previewing an individual live wallpaper, its attribution
  * information and settings slices if available.
@@ -109,7 +111,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     private LiveData<Slice> mSettingsLiveData;
     private View mLoadingScrim;
     private Point mScreenSize;
-    private ViewGroup mPreviewContainer;
     private TouchForwardingLayout mTouchForwardingLayout;
     private View mTab;
     private TextView mHomeTextView;
@@ -169,25 +170,28 @@ public class LivePreviewFragment extends PreviewFragment implements
         mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
                 activity.getWindowManager().getDefaultDisplay());
 
-        mPreviewContainer = view.findViewById(R.id.live_wallpaper_preview);
-        mHomePreviewCard = mPreviewContainer.findViewById(R.id.wallpaper_full_preview_card);
+        ConstraintLayout previewContainer = view.findViewById(R.id.live_wallpaper_preview);
         mTouchForwardingLayout = view.findViewById(R.id.touch_forwarding_layout);
         // Set aspect ratio on the preview card.
         ConstraintSet set = new ConstraintSet();
-        set.clone((ConstraintLayout) mPreviewContainer);
-        String ratio = String.format("%d:%d", mScreenSize.x, mScreenSize.y);
+        set.clone(previewContainer);
+        String ratio = String.format(Locale.US, "%d:%d", mScreenSize.x, mScreenSize.y);
         set.setDimensionRatio(mTouchForwardingLayout.getId(), ratio);
-        set.applyTo((ConstraintLayout) mPreviewContainer);
+        set.applyTo(previewContainer);
 
+        mHomePreviewCard = previewContainer.findViewById(R.id.wallpaper_full_preview_card);
         mHomePreview = mHomePreviewCard.findViewById(R.id.wallpaper_preview_image);
         mTouchForwardingLayout.setTargetView(mHomePreview);
         mTouchForwardingLayout.setForwardingEnabled(true);
-        mLockPreviewContainer = mPreviewContainer.findViewById(R.id.lock_screen_preview_container);
+        mLockPreviewContainer = previewContainer.findViewById(R.id.lock_screen_preview_container);
         mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), activity,
                 mLockPreviewContainer);
         mTab = view.findViewById(R.id.tabs_container);
         mHomeTextView = mTab.findViewById(R.id.home);
         mLockTextView = mTab.findViewById(R.id.lock);
+        mHomeTextView.setOnClickListener(v -> updateScreenTab(/* isHomeSelected= */ true));
+        mLockTextView.setOnClickListener(v -> updateScreenTab(/* isHomeSelected= */ false));
+
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
         mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(
                 mWorkspaceSurface, getContext());
@@ -196,7 +200,8 @@ public class LivePreviewFragment extends PreviewFragment implements
             @Override
             public void onLayoutChange(View thisView, int left, int top, int right, int bottom,
                     int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                setupPreview();
+                mHomePreviewCard.setRadius(SizeCalculator.getPreviewCornerRadius(activity,
+                        mHomePreviewCard.getMeasuredWidth()));
                 view.removeOnLayoutChangeListener(this);
             }
         });
@@ -215,26 +220,6 @@ public class LivePreviewFragment extends PreviewFragment implements
         mLockTextView.setSelected(!isHomeSelected);
         mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.INVISIBLE);
         mLockPreviewContainer.setVisibility(isHomeSelected ? View.INVISIBLE : View.VISIBLE);
-    }
-
-    private void setupPreview() {
-        mHomeTextView.setOnClickListener(view ->
-                updateScreenTab(/* isHomeSelected= */ true)
-        );
-        mLockTextView.setOnClickListener(view ->
-                updateScreenTab(/* isHomeSelected= */ false)
-        );
-        if (mWallpaperInfoView != null) {
-            mWallpaperInfoView.populateWallpaperInfo(
-                    mWallpaper,
-                    mActionLabel,
-                    mExploreIntent,
-                    LivePreviewFragment.this::onExploreClicked);
-        }
-
-        ((CardView) mHomePreview.getParent())
-                .setRadius(SizeCalculator.getPreviewCornerRadius(
-                        getActivity(), mHomePreviewCard.getMeasuredWidth()));
     }
 
     private void repositionPreview(ImageView previewView) {
@@ -349,10 +334,11 @@ public class LivePreviewFragment extends PreviewFragment implements
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar.showActionsOnly(INFORMATION, DELETE, CUSTOMIZE, APPLY);
-        mBottomActionBar.setActionClickListener(APPLY, unused ->
-                this.onSetWallpaperClicked(null));
+        mBottomActionBar.setActionClickListener(APPLY, unused -> onSetWallpaperClicked(null));
         mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
                 .inflate(R.layout.wallpaper_info_view, /* root= */ null);
+        mWallpaperInfoView.populateWallpaperInfo(mWallpaper, mActionLabel, mExploreIntent,
+                this::onExploreClicked);
         mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
 
         // Update target view's accessibility param since it will be blocked by the bottom sheet
