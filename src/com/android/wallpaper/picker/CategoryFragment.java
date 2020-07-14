@@ -233,7 +233,7 @@ public class CategoryFragment extends AppbarFragment
                         ? (mWallPaperPreviews.size() - 1) - i
                         : i;
                 if (mIndividualPickerFragment != null && mIndividualPickerFragment.isVisible()) {
-                    mIndividualPickerFragment.highlightAppliedWallpaper(i);
+                    mIndividualPickerFragment.highlightAppliedWallpaper(mWallpaperIndex);
                 }
             }
 
