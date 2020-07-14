@@ -229,6 +229,7 @@ public class CategoryFragment extends AppbarFragment
         ViewGroup fragmentContainer = view.findViewById(R.id.category_fragment_container);
         mBottomSheetBehavior = BottomSheetBehavior.from(fragmentContainer);
         if (!NEW_SCROLL_INTERACTION) {
+            fragmentContainer.getLayoutParams().height = MATCH_PARENT;
             mBottomSheetBehavior.setBottomSheetCallback(
                     new BottomSheetBehavior.BottomSheetCallback() {
                         @Override
@@ -251,11 +252,12 @@ public class CategoryFragment extends AppbarFragment
                         }
                     });
         }
+        View rootContainer = view.findViewById(R.id.root_container);
         fragmentContainer.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View containerView, int left, int top, int right,
                     int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                int minimumHeight = containerView.getHeight() - mPreviewPager.getMeasuredHeight();
+                int minimumHeight = rootContainer.getHeight() - mPreviewPager.getMeasuredHeight();
                 mBottomSheetBehavior.setPeekHeight(minimumHeight);
                 containerView.setMinimumHeight(minimumHeight);
                 ((CardView) mHomePreview.getParent())
