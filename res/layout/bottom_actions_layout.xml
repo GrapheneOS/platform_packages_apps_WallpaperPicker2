@@ -45,7 +45,7 @@
         android:paddingTop="@dimen/bottom_action_bar_padding_top"
         android:paddingHorizontal="@dimen/bottom_action_bar_padding_horizontal"
         android:clickable="true"
-        android:background="?android:colorPrimary"
+        android:background="@color/bottom_bar_background_color"
         android:theme="@style/BottomActionItemStyle"
         android:layoutDirection="locale">
 

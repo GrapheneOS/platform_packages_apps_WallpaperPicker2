@@ -27,6 +27,7 @@
 
     <color name="light_grey">#d8d8d8</color>
     <color name="white_34_alpha">#57FFFFFF</color>
+    <color name="white_54_alpha">#8AFFFFFF</color>
     <color name="white_60_alpha">#99FFFFFF</color>
     <color name="white_67_alpha">#ABFFFFFF</color>
     <color name="white_70_alpha">#B3FFFFFF</color>
