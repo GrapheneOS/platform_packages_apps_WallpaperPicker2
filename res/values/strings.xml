@@ -341,4 +341,7 @@
 
     <!-- Content description of wallpaper preview card. [CHAR_LIMIT=40]-->
     <string name="wallpaper_preview_card_content_description">Wallpaper preview</string>
+
+    <!-- Error message of the wallpaper's collection doesn't exist. [CHAR_LIMIT=NONE] -->
+    <string name="collection_not_exist_msg">The collection doesn\'t exist</string>
 </resources>
