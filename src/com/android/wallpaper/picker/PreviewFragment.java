@@ -313,7 +313,10 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected abstract void setCurrentWallpaper(@Destination int destination);
 
     protected void finishActivity(boolean success) {
-        Activity activity = requireActivity();
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
         if (success) {
             try {
                 Toast.makeText(activity,
