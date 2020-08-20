@@ -87,6 +87,11 @@ public class TestCategoryProvider implements CategoryProvider {
         return null;
     }
 
+    @Override
+    public boolean isCategoriesFetched() {
+        return false;
+    }
+
     /** Returns a list of test Category objects used by this TestCategoryProvider. */
     public List<Category> getTestCategories() {
         return mCategories;
