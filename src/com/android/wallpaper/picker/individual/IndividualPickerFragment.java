@@ -44,6 +44,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -169,6 +170,21 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         void onWallpaperSelected(int position);
     }
 
+    /**
+     * Interface to be implemented by a Fragment hosting a {@link IndividualPickerFragment}
+     */
+    public interface IndividualPickerFragmentHost {
+        /**
+         * Sets the title in the toolbar.
+         */
+        void setToolbarTitle(CharSequence title);
+
+        /**
+         * Moves to the previous fragment.
+         */
+        void moveToPreviousFragment();
+    }
+
     WallpaperPersister mWallpaperPersister;
     WallpaperPreferences mWallpaperPreferences;
     WallpaperChangedNotifier mWallpaperChangedNotifier;
@@ -185,6 +201,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
     Handler mHandler;
     Random mRandom;
+    boolean mIsWallpapersReceived;
 
     WallpaperChangedNotifier.Listener mWallpaperChangedListener =
             new WallpaperChangedNotifier.Listener() {
@@ -218,6 +235,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
     private boolean mTestingMode;
     private CurrentWallpaperBottomSheetPresenter mCurrentWallpaperBottomSheetPresenter;
     private SetIndividualHolder mPendingSetIndividualHolder;
+    private ContentLoadingProgressBar mLoading;
 
     /**
      * Staged error dialog fragments that were unable to be shown when the activity didn't allow
@@ -357,7 +375,9 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
                     // The absence of this category in the CategoryProvider indicates a broken
                     // state, see b/38030129. Hence, finish the activity and return.
-                    getActivity().finish();
+                    getIndividualPickerFragmentHost().moveToPreviousFragment();
+                    Toast.makeText(getContext(), R.string.collection_not_exist_msg,
+                            Toast.LENGTH_SHORT).show();
                     return;
                 }
                 onCategoryLoaded();
@@ -365,7 +385,9 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         }, false);
     }
 
+
     protected void onCategoryLoaded() {
+        getIndividualPickerFragmentHost().setToolbarTitle(mCategory.getTitle());
         mWallpaperRotationInitializer = mCategory.getWallpaperRotationInitializer();
         // Avoids the "rotation" action is not shown correctly
         // in a rare case : onCategoryLoaded() is called after onBottomActionBarReady().
@@ -391,9 +413,13 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
     void fetchWallpapers(boolean forceReload) {
         mWallpapers.clear();
+        mIsWallpapersReceived = false;
+        updateLoading();
         mCategory.fetchWallpapers(getActivity().getApplicationContext(), new WallpaperReceiver() {
             @Override
             public void onWallpapersReceived(List<WallpaperInfo> wallpapers) {
+                mIsWallpapersReceived = true;
+                updateLoading();
                 for (WallpaperInfo wallpaper : wallpapers) {
                     mWallpapers.add(wallpaper);
                 }
@@ -421,6 +447,18 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         }, forceReload);
     }
 
+    void updateLoading() {
+        if (mLoading == null) {
+            return;
+        }
+
+        if (mIsWallpapersReceived) {
+            mLoading.hide();
+        } else {
+            mLoading.show();
+        }
+    }
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -446,6 +484,8 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         mImageGrid.setAccessibilityDelegateCompat(
                 new WallpaperPickerRecyclerViewAccessibilityDelegate(
                         mImageGrid, (BottomSheetHost) getParentFragment(), getNumColumns()));
+        mLoading = view.findViewById(R.id.loading_indicator);
+        updateLoading();
         maybeSetUpImageGrid();
         setUpBottomSheet();
         return view;
@@ -466,6 +506,10 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         // Only left and top may be set in order for the GridMarginDecoration to work properly.
         mImageGrid.setPadding(
                 gridPaddingPx, gridPaddingPx, 0, paddingBottomPx);
+    }
+
+    private IndividualPickerFragmentHost getIndividualPickerFragmentHost() {
+        return (IndividualPickerFragmentHost) getParentFragment();
     }
 
     private void maybeSetUpImageGrid() {
