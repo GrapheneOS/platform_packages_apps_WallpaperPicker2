@@ -16,6 +16,8 @@
 package com.android.wallpaper.testing;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 
 import androidx.fragment.app.Fragment;
 
@@ -232,6 +234,11 @@ public class TestInjector implements Injector {
 
     @Override
     public DrawableLayerResolver getDrawableLayerResolver() {
+        return null;
+    }
+
+    @Override
+    public Intent getDeepLinkRedirectIntent(Context context, Uri uri) {
         return null;
     }
 
