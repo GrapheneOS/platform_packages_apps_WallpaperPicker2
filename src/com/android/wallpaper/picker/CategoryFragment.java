@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.service.wallpaper.WallpaperService;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
@@ -63,6 +64,7 @@ import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.ThumbnailUpdater;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.WallpaperDestinationCallback;
+import com.android.wallpaper.util.DeepLinkUtils;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
@@ -88,7 +90,8 @@ import java.util.List;
  */
 public class CategoryFragment extends AppbarFragment
         implements CategorySelectorFragmentHost, ThumbnailUpdater, WallpaperDestinationCallback,
-        WallpaperPickerRecyclerViewAccessibilityDelegate.BottomSheetHost {
+        WallpaperPickerRecyclerViewAccessibilityDelegate.BottomSheetHost,
+        IndividualPickerFragment.IndividualPickerFragmentHost {
 
     /**
      * Interface to be implemented by an Activity hosting a {@link CategoryFragment}
@@ -104,6 +107,8 @@ public class CategoryFragment extends AppbarFragment
         void show(String collectionId);
 
         boolean isNavigationTabsContained();
+
+        void fetchCategories();
     }
 
     public static CategoryFragment newInstance(CharSequence title) {
@@ -278,6 +283,22 @@ public class CategoryFragment extends AppbarFragment
                 .beginTransaction()
                 .replace(R.id.category_fragment_container, mCategorySelectorFragment)
                 .commitNow();
+
+        // Deep link case
+        Intent intent = getActivity().getIntent();
+        String deepLinkCollectionId = DeepLinkUtils.getCollectionId(intent);
+        if (!TextUtils.isEmpty(deepLinkCollectionId)) {
+            mIndividualPickerFragment = InjectorProvider.getInjector()
+                    .getIndividualPickerFragment(deepLinkCollectionId);
+            mIndividualPickerFragment.highlightAppliedWallpaper(mWallpaperIndex);
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.category_fragment_container, mIndividualPickerFragment)
+                    .addToBackStack(null)
+                    .commit();
+            getChildFragmentManager().executePendingTransactions();
+            intent.setData(null);
+        }
         return view;
     }
 
@@ -414,6 +435,16 @@ public class CategoryFragment extends AppbarFragment
     @Override
     public void setToolbarTitle(CharSequence title) {
         setTitle(title);
+    }
+
+    @Override
+    public void moveToPreviousFragment() {
+        getChildFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void fetchCategories() {
+        getFragmentHost().fetchCategories();
     }
 
     @Override

@@ -305,8 +305,6 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                     .add(R.id.fragment_container, newFragment)
                     .commit();
         }
-
-        mDelegate.initialize(shouldForceRefresh);
     }
 
     private void initializeDesktop(Bundle savedInstanceState) {
@@ -800,6 +798,11 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     @Override
     public boolean isNavigationTabsContained() {
         return false;
+    }
+
+    @Override
+    public void fetchCategories() {
+        mDelegate.initialize(!mDelegate.getCategoryProvider().isCategoriesFetched());
     }
 
     @Override
