@@ -122,6 +122,11 @@ public class DefaultCategoryProvider implements CategoryProvider {
         return null;
     }
 
+    @Override
+    public boolean isCategoriesFetched() {
+        return mFetchedCategories;
+    }
+
     protected void doFetch(final CategoryReceiver receiver, boolean forceRefresh) {
         CategoryReceiver delegatingReceiver = new CategoryReceiver() {
             @Override
