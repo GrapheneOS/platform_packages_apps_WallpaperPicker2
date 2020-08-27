@@ -26,6 +26,7 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
+import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -314,6 +315,27 @@ public class IndividualPickerActivityTest {
         // WiFi-only option should be checked by default.
         onView(withId(R.id.start_rotation_wifi_only_checkbox))
                 .check(matches(isChecked()));
+    }
+
+    @Test
+    public void testStartRotationDialogUiComponents() {
+        setActivityWithMockWallpapers(true /* isRotationEnabled */,
+                WallpaperRotationInitializer.ROTATION_NOT_INITIALIZED);
+        getActivity();
+
+        onView(withId(R.id.daily_refresh)).perform(click());
+
+        onView(withText(R.string.start_rotation_dialog_body)).check(matches(isDisplayed()));
+        onView(withText(android.R.string.cancel)).check(matches(isDisplayed()));
+        onView(withText(android.R.string.cancel)).check(matches(isClickable()));
+        onView(withText(android.R.string.ok)).check(matches(isDisplayed()));
+        onView(withText(android.R.string.ok)).check(matches(isClickable()));
+        onView(withId(R.id.start_rotation_wifi_only_checkbox))
+                .check(matches(isDisplayed()));
+        onView(withId(R.id.start_rotation_wifi_only_checkbox))
+                .check(matches(isClickable()));
+        onView(withText(R.string.start_rotation_dialog_wifi_only_option_message))
+                .check(matches(isDisplayed()));
     }
 
     @Test
