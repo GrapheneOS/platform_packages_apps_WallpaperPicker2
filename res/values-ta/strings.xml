@@ -93,4 +93,5 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"முந்தைய பக்கத்திற்குச் செல்வதற்கான பட்டன்"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"வால்பேப்பர்"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"வால்பேப்பர் மாதிரிக்காட்சி"</string>
+    <string name="collection_not_exist_msg" msgid="3504852962885064842">"இந்தத் தொகுப்பு இல்லை"</string>
 </resources>
