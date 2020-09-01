@@ -54,8 +54,8 @@
         android:layout_marginTop="@dimen/wallpaper_info_pane_subtitle2_top_margin"
         android:lineHeight="16dp"
         android:gravity="center"
-        android:textColor="@color/action_bar_bottom_sheet_text_color"
-        android:textSize="12sp"
+        android:textColor="@color/action_bar_bottom_sheet_subtitle2_text_color"
+        android:textSize="14sp"
         android:visibility="gone" />
 
     <Button
