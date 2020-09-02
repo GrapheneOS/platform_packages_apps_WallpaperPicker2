@@ -70,8 +70,8 @@
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"यन्त्रका वालपेपर"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Android वालपेपर"</string>
     <string name="live_wallpapers_category_title" msgid="1814374812192366349">"लाइभ वालपेपरहरू"</string>
-    <string name="my_photos_category_title" msgid="4294567122144565273">"मेरा तस्बिरहरू"</string>
-    <string name="my_photos_generic_wallpaper_title" msgid="7002867526154631172">"मेरो तस्बिर"</string>
+    <string name="my_photos_category_title" msgid="4294567122144565273">"मेरा फोटोहरू"</string>
+    <string name="my_photos_generic_wallpaper_title" msgid="7002867526154631172">"मेरो फोटो"</string>
     <string name="fallback_wallpaper_title" msgid="6154655421012506001">"वालपेपर"</string>
     <string name="app_not_found" msgid="4431461707854088231">"एप स्थापित छैन।"</string>
     <string name="center_wallpaper_position" msgid="4166894762352288883">"मध्यभाग"</string>
@@ -93,4 +93,5 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"अघिल्लो"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"वालपेपर"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"वालपेपरको प्रिभ्यु"</string>
+    <string name="collection_not_exist_msg" msgid="3504852962885064842">"यो सङ्ग्रह छैन"</string>
 </resources>

@@ -93,4 +93,5 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"上一页"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"壁纸"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"壁纸预览"</string>
+    <string name="collection_not_exist_msg" msgid="3504852962885064842">"该集合不存在"</string>
 </resources>
