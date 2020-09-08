@@ -15,6 +15,9 @@
  */
 package com.android.wallpaper.picker.individual;
 
+import static com.android.wallpaper.picker.WallpaperPickerDelegate.PREVIEW_LIVE_WALLPAPER_REQUEST_CODE;
+import static com.android.wallpaper.picker.WallpaperPickerDelegate.PREVIEW_WALLPAPER_REQUEST_CODE;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +42,7 @@ import com.android.wallpaper.model.CategoryReceiver;
 import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.PickerIntentFactory;
+import com.android.wallpaper.model.WallpaperCategory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
@@ -55,34 +59,34 @@ public class IndividualPickerActivity extends BaseActivity {
     private static final String TAG = "IndividualPickerAct";
     private static final String EXTRA_CATEGORY_COLLECTION_ID =
             "com.android.wallpaper.category_collection_id";
-    private static final int PREVIEW_WALLPAPER_REQUEST_CODE = 0;
-    private static final int PREVIEW_LIVEWALLPAPER_REQUEST_CODE = 2;
+    private static final String EXTRA_WALLPAPER_ID = "com.android.wallpaper.wallpaper_id";
     private static final String KEY_CATEGORY_COLLECTION_ID = "key_category_collection_id";
 
     private InlinePreviewIntentFactory mPreviewIntentFactory;
     private WallpaperPersister mWallpaperPersister;
     private Category mCategory;
     private String mCategoryCollectionId;
+    private String mWallpaperId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_single_fragment_with_toolbar);
-
-        // Set toolbar as the action bar.
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         mPreviewIntentFactory = new PreviewActivityIntentFactory();
         Injector injector = InjectorProvider.getInjector();
         mWallpaperPersister = injector.getWallpaperPersister(this);
 
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
-
         mCategoryCollectionId = (savedInstanceState == null)
                 ? getIntent().getStringExtra(EXTRA_CATEGORY_COLLECTION_ID)
                 : savedInstanceState.getString(KEY_CATEGORY_COLLECTION_ID);
+        mWallpaperId = getIntent().getStringExtra(EXTRA_WALLPAPER_ID);
+
+        if (mWallpaperId == null) { // Normal case
+            initializeUI();
+        } else { // Deeplink to preview page case
+            setContentView(R.layout.activity_loading);
+        }
+
         CategoryProvider categoryProvider = injector.getCategoryProvider(this);
         categoryProvider.fetchCategories(new CategoryReceiver() {
             @Override
@@ -94,17 +98,49 @@ public class IndividualPickerActivity extends BaseActivity {
             public void doneFetchingCategories() {
                 mCategory = categoryProvider.getCategory(mCategoryCollectionId);
                 if (mCategory == null) {
-                    DiskBasedLogger.e(TAG, "Failed to find the category: " + mCategoryCollectionId,
-                            IndividualPickerActivity.this);
-                    // We either were called with an invalid collection Id, or we're restarting with
-                    // no saved state, or with a collection id that doesn't exist anymore.
+                    DiskBasedLogger.e(TAG, "Failed to find the category: "
+                            + mCategoryCollectionId, IndividualPickerActivity.this);
+                    // We either were called with an invalid collection Id, or we're restarting
+                    // with no saved state, or with a collection id that doesn't exist anymore.
                     // In those cases, we cannot continue, so let's just go back.
                     finish();
                     return;
                 }
-                onCategoryLoaded();
+
+                // Show the preview of the specific wallpaper directly.
+                if (mWallpaperId != null) {
+                    ((WallpaperCategory) mCategory).fetchWallpapers(getApplicationContext(),
+                            wallpapers -> {
+                                for (WallpaperInfo wallpaper : wallpapers) {
+                                    if (wallpaper.getWallpaperId().equals(mWallpaperId)) {
+                                        showPreview(wallpaper);
+                                        return;
+                                    }
+                                }
+                                // No matched wallpaper, finish the activity.
+                                finish();
+                            }, false);
+                } else {
+                    onCategoryLoaded();
+                }
             }
         }, false);
+    }
+
+    private void onCategoryLoaded() {
+        setTitle(mCategory.getTitle());
+        getSupportActionBar().setTitle(mCategory.getTitle());
+    }
+
+    private void initializeUI() {
+        setContentView(R.layout.activity_individual_picker);
+
+        // Set toolbar as the action bar.
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -117,35 +153,37 @@ public class IndividualPickerActivity extends BaseActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         ((View) findViewById(R.id.fragment_container).getParent())
                 .setOnApplyWindowInsetsListener((view, windowInsets) -> {
-            view.setPadding(view.getPaddingLeft(), windowInsets.getSystemWindowInsetTop(),
-                    view.getPaddingRight(), view.getBottom());
-            // Consume only the top inset (status bar), to let other content in the Activity consume
-            // the nav bar (ie, by using "fitSystemWindows")
-            if (BuildCompat.isAtLeastQ()) {
-                WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
-                builder.setSystemWindowInsets(Insets.of(windowInsets.getSystemWindowInsetLeft(),
-                        0, windowInsets.getStableInsetRight(),
-                        windowInsets.getSystemWindowInsetBottom()));
-                return builder.build();
-            } else {
-                return windowInsets.replaceSystemWindowInsets(
-                        windowInsets.getSystemWindowInsetLeft(),
-                        0, windowInsets.getStableInsetRight(),
-                        windowInsets.getSystemWindowInsetBottom());
-            }
-        });
+                    view.setPadding(
+                            view.getPaddingLeft(),
+                            windowInsets.getSystemWindowInsetTop(),
+                            view.getPaddingRight(),
+                            view.getPaddingBottom());
+                    // Consume only the top inset (status bar),
+                    // to let other content in the Activity consume the nav bar
+                    // (ie, by using "fitSystemWindows")
+                    if (BuildCompat.isAtLeastQ()) {
+                        WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
+                        builder.setSystemWindowInsets(
+                                Insets.of(
+                                        windowInsets.getSystemWindowInsetLeft(),
+                                        /* top= */ 0,
+                                        windowInsets.getStableInsetRight(),
+                                        windowInsets.getSystemWindowInsetBottom()));
+                        return builder.build();
+                    } else {
+                        return windowInsets.replaceSystemWindowInsets(
+                                windowInsets.getSystemWindowInsetLeft(),
+                                /* top= */ 0,
+                                windowInsets.getStableInsetRight(),
+                                windowInsets.getSystemWindowInsetBottom());
+                    }
+                });
 
         if (fragment == null) {
-            fragment = injector.getIndividualPickerFragment(mCategoryCollectionId);
-            fm.beginTransaction()
-                    .add(R.id.fragment_container, fragment)
-                    .commit();
+            fragment = InjectorProvider.getInjector()
+                    .getIndividualPickerFragment(mCategoryCollectionId);
+            fm.beginTransaction().add(R.id.fragment_container, fragment).commit();
         }
-    }
-
-    private void onCategoryLoaded() {
-        setTitle(mCategory.getTitle());
-        getSupportActionBar().setTitle(mCategory.getTitle());
     }
 
     @Override
@@ -166,7 +204,7 @@ public class IndividualPickerActivity extends BaseActivity {
 
         boolean shouldShowMessage = false;
         switch (requestCode) {
-            case PREVIEW_LIVEWALLPAPER_REQUEST_CODE:
+            case PREVIEW_LIVE_WALLPAPER_REQUEST_CODE:
                 shouldShowMessage = true;
             case PREVIEW_WALLPAPER_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
@@ -179,6 +217,14 @@ public class IndividualPickerActivity extends BaseActivity {
             default:
                 Log.e(TAG, "Invalid request code: " + requestCode);
         }
+
+        // In deeplink to preview page case, this activity is just a middle layer
+        // which redirects to preview activity. We should make sure this activity is finished
+        // after getting the result in this case. Otherwise it will show an empty activity.
+        if (mWallpaperId != null && !isFinishing()) {
+            setResult(resultCode);
+            finish();
+        }
     }
 
     /**
@@ -187,7 +233,7 @@ public class IndividualPickerActivity extends BaseActivity {
     public void showPreview(WallpaperInfo wallpaperInfo) {
         mWallpaperPersister.setWallpaperInfoInPreview(wallpaperInfo);
         wallpaperInfo.showPreview(this, mPreviewIntentFactory,
-                wallpaperInfo instanceof LiveWallpaperInfo ? PREVIEW_LIVEWALLPAPER_REQUEST_CODE
+                wallpaperInfo instanceof LiveWallpaperInfo ? PREVIEW_LIVE_WALLPAPER_REQUEST_CODE
                         : PREVIEW_WALLPAPER_REQUEST_CODE);
     }
 

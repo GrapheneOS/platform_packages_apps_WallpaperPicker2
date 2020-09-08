@@ -678,7 +678,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             }
 
             if (isSuccess) {
-                mCallback.onSuccess();
+                mCallback.onSuccess(mWallpaper);
                 mWallpaperChangedNotifier.notifyWallpaperChanged();
             } else {
                 mCallback.onError(null /* throwable */);

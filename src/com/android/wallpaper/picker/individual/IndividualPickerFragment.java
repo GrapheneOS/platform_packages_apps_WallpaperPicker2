@@ -15,6 +15,11 @@
  */
 package com.android.wallpaper.picker.individual;
 
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.CANCEL;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMATION;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.ROTATION;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -22,6 +27,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.Rect;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -31,12 +37,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -51,6 +58,7 @@ import com.android.wallpaper.config.Flags;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.CategoryProvider;
 import com.android.wallpaper.model.CategoryReceiver;
+import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperCategory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.model.WallpaperReceiver;
@@ -67,10 +75,12 @@ import com.android.wallpaper.module.WallpaperChangedNotifier;
 import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
+import com.android.wallpaper.module.WallpaperSetter;
 import com.android.wallpaper.picker.BaseActivity;
 import com.android.wallpaper.picker.CurrentWallpaperBottomSheetPresenter;
 import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
 import com.android.wallpaper.picker.RotationStarter;
+import com.android.wallpaper.picker.SetWallpaperDialogFragment;
 import com.android.wallpaper.picker.SetWallpaperErrorDialogFragment;
 import com.android.wallpaper.picker.StartRotationDialogFragment;
 import com.android.wallpaper.picker.StartRotationErrorDialogFragment;
@@ -78,13 +88,14 @@ import com.android.wallpaper.picker.WallpapersUiContainer;
 import com.android.wallpaper.picker.individual.SetIndividualHolder.OnSetListener;
 import com.android.wallpaper.util.DiskBasedLogger;
 import com.android.wallpaper.util.TileSizeCalculator;
-import com.android.wallpaper.widget.GridMarginDecoration;
+import com.android.wallpaper.widget.BottomActionBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
 
@@ -94,7 +105,7 @@ import java.util.Random;
 public class IndividualPickerFragment extends Fragment
         implements RotationStarter, StartRotationErrorDialogFragment.Listener,
         CurrentWallpaperBottomSheetPresenter.RefreshListener,
-        SetWallpaperErrorDialogFragment.Listener {
+        SetWallpaperErrorDialogFragment.Listener, SetWallpaperDialogFragment.Listener {
     /**
      * Position of a special tile that doesn't belong to an individual wallpaper of the category,
      * such as "my photos" or "daily rotation".
@@ -111,6 +122,26 @@ public class IndividualPickerFragment extends Fragment
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "individual_set_wallpaper_error_dialog";
     private static final String KEY_NIGHT_MODE = "IndividualPickerFragment.NIGHT_MODE";
+
+    /**
+     * A temporary flag to hide the bottom action bar feature.
+     */
+    private static final boolean TEMP_BOTTOM_ACTION_BAR_FEATURE = false;
+
+    /**
+     * An interface for updating the thumbnail with the specific wallpaper.
+     */
+    public interface ThumbnailUpdater {
+        /**
+         * Updates the thumbnail with the specific wallpaper.
+         */
+        void updateThumbnail(WallpaperInfo wallpaperInfo);
+
+        /**
+         * Restores to the thumbnails of the wallpapers which were applied.
+         */
+        void restoreThumbnails();
+    }
 
     WallpaperPreferences mWallpaperPreferences;
     WallpaperChangedNotifier mWallpaperChangedNotifier;
@@ -194,6 +225,12 @@ public class IndividualPickerFragment extends Fragment
         }
     };
 
+    private BottomActionBar mBottomActionBar;
+    private WallpaperSetter mWallpaperSetter;
+    private WallpaperPersister mWallpaperPersister;
+    @Nullable private WallpaperInfo mSelectedWallpaperInfo;
+    private WallpaperInfo mAppliedWallpaperInfo;
+
     public static IndividualPickerFragment newInstance(String collectionId) {
         Bundle args = new Bundle();
         args.putString(ARG_CATEGORY_COLLECTION_ID, collectionId);
@@ -250,6 +287,13 @@ public class IndividualPickerFragment extends Fragment
         mFormFactor = injector.getFormFactorChecker(appContext).getFormFactor();
 
         mPackageStatusNotifier = injector.getPackageStatusNotifier(appContext);
+
+        mWallpaperPersister = injector.getWallpaperPersister(appContext);
+        mWallpaperSetter = new WallpaperSetter(
+                mWallpaperPersister,
+                injector.getPreferences(appContext),
+                injector.getUserEventLogger(appContext),
+                false);
 
         mWallpapers = new ArrayList<>();
         mRandom = new Random();
@@ -355,13 +399,51 @@ public class IndividualPickerFragment extends Fragment
             updateImageGridPadding(false /* addExtraBottomSpace */);
             mImageGrid.setScrollBarSize(gridPaddingPx);
         }
-        GridMarginDecoration.applyTo(mImageGrid);
+        mImageGrid.addItemDecoration(new GridPaddingDecoration(
+                getResources().getDimensionPixelSize(R.dimen.grid_padding)));
 
         maybeSetUpImageGrid();
 
         setUpBottomSheet();
 
+        if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
+            mBottomActionBar = getActivity().findViewById(R.id.bottom_actionbar);
+
+            mBottomActionBar.setActionClickListener(CANCEL, unused -> {
+                if (mSelectedWallpaperInfo != null) {
+                    onWallpaperSelected(null);
+                    return;
+                }
+                getActivity().onBackPressed();
+            });
+            mBottomActionBar.setActionClickListener(ROTATION, unused -> {
+                DialogFragment startRotationDialogFragment = new StartRotationDialogFragment();
+                startRotationDialogFragment.setTargetFragment(
+                        IndividualPickerFragment.this, UNUSED_REQUEST_CODE);
+                startRotationDialogFragment.show(getFragmentManager(), TAG_START_ROTATION_DIALOG);
+            });
+            mBottomActionBar.setActionClickListener(APPLY, unused -> {
+                mBottomActionBar.disableActions();
+                mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
+                        mSelectedWallpaperInfo instanceof LiveWallpaperInfo);
+            });
+
+            mBottomActionBar.show();
+            mBottomActionBar.showActionsOnly(
+                    isRotationEnabled() ? EnumSet.of(CANCEL, ROTATION) : EnumSet.of(CANCEL));
+        }
+
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
+            mBottomActionBar.hide();
+            mBottomActionBar.clearActionClickListeners();
+            updateThumbnail(null);
+        }
+        super.onDestroyView();
     }
 
     @Override
@@ -505,6 +587,7 @@ public class IndividualPickerFragment extends Fragment
         if (mAppStatusListener != null) {
             mPackageStatusNotifier.removeListener(mAppStatusListener);
         }
+        mWallpaperSetter.cleanUp();
     }
 
     @Override
@@ -685,6 +768,51 @@ public class IndividualPickerFragment extends Fragment
         mCurrentWallpaperBottomSheetPresenter.setCurrentWallpapersExpanded(true);
     }
 
+
+    @Override
+    public void onSet(int destination) {
+        if (mSelectedWallpaperInfo == null) {
+            Log.e(TAG, "Unable to set wallpaper since the selected wallpaper info is null");
+            return;
+        }
+
+        mWallpaperPersister.setWallpaperInfoInPreview(mSelectedWallpaperInfo);
+        if (mSelectedWallpaperInfo instanceof LiveWallpaperInfo) {
+            mWallpaperSetter.setCurrentWallpaper(getActivity(), mSelectedWallpaperInfo, null,
+                    destination, 0, null, mSetWallpaperCallback);
+        } else {
+            mWallpaperSetter.setCurrentWallpaper(
+                    getActivity(), mSelectedWallpaperInfo, destination, mSetWallpaperCallback);
+        }
+    }
+
+    private WallpaperPersister.SetWallpaperCallback mSetWallpaperCallback =
+            new WallpaperPersister.SetWallpaperCallback() {
+                @Override
+                public void onSuccess(WallpaperInfo wallpaperInfo) {
+                    // TODO(b/150913705): Show the snack bar.
+                    mBottomActionBar.enableActions();
+                    updateAppliedStatus(mAppliedWallpaperInfo, false);
+                    updateAppliedStatus(wallpaperInfo, true);
+                    mAppliedWallpaperInfo = wallpaperInfo;
+
+                    mWallpaperPersister.onLiveWallpaperSet();
+                }
+
+                @Override
+                public void onError(@Nullable Throwable throwable) {
+                    Log.e(TAG, "Can't apply the wallpaper.");
+                    mBottomActionBar.enableActions();
+                }
+            };
+
+    @Override
+    public void onDialogDismissed(boolean withItemSelected) {
+        if (!withItemSelected) {
+            mBottomActionBar.enableActions();
+        }
+    }
+
     /**
      * Shows a "set wallpaper" error dialog with a failure message and button to try again.
      */
@@ -700,13 +828,93 @@ public class IndividualPickerFragment extends Fragment
         }
     }
 
+    private void updateBottomActions(boolean hasWallpaperSelected) {
+        mBottomActionBar.showActions(
+                hasWallpaperSelected ? EnumSet.of(APPLY, INFORMATION) : EnumSet.of(ROTATION));
+        mBottomActionBar.hideActions(
+                hasWallpaperSelected ? EnumSet.of(ROTATION) : EnumSet.of(APPLY, INFORMATION));
+    }
+
+    private void updateThumbnail(WallpaperInfo selectedWallpaperInfo) {
+        ThumbnailUpdater thumbnailUpdater = (ThumbnailUpdater) getParentFragment();
+        if (thumbnailUpdater == null) {
+            return;
+        }
+
+        if (selectedWallpaperInfo != null) {
+            thumbnailUpdater.updateThumbnail(selectedWallpaperInfo);
+        } else {
+            thumbnailUpdater.restoreThumbnails();
+        }
+    }
+
+    private void onWallpaperSelected(@Nullable WallpaperInfo newSelectedWallpaperInfo) {
+        if (mSelectedWallpaperInfo == newSelectedWallpaperInfo) {
+            return;
+        }
+        // Update current wallpaper.
+        updateActivatedStatus(mSelectedWallpaperInfo == null
+                ? mAppliedWallpaperInfo : mSelectedWallpaperInfo, false);
+        // Update new selected wallpaper.
+        updateActivatedStatus(newSelectedWallpaperInfo == null
+                ? mAppliedWallpaperInfo : newSelectedWallpaperInfo, true);
+
+        mSelectedWallpaperInfo = newSelectedWallpaperInfo;
+        updateBottomActions(mSelectedWallpaperInfo != null);
+        updateThumbnail(mSelectedWallpaperInfo);
+        // Populate wallpaper info to bottom sheet page.
+        if (mSelectedWallpaperInfo != null) {
+            mBottomActionBar.populateInfoPage(
+                mSelectedWallpaperInfo.getAttributions(getContext()),
+                shouldShowMetadataInPreview(mSelectedWallpaperInfo));
+        }
+    }
+
+    private void updateActivatedStatus(WallpaperInfo wallpaperInfo, boolean isActivated) {
+        if (wallpaperInfo == null) {
+            return;
+        }
+        int index = mWallpapers.indexOf(wallpaperInfo);
+        index = (isRotationEnabled() || mCategory.supportsCustomPhotos())
+                ? index + 1 : index;
+        ViewHolder holder = mImageGrid.findViewHolderForAdapterPosition(index);
+        if (holder != null) {
+            holder.itemView.setActivated(isActivated);
+        } else {
+            // Item is not visible, make sure the item is re-bound when it becomes visible.
+            mAdapter.notifyItemChanged(index);
+        }
+    }
+
+    private void updateAppliedStatus(WallpaperInfo wallpaperInfo, boolean isApplied) {
+        if (wallpaperInfo == null) {
+            return;
+        }
+        int index = mWallpapers.indexOf(wallpaperInfo);
+        index = (isRotationEnabled() || mCategory.supportsCustomPhotos())
+                ? index + 1 : index;
+        ViewHolder holder = mImageGrid.findViewHolderForAdapterPosition(index);
+        if (holder != null) {
+            holder.itemView.findViewById(R.id.check_circle)
+                    .setVisibility(isApplied ? View.VISIBLE : View.GONE);
+        } else {
+            // Item is not visible, make sure the item is re-bound when it becomes visible.
+            mAdapter.notifyItemChanged(index);
+        }
+    }
+
+    private static boolean shouldShowMetadataInPreview(WallpaperInfo wallpaperInfo) {
+        android.app.WallpaperInfo wallpaperComponent = wallpaperInfo.getWallpaperComponent();
+        return wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
+    }
+
     /**
      * ViewHolder subclass for "daily refresh" tile in the RecyclerView, only shown if rotation is
      * enabled for this category.
      */
     private class RotationHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private FrameLayout mTileLayout;
+        private CardView mTileLayout;
         private TextView mRotationMessage;
         private TextView mRotationTitle;
         private ImageView mRefreshIcon;
@@ -778,7 +986,7 @@ public class IndividualPickerFragment extends Fragment
                             ? getResources().getColor(R.color.rotation_tile_not_enabled_refresh_icon_color)
                             : getResources().getColor(R.color.rotation_tile_enabled_refresh_icon_color);
 
-            mTileLayout.setBackgroundColor(newBackgroundColor);
+            mTileLayout.setCardBackgroundColor(newBackgroundColor);
             mRotationTitle.setTextColor(newTitleTextColor);
             mRotationMessage.setText(getResIdForRotationState(rotationState));
             mRotationMessage.setTextColor(newSubtitleTextColor);
@@ -882,6 +1090,9 @@ public class IndividualPickerFragment extends Fragment
         private ViewHolder createIndividualHolder(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.grid_item_image, parent, false);
+            if (!TEMP_BOTTOM_ACTION_BAR_FEATURE) {
+                view.findViewById(R.id.tile).setPadding(0, 0, 0, 0);
+            }
 
             if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
                 SelectionAnimator selectionAnimator =
@@ -927,8 +1138,7 @@ public class IndividualPickerFragment extends Fragment
                             }
                         });
             } else { // MOBILE
-                return new PreviewIndividualHolder(
-                        (IndividualPickerActivity) getActivity(), mTileSizePx.y, view);
+                return new PreviewIndividualHolder(getActivity(), mTileSizePx.y, view);
             }
         }
 
@@ -1030,10 +1240,42 @@ public class IndividualPickerFragment extends Fragment
             WallpaperInfo wallpaper = mWallpapers.get(wallpaperIndex);
             ((IndividualHolder) holder).bindWallpaper(wallpaper);
             WallpaperPreferences prefs = InjectorProvider.getInjector().getPreferences(getContext());
+            String appliedWallpaperId = prefs.getHomeWallpaperRemoteId();
+            boolean isWallpaperApplied = wallpaper.getWallpaperId().equals(appliedWallpaperId);
+            boolean isWallpaperSelected = wallpaper.equals(mSelectedWallpaperInfo);
+            boolean hasUserSelectedWallpaper = mSelectedWallpaperInfo != null;
 
-            String wallpaperId = wallpaper.getWallpaperId();
-            if (wallpaperId != null && wallpaperId.equals(prefs.getHomeWallpaperRemoteId())) {
+            if (isWallpaperApplied) {
                 mSelectedAdapterPosition = position;
+                mAppliedWallpaperInfo = wallpaper;
+            }
+
+            if (TEMP_BOTTOM_ACTION_BAR_FEATURE) {
+                holder.itemView.setActivated(
+                        (isWallpaperApplied && !hasUserSelectedWallpaper) || isWallpaperSelected);
+                holder.itemView.findViewById(R.id.check_circle).setVisibility(
+                        isWallpaperApplied ? View.VISIBLE : View.GONE);
+                holder.itemView.findViewById(R.id.tile).setOnClickListener(
+                        view -> onWallpaperSelected(wallpaper));
+            }
+        }
+    }
+
+    private class GridPaddingDecoration extends RecyclerView.ItemDecoration {
+
+        private int mPadding;
+
+        GridPaddingDecoration(int padding) {
+            mPadding = padding;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                                   RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view);
+            if (position >= 0) {
+                outRect.left = mPadding;
+                outRect.right = mPadding;
             }
         }
     }
