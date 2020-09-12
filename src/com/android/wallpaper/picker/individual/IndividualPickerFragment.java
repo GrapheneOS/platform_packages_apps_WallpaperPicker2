@@ -78,6 +78,7 @@ import com.android.wallpaper.module.WallpaperSetter;
 import com.android.wallpaper.picker.BaseActivity;
 import com.android.wallpaper.picker.BottomActionBarFragment;
 import com.android.wallpaper.picker.CurrentWallpaperBottomSheetPresenter;
+import com.android.wallpaper.picker.FragmentTransactionChecker;
 import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
 import com.android.wallpaper.picker.PreviewActivity;
 import com.android.wallpaper.picker.RotationStarter;
@@ -816,7 +817,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
     }
 
     private void showStartRotationErrorDialog(@NetworkPreference int networkPreference) {
-        BaseActivity activity = (BaseActivity) getActivity();
+        FragmentTransactionChecker activity = (FragmentTransactionChecker) getActivity();
         if (activity != null) {
             StartRotationErrorDialogFragment startRotationErrorDialogFragment =
                     StartRotationErrorDialogFragment.newInstance(networkPreference);

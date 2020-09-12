@@ -302,7 +302,9 @@ public class LivePreviewFragment extends PreviewFragment implements
             mWallpaperConnection = null;
         }
         mWorkspaceSurfaceCallback.cleanUp();
+        mWorkspaceSurface.getHolder().removeCallback(mWorkspaceSurfaceCallback);
         mWallpaperSurfaceCallback.cleanUp();
+        mWallpaperSurface.getHolder().removeCallback(mWallpaperSurfaceCallback);
     }
 
     private void previewLiveWallpaper(ImageView thumbnailView) {
