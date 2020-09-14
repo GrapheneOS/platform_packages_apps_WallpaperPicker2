@@ -147,6 +147,7 @@ public class CategoryFragment extends AppbarFragment
 
     private LockScreenPreviewer mLockScreenPreviewer;
     private View mRootContainer;
+    private BottomActionBar mBottomActionBar;
 
     private final Rect mPreviewLocalRect = new Rect();
     private final Rect mPreviewGlobalRect = new Rect();
@@ -311,6 +312,7 @@ public class CategoryFragment extends AppbarFragment
 
     @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
+        mBottomActionBar = bottomActionBar;
         if (getFragmentHost().isNavigationTabsContained()) {
             return;
         }
@@ -445,6 +447,11 @@ public class CategoryFragment extends AppbarFragment
     @Override
     public void fetchCategories() {
         getFragmentHost().fetchCategories();
+    }
+
+    @Override
+    public void hideBottomActionBar() {
+        mBottomActionBar.hide();
     }
 
     @Override

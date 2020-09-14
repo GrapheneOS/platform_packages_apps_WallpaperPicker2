@@ -94,6 +94,11 @@ public class CategorySelectorFragment extends Fragment {
          * Fetches the wallpaper categories.
          */
         void fetchCategories();
+
+        /**
+         * Hides the {@link com.android.wallpaper.widget.BottomActionBar}.
+         */
+        void hideBottomActionBar();
     }
 
     private RecyclerView mImageGrid;
@@ -130,6 +135,8 @@ public class CategorySelectorFragment extends Fragment {
         if (!DeepLinkUtils.isDeepLink(getActivity().getIntent())) {
             getCategorySelectorFragmentHost().fetchCategories();
         }
+
+        getCategorySelectorFragmentHost().hideBottomActionBar();
 
         return view;
     }
