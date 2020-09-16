@@ -46,18 +46,10 @@ public class BottomActionBarFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mBottomActionBar = findBottomActionBar();
         if (mBottomActionBar != null) {
+            mBottomActionBar.reset();
             mBottomActionBar.bindBackButtonToSystemBackKey(getActivity());
             onBottomActionBarReady(mBottomActionBar);
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        if (mBottomActionBar != null) {
-            mBottomActionBar.reset();
-            mBottomActionBar = null;
-        }
-        super.onDestroyView();
     }
 
     /** Returns {@code true} if the fragment would handle the event. */
