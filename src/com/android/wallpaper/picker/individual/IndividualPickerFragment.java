@@ -369,8 +369,12 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
             @Override
             public void doneFetchingCategories() {
-                mCategory = (WallpaperCategory) categoryProvider.getCategory(
+                Category category = categoryProvider.getCategory(
                         getArguments().getString(ARG_CATEGORY_COLLECTION_ID));
+                if (!(category instanceof WallpaperCategory)) {
+                    return;
+                }
+                mCategory = (WallpaperCategory) category;
                 if (mCategory == null) {
                     DiskBasedLogger.e(TAG, "Failed to find the category.", getContext());
 
@@ -388,6 +392,9 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
 
     protected void onCategoryLoaded() {
+        if (getIndividualPickerFragmentHost() == null) {
+            return;
+        }
         getIndividualPickerFragmentHost().setToolbarTitle(mCategory.getTitle());
         mWallpaperRotationInitializer = mCategory.getWallpaperRotationInitializer();
         // Avoids the "rotation" action is not shown correctly
