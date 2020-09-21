@@ -371,7 +371,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
             public void doneFetchingCategories() {
                 Category category = categoryProvider.getCategory(
                         getArguments().getString(ARG_CATEGORY_COLLECTION_ID));
-                if (!(category instanceof WallpaperCategory)) {
+                if (category != null && !(category instanceof WallpaperCategory)) {
                     return;
                 }
                 mCategory = (WallpaperCategory) category;
