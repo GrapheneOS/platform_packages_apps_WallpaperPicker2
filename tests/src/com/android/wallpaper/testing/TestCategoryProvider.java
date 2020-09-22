@@ -92,6 +92,11 @@ public class TestCategoryProvider implements CategoryProvider {
         return false;
     }
 
+    @Override
+    public void resetIfNeeded() {
+        mCategories.clear();
+    }
+
     /** Returns a list of test Category objects used by this TestCategoryProvider. */
     public List<Category> getTestCategories() {
         return mCategories;

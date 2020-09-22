@@ -169,6 +169,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         mWallpaperPreferences = injector.getPreferences(this);
         mWasCustomPhotoWallpaperSet = false;
 
+        mDelegate.getCategoryProvider().resetIfNeeded();
+
         @WallpaperSupportLevel int wallpaperSupportLevel = mDelegate.getWallpaperSupportLevel();
         if (wallpaperSupportLevel != WallpaperDisabledFragment.SUPPORTED_CAN_SET) {
             setContentView(R.layout.activity_top_level_picker);
