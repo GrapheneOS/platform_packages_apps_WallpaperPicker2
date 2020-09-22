@@ -250,10 +250,6 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         mBottomActionBar.disableActions();
         mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
-            if (mBottomActionBar != null) {
-                mBottomActionBar.enableActions();
-            }
-
             // Don't continue loading the wallpaper if the Fragment is detached.
             if (getActivity() == null) {
                 return;
@@ -263,6 +259,10 @@ public class ImagePreviewFragment extends PreviewFragment {
             if (dimensions == null) {
                 showLoadWallpaperErrorDialog();
                 return;
+            }
+
+            if (mBottomActionBar != null) {
+                mBottomActionBar.enableActions();
             }
 
             mRawWallpaperSize = dimensions;
