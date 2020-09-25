@@ -15,9 +15,11 @@
  */
 package com.android.wallpaper.module;
 
-import com.android.wallpaper.module.WallpaperPersister.WallpaperPosition;
+import android.content.Intent;
 
 import androidx.annotation.IntDef;
+
+import com.android.wallpaper.module.WallpaperPersister.WallpaperPosition;
 
 /**
  * Interface for logging user events in the wallpaper picker.
@@ -48,7 +50,7 @@ public interface UserEventLogger {
 
     void logStopped();
 
-    void logAppLaunched();
+    void logAppLaunched(Intent launchSource);
 
     void logDailyRefreshTurnedOn();
 

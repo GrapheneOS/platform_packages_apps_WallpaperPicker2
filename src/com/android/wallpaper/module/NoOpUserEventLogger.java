@@ -15,6 +15,8 @@
  */
 package com.android.wallpaper.module;
 
+import android.content.Intent;
+
 import com.android.wallpaper.module.WallpaperPersister.WallpaperPosition;
 
 /**
@@ -33,7 +35,7 @@ public class NoOpUserEventLogger implements UserEventLogger {
     }
 
     @Override
-    public void logAppLaunched() {
+    public void logAppLaunched(Intent launchSource) {
     }
 
     @Override
