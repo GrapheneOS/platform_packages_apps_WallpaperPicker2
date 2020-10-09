@@ -15,6 +15,8 @@
  */
 package com.android.wallpaper.asset;
 
+import androidx.annotation.Nullable;
+
 import com.android.wallpaper.asset.ResourceAssetLoader.ResourceAssetFetcher;
 
 import com.bumptech.glide.load.Options;
@@ -24,36 +26,36 @@ import com.bumptech.glide.load.model.MultiModelLoaderFactory;
 
 import java.io.InputStream;
 
-import androidx.annotation.Nullable;
-
 /**
- * Glide ModelLoader which loads InputStreams from NexusStaticAssets.
+ * Glide ModelLoader which loads InputStreams from PartnerStaticAssets.
  */
-public class NexusStaticAssetLoader implements ModelLoader<NexusStaticAsset, InputStream> {
+public class SystemStaticAssetLoader implements ModelLoader<SystemStaticAsset, InputStream> {
 
     @Override
-    public boolean handles(NexusStaticAsset nexusStaticAsset) {
+    public boolean handles(SystemStaticAsset systemStaticAsset) {
         return true;
     }
 
     @Nullable
     @Override
-    public LoadData<InputStream> buildLoadData(NexusStaticAsset nexusStaticAsset, int unusedWidth,
+    public LoadData<InputStream> buildLoadData(SystemStaticAsset systemStaticAsset, int unusedWidth,
                                                int unusedHeight, Options options) {
-        return new LoadData<>(nexusStaticAsset.getKey(), new ResourceAssetFetcher(nexusStaticAsset));
+        return new LoadData<>(systemStaticAsset.getKey(),
+                new ResourceAssetFetcher(systemStaticAsset));
     }
 
     /**
-     * Factory that constructs {@link NexusStaticAssetLoader} instances.
+     * Factory that constructs {@link SystemStaticAssetLoader} instances.
      */
-    public static class NexusStaticAssetLoaderFactory
-            implements ModelLoaderFactory<NexusStaticAsset, InputStream> {
-        public NexusStaticAssetLoaderFactory() {
+    public static class SystemStaticAssetLoaderFactory
+            implements ModelLoaderFactory<SystemStaticAsset, InputStream> {
+        public SystemStaticAssetLoaderFactory() {
         }
 
         @Override
-        public ModelLoader<NexusStaticAsset, InputStream> build(MultiModelLoaderFactory multiFactory) {
-            return new NexusStaticAssetLoader();
+        public ModelLoader<SystemStaticAsset, InputStream> build(
+                MultiModelLoaderFactory multiFactory) {
+            return new SystemStaticAssetLoader();
         }
 
         @Override

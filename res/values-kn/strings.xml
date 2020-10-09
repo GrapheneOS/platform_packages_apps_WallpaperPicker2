@@ -66,8 +66,6 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"ದಿನನಿತ್ಯದ ವಾಲ್‌ಪೇಪರ್ ಅನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಿ"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"ದೈನಂದಿನ ವಾಲ್‌ಪೇಪರ್ ಅನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಲಾಗುತ್ತಿದೆ…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"ಪ್ರತಿದಿನದ ವಾಲ್‌ಪೇಪರ್ ರಿಫ್ರೆಶ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ. ನಿಮ್ಮ ನೆಟ್‌ವರ್ಕ್ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಹಾಗೂ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."</string>
-    <string name="collapse_attribution_panel" msgid="4367971404848122275">"ವಾಲ್‌ಪೇಪರ್ ಮಾಹಿತಿ ಫಲಕ ಸಂಕುಚಿಸಿ"</string>
-    <string name="expand_attribution_panel" msgid="6975094181456095915">"ವಾಲ್‌ಪೇಪರ್ ಮಾಹಿತಿ ಫಲಕ ವಿಸ್ತರಿಸಿ"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"ಸಾಧನದಲ್ಲಿನ ವಾಲ್‌ಪೇಪರ್‌ಗಳು"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"ಸಾಧನದಲ್ಲಿ"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Android ವಾಲ್‌ಪೇಪರ್"</string>
@@ -80,4 +78,19 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"ಮಧ್ಯಕ್ಕೆ ಕ್ರಾಪ್ ಮಾಡಿ"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"ವಿಸ್ತರಿಸಿ"</string>
     <string name="preview" msgid="1774602101743861071">"ಪೂರ್ವವೀಕ್ಷಣೆ"</string>
+    <string name="tab_info" msgid="818614080690111416">"ಮಾಹಿತಿ"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"ಕಸ್ಟಮೈಜ್‌ ಮಾಡಿ"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"ಸೆಟ್ಟಿಂಗ್‌ಗಳು..."</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"ಅಳಿಸಿ"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"ನಿಮ್ಮ ಫೋನ್‌ನಿಂದ ಈ ವಾಲ್‌ಪೇಪರ್ ಅನ್ನು ಅಳಿಸುವುದೇ?"</string>
+    <string name="bottom_action_bar_back" msgid="8237013112999946725">"ಹಿಂದೆ"</string>
+    <string name="bottom_action_bar_edit" msgid="1214742990893082138">"ಎಡಿಟ್ ಮಾಡಿ"</string>
+    <string name="bottom_action_bar_download" msgid="3983122338076389421">"ಡೌನ್‌ಲೋಡ್"</string>
+    <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"ಸ್ಲೈಡ್‌ಶೋ ವಾಲ್‌ಪೇಪರ್"</string>
+    <string name="bottom_action_bar_apply" msgid="2983308349819178932">"ಅನ್ವಯಿಸಿ"</string>
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"ಪುಟ <xliff:g id="ID_2">%2$d</xliff:g> ರಲ್ಲಿ <xliff:g id="ID_1">%1$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"ಮುಂದಕ್ಕೆ"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"ಹಿಂದಕ್ಕೆ"</string>
+    <string name="wallpaper_title" msgid="6754214682228331092">"ವಾಲ್‌ಪೇಪರ್‌"</string>
+    <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"ವಾಲ್‌ಪೇಪರ್ ಪೂರ್ವವೀಕ್ಷಣೆ"</string>
 </resources>

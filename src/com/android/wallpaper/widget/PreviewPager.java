@@ -21,20 +21,25 @@ import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
+import android.widget.Scroller;
 
 import androidx.annotation.Nullable;
 import androidx.core.text.TextUtilsCompat;
 import androidx.core.view.ViewCompat;
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 
 import com.android.wallpaper.R;
 
+import java.lang.reflect.Field;
 import java.util.Locale;
 
 /**
@@ -45,6 +50,7 @@ import java.util.Locale;
  */
 public class PreviewPager extends LinearLayout {
 
+    private static final String TAG = "PreviewPager";
     private static final int STYLE_PEEKING = 0;
     private static final int STYLE_ASPECT_RATIO = 1;
 
@@ -58,8 +64,6 @@ public class PreviewPager extends LinearLayout {
     private PagerAdapter mAdapter;
     private ViewPager.OnPageChangeListener mExternalPageListener;
     private float mScreenAspectRatio;
-    /** The maximum height ratio of PreviewPager and its parent view. */
-    private float mMaxHeightRatio;
 
     public PreviewPager(Context context) {
         this(context, null);
@@ -79,10 +83,6 @@ public class PreviewPager extends LinearLayout {
         mPageStyle = a.getInteger(R.styleable.PreviewPager_card_style, STYLE_PEEKING);
 
         a.recycle();
-
-        TypedValue ratioValue = new TypedValue();
-        res.getValue(R.dimen.preview_pager_maximum_height_ratio, ratioValue, true);
-        mMaxHeightRatio = ratioValue.getFloat();
 
         mViewPager = findViewById(R.id.preview_viewpager);
         mViewPager.setPageMargin(res.getDimensionPixelOffset(R.dimen.preview_page_gap));
@@ -107,6 +107,7 @@ public class PreviewPager extends LinearLayout {
                     0,
                     res.getDimensionPixelOffset(R.dimen.preview_page_bottom_margin));
         }
+        setupPagerScroller(context);
         mPageIndicator = findViewById(R.id.page_indicator);
         mPreviousArrow = findViewById(R.id.arrow_previous);
         mPreviousArrow.setOnClickListener(v -> {
@@ -172,7 +173,12 @@ public class PreviewPager extends LinearLayout {
      * Call this method to set the {@link PagerAdapter} backing the {@link ViewPager} in this
      * widget.
      */
-    public void setAdapter(PagerAdapter adapter) {
+    public void setAdapter(@Nullable PagerAdapter adapter) {
+        if (adapter == null) {
+            mAdapter = null;
+            mViewPager.setAdapter(null);
+            return;
+        }
         int initialPage = 0;
         if (mViewPager.getAdapter() != null) {
             initialPage = isRtl() ? mAdapter.getCount() - 1 - mViewPager.getCurrentItem()
@@ -191,7 +197,12 @@ public class PreviewPager extends LinearLayout {
         updateIndicator(mViewPager.getCurrentItem());
     }
 
-    private boolean isRtl() {
+    /**
+     * Checks if it is in RTL mode.
+     *
+     * @return {@code true} if it's in RTL mode; {@code false} otherwise.
+     */
+    public boolean isRtl() {
         if (ViewCompat.isLayoutDirectionResolved(mViewPager)) {
             return ViewCompat.getLayoutDirection(mViewPager) == ViewCompat.LAYOUT_DIRECTION_RTL;
         }
@@ -209,6 +220,19 @@ public class PreviewPager extends LinearLayout {
     private void initIndicator() {
         mPageIndicator.setNumPages(mAdapter.getCount());
         mPageIndicator.setLocation(mViewPager.getCurrentItem());
+    }
+
+    private void setupPagerScroller(Context context) {
+        try {
+            // TODO(b/159082165): Revisit if we can refactor it better.
+            Field scroller = ViewPager.class.getDeclaredField("mScroller");
+            scroller.setAccessible(true);
+            PreviewPagerScroller previewPagerScroller =
+                    new PreviewPagerScroller(context, new LinearOutSlowInInterpolator());
+            scroller.set(mViewPager, previewPagerScroller);
+        } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+            Log.e(TAG, "Failed to setup pager scroller.", e);
+        }
     }
 
     private ViewPager.OnPageChangeListener createPageListener() {
@@ -257,6 +281,20 @@ public class PreviewPager extends LinearLayout {
             mPageIndicator.setVisibility(View.GONE);
             mPreviousArrow.setVisibility(View.GONE);
             mNextArrow.setVisibility(View.GONE);
+        }
+    }
+
+    private static class PreviewPagerScroller extends Scroller {
+
+        private static final int DURATION_MS = 500;
+
+        PreviewPagerScroller(Context context, Interpolator interpolator) {
+            super(context, interpolator);
+        }
+
+        @Override
+        public void startScroll(int startX, int startY, int dx, int dy, int duration) {
+            super.startScroll(startX, startY, dx, dy, DURATION_MS);
         }
     }
 }

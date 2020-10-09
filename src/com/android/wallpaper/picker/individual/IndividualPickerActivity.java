@@ -22,12 +22,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
-import android.graphics.Insets;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowInsets;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -35,7 +32,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.android.wallpaper.R;
-import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.CategoryProvider;
 import com.android.wallpaper.model.CategoryReceiver;
@@ -146,38 +142,6 @@ public class IndividualPickerActivity extends BaseActivity {
 
         toolbar.getNavigationIcon().setTint(getColor(R.color.toolbar_icon_color));
         toolbar.getNavigationIcon().setAutoMirrored(true);
-
-        getWindow().getDecorView().setSystemUiVisibility(
-                getWindow().getDecorView().getSystemUiVisibility()
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        ((View) findViewById(R.id.fragment_container).getParent())
-                .setOnApplyWindowInsetsListener((view, windowInsets) -> {
-                    view.setPadding(
-                            view.getPaddingLeft(),
-                            windowInsets.getSystemWindowInsetTop(),
-                            view.getPaddingRight(),
-                            view.getPaddingBottom());
-                    // Consume only the top inset (status bar),
-                    // to let other content in the Activity consume the nav bar
-                    // (ie, by using "fitSystemWindows")
-                    if (BuildCompat.isAtLeastQ()) {
-                        WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
-                        builder.setSystemWindowInsets(
-                                Insets.of(
-                                        windowInsets.getSystemWindowInsetLeft(),
-                                        /* top= */ 0,
-                                        windowInsets.getStableInsetRight(),
-                                        windowInsets.getSystemWindowInsetBottom()));
-                        return builder.build();
-                    } else {
-                        return windowInsets.replaceSystemWindowInsets(
-                                windowInsets.getSystemWindowInsetLeft(),
-                                /* top= */ 0,
-                                windowInsets.getStableInsetRight(),
-                                windowInsets.getSystemWindowInsetBottom());
-                    }
-                });
 
         if (fragment == null) {
             fragment = InjectorProvider.getInjector()

@@ -15,8 +15,7 @@
  */
 package com.android.wallpaper.picker;
 
-import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
-import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
 
 import android.app.Activity;
 import android.content.Context;
@@ -24,23 +23,12 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources.NotFoundException;
 import android.content.res.TypedArray;
-import android.graphics.Insets;
-import android.graphics.drawable.GradientDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.CallSuper;
@@ -48,26 +36,19 @@ import androidx.annotation.IdRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.ViewCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
-import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
-
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetBehavior.State;
+import com.android.wallpaper.widget.BottomActionBar;
 
 import java.util.Date;
 import java.util.List;
@@ -75,7 +56,7 @@ import java.util.List;
 /**
  * Base Fragment to display the UI for previewing an individual wallpaper
  */
-public abstract class PreviewFragment extends Fragment implements
+public abstract class PreviewFragment extends AppbarFragment implements
         SetWallpaperDialogFragment.Listener, SetWallpaperErrorDialogFragment.Listener,
         LoadWallpaperErrorDialogFragment.Listener {
 
@@ -102,23 +83,23 @@ public abstract class PreviewFragment extends Fragment implements
 
     public static final String ARG_WALLPAPER = "wallpaper";
     public static final String ARG_PREVIEW_MODE = "preview_mode";
+    public static final String ARG_VIEW_AS_HOME = "view_as_home";
     public static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
 
     /**
      * Creates and returns new instance of {@link ImagePreviewFragment} with the provided wallpaper
      * set as an argument.
      */
-    public static PreviewFragment newInstance(
-            WallpaperInfo wallpaperInfo, @PreviewMode int mode, boolean testingModeEnabled) {
-
-        boolean isLive = wallpaperInfo instanceof LiveWallpaperInfo;
-
+    public static PreviewFragment newInstance(WallpaperInfo wallpaperInfo, @PreviewMode int mode,
+            boolean viewAsHome, boolean testingModeEnabled) {
         Bundle args = new Bundle();
         args.putParcelable(ARG_WALLPAPER, wallpaperInfo);
         args.putInt(ARG_PREVIEW_MODE, mode);
+        args.putBoolean(ARG_VIEW_AS_HOME, viewAsHome);
         args.putBoolean(ARG_TESTING_MODE_ENABLED, testingModeEnabled);
 
-        PreviewFragment fragment = isLive ? new LivePreviewFragment() : new ImagePreviewFragment();
+        PreviewFragment fragment = wallpaperInfo instanceof LiveWallpaperInfo
+                ? new LivePreviewFragment() : new ImagePreviewFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -129,10 +110,11 @@ public abstract class PreviewFragment extends Fragment implements
             "set_wallpaper_error_dialog";
     private static final int UNUSED_REQUEST_CODE = 1;
     private static final String TAG = "PreviewFragment";
-    static final String KEY_BOTTOM_SHEET_STATE = "key_bottom_sheet_state";
 
     @PreviewMode
     protected int mPreviewMode;
+
+    protected boolean mViewAsHome;
 
     /**
      * When true, enables a test mode of operation -- in which certain UI features are disabled to
@@ -144,16 +126,11 @@ public abstract class PreviewFragment extends Fragment implements
     protected WallpaperInfo mWallpaper;
     protected WallpaperSetter mWallpaperSetter;
     protected UserEventLogger mUserEventLogger;
-    protected ViewGroup mBottomSheet;
+    protected BottomActionBar mBottomActionBar;
     protected ContentLoadingProgressBar mLoadingProgressBar;
 
-    protected CheckBox mPreview;
-
-    @SuppressWarnings("RestrictTo")
-    @State
-    protected int mBottomSheetInitialState;
-
     protected Intent mExploreIntent;
+    protected CharSequence mActionLabel;
 
     /**
      * Staged error dialog fragments that were unable to be shown when the hosting activity didn't
@@ -172,8 +149,6 @@ public abstract class PreviewFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Activity activity = getActivity();
         Context appContext = getContext().getApplicationContext();
         Injector injector = InjectorProvider.getInjector();
 
@@ -182,12 +157,14 @@ public abstract class PreviewFragment extends Fragment implements
 
         //noinspection ResourceType
         mPreviewMode = getArguments().getInt(ARG_PREVIEW_MODE);
+        mViewAsHome = getArguments().getBoolean(ARG_VIEW_AS_HOME);
         mTestingModeEnabled = getArguments().getBoolean(ARG_TESTING_MODE_ENABLED);
         mWallpaperSetter = new WallpaperSetter(injector.getWallpaperPersister(appContext),
                 injector.getPreferences(appContext), mUserEventLogger, mTestingModeEnabled);
 
         setHasOptionsMenu(true);
 
+        Activity activity = getActivity();
         List<String> attributions = getAttributions(activity);
         if (attributions.size() > 0 && attributions.get(0) != null) {
             activity.setTitle(attributions.get(0));
@@ -199,110 +176,25 @@ public abstract class PreviewFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutResId(), container, false);
-
-        // Set toolbar as the action bar.
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
-        AppCompatActivity activity = (AppCompatActivity) requireActivity();
-        activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        toolbar.getNavigationIcon().setTint(getAttrColor(activity, android.R.attr.colorPrimary));
-        toolbar.getNavigationIcon().setAutoMirrored(true);
-
-        ViewCompat.setPaddingRelative(toolbar,
-        /* start */ getResources().getDimensionPixelSize(
-                        R.dimen.preview_toolbar_up_button_start_padding),
-        /* top */ 0,
-        /* end */ getResources().getDimensionPixelSize(
-                        R.dimen.preview_toolbar_set_wallpaper_button_end_padding),
-        /* bottom */ 0);
+        setUpToolbar(view);
 
         mLoadingProgressBar = view.findViewById(getLoadingIndicatorResId());
         mLoadingProgressBar.show();
-
-        mBottomSheet = view.findViewById(getBottomSheetResId());
-        setUpBottomSheetView(mBottomSheet);
-
-        // Workaround as we don't have access to bottomDialogCornerRadius, mBottomSheet radii are
-        // set to dialogCornerRadius by default.
-        GradientDrawable bottomSheetBackground = (GradientDrawable) mBottomSheet.getBackground();
-        float[] radii = bottomSheetBackground.getCornerRadii();
-        for (int i = 0; i < radii.length; i++) {
-            radii[i]*=2f;
-        }
-        bottomSheetBackground = ((GradientDrawable)bottomSheetBackground.mutate());
-        bottomSheetBackground.setCornerRadii(radii);
-        mBottomSheet.setBackground(bottomSheetBackground);
-
-        mBottomSheetInitialState = (savedInstanceState == null) ? STATE_EXPANDED
-                : savedInstanceState.getInt(KEY_BOTTOM_SHEET_STATE, STATE_EXPANDED);
-        setUpBottomSheetListeners();
-
-        view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
-            toolbar.setPadding(toolbar.getPaddingLeft(),
-                    toolbar.getPaddingTop() + windowInsets.getSystemWindowInsetTop(),
-                    toolbar.getPaddingRight(), toolbar.getPaddingBottom());
-            mBottomSheet.setPadding(mBottomSheet.getPaddingLeft(),
-                    mBottomSheet.getPaddingTop(), mBottomSheet.getPaddingRight(),
-                    mBottomSheet.getPaddingBottom() + windowInsets.getSystemWindowInsetBottom());
-            WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
-            builder.setSystemWindowInsets(Insets.of(windowInsets.getSystemWindowInsetLeft(),
-                    0, windowInsets.getStableInsetRight(), 0));
-            return builder.build();
-        });
-
         return view;
     }
 
-    protected void populateInfoPage(InfoPageController infoPage) {
-        Context context = requireContext();
-
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-
-        List<String> attributions = getAttributions(context);
-        boolean showMetadata = shouldShowMetadataInPreview();
-        CharSequence exploreLabel = getExploreButtonLabel(context);
-
-        infoPage.populate(attributions, showMetadata, this::onSetWallpaperClicked,
-                exploreLabel,
-                (showMetadata && mExploreIntent != null) ? this::onExploreClicked : null);
-
-        mBottomSheet.setVisibility(View.VISIBLE);
-
-        // Initialize the state of the BottomSheet based on the current state because if the initial
-        // and current state are the same, the state change listener won't fire and set the correct
-        // arrow asset and text alpha.
-        if (mBottomSheetInitialState == STATE_EXPANDED) {
-            setPreviewChecked(false);
-            infoPage.setContentAlpha(1f);
-        } else {
-            setPreviewChecked(true);
-            infoPage.setContentAlpha(0f);
-        }
-
-        bottomSheetBehavior.setState(mBottomSheetInitialState);
+    @Override
+    protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
+        mBottomActionBar = bottomActionBar;
+        // TODO: Extract the common code here.
     }
 
     protected List<String> getAttributions(Context context) {
         return mWallpaper.getAttributions(context);
     }
 
-    protected boolean shouldShowMetadataInPreview() {
-        android.app.WallpaperInfo wallpaperComponent = mWallpaper.getWallpaperComponent();
-        return wallpaperComponent == null || wallpaperComponent.getShowMetadataInPreview();
-    }
-
-    @Nullable
-    protected abstract CharSequence getExploreButtonLabel(Context context);
-
     @LayoutRes
     protected abstract int getLayoutResId();
-
-    protected abstract void setUpBottomSheetView(ViewGroup bottomSheet);
-
-    @IdRes
-    protected abstract int getBottomSheetResId();
 
     @IdRes
     protected abstract int getLoadingIndicatorResId();
@@ -334,85 +226,21 @@ public abstract class PreviewFragment extends Fragment implements
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.preview_menu, menu);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        setupPreviewMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            // The Preview screen has multiple entry points. It could be opened from either
-            // the IndividualPreviewActivity, the "My photos" selection (by way of
-            // TopLevelPickerActivity), or from a system "crop and set wallpaper" intent.
-            // Therefore, handle the Up button as a global Back.
-            requireActivity().onBackPressed();
-            return true;
-        }
-
-        return false;
-    }
-
-    private void setupPreviewMenu(Menu menu) {
-        mPreview = (CheckBox) menu.findItem(R.id.preview).getActionView();
-        mPreview.setChecked(mBottomSheetInitialState == STATE_COLLAPSED);
-        mPreview.setOnClickListener(this::setPreviewBehavior);
-    }
-
-    protected void setPreviewChecked(boolean checked) {
-        if (mPreview != null) {
-            mPreview.setChecked(checked);
-            int resId = checked ? R.string.expand_attribution_panel
-                    : R.string.collapse_attribution_panel;
-            mPreview.setContentDescription(getResources().getString(resId));
-        }
-    }
-
-    private void setPreviewBehavior(View v) {
-        CheckBox checkbox = (CheckBox) v;
-        BottomSheetBehavior<?> behavior = BottomSheetBehavior.from(mBottomSheet);
-
-        if (checkbox.isChecked()) {
-            behavior.setState(STATE_COLLAPSED);
-        } else {
-            behavior.setState(STATE_EXPANDED);
-        }
-    }
-
-    protected void setUpExploreIntent(@Nullable Runnable callback) {
+    protected void setUpExploreIntentAndLabel(@Nullable Runnable callback) {
         Context context = getContext();
         if (context == null) {
             return;
         }
-        String actionUrl = mWallpaper.getActionUrl(context);
-        if (actionUrl != null && !actionUrl.isEmpty()) {
-            Uri exploreUri = Uri.parse(mWallpaper.getActionUrl(context));
-            ExploreIntentChecker intentChecker =
-                    InjectorProvider.getInjector().getExploreIntentChecker(context);
 
-            intentChecker.fetchValidActionViewIntent(exploreUri, exploreIntent -> {
-                if (getActivity() == null) {
-                    return;
+        WallpaperInfoHelper.loadExploreIntent(context, mWallpaper,
+                (actionLabel, exploreIntent) -> {
+                    mActionLabel = actionLabel;
+                    mExploreIntent = exploreIntent;
+                    if (callback != null) {
+                        callback.run();
+                    }
                 }
-
-                mExploreIntent = exploreIntent;
-                if (callback != null) {
-                    callback.run();
-                }
-            });
-        } else {
-            if (callback != null) {
-                callback.run();
-            }
-        }
+        );
     }
 
     /**
@@ -430,6 +258,11 @@ public abstract class PreviewFragment extends Fragment implements
     @Override
     public void onSet(int destination) {
         setCurrentWallpaper(destination);
+    }
+
+    @Override
+    public void onDialogDismissed(boolean withItemSelected) {
+        mBottomActionBar.deselectAction(APPLY);
     }
 
     @Override
@@ -452,11 +285,8 @@ public abstract class PreviewFragment extends Fragment implements
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        outState.putInt(KEY_BOTTOM_SHEET_STATE, bottomSheetBehavior.getState());
+    public CharSequence getDefaultTitle() {
+        return getContext().getString(R.string.preview);
     }
 
     protected void onSetWallpaperClicked(View button) {
@@ -464,7 +294,7 @@ public abstract class PreviewFragment extends Fragment implements
                 mWallpaper instanceof LiveWallpaperInfo);
     }
 
-    private void onExploreClicked(View button) {
+    protected void onExploreClicked(View button) {
         if (getContext() == null) {
             return;
         }
@@ -475,47 +305,6 @@ public abstract class PreviewFragment extends Fragment implements
         startActivity(mExploreIntent);
     }
 
-    private void setUpBottomSheetListeners() {
-        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(View bottomSheet, int newState) {
-                // Don't respond to lingering state change events occurring after the fragment has
-                // already been detached from the activity. Else, IllegalStateException may occur
-                // when trying to fetch resources.
-                if (getActivity() == null) {
-                    return;
-                }
-                switch (newState) {
-                    case STATE_COLLAPSED:
-                        setPreviewChecked(true /* checked */);
-                        break;
-                    case STATE_EXPANDED:
-                        setPreviewChecked(false /* checked */);
-                        break;
-                    default:
-                        Log.v(TAG, "Ignoring BottomSheet state: " + newState);
-                }
-            }
-
-            @Override
-            public void onSlide(View bottomSheet, float slideOffset) {
-                float alpha;
-                if (slideOffset >= 0) {
-                    alpha = slideOffset;
-                } else {
-                    alpha = 1f - slideOffset;
-                }
-                setBottomSheetContentAlpha(alpha);
-            }
-        });
-    }
-
-    protected void setBottomSheetContentAlpha(float alpha) {
-
-    }
-
     /**
      * Sets current wallpaper to the device based on current zoom and scroll state.
      *
@@ -523,16 +312,18 @@ public abstract class PreviewFragment extends Fragment implements
      */
     protected abstract void setCurrentWallpaper(@Destination int destination);
 
-    protected void finishActivityWithResultOk() {
+    protected void finishActivity(boolean success) {
         Activity activity = requireActivity();
-        try {
-            Toast.makeText(activity,
-                    R.string.wallpaper_set_successfully_message, Toast.LENGTH_SHORT).show();
-        } catch (NotFoundException e) {
-            Log.e(TAG, "Could not show toast " + e);
+        if (success) {
+            try {
+                Toast.makeText(activity,
+                        R.string.wallpaper_set_successfully_message, Toast.LENGTH_SHORT).show();
+            } catch (NotFoundException e) {
+                Log.e(TAG, "Could not show toast " + e);
+            }
+            activity.setResult(Activity.RESULT_OK);
         }
         activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        activity.setResult(Activity.RESULT_OK);
         activity.finish();
     }
 
@@ -578,95 +369,5 @@ public abstract class PreviewFragment extends Fragment implements
     protected boolean isRtl() {
         return getResources().getConfiguration().getLayoutDirection()
                     == View.LAYOUT_DIRECTION_RTL;
-    }
-
-    protected static class InfoPageController {
-
-        public static View createView(LayoutInflater inflater) {
-            return inflater.inflate(R.layout.preview_page_info, null /* root */);
-        }
-
-        private final int mPreviewMode;
-        private final View mInfoPage;
-        private final TextView mAttributionTitle;
-        private final TextView mAttributionSubtitle1;
-        private final TextView mAttributionSubtitle2;
-        private final Button mExploreButton;
-        private final Button mSetWallpaperButton;
-        private final View mSpacer;
-
-        public InfoPageController(View infoPage, int previewMode) {
-            mInfoPage = infoPage;
-            mPreviewMode = previewMode;
-
-            mAttributionTitle = mInfoPage.findViewById(R.id.preview_attribution_pane_title);
-            mAttributionSubtitle1 = mInfoPage.findViewById(R.id.preview_attribution_pane_subtitle1);
-            mAttributionSubtitle2 = mInfoPage.findViewById(R.id.preview_attribution_pane_subtitle2);
-            mSpacer = mInfoPage.findViewById(R.id.spacer);
-
-            mExploreButton = mInfoPage.findViewById(R.id.preview_attribution_pane_explore_button);
-            mSetWallpaperButton = mInfoPage.findViewById(
-                    R.id.preview_attribution_pane_set_wallpaper_button);
-        }
-
-        public void populate(List<String> attributions, boolean showMetadata,
-                OnClickListener setWallpaperOnClickListener,
-                CharSequence exploreButtonLabel,
-                @Nullable OnClickListener exploreOnClickListener) {
-            if (attributions.size() > 0 && attributions.get(0) != null) {
-                mAttributionTitle.setText(attributions.get(0));
-            }
-
-            if (showMetadata) {
-                if (attributions.size() > 1 && attributions.get(1) != null) {
-                    mAttributionSubtitle1.setVisibility(View.VISIBLE);
-                    mAttributionSubtitle1.setText(attributions.get(1));
-                }
-
-                if (attributions.size() > 2 && attributions.get(2) != null) {
-                    mAttributionSubtitle2.setVisibility(View.VISIBLE);
-                    mAttributionSubtitle2.setText(attributions.get(2));
-                }
-            }
-            setUpSetWallpaperButton(setWallpaperOnClickListener);
-
-            setUpExploreButton(exploreButtonLabel, exploreOnClickListener);
-
-            if (mExploreButton.getVisibility() == View.VISIBLE
-                    && mSetWallpaperButton.getVisibility() == View.VISIBLE) {
-                mSpacer.setVisibility(View.VISIBLE);
-            } else {
-                mSpacer.setVisibility(View.GONE);
-            }
-        }
-
-        public void setContentAlpha(float alpha) {
-            mSetWallpaperButton.setAlpha(alpha);
-            mExploreButton.setAlpha(alpha);
-            mAttributionTitle.setAlpha(alpha);
-            mAttributionSubtitle1.setAlpha(alpha);
-            mAttributionSubtitle2.setAlpha(alpha);
-        }
-
-        private void setUpSetWallpaperButton(OnClickListener setWallpaperOnClickListener) {
-            if (mPreviewMode == MODE_VIEW_ONLY) {
-                mSetWallpaperButton.setVisibility(View.GONE);
-            } else {
-                mSetWallpaperButton.setVisibility(View.VISIBLE);
-                mSetWallpaperButton.setOnClickListener(setWallpaperOnClickListener);
-            }
-        }
-
-        private void setUpExploreButton(CharSequence label,
-                @Nullable OnClickListener exploreOnClickListener) {
-            mExploreButton.setVisibility(View.GONE);
-            if (exploreOnClickListener == null) {
-                return;
-            }
-            mExploreButton.setVisibility(View.VISIBLE);
-            mExploreButton.setText(label);
-
-            mExploreButton.setOnClickListener(exploreOnClickListener);
-        }
     }
 }

@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Kategoritë e imazheve të sfondit"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Cakto imazhin e sfondit"</string>
+    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Caktoje si imazh sfondi"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Po cakton imazhin e sfondit..."</string>
     <string name="try_again" msgid="8278874823700921234">"Provo sërish"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Nuk mund të caktojë imazhin e sfondit"</string>
@@ -66,8 +66,6 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Rifresko imazhin e përditshëm të sfondit"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"Po rifreskon imazhin e përditshëm të sfondit..."</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"Rifreskimi i imazhit të përditshëm të sfondit dështoi. Kontrollo lidhjen e rrjetit dhe provo përsëri."</string>
-    <string name="collapse_attribution_panel" msgid="4367971404848122275">"Palos panelin e informacionit të imazhit të sfondit"</string>
-    <string name="expand_attribution_panel" msgid="6975094181456095915">"Zgjero panelin e informacionit të imazhit të sfondit"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"Imazhet e sfondit në pajisje"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"Në pajisje"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Imazhi i sfondit Android"</string>
@@ -80,4 +78,19 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Prerje qendrore"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"E tendosur"</string>
     <string name="preview" msgid="1774602101743861071">"Shiko paraprakisht"</string>
+    <string name="tab_info" msgid="818614080690111416">"Informacione"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Personalizo"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Cilësimet…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Fshi"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Do ta fshish këtë imazh sfondi nga telefoni?"</string>
+    <string name="bottom_action_bar_back" msgid="8237013112999946725">"Pas"</string>
+    <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Modifiko"</string>
+    <string name="bottom_action_bar_download" msgid="3983122338076389421">"Shkarko"</string>
+    <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Imazhi i sfondit të diafilmit"</string>
+    <string name="bottom_action_bar_apply" msgid="2983308349819178932">"Zbato"</string>
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"Faqja <xliff:g id="ID_1">%1$d</xliff:g> nga <xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"Para"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"Pas"</string>
+    <string name="wallpaper_title" msgid="6754214682228331092">"Imazhi i sfondit"</string>
+    <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Pamja paraprake e imazhit të sfondit"</string>
 </resources>

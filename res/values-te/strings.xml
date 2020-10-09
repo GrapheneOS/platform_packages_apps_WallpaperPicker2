@@ -66,8 +66,6 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"రోజువారీ వాల్‌పేపర్‌ను రిఫ్రెష్ చేస్తుంది"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"రోజువారీ వాల్‌పేపర్‌ను రిఫ్రెష్ చేస్తోంది…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"రోజువారీ వాల్‌పేపర్‌ను రిఫ్రెష్ చేయడంలో విఫలమైంది. దయచేసి మీ నెట్‌వర్క్ కనెక్షన్‌ను తనిఖీ చేసుకొని, ఆపై మళ్లీ ప్రయత్నించండి."</string>
-    <string name="collapse_attribution_panel" msgid="4367971404848122275">"వాల్‌పేపర్ సమాచార ప్యానెల్‌ను కుదిస్తుంది"</string>
-    <string name="expand_attribution_panel" msgid="6975094181456095915">"వాల్‌పేపర్ సమాచార ప్యానెల్‌ను విస్తరింపజేస్తుంది"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"పరికరంలో వాల్‌పేపర్‌లు"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"పరికరంలో"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Android వాల్‌పేపర్"</string>
@@ -80,4 +78,19 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"మధ్యన కత్తిరించు"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"విస్తరించు"</string>
     <string name="preview" msgid="1774602101743861071">"ప్రివ్యూ చూపు"</string>
+    <string name="tab_info" msgid="818614080690111416">"సమాచారం"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"అనుకూలీకరించండి"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"సెట్టింగ్‌లు…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"తొలగించు"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"మీ ఫోన్ నుండి ఈ వాల్‌పేపర్‌ను తొలగించాలా?"</string>
+    <string name="bottom_action_bar_back" msgid="8237013112999946725">"వెనుకకు"</string>
+    <string name="bottom_action_bar_edit" msgid="1214742990893082138">"ఎడిట్‌"</string>
+    <string name="bottom_action_bar_download" msgid="3983122338076389421">"డౌన్‌లోడ్"</string>
+    <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"స్లయిడ్ షో వాల్‌పేపర్"</string>
+    <string name="bottom_action_bar_apply" msgid="2983308349819178932">"వర్తింపజేయి"</string>
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"<xliff:g id="ID_2">%2$d</xliff:g>లో <xliff:g id="ID_1">%1$d</xliff:g>వ పేజీ"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"తర్వాత"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"మునుపటి"</string>
+    <string name="wallpaper_title" msgid="6754214682228331092">"వాల్‌పేపర్"</string>
+    <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"వాల్‌పేపర్ ప్రివ్యూ"</string>
 </resources>

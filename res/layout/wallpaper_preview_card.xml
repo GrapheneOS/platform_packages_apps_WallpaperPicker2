@@ -16,7 +16,8 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/FullContentPreviewCard"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:contentDescription="@string/wallpaper_preview_card_content_description">
 
     <ImageView
         android:id="@+id/wallpaper_preview_image"
@@ -25,12 +26,26 @@
         android:background="@color/primary_color" />
 
     <SurfaceView
-        android:id="@+id/workspace_surface"
+        android:id="@+id/wallpaper_surface"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <SurfaceView
-        android:id="@+id/wallpaper_surface"
+        android:id="@+id/workspace_surface"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:importantForAccessibility="noHideDescendants" />
+
+    <FrameLayout
+        android:id="@+id/lock_screen_preview_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:importantForAccessibility="noHideDescendants" />
+
+    <View
+        android:id="@+id/fade_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:background="@color/preview_pager_background" />
 </androidx.cardview.widget.CardView>

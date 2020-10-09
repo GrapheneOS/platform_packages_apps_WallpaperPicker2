@@ -66,8 +66,6 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Actualiser le fond d\'écran quotidien"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"Actualisation du fond d\'écran quotidien…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"Échec de l\'actualisation du fond d\'écran quotidien. Veuillez vérifier votre connexion réseau, puis réessayer."</string>
-    <string name="collapse_attribution_panel" msgid="4367971404848122275">"Réduire le panneau d\'information du fond d\'écran"</string>
-    <string name="expand_attribution_panel" msgid="6975094181456095915">"Développer le panneau d\'information du fond d\'écran"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"Fonds d\'écran sur l\'appareil"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"Sur l\'appareil"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Fond d\'écran Android"</string>
@@ -79,5 +77,20 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Centrer"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Recadrer et centrer"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Étirer"</string>
-    <string name="preview" msgid="1774602101743861071">"Prévisualiser"</string>
+    <string name="preview" msgid="1774602101743861071">"Aperçu"</string>
+    <string name="tab_info" msgid="818614080690111416">"Informations"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Personnaliser"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Paramètres…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Supprimer"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Supprimer ce fond d\'écran de votre téléphone ?"</string>
+    <string name="bottom_action_bar_back" msgid="8237013112999946725">"Retour"</string>
+    <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Modifier"</string>
+    <string name="bottom_action_bar_download" msgid="3983122338076389421">"Télécharger"</string>
+    <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Fond d\'écran diaporama"</string>
+    <string name="bottom_action_bar_apply" msgid="2983308349819178932">"Appliquer"</string>
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"Page <xliff:g id="ID_1">%1$d</xliff:g> sur <xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"Suivante"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"Précédente"</string>
+    <string name="wallpaper_title" msgid="6754214682228331092">"Fond d\'écran"</string>
+    <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Aperçu du fond d\'écran"</string>
 </resources>

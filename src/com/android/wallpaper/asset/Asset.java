@@ -279,6 +279,10 @@ public abstract class Asset {
         void onDrawableLoaded();
     }
 
+    protected void adjustCropRect(Context context, Point assetDimensions, Rect cropRect) {
+        WallpaperCropUtils.adjustCropRect(context, cropRect, true /* zoomIn */);
+    }
+
     /**
      * Custom AsyncTask which returns a copy of the given bitmap which is center cropped and scaled
      * to fit in the given ImageView.
