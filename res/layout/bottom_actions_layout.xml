@@ -44,6 +44,7 @@
         android:id="@+id/action_tabs"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_navbar_height"
+        android:paddingTop="@dimen/bottom_action_bar_padding_top"
         android:paddingHorizontal="@dimen/bottom_action_bar_padding_horizontal"
         android:clickable="true"
         android:elevation="@dimen/bottom_action_bar_elevation"
@@ -53,9 +54,10 @@
         android:layoutDirection="locale">
 
         <ImageView
-            android:id="@+id/action_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:id="@+id/action_back"
+            android:layout_width="@dimen/bottom_action_button_size"
+            android:layout_height="@dimen/bottom_action_button_size"
+            android:padding="@dimen/bottom_action_button_padding"
             android:src="@drawable/ic_close_gm2_24px"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/bottom_action_bar_back"
@@ -91,19 +93,21 @@
             android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/action_information"
-            app:layout_constraintStart_toEndOf="@id/action_cancel" />
+            app:layout_constraintStart_toEndOf="@id/action_rotation" />
 
         <ImageView
             android:id="@+id/action_information"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="@dimen/bottom_action_button_size"
+            android:layout_height="@dimen/bottom_action_button_size"
+            android:padding="@dimen/bottom_action_button_padding"
             android:src="@drawable/ic_info_gm2_24px"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/tab_info"
             android:tint="@color/bottom_action_button_color_tint"
             android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/action_edit"
-            app:layout_constraintStart_toEndOf="@id/action_rotation" />
+            app:layout_constraintStart_toEndOf="@id/action_delete" />
 
         <ImageView
             android:id="@+id/action_edit"
@@ -155,19 +159,21 @@
             android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/action_apply"
-            app:layout_constraintStart_toEndOf="@id/action_information" />
+            app:layout_constraintStart_toEndOf="@id/action_download" />
 
         <ImageView
             android:id="@+id/action_apply"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="@dimen/bottom_action_button_size"
+            android:layout_height="@dimen/bottom_action_button_size"
+            android:padding="@dimen/bottom_action_button_padding"
             android:src="@drawable/ic_done_gm2_24px"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/bottom_action_bar_apply"
             android:tint="@color/bottom_action_button_color_tint"
             android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/action_edit" />
+            app:layout_constraintStart_toEndOf="@id/action_progress" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>

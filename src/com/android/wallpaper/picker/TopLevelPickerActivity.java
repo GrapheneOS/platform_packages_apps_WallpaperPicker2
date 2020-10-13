@@ -78,6 +78,8 @@ import com.android.wallpaper.picker.WallpaperDisabledFragment.WallpaperSupportLe
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.ThrowableAnalyzer;
+import com.android.wallpaper.widget.BottomActionBar;
+import com.android.wallpaper.widget.BottomActionBar.BottomActionBarHost;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback;
@@ -92,7 +94,7 @@ import java.util.List;
  */
 public class TopLevelPickerActivity extends BaseActivity implements WallpapersUiContainer,
         CurrentWallpaperBottomSheetPresenter, SetWallpaperErrorDialogFragment.Listener,
-        MyPhotosStarter, CategoryFragmentHost {
+        MyPhotosStarter, CategoryFragmentHost, BottomActionBarHost {
 
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "toplevel_set_wallpaper_error_dialog";
@@ -1112,6 +1114,11 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         } else {
             mStagedSetWallpaperErrorDialogFragment = dialogFragment;
         }
+    }
+
+    @Override
+    public BottomActionBar getBottomActionBar() {
+        return findViewById(R.id.bottom_actionbar);
     }
 
     private interface AssetReceiver {

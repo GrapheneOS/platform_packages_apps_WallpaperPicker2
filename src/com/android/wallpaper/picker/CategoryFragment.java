@@ -120,7 +120,7 @@ public class CategoryFragment extends AppbarFragment
 
     public static CategoryFragment newInstance(CharSequence title) {
         CategoryFragment fragment = new CategoryFragment();
-        fragment.setArguments(ToolbarFragment.createArguments(title));
+        fragment.setArguments(AppbarFragment.createArguments(title));
         return fragment;
     }
 
@@ -415,8 +415,7 @@ public class CategoryFragment extends AppbarFragment
         });
         getChildFragmentManager()
                 .beginTransaction()
-                .replace(R.id.category_fragment_container,
-                        InjectorProvider.getInjector().getIndividualPickerFragment(collectionId))
+                .replace(R.id.category_fragment_container, mIndividualPickerFragment)
                 .addToBackStack(null)
                 .commit();
         getChildFragmentManager().executePendingTransactions();
@@ -453,7 +452,6 @@ public class CategoryFragment extends AppbarFragment
             updateThumbnail(mHomePreviewWallpaperInfo, mHomePreview, true);
             updateThumbnail(mLockPreviewWallpaperInfo, mLockscreenPreview, false);
             mShowSelectedWallpaper = true;
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
     }
 
@@ -665,9 +663,9 @@ public class CategoryFragment extends AppbarFragment
                             mLockScreenPreviewer.setColor(colors);
                         }
                     }
-                }, previewGlobalRect);
+                }, mPreviewGlobalRect);
 
-        LiveTileOverlay.INSTANCE.update(new RectF(previewLocalRect),
+        LiveTileOverlay.INSTANCE.update(new RectF(mPreviewLocalRect),
                 ((CardView) previewView.getParent()).getRadius());
 
         mWallpaperConnection.setVisibility(true);
@@ -755,8 +753,9 @@ public class CategoryFragment extends AppbarFragment
         private SurfaceControlViewHost mHost;
 
         @Override
-        public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
-            if (mHomeImageWallpaper == null) {
+        public void surfaceCreated(SurfaceHolder holder) {
+            if (mLastSurface != holder.getSurface()) {
+                mLastSurface = holder.getSurface();
                 mHomeImageWallpaper = new ImageView(getContext());
                 mHomeImageWallpaper.setBackgroundColor(
                         ContextCompat.getColor(getContext(), R.color.primary_color));

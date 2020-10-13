@@ -269,6 +269,18 @@ public interface WallpaperPreferences {
     void setLockWallpaperId(int lockWallpaperId);
 
     /**
+     * Gets the lock wallpaper's remote identifier.
+     */
+    String getLockWallpaperRemoteId();
+
+    /**
+     * Sets the lock wallpaper's remote identifier to SharedPreferences. This should be a string
+     * which uniquely identifies the currently set lock wallpaper in the context of a remote
+     * wallpaper collection.
+     */
+    void setLockWallpaperRemoteId(String wallpaperRemoteId);
+
+    /**
      * Persists the timestamp of a daily wallpaper rotation that just occurred.
      */
     void addDailyRotation(long timestamp);

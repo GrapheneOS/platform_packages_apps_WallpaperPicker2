@@ -19,8 +19,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
+import android.graphics.Point;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +38,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.util.ScreenSizeCalculator;
 
 import java.lang.reflect.Field;
 import java.util.Locale;
@@ -85,6 +86,32 @@ public class PreviewPager extends LinearLayout {
         a.recycle();
 
         mViewPager = findViewById(R.id.preview_viewpager);
+        mViewPager.setPageTransformer(false, (view, position) -> {
+            int origin = mViewPager.getPaddingStart();
+            int leftBoundary = -view.getWidth();
+            int rightBoundary = mViewPager.getWidth();
+            int pageWidth = view.getWidth();
+            int offset = (int) (pageWidth * position);
+
+            //               left      origin     right
+            //             boundary              boundary
+            // ---------------|----------|----------|----------
+            // Cover alpha:  1.0         0         1.0
+            float alpha;
+            if (offset <= leftBoundary || offset >= rightBoundary) {
+                alpha = 1.0f;
+            } else if (offset <= origin) {
+                // offset in (leftBoundary, origin]
+                alpha = (float) Math.abs(offset - origin) / Math.abs(leftBoundary - origin);
+            } else {
+                // offset in (origin, rightBoundary)
+                alpha = (float) Math.abs(offset - origin) / Math.abs(rightBoundary - origin);
+            }
+            View cover = view.findViewById(R.id.fade_cover);
+            if (cover != null) {
+                view.findViewById(R.id.fade_cover).setAlpha(alpha);
+            }
+        }, LAYER_TYPE_NONE);
         mViewPager.setPageMargin(res.getDimensionPixelOffset(R.dimen.preview_page_gap));
         mViewPager.setClipToPadding(false);
         if (mPageStyle == STYLE_PEEKING) {
@@ -97,15 +124,27 @@ public class PreviewPager extends LinearLayout {
                     hMargin,
                     res.getDimensionPixelOffset(R.dimen.preview_page_bottom_margin));
         } else if (mPageStyle == STYLE_ASPECT_RATIO) {
-            DisplayMetrics dm = res.getDisplayMetrics();
-            mScreenAspectRatio = dm.heightPixels > dm.widthPixels
-                    ? (float) dm.heightPixels / dm.widthPixels
-                    : (float) dm.widthPixels / dm.heightPixels;
+            WindowManager windowManager = context.getSystemService(WindowManager.class);
+            Point screenSize = ScreenSizeCalculator.getInstance()
+                    .getScreenSize(windowManager.getDefaultDisplay());
+            mScreenAspectRatio = (float) screenSize.y / screenSize.x;
             mViewPager.setPadding(
                     0,
                     res.getDimensionPixelOffset(R.dimen.preview_page_top_margin),
                     0,
                     res.getDimensionPixelOffset(R.dimen.preview_page_bottom_margin));
+            // Set the default margin to make sure not peeking the second page before calculating
+            // the real margin.
+            mViewPager.setPageMargin(screenSize.x / 2);
+            mViewPager.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+                @Override
+                public void onLayoutChange(View view, int left, int top, int right, int bottom,
+                                           int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                    // Set the minimum margin which can't peek the second page.
+                    mViewPager.setPageMargin(view.getPaddingEnd());
+                    mViewPager.removeOnLayoutChangeListener(this);
+                }
+            });
         }
         setupPagerScroller(context);
         mPageIndicator = findViewById(R.id.page_indicator);
@@ -128,9 +167,7 @@ public class PreviewPager extends LinearLayout {
         if (mPageStyle == STYLE_ASPECT_RATIO) {
             int availableWidth = MeasureSpec.getSize(widthMeasureSpec);
             int availableHeight = MeasureSpec.getSize(heightMeasureSpec);
-            int indicatorHeight = mPageIndicator.getVisibility() == VISIBLE
-                    ? ((View) mPageIndicator.getParent()).getLayoutParams().height
-                    : 0;
+            int indicatorHeight = ((View) mPageIndicator.getParent()).getLayoutParams().height;
             int pagerHeight = availableHeight - indicatorHeight;
             if (availableWidth > 0) {
                 int absoluteCardWidth = (int) ((pagerHeight - mViewPager.getPaddingBottom()
@@ -142,14 +179,6 @@ public class PreviewPager extends LinearLayout {
                         hPadding,
                         mViewPager.getPaddingBottom());
             }
-        }
-
-        View parentView = (View) getParent();
-        float parentHeight = parentView != null ? parentView.getMeasuredHeight() : 0;
-        if (parentHeight > 0) {
-            int maxHeight = Math.min(MeasureSpec.getSize(heightMeasureSpec),
-                    (int) (parentHeight * mMaxHeightRatio));
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST);
         }
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -215,6 +244,15 @@ public class PreviewPager extends LinearLayout {
      */
     public void setOnPageChangeListener(@Nullable ViewPager.OnPageChangeListener listener) {
         mExternalPageListener = listener;
+    }
+
+    /**
+     * Switches to the specific preview page.
+     *
+     * @param index preview page index to select
+     */
+    public void switchPreviewPage(int index) {
+        mViewPager.setCurrentItem(index);
     }
 
     private void initIndicator() {

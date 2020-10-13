@@ -54,6 +54,7 @@ public class WallpaperPreferenceKeys {
         public static final String KEY_HOME_WALLPAPER_REMOTE_ID = "home_wallpaper_remote_id";
         public static final String KEY_HOME_WALLPAPER_BACKING_FILE = "home_wallpaper_backing_file";
         public static final String KEY_LOCK_WALLPAPER_MANAGER_ID = "lock_wallpaper_id";
+        public static final String KEY_LOCK_WALLPAPER_REMOTE_ID = "lock_wallpaper_remote_id";
         public static final String KEY_LOCK_WALLPAPER_BACKING_FILE = "lock_wallpaper_backing_file";
         public static final String KEY_DAILY_ROTATION_TIMESTAMPS = "daily_rotation_timestamps";
         public static final String KEY_DAILY_WALLPAPER_ENABLED_TIMESTAMP =

@@ -451,6 +451,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
                 // image.
                 ImageWallpaperInfo imageWallpaper = new ImageWallpaperInfo(imageUri);
 
+                mWallpaperPersister.setWallpaperInfoInPreview(imageWallpaper);
                 imageWallpaper.showPreview(mActivity, getPreviewIntentFactory(),
                         PREVIEW_WALLPAPER_REQUEST_CODE);
                 return false;
