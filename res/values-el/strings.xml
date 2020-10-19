@@ -66,8 +66,6 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Ανανέωση ημερήσιας ταπετσαρίας"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"Ανανέωση ημερήσιας ταπετσαρίας…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"Αποτυχία ανανέωσης ημερήσιας ταπετσαρίας. Ελέγξτε τη σύνδεση δικτύου σας και δοκιμάστε ξανά."</string>
-    <string name="collapse_attribution_panel" msgid="4367971404848122275">"Σύμπτυξη πλαισίου πληροφοριών ταπετσαρίας"</string>
-    <string name="expand_attribution_panel" msgid="6975094181456095915">"Ανάπτυξη πλαισίου πληροφοριών ταπετσαρίας"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"Ταπετσαρίες στη συσκευή"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"Στη συσκευή"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Ταπετσαρία Android"</string>
@@ -80,4 +78,19 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Περικοπή στο κέντρο"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Τέντωμα"</string>
     <string name="preview" msgid="1774602101743861071">"Προεπισκόπηση"</string>
+    <string name="tab_info" msgid="818614080690111416">"Πληροφορίες"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Προσαρμογή"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Ρυθμίσεις…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Διαγραφή"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Διαγραφή αυτής της ταπετσαρίας από το τηλέφωνό σας;"</string>
+    <string name="bottom_action_bar_back" msgid="8237013112999946725">"Πίσω"</string>
+    <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Επεξεργασία"</string>
+    <string name="bottom_action_bar_download" msgid="3983122338076389421">"Λήψη"</string>
+    <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Ταπετσαρία: Προβολή διαφανειών"</string>
+    <string name="bottom_action_bar_apply" msgid="2983308349819178932">"Εφαρμογή"</string>
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"Σελίδα <xliff:g id="ID_1">%1$d</xliff:g> από <xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"Επόμενη"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"Προηγούμενη"</string>
+    <string name="wallpaper_title" msgid="6754214682228331092">"Ταπετσαρία"</string>
+    <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Προεπισκόπηση ταπετσαρίας"</string>
 </resources>

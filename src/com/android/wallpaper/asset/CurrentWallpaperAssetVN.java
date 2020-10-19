@@ -17,6 +17,8 @@ package com.android.wallpaper.asset;
 
 import android.app.WallpaperManager;
 import android.content.Context;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.ParcelFileDescriptor;
 import android.os.ParcelFileDescriptor.AutoCloseInputStream;
 import android.util.Log;
@@ -24,6 +26,8 @@ import android.widget.ImageView;
 
 import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.compat.WallpaperManagerCompat.WallpaperLocation;
+import com.android.wallpaper.util.WallpaperCropUtils;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Key;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -93,6 +97,12 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
                 .apply(RequestOptions.centerCropTransform())
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView);
+    }
+
+    @Override
+    protected void adjustCropRect(Context context, Point assetDimensions, Rect cropRect) {
+        cropRect.offsetTo(0, 0);
+        WallpaperCropUtils.adjustCurrentWallpaperCropRect(context, assetDimensions, cropRect);
     }
 
     public Key getKey() {

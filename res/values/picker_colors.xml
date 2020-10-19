@@ -17,6 +17,7 @@
     <color name="black_24_alpha">#3D000000</color>
     <color name="black_38_alpha">#61000000</color>
     <color name="black_54_alpha">#8A000000</color>
+    <color name="black_55_alpha">#8C000000</color>
     <color name="black_67_alpha">#AB000000</color>
     <color name="black_87_alpha">#DE000000</color>
     <color name="translucent_black_lighter">#59000000</color>
@@ -27,6 +28,7 @@
 
     <color name="light_grey">#d8d8d8</color>
     <color name="white_34_alpha">#57FFFFFF</color>
+    <color name="white_54_alpha">#8AFFFFFF</color>
     <color name="white_60_alpha">#99FFFFFF</color>
     <color name="white_67_alpha">#ABFFFFFF</color>
     <color name="white_70_alpha">#B3FFFFFF</color>
@@ -55,15 +57,6 @@
     <color name="currently_set_both_attribution_subtitle_text_color">@color/white_70_alpha</color>
 
     <color name="select_wallpaper_header_text_color">@color/white_60_alpha</color>
-
-    <color name="rotation_tile_enabled_background_color">@color/accent_color</color>
-    <color name="rotation_tile_enabled_title_text_color">@color/material_white_100</color>
-    <color name="rotation_tile_enabled_subtitle_text_color">@color/white_88_alpha</color>
-    <color name="rotation_tile_enabled_refresh_icon_color">@color/white_88_alpha</color>
-    <color name="rotation_tile_not_enabled_background_color">@color/secondary_color</color>
-    <color name="rotation_tile_not_enabled_title_text_color">@color/material_white_100</color>
-    <color name="rotation_tile_not_enabled_subtitle_text_color">@color/white_88_alpha</color>
-    <color name="rotation_tile_not_enabled_refresh_icon_color">@color/white_88_alpha</color>
 
     <color name="individual_tile_title_scrim_color">@color/translucent_black</color>
     <color name="individual_tile_title_text_color">@color/material_white_100</color>

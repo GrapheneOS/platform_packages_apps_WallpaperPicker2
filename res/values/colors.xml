@@ -16,6 +16,7 @@
 <resources>
 
     <color name="material_white_text">#ffffff</color>
+    <color name="material_grey600">#757575</color>
     <color name="material_grey500">#9e9e9e</color>
     <color name="material_grey200">#eeeeee</color>
     <color name="material_white_100">#ffffff</color>
@@ -36,10 +37,18 @@
 
     <color name="preview_pager_arrow_disabled">@android:color/darker_gray</color>
     <color name="preview_pager_background">@color/secondary_color</color>
+    <color name="fullscreen_preview_background">@color/secondary_color</color>
     <color name="google_grey900">#202124</color>
 
     <color name="google_grey700">#5f6368</color>
     <color name="edit_background_base">@color/google_grey700</color>
     <color name="option_border_default">@color/edit_background_base</color>
+    <color name="full_preview_tab_unselected_text_color">@color/black_55_alpha</color>
+    <color name="bottom_bar_background_color">@color/material_white_100</color>
+    <color name="bottom_bar_icon_unchecked_color">@color/material_grey600</color>
     <color name="action_bar_bottom_sheet_text_color">@color/black_87_alpha</color>
+
+    <color name="selected_check_color">@color/material_white_100</color>
+    <color name="smartspace_preview_shadow_color_dark">#B0000000</color>
+    <color name="smartspace_preview_shadow_color_transparent">@android:color/transparent</color>
 </resources>

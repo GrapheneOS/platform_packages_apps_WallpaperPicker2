@@ -314,7 +314,9 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     /**
      * Shows the view-only preview activity for the given wallpaper.
      */
-    public void showViewOnlyPreview(WallpaperInfo wallpaperInfo) {
+    public void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome) {
+        ((ViewOnlyPreviewActivityIntentFactory) mViewOnlyPreviewIntentFactory).setAsHomePreview(
+                /* isHomeAndLockPreviews= */ true, isViewAsHome);
         wallpaperInfo.showPreview(
                 mActivity, mViewOnlyPreviewIntentFactory,
                 VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE);
@@ -449,10 +451,14 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
                 // image.
                 ImageWallpaperInfo imageWallpaper = new ImageWallpaperInfo(imageUri);
 
+                mWallpaperPersister.setWallpaperInfoInPreview(imageWallpaper);
                 imageWallpaper.showPreview(mActivity, getPreviewIntentFactory(),
                         PREVIEW_WALLPAPER_REQUEST_CODE);
                 return false;
+            case VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE:
+                // Fall through.
             case PREVIEW_WALLPAPER_REQUEST_CODE:
+                // Fall through.
             case PREVIEW_LIVE_WALLPAPER_REQUEST_CODE:
                 // User previewed and selected a wallpaper, so finish this activity.
                 mWallpaperPersister.onLiveWallpaperSet();

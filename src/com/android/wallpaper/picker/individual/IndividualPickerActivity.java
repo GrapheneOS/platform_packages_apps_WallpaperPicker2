@@ -22,12 +22,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
-import android.graphics.Insets;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowInsets;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -35,7 +32,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.android.wallpaper.R;
-import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.CategoryProvider;
 import com.android.wallpaper.model.CategoryReceiver;
@@ -50,12 +46,14 @@ import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.picker.BaseActivity;
 import com.android.wallpaper.picker.PreviewActivity.PreviewActivityIntentFactory;
 import com.android.wallpaper.util.DiskBasedLogger;
+import com.android.wallpaper.widget.BottomActionBar;
+import com.android.wallpaper.widget.BottomActionBar.BottomActionBarHost;
 
 /**
  * Activity that can be launched from the Android wallpaper picker and allows users to pick from
  * various wallpapers and enter a preview mode for specific ones.
  */
-public class IndividualPickerActivity extends BaseActivity {
+public class IndividualPickerActivity extends BaseActivity implements BottomActionBarHost {
     private static final String TAG = "IndividualPickerAct";
     private static final String EXTRA_CATEGORY_COLLECTION_ID =
             "com.android.wallpaper.category_collection_id";
@@ -147,38 +145,6 @@ public class IndividualPickerActivity extends BaseActivity {
         toolbar.getNavigationIcon().setTint(getColor(R.color.toolbar_icon_color));
         toolbar.getNavigationIcon().setAutoMirrored(true);
 
-        getWindow().getDecorView().setSystemUiVisibility(
-                getWindow().getDecorView().getSystemUiVisibility()
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        ((View) findViewById(R.id.fragment_container).getParent())
-                .setOnApplyWindowInsetsListener((view, windowInsets) -> {
-                    view.setPadding(
-                            view.getPaddingLeft(),
-                            windowInsets.getSystemWindowInsetTop(),
-                            view.getPaddingRight(),
-                            view.getPaddingBottom());
-                    // Consume only the top inset (status bar),
-                    // to let other content in the Activity consume the nav bar
-                    // (ie, by using "fitSystemWindows")
-                    if (BuildCompat.isAtLeastQ()) {
-                        WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
-                        builder.setSystemWindowInsets(
-                                Insets.of(
-                                        windowInsets.getSystemWindowInsetLeft(),
-                                        /* top= */ 0,
-                                        windowInsets.getStableInsetRight(),
-                                        windowInsets.getSystemWindowInsetBottom()));
-                        return builder.build();
-                    } else {
-                        return windowInsets.replaceSystemWindowInsets(
-                                windowInsets.getSystemWindowInsetLeft(),
-                                /* top= */ 0,
-                                windowInsets.getStableInsetRight(),
-                                windowInsets.getSystemWindowInsetBottom());
-                    }
-                });
-
         if (fragment == null) {
             fragment = InjectorProvider.getInjector()
                     .getIndividualPickerFragment(mCategoryCollectionId);
@@ -256,6 +222,11 @@ public class IndividualPickerActivity extends BaseActivity {
         super.onSaveInstanceState(bundle);
 
         bundle.putString(KEY_CATEGORY_COLLECTION_ID, mCategoryCollectionId);
+    }
+
+    @Override
+    public BottomActionBar getBottomActionBar() {
+        return findViewById(R.id.bottom_actionbar);
     }
 
     /**

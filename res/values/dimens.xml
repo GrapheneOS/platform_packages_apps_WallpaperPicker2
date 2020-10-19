@@ -30,11 +30,18 @@
     <dimen name="grid_tile_aspect_height">340dp</dimen>
     <dimen name="grid_tile_aspect_width">182dp</dimen>
     <dimen name="grid_edge_space">8dp</dimen>
+    <dimen name="category_grid_padding_top">4dp</dimen>
+    <dimen name="category_grid_padding_bottom">16dp</dimen>
 
     <!-- Dimensions for individual wallpaper tiles. -->
     <dimen name="grid_item_individual_wallpaper_selected_inset">14dp</dimen>
     <dimen name="grid_item_individual_wallpaper_check_circle_offset">4dp</dimen>
     <dimen name="grid_item_individual_wallpaper_check_circle_size">24dp</dimen>
+    <dimen name="grid_item_individual_padding_top">8dp</dimen>
+    <dimen name="grid_item_individual_label_padding_top">4dp</dimen>
+    <dimen name="grid_item_individual_label_padding_bottom">4dp</dimen>
+    <dimen name="wallpaper_grid_padding_top">16dp</dimen>
+    <dimen name="wallpaper_grid_padding_bottom">24dp</dimen>
 
     <!-- Dimensions for "single metadata card" configuration. -->
     <dimen name="single_metadata_card_elevation">2dp</dimen>
@@ -85,15 +92,6 @@
     <!-- Dimensions for "Select wallpaper" header. -->
     <dimen name="select_wallpaper_header_height">48dp</dimen>
     <dimen name="select_wallpaper_header_margin_left">12dp</dimen>
-
-    <!-- Dimensions for "daily refresh" rotation tile in individual picker. -->
-    <dimen name="rotation_tile_padding_left">16dp</dimen>
-    <dimen name="rotation_tile_padding_right">16dp</dimen>
-    <dimen name="rotation_tile_title_size">14sp</dimen>
-    <dimen name="rotation_tile_textarea_margin_bottom">16dp</dimen>
-    <dimen name="rotation_tile_textarea_title_margin_bottom">2dp</dimen>
-    <dimen name="rotation_tile_textarea_subtitle_margin_left">4dp</dimen>
-    <dimen name="rotation_tile_refresh_icon_offset">-3dp</dimen>
 
     <!-- Dimensions for wallpaper tiles in individual picker when in desktop mode. -->
     <dimen name="tile_desktop_progress_bar_size">40dp</dimen>
@@ -197,7 +195,7 @@
     <dimen name="indicator_arrow_container_margin_horizontal">4dp</dimen>
     <dimen name="preview_page_gap">16dp</dimen>
     <dimen name="preview_page_horizontal_margin">56dp</dimen>
-    <dimen name="preview_page_top_margin">16dp</dimen>
+    <dimen name="preview_page_top_margin">30dp</dimen>
     <dimen name="preview_page_bottom_margin">2dp</dimen>
     <dimen name="preview_card_padding">20dp</dimen>
     <dimen name="preview_pager_max_height">450dp</dimen>
@@ -207,13 +205,36 @@
     <!-- The maximum height ratio of PreviewPager and its parent view. -->
     <item name="preview_pager_maximum_height_ratio" format="float" type="dimen">0.7</item>
 
+    <!-- Dimensions for full preview page -->
+    <dimen name="full_preview_page_default_padding_top">24dp</dimen>
+    <dimen name="full_preview_page_default_padding_bottom">32dp</dimen>
+
     <!-- Dimensions for the bottom bar. -->
-    <dimen name="bottom_navbar_height">56dp</dimen>
-    <dimen name="bottom_action_bar_padding_horizontal">16dp</dimen>
-    <dimen name="bottom_action_bar_padding_vertical">20dp</dimen>
+    <dimen name="bottom_navbar_height">76dp</dimen>
+    <dimen name="bottom_action_bar_padding_horizontal">4dp</dimen>
+    <dimen name="bottom_action_bar_padding_top">6dp</dimen>
+    <dimen name="bottom_action_bar_preview_info_padding_vertical">20dp</dimen>
     <dimen name="bottom_action_bar_elevation">10dp</dimen>
+    <dimen name="bottom_action_button_size">48dp</dimen>
+    <dimen name="bottom_action_button_padding">12dp</dimen>
+    <dimen name="bottom_action_icon_size">24dp</dimen>
+
+    <dimen name="wallpaper_info_pane_top_padding">20dp</dimen>
+    <dimen name="wallpaper_info_pane_bottom_padding">24dp</dimen>
+    <dimen name="wallpaper_info_pane_horizontal_padding">24dp</dimen>
+    <dimen name="wallpaper_info_pane_subtitle1_top_margin">14dp</dimen>
+    <dimen name="wallpaper_info_pane_subtitle2_top_margin">4dp</dimen>
+    <dimen name="wallpaper_info_pane_explore_button_top_margin">12dp</dimen>
+    <dimen name="wallpaper_info_pane_title_height">48dp</dimen>
 
     <dimen name="option_border_width">2dp</dimen>
     <dimen name="option_selected_border_width">3dp</dimen>
     <dimen name="option_title_font_text_size">12sp</dimen>
+    <dimen name="option_title_line_height">16dp</dimen>
+
+    <!-- The size of lock screen widget on the full screen. -->
+    <dimen name="lock_screen_preview_lock_icon_size">42dp</dimen>
+    <dimen name="lock_screen_preview_time_text_size">54dp</dimen>
+    <dimen name="lock_screen_preview_date_text_size">18dp</dimen>
+    <dimen name="smartspace_preview_key_ambient_shadow_blur">1.5dp</dimen>
 </resources>

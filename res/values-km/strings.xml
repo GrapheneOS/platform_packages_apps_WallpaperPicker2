@@ -42,7 +42,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"ផ្តល់សិទិ្ធ​ចូលប្រើ"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"សេវាកម្មផ្ទាំងរូបភាពរស់រវើកសម្រាប់បង្វិលផ្ទាំងរូបភាព"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"ផ្ទាំងរូបភាពប្រចាំថ្ងៃ"</string>
-    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"ប៉ះដើម្បីបើក"</string>
+    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"ចុចដើម្បីបើក"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Wallpaper នឹង​ផ្លាស់​ប្ដូរ​ដោយស្វ័យ​ប្រវត្តិ​ជារៀងរាល់ថ្ងៃ។ ដើម្បី​បញ្ចប់​ការ​រៀបចំ សូម​ចុច &lt;strong&gt;កំណត់​ផ្ទាំងរូបភាព&lt;/strong&gt; នៅលើ​អេក្រង់​បន្ទាប់។"</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"ទាញយកផ្ទាំងរូបភាពនៅពេលក្រោយតាមរយៈ Wi-Fi តែប៉ុណ្ណោះ"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"បន្ត"</string>
@@ -66,8 +66,6 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"ផ្ទុកផ្ទាំងរូបភាពប្រចាំថ្ងៃឡើងវិញ"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"កំពុងផ្ទុកផ្ទាំងរូបភាពប្រចាំថ្ងៃឡើងវិញ…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"បានបរាជ័យក្នុងការផ្ទុកផ្ទាំងរូបភាពប្រចាំថ្ងៃឡើងវិញ។ សូមពិនិត្យការតភ្ជាប់បណ្តាញរបស់អ្នក ហើយព្យាយាមម្តងទៀត។"</string>
-    <string name="collapse_attribution_panel" msgid="4367971404848122275">"បង្រួមផ្ទាំងព័ត៌មានផ្ទាំងរូបភាព"</string>
-    <string name="expand_attribution_panel" msgid="6975094181456095915">"ពង្រីកផ្ទាំងព័ត៌មានផ្ទាំងរូបភាព"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"ផ្ទាំងរូបភាពនៅលើឧបករណ៍"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"នៅ​លើ​ឧបករណ៍"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"ផ្ទាំងរូបភាព Android"</string>
@@ -80,4 +78,19 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"ច្រឹប​កណ្តាល"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"ទាញ"</string>
     <string name="preview" msgid="1774602101743861071">"មើលសាកល្បង"</string>
+    <string name="tab_info" msgid="818614080690111416">"ព័ត៌មាន"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"ប្ដូរ​តាម​បំណង"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"ការកំណត់…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"លុប"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"លុប​ផ្ទាំងរូបភាពនេះ​ពី​ទូរសព្ទរបស់អ្នកដែរទេ?"</string>
+    <string name="bottom_action_bar_back" msgid="8237013112999946725">"ថយក្រោយ"</string>
+    <string name="bottom_action_bar_edit" msgid="1214742990893082138">"កែ"</string>
+    <string name="bottom_action_bar_download" msgid="3983122338076389421">"ទាញយក"</string>
+    <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"ផ្ទាំងរូបភាព​បញ្ចាំងស្លាយ"</string>
+    <string name="bottom_action_bar_apply" msgid="2983308349819178932">"ប្រើ"</string>
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"ទំព័រ <xliff:g id="ID_1">%1$d</xliff:g> នៃ <xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"បន្ទាប់"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"មុន"</string>
+    <string name="wallpaper_title" msgid="6754214682228331092">"ផ្ទាំងរូបភាព"</string>
+    <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"ការមើលផ្ទាំង​រូបភាពសាកល្បង"</string>
 </resources>

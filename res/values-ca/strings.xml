@@ -42,7 +42,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Permet l\'accés"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Servei de fons de pantalla animats per a fons de pantalla rotatius"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Fons de pantalla diari"</string>
-    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Toca per activar la funció"</string>
+    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Toca per activar"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"El fons de pantalla canviarà automàticament cada dia. Per completar la configuració, toca &lt;strong&gt;Estableix el fons de pantalla&lt;/strong&gt; a la pantalla següent."</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Baixa els propers fons de pantalla només per Wi-Fi"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Continua"</string>
@@ -66,8 +66,6 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Actualitza el fons de pantalla diari"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"S\'està actualitzant el fons de pantalla diari…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"No s\'ha pogut actualitzar el fons de pantalla diari. Comprova la connexió a la xarxa i torna-ho a provar."</string>
-    <string name="collapse_attribution_panel" msgid="4367971404848122275">"Replega el tauler d\'informació sobre el fons de pantalla"</string>
-    <string name="expand_attribution_panel" msgid="6975094181456095915">"Desplega el tauler d\'informació sobre el fons de pantalla"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"Fons de pantalla del dispositiu"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"Al dispositiu"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Fons de pantalla d\'Android"</string>
@@ -80,4 +78,19 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Centra i retalla"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Amplia"</string>
     <string name="preview" msgid="1774602101743861071">"Previsualitza"</string>
+    <string name="tab_info" msgid="818614080690111416">"Informació"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Personalitza"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Configuració…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Suprimeix"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Vols suprimir aquest fons de pantalla del telèfon?"</string>
+    <string name="bottom_action_bar_back" msgid="8237013112999946725">"Enrere"</string>
+    <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Edita"</string>
+    <string name="bottom_action_bar_download" msgid="3983122338076389421">"Baixa"</string>
+    <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Fons de pantalla de diapositives"</string>
+    <string name="bottom_action_bar_apply" msgid="2983308349819178932">"Aplica"</string>
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"Pàgina <xliff:g id="ID_1">%1$d</xliff:g> de <xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"Següent"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"Anterior"</string>
+    <string name="wallpaper_title" msgid="6754214682228331092">"Fons de pantalla"</string>
+    <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Previsualitz. fons de pantalla"</string>
 </resources>

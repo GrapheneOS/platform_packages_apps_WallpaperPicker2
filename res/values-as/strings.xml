@@ -66,8 +66,6 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"দৈনিক ৱালপেপাৰ ৰিফ্ৰে\'শ্ব কৰক"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"দৈনিক ৱালপেপাৰ ৰিফ্ৰে\'শ্ব কৰি থকা হৈছে …"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"দৈনিক ৱালপেপাৰ ৰিফ্ৰে\'শ্ব কৰিব পৰা নগ\'ল। অনুগ্ৰহ কৰি আপোনাৰ নেটৱর্ক সংযোগ পৰীক্ষা কৰক আৰু আকৌ চেষ্টা কৰক।"</string>
-    <string name="collapse_attribution_panel" msgid="4367971404848122275">"ৱালপেপাৰ সম্পৰ্কীয় তথ্যৰ পেনেল সংকুচিত কৰক"</string>
-    <string name="expand_attribution_panel" msgid="6975094181456095915">"ৱালপেপাৰ সম্পৰ্কীয় তথ্যৰ পেনেল বিস্তাৰ কৰক"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"ডিভাইচত থকা ৱালপেপাৰ"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"ডিভাইচত থকা"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Android ৱালপেপাৰ"</string>
@@ -80,4 +78,19 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"মধ্য অংশৰ পৰা কৰা ক্ৰপ"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"প্ৰসাৰিত"</string>
     <string name="preview" msgid="1774602101743861071">"পূৰ্বদৰ্শন"</string>
+    <string name="tab_info" msgid="818614080690111416">"তথ্য"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"কাষ্টমাইজ কৰক"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"ছেটিংসমূহ…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"মচক"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"এই ৱালপেপাৰখন আপোনাৰ ফ’নটোৰ পৰা মচিবনে?"</string>
+    <string name="bottom_action_bar_back" msgid="8237013112999946725">"উভতি যাওক"</string>
+    <string name="bottom_action_bar_edit" msgid="1214742990893082138">"সম্পাদনা কৰক"</string>
+    <string name="bottom_action_bar_download" msgid="3983122338076389421">"ডাউনল’ড কৰক"</string>
+    <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"ৱালপেপাৰৰ শ্লাইডশ্ব’ দেখুৱাওক"</string>
+    <string name="bottom_action_bar_apply" msgid="2983308349819178932">"প্ৰয়োগ কৰক"</string>
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"পৃষ্ঠা <xliff:g id="ID_2">%2$d</xliff:g>ৰ <xliff:g id="ID_1">%1$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"পৰৱৰ্তী"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"পূৰ্বৱৰ্তী"</string>
+    <string name="wallpaper_title" msgid="6754214682228331092">"ৱালপেপাৰ"</string>
+    <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"ৱালপেপাৰৰ পূৰ্বদৰ্শন"</string>
 </resources>

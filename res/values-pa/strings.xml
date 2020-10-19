@@ -66,8 +66,6 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"ਰੋਜ਼ਾਨਾ ਵਾਲਪੇਪਰ ਰਿਫ੍ਰੈਸ਼ ਕਰੋ"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"ਰੋਜ਼ਾਨਾ ਵਾਲਪੇਪਰ ਰਿਫ੍ਰੈਸ਼ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"ਰੋਜ਼ਾਨਾ ਵਾਲਪੇਪਰ ਰਿਫ੍ਰੈਸ਼ ਕਰਨਾ ਅਸਫਲ ਰਿਹਾ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਨੈੱਟਵਰਕ ਕਨੈਕਸ਼ਨ ਦੀ ਜਾਂਚ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"</string>
-    <string name="collapse_attribution_panel" msgid="4367971404848122275">"ਵਾਲਪੇਪਰ ਦੀ ਜਾਣਕਾਰੀ ਵਾਲਾ ਪੈਨਲ ਸਮੇਟੋ"</string>
-    <string name="expand_attribution_panel" msgid="6975094181456095915">"ਵਾਲਪੇਪਰ ਦੀ ਜਾਣਕਾਰੀ ਵਾਲੇ ਪੈਨਲ ਦਾ ਵਿਸਤਾਰ ਕਰੋ"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"ਡੀਵਾਈਸ ਵਿੱਚ ਮੌਜੂਦ ਵਾਲਪੇਪਰ"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"ਡੀਵਾਈਸ ਵਿੱਚ ਮੌਜੂਦ"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Android ਵਾਲਪੇਪਰ"</string>
@@ -80,4 +78,19 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"ਵਿਚਕਾਰੋਂ ਕਾਂਟ-ਛਾਂਟ ਕਰੋ"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"ਫੈਲਾਓ"</string>
     <string name="preview" msgid="1774602101743861071">"ਪੂਰਵ-ਝਲਕ"</string>
+    <string name="tab_info" msgid="818614080690111416">"ਜਾਣਕਾਰੀ"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"ਵਿਉਂਤਬੱਧ ਕਰੋ"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"ਸੈਟਿੰਗਾਂ…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"ਮਿਟਾਓ"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"ਕੀ ਇਹ ਵਾਲਪੇਪਰ ਤੁਹਾਡੇ ਫ਼ੋਨ ਤੋਂ ਮਿਟਾਉਣਾ ਹੈ?"</string>
+    <string name="bottom_action_bar_back" msgid="8237013112999946725">"ਪਿੱਛੇ"</string>
+    <string name="bottom_action_bar_edit" msgid="1214742990893082138">"ਸੰਪਾਦਨ ਕਰੋ"</string>
+    <string name="bottom_action_bar_download" msgid="3983122338076389421">"ਡਾਊਨਲੋਡ ਕਰੋ"</string>
+    <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"ਸਲਾਈਡਸ਼ੋਅ ਵਾਲਪੇਪਰ"</string>
+    <string name="bottom_action_bar_apply" msgid="2983308349819178932">"ਲਾਗੂ ਕਰੋ"</string>
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"<xliff:g id="ID_2">%2$d</xliff:g> ਵਿੱਚੋਂ ਪੰਨਾ <xliff:g id="ID_1">%1$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"ਅੱਗੇ ਵਧੋ"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"ਪਿੱਛੇ ਜਾਓ"</string>
+    <string name="wallpaper_title" msgid="6754214682228331092">"ਵਾਲਪੇਪਰ"</string>
+    <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"ਵਾਲਪੇਪਰ ਦੀ ਪੂਰਵ-ਝਲਕ"</string>
 </resources>

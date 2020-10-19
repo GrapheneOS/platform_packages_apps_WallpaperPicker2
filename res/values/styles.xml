@@ -125,7 +125,7 @@
 
     <style name="OutlinedButtonStyle"  parent="@android:style/Widget.DeviceDefault.Button">
         <item name="android:background">@drawable/btn_transparent</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">?android:attr/colorAccent</item>
     </style>
 
     <style name="ActionBarCheckboxStyle" parent="@android:style/Widget.DeviceDefault.CompoundButton.CheckBox">
@@ -146,6 +146,14 @@
     <style name="WallpaperPicker.BottomPaneStyle" parent="@android:style/Theme.DeviceDefault.Settings">
         <item name="android:textColorPrimary">@color/material_white_100</item>
         <item name="android:textColorSecondary">@color/white_70_alpha</item>
+        <item name="tabTextAppearance">@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps</item>
+        <item name="tabIndicatorColor">?android:attr/textColorPrimary</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabMaxWidth">0dp</item>
+    </style>
+
+    <!-- Preview customization pane styles -->
+    <style name="WallpaperPicker.CustomizationPaneStyle" parent="@android:style/Theme.DeviceDefault.Settings">
         <item name="tabTextAppearance">@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps</item>
         <item name="tabIndicatorColor">?android:attr/textColorPrimary</item>
         <item name="tabGravity">fill</item>
@@ -176,6 +184,7 @@
     <!-- Set wallpaper destination item -->
     <style name="set_wallpaper_destination_item">
         <item name="android:minHeight">@dimen/set_wallpaper_dialog_item_min_height</item>
+        <item name="android:textAlignment">viewStart</item>
         <item name="android:textAppearance">?attr/textAppearanceListItemSmall</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="android:textSize">@dimen/abc_text_size_subhead_material</item>
@@ -227,6 +236,7 @@
         <item name="android:textColor">@color/option_title_color</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">@dimen/option_title_font_text_size</item>
+        <item name="android:lineHeight">@dimen/option_title_line_height</item>
     </style>
 
 </resources>

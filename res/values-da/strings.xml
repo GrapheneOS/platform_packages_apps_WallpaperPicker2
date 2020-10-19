@@ -66,8 +66,6 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Opdater daglig baggrund"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"Opdaterer daglig baggrund…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"Opdateringen af din daglige baggrund mislykkedes. Tjek din netværksforbindelse, og prøv igen."</string>
-    <string name="collapse_attribution_panel" msgid="4367971404848122275">"Skjul panelet med oplysninger om baggrunden"</string>
-    <string name="expand_attribution_panel" msgid="6975094181456095915">"Udvid panelet med oplysninger om baggrunden"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"Baggrunde på enheden"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"På enheden"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Android-baggrund"</string>
@@ -80,4 +78,19 @@
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Centrer og beskær"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Stræk"</string>
     <string name="preview" msgid="1774602101743861071">"Forhåndsvisning"</string>
+    <string name="tab_info" msgid="818614080690111416">"Oplysninger"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"Tilpas"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Indstillinger…"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"Slet"</string>
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Vil du slette denne baggrund på din telefon?"</string>
+    <string name="bottom_action_bar_back" msgid="8237013112999946725">"Tilbage"</string>
+    <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Rediger"</string>
+    <string name="bottom_action_bar_download" msgid="3983122338076389421">"Download"</string>
+    <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Baggrund med diasshow"</string>
+    <string name="bottom_action_bar_apply" msgid="2983308349819178932">"Anvend"</string>
+    <string name="accessibility_preview_pager" msgid="1839869637405028575">"Side <xliff:g id="ID_1">%1$d</xliff:g> af <xliff:g id="ID_2">%2$d</xliff:g>"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"Næste"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"Forrige"</string>
+    <string name="wallpaper_title" msgid="6754214682228331092">"Baggrund"</string>
+    <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Forhåndsvisning af baggrund"</string>
 </resources>
