@@ -296,8 +296,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
 
         if (fragment == null) {
-            // App launch specific logic: log the "app launched" event and set up daily logging.
-            mUserEventLogger.logAppLaunched();
+            // App launch specific logic: log the "app launch source" event.
+            mUserEventLogger.logAppLaunched(getIntent());
             mWallpaperPreferences.incrementAppLaunched();
             DailyLoggingAlarmScheduler.setAlarm(getApplicationContext());
 
@@ -357,8 +357,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
 
         if (fragment == null) {
-            // App launch specific logic: log the "app launched" event and set up daily logging.
-            mUserEventLogger.logAppLaunched();
+            // App launch specific logic: log the "app launch source" event.
+            mUserEventLogger.logAppLaunched(getIntent());
             mWallpaperPreferences.incrementAppLaunched();
             DailyLoggingAlarmScheduler.setAlarm(getApplicationContext());
         }

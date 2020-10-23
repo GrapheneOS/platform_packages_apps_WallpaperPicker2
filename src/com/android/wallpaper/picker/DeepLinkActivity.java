@@ -15,7 +15,11 @@
  */
 package com.android.wallpaper.picker;
 
+import static com.android.wallpaper.util.LaunchSourceUtils.LAUNCH_SOURCE_DEEP_LINK;
+import static com.android.wallpaper.util.LaunchSourceUtils.WALLPAPER_LAUNCH_SOURCE;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -27,12 +31,16 @@ import com.android.wallpaper.module.InjectorProvider;
  * the url link to deep link.
  */
 public class DeepLinkActivity extends Activity {
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        startActivity(InjectorProvider.getInjector().getDeepLinkRedirectIntent(
-                this, getIntent().getData()));
+        Intent intent = InjectorProvider.getInjector().getDeepLinkRedirectIntent(
+                this, getIntent().getData());
+        intent.putExtra(WALLPAPER_LAUNCH_SOURCE, LAUNCH_SOURCE_DEEP_LINK);
+
+        startActivity(intent);
         finish();
     }
 }
