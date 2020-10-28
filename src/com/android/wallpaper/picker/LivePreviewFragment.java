@@ -309,9 +309,13 @@ public class LivePreviewFragment extends PreviewFragment implements
 
     private void previewLiveWallpaper(ImageView thumbnailView) {
         thumbnailView.post(() -> {
+            Activity activity = getActivity();
+            if (activity == null) {
+                return;
+            }
             if (mWallpaperSurfaceCallback.getHomeImageWallpaper() != null) {
-                mWallpaper.getThumbAsset(requireActivity().getApplicationContext())
-                        .loadPreviewImage(requireActivity(),
+                mWallpaper.getThumbAsset(activity.getApplicationContext())
+                        .loadPreviewImage(activity,
                                 mWallpaperSurfaceCallback.getHomeImageWallpaper(),
                                 getResources().getColor(R.color.secondary_color));
             }
@@ -319,7 +323,7 @@ public class LivePreviewFragment extends PreviewFragment implements
 
             setUpLiveWallpaperPreview(mWallpaper, thumbnailView,
                     new ColorDrawable(getResources().getColor(
-                            R.color.secondary_color, getActivity().getTheme())));
+                            R.color.secondary_color, activity.getTheme())));
         });
     }
 
