@@ -54,6 +54,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -83,6 +84,7 @@ public class DefaultCategoryProvider implements CategoryProvider {
     // The network status of the last fetch from the server.
     @NetworkStatus
     private int mNetworkStatus;
+    private Locale mLocale;
 
     public DefaultCategoryProvider(Context context) {
         mAppContext = context.getApplicationContext();
@@ -105,6 +107,7 @@ public class DefaultCategoryProvider implements CategoryProvider {
         }
 
         mNetworkStatus = mNetworkStatusNotifier.getNetworkStatus();
+        mLocale = getLocale();
         doFetch(receiver, forceRefresh);
     }
 
@@ -140,7 +143,8 @@ public class DefaultCategoryProvider implements CategoryProvider {
 
     @Override
     public void resetIfNeeded() {
-        if (mNetworkStatus != mNetworkStatusNotifier.getNetworkStatus()) {
+        if (mNetworkStatus != mNetworkStatusNotifier.getNetworkStatus()
+                || mLocale != getLocale()) {
             mCategories.clear();
             mFetchedCategories = false;
         }
@@ -162,6 +166,10 @@ public class DefaultCategoryProvider implements CategoryProvider {
         };
 
         new FetchCategoriesTask(delegatingReceiver, mAppContext).execute();
+    }
+
+    private Locale getLocale() {
+        return mAppContext.getResources().getConfiguration().getLocales().get(0);
     }
 
     /**
