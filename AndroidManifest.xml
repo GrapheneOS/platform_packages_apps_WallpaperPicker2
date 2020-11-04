@@ -15,6 +15,9 @@
   <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <uses-permission android:name="android.permission.SET_WALLPAPER" />
+  <uses-permission android:name="android.permission.BIND_WALLPAPER"/>
+  <uses-permission android:name="android.permission.READ_WALLPAPER_INTERNAL"/>
+  <uses-permission android:name="android.permission.SET_WALLPAPER_COMPONENT"/>
   <uses-permission android:name="android.permission.WAKE_LOCK" />
   <uses-permission
       android:name="com.android.wallpaper.NOTIFY_ROTATING_WALLPAPER_CHANGED" />
