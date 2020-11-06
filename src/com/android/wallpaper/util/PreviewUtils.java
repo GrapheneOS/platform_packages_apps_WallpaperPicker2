@@ -33,7 +33,7 @@ public class PreviewUtils {
 
     private final Context mContext;
     private final String mProviderAuthority;
-    private final ProviderInfo mProviderInfo;
+    private ProviderInfo mProviderInfo;
 
     public PreviewUtils(Context context, String authorityMetadataKey) {
         mContext = context;
@@ -46,9 +46,15 @@ public class PreviewUtils {
         } else {
             mProviderAuthority = null;
         }
-        // TODO: check permissions if needed
+
         mProviderInfo = TextUtils.isEmpty(mProviderAuthority) ? null
                 : mContext.getPackageManager().resolveContentProvider(mProviderAuthority, 0);
+        if (mProviderInfo != null && !TextUtils.isEmpty(mProviderInfo.readPermission)) {
+            if (context.checkSelfPermission(mProviderInfo.readPermission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                mProviderInfo = null;
+            }
+        }
     }
 
     /** Render preview under the current grid option. */
