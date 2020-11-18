@@ -264,11 +264,14 @@ public class LivePreviewFragment extends PreviewFragment implements
     private void setupCurrentWallpaperPreview() {
         mHomePreview.setOnTouchListener((v, ev) -> {
             if (mWallpaperConnection != null && mWallpaperConnection.getEngine() != null) {
+                float scaleRatio =
+                        (float) mTouchForwardingLayout.getWidth() / (float) mScreenSize.x;
                 int action = ev.getActionMasked();
                 if (action == MotionEvent.ACTION_DOWN) {
                     mBottomActionBar.collapseBottomSheetIfExpanded();
                 }
                 MotionEvent dup = MotionEvent.obtainNoHistory(ev);
+                dup.setLocation(ev.getX() / scaleRatio, ev.getY() / scaleRatio);
                 try {
                     mWallpaperConnection.getEngine().dispatchPointer(dup);
                     if (action == MotionEvent.ACTION_UP) {
