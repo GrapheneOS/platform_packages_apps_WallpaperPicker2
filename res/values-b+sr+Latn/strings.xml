@@ -44,7 +44,7 @@
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Dnevna pozadina"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Dodirnite da biste uključili"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Pozadina se automatski menja svaki dan. Da biste dovršili podešavanje, dodirnite &lt;strong&gt;Podesi pozadinu&lt;/strong&gt; na sledećem ekranu."</string>
-    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Preuzimaj buduće pozadine samo preko Wi-Fi mreže"</string>
+    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Preuzimaj buduće pozadine samo preko WiFi mreže"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Nastavi"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Preuzima se prva pozadina…"</string>
     <string name="start_rotation_error_message" msgid="3053799836719618972">"Preuzimanje prve pozadine nije uspelo. Proverite podešavanja mreže i probajte ponovo."</string>
@@ -93,4 +93,5 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"Prethodna"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Pozadina"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Pregled pozadine"</string>
+    <string name="collection_not_exist_msg" msgid="3504852962885064842">"Kolekcija ne postoji"</string>
 </resources>

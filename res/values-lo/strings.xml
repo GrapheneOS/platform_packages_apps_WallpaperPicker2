@@ -93,4 +93,5 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"ກ່ອນໜ້າ"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"ຮູບພື້ນຫຼັງ"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"ຕົວຢ່າງຮູບພື້ນຫຼັງ"</string>
+    <string name="collection_not_exist_msg" msgid="3504852962885064842">"ບໍ່ມິຄໍເລັກຊັນ"</string>
 </resources>
