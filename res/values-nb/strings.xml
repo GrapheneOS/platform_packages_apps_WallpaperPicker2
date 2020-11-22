@@ -93,4 +93,5 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"Forrige"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Bakgrunn"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Forhåndsvisning av bakgrunn"</string>
+    <string name="collection_not_exist_msg" msgid="3504852962885064842">"Samlingen eksisterer ikke"</string>
 </resources>

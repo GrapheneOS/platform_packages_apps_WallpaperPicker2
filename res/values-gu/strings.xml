@@ -43,12 +43,12 @@
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"સતત બદલાતા રહેતા વૉલપેપર માટે લાઇવ વૉલપેપર સેવા"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"દૈનિક વૉલપેપર"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"ચાલુ કરવા માટે ટૅપ કરો"</string>
-    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"વૉલપેપર દરરોજ આપમેળે બદલાશે. સેટઅપ પૂર્ણ કરવા માટે, આગલી સ્ક્રીન પર &lt;strong&gt;વૉલપેપર સેટ કરો&lt;/strong&gt; પર ટૅપ કરો."</string>
+    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"વૉલપેપર દરરોજ ઑટોમૅટિક રીતે બદલાશે. સેટઅપ પૂર્ણ કરવા માટે, આગલી સ્ક્રીન પર &lt;strong&gt;વૉલપેપર સેટ કરો&lt;/strong&gt; પર ટૅપ કરો."</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"ભવિષ્યમાં માત્ર વાઇ-ફાઇ પર વૉલપેપર ડાઉનલોડ કરજો"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"આગળ વધો"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"પ્રથમ વૉલપેપર ડાઉનલોડ કરી રહ્યાં છીએ…"</string>
     <string name="start_rotation_error_message" msgid="3053799836719618972">"પ્રથમ વૉલપેપર ડાઉનલોડ કરવામાં અસમર્થ રહ્યાં. કૃપા કરીને તમારી નેટવર્ક સેટિંગ ચેક કરો અને ફરી પ્રયાસ કરો."</string>
-    <string name="start_rotation_dialog_body" msgid="7903554799046364916">"વૉલપેપર દરરોજ આપમેળે બદલાશે"</string>
+    <string name="start_rotation_dialog_body" msgid="7903554799046364916">"વૉલપેપર દરરોજ ઑટોમૅટિક રીતે બદલાશે"</string>
     <string name="settings_button_label" msgid="8724734130079207955">"સેટિંગ"</string>
     <string name="explore" msgid="7468719504199497281">"શોધખોળ કરો"</string>
     <string name="next_wallpaper" msgid="3911873152952596232">"આગલું વૉલપેપર"</string>
@@ -93,4 +93,5 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"પાછળ"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"વૉલપેપર"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"વૉલપેપરનો પ્રીવ્યૂ કરો"</string>
+    <string name="collection_not_exist_msg" msgid="3504852962885064842">"સંગ્રહ અસ્તિત્વમાં નથી"</string>
 </resources>
