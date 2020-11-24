@@ -42,6 +42,13 @@ import com.android.systemui.shared.system.WallpaperEngineCompat;
  */
 public class WallpaperConnection extends IWallpaperConnection.Stub implements ServiceConnection {
 
+    /**
+     * Returns whether live preview is available in framework.
+     */
+    public static boolean isPreviewAvailable() {
+        return WallpaperEngineCompat.supportsScalePreview();
+    }
+
     private static final String TAG = "WallpaperConnection";
     private final Activity mActivity;
     private final Intent mIntent;

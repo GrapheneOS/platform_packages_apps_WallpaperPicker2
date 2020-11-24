@@ -16,6 +16,8 @@
 package com.android.wallpaper.module;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 
 import androidx.fragment.app.Fragment;
 
@@ -82,4 +84,6 @@ public interface Injector {
     LiveWallpaperInfoFactory getLiveWallpaperInfoFactory(Context context);
 
     DrawableLayerResolver getDrawableLayerResolver();
+
+    Intent getDeepLinkRedirectIntent(Context context, Uri uri);
 }

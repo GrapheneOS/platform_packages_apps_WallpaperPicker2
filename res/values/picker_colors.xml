@@ -33,6 +33,7 @@
     <color name="white_67_alpha">#ABFFFFFF</color>
     <color name="white_70_alpha">#B3FFFFFF</color>
     <color name="white_80_alpha">#CCFFFFFF</color>
+    <color name="white_87_alpha">#DEFFFFFF</color>
     <color name="white_88_alpha">#E0FFFFFF</color>
 
     <!-- Dark scrollbar thumb color (26% of black) -->

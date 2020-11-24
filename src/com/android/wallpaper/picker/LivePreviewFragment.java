@@ -69,10 +69,12 @@ import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
+import com.android.wallpaper.util.WallpaperSurfaceCallback;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.BottomActionBar.AccessibilityCallback;
 import com.android.wallpaper.widget.LiveTileOverlay;
 import com.android.wallpaper.widget.LockScreenPreviewer;
+import com.android.wallpaper.widget.WallpaperColorsLoader;
 import com.android.wallpaper.widget.WallpaperInfoView;
 
 import com.google.android.material.tabs.TabLayout;
@@ -115,9 +117,11 @@ public class LivePreviewFragment extends PreviewFragment implements
     private ViewGroup mPreviewContainer;
     private TouchForwardingLayout mTouchForwardingLayout;
     private SurfaceView mWorkspaceSurface;
+    private SurfaceView mWallpaperSurface;
     private ViewGroup mLockPreviewContainer;
     private LockScreenPreviewer mLockScreenPreviewer;
     private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
+    private WallpaperSurfaceCallback mWallpaperSurfaceCallback;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -190,9 +194,13 @@ public class LivePreviewFragment extends PreviewFragment implements
         mLockPreviewContainer = mPreviewContainer.findViewById(R.id.lock_screen_preview_container);
         mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), activity,
                 mLockPreviewContainer);
+        mWallpaperSurface = mHomePreviewCard.findViewById(R.id.wallpaper_surface);
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
+
         mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(
                 mWorkspaceSurface, getContext());
+        mWallpaperSurfaceCallback = new WallpaperSurfaceCallback(getContext(),
+                mHomePreview, mWallpaperSurface);
 
         TabLayout tabs = inflater.inflate(R.layout.full_preview_tabs,
                 view.findViewById(R.id.toolbar_tabs_container))
@@ -231,8 +239,13 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        updateWallpaperSurface();
         setupCurrentWallpaperPreview();
         renderWorkspaceSurface();
+    }
+
+    private void updateWallpaperSurface() {
+        mWallpaperSurface.getHolder().addCallback(mWallpaperSurfaceCallback);
     }
 
     private void updateScreenPreview(boolean isHomeSelected) {
@@ -289,13 +302,19 @@ public class LivePreviewFragment extends PreviewFragment implements
             mWallpaperConnection = null;
         }
         mWorkspaceSurfaceCallback.cleanUp();
+        mWorkspaceSurface.getHolder().removeCallback(mWorkspaceSurfaceCallback);
+        mWallpaperSurfaceCallback.cleanUp();
+        mWallpaperSurface.getHolder().removeCallback(mWallpaperSurfaceCallback);
     }
 
     private void previewLiveWallpaper(ImageView thumbnailView) {
         thumbnailView.post(() -> {
-            mWallpaper.getThumbAsset(requireActivity().getApplicationContext()).loadPreviewImage(
-                    requireActivity(), thumbnailView,
-                    getResources().getColor(R.color.secondary_color));
+            if (mWallpaperSurfaceCallback.getHomeImageWallpaper() != null) {
+                mWallpaper.getThumbAsset(requireActivity().getApplicationContext())
+                        .loadPreviewImage(requireActivity(),
+                                mWallpaperSurfaceCallback.getHomeImageWallpaper(),
+                                getResources().getColor(R.color.secondary_color));
+            }
             LiveTileOverlay.INSTANCE.detach(thumbnailView.getOverlay());
 
             setUpLiveWallpaperPreview(mWallpaper, thumbnailView,
@@ -317,18 +336,25 @@ public class LivePreviewFragment extends PreviewFragment implements
             thumbnail.setBounds(previewView.getLeft(), previewView.getTop(), previewView.getRight(),
                     previewView.getBottom());
         }
-        repositionPreview(previewView);
 
-        mWallpaperConnection = new WallpaperConnection(
-                getWallpaperIntent(homeWallpaper.getWallpaperComponent()),
-                activity,
-                /* listener= */ this,
-                mPreviewGlobalRect);
+        if (WallpaperConnection.isPreviewAvailable()) {
+            repositionPreview(previewView);
+            mWallpaperConnection = new WallpaperConnection(
+                    getWallpaperIntent(homeWallpaper.getWallpaperComponent()),
+                    activity,
+                    /* listener= */ this,
+                    mPreviewGlobalRect);
 
-        LiveTileOverlay.INSTANCE.update(new RectF(mPreviewLocalRect),
-                ((CardView) previewView.getParent()).getRadius());
+            LiveTileOverlay.INSTANCE.update(new RectF(mPreviewLocalRect),
+                    ((CardView) previewView.getParent()).getRadius());
 
-        mWallpaperConnection.setVisibility(true);
+            mWallpaperConnection.setVisibility(true);
+        } else {
+            WallpaperColorsLoader.getWallpaperColors(
+                    activity,
+                    homeWallpaper.getThumbAsset(activity),
+                    mLockScreenPreviewer::setColor);
+        }
         mLoadingScrim.post(() -> mLoadingScrim.animate()
                 .alpha(0f)
                 .setStartDelay(50)
