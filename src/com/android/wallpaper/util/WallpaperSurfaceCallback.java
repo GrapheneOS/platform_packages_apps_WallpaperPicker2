@@ -19,6 +19,7 @@ import static android.view.View.MeasureSpec.EXACTLY;
 import static android.view.View.MeasureSpec.makeMeasureSpec;
 
 import android.content.Context;
+import android.service.wallpaper.WallpaperService;
 import android.view.Surface;
 import android.view.SurfaceControlViewHost;
 import android.view.SurfaceHolder;
@@ -29,6 +30,9 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.module.Injector;
+import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.module.PackageStatusNotifier;
 
 /**
  * Default implementation of {@link SurfaceHolder.Callback} to render a static wallpaper when the
@@ -56,6 +60,10 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
     private final SurfaceView mWallpaperSurface;
     @Nullable
     private final SurfaceListener mListener;
+    private boolean mSurfaceCreated;
+
+    private PackageStatusNotifier.Listener mAppStatusListener;
+    private PackageStatusNotifier mPackageStatusNotifier;
 
     public WallpaperSurfaceCallback(Context context, ImageView homePreview,
             SurfaceView wallpaperSurface, @Nullable  SurfaceListener listener) {
@@ -63,6 +71,18 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
         mHomePreview = homePreview;
         mWallpaperSurface = wallpaperSurface;
         mListener = listener;
+
+        // Notify WallpaperSurface to reset image wallpaper when encountered live wallpaper's
+        // package been changed in background.
+        Injector injector = InjectorProvider.getInjector();
+        mPackageStatusNotifier = injector.getPackageStatusNotifier(context);
+        mAppStatusListener = (packageName, status) -> {
+            if (status != PackageStatusNotifier.PackageStatus.REMOVED) {
+                resetHomeImageWallpaper();
+            }
+        };
+        mPackageStatusNotifier.addListener(mAppStatusListener,
+                WallpaperService.SERVICE_INTERFACE);
     }
 
     public WallpaperSurfaceCallback(Context context, ImageView homePreview,
@@ -74,40 +94,67 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder holder) {
         if (mLastSurface != holder.getSurface()) {
             mLastSurface = holder.getSurface();
-            mHomeImageWallpaper = new ImageView(mContext);
-            mHomeImageWallpaper.setBackgroundColor(
-                    ContextCompat.getColor(mContext, R.color.primary_color));
-            mHomeImageWallpaper.measure(makeMeasureSpec(mHomePreview.getWidth(), EXACTLY),
-                    makeMeasureSpec(mHomePreview.getHeight(), EXACTLY));
-            mHomeImageWallpaper.layout(0, 0, mHomePreview.getWidth(),
-                    mHomePreview.getHeight());
-
-            cleanUp();
-            mHost = new SurfaceControlViewHost(mContext,
-                    mContext.getDisplay(), mWallpaperSurface.getHostToken());
-            mHost.setView(mHomeImageWallpaper, mHomeImageWallpaper.getWidth(),
-                    mHomeImageWallpaper.getHeight());
-            mWallpaperSurface.setChildSurfacePackage(mHost.getSurfacePackage());
+            setupSurfaceWallpaper(/* forceClean= */ true);
         }
         if (mListener != null) {
             mListener.onSurfaceCreated();
         }
+        mSurfaceCreated = true;
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder) { }
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        mSurfaceCreated = false;
+    }
 
     /**
-     * Call to release resources.
+     * Call to release resources and app status listener.
      */
     public void cleanUp() {
+        releaseHost();
+        mPackageStatusNotifier.removeListener(mAppStatusListener);
+    }
+
+    private void releaseHost() {
         if (mHost != null) {
             mHost.release();
             mHost = null;
         }
+    }
+
+    /**
+     * Reset existing image wallpaper by creating a new ImageView for SurfaceControlViewHost
+     * if surface state is not created.
+     */
+    private void resetHomeImageWallpaper() {
+        if (mSurfaceCreated) {
+            return;
+        }
+
+        if (mHost != null) {
+            setupSurfaceWallpaper(/* forceClean= */ false);
+        }
+    }
+
+    private void setupSurfaceWallpaper(boolean forceClean) {
+        mHomeImageWallpaper = new ImageView(mContext);
+        mHomeImageWallpaper.setBackgroundColor(
+                ContextCompat.getColor(mContext, R.color.primary_color));
+        mHomeImageWallpaper.measure(makeMeasureSpec(mHomePreview.getWidth(), EXACTLY),
+                makeMeasureSpec(mHomePreview.getHeight(), EXACTLY));
+        mHomeImageWallpaper.layout(0, 0, mHomePreview.getWidth(),
+                mHomePreview.getHeight());
+        if (forceClean) {
+            releaseHost();
+            mHost = new SurfaceControlViewHost(mContext,
+                    mContext.getDisplay(), mWallpaperSurface.getHostToken());
+        }
+        mHost.setView(mHomeImageWallpaper, mHomeImageWallpaper.getWidth(),
+                mHomeImageWallpaper.getHeight());
+        mWallpaperSurface.setChildSurfacePackage(mHost.getSurfacePackage());
     }
 
     @Nullable
