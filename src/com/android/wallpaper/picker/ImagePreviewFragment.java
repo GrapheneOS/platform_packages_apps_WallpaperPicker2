@@ -52,6 +52,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
+import com.android.wallpaper.asset.CurrentWallpaperAssetVN;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
@@ -249,10 +250,6 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         mBottomActionBar.disableActions();
         mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
-            if (mBottomActionBar != null) {
-                mBottomActionBar.enableActions();
-            }
-
             // Don't continue loading the wallpaper if the Fragment is detached.
             if (getActivity() == null) {
                 return;
@@ -262,6 +259,10 @@ public class ImagePreviewFragment extends PreviewFragment {
             if (dimensions == null) {
                 showLoadWallpaperErrorDialog();
                 return;
+            }
+
+            if (mBottomActionBar != null) {
+                mBottomActionBar.enableActions();
             }
 
             mRawWallpaperSize = dimensions;
@@ -314,7 +315,8 @@ public class ImagePreviewFragment extends PreviewFragment {
                         // Set page bitmap.
                         mFullResImageView.setImage(ImageSource.bitmap(pageBitmap));
 
-                        setDefaultWallpaperZoomAndScroll();
+                        setDefaultWallpaperZoomAndScroll(
+                                mWallpaperAsset instanceof CurrentWallpaperAssetVN);
                         crossFadeInMosaicView();
                     }
                     getActivity().invalidateOptionsMenu();
@@ -370,14 +372,20 @@ public class ImagePreviewFragment extends PreviewFragment {
      *
      * <p>This method is called once in the Fragment lifecycle after the wallpaper asset has loaded
      * and rendered to the layout.
+     *
+     * @param offsetToFarLeft {@code true} if we want to offset the visible rectangle to far left of
+     *                                    the raw wallpaper; {@code false} otherwise.
      */
-    private void setDefaultWallpaperZoomAndScroll() {
+    private void setDefaultWallpaperZoomAndScroll(boolean offsetToFarLeft) {
         // Determine minimum zoom to fit maximum visible area of wallpaper on crop surface.
         int cropWidth = mWorkspaceSurface.getMeasuredWidth();
         int cropHeight = mWorkspaceSurface.getMeasuredHeight();
         Point crop = new Point(cropWidth, cropHeight);
         Rect visibleRawWallpaperRect =
                 WallpaperCropUtils.calculateVisibleRect(mRawWallpaperSize, crop);
+        if (offsetToFarLeft) {
+            visibleRawWallpaperRect.offsetTo(/* newLeft= */ 0, visibleRawWallpaperRect.top);
+        }
 
         final PointF centerPosition = WallpaperCropUtils.calculateDefaultCenter(requireContext(),
                 mRawWallpaperSize, visibleRawWallpaperRect);

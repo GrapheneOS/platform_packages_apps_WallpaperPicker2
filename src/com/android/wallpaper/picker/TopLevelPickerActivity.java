@@ -16,6 +16,7 @@
 package com.android.wallpaper.picker;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -41,7 +42,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -168,6 +168,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         mWallpaperPersister = injector.getWallpaperPersister(this);
         mWallpaperPreferences = injector.getPreferences(this);
         mWasCustomPhotoWallpaperSet = false;
+
+        mDelegate.getCategoryProvider().resetIfNeeded();
 
         @WallpaperSupportLevel int wallpaperSupportLevel = mDelegate.getWallpaperSupportLevel();
         if (wallpaperSupportLevel != WallpaperDisabledFragment.SUPPORTED_CAN_SET) {
@@ -305,8 +307,6 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                     .add(R.id.fragment_container, newFragment)
                     .commit();
         }
-
-        mDelegate.initialize(shouldForceRefresh);
     }
 
     private void initializeDesktop(Bundle savedInstanceState) {
@@ -800,6 +800,11 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     @Override
     public boolean isNavigationTabsContained() {
         return false;
+    }
+
+    @Override
+    public void fetchCategories() {
+        mDelegate.initialize(!mDelegate.getCategoryProvider().isCategoriesFetched());
     }
 
     @Override

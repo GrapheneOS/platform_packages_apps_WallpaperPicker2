@@ -54,7 +54,7 @@
     <string name="next_wallpaper" msgid="3911873152952596232">"الخلفية التالية"</string>
     <string name="wallpaper_disabled_message" msgid="7309484130562148185">"تم إيقاف إمكانية تعيين خلفية على هذا الجهاز."</string>
     <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"أوقف مشرف الجهاز إمكانية تعيين خلفية."</string>
-    <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"تم تعيين الخلفية بنجاح."</string>
+    <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"تم ضبط الخلفية بنجاح."</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"يلزمك الاتصال بالإنترنت للاطّلاع على الخلفيات. يُرجى الاتصال وإعادة المحاولة."</string>
     <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"صورة مصغَّرة لخلفية الشاشة الرئيسية المعيَّنة حاليًا"</string>
     <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"صورة مصغَّرة لخلفية شاشة القفل المعيَّنة حاليًا"</string>
@@ -93,4 +93,5 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"الصفحة السابقة"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"الخلفية"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"معاينة عرض الشرائح"</string>
+    <string name="collection_not_exist_msg" msgid="3504852962885064842">"المجموعة غير متوفرة."</string>
 </resources>

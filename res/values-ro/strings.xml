@@ -93,4 +93,5 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"Înapoi"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Imagine de fundal"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Previzualizarea imaginii de fundal"</string>
+    <string name="collection_not_exist_msg" msgid="3504852962885064842">"Colecția nu există"</string>
 </resources>

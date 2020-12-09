@@ -47,6 +47,7 @@
     <color name="bottom_bar_background_color">@color/material_white_100</color>
     <color name="bottom_bar_icon_unchecked_color">@color/material_grey600</color>
     <color name="action_bar_bottom_sheet_text_color">@color/black_87_alpha</color>
+    <color name="action_bar_bottom_sheet_subtitle2_text_color">@color/black_54_alpha</color>
 
     <color name="selected_check_color">@color/material_white_100</color>
     <color name="smartspace_preview_shadow_color_dark">#B0000000</color>
