@@ -347,7 +347,7 @@ public final class WallpaperCropUtils {
      * Returns whether layout direction is RTL (or false for LTR). Since native RTL layout support
      * was added in API 17, returns false for versions lower than 17.
      */
-    private static boolean isRtl(Context context) {
+    public static boolean isRtl(Context context) {
         return context.getResources().getConfiguration().getLayoutDirection()
                 == View.LAYOUT_DIRECTION_RTL;
     }
