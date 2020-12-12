@@ -126,7 +126,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         }
 
         BitmapCropper bitmapCropper = InjectorProvider.getInjector().getBitmapCropper();
-        bitmapCropper.cropAndScaleBitmap(asset, scale, cropRect, new Callback() {
+        bitmapCropper.cropAndScaleBitmap(asset, scale, cropRect, false, new Callback() {
             @Override
             public void onBitmapCropped(Bitmap croppedBitmap) {
                 setIndividualWallpaper(wallpaper, croppedBitmap, destination, callback);
@@ -211,13 +211,9 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                     (dimensions.y - screenSize.y) / 2,
                     dimensions.x - ((dimensions.x - screenSize.x) / 2),
                     dimensions.y - ((dimensions.y - screenSize.y) / 2));
-            asset.decodeBitmapRegion(cropRect, screenSize.x, screenSize.y, new BitmapReceiver() {
-                @Override
-                public void onBitmapDecoded(@Nullable Bitmap bitmap) {
-                    setIndividualWallpaper(wallpaper, bitmap, WallpaperPersister.DEST_BOTH,
-                            callback);
-                }
-            });
+            asset.decodeBitmapRegion(cropRect, screenSize.x, screenSize.y, false,
+                    bitmap -> setIndividualWallpaper(wallpaper, bitmap,
+                            WallpaperPersister.DEST_BOTH, callback));
         } else {
             // Decode the full bitmap and pass with the screen size as a fill rect.
             asset.decodeBitmap(dimensions.x, dimensions.y, new BitmapReceiver() {
