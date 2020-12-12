@@ -101,6 +101,10 @@ public abstract class AppbarFragment extends BottomActionBarFragment
         return null;
     }
 
+    protected String getAccessibilityTitle() {
+        return null;
+    }
+
     protected void setTitle(CharSequence title) {
         if (mToolbar == null) {
             return;
@@ -114,7 +118,9 @@ public abstract class AppbarFragment extends BottomActionBarFragment
 
         // Set Activity title to make TalkBack announce title after updating toolbar title.
         if (getActivity() != null) {
-            getActivity().setTitle(title);
+            String accessibilityTitle = getAccessibilityTitle();
+            getActivity().setTitle(TextUtils.isEmpty(accessibilityTitle) ? title
+                    : accessibilityTitle);
         }
     }
 
