@@ -309,7 +309,6 @@ public class DefaultCategoryProvider implements CategoryProvider {
                                         Xml.asAttributeSet(parser));
                         categoryBuilder.setPriorityIfEmpty(PRIORITY_SYSTEM + priorityTracker++);
                         final int categoryDepth = parser.getDepth();
-                        boolean publishedPlaceholder = false;
                         while (((type = parser.next()) != XmlPullParser.END_TAG
                                 || parser.getDepth() > categoryDepth)
                                 && type != XmlPullParser.END_DOCUMENT) {
@@ -327,11 +326,6 @@ public class DefaultCategoryProvider implements CategoryProvider {
                                 }
                                 if (wallpaper != null) {
                                     categoryBuilder.addWallpaper(wallpaper);
-                                    // Publish progress only if there's at least one wallpaper
-                                    if (!publishedPlaceholder) {
-                                        publishProgress(categoryBuilder.buildPlaceholder());
-                                        publishedPlaceholder = true;
-                                    }
                                 }
                             }
                         }
