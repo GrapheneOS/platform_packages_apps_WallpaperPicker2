@@ -294,15 +294,10 @@ public class DefaultCategoryProvider implements CategoryProvider {
                                         Xml.asAttributeSet(parser));
                         categoryBuilder.setPriorityIfEmpty(PRIORITY_SYSTEM + priorityTracker++);
                         final int categoryDepth = parser.getDepth();
-                        boolean publishedPlaceholder = false;
                         while (((type = parser.next()) != XmlPullParser.END_TAG
                                 || parser.getDepth() > categoryDepth)
                                 && type != XmlPullParser.END_DOCUMENT) {
                             if (type == XmlPullParser.START_TAG) {
-                                if (!publishedPlaceholder) {
-                                    publishProgress(categoryBuilder.buildPlaceholder());
-                                    publishedPlaceholder = true;
-                                }
                                 WallpaperInfo wallpaper = null;
                                 if (SystemStaticWallpaperInfo.TAG_NAME.equals(parser.getName())) {
                                     wallpaper = SystemStaticWallpaperInfo
