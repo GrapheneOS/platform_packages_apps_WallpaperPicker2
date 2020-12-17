@@ -109,6 +109,8 @@ public class CategoryFragment extends AppbarFragment
         boolean isNavigationTabsContained();
 
         void fetchCategories();
+
+        void cleanUp();
     }
 
     public static CategoryFragment newInstance(CharSequence title) {
@@ -447,6 +449,11 @@ public class CategoryFragment extends AppbarFragment
     @Override
     public void fetchCategories() {
         getFragmentHost().fetchCategories();
+    }
+
+    @Override
+    public void cleanUp() {
+        getFragmentHost().cleanUp();
     }
 
     @Override

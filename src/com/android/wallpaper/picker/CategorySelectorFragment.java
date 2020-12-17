@@ -96,6 +96,11 @@ public class CategorySelectorFragment extends Fragment {
         void fetchCategories();
 
         /**
+         * Cleans up the listeners which will be notified when there's a package event.
+         */
+        void cleanUp();
+
+        /**
          * Hides the {@link com.android.wallpaper.widget.BottomActionBar}.
          */
         void hideBottomActionBar();
@@ -139,6 +144,12 @@ public class CategorySelectorFragment extends Fragment {
         getCategorySelectorFragmentHost().hideBottomActionBar();
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        getCategorySelectorFragmentHost().cleanUp();
+        super.onDestroyView();
     }
 
     /**
