@@ -82,16 +82,16 @@ public abstract class Asset {
 
     /**
      * Decodes and downscales a bitmap region off the main UI thread.
-     *
      * @param rect         Rect representing the crop region in terms of the original image's
      *                     resolution.
      * @param targetWidth  Width of target view in physical pixels.
      * @param targetHeight Height of target view in physical pixels.
+     * @param shouldAdjustForRtl whether the region selected should be adjusted for RTL (that is,
+     *                           the crop region will be considered starting from the right)
      * @param receiver     Called with the decoded bitmap region or null if there was an error
-     *                     decoding the bitmap region.
      */
     public abstract void decodeBitmapRegion(Rect rect, int targetWidth, int targetHeight,
-            BitmapReceiver receiver);
+            boolean shouldAdjustForRtl, BitmapReceiver receiver);
 
     /**
      * Calculates the raw dimensions of the asset at its original resolution off the main UI thread.
@@ -283,6 +283,7 @@ public abstract class Asset {
 
             BitmapCropper bitmapCropper = InjectorProvider.getInjector().getBitmapCropper();
             bitmapCropper.cropAndScaleBitmap(this, /* scale= */ 1f, visibleRawWallpaperRect,
+                    WallpaperCropUtils.isRtl(activity),
                     new BitmapCropper.Callback() {
                         @Override
                         public void onBitmapCropped(Bitmap croppedBitmap) {

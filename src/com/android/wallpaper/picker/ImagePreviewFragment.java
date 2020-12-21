@@ -374,18 +374,23 @@ public class ImagePreviewFragment extends PreviewFragment {
      * <p>This method is called once in the Fragment lifecycle after the wallpaper asset has loaded
      * and rendered to the layout.
      *
-     * @param offsetToFarLeft {@code true} if we want to offset the visible rectangle to far left of
-     *                                    the raw wallpaper; {@code false} otherwise.
+     * @param offsetToStart {@code true} if we want to offset the visible rectangle to the start
+     *                                  side of the raw wallpaper; {@code false} otherwise.
      */
-    private void setDefaultWallpaperZoomAndScroll(boolean offsetToFarLeft) {
+    private void setDefaultWallpaperZoomAndScroll(boolean offsetToStart) {
         // Determine minimum zoom to fit maximum visible area of wallpaper on crop surface.
         int cropWidth = mWallpaperSurface.getMeasuredWidth();
         int cropHeight = mWallpaperSurface.getMeasuredHeight();
         Point crop = new Point(cropWidth, cropHeight);
         Rect visibleRawWallpaperRect =
                 WallpaperCropUtils.calculateVisibleRect(mRawWallpaperSize, crop);
-        if (offsetToFarLeft) {
-            visibleRawWallpaperRect.offsetTo(/* newLeft= */ 0, visibleRawWallpaperRect.top);
+        if (offsetToStart) {
+            if (WallpaperCropUtils.isRtl(requireContext())) {
+                visibleRawWallpaperRect.offsetTo(mRawWallpaperSize.x
+                                - visibleRawWallpaperRect.width(), visibleRawWallpaperRect.top);
+            } else {
+                visibleRawWallpaperRect.offsetTo(/* newLeft= */ 0, visibleRawWallpaperRect.top);
+            }
         }
 
         final PointF centerPosition = new PointF(visibleRawWallpaperRect.centerX(),
