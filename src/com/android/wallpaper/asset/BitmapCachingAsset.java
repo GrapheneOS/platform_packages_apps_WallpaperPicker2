@@ -101,8 +101,9 @@ public class BitmapCachingAsset extends Asset {
 
     @Override
     public void decodeBitmapRegion(Rect rect, int targetWidth, int targetHeight,
-            BitmapReceiver receiver) {
-        mOriginalAsset.decodeBitmapRegion(rect, targetWidth, targetHeight, receiver);
+            boolean shouldAdjustForRtl, BitmapReceiver receiver) {
+        mOriginalAsset.decodeBitmapRegion(rect, targetWidth, targetHeight, shouldAdjustForRtl,
+                receiver);
     }
 
     @Override
