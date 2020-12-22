@@ -86,4 +86,6 @@ public interface Injector {
     DrawableLayerResolver getDrawableLayerResolver();
 
     Intent getDeepLinkRedirectIntent(Context context, Uri uri);
+
+    String getDownloadableIntentAction();
 }

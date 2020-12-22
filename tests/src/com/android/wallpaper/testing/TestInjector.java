@@ -243,6 +243,11 @@ public class TestInjector implements Injector {
     }
 
     @Override
+    public String getDownloadableIntentAction() {
+        return null;
+    }
+
+    @Override
     public PerformanceMonitor getPerformanceMonitor() {
         if (mPerformanceMonitor == null) {
             mPerformanceMonitor = new TestPerformanceMonitor();
