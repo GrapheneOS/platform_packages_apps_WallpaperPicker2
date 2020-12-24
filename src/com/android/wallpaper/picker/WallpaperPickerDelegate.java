@@ -79,6 +79,8 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     private List<PermissionChangedListener> mPermissionChangedListeners;
     private PackageStatusNotifier.Listener mLiveWallpaperStatusListener;
     private PackageStatusNotifier.Listener mThirdPartyStatusListener;
+    private PackageStatusNotifier.Listener mDownloadableWallpaperStatusListener;
+    private String mDownloadableIntentAction;
     private CategoryProvider mCategoryProvider;
     private WallpaperPersister mWallpaperPersister;
     private static final String READ_PERMISSION = permission.READ_EXTERNAL_STORAGE;
@@ -101,6 +103,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
         mFormFactor = formFactorChecker.getFormFactor();
 
         mPermissionChangedListeners = new ArrayList<>();
+        mDownloadableIntentAction = injector.getDownloadableIntentAction();
     }
 
     public void initialize(boolean forceCategoryRefresh) {
@@ -111,6 +114,15 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
                 mLiveWallpaperStatusListener,
                 WallpaperService.SERVICE_INTERFACE);
         mPackageStatusNotifier.addListener(mThirdPartyStatusListener, Intent.ACTION_SET_WALLPAPER);
+        if (mDownloadableIntentAction != null) {
+            mDownloadableWallpaperStatusListener = (packageName, status) -> {
+                if (status != PackageStatusNotifier.PackageStatus.REMOVED) {
+                    populateCategories(true);
+                }
+            };
+            mPackageStatusNotifier.addListener(
+                    mDownloadableWallpaperStatusListener, mDownloadableIntentAction);
+        }
     }
 
     @Override
@@ -396,6 +408,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
         if (mPackageStatusNotifier != null) {
             mPackageStatusNotifier.removeListener(mLiveWallpaperStatusListener);
             mPackageStatusNotifier.removeListener(mThirdPartyStatusListener);
+            mPackageStatusNotifier.removeListener(mDownloadableWallpaperStatusListener);
         }
     }
 

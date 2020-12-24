@@ -103,4 +103,9 @@ public class WallpapersInjector extends BaseWallpaperInjector {
     public synchronized LoggingOptInStatusProvider getLoggingOptInStatusProvider(Context context) {
         return null;
     }
+
+    @Override
+    public String getDownloadableIntentAction() {
+        return null;
+    }
 }
