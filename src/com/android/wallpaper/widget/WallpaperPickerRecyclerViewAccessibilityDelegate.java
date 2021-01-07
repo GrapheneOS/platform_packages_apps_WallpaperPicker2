@@ -15,10 +15,12 @@
  */
 package com.android.wallpaper.widget;
 
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerViewAccessibilityDelegate;
 
@@ -46,6 +48,11 @@ public class WallpaperPickerRecyclerViewAccessibilityDelegate
          * Gets bottom sheet current state.
          */
         int getBottomSheetState();
+
+        /** Returns {@code true} if the bottom sheet is expanded. */
+        default boolean isExpanded() {
+            return getBottomSheetState() == BottomSheetBehavior.STATE_EXPANDED;
+        }
     }
 
     private final RecyclerView mGridRecyclerView;
@@ -67,11 +74,22 @@ public class WallpaperPickerRecyclerViewAccessibilityDelegate
             int itemPos = mGridRecyclerView.getChildLayoutPosition(child);
 
             // Expand the bottom sheet when TB travel to second column.
-            if (mBottomSheetHost != null && mBottomSheetHost.getBottomSheetState()
-                    != BottomSheetBehavior.STATE_EXPANDED && itemPos >= mColumns) {
+            if (mBottomSheetHost != null && !mBottomSheetHost.isExpanded()
+                    && itemPos >= mColumns) {
                 mBottomSheetHost.expandBottomSheet();
             }
         }
         return super.onRequestSendAccessibilityEvent(host, child, event);
+    }
+
+    @Override
+    public boolean performAccessibilityAction(View host, int action, Bundle args) {
+        // Expand the bottom sheet when Switch Access scrolls down grid category.
+        if (action == AccessibilityNodeInfoCompat.ACTION_SCROLL_FORWARD) {
+            if (mBottomSheetHost != null && !mBottomSheetHost.isExpanded()) {
+                mBottomSheetHost.expandBottomSheet();
+            }
+        }
+        return super.performAccessibilityAction(host, action, args);
     }
 }
