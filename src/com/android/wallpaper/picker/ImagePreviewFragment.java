@@ -269,14 +269,7 @@ public class ImagePreviewFragment extends PreviewFragment {
 
             mRawWallpaperSize = dimensions;
 
-            setUpExploreIntentAndLabel(() -> {
-                synchronized (this) {
-                    /* Init if we finish after WallpaperSurfaceCallback */
-                    if (mFullResImageView != null && !mFullResViewInitialized) {
-                        initFullResView();
-                    }
-                }
-            });
+            setUpExploreIntentAndLabel(ImagePreviewFragment.this::initFullResView);
         });
     }
 
@@ -286,6 +279,10 @@ public class ImagePreviewFragment extends PreviewFragment {
      */
     private void initFullResView() {
         synchronized (this) {
+            // Skip init if already initialized or dependencies aren't ready yet
+            if (mFullResViewInitialized || mFullResImageView == null || mRawWallpaperSize == null) {
+                return;
+            }
             mFullResViewInitialized = true;
         }
 
@@ -526,13 +523,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                 mHost.setView(wallpaperPreviewContainer, wallpaperPreviewContainer.getWidth(),
                         wallpaperPreviewContainer.getHeight());
                 mWallpaperSurface.setChildSurfacePackage(mHost.getSurfacePackage());
-
-                synchronized (this) {
-                    /* Init if we finish after decodeRawDimensions */
-                    if (mRawWallpaperSize != null && !mFullResViewInitialized) {
-                        initFullResView();
-                    }
-                }
+                initFullResView();
             }
         }
 
