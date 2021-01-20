@@ -175,8 +175,12 @@ public class LivePreviewFragment extends PreviewFragment implements
         mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
                 .inflate(R.layout.wallpaper_info_view, /* root= */ null);
         setUpExploreIntentAndLabel(
-                () -> mWallpaperInfoView.populateWallpaperInfo(mWallpaper, mActionLabel,
-                                mExploreIntent, this::onExploreClicked));
+                () -> mWallpaperInfoView.populateWallpaperInfo(
+                        mWallpaper,
+                        mActionLabel,
+                        WallpaperInfoHelper.shouldShowExploreButton(getContext(), mExploreIntent),
+                        this::onExploreClicked)
+        );
 
         mPreviewContainer = view.findViewById(R.id.live_wallpaper_preview);
         mTouchForwardingLayout = view.findViewById(R.id.touch_forwarding_layout);
