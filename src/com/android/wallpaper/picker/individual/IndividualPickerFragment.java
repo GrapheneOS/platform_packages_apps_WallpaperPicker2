@@ -968,8 +968,12 @@ public class IndividualPickerFragment extends BottomActionBarFragment
                     mSelectedWallpaperInfo,
                     (actionLabel, exploreIntent) ->
                             mWallpaperInfoView.populateWallpaperInfo(
-                                    mSelectedWallpaperInfo, actionLabel, exploreIntent,
-                                    v -> onExploreClicked(exploreIntent)));
+                                    mSelectedWallpaperInfo,
+                                    actionLabel,
+                                    WallpaperInfoHelper.shouldShowExploreButton(
+                                            getContext(), exploreIntent),
+                                    v -> onExploreClicked(exploreIntent))
+            );
         }
 
         if (mWallpaperSelectedListener != null) {
