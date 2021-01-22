@@ -323,8 +323,12 @@ public class ImagePreviewFragment extends PreviewFragment {
                     getActivity().invalidateOptionsMenu();
 
                     if (mWallpaperInfoView != null && mWallpaper != null) {
-                        mWallpaperInfoView.populateWallpaperInfo(mWallpaper, mActionLabel,
-                                mExploreIntent, this::onExploreClicked);
+                        mWallpaperInfoView.populateWallpaperInfo(
+                                mWallpaper,
+                                mActionLabel,
+                                WallpaperInfoHelper.shouldShowExploreButton(
+                                        getContext(), mExploreIntent),
+                                this::onExploreClicked);
                     }
                 });
     }
