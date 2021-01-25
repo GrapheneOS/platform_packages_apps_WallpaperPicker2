@@ -29,10 +29,8 @@
         android:id="@+id/wallpaper_info_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
         android:gravity="center"
         android:lineHeight="24dp"
-        android:singleLine="true"
         android:textAppearance="@style/TitleTextAppearance"
         android:textColor="@color/action_bar_bottom_sheet_text_color" />
 
