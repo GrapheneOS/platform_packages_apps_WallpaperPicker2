@@ -26,12 +26,13 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
 
 /**
  * Activity that displays a preview of a specific wallpaper and provides the ability to set the
  * wallpaper as the user's current wallpaper.
  */
-public class PreviewActivity extends BasePreviewActivity {
+public class PreviewActivity extends BasePreviewActivity implements AppbarFragmentHost {
 
     /**
      * Returns a new Intent with the provided WallpaperInfo instance put as an extra.
@@ -67,6 +68,15 @@ public class PreviewActivity extends BasePreviewActivity {
         }
     }
 
+    @Override
+    public void onUpArrowPressed() {
+        onBackPressed();
+    }
+
+    @Override
+    public boolean isUpArrowSupported() {
+        return true;
+    }
 
     /**
      * Implementation that provides an intent to start a PreviewActivity.
