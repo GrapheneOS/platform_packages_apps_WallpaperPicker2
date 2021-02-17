@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
@@ -147,13 +146,6 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
         } catch (RemoteException e) {
             Log.w(TAG, "Failed attaching wallpaper; clearing", e);
         }
-    }
-
-
-    @Override
-    public void onLocalWallpaperColorsChanged(RectF area,
-            WallpaperColors colors, int displayId) {
-
     }
 
     /**
