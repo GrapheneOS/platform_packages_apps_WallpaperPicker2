@@ -19,6 +19,8 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE_CLASS := JAVA_LIBRARIES
 LOCAL_MODULE := wallpaper2-glide-target
+LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0
+LOCAL_LICENSE_CONDITIONS := notice
 LOCAL_SDK_VERSION := current
 LOCAL_SRC_FILES := ../../../prebuilts/maven_repo/bumptech/com/github/bumptech/glide/glide/SNAPSHOT/glide-SNAPSHOT$(COMMON_JAVA_PACKAGE_SUFFIX)
 LOCAL_UNINSTALLABLE_MODULE := true
@@ -28,6 +30,8 @@ include $(BUILD_PREBUILT)
 include $(CLEAR_VARS)
 LOCAL_MODULE_CLASS := JAVA_LIBRARIES
 LOCAL_MODULE := wallpaper2-disklrucache-target
+LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0
+LOCAL_LICENSE_CONDITIONS := notice
 LOCAL_SDK_VERSION := current
 LOCAL_SRC_FILES := ../../../prebuilts/maven_repo/bumptech/com/github/bumptech/glide/disklrucache/SNAPSHOT/disklrucache-SNAPSHOT$(COMMON_JAVA_PACKAGE_SUFFIX)
 LOCAL_UNINSTALLABLE_MODULE := true
@@ -36,6 +40,8 @@ include $(BUILD_PREBUILT)
 include $(CLEAR_VARS)
 LOCAL_MODULE_CLASS := JAVA_LIBRARIES
 LOCAL_MODULE := wallpaper2-gifdecoder-target
+LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0
+LOCAL_LICENSE_CONDITIONS := notice
 LOCAL_SDK_VERSION := current
 LOCAL_SRC_FILES := ../../../prebuilts/maven_repo/bumptech/com/github/bumptech/glide/gifdecoder/SNAPSHOT/gifdecoder-SNAPSHOT$(COMMON_JAVA_PACKAGE_SUFFIX)
 LOCAL_UNINSTALLABLE_MODULE := true
@@ -55,6 +61,8 @@ LOCAL_PROGUARD_ENABLED := disabled
 LOCAL_SDK_VERSION := current
 LOCAL_MIN_SDK_VERSION := 26
 LOCAL_MODULE := wallpaper-subsampling-scale-image-view
+LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0
+LOCAL_LICENSE_CONDITIONS := notice
 LOCAL_MANIFEST_FILE := ../../../external/subsampling-scale-image-view/library/src/main/AndroidManifest.xml
 
 include $(BUILD_STATIC_JAVA_LIBRARY)
@@ -96,6 +104,8 @@ else
     LOCAL_SDK_VERSION := current
 endif
 LOCAL_MODULE := WallpaperPicker2CommonDepsLib
+LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0
+LOCAL_LICENSE_CONDITIONS := notice
 LOCAL_PRIVILEGED_MODULE := true
 
 include $(BUILD_STATIC_JAVA_LIBRARY)
