@@ -169,6 +169,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
         if (attributions.size() > 0 && attributions.get(0) != null) {
             activity.setTitle(attributions.get(0));
         }
+        setRetainInstance(true);
     }
 
     @Override
