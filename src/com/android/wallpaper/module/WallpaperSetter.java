@@ -151,7 +151,9 @@ public class WallpaperSetter {
                             public void onStateChanged(@NonNull LifecycleOwner source,
                                     @NonNull Event event) {
                                 if (event == Event.ON_DESTROY) {
-                                    mProgressDialog.dismiss();
+                                    if (mProgressDialog != null) {
+                                        mProgressDialog.dismiss();
+                                    }
                                 }
                             }
                         });
