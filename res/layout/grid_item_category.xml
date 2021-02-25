@@ -29,7 +29,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/grid_item_category_label_padding_top"
         android:layout_marginBottom="@dimen/grid_item_category_label_padding_bottom"
-        android:background="@color/category_title_scrim_color"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
