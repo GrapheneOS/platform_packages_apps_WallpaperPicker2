@@ -42,7 +42,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.filters.MediumTest;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
@@ -55,7 +54,6 @@ import com.android.wallpaper.model.PickerIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.model.WallpaperRotationInitializer;
 import com.android.wallpaper.model.WallpaperRotationInitializer.RotationInitializationState;
-import com.android.wallpaper.module.FormFactorChecker;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.testing.TestCategoryProvider;
@@ -173,22 +171,6 @@ public class IndividualPickerActivityTest {
         assertNotNull(recyclerView.findViewHolderForAdapterPosition(1));
         assertNotNull(recyclerView.findViewHolderForAdapterPosition(2));
         assertNull(recyclerView.findViewHolderForAdapterPosition(3));
-    }
-
-    @Test
-    public void testClickTile_Mobile_showsBottomActions() {
-        mTestFormFactorChecker.setFormFactor(FormFactorChecker.FORM_FACTOR_MOBILE);
-
-        setActivityWithMockWallpapers(false /* isRotationEnabled */,
-                WallpaperRotationInitializer.ROTATION_NOT_INITIALIZED);
-        getActivity();
-
-        onView(withId(R.id.wallpaper_grid)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, click()));
-
-        onView(withId(R.id.action_back)).check(matches(isDisplayed()));
-        onView(withId(R.id.action_information)).check(matches(isDisplayed()));
-        onView(withId(R.id.action_apply)).check(matches(isDisplayed()));
     }
 
     @Test
