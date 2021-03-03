@@ -46,6 +46,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
@@ -172,7 +173,8 @@ public class IndividualPickerFragment extends BottomActionBarFragment
     }
 
     /**
-     * Interface to be implemented by a Fragment hosting a {@link IndividualPickerFragment}
+     * Interface to be implemented by a Fragment(or an Activity) hosting
+     * a {@link IndividualPickerFragment}.
      */
     public interface IndividualPickerFragmentHost {
         /**
@@ -517,7 +519,12 @@ public class IndividualPickerFragment extends BottomActionBarFragment
     }
 
     private IndividualPickerFragmentHost getIndividualPickerFragmentHost() {
-        return (IndividualPickerFragmentHost) getParentFragment();
+        Fragment parentFragment = getParentFragment();
+        if (parentFragment != null) {
+            return (IndividualPickerFragmentHost) parentFragment;
+        } else {
+            return (IndividualPickerFragmentHost) getActivity();
+        }
     }
 
     private void maybeSetUpImageGrid() {

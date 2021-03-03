@@ -53,7 +53,8 @@ import com.android.wallpaper.widget.BottomActionBar.BottomActionBarHost;
  * Activity that can be launched from the Android wallpaper picker and allows users to pick from
  * various wallpapers and enter a preview mode for specific ones.
  */
-public class IndividualPickerActivity extends BaseActivity implements BottomActionBarHost {
+public class IndividualPickerActivity extends BaseActivity implements BottomActionBarHost,
+        IndividualPickerFragment.IndividualPickerFragmentHost {
     private static final String TAG = "IndividualPickerAct";
     private static final String EXTRA_CATEGORY_COLLECTION_ID =
             "com.android.wallpaper.category_collection_id";
@@ -227,6 +228,17 @@ public class IndividualPickerActivity extends BaseActivity implements BottomActi
     @Override
     public BottomActionBar getBottomActionBar() {
         return findViewById(R.id.bottom_actionbar);
+    }
+
+    @Override
+    public void setToolbarTitle(CharSequence title) {
+        setTitle(title);
+        getSupportActionBar().setTitle(title);
+    }
+
+    @Override
+    public void moveToPreviousFragment() {
+        getSupportFragmentManager().popBackStack();
     }
 
     /**
