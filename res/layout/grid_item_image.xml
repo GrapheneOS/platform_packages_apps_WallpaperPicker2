@@ -43,6 +43,7 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/wallpaper_thumbnail"
         app:cardCornerRadius="?android:dialogCornerRadius"
+        app:cardBackgroundColor="@android:color/transparent"
         app:cardElevation="0dp">
 
         <RelativeLayout
@@ -50,11 +51,10 @@
             android:layout_height="match_parent"
             android:foreground="@drawable/wallpaper_option_border">
 
-            <ImageView
+            <com.android.wallpaper.picker.individual.CircularImageView
                 android:id="@+id/thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/secondary_color"
                 android:scaleType="centerCrop" />
 
             <ImageView
@@ -67,7 +67,6 @@
                 android:id="@+id/loading_indicator_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/black_67_alpha"
                 android:visibility="gone">
 
                 <ProgressBar
@@ -80,16 +79,6 @@
 
             </FrameLayout>
         </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/check_circle"
-            android:layout_width="@dimen/grid_item_individual_wallpaper_check_circle_size"
-            android:layout_height="@dimen/grid_item_individual_wallpaper_check_circle_size"
-            android:layout_gravity="bottom|right"
-            android:layout_marginEnd="@dimen/grid_item_individual_wallpaper_check_circle_offset"
-            android:layout_marginBottom="@dimen/grid_item_individual_wallpaper_check_circle_offset"
-            android:src="@drawable/check_circle_accent_24dp"
-            android:visibility="gone" />
 
     </androidx.cardview.widget.CardView>
 </LinearLayout>
