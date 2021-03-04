@@ -98,4 +98,11 @@ public class BuildCompat {
     public static boolean isAtLeastQ() {
         return sSdk >= VERSION_CODES.Q;
     }
+
+    /**
+     * Returns whether the framework on the current Android device is S or higher.
+     */
+    public static boolean isAtLeastS() {
+        return sSdk >= VERSION_CODES.S;
+    }
 }
