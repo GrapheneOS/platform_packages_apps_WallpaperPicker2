@@ -27,11 +27,10 @@
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground">
 
-        <ImageView
+        <com.android.wallpaper.picker.individual.CircularImageView
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/secondary_color"
             android:scaleType="centerCrop" />
 
         <ImageView

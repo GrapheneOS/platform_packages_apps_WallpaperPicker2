@@ -61,6 +61,7 @@ import com.android.wallpaper.testing.TestFormFactorChecker;
 import com.android.wallpaper.testing.TestInjector;
 import com.android.wallpaper.testing.TestWallpaperCategory;
 import com.android.wallpaper.testing.TestWallpaperInfo;
+import com.android.wallpaper.testing.TestWallpaperPreferences;
 import com.android.wallpaper.testing.TestWallpaperRotationInitializer;
 
 import org.hamcrest.Matcher;
@@ -97,6 +98,9 @@ public class IndividualPickerActivityTest {
 
     private TestWallpaperCategory mTestCategory;
 
+    private TestWallpaperPreferences mPreferences;
+    private ArrayList<WallpaperInfo> mWallpapers;
+
     @Rule
     public ActivityTestRule<IndividualPickerActivity> mActivityRule =
             new ActivityTestRule<>(IndividualPickerActivity.class, false, false);
@@ -114,6 +118,15 @@ public class IndividualPickerActivityTest {
 
         sWallpaperInfo1.setAttributions(Arrays.asList(
                 "Attribution 0", "Attribution 1", "Attribution 2"));
+
+        sWallpaperInfo1.setCollectionId("collection");
+
+        mPreferences = (TestWallpaperPreferences) mInjector.getPreferences(context);
+
+        mWallpapers = new ArrayList<>();
+        mWallpapers.add(sWallpaperInfo1);
+        mWallpapers.add(sWallpaperInfo2);
+        mWallpapers.add(sWallpaperInfo3);
     }
 
     @After
@@ -134,15 +147,8 @@ public class IndividualPickerActivityTest {
 
     private void setActivityWithMockWallpapers(boolean isRotationEnabled,
             @RotationInitializationState int rotationState) {
-        sWallpaperInfo1.setCollectionId("collection");
-
-        ArrayList<WallpaperInfo> wallpapers = new ArrayList<>();
-        wallpapers.add(sWallpaperInfo1);
-        wallpapers.add(sWallpaperInfo2);
-        wallpapers.add(sWallpaperInfo3);
-
         mTestCategory = new TestWallpaperCategory(
-                "Test category", "collection", wallpapers, 0 /* priority */);
+                "Test category", "collection", mWallpapers, 0 /* priority */);
         mTestCategory.setIsRotationEnabled(isRotationEnabled);
         mTestCategory.setRotationInitializationState(rotationState);
 
@@ -387,5 +393,51 @@ public class IndividualPickerActivityTest {
         RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(0);
         assertEquals("Attribution 0", holder.itemView.findViewById(R.id.tile)
                 .getContentDescription());
+    }
+
+    /**
+     * Tests whether the selected wallpaper has a clipped thumbnail: first wallpaper.
+     */
+    @Test
+    public void testSelectFirstWallpaper_ShowsClippedThumbnail() {
+        runSelectWallpaperTest(0);
+    }
+
+    /**
+     * Tests whether the selected wallpaper has a clipped thumbnail: second wallpaper.
+     */
+    @Test
+    public void testSelectSecondWallpaper_ShowsClippedThumbnail() {
+        runSelectWallpaperTest(1);
+    }
+
+    /**
+     * Tests whether the selected wallpaper has a clipped thumbnail: third wallpaper.
+     */
+    @Test
+    public void testSelectThirdWallpaper_ShowsClippedThumbnail() {
+        runSelectWallpaperTest(2);
+    }
+
+    private void runSelectWallpaperTest(int selectedWallpaperIndex) {
+        mPreferences.setHomeWallpaperRemoteId(
+                mWallpapers.get(selectedWallpaperIndex).getWallpaperId());
+
+        setActivityWithMockWallpapers(false /* isRotationEnabled */,
+                WallpaperRotationInitializer.ROTATION_NOT_INITIALIZED);
+        IndividualPickerActivity activity = getActivity();
+
+        RecyclerView recyclerView = activity.findViewById(R.id.wallpaper_grid);
+
+        for (int index = 0; index < 3; index++) {
+            assertNotNull(recyclerView.findViewHolderForAdapterPosition(index));
+
+            CircularImageView thumbnail =
+                    recyclerView.findViewHolderForAdapterPosition(index)
+                            .itemView.findViewById(R.id.thumbnail);
+
+            // Assert that only the selected wallpaper has a clipped thumbnail.
+            assertEquals(thumbnail.getClipped(), index == selectedWallpaperIndex);
+        }
     }
 }
