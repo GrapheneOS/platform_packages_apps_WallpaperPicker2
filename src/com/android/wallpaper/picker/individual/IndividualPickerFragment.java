@@ -1008,7 +1008,8 @@ public class IndividualPickerFragment extends BottomActionBarFragment
                 ? index + 1 : index;
         ViewHolder holder = mImageGrid.findViewHolderForAdapterPosition(index);
         if (holder != null) {
-            holder.itemView.setActivated(isActivated);
+            CircularImageView thumbnail = holder.itemView.findViewById(R.id.thumbnail);
+            thumbnail.setClipped(isActivated);
         } else {
             // Item is not visible, make sure the item is re-bound when it becomes visible.
             mAdapter.notifyItemChanged(index);
@@ -1023,10 +1024,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         index = (shouldShowRotationTile() || mCategory.supportsCustomPhotos())
                 ? index + 1 : index;
         ViewHolder holder = mImageGrid.findViewHolderForAdapterPosition(index);
-        if (holder != null) {
-            holder.itemView.findViewById(R.id.check_circle)
-                    .setVisibility(isApplied ? View.VISIBLE : View.GONE);
-        } else {
+        if (holder == null) {
             // Item is not visible, make sure the item is re-bound when it becomes visible.
             mAdapter.notifyItemChanged(index);
         }
@@ -1073,6 +1071,45 @@ public class IndividualPickerFragment extends BottomActionBarFragment
 
     private boolean shouldShowRotationTile() {
         return mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP && isRotationEnabled();
+    }
+
+    class EmptySelectionAnimator implements SelectionAnimator{
+        EmptySelectionAnimator() {}
+
+        public boolean isSelected() {
+            return false;
+        }
+
+        /**
+         * Sets the UI to selected immediately with no animation.
+         */
+        public void selectImmediately() {}
+
+        /**
+         * Sets the UI to deselected immediately with no animation.
+         */
+        public void deselectImmediately() {}
+
+        /**
+         * Sets the UI to selected with a smooth animation.
+         */
+        public void animateSelected() {}
+
+        /**
+         * Sets the UI to deselected with a smooth animation.
+         */
+        public void animateDeselected() {}
+
+        /**
+         * Sets the UI to show a loading indicator.
+         */
+        public void showLoading() {}
+
+        /**
+         * Sets the UI to hide the loading indicator.
+         */
+        public void showNotLoading() {}
+
     }
 
     /**
@@ -1154,8 +1191,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         private ViewHolder createRotationHolder(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.grid_item_rotation_desktop, parent, false);
-            SelectionAnimator selectionAnimator =
-                    new CheckmarkSelectionAnimator(getActivity(), view);
+            SelectionAnimator selectionAnimator = new EmptySelectionAnimator();
             return new DesktopRotationHolder(getActivity(), mTileSizePx.y, view, selectionAnimator,
                     IndividualPickerFragment.this);
         }
@@ -1165,8 +1201,7 @@ public class IndividualPickerFragment extends BottomActionBarFragment
             View view = layoutInflater.inflate(R.layout.grid_item_image, parent, false);
 
             if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
-                SelectionAnimator selectionAnimator =
-                        new CheckmarkSelectionAnimator(getActivity(), view);
+                SelectionAnimator selectionAnimator = new EmptySelectionAnimator();
                 return new SetIndividualHolder(
                         getActivity(), mTileSizePx.y, view,
                         selectionAnimator,
@@ -1319,10 +1354,8 @@ public class IndividualPickerFragment extends BottomActionBarFragment
                 mAppliedWallpaperInfo = wallpaper;
             }
 
-            holder.itemView.setActivated(
-                    (isWallpaperApplied && !hasUserSelectedWallpaper) || isWallpaperSelected);
-            holder.itemView.findViewById(R.id.check_circle).setVisibility(
-                    isWallpaperApplied ? View.VISIBLE : View.GONE);
+            CircularImageView thumbnail = holder.itemView.findViewById(R.id.thumbnail);
+            thumbnail.setClipped(isWallpaperApplied);
         }
     }
 
