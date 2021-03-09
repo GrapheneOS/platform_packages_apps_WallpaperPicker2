@@ -27,11 +27,10 @@
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground">
 
-        <ImageView
+        <com.android.wallpaper.picker.individual.CircularImageView
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/secondary_color"
             android:scaleType="centerCrop" />
 
         <FrameLayout
@@ -68,14 +67,5 @@
         </FrameLayout>
 
     </FrameLayout>
-
-    <ImageView
-        android:id="@+id/check_circle"
-        android:layout_width="@dimen/grid_item_individual_wallpaper_check_circle_size"
-        android:layout_height="@dimen/grid_item_individual_wallpaper_check_circle_size"
-        android:layout_marginStart="@dimen/grid_item_individual_wallpaper_check_circle_offset"
-        android:layout_marginTop="@dimen/grid_item_individual_wallpaper_check_circle_offset"
-        android:src="@drawable/check_circle_accent_24dp"
-        android:visibility="gone" />
 
 </FrameLayout>
