@@ -41,7 +41,7 @@
 
         <include
             android:id="@+id/permission_needed"
-            layout="@layout/grid_item_permission_needed"
+            layout="@layout/permission_needed_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:visibility="gone"
