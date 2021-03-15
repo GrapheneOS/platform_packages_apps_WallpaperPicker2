@@ -267,10 +267,10 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
      */
     public void populateCategories(boolean forceRefresh) {
 
-        final CategoryFragment categoryFragment = getCategoryPickerFragment();
+        final CategorySelectorFragment categorySelectorFragment = getCategorySelectorFragment();
 
-        if (forceRefresh && categoryFragment != null) {
-            categoryFragment.clearCategories();
+        if (forceRefresh && categorySelectorFragment != null) {
+            categorySelectorFragment.clearCategories();
         }
 
         mCategoryProvider.fetchCategories(new CategoryReceiver() {
@@ -288,9 +288,9 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
 
     private void notifyDoneFetchingCategories() {
         if (mFormFactor == FormFactorChecker.FORM_FACTOR_MOBILE) {
-            CategoryFragment categoryFragment = getCategoryPickerFragment();
-            if (categoryFragment != null) {
-                categoryFragment.doneFetchingCategories();
+            CategorySelectorFragment categorySelectorFragment = getCategorySelectorFragment();
+            if (categorySelectorFragment != null) {
+                categorySelectorFragment.doneFetchingCategories();
             }
         } else {
             mContainer.doneFetchingCategories();
@@ -298,29 +298,29 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     }
 
     public void addCategory(Category category, boolean fetchingAll) {
-        CategoryFragment categoryFragment = getCategoryPickerFragment();
-        if (categoryFragment != null) {
-            categoryFragment.addCategory(category, fetchingAll);
+        CategorySelectorFragment categorySelectorFragment = getCategorySelectorFragment();
+        if (categorySelectorFragment != null) {
+            categorySelectorFragment.addCategory(category, fetchingAll);
         }
     }
 
     public void removeCategory(Category category) {
-        CategoryFragment categoryFragment = getCategoryPickerFragment();
-        if (categoryFragment != null) {
-            categoryFragment.removeCategory(category);
+        CategorySelectorFragment categorySelectorFragment = getCategorySelectorFragment();
+        if (categorySelectorFragment != null) {
+            categorySelectorFragment.removeCategory(category);
         }
     }
 
     public void updateCategory(Category category) {
-        CategoryFragment categoryFragment = getCategoryPickerFragment();
-        if (categoryFragment != null) {
-            categoryFragment.updateCategory(category);
+        CategorySelectorFragment categorySelectorFragment = getCategorySelectorFragment();
+        if (categorySelectorFragment != null) {
+            categorySelectorFragment.updateCategory(category);
         }
     }
 
     @Nullable
-    private CategoryFragment getCategoryPickerFragment() {
-        return mContainer.getCategoryFragment();
+    private CategorySelectorFragment getCategorySelectorFragment() {
+        return mContainer.getCategorySelectorFragment();
     }
 
     /**
