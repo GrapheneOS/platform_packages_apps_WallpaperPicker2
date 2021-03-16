@@ -437,6 +437,11 @@ public class CategoryFragment extends AppbarFragment
     }
 
     @Override
+    public boolean isHostToolbarShown() {
+        return true;
+    }
+
+    @Override
     public void setToolbarTitle(CharSequence title) {
         setTitle(title);
     }
