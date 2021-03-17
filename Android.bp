@@ -1,0 +1,113 @@
+//
+// Copyright (C) 2021 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+//
+// Build rule for WallpaperPicker2 dependencies lib.
+//
+android_library {
+    name: "wallpaper-common-deps",
+
+    static_libs: [
+        "androidx.appcompat_appcompat",
+        "androidx.cardview_cardview",
+        "androidx.exifinterface_exifinterface",
+        "androidx.recyclerview_recyclerview",
+        "androidx.slice_slice-view",
+        "androidx-constraintlayout_constraintlayout",
+        "com.google.android.material_material",
+        "glide-prebuilt",
+        "libbackup",
+        "subsampling-scale-image-view",
+        "SystemUISharedLib",
+        "volley",
+    ],
+
+    resource_dirs: ["res"],
+
+    optimize: {
+        enabled: false,
+    },
+
+    sdk_version: "current",
+
+    manifest: "AndroidManifest-empty.xml",
+
+    visibility: [
+        ":__subpackages__",
+        "//packages/apps/ThemePicker",
+        "//vendor:__subpackages__",
+    ],
+}
+
+filegroup {
+    name: "WallpaperPicker2_srcs",
+    srcs: [
+        "src/**/*.java",
+        "src/**/*.kt",
+    ],
+}
+
+genrule {
+   name: "WallpaperPicker2_res",
+   tools: ["soong_zip"],
+   srcs: [
+       "res/**/*"
+   ],
+   out: ["wallpaperpicker2_res.zip"],
+   cmd: "INPUTS=($(in)) && "
+       + "RES_DIR=$$(dirname $$(dirname $${INPUTS[0]})) && "
+       + "$(location soong_zip) -o $(out) -C $$RES_DIR -D $$RES_DIR && "
+       + "cp $(out) ."
+}
+
+java_defaults {
+    name: "WallpaperPicker2_defaults",
+
+    static_libs: [
+        "wallpaper-common-deps",
+    ],
+
+    srcs: [
+        ":WallpaperPicker2_srcs",
+        "src_override/**/*.java",
+        "src_override/**/*.kt",
+    ],
+    resource_zips: [":WallpaperPicker2_res"],
+
+    certificate: "",
+
+    optimize: {
+        enabled: false,
+    },
+
+    privileged: true,
+    system_ext_specific: true,
+
+    use_embedded_native_libs: true,
+
+    manifest: "AndroidManifest.xml",
+}
+
+//
+// Build app code.
+//
+android_app {
+    name: "WallpaperPicker2",
+
+    defaults: ["WallpaperPicker2_defaults"],
+
+    platform_apis: true,
+}
