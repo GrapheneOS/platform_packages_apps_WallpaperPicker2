@@ -1032,7 +1032,7 @@ public class IndividualPickerFragment extends AppbarFragment
                 ? index + 1 : index;
         ViewHolder holder = mImageGrid.findViewHolderForAdapterPosition(index);
         if (holder != null) {
-            CircularImageView thumbnail = holder.itemView.findViewById(R.id.thumbnail);
+            CustomShapeImageView thumbnail = holder.itemView.findViewById(R.id.thumbnail);
             thumbnail.setClipped(isActivated);
         } else {
             // Item is not visible, make sure the item is re-bound when it becomes visible.
@@ -1378,7 +1378,7 @@ public class IndividualPickerFragment extends AppbarFragment
                 mAppliedWallpaperInfo = wallpaper;
             }
 
-            CircularImageView thumbnail = holder.itemView.findViewById(R.id.thumbnail);
+            CustomShapeImageView thumbnail = holder.itemView.findViewById(R.id.thumbnail);
             thumbnail.setClipped(isWallpaperApplied);
         }
     }

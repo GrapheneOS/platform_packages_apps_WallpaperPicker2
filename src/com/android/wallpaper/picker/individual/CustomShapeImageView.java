@@ -17,33 +17,38 @@ package com.android.wallpaper.picker.individual;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-/**
- * A view where the image can be optionally clipped to have a circular border.
- */
-public class CircularImageView extends ImageView {
-    private boolean mClipped = false;
+import androidx.core.graphics.PathParser;
 
-    private boolean mPathSet = false;
+import com.android.wallpaper.R;
+
+/**
+ * A view where the image can be optionally clipped to have a custom border, by default circular.
+ */
+public class CustomShapeImageView extends ImageView {
+    private boolean mClipped;
+
+    private boolean mPathSet;
     private Path mPath;
 
-    public CircularImageView(Context context) {
+    public CustomShapeImageView(Context context) {
         super(context);
     }
 
-    public CircularImageView(Context context, AttributeSet attrs) {
+    public CustomShapeImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CircularImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomShapeImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     /**
-     * Returns whether the image is clipped with a circular boundary.
+     * Returns whether the image is clipped with a circular border.
      */
     public boolean getClipped() {
         return mClipped;
@@ -51,10 +56,10 @@ public class CircularImageView extends ImageView {
 
     /**
      * Modifies how the image is clipped. When called with true, the image
-     * is clipped with a circular boundary; with false, the default boundary.
+     * is clipped with a circular border; with false, the default border.
      *
      * @param clippedValue Whether the image is clipped with a circular
-     *                     boundary.
+     *                     border.
      */
     public void setClipped(boolean clippedValue) {
         mClipped = clippedValue;
@@ -62,20 +67,30 @@ public class CircularImageView extends ImageView {
         requestLayout();
     }
 
+    /**
+     * Sets the border of the thumbnail.
+     *
+     * @param clippingPathResource The resource ID of the path string of the desired
+     *                             border.
+     */
+    public void setClippingPath(int clippingPathResource) {
+        String string = getResources().getString(clippingPathResource);
+        mPath = PathParser.createPathFromPathData(string);
+        mPathSet = true;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         if (mClipped) {
             if (!mPathSet) {
-                // Computes path.
-                mPath = new Path();
-                mPath.addCircle(
-                        getWidth() / 2,
-                        getHeight() / 2,
-                        getHeight() / 2,
-                        Path.Direction.CW);
-                mPathSet = true;
+                setClippingPath(R.string.circular_border);
             }
-            canvas.clipPath(mPath);
+            float scale = (float) (getHeight() / 100.0);
+            Matrix matrix = new Matrix();
+            matrix.postScale(scale, scale);
+            Path scaledPath = new Path(mPath);
+            scaledPath.transform(matrix);
+            canvas.clipPath(scaledPath);
         }
 
         super.onDraw(canvas);

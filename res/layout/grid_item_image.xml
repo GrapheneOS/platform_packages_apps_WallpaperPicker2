@@ -51,7 +51,7 @@
             android:layout_height="match_parent"
             android:foreground="@drawable/wallpaper_option_border">
 
-            <com.android.wallpaper.picker.individual.CircularImageView
+            <com.android.wallpaper.picker.individual.CustomShapeImageView
                 android:id="@+id/thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
