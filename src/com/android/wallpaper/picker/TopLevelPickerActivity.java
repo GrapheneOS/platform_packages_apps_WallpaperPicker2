@@ -238,8 +238,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
             return;
         }
 
-        CategoryFragment categoryFragment = getCategoryFragment();
-        if (categoryFragment != null && categoryFragment.popChildFragment()) {
+        if (fragment != null && fragment.getChildFragmentManager().popBackStackImmediate()) {
             return;
         }
         super.onBackPressed();
@@ -650,12 +649,13 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
 
     @Override
     @Nullable
-    public CategoryFragment getCategoryFragment() {
+    public CategorySelectorFragment getCategorySelectorFragment() {
         if (mDelegate.getFormFactor() != FormFactorChecker.FORM_FACTOR_MOBILE) {
             return null;
         }
         FragmentManager fm = getSupportFragmentManager();
-        return (CategoryFragment) fm.findFragmentById(R.id.fragment_container);
+        return ((CategoryFragment) fm.findFragmentById(
+                R.id.fragment_container)).getCategorySelectorFragment();
     }
 
     /**

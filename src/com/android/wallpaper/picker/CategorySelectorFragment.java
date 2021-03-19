@@ -227,7 +227,12 @@ public class CategorySelectorFragment extends Fragment {
 
 
     private CategorySelectorFragmentHost getCategorySelectorFragmentHost() {
-        return (CategorySelectorFragmentHost) getParentFragment();
+        Fragment parentFragment = getParentFragment();
+        if (parentFragment != null) {
+            return (CategorySelectorFragmentHost) parentFragment;
+        } else {
+            return (CategorySelectorFragmentHost) getActivity();
+        }
     }
 
     /**
