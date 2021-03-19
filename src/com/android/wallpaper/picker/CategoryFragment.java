@@ -513,39 +513,19 @@ public class CategoryFragment extends AppbarFragment
     }
 
     /**
+     * Gets the {@link CategorySelectorFragment} which is attached to {@link CategoryFragment}.
+     */
+    public CategorySelectorFragment getCategorySelectorFragment() {
+        return mCategorySelectorFragment;
+    }
+
+    /**
      * Pops the child fragment from the stack if {@link CategoryFragment} is visible to the users.
      *
      * @return {@code true} if the child fragment is popped, {@code false} otherwise.
      */
     public boolean popChildFragment() {
         return isVisible() && getChildFragmentManager().popBackStackImmediate();
-    }
-
-    /**
-     * Inserts the given category into the categories list in priority order.
-     */
-    void addCategory(Category category, boolean loading) {
-        mCategorySelectorFragment.addCategory(category, loading);
-    }
-
-    void removeCategory(Category category) {
-        mCategorySelectorFragment.removeCategory(category);
-    }
-
-    void updateCategory(Category category) {
-        mCategorySelectorFragment.updateCategory(category);
-    }
-
-    void clearCategories() {
-        mCategorySelectorFragment.clearCategories();
-    }
-
-    /**
-     * Notifies the CategoryFragment that no further categories are expected so it may hide
-     * the loading indicator.
-     */
-    void doneFetchingCategories() {
-        mCategorySelectorFragment.doneFetchingCategories();
     }
 
     private boolean canShowCurrentWallpaper() {
