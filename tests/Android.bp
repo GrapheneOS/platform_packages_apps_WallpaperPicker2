@@ -16,6 +16,10 @@
 //
 // Build rule for WallpaperPicker2 tests
 //
+package {
+    default_applicable_licenses: ["Android-Apache-2.0"],
+}
+
 android_test {
     name: "WallpaperPicker2Tests",
 
