@@ -231,6 +231,11 @@ public class IndividualPickerActivity extends BaseActivity implements BottomActi
     }
 
     @Override
+    public boolean isHostToolbarShown() {
+        return true;
+    }
+
+    @Override
     public void setToolbarTitle(CharSequence title) {
         setTitle(title);
         getSupportActionBar().setTitle(title);
