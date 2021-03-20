@@ -59,7 +59,6 @@ public class LockScreenPreviewer implements LifecycleObserver {
     private TextView mLockDate;
 
     public LockScreenPreviewer(Lifecycle lifecycle, Activity activity, ViewGroup previewContainer) {
-        lifecycle.addObserver(this);
         mActivity = activity;
         View contentView = LayoutInflater.from(mActivity).inflate(
                 R.layout.lock_screen_preview, /* root= */ null);
@@ -103,6 +102,7 @@ public class LockScreenPreviewer implements LifecycleObserver {
                 rootView.removeOnLayoutChangeListener(this);
             }
         });
+        lifecycle.addObserver(this);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
