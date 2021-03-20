@@ -59,7 +59,7 @@ import java.util.List;
 /**
  * Displays the UI which contains the categories of the wallpaper.
  */
-public class CategorySelectorFragment extends Fragment {
+public class CategorySelectorFragment extends AppbarFragment {
 
     // The number of ViewHolders that don't pertain to category tiles.
     // Currently 2: one for the metadata section and one for the "Select wallpaper" header.
@@ -85,8 +85,15 @@ public class CategorySelectorFragment extends Fragment {
          */
         void show(Category category);
 
+
         /**
-         * Sets the title in the toolbar.
+         * Indicates if the host has toolbar to show the title. If it does, we should set the title
+         * there.
+         */
+        boolean isHostToolbarShown();
+
+        /**
+         * Sets the title in the host's toolbar.
          */
         void setToolbarTitle(CharSequence title);
 
@@ -135,7 +142,14 @@ public class CategorySelectorFragment extends Fragment {
         mImageGrid.setAccessibilityDelegateCompat(
                 new WallpaperPickerRecyclerViewAccessibilityDelegate(
                         mImageGrid, (BottomSheetHost) getParentFragment(), getNumColumns()));
-        getCategorySelectorFragmentHost().setToolbarTitle(getText(R.string.wallpaper_title));
+
+        if (getCategorySelectorFragmentHost().isHostToolbarShown()) {
+            view.findViewById(R.id.header_bar).setVisibility(View.GONE);
+            getCategorySelectorFragmentHost().setToolbarTitle(getText(R.string.wallpaper_title));
+        } else {
+            setUpToolbar(view);
+            setTitle(getText(R.string.wallpaper_title));
+        }
 
         if (!DeepLinkUtils.isDeepLink(getActivity().getIntent())) {
             getCategorySelectorFragmentHost().fetchCategories();
@@ -227,7 +241,12 @@ public class CategorySelectorFragment extends Fragment {
 
 
     private CategorySelectorFragmentHost getCategorySelectorFragmentHost() {
-        return (CategorySelectorFragmentHost) getParentFragment();
+        Fragment parentFragment = getParentFragment();
+        if (parentFragment != null) {
+            return (CategorySelectorFragmentHost) parentFragment;
+        } else {
+            return (CategorySelectorFragmentHost) getActivity();
+        }
     }
 
     /**

@@ -76,8 +76,8 @@ import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
+import com.android.wallpaper.picker.AppbarFragment;
 import com.android.wallpaper.picker.BaseActivity;
-import com.android.wallpaper.picker.BottomActionBarFragment;
 import com.android.wallpaper.picker.CurrentWallpaperBottomSheetPresenter;
 import com.android.wallpaper.picker.FragmentTransactionChecker;
 import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
@@ -109,7 +109,7 @@ import java.util.Random;
 /**
  * Displays the Main UI for picking an individual wallpaper image.
  */
-public class IndividualPickerFragment extends BottomActionBarFragment
+public class IndividualPickerFragment extends AppbarFragment
         implements RotationStarter, StartRotationErrorDialogFragment.Listener,
         CurrentWallpaperBottomSheetPresenter.RefreshListener,
         SetWallpaperErrorDialogFragment.Listener, SetWallpaperDialogFragment.Listener,
@@ -178,7 +178,13 @@ public class IndividualPickerFragment extends BottomActionBarFragment
      */
     public interface IndividualPickerFragmentHost {
         /**
-         * Sets the title in the toolbar.
+         * Indicates if the host has toolbar to show the title. If it does, we should set the title
+         * there.
+         */
+        boolean isHostToolbarShown();
+
+        /**
+         * Sets the title in the host's toolbar.
          */
         void setToolbarTitle(CharSequence title);
 
@@ -397,7 +403,11 @@ public class IndividualPickerFragment extends BottomActionBarFragment
         if (getIndividualPickerFragmentHost() == null) {
             return;
         }
-        getIndividualPickerFragmentHost().setToolbarTitle(mCategory.getTitle());
+        if (getIndividualPickerFragmentHost().isHostToolbarShown()) {
+            getIndividualPickerFragmentHost().setToolbarTitle(mCategory.getTitle());
+        } else {
+            setTitle(mCategory.getTitle());
+        }
         mWallpaperRotationInitializer = mCategory.getWallpaperRotationInitializer();
         // Avoids the "rotation" action is not shown correctly
         // in a rare case : onCategoryLoaded() is called after onBottomActionBarReady().
@@ -480,6 +490,14 @@ public class IndividualPickerFragment extends BottomActionBarFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_individual_picker, container, false);
+        if (getIndividualPickerFragmentHost().isHostToolbarShown()) {
+            view.findViewById(R.id.header_bar).setVisibility(View.GONE);
+        } else {
+            setUpToolbar(view);
+            if (mCategory != null) {
+                setTitle(mCategory.getTitle());
+            }
+        }
 
         mTileSizePx = SizeCalculator.getIndividualTileSize(getActivity());
 
