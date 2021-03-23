@@ -17,6 +17,10 @@
 //
 // Build rule for WallpaperPicker2 dependencies lib.
 //
+package {
+    default_applicable_licenses: ["Android-Apache-2.0"],
+}
+
 android_library {
     name: "wallpaper-common-deps",
 
