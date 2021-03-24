@@ -186,6 +186,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
     @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
+        super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar = bottomActionBar;
         // TODO: Extract the common code here.
     }
