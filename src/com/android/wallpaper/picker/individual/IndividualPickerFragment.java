@@ -90,6 +90,7 @@ import com.android.wallpaper.picker.StartRotationErrorDialogFragment;
 import com.android.wallpaper.picker.WallpaperInfoHelper;
 import com.android.wallpaper.picker.WallpapersUiContainer;
 import com.android.wallpaper.picker.individual.SetIndividualHolder.OnSetListener;
+import com.android.wallpaper.util.ActivityUtils;
 import com.android.wallpaper.util.DiskBasedLogger;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.widget.BottomActionBar;
@@ -492,6 +493,7 @@ public class IndividualPickerFragment extends AppbarFragment
         View view = inflater.inflate(R.layout.fragment_individual_picker, container, false);
         if (getIndividualPickerFragmentHost().isHostToolbarShown()) {
             view.findViewById(R.id.header_bar).setVisibility(View.GONE);
+            setUpArrowEnabled(ActivityUtils.isLaunchedFromSettings(getActivity().getIntent()));
         } else {
             setUpToolbar(view);
             if (mCategory != null) {
@@ -602,8 +604,10 @@ public class IndividualPickerFragment extends AppbarFragment
 
     @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
+        super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar = bottomActionBar;
-        if (isRotationEnabled()) {
+        boolean isRotationEnabled = isRotationEnabled();
+        if (isRotationEnabled) {
             mBottomActionBar.showActionsOnly(ROTATION);
         }
         mBottomActionBar.setActionClickListener(ROTATION, unused -> {
@@ -627,7 +631,9 @@ public class IndividualPickerFragment extends AppbarFragment
                     new PreviewActivity.PreviewActivityIntentFactory(),
                     PREVIEW_WALLPAPER_REQUEST_CODE);
         });
-        mBottomActionBar.show();
+        if (isRotationEnabled || (mBottomActionBar.getBackButtonVisibility() == View.VISIBLE)) {
+            mBottomActionBar.show();
+        }
     }
 
     @Override
