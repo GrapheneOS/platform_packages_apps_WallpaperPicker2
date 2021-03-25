@@ -32,13 +32,14 @@ import com.android.wallpaper.model.ImageWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.UserEventLogger;
+import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
 
 /**
  * Activity that displays a preview of a specific wallpaper and provides the ability to set the
  * wallpaper as the user's current wallpaper. It's "standalone" meaning it doesn't reside in the
  * app navigation hierarchy and can be launched directly via an explicit intent.
  */
-public class StandalonePreviewActivity extends BasePreviewActivity {
+public class StandalonePreviewActivity extends BasePreviewActivity implements AppbarFragmentHost {
     private static final String TAG = "StandalonePreview";
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 1;
 
@@ -108,6 +109,17 @@ public class StandalonePreviewActivity extends BasePreviewActivity {
 
             loadPreviewFragment();
         }
+    }
+
+    @Override
+    public void onUpArrowPressed() {
+        // TODO(b/182972395): It should go back to WallpaperPicker.
+    }
+
+    @Override
+    public boolean isUpArrowSupported() {
+        // TODO(b/182972395): It should go back to WallpaperPicker.
+        return false;
     }
 
     /**

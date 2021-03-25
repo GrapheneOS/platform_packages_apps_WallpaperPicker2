@@ -15,9 +15,13 @@
  */
 package com.android.wallpaper.util;
 
+import static com.android.wallpaper.util.LaunchSourceUtils.LAUNCH_SOURCE_SETTINGS;
+import static com.android.wallpaper.util.LaunchSourceUtils.WALLPAPER_LAUNCH_SOURCE;
+
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -48,5 +52,15 @@ public final class ActivityUtils {
                     + ". Make sure to create a MAIN intent-filter for the corresponding activity "
                     + "or use the exported attribute for this activity.", e);
         }
+    }
+
+    /**
+     * Return true if wallpaper launch source is from Settings.
+     *
+     * @param intent activity intent.
+     */
+    public static boolean isLaunchedFromSettings(Intent intent) {
+        return (intent != null && TextUtils.equals(LAUNCH_SOURCE_SETTINGS,
+                intent.getStringExtra(WALLPAPER_LAUNCH_SOURCE)));
     }
 }

@@ -26,11 +26,12 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
 
 /**
  * Activity that displays a view-only preview of a specific wallpaper.
  */
-public class ViewOnlyPreviewActivity extends BasePreviewActivity {
+public class ViewOnlyPreviewActivity extends BasePreviewActivity implements AppbarFragmentHost {
 
     /**
      * Returns a new Intent with the provided WallpaperInfo instance put as an extra.
@@ -73,6 +74,16 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity {
                     .add(R.id.fragment_container, fragment)
                     .commit();
         }
+    }
+
+    @Override
+    public void onUpArrowPressed() {
+        onBackPressed();
+    }
+
+    @Override
+    public boolean isUpArrowSupported() {
+        return true;
     }
 
     /**

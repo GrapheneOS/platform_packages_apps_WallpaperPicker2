@@ -263,6 +263,16 @@ public class BottomActionBar extends FrameLayout {
         mActionSelectedListeners.put(bottomAction, actionSelectedListener);
     }
 
+    /** Set back button visibility. */
+    public void setBackButtonVisibility(int visibility) {
+        findViewById(R.id.action_back).setVisibility(visibility);
+    }
+
+    /** Get back button visibility. */
+    public int getBackButtonVisibility() {
+        return findViewById(R.id.action_back).getVisibility();
+    }
+
     /** Binds the cancel button to back key. */
     public void bindBackButtonToSystemBackKey(Activity activity) {
         findViewById(R.id.action_back).setOnClickListener(v -> activity.onBackPressed());
