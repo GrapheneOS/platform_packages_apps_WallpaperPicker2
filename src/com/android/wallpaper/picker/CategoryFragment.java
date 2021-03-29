@@ -186,7 +186,7 @@ public class CategoryFragment extends AppbarFragment
         ViewGroup lockPreviewContainer = lockscreenPreviewCard.findViewById(
                 R.id.lock_screen_preview_container);
         lockPreviewContainer.setVisibility(View.VISIBLE);
-        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getActivity(),
+        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getContext(),
                 lockPreviewContainer);
         mWallPaperPreviews.add(lockscreenPreviewCard);
 
