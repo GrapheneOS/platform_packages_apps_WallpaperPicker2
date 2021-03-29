@@ -28,11 +28,14 @@ android_library {
         "androidx.appcompat_appcompat",
         "androidx.cardview_cardview",
         "androidx.exifinterface_exifinterface",
+        "androidx.lifecycle_lifecycle-runtime-ktx",
         "androidx.recyclerview_recyclerview",
         "androidx.slice_slice-view",
         "androidx-constraintlayout_constraintlayout",
         "com.google.android.material_material",
         "glide-prebuilt",
+        "kotlinx-coroutines-android",
+        "kotlinx-coroutines-core",
         "libbackup",
         "subsampling-scale-image-view",
         "SystemUISharedLib",
@@ -44,6 +47,8 @@ android_library {
     optimize: {
         enabled: false,
     },
+
+    kotlincflags: ["-Xjvm-default=enable"],
 
     sdk_version: "current",
 
@@ -97,6 +102,7 @@ java_defaults {
         enabled: false,
     },
 
+    kotlincflags: ["-Xjvm-default=enable"],
     privileged: true,
     system_ext_specific: true,
 
