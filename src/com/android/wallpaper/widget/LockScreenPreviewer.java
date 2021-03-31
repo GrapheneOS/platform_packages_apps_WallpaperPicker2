@@ -79,6 +79,7 @@ public class LockScreenPreviewer implements LifecycleObserver {
             public void onLayoutChange(View view, int left, int top, int right, int bottom,
                                        int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 int cardHeight = previewContainer.getMeasuredHeight();
+                int cardWidth = previewContainer.getMeasuredWidth();
 
                 // Relayout the content view to match full screen size.
                 contentView.measure(
@@ -87,7 +88,8 @@ public class LockScreenPreviewer implements LifecycleObserver {
                 contentView.layout(0, 0, screenSize.x, screenSize.y);
 
                 // Scale the content view from full screen size to the container(card) size.
-                float scale = (float) cardHeight / screenSize.y;
+                float scale = cardHeight > 0 ? (float) cardHeight / screenSize.y
+                        : (float) cardWidth / screenSize.x;
                 contentView.setScaleX(scale);
                 contentView.setScaleY(scale);
                 // The pivot point is centered by default, set to (0, 0).
