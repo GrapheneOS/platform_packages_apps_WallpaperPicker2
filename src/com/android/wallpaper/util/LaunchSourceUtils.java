@@ -9,4 +9,5 @@ public final class LaunchSourceUtils {
     public static final String LAUNCH_SOURCE_SUW = "app_launched_suw";
     public static final String LAUNCH_SOURCE_TIPS = "app_launched_tips";
     public static final String LAUNCH_SOURCE_DEEP_LINK = "app_launched_deeplink";
+    public static final String LAUNCH_SETTINGS_SEARCH = ":settings:fragment_args_key";
 }
