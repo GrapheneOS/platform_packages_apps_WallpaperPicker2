@@ -18,8 +18,8 @@ package com.android.wallpaper.widget;
 import static android.view.View.MeasureSpec.EXACTLY;
 import static android.view.View.MeasureSpec.makeMeasureSpec;
 
-import android.app.Activity;
 import android.app.WallpaperColors;
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -28,6 +28,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,26 +52,26 @@ public class LockScreenPreviewer implements LifecycleObserver {
 
     private static final String DEFAULT_DATE_PATTERN = "EEE, MMM d";
 
-    private Activity mActivity;
+    private Context mContext;
     private String mDatePattern;
     private TimeTicker mTicker;
     private ImageView mLockIcon;
     private TextView mLockTime;
     private TextView mLockDate;
 
-    public LockScreenPreviewer(Lifecycle lifecycle, Activity activity, ViewGroup previewContainer) {
-        mActivity = activity;
-        View contentView = LayoutInflater.from(mActivity).inflate(
+    public LockScreenPreviewer(Lifecycle lifecycle, Context context, ViewGroup previewContainer) {
+        mContext = context;
+        View contentView = LayoutInflater.from(mContext).inflate(
                 R.layout.lock_screen_preview, /* root= */ null);
         mLockIcon = contentView.findViewById(R.id.lock_icon);
         mLockTime = contentView.findViewById(R.id.lock_time);
         mLockDate = contentView.findViewById(R.id.lock_date);
         mDatePattern = DateFormat.getBestDateTimePattern(Locale.getDefault(), DEFAULT_DATE_PATTERN);
 
-        Display defaultDisplay = mActivity.getWindowManager().getDefaultDisplay();
+        Display defaultDisplay = mContext.getSystemService(WindowManager.class).getDefaultDisplay();
         Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(defaultDisplay);
 
-        Configuration config = mActivity.getResources().getConfiguration();
+        Configuration config = mContext.getResources().getConfiguration();
         final boolean directionLTR = config.getLayoutDirection() == View.LAYOUT_DIRECTION_LTR;
 
         View rootView = previewContainer.getRootView();
@@ -110,15 +111,15 @@ public class LockScreenPreviewer implements LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     @MainThread
     public void onResume() {
-        mTicker = TimeTicker.registerNewReceiver(mActivity, this::updateDateTime);
+        mTicker = TimeTicker.registerNewReceiver(mContext, this::updateDateTime);
         updateDateTime();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     @MainThread
     public void onPause() {
-        if (mActivity != null) {
-            mActivity.unregisterReceiver(mTicker);
+        if (mContext != null) {
+            mContext.unregisterReceiver(mTicker);
         }
     }
 
@@ -131,9 +132,9 @@ public class LockScreenPreviewer implements LifecycleObserver {
     public void setColor(@Nullable WallpaperColors colors) {
         boolean useLightTextColor = colors == null
                 || (colors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_TEXT) == 0;
-        int color = mActivity.getColor(useLightTextColor
+        int color = mContext.getColor(useLightTextColor
                 ? R.color.text_color_light : R.color.text_color_dark);
-        int textShadowColor = mActivity.getColor(useLightTextColor
+        int textShadowColor = mContext.getColor(useLightTextColor
                 ? R.color.smartspace_preview_shadow_color_dark
                 : R.color.smartspace_preview_shadow_color_transparent);
         mLockIcon.setImageTintList(ColorStateList.valueOf(color));
@@ -141,13 +142,13 @@ public class LockScreenPreviewer implements LifecycleObserver {
         mLockTime.setTextColor(color);
 
         mLockDate.setShadowLayer(
-                mActivity.getResources().getDimension(
+                mContext.getResources().getDimension(
                         R.dimen.smartspace_preview_key_ambient_shadow_blur),
                 /* dx = */ 0,
                 /* dy = */ 0,
                 textShadowColor);
         mLockTime.setShadowLayer(
-                mActivity.getResources().getDimension(
+                mContext.getResources().getDimension(
                         R.dimen.smartspace_preview_key_ambient_shadow_blur),
                 /* dx = */ 0,
                 /* dy = */ 0,
@@ -156,7 +157,7 @@ public class LockScreenPreviewer implements LifecycleObserver {
 
     private void updateDateTime() {
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        mLockTime.setText(TimeUtils.getFormattedTime(mActivity, calendar));
+        mLockTime.setText(TimeUtils.getFormattedTime(mContext, calendar));
         mLockDate.setText(DateFormat.format(mDatePattern, calendar));
     }
 }
