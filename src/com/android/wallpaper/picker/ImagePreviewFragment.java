@@ -143,7 +143,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                 getContext());
         mWallpaperSurface = mContainer.findViewById(R.id.wallpaper_surface);
         mLockPreviewContainer = mContainer.findViewById(R.id.lock_screen_preview_container);
-        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getActivity(),
+        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getContext(),
                 mLockPreviewContainer);
 
         TabLayout tabs = inflater.inflate(R.layout.full_preview_tabs,
