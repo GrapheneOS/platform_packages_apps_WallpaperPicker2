@@ -196,7 +196,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         mTouchForwardingLayout.setTargetView(mHomePreview);
         mTouchForwardingLayout.setForwardingEnabled(true);
         mLockPreviewContainer = mPreviewContainer.findViewById(R.id.lock_screen_preview_container);
-        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), activity,
+        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getContext(),
                 mLockPreviewContainer);
         mWallpaperSurface = mHomePreviewCard.findViewById(R.id.wallpaper_surface);
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
