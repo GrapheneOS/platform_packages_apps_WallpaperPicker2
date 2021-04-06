@@ -48,4 +48,11 @@
         android:layout_height="match_parent"
         android:alpha="0"
         android:background="@color/preview_pager_background" />
+
+    <ProgressBar android:id="@+id/wallpaper_preview_spinner"
+        style="?android:progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 </androidx.cardview.widget.CardView>
