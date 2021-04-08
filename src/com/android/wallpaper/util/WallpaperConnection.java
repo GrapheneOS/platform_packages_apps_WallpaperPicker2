@@ -65,6 +65,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     private final Intent mIntent;
     private final WallpaperConnectionListener mListener;
     private final SurfaceView mContainerView;
+    private final SurfaceView mSecondContainerView;
     private IWallpaperService mService;
     private IWallpaperEngine mEngine;
     private boolean mConnected;
@@ -80,10 +81,25 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
      */
     public WallpaperConnection(Intent intent, Activity activity,
             @Nullable WallpaperConnectionListener listener, SurfaceView containerView) {
+        this(intent, activity, listener, containerView, null);
+    }
+
+    /**
+     * @param intent used to bind the wallpaper service
+     * @param activity Activity that owns the window where the wallpaper is rendered
+     * @param listener if provided, it'll be notified of connection/disconnection events
+     * @param containerView SurfaceView that will display the wallpaper
+     * @param secondaryContainerView optional SurfaceView that will display a second, mirrored
+     *                               version of the wallpaper
+     */
+    public WallpaperConnection(Intent intent, Activity activity,
+            @Nullable WallpaperConnectionListener listener, SurfaceView containerView,
+            @Nullable SurfaceView secondaryContainerView) {
         mActivity = activity;
         mIntent = intent;
         mListener = listener;
         mContainerView = containerView;
+        mSecondContainerView = secondaryContainerView;
     }
 
     /**
@@ -225,6 +241,9 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
         mEngineReady = true;
         if (mContainerView != null) {
             reparentWallpaperSurface(mContainerView);
+        }
+        if (mSecondContainerView != null) {
+            reparentWallpaperSurface(mSecondContainerView);
         }
 
         mActivity.runOnUiThread(() -> {
