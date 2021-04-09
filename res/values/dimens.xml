@@ -237,4 +237,8 @@
     <dimen name="lock_screen_preview_time_text_size">54dp</dimen>
     <dimen name="lock_screen_preview_date_text_size">18dp</dimen>
     <dimen name="smartspace_preview_key_ambient_shadow_blur">1.5dp</dimen>
+
+    <!-- The size of lock screen preview 2 on the full screen. -->
+    <dimen name="lock_screen_preview2_date_text_size">20dp</dimen>
+    <dimen name="lock_screen_preview2_time_text_size">170dp</dimen>
 </resources>
