@@ -432,7 +432,7 @@ public class IndividualPickerActivityTest {
         for (int index = 0; index < 3; index++) {
             assertNotNull(recyclerView.findViewHolderForAdapterPosition(index));
 
-            CircularImageView thumbnail =
+            CustomShapeImageView thumbnail =
                     recyclerView.findViewHolderForAdapterPosition(index)
                             .itemView.findViewById(R.id.thumbnail);
 
