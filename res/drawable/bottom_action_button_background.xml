@@ -14,11 +14,18 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:state_selected="false"
-        android:color="?android:textColorTertiary" />
-    <item
-        android:state_selected="true"
-        android:color="?android:textColorPrimary" />
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:androidprv="http://schemas.android.com/apk/prv/res/android">
+    <item android:state_selected="false">
+        <shape>
+            <solid android:color="?android:colorBackground" />
+            <corners android:radius="@dimen/bottom_action_button_radius" />
+        </shape>
+    </item>
+    <item android:state_selected="true">
+        <shape>
+            <solid android:color="?androidprv:attr/colorAccentPrimary" />
+            <corners android:radius="@dimen/bottom_action_button_radius" />
+        </shape>
+    </item>
 </selector>
