@@ -24,6 +24,7 @@ import android.view.Surface;
 import android.view.SurfaceControlViewHost;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -56,7 +57,7 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
     // the live wallpaper. This view is rendered on here for home image wallpaper.
     private ImageView mHomeImageWallpaper;
     private final Context mContext;
-    private final ImageView mHomePreview;
+    private final View mContainerView;
     private final SurfaceView mWallpaperSurface;
     @Nullable
     private final SurfaceListener mListener;
@@ -65,10 +66,10 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
     private PackageStatusNotifier.Listener mAppStatusListener;
     private PackageStatusNotifier mPackageStatusNotifier;
 
-    public WallpaperSurfaceCallback(Context context, ImageView homePreview,
+    public WallpaperSurfaceCallback(Context context, View containerView,
             SurfaceView wallpaperSurface, @Nullable  SurfaceListener listener) {
         mContext = context;
-        mHomePreview = homePreview;
+        mContainerView = containerView;
         mWallpaperSurface = wallpaperSurface;
         mListener = listener;
 
@@ -85,9 +86,9 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
                 WallpaperService.SERVICE_INTERFACE);
     }
 
-    public WallpaperSurfaceCallback(Context context, ImageView homePreview,
+    public WallpaperSurfaceCallback(Context context, View containerView,
             SurfaceView wallpaperSurface) {
-        this(context, homePreview, wallpaperSurface, null);
+        this(context, containerView, wallpaperSurface, null);
     }
 
     @Override
@@ -143,10 +144,10 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
         mHomeImageWallpaper = new ImageView(mContext);
         mHomeImageWallpaper.setBackgroundColor(
                 ContextCompat.getColor(mContext, R.color.primary_color));
-        mHomeImageWallpaper.measure(makeMeasureSpec(mHomePreview.getWidth(), EXACTLY),
-                makeMeasureSpec(mHomePreview.getHeight(), EXACTLY));
-        mHomeImageWallpaper.layout(0, 0, mHomePreview.getWidth(),
-                mHomePreview.getHeight());
+        mHomeImageWallpaper.measure(makeMeasureSpec(mContainerView.getWidth(), EXACTLY),
+                makeMeasureSpec(mContainerView.getHeight(), EXACTLY));
+        mHomeImageWallpaper.layout(0, 0, mContainerView.getWidth(),
+                mContainerView.getHeight());
         if (forceClean) {
             releaseHost();
             mHost = new SurfaceControlViewHost(mContext,
