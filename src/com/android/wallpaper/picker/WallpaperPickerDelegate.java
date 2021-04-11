@@ -259,6 +259,25 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     }
 
     /**
+     * Fetch the wallpaper categories but don't call any callbacks on the result, just so that
+     * they're cached when loading later.
+     */
+    public void prefetchCategories() {
+        mCategoryProvider.resetIfNeeded();
+        mCategoryProvider.fetchCategories(new CategoryReceiver() {
+            @Override
+            public void onCategoryReceived(Category category) {
+                // Do nothing
+            }
+
+            @Override
+            public void doneFetchingCategories() {
+                // Do nothing
+            }
+        }, false);
+    }
+
+    /**
      * Populates the categories appropriately depending on the device form factor.
      *
      * @param forceRefresh        Whether to force a refresh of categories from the
