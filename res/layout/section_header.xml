@@ -21,11 +21,11 @@
     android:layout_height="wrap_content"
     android:elevation="8dp">
 
-    <androidx.appcompat.widget.Toolbar
-        style="@style/RegularToolbarStyle"
+    <Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
+        android:theme="?android:attr/actionBarTheme"
         android:layout_gravity="top">
         <TextView
             android:id="@+id/custom_toolbar_title"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textAppearance="@style/TitleTextAppearance"/>
-    </androidx.appcompat.widget.Toolbar>
+    </Toolbar>
 
     <FrameLayout
         android:id="@+id/toolbar_tabs_container"
