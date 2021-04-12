@@ -106,7 +106,7 @@ public abstract class AppbarFragment extends BottomActionBarFragment
      */
     protected void setUpToolbar(View rootView, boolean upArrow) {
         mUpArrowEnabled = upArrow;
-        mToolbar = rootView.findViewById(R.id.toolbar);
+        mToolbar = rootView.findViewById(getToolbarId());
 
         mTitleView = mToolbar.findViewById(R.id.custom_toolbar_title);
         CharSequence title;
@@ -122,6 +122,10 @@ public abstract class AppbarFragment extends BottomActionBarFragment
         if (upArrow && mHost.isUpArrowSupported()) {
             setUpUpArrow();
         }
+    }
+
+    protected int getToolbarId() {
+        return R.id.toolbar;
     }
 
     /**

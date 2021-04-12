@@ -31,8 +31,7 @@
             android:id="@+id/custom_toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textAppearance="@style/TitleTextAppearance"/>
+            android:textAppearance="@style/CollapsingToolbarTitle.Collapsed"/>
     </Toolbar>
 
     <FrameLayout
