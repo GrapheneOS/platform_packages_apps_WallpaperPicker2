@@ -139,10 +139,12 @@
     <dimen name="start_rotation_dialog_checkbox_area_margin_bottom">12dp</dimen>
 
     <!-- Dimensions for the "Set wallpaper" destination dialog. -->
-    <dimen name="set_wallpaper_dialog_padding_bottom">8dp</dimen>
-    <dimen name="set_wallpaper_dialog_padding_top">15dp</dimen>
-    <dimen name="set_wallpaper_dialog_item_min_height">48dp</dimen>
-    <dimen name="set_wallpaper_dialog_item_drawable_padding">32dp</dimen>
+    <dimen name="set_wallpaper_dialog_padding">24dp</dimen>
+    <dimen name="set_wallpaper_dialog_item_min_height">56dp</dimen>
+    <dimen name="set_wallpaper_dialog_item_min_width">300dp</dimen>
+    <dimen name="set_wallpaper_dialog_item_outer_corner_radius">12dp</dimen>
+    <dimen name="set_wallpaper_dialog_item_inner_corner_radius">4dp</dimen>
+    <dimen name="set_wallpaper_dialog_icon_size">24dp</dimen>
 
     <!-- Dimensions for the "wallpaper disabled by administrator" UI. -->
     <dimen name="wallpaper_disabled_asset_margin_bottom">26dp</dimen>
