@@ -69,7 +69,7 @@
     <string name="home_and_lock_short_label">Home &#38; Lock</string>
 
     <!-- Label for a dialog which lets the user set an image as wallpaper. [CHAR LIMIT=50] -->
-    <string name="set_wallpaper_dialog_message">Set wallpaper</string>
+    <string name="set_wallpaper_dialog_message">Set wallpaper on</string>
 
     <!-- Label referring to the home screen of the device, i.e. shown behind the launcher.
          [CHAR LIMIT=100] -->
@@ -81,7 +81,7 @@
 
     <!-- Label referring to both the home screen and the lock screen of the
          device. [CHAR LIMIT=100] -->
-    <string name="set_wallpaper_both_destination">Home screen and lock screen</string>
+    <string name="set_wallpaper_both_destination">Home and lock screen</string>
 
     <!-- Label describing a live wallpaper whose responsibility is to display a different wallpaper
          on a periodic basis (i.e., in a daily rotation). [CHAR LIMIT=80] -->
