@@ -48,6 +48,7 @@ import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.util.DeepLinkUtils;
 import com.android.wallpaper.util.DisplayMetricsRetriever;
+import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate;
 import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate.BottomSheetHost;
@@ -330,7 +331,10 @@ public class CategorySelectorFragment extends AppbarFragment {
             Asset thumbnail = mCategory.getThumbnail(getActivity().getApplicationContext());
             if (thumbnail != null) {
                 thumbnail.loadDrawable(getActivity(), mImageView,
-                        getResources().getColor(R.color.secondary_color));
+                        ResourceUtils.getColorAttr(
+                            getActivity(),
+                            android.R.attr.colorSecondary
+                        ));
             } else {
                 // TODO(orenb): Replace this workaround for b/62584914 with a proper way of
                 //  unloading the ImageView such that no incorrect image is improperly loaded upon
@@ -376,7 +380,10 @@ public class CategorySelectorFragment extends AppbarFragment {
             super(view);
             ProgressBar progressBar = view.findViewById(R.id.loading_indicator);
             progressBar.getIndeterminateDrawable().setColorFilter(
-                    getResources().getColor(R.color.accent_color), PorterDuff.Mode.SRC_IN);
+                    ResourceUtils.getColorAttr(
+                            getActivity(),
+                            android.R.attr.colorAccent
+                    ), PorterDuff.Mode.SRC_IN);
         }
     }
 
