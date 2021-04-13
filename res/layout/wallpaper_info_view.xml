@@ -18,21 +18,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingHorizontal="@dimen/wallpaper_info_pane_horizontal_padding"
-    android:paddingTop="@dimen/wallpaper_info_pane_top_padding"
-    android:paddingBottom="@dimen/wallpaper_info_pane_bottom_padding"
+    android:padding="@dimen/wallpaper_info_pane_padding"
     android:theme="@style/WallpaperPicker.BottomPaneStyle">
 
     <TextView
         android:id="@+id/wallpaper_info_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:lineHeight="24dp"
         android:textAppearance="@style/TitleTextAppearance"
-        android:textColor="@color/action_bar_bottom_sheet_text_color" />
+        android:textColor="?android:textColorPrimary" />
 
     <TextView
         android:id="@+id/wallpaper_info_subtitle1"
@@ -40,9 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/wallpaper_info_pane_subtitle1_top_margin"
         android:lineHeight="20dp"
-        android:gravity="center"
-        android:textColor="@color/action_bar_bottom_sheet_text_color"
-        android:textSize="16sp"
+        android:textColor="?android:textColorTertiary"
+        android:textSize="14sp"
         android:visibility="gone" />
 
     <TextView
@@ -50,15 +45,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/wallpaper_info_pane_subtitle2_top_margin"
-        android:lineHeight="16dp"
-        android:gravity="center"
-        android:textColor="@color/action_bar_bottom_sheet_text_color"
-        android:textSize="12sp"
+        android:lineHeight="20dp"
+        android:textColor="?android:textColorTertiary"
+        android:textSize="14sp"
         android:visibility="gone" />
 
     <Button
         android:id="@+id/wallpaper_info_explore_button"
-        style="@style/OutlinedButtonStyle"
+        style="@style/ExploreButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/wallpaper_info_pane_explore_button_top_margin"
