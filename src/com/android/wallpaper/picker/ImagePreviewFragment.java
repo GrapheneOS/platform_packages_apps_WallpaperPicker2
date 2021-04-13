@@ -62,7 +62,7 @@ import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperCropUtils;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.BottomActionBar.AccessibilityCallback;
-import com.android.wallpaper.widget.LockScreenPreviewer;
+import com.android.wallpaper.widget.LockScreenPreviewer2;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
 import com.android.wallpaper.widget.WallpaperInfoView;
 
@@ -96,7 +96,7 @@ public class ImagePreviewFragment extends PreviewFragment {
     private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     private SurfaceView mWallpaperSurface;
     private ViewGroup mLockPreviewContainer;
-    private LockScreenPreviewer mLockScreenPreviewer;
+    private LockScreenPreviewer2 mLockScreenPreviewer;
     private WallpaperInfoView mWallpaperInfoView;
 
     @Override
@@ -143,7 +143,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                 getContext());
         mWallpaperSurface = mContainer.findViewById(R.id.wallpaper_surface);
         mLockPreviewContainer = mContainer.findViewById(R.id.lock_screen_preview_container);
-        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getContext(),
+        mLockScreenPreviewer = new LockScreenPreviewer2(getLifecycle(), getContext(),
                 mLockPreviewContainer);
 
         TabLayout tabs = inflater.inflate(R.layout.full_preview_tabs,
