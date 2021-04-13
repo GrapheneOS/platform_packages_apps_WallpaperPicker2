@@ -63,7 +63,6 @@ import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.ThumbnailUpdater;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.WallpaperDestinationCallback;
-import com.android.wallpaper.util.ActivityUtils;
 import com.android.wallpaper.util.DeepLinkUtils;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
@@ -265,7 +264,7 @@ public class CategoryFragment extends AppbarFragment
             return windowInsets;
         });
 
-        setUpToolbar(view, ActivityUtils.isLaunchedFromSettings(getActivity().getIntent()));
+        setUpToolbar(view);
 
         getChildFragmentManager()
                 .beginTransaction()

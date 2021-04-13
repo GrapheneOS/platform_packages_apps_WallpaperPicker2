@@ -18,6 +18,7 @@ package com.android.wallpaper.picker;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.annotation.MenuRes;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -25,10 +26,8 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
-import androidx.annotation.MenuRes;
-import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener;
+import android.widget.Toolbar;
+import android.widget.Toolbar.OnMenuItemClickListener;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.widget.BottomActionBar;
@@ -107,7 +106,7 @@ public abstract class AppbarFragment extends BottomActionBarFragment
      */
     protected void setUpToolbar(View rootView, boolean upArrow) {
         mUpArrowEnabled = upArrow;
-        mToolbar = rootView.findViewById(R.id.toolbar);
+        mToolbar = rootView.findViewById(getToolbarId());
 
         mTitleView = mToolbar.findViewById(R.id.custom_toolbar_title);
         CharSequence title;
@@ -123,6 +122,10 @@ public abstract class AppbarFragment extends BottomActionBarFragment
         if (upArrow && mHost.isUpArrowSupported()) {
             setUpUpArrow();
         }
+    }
+
+    protected int getToolbarId() {
+        return R.id.toolbar;
     }
 
     /**
