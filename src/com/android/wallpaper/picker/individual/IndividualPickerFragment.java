@@ -90,7 +90,6 @@ import com.android.wallpaper.picker.StartRotationErrorDialogFragment;
 import com.android.wallpaper.picker.WallpaperInfoHelper;
 import com.android.wallpaper.picker.WallpapersUiContainer;
 import com.android.wallpaper.picker.individual.SetIndividualHolder.OnSetListener;
-import com.android.wallpaper.util.ActivityUtils;
 import com.android.wallpaper.util.DiskBasedLogger;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.widget.BottomActionBar;
@@ -493,7 +492,7 @@ public class IndividualPickerFragment extends AppbarFragment
         View view = inflater.inflate(R.layout.fragment_individual_picker, container, false);
         if (getIndividualPickerFragmentHost().isHostToolbarShown()) {
             view.findViewById(R.id.header_bar).setVisibility(View.GONE);
-            setUpArrowEnabled(ActivityUtils.isLaunchedFromSettings(getActivity().getIntent()));
+            setUpArrowEnabled(/* upArrow= */ true);
         } else {
             setUpToolbar(view);
             if (mCategory != null) {
