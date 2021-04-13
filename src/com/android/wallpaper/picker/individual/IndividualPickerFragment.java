@@ -15,12 +15,6 @@
  */
 package com.android.wallpaper.picker.individual;
 
-import static com.android.wallpaper.picker.WallpaperPickerDelegate.PREVIEW_WALLPAPER_REQUEST_CODE;
-import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
-import static com.android.wallpaper.widget.BottomActionBar.BottomAction.EDIT;
-import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMATION;
-import static com.android.wallpaper.widget.BottomActionBar.BottomAction.ROTATION;
-
 import android.annotation.MenuRes;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -83,7 +77,6 @@ import com.android.wallpaper.picker.BaseActivity;
 import com.android.wallpaper.picker.CurrentWallpaperBottomSheetPresenter;
 import com.android.wallpaper.picker.FragmentTransactionChecker;
 import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
-import com.android.wallpaper.picker.PreviewActivity;
 import com.android.wallpaper.picker.RotationStarter;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment;
 import com.android.wallpaper.picker.SetWallpaperErrorDialogFragment;
@@ -94,7 +87,6 @@ import com.android.wallpaper.picker.WallpapersUiContainer;
 import com.android.wallpaper.picker.individual.SetIndividualHolder.OnSetListener;
 import com.android.wallpaper.util.DiskBasedLogger;
 import com.android.wallpaper.util.SizeCalculator;
-import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.WallpaperInfoView;
 import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate;
 import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate.BottomSheetHost;
@@ -249,7 +241,6 @@ public class IndividualPickerFragment extends AppbarFragment
         }
     };
     PackageStatusNotifier.Listener mAppStatusListener;
-    BottomActionBar mBottomActionBar;
     WallpaperInfoView mWallpaperInfoView;
     @Nullable WallpaperInfo mSelectedWallpaperInfo;
 
@@ -423,12 +414,6 @@ public class IndividualPickerFragment extends AppbarFragment
             setTitle(mCategory.getTitle());
         }
         mWallpaperRotationInitializer = mCategory.getWallpaperRotationInitializer();
-        // Avoids the "rotation" action is not shown correctly
-        // in a rare case : onCategoryLoaded() is called after onBottomActionBarReady().
-        if (isRotationEnabled() && mBottomActionBar != null
-                && !mBottomActionBar.areActionsShown(ROTATION)) {
-            mBottomActionBar.showActions(ROTATION);
-        }
         if (mToolbar != null && isRotationEnabled()) {
             setUpToolbarMenu(R.menu.individual_picker_menu);
         }
@@ -634,40 +619,6 @@ public class IndividualPickerFragment extends AppbarFragment
     }
 
     @Override
-    protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
-        super.onBottomActionBarReady(bottomActionBar);
-        mBottomActionBar = bottomActionBar;
-        boolean isRotationEnabled = isRotationEnabled();
-        if (isRotationEnabled) {
-            mBottomActionBar.showActionsOnly(ROTATION);
-        }
-        mBottomActionBar.setActionClickListener(ROTATION, unused -> {
-            DialogFragment startRotationDialogFragment = new StartRotationDialogFragment();
-            startRotationDialogFragment.setTargetFragment(
-                    IndividualPickerFragment.this, UNUSED_REQUEST_CODE);
-            startRotationDialogFragment.show(getFragmentManager(), TAG_START_ROTATION_DIALOG);
-        });
-        mBottomActionBar.setActionClickListener(APPLY, unused -> {
-            mBottomActionBar.disableActions();
-            mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
-                    mSelectedWallpaperInfo instanceof LiveWallpaperInfo);
-        });
-
-        mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
-                .inflate(R.layout.wallpaper_info_view, /* root= */ null);
-        mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
-        mBottomActionBar.setActionClickListener(EDIT, unused -> {
-            mWallpaperPersister.setWallpaperInfoInPreview(mSelectedWallpaperInfo);
-            mSelectedWallpaperInfo.showPreview(getActivity(),
-                    new PreviewActivity.PreviewActivityIntentFactory(),
-                    PREVIEW_WALLPAPER_REQUEST_CODE);
-        });
-        if (isRotationEnabled || (mBottomActionBar.getBackButtonVisibility() == View.VISIBLE)) {
-            mBottomActionBar.show();
-        }
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
@@ -735,23 +686,11 @@ public class IndividualPickerFragment extends AppbarFragment
         // This is to handle config change with StartRotationDialog popup,  the StartRotationDialog
         // still holds a reference to the destroyed Fragment and is calling
         // onStartRotationDialogDismissed on that destroyed Fragment.
-        if (mBottomActionBar != null) {
-            mBottomActionBar.deselectAction(ROTATION);
-        }
     }
 
     @Override
     public void retryStartRotation(@NetworkPreference int networkPreference) {
         startRotation(networkPreference);
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        if (mSelectedWallpaperInfo != null) {
-            onWallpaperSelected(null, 0);
-            return true;
-        }
-        return false;
     }
 
     public void setCurrentWallpaperBottomSheetPresenter(
@@ -957,16 +896,8 @@ public class IndividualPickerFragment extends AppbarFragment
                 @Override
                 public void onError(@Nullable Throwable throwable) {
                     Log.e(TAG, "Can't apply the wallpaper.");
-                    mBottomActionBar.enableActions();
                 }
             };
-
-    @Override
-    public void onDialogDismissed(boolean withItemSelected) {
-        if (!withItemSelected) {
-            mBottomActionBar.enableActions();
-        }
-    }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
@@ -999,14 +930,6 @@ public class IndividualPickerFragment extends AppbarFragment
             dialogFragment.show(getFragmentManager(), TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT);
         } else {
             mStagedSetWallpaperErrorDialogFragment = dialogFragment;
-        }
-    }
-
-    void updateBottomActions(boolean hasWallpaperSelected) {
-        if (hasWallpaperSelected) {
-            mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
-        } else {
-            mBottomActionBar.showActionsOnly(ROTATION);
         }
     }
 
@@ -1046,7 +969,6 @@ public class IndividualPickerFragment extends AppbarFragment
                 ? mAppliedWallpaperInfo : newSelectedWallpaperInfo, true);
 
         mSelectedWallpaperInfo = newSelectedWallpaperInfo;
-        updateBottomActions(mSelectedWallpaperInfo != null);
         updateThumbnail(mSelectedWallpaperInfo);
         // Populate wallpaper info into view.
         if (mSelectedWallpaperInfo != null && mWallpaperInfoView != null) {

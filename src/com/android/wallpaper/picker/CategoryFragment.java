@@ -41,8 +41,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -69,7 +67,6 @@ import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
 import com.android.wallpaper.util.WallpaperSurfaceCallback;
-import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.LockScreenPreviewer2;
 import com.android.wallpaper.widget.PreviewPager;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
@@ -104,8 +101,6 @@ public class CategoryFragment extends AppbarFragment
         void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome);
 
         void show(String collectionId);
-
-        boolean isNavigationTabsContained();
 
         void fetchCategories();
 
@@ -148,7 +143,6 @@ public class CategoryFragment extends AppbarFragment
 
     private LockScreenPreviewer2 mLockScreenPreviewer;
     private View mRootContainer;
-    private BottomActionBar mBottomActionBar;
 
     private final Rect mPreviewLocalRect = new Rect();
     private final Rect mPreviewGlobalRect = new Rect();
@@ -298,23 +292,6 @@ public class CategoryFragment extends AppbarFragment
     }
 
     @Override
-    protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
-        super.onBottomActionBarReady(bottomActionBar);
-        mBottomActionBar = bottomActionBar;
-        if (getFragmentHost().isNavigationTabsContained()) {
-            return;
-        }
-        int bottomActionBarHeight = getResources()
-                .getDimensionPixelSize(R.dimen.bottom_navbar_height);
-        ConstraintLayout.LayoutParams layoutParams =
-                (ConstraintLayout.LayoutParams) mRootContainer.getLayoutParams();
-        if (layoutParams != null) {
-            bottomActionBar.addVisibilityChangeListener(isVisible ->
-                    layoutParams.bottomMargin = isVisible ? bottomActionBarHeight : 0);
-        }
-    }
-
-    @Override
     public CharSequence getDefaultTitle() {
         return getContext().getString(R.string.app_name);
     }
@@ -456,11 +433,6 @@ public class CategoryFragment extends AppbarFragment
     }
 
     @Override
-    public void hideBottomActionBar() {
-        mBottomActionBar.hide();
-    }
-
-    @Override
     public void expandBottomSheet() {
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -501,14 +473,6 @@ public class CategoryFragment extends AppbarFragment
             return;
         }
         mPreviewPager.switchPreviewPage(destination);
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        Fragment childFragment = getChildFragmentManager().findFragmentById(
-                R.id.category_fragment_container);
-        return childFragment instanceof BottomActionBarFragment
-                && ((BottomActionBarFragment) childFragment).onBackPressed();
     }
 
     @Override
