@@ -17,8 +17,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_selected="false"
-        android:color="@color/bottom_bar_icon_unchecked_color" />
+        android:color="?android:textColorTertiary" />
     <item
         android:state_selected="true"
-        android:color="?android:colorAccent" />
+        android:color="?android:textColorPrimary" />
 </selector>

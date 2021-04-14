@@ -127,6 +127,14 @@
         <item name="android:textColor">?android:attr/colorAccent</item>
     </style>
 
+    <style name="ExploreButtonStyle"  parent="OutlinedButtonStyle">
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">22sp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="ActionBarCheckboxStyle" parent="@android:style/Widget.DeviceDefault.CompoundButton.CheckBox">
         <item name="android:textColor">?android:attr/colorPrimary</item>
     </style>
@@ -143,8 +151,6 @@
 
     <!-- Preview attribution pane styles -->
     <style name="WallpaperPicker.BottomPaneStyle" parent="@android:style/Theme.DeviceDefault.Settings">
-        <item name="android:textColorPrimary">@color/material_white_100</item>
-        <item name="android:textColorSecondary">@color/white_70_alpha</item>
         <item name="tabTextAppearance">@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps</item>
         <item name="tabIndicatorColor">?android:attr/textColorPrimary</item>
         <item name="tabGravity">fill</item>
@@ -183,19 +189,13 @@
     <!-- Set wallpaper destination item -->
     <style name="set_wallpaper_destination_item">
         <item name="android:minHeight">@dimen/set_wallpaper_dialog_item_min_height</item>
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:textAppearance">?attr/textAppearanceListItemSmall</item>
+        <item name="android:minWidth">@dimen/set_wallpaper_dialog_item_min_width</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/abc_text_size_small_material</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:textSize">@dimen/abc_text_size_subhead_material</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:alpha">.87</item>
-        <item name="android:paddingStart">?attr/dialogPreferredPadding</item>
-        <item name="android:paddingEnd">?attr/dialogPreferredPadding</item>
-        <item name="android:background">?attr/selectableItemBackground</item>
-        <item name="android:drawablePadding">@dimen/set_wallpaper_dialog_item_drawable_padding
-        </item>
-        <item name="android:drawableTint">?android:colorAccent</item>
-        <item name="android:drawableTintMode">src_atop</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/dialog_option_background</item>
     </style>
 
     <!-- Desktop UI - category tabs layout -->
@@ -216,18 +216,19 @@
         <item name="cardCornerRadius">?android:dialogCornerRadius</item>
         <item name="android:clipChildren">true</item>
         <item name="contentPadding">@dimen/preview_card_padding</item>
-        <item name="cardBackgroundColor">?android:colorPrimary</item>
     </style>
 
     <style name="FullContentPreviewCard" parent="PreviewCard">
         <item name="android:clipChildren">true</item>
         <item name="contentPadding">0dp</item>
-        <item name="cardBackgroundColor">?android:colorPrimary</item>
     </style>
 
     <!-- Bottom action item -->
     <style name="BottomActionItemStyle">
-        <item name="android:tint">@color/material_grey500</item>
+        <item name="android:tint">@color/bottom_action_button_color_tint</item>
+        <item name="android:background">@drawable/bottom_action_button_background</item>
+        <item name="android:paddingHorizontal">@dimen/bottom_action_button_padding_horizontal</item>
+        <item name="android:layout_marginTop">@dimen/bottom_action_button_margin_top</item>
     </style>
 
     <!-- Option tiles -->

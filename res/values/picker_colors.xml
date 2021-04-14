@@ -61,8 +61,6 @@
     <color name="individual_tile_title_scrim_color">@color/translucent_black</color>
     <color name="individual_tile_title_text_color">@color/material_white_100</color>
 
-    <color name="individual_picker_background_color">@color/translucent_black</color>
-
     <color name="preview_pane_arrow_color">@color/material_white_100</color>
 
     <color name="toolbar_icon_color">@color/material_white_text</color>

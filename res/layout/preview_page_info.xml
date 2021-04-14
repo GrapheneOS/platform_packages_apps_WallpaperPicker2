@@ -60,7 +60,7 @@
         android:forceHasOverlappingRendering="false"
         android:gravity="center_horizontal"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-        android:textSize="12dp"
+        android:textSize="12sp"
         android:textColor="@color/material_white_100"
         android:visibility="gone"/>
 
