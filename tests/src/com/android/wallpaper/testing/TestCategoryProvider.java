@@ -97,6 +97,11 @@ public class TestCategoryProvider implements CategoryProvider {
         mCategories.clear();
     }
 
+    @Override
+    public boolean isFeaturedCategory(Category category) {
+        return false;
+    }
+
     /** Returns a list of test Category objects used by this TestCategoryProvider. */
     public List<Category> getTestCategories() {
         return mCategories;
