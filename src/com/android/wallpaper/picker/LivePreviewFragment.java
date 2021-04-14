@@ -70,7 +70,7 @@ import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperSurfaceCallback;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.BottomActionBar.AccessibilityCallback;
-import com.android.wallpaper.widget.LockScreenPreviewer;
+import com.android.wallpaper.widget.LockScreenPreviewer2;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
 import com.android.wallpaper.widget.WallpaperInfoView;
 
@@ -112,7 +112,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     private SurfaceView mWorkspaceSurface;
     private SurfaceView mWallpaperSurface;
     private ViewGroup mLockPreviewContainer;
-    private LockScreenPreviewer mLockScreenPreviewer;
+    private LockScreenPreviewer2 mLockScreenPreviewer;
     private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     private WallpaperSurfaceCallback mWallpaperSurfaceCallback;
 
@@ -189,7 +189,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         mTouchForwardingLayout.setTargetView(mHomePreview);
         mTouchForwardingLayout.setForwardingEnabled(true);
         mLockPreviewContainer = mPreviewContainer.findViewById(R.id.lock_screen_preview_container);
-        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getContext(),
+        mLockScreenPreviewer = new LockScreenPreviewer2(getLifecycle(), getContext(),
                 mLockPreviewContainer);
         mWallpaperSurface = mHomePreviewCard.findViewById(R.id.wallpaper_surface);
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
