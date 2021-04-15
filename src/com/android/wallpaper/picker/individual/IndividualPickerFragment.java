@@ -21,6 +21,7 @@ import static com.android.wallpaper.widget.BottomActionBar.BottomAction.EDIT;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMATION;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.ROTATION;
 
+import android.annotation.MenuRes;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.WallpaperManager;
@@ -188,6 +189,18 @@ public class IndividualPickerFragment extends AppbarFragment
          * Sets the title in the host's toolbar.
          */
         void setToolbarTitle(CharSequence title);
+
+        /**
+         * Configures the menu in the toolbar.
+         *
+         * @param menuResId the resource id of the menu
+         */
+        void setToolbarMenu(@MenuRes int menuResId);
+
+        /**
+         * Removes the menu in the toolbar.
+         */
+        void removeToolbarMenu();
 
         /**
          * Moves to the previous fragment.
@@ -497,6 +510,9 @@ public class IndividualPickerFragment extends AppbarFragment
         if (getIndividualPickerFragmentHost().isHostToolbarShown()) {
             view.findViewById(R.id.header_bar).setVisibility(View.GONE);
             setUpArrowEnabled(/* upArrow= */ true);
+            if (isRotationEnabled()) {
+                getIndividualPickerFragmentHost().setToolbarMenu(R.menu.individual_picker_menu);
+            }
         } else {
             setUpToolbar(view);
             if (isRotationEnabled()) {
@@ -692,6 +708,12 @@ public class IndividualPickerFragment extends AppbarFragment
     public void onStop() {
         super.onStop();
         mHandler.removeCallbacks(mUpdateDailyWallpaperThumbRunnable);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getIndividualPickerFragmentHost().removeToolbarMenu();
     }
 
     @Override
@@ -949,13 +971,20 @@ public class IndividualPickerFragment extends AppbarFragment
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.daily_rotation) {
-            DialogFragment startRotationDialogFragment = new StartRotationDialogFragment();
-            startRotationDialogFragment.setTargetFragment(
-                    IndividualPickerFragment.this, UNUSED_REQUEST_CODE);
-            startRotationDialogFragment.show(getFragmentManager(), TAG_START_ROTATION_DIALOG);
+            showRotationDialog();
             return true;
         }
         return super.onMenuItemClick(item);
+    }
+
+    /**
+     * Popups a daily rotation dialog for the uses to confirm.
+     */
+    public void showRotationDialog() {
+        DialogFragment startRotationDialogFragment = new StartRotationDialogFragment();
+        startRotationDialogFragment.setTargetFragment(
+                IndividualPickerFragment.this, UNUSED_REQUEST_CODE);
+        startRotationDialogFragment.show(getFragmentManager(), TAG_START_ROTATION_DIALOG);
     }
 
     /**
