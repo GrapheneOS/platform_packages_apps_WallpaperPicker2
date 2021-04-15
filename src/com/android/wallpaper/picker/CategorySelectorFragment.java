@@ -157,6 +157,15 @@ public class CategorySelectorFragment extends AppbarFragment {
 
         getCategorySelectorFragmentHost().hideBottomActionBar();
 
+        // For nav bar edge-to-edge effect.
+        view.findViewById(R.id.category_grid).setOnApplyWindowInsetsListener((v, windowInsets) -> {
+            v.setPadding(
+                    v.getPaddingLeft(),
+                    v.getPaddingTop(),
+                    v.getPaddingRight(),
+                    windowInsets.getSystemWindowInsetBottom());
+            return windowInsets.consumeSystemWindowInsets();
+        });
         return view;
     }
 
