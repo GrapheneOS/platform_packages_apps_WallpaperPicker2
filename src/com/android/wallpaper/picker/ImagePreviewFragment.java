@@ -146,9 +146,9 @@ public class ImagePreviewFragment extends PreviewFragment {
         mLockScreenPreviewer = new LockScreenPreviewer2(getLifecycle(), getContext(),
                 mLockPreviewContainer);
 
-        TabLayout tabs = inflater.inflate(R.layout.full_preview_tabs,
-                view.findViewById(R.id.toolbar_tabs_container))
-                .findViewById(R.id.full_preview_tabs);
+        TabLayout tabs = view.findViewById(R.id.pill_tabs);
+        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.home_screen_message)));
+        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.lock_screen_message)));
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -162,7 +162,7 @@ public class ImagePreviewFragment extends PreviewFragment {
             public void onTabReselected(TabLayout.Tab tab) {}
         });
 
-        // The TabLayout only contains below tabs, see: full_preview_tabs.xml
+        // The TabLayout only contains below tabs
         // 0. Home tab
         // 1. Lock tab
         tabs.getTabAt(mViewAsHome ? 0 : 1).select();

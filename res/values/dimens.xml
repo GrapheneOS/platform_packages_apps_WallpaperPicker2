@@ -232,6 +232,11 @@
     <dimen name="option_title_font_text_size">14sp</dimen>
     <dimen name="option_title_line_height">20dp</dimen>
 
+    <!-- Dimensions for the pill tabs. -->
+    <dimen name="pill_tabs_height">60dp</dimen>
+    <dimen name="pill_tabs_corner_radius">50dp</dimen>
+    <dimen name="pill_tabs_horizontal_margin">24dp</dimen>
+
     <!-- The size of lock screen widget on the full screen. -->
     <dimen name="lock_screen_preview_lock_icon_size">42dp</dimen>
     <dimen name="lock_screen_preview_time_text_size">54dp</dimen>
