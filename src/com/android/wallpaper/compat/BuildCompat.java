@@ -103,6 +103,7 @@ public class BuildCompat {
      * Returns whether the framework on the current Android device is S or higher.
      */
     public static boolean isAtLeastS() {
-        return sSdk >= VERSION_CODES.S;
+        return sSdk >= VERSION_CODES.S
+                || "S".equals(VERSION.CODENAME); // TODO: remove once build version for S is updated
     }
 }
