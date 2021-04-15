@@ -517,6 +517,15 @@ public class IndividualPickerFragment extends AppbarFragment
         updateLoading();
         maybeSetUpImageGrid();
         setUpBottomSheet();
+        // For nav bar edge-to-edge effect.
+        view.findViewById(R.id.wallpaper_grid).setOnApplyWindowInsetsListener((v, windowInsets) -> {
+            v.setPadding(
+                    v.getPaddingLeft(),
+                    v.getPaddingTop(),
+                    v.getPaddingRight(),
+                    windowInsets.getSystemWindowInsetBottom());
+            return windowInsets.consumeSystemWindowInsets();
+        });
         return view;
     }
 
