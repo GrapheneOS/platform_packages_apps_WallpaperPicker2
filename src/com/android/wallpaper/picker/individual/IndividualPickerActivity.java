@@ -242,6 +242,16 @@ public class IndividualPickerActivity extends BaseActivity implements BottomActi
     }
 
     @Override
+    public void setToolbarMenu(int menuResId) {
+
+    }
+
+    @Override
+    public void removeToolbarMenu() {
+
+    }
+
+    @Override
     public void moveToPreviousFragment() {
         getSupportFragmentManager().popBackStack();
     }

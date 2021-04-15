@@ -30,6 +30,7 @@ import android.provider.Settings;
 import android.service.wallpaper.WallpaperService;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -430,6 +431,16 @@ public class CategoryFragment extends AppbarFragment
     }
 
     @Override
+    public void setToolbarMenu(int menuResId) {
+        setUpToolbarMenu(menuResId);
+    }
+
+    @Override
+    public void removeToolbarMenu() {
+        mToolbar.getMenu().clear();
+    }
+
+    @Override
     public void moveToPreviousFragment() {
         getChildFragmentManager().popBackStack();
     }
@@ -498,6 +509,17 @@ public class CategoryFragment extends AppbarFragment
                 R.id.category_fragment_container);
         return childFragment instanceof BottomActionBarFragment
                 && ((BottomActionBarFragment) childFragment).onBackPressed();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        if (item.getItemId() == R.id.daily_rotation) {
+            if (mIndividualPickerFragment != null && mIndividualPickerFragment.isVisible()) {
+                mIndividualPickerFragment.showRotationDialog();
+            }
+            return true;
+        }
+        return super.onMenuItemClick(item);
     }
 
     /**
