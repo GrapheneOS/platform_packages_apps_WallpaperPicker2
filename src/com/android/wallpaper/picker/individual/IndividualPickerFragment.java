@@ -38,6 +38,7 @@ import android.os.Handler;
 import android.service.wallpaper.WallpaperService;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -415,6 +416,9 @@ public class IndividualPickerFragment extends AppbarFragment
                 && !mBottomActionBar.areActionsShown(ROTATION)) {
             mBottomActionBar.showActions(ROTATION);
         }
+        if (mToolbar != null && isRotationEnabled()) {
+            setUpToolbarMenu(R.menu.individual_picker_menu);
+        }
         fetchWallpapers(false);
 
         if (mCategory.supportsThirdParty()) {
@@ -495,6 +499,9 @@ public class IndividualPickerFragment extends AppbarFragment
             setUpArrowEnabled(/* upArrow= */ true);
         } else {
             setUpToolbar(view);
+            if (isRotationEnabled()) {
+                setUpToolbarMenu(R.menu.individual_picker_menu);
+            }
             if (mCategory != null) {
                 setTitle(mCategory.getTitle());
             }
@@ -937,6 +944,18 @@ public class IndividualPickerFragment extends AppbarFragment
         if (!withItemSelected) {
             mBottomActionBar.enableActions();
         }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        if (item.getItemId() == R.id.daily_rotation) {
+            DialogFragment startRotationDialogFragment = new StartRotationDialogFragment();
+            startRotationDialogFragment.setTargetFragment(
+                    IndividualPickerFragment.this, UNUSED_REQUEST_CODE);
+            startRotationDialogFragment.show(getFragmentManager(), TAG_START_ROTATION_DIALOG);
+            return true;
+        }
+        return super.onMenuItemClick(item);
     }
 
     /**
