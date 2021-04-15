@@ -44,7 +44,7 @@
         android:textColor="?androidprv:attr/colorAccentPrimary"
         android:elegantTextHeight="false"
         android:lineSpacingMultiplier="0.75"
-        android:letterSpacing="-0.1"
+        android:letterSpacing="-0.05"
         android:includeFontPadding="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
