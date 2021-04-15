@@ -106,11 +106,6 @@ public class CategorySelectorFragment extends AppbarFragment {
          * Cleans up the listeners which will be notified when there's a package event.
          */
         void cleanUp();
-
-        /**
-         * Hides the {@link com.android.wallpaper.widget.BottomActionBar}.
-         */
-        void hideBottomActionBar();
     }
 
     private RecyclerView mImageGrid;
@@ -154,8 +149,6 @@ public class CategorySelectorFragment extends AppbarFragment {
         if (!DeepLinkUtils.isDeepLink(getActivity().getIntent())) {
             getCategorySelectorFragmentHost().fetchCategories();
         }
-
-        getCategorySelectorFragmentHost().hideBottomActionBar();
 
         // For nav bar edge-to-edge effect.
         view.findViewById(R.id.category_grid).setOnApplyWindowInsetsListener((v, windowInsets) -> {
