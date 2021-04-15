@@ -124,6 +124,16 @@ public abstract class AppbarFragment extends BottomActionBarFragment
         }
     }
 
+    /**
+     * Configures the menu in the toolbar.
+     *
+     * @param menuResId the resource id of the menu
+     */
+    public void setUpToolbarMenu(@MenuRes int menuResId) {
+        mToolbar.inflateMenu(menuResId);
+        mToolbar.setOnMenuItemClickListener(this);
+    }
+
     protected int getToolbarId() {
         return R.id.toolbar;
     }
@@ -155,8 +165,7 @@ public abstract class AppbarFragment extends BottomActionBarFragment
      */
     public void setUpToolbar(View rootView, @MenuRes int menuResId) {
         setUpToolbar(rootView);
-        mToolbar.inflateMenu(menuResId);
-        mToolbar.setOnMenuItemClickListener(this);
+        setUpToolbarMenu(menuResId);
     }
 
     /**
