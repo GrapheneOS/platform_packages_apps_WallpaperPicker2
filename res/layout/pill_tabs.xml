@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2021 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<com.google.android.material.tabs.TabLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
+        android:id="@+id/pill_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pill_tabs_height"
+        android:background="@drawable/pill_tabs_background"
+        app:tabRippleColor="@null"
+        app:tabGravity="fill"
+        app:tabIndicator="@drawable/pill_tabs_indicator_background"
+        app:tabIndicatorColor="?androidprv:attr/colorAccentPrimary"
+        app:tabIndicatorFullWidth="true"
+        app:tabIndicatorGravity="stretch"
+        app:tabTextColor="?android:textColorTertiary"
+        app:tabSelectedTextColor="?android:textColorPrimary"
+        app:tabTextAppearance="@style/PillTabsTextAppearance" />
