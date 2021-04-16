@@ -79,8 +79,6 @@ import com.android.wallpaper.picker.WallpaperDisabledFragment.WallpaperSupportLe
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.ThrowableAnalyzer;
-import com.android.wallpaper.widget.BottomActionBar;
-import com.android.wallpaper.widget.BottomActionBar.BottomActionBarHost;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback;
@@ -95,7 +93,7 @@ import java.util.List;
  */
 public class TopLevelPickerActivity extends BaseActivity implements WallpapersUiContainer,
         CurrentWallpaperBottomSheetPresenter, SetWallpaperErrorDialogFragment.Listener,
-        MyPhotosStarter, AppbarFragmentHost, CategoryFragmentHost, BottomActionBarHost {
+        MyPhotosStarter, AppbarFragmentHost, CategoryFragmentHost {
 
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "toplevel_set_wallpaper_error_dialog";
@@ -234,11 +232,6 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     @Override
     public void onBackPressed() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (fragment instanceof BottomActionBarFragment
-                && ((BottomActionBarFragment) fragment).onBackPressed()) {
-            return;
-        }
-
         if (fragment != null && fragment.getChildFragmentManager().popBackStackImmediate()) {
             return;
         }
@@ -799,11 +792,6 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     }
 
     @Override
-    public boolean isNavigationTabsContained() {
-        return false;
-    }
-
-    @Override
     public void fetchCategories() {
         mDelegate.initialize(!mDelegate.getCategoryProvider().isCategoriesFetched());
     }
@@ -1125,11 +1113,6 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         } else {
             mStagedSetWallpaperErrorDialogFragment = dialogFragment;
         }
-    }
-
-    @Override
-    public BottomActionBar getBottomActionBar() {
-        return findViewById(R.id.bottom_actionbar);
     }
 
     @Override
