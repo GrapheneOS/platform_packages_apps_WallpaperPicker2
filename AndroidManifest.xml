@@ -19,12 +19,28 @@
   <uses-permission android:name="com.android.wallpaper.NOTIFY_ROTATING_WALLPAPER_CHANGED"/>
 
   <queries>
-    <intent>
-      <action android:name="com.android.launcher3.action.PARTNER_CUSTOMIZATION"/>
-    </intent>
-    <intent>
-      <action android:name="android.service.wallpaper.WallpaperService"/>
-    </intent>
+      <!-- Specific intents Wallpaper picker query for -->
+      <!-- Intent filter with action SET_WALLPAPER -->
+      <intent>
+          <action android:name="android.intent.action.SET_WALLPAPER" />
+      </intent>
+      <!-- Intent filter with action GET_CONTENT and data's mimeType as "image/*" -->
+      <intent>
+          <action android:name="android.intent.action.GET_CONTENT" />
+          <data android:mimeType="image/*" />
+      </intent>
+      <!-- Intent filter with action VIEW -->
+      <intent>
+          <action android:name="android.intent.action.VIEW" />
+      </intent>
+      <!-- Intent filter with action WallpaperService (live wallpaper interface) -->
+      <intent>
+          <action android:name="android.service.wallpaper.WallpaperService" />
+      </intent>
+      <!-- Intent filter with action used to discover partner -->
+      <intent>
+          <action android:name="com.android.launcher3.action.PARTNER_CUSTOMIZATION" />
+      </intent>
   </queries>
 
   <application
