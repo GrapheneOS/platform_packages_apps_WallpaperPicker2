@@ -30,6 +30,7 @@ import android.provider.Settings;
 import android.service.wallpaper.WallpaperService;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +41,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -68,7 +67,6 @@ import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
 import com.android.wallpaper.util.WallpaperSurfaceCallback;
-import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.LockScreenPreviewer2;
 import com.android.wallpaper.widget.PreviewPager;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
@@ -103,8 +101,6 @@ public class CategoryFragment extends AppbarFragment
         void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome);
 
         void show(String collectionId);
-
-        boolean isNavigationTabsContained();
 
         void fetchCategories();
 
@@ -147,7 +143,6 @@ public class CategoryFragment extends AppbarFragment
 
     private LockScreenPreviewer2 mLockScreenPreviewer;
     private View mRootContainer;
-    private BottomActionBar mBottomActionBar;
 
     private final Rect mPreviewLocalRect = new Rect();
     private final Rect mPreviewGlobalRect = new Rect();
@@ -297,23 +292,6 @@ public class CategoryFragment extends AppbarFragment
     }
 
     @Override
-    protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
-        super.onBottomActionBarReady(bottomActionBar);
-        mBottomActionBar = bottomActionBar;
-        if (getFragmentHost().isNavigationTabsContained()) {
-            return;
-        }
-        int bottomActionBarHeight = getResources()
-                .getDimensionPixelSize(R.dimen.bottom_navbar_height);
-        ConstraintLayout.LayoutParams layoutParams =
-                (ConstraintLayout.LayoutParams) mRootContainer.getLayoutParams();
-        if (layoutParams != null) {
-            bottomActionBar.addVisibilityChangeListener(isVisible ->
-                    layoutParams.bottomMargin = isVisible ? bottomActionBarHeight : 0);
-        }
-    }
-
-    @Override
     public CharSequence getDefaultTitle() {
         return getContext().getString(R.string.app_name);
     }
@@ -430,6 +408,16 @@ public class CategoryFragment extends AppbarFragment
     }
 
     @Override
+    public void setToolbarMenu(int menuResId) {
+        setUpToolbarMenu(menuResId);
+    }
+
+    @Override
+    public void removeToolbarMenu() {
+        mToolbar.getMenu().clear();
+    }
+
+    @Override
     public void moveToPreviousFragment() {
         getChildFragmentManager().popBackStack();
     }
@@ -442,11 +430,6 @@ public class CategoryFragment extends AppbarFragment
     @Override
     public void cleanUp() {
         getFragmentHost().cleanUp();
-    }
-
-    @Override
-    public void hideBottomActionBar() {
-        mBottomActionBar.hide();
     }
 
     @Override
@@ -493,11 +476,14 @@ public class CategoryFragment extends AppbarFragment
     }
 
     @Override
-    public boolean onBackPressed() {
-        Fragment childFragment = getChildFragmentManager().findFragmentById(
-                R.id.category_fragment_container);
-        return childFragment instanceof BottomActionBarFragment
-                && ((BottomActionBarFragment) childFragment).onBackPressed();
+    public boolean onMenuItemClick(MenuItem item) {
+        if (item.getItemId() == R.id.daily_rotation) {
+            if (mIndividualPickerFragment != null && mIndividualPickerFragment.isVisible()) {
+                mIndividualPickerFragment.showRotationDialog();
+            }
+            return true;
+        }
+        return super.onMenuItemClick(item);
     }
 
     /**
