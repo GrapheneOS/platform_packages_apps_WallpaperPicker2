@@ -32,13 +32,15 @@
     <string name="home_screen_message" msgid="106444102822522813">"गृह स्क्रिन"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"लक स्क्रिन"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"गृह स्क्रिन &amp; लक स्क्रिन"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"वालपेपर सेट गर्नुहोस्"</string>
+    <!-- no translation found for set_wallpaper_dialog_message (2110475703996853076) -->
+    <skip />
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"गृह स्क्रिन"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"लक स्क्रिन"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"गृह स्क्रिन र लक स्क्रिन"</string>
+    <!-- no translation found for set_wallpaper_both_destination (233216830256235288) -->
+    <skip />
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"छवि परिवर्तन हुने वालपेपर"</string>
-    <string name="permission_needed_explanation" msgid="139166837541426823">"यहाँ हालको वालपेपर देखाउन <xliff:g id="APP_NAME">%1$s</xliff:g> लाई तपाईंको यन्त्रको भण्डारणमाथिको पहुँच अनिवार्य हुन्छ।"</string>
-    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"यहाँ हालैको वालपेपर देखाउन वालपेपरहरूलाई तपाईंको यन्त्रको भण्डारणमाथिको पहुँच अनिवार्य हुन्छ।\n\nयो सेटिङ बदल्न वालपेपरहरूको एपसम्बन्धी जानकारीमा रहेको अनुमति क्षेत्रमा जानुहोस्।"</string>
+    <string name="permission_needed_explanation" msgid="139166837541426823">"यहाँ हालको वालपेपर देखाउन <xliff:g id="APP_NAME">%1$s</xliff:g> लाई तपाईंको डिभाइसको भण्डारणमाथिको पहुँच अनिवार्य हुन्छ।"</string>
+    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"यहाँ हालैको वालपेपर देखाउन वालपेपरहरूलाई तपाईंको डिभाइसको भण्डारणमाथिको पहुँच अनिवार्य हुन्छ।\n\nयो सेटिङ बदल्न वालपेपरहरूको एपसम्बन्धी जानकारीमा रहेको अनुमति क्षेत्रमा जानुहोस्।"</string>
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"पहुँच राख्न दिनुहोस्"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"परिवर्तन हुने वालपेपरसम्बन्धी सेवाका लागि लाइभ वालपेपरहरू"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"दैनिक वालपेपर"</string>
@@ -53,7 +55,7 @@
     <string name="explore" msgid="7468719504199497281">"अन्वेषण गर्नुहोस्"</string>
     <string name="next_wallpaper" msgid="3911873152952596232">"अर्को वालपेपर"</string>
     <string name="wallpaper_disabled_message" msgid="7309484130562148185">"यस यन्त्रमा वालपेपर सेट गर्ने सुविधालाई असक्षम पारिएको छ"</string>
-    <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"तपाईंको यन्त्रको प्रशासकले वालपेपर सेट गर्ने सुविधालाई असक्षम पार्नुभएको छ"</string>
+    <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"तपाईंको डिभाइसको प्रशासकले वालपेपर सेट गर्ने सुविधालाई असक्षम पार्नुभएको छ"</string>
     <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"वालपेपर सफलतापूर्वक सेट गरियो"</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"वालपेपरहरू हेर्न तपाईंसँग इन्टरनेट जडान हुनु आवश्यक हुन्छ। कृपया जडान गरेर फेरि प्रयास गर्नुहोस।"</string>
     <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"हाल गृह स्क्रिनमा सेट गरिएको वालपेपरको थम्बनेल"</string>
@@ -67,7 +69,7 @@
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"दैनिक वालपेपर पुनः ताजा गर्दै…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"दैनिक वालपेपर पुनः ताजा गर्न सकिएन। कृपया आफ्नो नेटवर्कको जडान जाँच गरी फेरि प्रयास गर्नुहोस्।"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"यन्त्रमा रहेका वालपेपरहरू"</string>
-    <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"यन्त्रका वालपेपर"</string>
+    <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"डिभाइसका वालपेपर"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Android वालपेपर"</string>
     <string name="live_wallpapers_category_title" msgid="1814374812192366349">"लाइभ वालपेपरहरू"</string>
     <string name="my_photos_category_title" msgid="4294567122144565273">"मेरा फोटोहरू"</string>

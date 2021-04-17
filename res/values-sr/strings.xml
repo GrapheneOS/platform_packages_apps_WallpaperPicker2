@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Почетни екран"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Закључан екран"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Почетни и закључани екран"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Подесите позадину"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Подесите позадину на"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Почетни екран"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Закључан екран"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Почетни екран и закључани екран"</string>
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Почетни и закључани екран"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Ротирајућа позадина са сликом"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Да би се актуелна позадина приказивала овде, апликација <xliff:g id="APP_NAME">%1$s</xliff:g> треба да има приступ меморијском простору на уређају."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Да би се актуелна позадина приказивала овде, апликација Позадине мора да има приступ меморијском простору на уређају.\n\nДа бисте променили ово подешавање, идите у одељак Дозволе у информацијама о апликацији Позадине."</string>
