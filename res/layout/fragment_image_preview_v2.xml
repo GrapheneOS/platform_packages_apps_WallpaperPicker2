@@ -79,6 +79,13 @@
                 </com.android.wallpaper.picker.TouchForwardingLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/pill_tabs_horizontal_margin">
+            <include layout="@layout/pill_tabs" />
+        </FrameLayout>
     </LinearLayout>
 
     <include layout="@layout/bottom_action_bar" />
