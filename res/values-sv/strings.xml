@@ -32,10 +32,12 @@
     <string name="home_screen_message" msgid="106444102822522813">"Startskärm"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Låsskärm"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Start- och låsskärm"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Välj bakgrund"</string>
+    <!-- no translation found for set_wallpaper_dialog_message (2110475703996853076) -->
+    <skip />
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Startskärm"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Låsskärm"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Startskärm och låsskärm"</string>
+    <!-- no translation found for set_wallpaper_both_destination (233216830256235288) -->
+    <skip />
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Bakgrund för bakgrundsbilder som byts ut"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Du behöver ge <xliff:g id="APP_NAME">%1$s</xliff:g> åtkomst till enhetens lagringsminne om du vill visa den aktuella bakgrunden här."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Du behöver ge Bakgrunder åtkomst till enhetens lagringsminne om du vill visa den aktuella bakgrunden här.\n\nDu kan ändra inställningen i Behörigheter i appinformationen för Bakgrunder."</string>
