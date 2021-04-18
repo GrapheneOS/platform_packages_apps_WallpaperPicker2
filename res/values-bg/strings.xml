@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Начален екран"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Заключен екран"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Начален и заключен екран"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Задаване на тапет"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Задаване на тапет на"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Начален екран"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Заключен екран"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Начален и заключен екран"</string>
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Начален и заключен екран"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Тапет с редуващи се изображения"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"За да се покаже тук текущият тапет, <xliff:g id="APP_NAME">%1$s</xliff:g> се нуждае от достъп до хранилището на устройството ви."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"За да се покаже тук текущият тапет, приложението Google Wallpapers се нуждае от достъп до хранилището на устройството ви.\n\nЗа да промените тази настройка, отворете областта с разрешения от информацията за приложението."</string>
