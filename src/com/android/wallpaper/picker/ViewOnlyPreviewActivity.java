@@ -27,6 +27,7 @@ import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
+import com.android.wallpaper.util.ActivityUtils;
 
 /**
  * Activity that displays a view-only preview of a specific wallpaper.
@@ -83,7 +84,7 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
 
     @Override
     public boolean isUpArrowSupported() {
-        return true;
+        return !ActivityUtils.isSUWMode(getBaseContext());
     }
 
     /**
