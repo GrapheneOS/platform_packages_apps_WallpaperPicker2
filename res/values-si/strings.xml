@@ -32,10 +32,12 @@
     <string name="home_screen_message" msgid="106444102822522813">"මුල් පිටු තිරය"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"අගුලු තිරය"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"මුල් පිටුව සහ අගුල"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"වෝල්පේපරය සකසන්න"</string>
+    <!-- no translation found for set_wallpaper_dialog_message (2110475703996853076) -->
+    <skip />
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"මුල් පිටු තිරය"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"අගුලු තිරය"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"මුල් පිටු තිරය සහ අගුලු තිරය"</string>
+    <!-- no translation found for set_wallpaper_both_destination (233216830256235288) -->
+    <skip />
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"කැරකෙන රූප වෝල්පේපරය"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"මෙහි වත්මන් වෝල්පේපරය සංදර්ශනය කිරීමට, <xliff:g id="APP_NAME">%1$s</xliff:g> හට ඔබේ උපාංගයේ ගබඩාව වෙත ප්‍රවේශය අවශ්‍යයි."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"මෙහි වත්මන් වෝල්පේපරය පෙන්වීමට, වෝල්පේපර වෙත ඔබගේ උපාංග ගබඩාව වෙත ප්‍රවේශය අවශ්‍යයි.\n\nමෙම සැකසීම වෙනස් කිරීමට, වෝල්පේපර යෙදුම් තොරතුරු වල අවසර වෙත යන්න."</string>
