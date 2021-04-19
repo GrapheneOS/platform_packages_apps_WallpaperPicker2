@@ -32,12 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Tuisskerm"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Sluitskerm"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Tuis- en sluitskerm"</string>
-    <!-- no translation found for set_wallpaper_dialog_message (2110475703996853076) -->
-    <skip />
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Stel as muurpapier"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Tuisskerm"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Sluitskerm"</string>
-    <!-- no translation found for set_wallpaper_both_destination (233216830256235288) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Tuisskerm en sluitskerm"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Muurpapier met afwisselende prent"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"<xliff:g id="APP_NAME">%1$s</xliff:g> moet toegang tot jou toestel se berging hê om die huidige muurpapier hier te wys."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Muurpapiere moet toegang tot jou toestel se berging hê om die huidige muurpapier hier te wys.\n\nGaan na die Toestemmings-gedeelte van Muurpapiere se programinligting om hierdie instelling te verander."</string>
