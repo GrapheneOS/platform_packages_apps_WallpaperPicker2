@@ -32,12 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"முகப்புத் திரை"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"பூட்டுத் திரை"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"முகப்பு &amp; பூட்டு"</string>
-    <!-- no translation found for set_wallpaper_dialog_message (2110475703996853076) -->
-    <skip />
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"வால்பேப்பரை அமையுங்கள்"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"முகப்புத் திரை"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"பூட்டுத் திரை"</string>
-    <!-- no translation found for set_wallpaper_both_destination (233216830256235288) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"முகப்புத் திரையும் பூட்டுத் திரையும்"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"சுழலும் பட வால்பேப்பர்"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"இந்த வால்பேப்பரை இங்கே காட்ட, <xliff:g id="APP_NAME">%1$s</xliff:g> பயன்பாட்டிற்கு உங்கள் சாதனத்தின் சேமிப்பகத்திற்கான அணுகல் தேவை."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"இந்த வால்பேப்பரை இங்கே காட்ட, வால்பேப்பர்களுக்கு உங்கள் சாதனத்தின் சேமிப்பகத்திற்கான அணுகல் தேவை.\n\nஇந்த அமைப்பை மாற்ற, வால்பேப்பர்களின் ஆப்ஸ் தகவல் பக்கத்தில் உள்ள அனுமதிகள் பகுதிக்குச் செல்லவும்."</string>
