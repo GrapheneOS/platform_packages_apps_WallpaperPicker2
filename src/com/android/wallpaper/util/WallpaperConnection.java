@@ -20,7 +20,6 @@ import static android.graphics.Matrix.MSCALE_Y;
 import static android.graphics.Matrix.MSKEW_X;
 import static android.graphics.Matrix.MSKEW_Y;
 
-import android.app.Activity;
 import android.app.WallpaperColors;
 import android.content.ComponentName;
 import android.content.Context;
@@ -35,10 +34,10 @@ import android.os.RemoteException;
 import android.service.wallpaper.IWallpaperConnection;
 import android.service.wallpaper.IWallpaperEngine;
 import android.service.wallpaper.IWallpaperService;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceControl;
 import android.view.SurfaceView;
-import android.view.View;
 import android.view.WindowManager.LayoutParams;
 
 import androidx.annotation.Nullable;
@@ -61,7 +60,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     }
 
     private static final String TAG = "WallpaperConnection";
-    private final Activity mActivity;
+    private final Context mContext;
     private final Intent mIntent;
     private final WallpaperConnectionListener mListener;
     private final SurfaceView mContainerView;
@@ -75,27 +74,27 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
 
     /**
      * @param intent used to bind the wallpaper service
-     * @param activity Activity that owns the window where the wallpaper is rendered
+     * @param context Context used to start and bind the live wallpaper service
      * @param listener if provided, it'll be notified of connection/disconnection events
      * @param containerView SurfaceView that will display the wallpaper
      */
-    public WallpaperConnection(Intent intent, Activity activity,
+    public WallpaperConnection(Intent intent, Context context,
             @Nullable WallpaperConnectionListener listener, SurfaceView containerView) {
-        this(intent, activity, listener, containerView, null);
+        this(intent, context, listener, containerView, null);
     }
 
     /**
      * @param intent used to bind the wallpaper service
-     * @param activity Activity that owns the window where the wallpaper is rendered
+     * @param context Context used to start and bind the live wallpaper service
      * @param listener if provided, it'll be notified of connection/disconnection events
      * @param containerView SurfaceView that will display the wallpaper
      * @param secondaryContainerView optional SurfaceView that will display a second, mirrored
      *                               version of the wallpaper
      */
-    public WallpaperConnection(Intent intent, Activity activity,
+    public WallpaperConnection(Intent intent, Context context,
             @Nullable WallpaperConnectionListener listener, SurfaceView containerView,
             @Nullable SurfaceView secondaryContainerView) {
-        mActivity = activity;
+        mContext = context.getApplicationContext();
         mIntent = intent;
         mListener = listener;
         mContainerView = containerView;
@@ -110,7 +109,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
             if (mConnected) {
                 return true;
             }
-            if (!mActivity.bindService(mIntent, this,
+            if (!mContext.bindService(mIntent, this,
                     Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT)) {
                 return false;
             }
@@ -140,7 +139,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
                 mEngine = null;
             }
             try {
-                mActivity.unbindService(this);
+                mContext.unbindService(this);
             } catch (IllegalArgumentException e) {
                 Log.i(TAG, "Can't unbind wallpaper service. "
                         + "It might have crashed, just ignoring.");
@@ -158,10 +157,9 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     public void onServiceConnected(ComponentName name, IBinder service) {
         mService = IWallpaperService.Stub.asInterface(service);
         try {
-            View root = mActivity.getWindow().getDecorView();
-            int displayId = root.getDisplay().getDisplayId();
+            int displayId = mContainerView.getDisplay().getDisplayId();
 
-            mService.attach(this, root.getWindowToken(),
+            mService.attach(this, mContainerView.getWindowToken(),
                     LayoutParams.TYPE_APPLICATION_MEDIA,
                     true, mContainerView.getWidth(), mContainerView.getHeight(),
                     new Rect(0, 0, 0, 0), displayId);
@@ -229,7 +227,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
 
     @Override
     public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
-        mActivity.runOnUiThread(() -> {
+        mContainerView.post(() -> {
             if (mListener != null) {
                 mListener.onWallpaperColorsChanged(colors, displayId);
             }
@@ -246,7 +244,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
             reparentWallpaperSurface(mSecondContainerView);
         }
 
-        mActivity.runOnUiThread(() -> {
+        mContainerView.post(() -> {
             if (mListener != null) {
                 mListener.onEngineShown();
             }
@@ -299,9 +297,10 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
         Matrix m = new Matrix();
         float[] values = new float[9];
         Rect surfacePosition = parentSurface.getHolder().getSurfaceFrame();
-        View decorView = mActivity.getWindow().getDecorView();
-        m.postScale(((float) surfacePosition.width()) / decorView.getWidth(),
-                ((float) surfacePosition.height()) / decorView.getHeight());
+        DisplayMetrics metrics = DisplayMetricsRetriever.getInstance().getDisplayMetrics(
+                mContainerView.getResources(), mContainerView.getDisplay());
+        m.postScale(((float) surfacePosition.width()) / metrics.widthPixels,
+                ((float) surfacePosition.height()) / metrics.heightPixels);
         m.getValues(values);
         return values;
     }
