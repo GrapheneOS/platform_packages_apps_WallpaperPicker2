@@ -32,12 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Ekrani bazë"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Ekrani i kyçjes"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"\"Ekrani bazë\" dhe \"Kyçja\""</string>
-    <!-- no translation found for set_wallpaper_dialog_message (2110475703996853076) -->
-    <skip />
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Caktoje aktiv imazhin e sfondit"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Ekrani bazë"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Ekrani i kyçjes"</string>
-    <!-- no translation found for set_wallpaper_both_destination (233216830256235288) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Ekrani i bazë dhe i kyçjes"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Imazh sfondi me rotacion"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Për të shfaqur imazhin aktual të sfondit këtu, <xliff:g id="APP_NAME">%1$s</xliff:g> ka nevojë për qasje te hapësira ruajtëse e pajisjes tënde."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Për të afishuar sfondin aktual këtu, \"Imazhet e sfondit\" kanë nevojë të kenë qasje në hapësirën ruajtëse të pajisjes sate.\n\nPër ta ndryshuar këtë cilësim, shko te zona \"Lejet\" në informacionin e aplikacionit \"Imazhet e sfondit\"."</string>
