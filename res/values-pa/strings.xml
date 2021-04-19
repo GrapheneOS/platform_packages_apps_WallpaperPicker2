@@ -32,12 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"ਹੋਮ ਸਕ੍ਰੀਨ"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"ਲਾਕ ਸਕ੍ਰੀਨ"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"ਹੋਮ ਸਕ੍ਰੀਨ ਅਤੇ ਲਾਕ ਸਕ੍ਰੀਨ"</string>
-    <!-- no translation found for set_wallpaper_dialog_message (2110475703996853076) -->
-    <skip />
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"ਵਾਲਪੇਪਰ ਵਜੋਂ ਸੈੱਟ ਕਰੋ"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"ਹੋਮ ਸਕ੍ਰੀਨ"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"ਲਾਕ ਸਕ੍ਰੀਨ"</string>
-    <!-- no translation found for set_wallpaper_both_destination (233216830256235288) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"ਹੋਮ ਅਤੇ ਲਾਕ ਸਕ੍ਰੀਨ"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"ਬਦਲਣ ਵਾਲਾ ਚਿੱਤਰ ਵਾਲਪੇਪਰ"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"ਇੱਥੇ ਵਰਤਮਾਨ ਵਾਲਪੇਪਰ ਨੂੰ ਦਿਖਾਉਣ ਲਈ, <xliff:g id="APP_NAME">%1$s</xliff:g> ਨੂੰ ਤੁਹਾਡੇ ਡੀਵਾਈਸ ਦੀ ਸਟੋਰੇਜ ਤੱਕ ਪਹੁੰਚ ਕਰਨੀ ਪਵੇਗੀ।"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"ਇੱਥੇ ਵਰਤਮਾਨ ਵਾਲਪੇਪਰ ਨੂੰ ਦਿਖਾਉਣ ਲਈ, \'ਵਾਲਪੇਪਰ\' ਐਪ ਨੂੰ ਤੁਹਾਡੇ ਡੀਵਾਈਸ ਦੀ ਸਟੋਰੇਜ ਤੱਕ ਪਹੁੰਚ ਕਰਨੀ ਪਵੇਗੀ।\n\nਇਸ ਸੈਟਿੰਗ ਨੂੰ ਬਦਲਣ ਲਈ, \'ਵਾਲਪੇਪਰ\' ਐਪ ਦੀ ਜਾਣਕਾਰੀ ਦੇ ਇਜਾਜ਼ਤਾਂ ਖੇਤਰ ਵਿੱਚ ਜਾਓ।"</string>
