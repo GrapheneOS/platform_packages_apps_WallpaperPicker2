@@ -150,6 +150,11 @@ public class DefaultCategoryProvider implements CategoryProvider {
         }
     }
 
+    @Override
+    public boolean isFeaturedCategory(Category category) {
+        return false;
+    }
+
     protected void doFetch(final CategoryReceiver receiver, boolean forceRefresh) {
         CategoryReceiver delegatingReceiver = new CategoryReceiver() {
             @Override
