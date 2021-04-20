@@ -77,6 +77,7 @@ import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
 import com.android.wallpaper.picker.CategoryFragment.CategoryFragmentHost;
 import com.android.wallpaper.picker.WallpaperDisabledFragment.WallpaperSupportLevel;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
+import com.android.wallpaper.util.ActivityUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.ThrowableAnalyzer;
 
@@ -257,6 +258,9 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
 
     private void initializeMobile(boolean shouldForceRefresh) {
         setContentView(R.layout.activity_top_level_picker);
+        if (ActivityUtils.isSUWMode(getBaseContext())) {
+            findViewById(R.id.fragment_main).setFitsSystemWindows(/* fitSystemWindows= */ true);
+        }
         getWindow().getDecorView().setSystemUiVisibility(
                 getWindow().getDecorView().getSystemUiVisibility()
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -1122,7 +1126,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
 
     @Override
     public boolean isUpArrowSupported() {
-        return true;
+        return !ActivityUtils.isSUWMode(getBaseContext());
     }
 
     private interface AssetReceiver {

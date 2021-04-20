@@ -32,12 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Hasierako pantaila"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Pantaila blokeatua"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Hasieran + pantaila blokeatuan"</string>
-    <!-- no translation found for set_wallpaper_dialog_message (2110475703996853076) -->
-    <skip />
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Ezarri horma-papera"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Hasierako pantaila"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Pantaila blokeatua"</string>
-    <!-- no translation found for set_wallpaper_both_destination (233216830256235288) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Hasierako pantaila eta pantaila blokeatua"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Txandakako irudidun horma-papera"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Uneko horma-papera hemen bistaratzeko, zure gailuaren memoria atzitu behar du <xliff:g id="APP_NAME">%1$s</xliff:g> aplikazioak."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Uneko horma-papera hemen ager dadin, gailuaren memoriarako sarbidea behar du Horma-paperak aplikazioak.\n\nEzarpena aldatzeko, joan Horma-paperak aplikazioaren informazioko Baimenak atalera."</string>

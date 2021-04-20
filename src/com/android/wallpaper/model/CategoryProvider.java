@@ -64,4 +64,11 @@ public interface CategoryProvider {
      * Resets the fetched categories if needed.
      */
     void resetIfNeeded();
+
+    /**
+     * Checks if the category is a featured category.
+     *
+     * @param category the category to be verified
+     */
+    boolean isFeaturedCategory(Category category);
 }
