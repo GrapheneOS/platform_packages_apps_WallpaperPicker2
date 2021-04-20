@@ -32,12 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"អេក្រង់ដើម"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"អេក្រង់​ចាក់សោ"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"ដើម និង​ចាក់សោ"</string>
-    <!-- no translation found for set_wallpaper_dialog_message (2110475703996853076) -->
-    <skip />
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"កំណត់​ផ្ទាំងរូបភាព​នៅលើ"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"អេក្រង់ដើម"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"អេក្រង់​ចាក់សោ"</string>
-    <!-- no translation found for set_wallpaper_both_destination (233216830256235288) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"អេក្រង់ដើម និង​អេក្រង់​ចាក់សោ"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"បង្វិលផ្ទាំងរូបភាពបែបរូបភាព"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"ដើម្បី​បង្ហាញ​ផ្ទាំងរូបភាព​បច្ចុប្បន្ន​នៅទីនេះ <xliff:g id="APP_NAME">%1$s</xliff:g> ត្រូវការ​សិទ្ធិចូលប្រើ​ទំហំ​ផ្ទុកឧបករណ៍​របស់អ្នក។"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"ដើម្បី​បង្ហាញ​ផ្ទាំងរូបភាព​បច្ចុប្បន្ននៅទីនេះ កម្មវិធី Wallpapers ត្រូវការសិទ្ធិចូលប្រើ​ទំហំផ្ទុក​របស់ឧបករណ៍អ្នក។\n\nដើម្បី​ផ្លាស់ប្តូរការកំណត់នេះ សូមចូលទៅកាន់ផ្នែកការអនុញ្ញាតនៃព័ត៌មានរបស់កម្មវិធី Wallpapers ។"</string>

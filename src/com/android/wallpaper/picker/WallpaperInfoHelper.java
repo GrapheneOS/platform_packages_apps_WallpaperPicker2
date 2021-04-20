@@ -18,8 +18,6 @@ package com.android.wallpaper.picker;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.Settings;
-import android.provider.Settings.Secure;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -29,12 +27,10 @@ import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.util.ActivityUtils;
 
 /** A helper class for wallpaper info. */
 public class WallpaperInfoHelper {
-
-    private static final int NOT_YET = 0;
-    private static final int COMPLETE = 1;
 
     /** A callback for receiving explore Intent. */
     public interface ExploreIntentReceiver {
@@ -62,8 +58,7 @@ public class WallpaperInfoHelper {
 
     /** Indicates if the explore button should show up in the wallpaper info view. */
     public static boolean shouldShowExploreButton(Context context, @Nullable Intent exploreIntent) {
-        return exploreIntent != null && Settings.Secure.getInt(
-            context.getContentResolver(), Secure.USER_SETUP_COMPLETE, NOT_YET) == COMPLETE;
+        return exploreIntent != null && !ActivityUtils.isSUWMode(context);
     }
 
     private static CharSequence getActionLabel(Context context, WallpaperInfo wallpaperInfo) {

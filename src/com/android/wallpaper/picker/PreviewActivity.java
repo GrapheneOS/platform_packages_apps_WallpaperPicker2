@@ -27,6 +27,7 @@ import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
+import com.android.wallpaper.util.ActivityUtils;
 
 /**
  * Activity that displays a preview of a specific wallpaper and provides the ability to set the
@@ -75,7 +76,7 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
 
     @Override
     public boolean isUpArrowSupported() {
-        return true;
+        return !ActivityUtils.isSUWMode(getBaseContext());
     }
 
     /**

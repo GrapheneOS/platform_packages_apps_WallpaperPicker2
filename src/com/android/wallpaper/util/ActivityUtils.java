@@ -20,7 +20,9 @@ import static com.android.wallpaper.util.LaunchSourceUtils.WALLPAPER_LAUNCH_SOUR
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -31,6 +33,8 @@ import com.android.wallpaper.R;
  * Various utilities pertaining to activities.
  */
 public final class ActivityUtils {
+    private static final int SUW_NOT_YET = 0;
+    private static final int SUW_COMPLETE = 1;
 
     /**
      * Starts an activity with the given intent "safely" - i.e., catches exceptions that may occur
@@ -62,5 +66,16 @@ public final class ActivityUtils {
     public static boolean isLaunchedFromSettings(Intent intent) {
         return (intent != null && TextUtils.equals(LAUNCH_SOURCE_SETTINGS,
                 intent.getStringExtra(WALLPAPER_LAUNCH_SOURCE)));
+    }
+
+    /**
+     * Return true if wallpaper is in SUW mode.
+     *
+     * @param context activity's context.
+     */
+    public static boolean isSUWMode(Context context) {
+        return (Settings.Secure.getInt(
+                context.getContentResolver(), Settings.Secure.USER_SETUP_COMPLETE, SUW_COMPLETE)
+                == SUW_NOT_YET);
     }
 }

@@ -250,6 +250,7 @@ public class IndividualPickerFragment extends AppbarFragment
     private CurrentWallpaperBottomSheetPresenter mCurrentWallpaperBottomSheetPresenter;
     private SetIndividualHolder mPendingSetIndividualHolder;
     private ContentLoadingProgressBar mLoading;
+    private CategoryProvider mCategoryProvider;
 
     /**
      * Staged error dialog fragments that were unable to be shown when the activity didn't allow
@@ -373,8 +374,8 @@ public class IndividualPickerFragment extends AppbarFragment
             Glide.get(getContext()).clearMemory();
         }
 
-        CategoryProvider categoryProvider = injector.getCategoryProvider(appContext);
-        categoryProvider.fetchCategories(new CategoryReceiver() {
+        mCategoryProvider = injector.getCategoryProvider(appContext);
+        mCategoryProvider.fetchCategories(new CategoryReceiver() {
             @Override
             public void onCategoryReceived(Category category) {
                 // Do nothing.
@@ -382,7 +383,7 @@ public class IndividualPickerFragment extends AppbarFragment
 
             @Override
             public void doneFetchingCategories() {
-                Category category = categoryProvider.getCategory(
+                Category category = mCategoryProvider.getCategory(
                         getArguments().getString(ARG_CATEGORY_COLLECTION_ID));
                 if (category != null && !(category instanceof WallpaperCategory)) {
                     return;
@@ -508,8 +509,6 @@ public class IndividualPickerFragment extends AppbarFragment
             }
         }
 
-        mTileSizePx = SizeCalculator.getIndividualTileSize(getActivity());
-
         mImageGrid = (RecyclerView) view.findViewById(R.id.wallpaper_grid);
         if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
             int gridPaddingPx = getResources().getDimensionPixelSize(R.dimen.grid_padding_desktop);
@@ -518,9 +517,6 @@ public class IndividualPickerFragment extends AppbarFragment
         }
         mImageGrid.addItemDecoration(new GridPaddingDecoration(
                 getResources().getDimensionPixelSize(R.dimen.grid_padding)));
-        mImageGrid.setAccessibilityDelegateCompat(
-                new WallpaperPickerRecyclerViewAccessibilityDelegate(
-                        mImageGrid, (BottomSheetHost) getParentFragment(), getNumColumns()));
         mLoading = view.findViewById(R.id.loading_indicator);
         updateLoading();
         maybeSetUpImageGrid();
@@ -576,7 +572,13 @@ public class IndividualPickerFragment extends AppbarFragment
         if (mAdapter != null) {
             return;
         }
+        mTileSizePx = mCategoryProvider.isFeaturedCategory(mCategory)
+                ? SizeCalculator.getFeaturedIndividualTileSize(getActivity())
+                : SizeCalculator.getIndividualTileSize(getActivity());
         setUpImageGrid();
+        mImageGrid.setAccessibilityDelegateCompat(
+                new WallpaperPickerRecyclerViewAccessibilityDelegate(
+                        mImageGrid, (BottomSheetHost) getParentFragment(), getNumColumns()));
     }
 
     /**
@@ -849,7 +851,12 @@ public class IndividualPickerFragment extends AppbarFragment
 
     int getNumColumns() {
         Activity activity = getActivity();
-        return activity == null ? 1 : SizeCalculator.getNumIndividualColumns(activity);
+        if (activity == null) {
+            return 1;
+        }
+        return mCategoryProvider.isFeaturedCategory(mCategory)
+                ? SizeCalculator.getNumFeaturedIndividualColumns(activity)
+                : SizeCalculator.getNumIndividualColumns(activity);
     }
 
     /**
