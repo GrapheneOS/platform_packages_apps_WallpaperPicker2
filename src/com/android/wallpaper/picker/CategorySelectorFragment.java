@@ -362,8 +362,11 @@ public class CategorySelectorFragment extends AppbarFragment {
             // Reuse the height of featured category since My Photos category & featured category
             // have the same height in current UI design.
             CardView categoryView = itemView.findViewById(R.id.category);
-            categoryView.getLayoutParams().height =
-                    SizeCalculator.getFeaturedCategoryTileSize(getActivity()).y;
+            int height = SizeCalculator.getFeaturedCategoryTileSize(getActivity()).y;
+            categoryView.getLayoutParams().height = height;
+            // Use the height as the card corner radius for the "My photos" category
+            // for a stadium border.
+            categoryView.setRadius(height);
         }
     }
 
