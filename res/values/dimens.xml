@@ -29,7 +29,7 @@
     <dimen name="grid_item_category_title_height">48dp</dimen>
     <dimen name="grid_tile_aspect_height">340dp</dimen>
     <dimen name="grid_tile_aspect_width">182dp</dimen>
-    <dimen name="grid_edge_space">8dp</dimen>
+    <dimen name="grid_edge_space">20dp</dimen>
     <dimen name="category_grid_padding_top">4dp</dimen>
     <dimen name="category_grid_padding_bottom">16dp</dimen>
 
