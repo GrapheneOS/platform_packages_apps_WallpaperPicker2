@@ -48,7 +48,6 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
@@ -57,6 +56,7 @@ import com.android.wallpaper.asset.CurrentWallpaperAssetVN;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
+import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperCropUtils;
@@ -286,7 +286,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         // Set a solid black "page bitmap" so MosaicView draws a black background while waiting
         // for the image to load or a transparent one if a thumbnail already loaded.
         Bitmap backgroundBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
-        int preColor = ContextCompat.getColor(getContext(), R.color.fullscreen_preview_background);
+        int preColor = ResourceUtils.getColorAttr(getActivity(), android.R.attr.colorSecondary);
         int color = (mLowResImageView.getDrawable() == null) ? preColor : Color.TRANSPARENT;
         backgroundBitmap.setPixel(0, 0, color);
         mFullResImageView.setImage(ImageSource.bitmap(backgroundBitmap));
