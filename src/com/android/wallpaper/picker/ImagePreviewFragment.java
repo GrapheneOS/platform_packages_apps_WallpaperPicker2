@@ -99,6 +99,8 @@ public class ImagePreviewFragment extends PreviewFragment {
     private LockScreenPreviewer2 mLockScreenPreviewer;
     private WallpaperInfoView mWallpaperInfoView;
 
+    protected boolean mSkipPreviewRendering;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,8 +175,11 @@ public class ImagePreviewFragment extends PreviewFragment {
         ((CardView) mWorkspaceSurface.getParent())
                 .setRadius(SizeCalculator.getPreviewCornerRadius(
                         activity, mContainer.getMeasuredWidth()));
-        renderImageWallpaper();
-        renderWorkspaceSurface();
+
+        if (!mSkipPreviewRendering) {
+            renderImageWallpaper();
+            renderWorkspaceSurface();
+        }
 
         // Trim some memory from Glide to make room for the full-size image in this fragment.
         Glide.get(activity).setMemoryCategory(MemoryCategory.LOW);
@@ -185,9 +190,11 @@ public class ImagePreviewFragment extends PreviewFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        WallpaperColorsLoader.getWallpaperColors(getContext(),
-                mWallpaper.getThumbAsset(getContext()),
-                mLockScreenPreviewer::setColor);
+        if (!mSkipPreviewRendering) {
+            WallpaperColorsLoader.getWallpaperColors(getContext(),
+                    mWallpaper.getThumbAsset(getContext()),
+                    mLockScreenPreviewer::setColor);
+        }
     }
 
     @Override
@@ -209,7 +216,10 @@ public class ImagePreviewFragment extends PreviewFragment {
         if (mLoadingProgressBar != null) {
             mLoadingProgressBar.hide();
         }
-        mFullResImageView.recycle();
+
+        if (mFullResImageView != null) {
+            mFullResImageView.recycle();
+        }
 
         mWallpaperSurfaceCallback.cleanUp();
         mWorkspaceSurfaceCallback.cleanUp();
@@ -277,6 +287,8 @@ public class ImagePreviewFragment extends PreviewFragment {
      * initializing a zoom-scroll observer and click listener.
      */
     private void initFullResView() {
+        if (getContext() == null || mSkipPreviewRendering) return;
+
         // Minimum scale will only be respected under this scale type.
         mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
         // When we set a minimum scale bigger than the scale with which the full image is shown,
