@@ -28,9 +28,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
-import com.android.wallpaper.R;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.PackageStatusNotifier;
@@ -146,7 +144,7 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
     private void setupSurfaceWallpaper(boolean forceClean) {
         mHomeImageWallpaper = new ImageView(mContext);
         mHomeImageWallpaper.setBackgroundColor(
-                ContextCompat.getColor(mContext, R.color.primary_color));
+                ResourceUtils.getColorAttr(mContext, android.R.attr.colorPrimary));
         mHomeImageWallpaper.measure(makeMeasureSpec(mContainerView.getWidth(), EXACTLY),
                 makeMeasureSpec(mContainerView.getHeight(), EXACTLY));
         mHomeImageWallpaper.layout(0, 0, mContainerView.getWidth(),

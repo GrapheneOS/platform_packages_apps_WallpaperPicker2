@@ -133,10 +133,10 @@ public class LockScreenPreviewer implements LifecycleObserver {
         boolean useLightTextColor = colors == null
                 || (colors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_TEXT) == 0;
         int color = mContext.getColor(useLightTextColor
-                ? R.color.text_color_light : R.color.text_color_dark);
+                ? android.R.color.white : android.R.color.black);
         int textShadowColor = mContext.getColor(useLightTextColor
-                ? R.color.smartspace_preview_shadow_color_dark
-                : R.color.smartspace_preview_shadow_color_transparent);
+                ? android.R.color.tertiary_text_dark
+                : android.R.color.transparent);
         mLockIcon.setImageTintList(ColorStateList.valueOf(color));
         mLockDate.setTextColor(color);
         mLockTime.setTextColor(color);
