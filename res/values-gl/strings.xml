@@ -32,12 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Pantalla de inicio"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Pantalla de bloqueo"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Pantallas de inicio e bloqueo"</string>
-    <!-- no translation found for set_wallpaper_dialog_message (2110475703996853076) -->
-    <skip />
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Definir como fondo de pantalla en:"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Pantalla de inicio"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Pantalla de bloqueo"</string>
-    <!-- no translation found for set_wallpaper_both_destination (233216830256235288) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Pantalla de inicio e pantalla de bloqueo"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Fondo de pantalla con imaxes que rotan"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Para mostrar aquí o fondo de pantalla actual, <xliff:g id="APP_NAME">%1$s</xliff:g> necesita acceso ao almacenamento do dispositivo."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Para mostrar aquí o fondo de pantalla actual, a aplicación Fondos de pantalla necesita acceso ao almacenamento do dispositivo.\n\nPara cambiar esta opción de configuración, accede á área de permisos de información da aplicación Fondos de pantalla."</string>
