@@ -32,7 +32,7 @@
     <string name="home_screen_message" msgid="106444102822522813">"होम स्क्रीन"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"लॉक स्‍क्रीन"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"होम स्क्रीन और लॉक स्क्रीन पर"</string>
-    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"वॉलपेपर के तौर पर सेट करें"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"वॉलपेपर सेट करें"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"होम स्क्रीन"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"लॉक स्‍क्रीन"</string>
     <string name="set_wallpaper_both_destination" msgid="233216830256235288">"होम और लॉक स्क्रीन"</string>
