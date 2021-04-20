@@ -30,6 +30,7 @@ import android.widget.Toolbar;
 import android.widget.Toolbar.OnMenuItemClickListener;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.widget.BottomActionBar;
 
 /**
@@ -151,7 +152,8 @@ public abstract class AppbarFragment extends BottomActionBarFragment
     private void setUpUpArrow() {
         Drawable backIcon = getResources().getDrawable(R.drawable.material_ic_arrow_back_black_24,
                 null).mutate();
-        backIcon.setTintList(getResources().getColorStateList(R.color.toolbar_icon_color, null));
+        backIcon.setTint(
+                ResourceUtils.getColorAttr(getActivity(), android.R.attr.textColorPrimary));
         mToolbar.setNavigationIcon(backIcon);
         mToolbar.setNavigationContentDescription(R.string.bottom_action_bar_back);
         mToolbar.setNavigationOnClickListener(v -> mHost.onUpArrowPressed());

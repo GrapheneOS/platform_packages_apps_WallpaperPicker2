@@ -63,6 +63,7 @@ import com.android.wallpaper.picker.individual.IndividualPickerFragment;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.ThumbnailUpdater;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.WallpaperDestinationCallback;
 import com.android.wallpaper.util.DeepLinkUtils;
+import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
@@ -685,7 +686,8 @@ public class CategoryFragment extends AppbarFragment
         if (imageView != null) {
             wallpaperInfo.getThumbAsset(activity.getApplicationContext())
                     .loadPreviewImage(activity, imageView,
-                            getResources().getColor(R.color.secondary_color));
+                            ResourceUtils.getColorAttr(
+                                    getActivity(), android.R.attr.colorSecondary));
         }
 
         if (isHomeWallpaper) {
@@ -693,7 +695,8 @@ public class CategoryFragment extends AppbarFragment
                 if (mWallpaperSurfaceCallback.getHomeImageWallpaper() != null) {
                     wallpaperInfo.getThumbAsset(activity.getApplicationContext()).loadPreviewImage(
                             activity, mWallpaperSurfaceCallback.getHomeImageWallpaper(),
-                            getResources().getColor(R.color.secondary_color));
+                            ResourceUtils.getColorAttr(
+                                    getActivity(), android.R.attr.colorSecondary));
                 }
                 setUpLiveWallpaperPreview(wallpaperInfo);
             } else {
