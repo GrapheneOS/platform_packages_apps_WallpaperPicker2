@@ -3,7 +3,5 @@
     <!-- Border shapes -->
     <!-- All shapes must be drawn in a 100 by 100 square -->
     <string name="circular_border" translatable="false">M50,0 A50,50,0,1,1,50,100 A50,50,0,1,1,50,0</string>
-    <string name="diamond_border" translatable="false">M50,0 L100,50 L50,100 L0,50</string>
-    <string name="squircle_border" translatable="false">"M50,0 C10,0 0,10 0,50 0,90 10,100 50,100 90,100 100,90 100,50 100,10 90,0 50,0 Z"</string>
 </resources>
 
