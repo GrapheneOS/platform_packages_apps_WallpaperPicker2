@@ -38,7 +38,7 @@
             android:paddingBottom="@dimen/wallpaper_grid_padding_bottom"
             android:scrollbarSize="@dimen/grid_padding"
             android:scrollbarStyle="outsideOverlay"
-            android:scrollbarThumbVertical="@color/scrollbar_thumb_color_dark"
+            android:scrollbarThumbVertical="?android:textColorTertiary"
             android:scrollbars="vertical" />
 
     </LinearLayout>

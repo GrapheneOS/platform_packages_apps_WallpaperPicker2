@@ -48,7 +48,9 @@
     <color name="bottom_bar_icon_unchecked_color">@color/material_grey600</color>
     <color name="action_bar_bottom_sheet_text_color">@color/black_87_alpha</color>
 
-    <color name="selected_check_color">@color/material_white_100</color>
     <color name="smartspace_preview_shadow_color_dark">#B0000000</color>
     <color name="smartspace_preview_shadow_color_transparent">@android:color/transparent</color>
+
+    <!-- Primary text on top of accent colors should always be dark -->
+    <color name="text_color_primary_on_accent">@*android:color/text_color_primary_device_default_light</color>
 </resources>
