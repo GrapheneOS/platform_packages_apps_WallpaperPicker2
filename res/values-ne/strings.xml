@@ -32,12 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"गृह स्क्रिन"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"लक स्क्रिन"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"गृह स्क्रिन &amp; लक स्क्रिन"</string>
-    <!-- no translation found for set_wallpaper_dialog_message (2110475703996853076) -->
-    <skip />
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"यहाँ वालपेपर सेट गर्नुहोस्"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"गृह स्क्रिन"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"लक स्क्रिन"</string>
-    <!-- no translation found for set_wallpaper_both_destination (233216830256235288) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"होम र लक स्क्रिन"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"छवि परिवर्तन हुने वालपेपर"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"यहाँ हालको वालपेपर देखाउन <xliff:g id="APP_NAME">%1$s</xliff:g> लाई तपाईंको डिभाइसको भण्डारणमाथिको पहुँच अनिवार्य हुन्छ।"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"यहाँ हालैको वालपेपर देखाउन वालपेपरहरूलाई तपाईंको डिभाइसको भण्डारणमाथिको पहुँच अनिवार्य हुन्छ।\n\nयो सेटिङ बदल्न वालपेपरहरूको एपसम्बन्धी जानकारीमा रहेको अनुमति क्षेत्रमा जानुहोस्।"</string>
