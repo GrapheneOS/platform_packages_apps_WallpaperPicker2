@@ -21,14 +21,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingHorizontal="24dp"
-    android:background="@color/black_24_alpha">
+    android:background="@color/lock_screen_scrim_color">
 
     <TextView
         android:id="@+id/lock_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceListItemSmall"
-        android:textColor="@color/white_88_alpha"
+        android:textColor="@color/lock_screen_text_color"
         android:textSize="@dimen/lock_screen_preview2_date_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

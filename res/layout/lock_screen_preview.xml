@@ -19,14 +19,14 @@
     android:id="@+id/lock_overlay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_24_alpha">
+    android:background="@color/lock_screen_scrim_color">
 
     <ImageView
         android:id="@+id/lock_icon"
         android:layout_width="@dimen/lock_screen_preview_lock_icon_size"
         android:layout_height="@dimen/lock_screen_preview_lock_icon_size"
         android:src="@drawable/ic_lock_outline_24px"
-        android:tint="@color/white_88_alpha"
+        android:tint="@color/lock_screen_text_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceListItemSmall"
-        android:textColor="@color/white_88_alpha"
+        android:textColor="@color/lock_screen_text_color"
         android:textSize="@dimen/lock_screen_preview_time_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceListItemSmall"
-        android:textColor="@color/white_88_alpha"
+        android:textColor="@color/lock_screen_text_color"
         android:textSize="@dimen/lock_screen_preview_date_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

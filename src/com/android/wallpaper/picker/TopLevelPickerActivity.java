@@ -78,6 +78,7 @@ import com.android.wallpaper.picker.CategoryFragment.CategoryFragmentHost;
 import com.android.wallpaper.picker.WallpaperDisabledFragment.WallpaperSupportLevel;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
 import com.android.wallpaper.util.ActivityUtils;
+import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.ThrowableAnalyzer;
 
@@ -151,8 +152,11 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
      */
     private WallpaperInfo mPendingSetWallpaperInfo;
 
-    private static int getTextColorIdForWallpaperPositionButton(boolean isSelected) {
-        return isSelected ? R.color.accent_color : R.color.material_grey500;
+    private int getTextColorForWallpaperPositionButton(boolean isSelected) {
+        int textColorId = isSelected
+                ? android.R.attr.colorAccent
+                : android.R.attr.textColorTertiary;
+        return ResourceUtils.getColorAttr(this, textColorId);
     }
 
     @Override
@@ -472,7 +476,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                     nextWallpaperButtonDrawable.getConstantState().newDrawable().mutate();
             // Color the "compass" icon with the accent color.
             nextWallpaperButtonDrawable.setColorFilter(
-                    getResources().getColor(R.color.accent_color), Mode.SRC_IN);
+                    ResourceUtils.getColorAttr(this,
+                            android.R.attr.colorAccent), Mode.SRC_IN);
             ButtonDrawableSetterCompat.setDrawableToButtonStart(
                     mCurrentWallpaperSkipWallpaperButton, nextWallpaperButtonDrawable);
         }
@@ -580,7 +585,8 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                                     .newDrawable().mutate();
                             // Color the "compass" icon with the accent color.
                             exploreButtonDrawable.setColorFilter(
-                                    getResources().getColor(R.color.accent_color), Mode.SRC_IN);
+                                    ResourceUtils.getColorAttr(TopLevelPickerActivity.this,
+                                            android.R.attr.colorAccent), Mode.SRC_IN);
 
                             ButtonDrawableSetterCompat.setDrawableToButtonStart(
                                     mCurrentWallpaperExploreButton, exploreButtonDrawable);
@@ -1068,19 +1074,19 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
     private void setCenterWallpaperPositionButtonSelected(Button button, boolean isSelected) {
         int drawableId = isSelected ? R.drawable.center_blue : R.drawable.center_grey;
         ButtonDrawableSetterCompat.setDrawableToButtonStart(button, getDrawable(drawableId));
-        button.setTextColor(getColor(getTextColorIdForWallpaperPositionButton(isSelected)));
+        button.setTextColor(getTextColorForWallpaperPositionButton(isSelected));
     }
 
     private void setCenterCropWallpaperPositionButtonSelected(Button button, boolean isSelected) {
         int drawableId = isSelected ? R.drawable.center_crop_blue : R.drawable.center_crop_grey;
         ButtonDrawableSetterCompat.setDrawableToButtonStart(button, getDrawable(drawableId));
-        button.setTextColor(getColor(getTextColorIdForWallpaperPositionButton(isSelected)));
+        button.setTextColor(getTextColorForWallpaperPositionButton(isSelected));
     }
 
     private void setStretchWallpaperPositionButtonSelected(Button button, boolean isSelected) {
         int drawableId = isSelected ? R.drawable.stretch_blue : R.drawable.stretch_grey;
         ButtonDrawableSetterCompat.setDrawableToButtonStart(button, getDrawable(drawableId));
-        button.setTextColor(getColor(getTextColorIdForWallpaperPositionButton(isSelected)));
+        button.setTextColor(getTextColorForWallpaperPositionButton(isSelected));
     }
 
     private void showSettingWallpaperProgressDialog() {
