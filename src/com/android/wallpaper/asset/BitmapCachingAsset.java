@@ -37,27 +37,37 @@ import java.util.Objects;
 public class BitmapCachingAsset extends Asset {
 
     private static class CacheKey {
-        final Asset asset;
-        final int width;
-        final int height;
+        final Asset mAsset;
+        final int mWidth;
+        final int mHeight;
+        final boolean mRtl;
+        final Rect mRect;
 
         CacheKey(Asset asset, int width, int height) {
-            this.asset = asset;
-            this.width = width;
-            this.height = height;
+            this(asset, width, height, false, null);
+        }
+
+        CacheKey(Asset asset, int width, int height, boolean rtl, Rect rect) {
+            mAsset = asset;
+            mWidth = width;
+            mHeight = height;
+            mRtl = rtl;
+            mRect = rect;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(asset, width, height);
+            return Objects.hash(mAsset, mWidth, mHeight);
         }
 
         @Override
         public boolean equals(Object obj) {
             return obj instanceof CacheKey
-                    && ((CacheKey)obj).asset == this.asset
-                    && ((CacheKey)obj).width == this.width
-                    && ((CacheKey)obj).height == this.height;
+                    && (Objects.equals(this.mAsset, ((CacheKey) obj).mAsset))
+                    && ((CacheKey) obj).mWidth == this.mWidth
+                    && ((CacheKey) obj).mHeight == this.mHeight
+                    && ((CacheKey) obj).mRtl == this.mRtl
+                    && (Objects.equals(this.mRect, ((CacheKey) obj).mRect));
         }
     }
 
@@ -72,7 +82,8 @@ public class BitmapCachingAsset extends Asset {
     private final Asset mOriginalAsset;
 
     public BitmapCachingAsset(Context context, Asset originalAsset) {
-        mOriginalAsset = originalAsset;
+        mOriginalAsset = originalAsset instanceof BitmapCachingAsset
+                ? ((BitmapCachingAsset) originalAsset).mOriginalAsset : originalAsset;
         mIsLowRam = ActivityManagerCompat.isLowRamDevice(
                 (ActivityManager) context.getApplicationContext().getSystemService(
                         Context.ACTIVITY_SERVICE));
@@ -102,8 +113,26 @@ public class BitmapCachingAsset extends Asset {
     @Override
     public void decodeBitmapRegion(Rect rect, int targetWidth, int targetHeight,
             boolean shouldAdjustForRtl, BitmapReceiver receiver) {
-        mOriginalAsset.decodeBitmapRegion(rect, targetWidth, targetHeight, shouldAdjustForRtl,
-                receiver);
+        // Skip the cache in low ram devices
+        if (mIsLowRam) {
+            mOriginalAsset.decodeBitmapRegion(rect, targetWidth, targetHeight, shouldAdjustForRtl,
+                    receiver);
+            return;
+        }
+        CacheKey key = new CacheKey(mOriginalAsset, targetWidth, targetHeight, shouldAdjustForRtl,
+                rect);
+        Bitmap cached = sCache.get(key);
+        if (cached != null) {
+            receiver.onBitmapDecoded(cached);
+        } else {
+            mOriginalAsset.decodeBitmapRegion(rect, targetWidth, targetHeight, shouldAdjustForRtl,
+                    bitmap -> {
+                        if (bitmap != null) {
+                            sCache.put(key, bitmap);
+                        }
+                        receiver.onBitmapDecoded(bitmap);
+                    });
+        }
     }
 
     @Override
