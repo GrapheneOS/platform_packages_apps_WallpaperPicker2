@@ -19,7 +19,7 @@
     android:background="@drawable/permission_needed_bg"
     android:orientation="vertical">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/permissions_needed_metadata_content_margin_top"
