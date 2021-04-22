@@ -32,7 +32,7 @@
     <string name="home_screen_message" msgid="106444102822522813">"ပင်မစာမျက်နှာ"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"လော့ခ်ချထားချိန် မျက်နှာပြင်"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"ပင်မနှင့် လော့ခ်မျက်နှာပြင်"</string>
-    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"နောက်ခံ သတ်မှတ်ပါ"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"နောက်ခံ သတ်မှတ်ရန်"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"ပင်မစာမျက်နှာ"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"လော့ခ်ချထားချိန် မျက်နှာပြင်"</string>
     <string name="set_wallpaper_both_destination" msgid="233216830256235288">"ပင်မစာမျက်နှာနှင့် လော့ခ်မျက်နှာပြင်"</string>
