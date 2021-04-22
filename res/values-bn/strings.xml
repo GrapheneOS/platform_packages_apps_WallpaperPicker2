@@ -32,12 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"হোম স্ক্রিন"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"লক স্ক্রিন"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"হোম ও লক"</string>
-    <!-- no translation found for set_wallpaper_dialog_message (2110475703996853076) -->
-    <skip />
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"ওয়ালপেপার সেট করুন"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"হোম স্ক্রিন"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"লক স্ক্রিন"</string>
-    <!-- no translation found for set_wallpaper_both_destination (233216830256235288) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"হোম ও লক স্ক্রিন"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"নির্দিষ্ট সময় অন্তর একই ছবি দেখানোর ওয়ালপেপার"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"বর্তমানে বেছে নেওয়া ওয়ালপেপারটি এখানে ডিসপ্লে করার জন্য <xliff:g id="APP_NAME">%1$s</xliff:g>-কে আপনার ডিভাইসের স্টোরেজে অ্যাক্সেস দিতে হবে।"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"বর্তমান ওয়ালপেপারটি এখানে দেখাতে হলে ওয়ালপেপার অ্যাপটিকে আপনার ডিভাইসের স্টোরেজে অ্যাক্সেস দিতে হবে।\n\nএই সেটিংটি পরিবর্তন করতে ওয়ালপেপার অ্যাপের তথ্যের পৃষ্ঠায় \'অনুমতি\' বিভাগে যান।"</string>

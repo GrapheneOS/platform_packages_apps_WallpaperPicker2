@@ -15,18 +15,13 @@
 -->
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="grid_padding">4dp</dimen>
     <dimen name="grid_padding_desktop">8dp</dimen>
 
     <!-- Dimensions for "category" tiles. -->
-    <dimen name="grid_item_category_label_padding">12dp</dimen>
     <dimen name="grid_item_category_label_padding_top">12dp</dimen>
     <dimen name="grid_item_category_label_padding_bottom">4dp</dimen>
     <dimen name="grid_item_category_label_minimum_height">16dp</dimen>
-    <dimen name="grid_item_category_overlay_icon_margin_bottom">24dp</dimen>
-    <dimen name="grid_item_category_title_height">48dp</dimen>
     <dimen name="grid_tile_aspect_height">340dp</dimen>
     <dimen name="grid_tile_aspect_width">182dp</dimen>
     <dimen name="grid_edge_space">20dp</dimen>
@@ -34,49 +29,11 @@
     <dimen name="category_grid_padding_bottom">16dp</dimen>
 
     <!-- Dimensions for individual wallpaper tiles. -->
-    <dimen name="grid_item_individual_wallpaper_selected_inset">14dp</dimen>
-    <dimen name="grid_item_individual_wallpaper_check_circle_offset">4dp</dimen>
-    <dimen name="grid_item_individual_wallpaper_check_circle_size">24dp</dimen>
     <dimen name="grid_item_individual_padding_top">8dp</dimen>
     <dimen name="grid_item_individual_label_padding_top">4dp</dimen>
     <dimen name="grid_item_individual_label_padding_bottom">4dp</dimen>
     <dimen name="wallpaper_grid_padding_top">16dp</dimen>
     <dimen name="wallpaper_grid_padding_bottom">24dp</dimen>
-
-    <!-- Dimensions for "single metadata card" configuration. -->
-    <dimen name="single_metadata_card_elevation">2dp</dimen>
-    <dimen name="single_metadata_card_corner_radius">0dp</dimen>
-    <dimen name="single_metadata_card_layout_height">192dp</dimen>
-    <dimen name="single_metadata_pane_vertical_offset">8dp</dimen>
-    <dimen name="single_metadata_pane_horizontal_offset">8dp</dimen>
-    <dimen name="single_metadata_pane_bottom_offset">12dp</dimen>
-    <dimen name="single_metadata_pane_thumb_width">120dp</dimen>
-    <dimen name="single_metadata_pane_attributions_margin_left">16dp</dimen>
-    <dimen name="single_metadata_pane_attributions_margin_right">16dp</dimen>
-    <dimen name="single_metadata_pane_wallpaper_label_margin_top">10dp</dimen>
-    <dimen name="single_metadata_pane_wallpaper_title_margin_top">12dp</dimen>
-
-    <dimen name="single_metadata_pane_wallpaper_subtitle_text_size">
-        @dimen/abc_text_size_caption_material
-    </dimen>
-    <dimen name="single_metadata_pane_wallpaper_subtitle_margin_top">3dp</dimen>
-    <dimen name="single_metadata_pane_wallpaper_subtitle_margin_bottom">10dp</dimen>
-    <dimen name="single_metadata_explore_button_margin">12dp</dimen>
-    <dimen name="single_metadata_explore_section_height">48dp</dimen>
-    <dimen name="single_metadata_skip_button_margin">10dp</dimen>
-    <dimen name="single_metadata_explore_section_button_padding">5dp</dimen>
-
-    <!-- Dimensions for "both metadata tiles" configuration. -->
-    <dimen name="both_metadata_thumb_height">208dp</dimen>
-    <dimen name="both_metadata_content_side_margin">12dp</dimen>
-    <dimen name="both_metadata_scrim_height">68dp</dimen>
-    <dimen name="both_metadata_scrim_content_top_margin">9dp</dimen>
-    <dimen name="both_metadata_scrim_content_bottom_margin">16dp</dimen>
-    <dimen name="both_metadata_attribution_section_height">132dp</dimen>
-    <dimen name="both_metadata_attribution_section_top_margin">12dp</dimen>
-    <dimen name="both_metadata_attribution_section_bottom_margin">16dp</dimen>
-    <dimen name="both_metadata_title_text_size">@dimen/abc_text_size_body_2_material</dimen>
-    <dimen name="both_metadata_explore_button_size">50dp</dimen>
 
     <!-- Dimensions for "permissions needed" tile. -->
     <dimen name="permissions_needed_metadata_content_margin_top">16dp</dimen>
@@ -89,10 +46,6 @@
     <!-- Dimensions for "loading indicator" configuration. -->
     <dimen name="categories_loading_indicator_margin_top">16dp</dimen>
 
-    <!-- Dimensions for "Select wallpaper" header. -->
-    <dimen name="select_wallpaper_header_height">48dp</dimen>
-    <dimen name="select_wallpaper_header_margin_left">12dp</dimen>
-
     <!-- Dimensions for wallpaper tiles in individual picker when in desktop mode. -->
     <dimen name="tile_desktop_progress_bar_size">40dp</dimen>
 
@@ -100,35 +53,8 @@
     <dimen name="rotation_tile_desktop_label_padding">16dp</dimen>
     <dimen name="rotation_tile_desktop_label_text_size">13sp</dimen>
 
-    <!-- Dimensions for the preview fragment. -->
-    <dimen name="preview_toolbar_up_button_start_padding">0dp</dimen>
-    <dimen name="preview_toolbar_set_wallpaper_button_end_padding">12dp</dimen>
-
-    <dimen name="preview_attribution_pane_collapsed_height">0dp</dimen>
-
-    <dimen name="preview_attribution_pane_expanded_height">96dp</dimen>
-    <dimen name="preview_attribution_pane_content_side_margin">16dp</dimen>
-    <dimen name="preview_attribution_pane_content_bottom_margin">12dp</dimen>
-    <dimen name="preview_attribution_pane_title_top_margin">16dp</dimen>
-    <dimen name="preview_attribution_pane_title_end_margin">48dp</dimen>
-    <dimen name="preview_attribution_pane_arrow_start_margin">16dp</dimen>
-    <dimen name="preview_attribution_pane_arrow_top_bottom_margin">4dp</dimen>
-    <dimen name="preview_attribution_pane_arrow_size">48dp</dimen>
-    <dimen name="preview_attribution_pane_subtitle1_top_margin">12dp</dimen>
-    <dimen name="preview_attribution_pane_subtitle2_top_margin">2dp</dimen>
-    <dimen name="preview_attribution_pane_explore_height">48dp</dimen>
-    <dimen name="preview_attribution_pane_explore_left_margin">2dp</dimen>
-    <dimen name="preview_attribution_pane_explore_bottom_margin">16dp</dimen>
+    <!-- Dimensions for the attribution pane. -->
     <dimen name="preview_attribution_pane_horizontal_padding">24dp</dimen>
-    <dimen name="preview_attribution_pane_extra_spacer_height">16dp</dimen>
-    <dimen name="preview_attribution_pane_inner_spacer_height">14dp</dimen>
-    <dimen name="preview_attribution_pane_title_height">48dp</dimen>
-    <dimen name="preview_attribution_pane_author_height">24dp</dimen>
-    <dimen name="preview_attribution_pane_author_top_margin">0dp</dimen>
-    <dimen name="preview_attribution_pane_description_height">34dp</dimen>
-    <dimen name="preview_attribution_pane_button_bottom_margin">8dp</dimen>
-
-    <dimen name="preview_gradient_background_height">256dp</dimen>
 
     <!-- Dimensions for the "start rotation" dialog. -->
     <dimen name="start_rotation_dialog_subhead_margin_top">19dp</dimen>
@@ -183,11 +109,6 @@
     <dimen name="disabled_by_admin_desktop_message_text_size">13sp</dimen>
     <dimen name="preview_bottom_sheet_corner_radius">?android:attr/dialogCornerRadius</dimen>
 
-    <!-- Dimensions for the minimum height of the scalable content container. -->
-    <dimen name="content_container_minimum_height">300dp</dimen>
-    <!-- Dimensions for the maximum height of the scalable content container. -->
-    <dimen name="content_container_maximum_height">400dp</dimen>
-
     <!-- Dimensions for PreviewPager and PageIndicator. -->
     <dimen name="preview_indicator_width">16dp</dimen>
     <dimen name="preview_indicator_height">8dp</dimen>
@@ -202,8 +123,6 @@
     <dimen name="preview_card_padding">20dp</dimen>
     <dimen name="preview_pager_max_height">450dp</dimen>
     <dimen name="preview_pager_min_height">350dp</dimen>
-    <dimen name="preview_pager_height">450dp</dimen>
-    <dimen name="system_rounded_corner">@*android:dimen/rounded_corner_radius_top</dimen>
     <!-- The maximum height ratio of PreviewPager and its parent view. -->
     <item name="preview_pager_maximum_height_ratio" format="float" type="dimen">0.7</item>
 
@@ -213,13 +132,11 @@
 
     <!-- Dimensions for the bottom bar. -->
     <dimen name="bottom_navbar_height">96dp</dimen>
-    <dimen name="bottom_action_bar_preview_info_padding_vertical">20dp</dimen>
     <dimen name="bottom_action_button_width">72dp</dimen>
     <dimen name="bottom_action_button_height">48dp</dimen>
     <dimen name="bottom_action_button_margin_top">24dp</dimen>
     <dimen name="bottom_action_button_padding_horizontal">26dp</dimen>
     <dimen name="bottom_action_button_radius">100dp</dimen>
-    <dimen name="bottom_action_icon_size">20dp</dimen>
 
     <dimen name="bottom_sheet_margin">24dp</dimen>
     <dimen name="wallpaper_info_pane_padding">24dp</dimen>

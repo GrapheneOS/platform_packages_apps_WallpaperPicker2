@@ -64,6 +64,7 @@ import androidx.slice.widget.SliceView;
 import com.android.wallpaper.R;
 import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
+import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
@@ -309,12 +310,13 @@ public class LivePreviewFragment extends PreviewFragment implements
                 mWallpaper.getThumbAsset(activity.getApplicationContext())
                         .loadPreviewImage(activity,
                                 mWallpaperSurfaceCallback.getHomeImageWallpaper(),
-                                getResources().getColor(R.color.secondary_color));
+                                ResourceUtils.getColorAttr(getActivity(),
+                                        android.R.attr.colorSecondary));
             }
 
             setUpLiveWallpaperPreview(mWallpaper, thumbnailView,
-                    new ColorDrawable(getResources().getColor(
-                            R.color.secondary_color, activity.getTheme())));
+                    new ColorDrawable(ResourceUtils.getColorAttr(getActivity(),
+                            android.R.attr.colorSecondary)));
         });
     }
 
@@ -435,8 +437,8 @@ public class LivePreviewFragment extends PreviewFragment implements
                     mLoadingScrim.setVisibility(View.GONE);
                 }));
         final Drawable placeholder = mHomePreview.getDrawable() == null
-                ? new ColorDrawable(getResources().getColor(R.color.secondary_color,
-                activity.getTheme()))
+                ? new ColorDrawable(ResourceUtils.getColorAttr(getActivity(),
+                android.R.attr.colorSecondary))
                 : mHomePreview.getDrawable();
         mHomePreview.animate()
                 .setStartDelay(0)

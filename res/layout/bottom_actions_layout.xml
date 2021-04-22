@@ -34,7 +34,7 @@
             android:background="@drawable/bottom_sheet_background"
             android:theme="@style/WallpaperPicker.BottomPaneStyle"
             android:clickable="true"
-            app:behavior_peekHeight="@dimen/preview_attribution_pane_collapsed_height"
+            app:behavior_peekHeight="0dp"
             app:layout_behavior="com.android.wallpaper.widget.BottomActionBar$QueueStateBottomSheetBehavior" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

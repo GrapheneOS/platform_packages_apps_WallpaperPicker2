@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/grid_item_individual_label_padding_top"
         android:layout_marginBottom="@dimen/grid_item_individual_label_padding_bottom"
-        android:background="@color/category_title_scrim_color"
+        android:background="?android:colorSecondary"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
@@ -75,7 +75,7 @@
                     android:layout_height="@dimen/tile_desktop_progress_bar_size"
                     android:layout_gravity="center"
                     android:indeterminate="true"
-                    android:indeterminateTint="@color/accent_color" />
+                    android:indeterminateTint="?android:colorAccent" />
 
             </FrameLayout>
         </RelativeLayout>

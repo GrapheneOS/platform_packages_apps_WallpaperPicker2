@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.WallpaperInfo;
+import com.android.wallpaper.util.ResourceUtils;
 
 import java.util.List;
 
@@ -78,7 +79,7 @@ abstract class IndividualHolder extends ViewHolder {
         } else {
             wallpaper.getThumbAsset(
                     mActivity.getApplicationContext()).loadDrawable(mActivity, mThumbnailView,
-                    mActivity.getResources().getColor(R.color.secondary_color));
+                    ResourceUtils.getColorAttr(mActivity, android.R.attr.colorSecondary));
         }
     }
 }
