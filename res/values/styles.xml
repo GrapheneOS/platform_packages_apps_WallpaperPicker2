@@ -32,7 +32,8 @@
         <item name="colorControlHighlight">@color/ripple_material_dark</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="toolbarNavigationButtonStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
+        <item name="toolbarNavigationButtonStyle">@android:style/Widget.Toolbar.Button.Navigation
+        </item>
 
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
@@ -66,7 +67,8 @@
         <item name="selectableItemBackground">?android:attr/selectableItemBackground</item>
         <item name="dialogPreferredPadding">24dp</item>
         <item name="colorControlHighlight">@color/ripple_material_dark</item>
-        <item name="toolbarNavigationButtonStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
+        <item name="toolbarNavigationButtonStyle">@android:style/Widget.Toolbar.Button.Navigation
+        </item>
 
         <!-- Set status bar and navigation buttons to be translucent. -->
         <item name="android:colorPrimaryDark">@color/translucent_black</item>
@@ -74,7 +76,8 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
 
         <!-- Apply borderless button style for the right ripple effect. -->
-        <item name="borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
+        <item name="borderlessButtonStyle">@android:style/Widget.DeviceDefault.Button.Borderless
+        </item>
 
         <item name="android:actionBarItemBackground">
             ?android:attr/selectableItemBackgroundBorderless

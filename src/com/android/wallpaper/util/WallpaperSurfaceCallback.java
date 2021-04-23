@@ -65,8 +65,8 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
     private PackageStatusNotifier mPackageStatusNotifier;
 
     public WallpaperSurfaceCallback(Context context, View containerView,
-            SurfaceView wallpaperSurface, @Nullable  SurfaceListener listener) {
-        mContext = context;
+            SurfaceView wallpaperSurface, @Nullable SurfaceListener listener) {
+        mContext = context.getApplicationContext();
         mContainerView = containerView;
         mWallpaperSurface = wallpaperSurface;
         mListener = listener;
@@ -152,7 +152,7 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
         if (forceClean) {
             releaseHost();
             mHost = new SurfaceControlViewHost(mContext,
-                    mContext.getDisplay(), mWallpaperSurface.getHostToken());
+                    mContainerView.getDisplay(), mWallpaperSurface.getHostToken());
         }
         mHost.setView(mHomeImageWallpaper, mHomeImageWallpaper.getWidth(),
                 mHomeImageWallpaper.getHeight());

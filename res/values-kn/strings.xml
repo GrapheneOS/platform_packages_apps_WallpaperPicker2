@@ -32,12 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"ಮುಖಪುಟದ ಪರದೆ"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"ಲಾಕ್ ಪರದೆ"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"ಮುಖಪುಟ ಮತ್ತು ಲಾಕ್‌"</string>
-    <!-- no translation found for set_wallpaper_dialog_message (2110475703996853076) -->
-    <skip />
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"ವಾಲ್‌ಪೇಪರ್ ಅನ್ನು ಆನ್‌ಗೆ ಹೊಂದಿಸಿ"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"ಮುಖಪುಟದ ಪರದೆ"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"ಲಾಕ್ ಪರದೆ"</string>
-    <!-- no translation found for set_wallpaper_both_destination (233216830256235288) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"ಹೋಮ್ ಮತ್ತು ಲಾಕ್ ಸ್ಕ್ರೀನ್"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"ತಿರುಗುವ ಚಿತ್ರದ ವಾಲ್‌ಪೇಪರ್"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"ಪ್ರಸ್ತುತ ವಾಲ್ಪೇಪರ್ ಅನ್ನು ಇಲ್ಲಿ ಪ್ರದರ್ಶಿಸಲು, <xliff:g id="APP_NAME">%1$s</xliff:g> ಗೆ ನಿಮ್ಮ ಸಾಧನದ ಸಂಗ್ರಹಣೆಯ ಪ್ರವೇಶದ ಅಗತ್ಯವಿದೆ."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"ಪ್ರಸ್ತುತ ಅನ್ನು ಇಲ್ಲಿ ಪ್ರದರ್ಶಿಸಲು, ವಾಲ್ಪೇಪರ್‌ಗಳಿಗೆ ನಿಮ್ಮ ಸಾಧನದ ಸಂಗ್ರಹಣೆ ಪ್ರವೇಶದ ಅಗತ್ಯವಿದೆ. \n\nಈ ಸೆಟ್ಟಿಂಗ್‌ ಅನ್ನು ಬದಯಾಯಿಸಲು, ವಾಲ್ಪೇಪರ್‌ಗಳ ಅಪ್ಲಿಕೇಶನ್‌ನ ಮಾಹಿತಿಯ ಅನುಮತಿ ಪ್ರದೇಶಕ್ಕೆ ಹೋಗಿ."</string>
