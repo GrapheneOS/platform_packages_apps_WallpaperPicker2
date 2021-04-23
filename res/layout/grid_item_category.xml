@@ -23,19 +23,6 @@
     android:focusable="true"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/category_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/grid_item_category_label_padding_top"
-        android:layout_marginBottom="@dimen/grid_item_category_label_padding_bottom"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxLines="1"
-        android:minHeight="@dimen/grid_item_category_label_minimum_height"
-        android:textAppearance="@style/OptionTitleTextAppearance"
-        tools:text="Wallpaper category" />
-
     <androidx.cardview.widget.CardView
         android:id="@+id/category"
         android:layout_width="match_parent"
@@ -57,4 +44,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
     </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/category_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/grid_item_category_label_padding_top"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:minHeight="@dimen/grid_item_category_label_minimum_height"
+        android:textAppearance="@style/OptionTitleTextAppearance"
+        tools:text="Wallpaper category" />
 </LinearLayout>

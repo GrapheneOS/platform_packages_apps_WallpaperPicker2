@@ -19,8 +19,7 @@
     android:id="@+id/tile"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/grid_item_individual_padding_top">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/title"
