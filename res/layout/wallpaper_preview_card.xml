@@ -49,7 +49,8 @@
         android:alpha="0"
         android:background="?android:colorSecondary" />
 
-    <ProgressBar android:id="@+id/wallpaper_preview_spinner"
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/wallpaper_preview_spinner"
         style="?android:progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
