@@ -130,8 +130,8 @@ public class CategorySelectorFragment extends AppbarFragment {
         View view = inflater.inflate(R.layout.fragment_category_selector, container,
                 /* attachToRoot= */ false);
         mImageGrid = view.findViewById(R.id.category_grid);
-        mImageGrid.addItemDecoration(new GridPaddingDecoration(
-                getResources().getDimensionPixelSize(R.dimen.grid_padding)));
+        mImageGrid.addItemDecoration(new GridPaddingDecoration(getResources().getDimensionPixelSize(
+                R.dimen.grid_item_category_padding_horizontal)));
 
         mTileSizePx = SizeCalculator.getCategoryTileSize(getActivity());
 
@@ -517,7 +517,7 @@ public class CategorySelectorFragment extends AppbarFragment {
 
     private class GridPaddingDecoration extends RecyclerView.ItemDecoration {
 
-        private int mPadding;
+        private final int mPadding;
 
         GridPaddingDecoration(int padding) {
             mPadding = padding;
@@ -530,6 +530,16 @@ public class CategorySelectorFragment extends AppbarFragment {
             if (position >= 0) {
                 outRect.left = mPadding;
                 outRect.right = mPadding;
+            }
+
+            RecyclerView.ViewHolder viewHolder = parent.getChildViewHolder(view);
+            if (viewHolder instanceof MyPhotosCategoryHolder
+                    || viewHolder instanceof FeaturedCategoryHolder) {
+                outRect.bottom = getResources().getDimensionPixelSize(
+                        R.dimen.grid_item_featured_category_padding_bottom);
+            } else {
+                outRect.bottom = getResources().getDimensionPixelSize(
+                        R.dimen.grid_item_category_padding_bottom);
             }
         }
     }
