@@ -19,21 +19,30 @@
     <dimen name="grid_padding_desktop">8dp</dimen>
 
     <!-- Dimensions for "category" tiles. -->
-    <dimen name="grid_item_category_label_padding_top">12dp</dimen>
-    <dimen name="grid_item_category_label_padding_bottom">4dp</dimen>
+    <dimen name="grid_item_category_label_padding_top">6dp</dimen>
     <dimen name="grid_item_category_label_minimum_height">16dp</dimen>
+    <dimen name="grid_item_category_padding_horizontal">6dp</dimen>
+    <dimen name="grid_item_category_padding_bottom">12dp</dimen>
     <dimen name="grid_tile_aspect_height">340dp</dimen>
     <dimen name="grid_tile_aspect_width">182dp</dimen>
-    <dimen name="grid_edge_space">20dp</dimen>
-    <dimen name="category_grid_padding_top">4dp</dimen>
-    <dimen name="category_grid_padding_bottom">16dp</dimen>
+    <dimen name="category_grid_edge_space">18dp</dimen>
+    <dimen name="category_grid_padding_top">32dp</dimen>
+
+    <!-- Dimensions for featured "category" tiles. -->
+    <dimen name="grid_item_featured_category_padding_bottom">16dp</dimen>
 
     <!-- Dimensions for individual wallpaper tiles. -->
-    <dimen name="grid_item_individual_padding_top">8dp</dimen>
+    <dimen name="grid_item_individual_padding_horizontal">4dp</dimen>
+    <dimen name="grid_item_individual_padding_bottom">8dp</dimen>
     <dimen name="grid_item_individual_label_padding_top">4dp</dimen>
     <dimen name="grid_item_individual_label_padding_bottom">4dp</dimen>
-    <dimen name="wallpaper_grid_padding_top">16dp</dimen>
-    <dimen name="wallpaper_grid_padding_bottom">24dp</dimen>
+    <dimen name="wallpaper_grid_edge_space">20dp</dimen>
+    <dimen name="wallpaper_grid_padding_top">32dp</dimen>
+
+    <!-- Dimensions for featured individual wallpaper tiles. -->
+    <dimen name="grid_item_featured_individual_padding_horizontal">6dp</dimen>
+    <dimen name="grid_item_featured_individual_padding_bottom">12dp</dimen>
+    <dimen name="featured_wallpaper_grid_edge_space">18dp</dimen>
 
     <!-- Dimensions for "permissions needed" tile. -->
     <dimen name="permissions_needed_metadata_content_margin_top">16dp</dimen>
