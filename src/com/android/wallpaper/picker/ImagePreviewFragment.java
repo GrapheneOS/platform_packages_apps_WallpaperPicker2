@@ -25,6 +25,7 @@ import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMAT
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.app.WallpaperColors;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -78,7 +79,7 @@ import java.util.Locale;
  * Fragment which displays the UI for previewing an individual static wallpaper and its attribution
  * information.
  */
-public class ImagePreviewFragment extends PreviewFragment {
+public class ImagePreviewFragment extends PreviewFragment implements WallpaperColorsLoader.Callback{
 
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
 
@@ -95,11 +96,10 @@ public class ImagePreviewFragment extends PreviewFragment {
     private SurfaceView mWorkspaceSurface;
     private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     private SurfaceView mWallpaperSurface;
-    private ViewGroup mLockPreviewContainer;
-    private LockScreenPreviewer2 mLockScreenPreviewer;
     private WallpaperInfoView mWallpaperInfoView;
 
-    protected boolean mSkipPreviewRendering;
+    protected ViewGroup mLockPreviewContainer;
+    protected LockScreenPreviewer2 mLockScreenPreviewer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,26 +148,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         mLockScreenPreviewer = new LockScreenPreviewer2(getLifecycle(), getContext(),
                 mLockPreviewContainer);
 
-        TabLayout tabs = view.findViewById(R.id.pill_tabs);
-        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.home_screen_message)));
-        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.lock_screen_message)));
-        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                updateScreenPreview(tab.getPosition() == 0);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
-        });
-
-        // The TabLayout only contains below tabs
-        // 0. Home tab
-        // 1. Lock tab
-        tabs.getTabAt(mViewAsHome ? 0 : 1).select();
+        setUpTabs(view.findViewById(R.id.pill_tabs));
         updateScreenPreview(mViewAsHome);
 
         view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
@@ -176,10 +157,8 @@ public class ImagePreviewFragment extends PreviewFragment {
                 .setRadius(SizeCalculator.getPreviewCornerRadius(
                         activity, mContainer.getMeasuredWidth()));
 
-        if (!mSkipPreviewRendering) {
-            renderImageWallpaper();
-            renderWorkspaceSurface();
-        }
+        renderImageWallpaper();
+        renderWorkspaceSurface();
 
         // Trim some memory from Glide to make room for the full-size image in this fragment.
         Glide.get(activity).setMemoryCategory(MemoryCategory.LOW);
@@ -190,11 +169,13 @@ public class ImagePreviewFragment extends PreviewFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (!mSkipPreviewRendering) {
-            WallpaperColorsLoader.getWallpaperColors(getContext(),
-                    mWallpaper.getThumbAsset(getContext()),
-                    mLockScreenPreviewer::setColor);
-        }
+        WallpaperColorsLoader.getWallpaperColors(getContext(),
+                mWallpaper.getThumbAsset(getContext()), this);
+    }
+
+    @Override
+    public void onLoaded(@Nullable WallpaperColors colors) {
+        mLockScreenPreviewer.setColor(colors);
     }
 
     @Override
@@ -282,13 +263,33 @@ public class ImagePreviewFragment extends PreviewFragment {
         });
     }
 
+    protected void setUpTabs(TabLayout tabs) {
+        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.home_screen_message)));
+        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.lock_screen_message)));
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                updateScreenPreview(tab.getPosition() == 0);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
+        // The TabLayout only contains below tabs
+        // 0. Home tab
+        // 1. Lock tab
+        tabs.getTabAt(mViewAsHome ? 0 : 1).select();
+    }
+
     /**
      * Initializes MosaicView by initializing tiling, setting a fallback page bitmap, and
      * initializing a zoom-scroll observer and click listener.
      */
     private void initFullResView() {
-        if (getContext() == null || mSkipPreviewRendering) return;
-
         // Minimum scale will only be respected under this scale type.
         mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
         // When we set a minimum scale bigger than the scale with which the full image is shown,
