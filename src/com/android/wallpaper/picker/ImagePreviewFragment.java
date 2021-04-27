@@ -94,10 +94,10 @@ public class ImagePreviewFragment extends PreviewFragment implements WallpaperCo
     private TouchForwardingLayout mTouchForwardingLayout;
     private ConstraintLayout mContainer;
     private SurfaceView mWorkspaceSurface;
-    private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     private SurfaceView mWallpaperSurface;
     private WallpaperInfoView mWallpaperInfoView;
 
+    protected WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     protected ViewGroup mLockPreviewContainer;
     protected LockScreenPreviewer2 mLockScreenPreviewer;
 
@@ -141,8 +141,7 @@ public class ImagePreviewFragment extends PreviewFragment implements WallpaperCo
         set.applyTo(mContainer);
 
         mWorkspaceSurface = mContainer.findViewById(R.id.workspace_surface);
-        mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(mWorkspaceSurface,
-                getContext());
+        mWorkspaceSurfaceCallback = createWorkspaceSurfaceCallback(mWorkspaceSurface);
         mWallpaperSurface = mContainer.findViewById(R.id.wallpaper_surface);
         mLockPreviewContainer = mContainer.findViewById(R.id.lock_screen_preview_container);
         mLockScreenPreviewer = new LockScreenPreviewer2(getLifecycle(), getContext(),

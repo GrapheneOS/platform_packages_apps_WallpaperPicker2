@@ -110,11 +110,11 @@ public class LivePreviewFragment extends PreviewFragment implements
     private Point mScreenSize;
     private ViewGroup mPreviewContainer;
     private TouchForwardingLayout mTouchForwardingLayout;
-    private SurfaceView mWorkspaceSurface;
     private SurfaceView mWallpaperSurface;
-    private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     private WallpaperSurfaceCallback mWallpaperSurfaceCallback;
 
+    protected SurfaceView mWorkspaceSurface;
+    protected WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     protected ViewGroup mLockPreviewContainer;
     protected LockScreenPreviewer2 mLockScreenPreviewer;
 
@@ -196,8 +196,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         mWallpaperSurface = mHomePreviewCard.findViewById(R.id.wallpaper_surface);
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
 
-        mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(
-                mWorkspaceSurface, getContext());
+        mWorkspaceSurfaceCallback = createWorkspaceSurfaceCallback(mWorkspaceSurface);
         mWallpaperSurfaceCallback = new WallpaperSurfaceCallback(getContext(),
                 mHomePreview, mWallpaperSurface);
 
