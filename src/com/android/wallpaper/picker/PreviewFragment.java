@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -203,6 +204,11 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
     protected int getDeviceDefaultTheme() {
         return android.R.style.Theme_DeviceDefault;
+    }
+
+    protected WorkspaceSurfaceHolderCallback createWorkspaceSurfaceCallback(
+            SurfaceView workspaceSurface) {
+        return new WorkspaceSurfaceHolderCallback(workspaceSurface, getContext());
     }
 
     @Override
