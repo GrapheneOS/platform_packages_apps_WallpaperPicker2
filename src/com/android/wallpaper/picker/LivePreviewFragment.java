@@ -112,10 +112,11 @@ public class LivePreviewFragment extends PreviewFragment implements
     private TouchForwardingLayout mTouchForwardingLayout;
     private SurfaceView mWorkspaceSurface;
     private SurfaceView mWallpaperSurface;
-    private ViewGroup mLockPreviewContainer;
-    private LockScreenPreviewer2 mLockScreenPreviewer;
     private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     private WallpaperSurfaceCallback mWallpaperSurfaceCallback;
+
+    protected ViewGroup mLockPreviewContainer;
+    protected LockScreenPreviewer2 mLockScreenPreviewer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -200,26 +201,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         mWallpaperSurfaceCallback = new WallpaperSurfaceCallback(getContext(),
                 mHomePreview, mWallpaperSurface);
 
-        TabLayout tabs = view.findViewById(R.id.pill_tabs);
-        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.home_screen_message)));
-        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.lock_screen_message)));
-        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                updateScreenPreview(tab.getPosition() == 0);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
-        });
-
-        // The TabLayout only contains below tabs
-        // 0. Home tab
-        // 1. Lock tab
-        tabs.getTabAt(mViewAsHome ? 0 : 1).select();
+        setUpTabs(view.findViewById(R.id.pill_tabs));
         updateScreenPreview(mViewAsHome);
 
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -240,6 +222,28 @@ public class LivePreviewFragment extends PreviewFragment implements
         updateWallpaperSurface();
         setupCurrentWallpaperPreview();
         renderWorkspaceSurface();
+    }
+
+    protected void setUpTabs(TabLayout tabs) {
+        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.home_screen_message)));
+        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.lock_screen_message)));
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                updateScreenPreview(tab.getPosition() == 0);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
+        // The TabLayout only contains below tabs
+        // 0. Home tab
+        // 1. Lock tab
+        tabs.getTabAt(mViewAsHome ? 0 : 1).select();
     }
 
     private void updateWallpaperSurface() {
