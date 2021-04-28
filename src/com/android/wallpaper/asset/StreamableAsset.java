@@ -365,6 +365,9 @@ public abstract class StreamableAsset extends Asset {
                 } catch (OutOfMemoryError e) {
                     Log.e(TAG, "Out of memory and unable to decode bitmap region", e);
                     return null;
+                } catch (IllegalArgumentException e){
+                    Log.e(TAG, "Illegal argument for decoding bitmap region", e);
+                    return null;
                 }
             }
 
