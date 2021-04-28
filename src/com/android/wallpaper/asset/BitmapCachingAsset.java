@@ -21,6 +21,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.util.LruCache;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityManagerCompat;
@@ -143,5 +144,11 @@ public class BitmapCachingAsset extends Asset {
     @Override
     public boolean supportsTiling() {
         return mOriginalAsset.supportsTiling();
+    }
+
+    @Override
+    public void loadPreviewImage(Activity activity, ImageView imageView, int placeholderColor) {
+        // Honor the original Asset's preview image loading
+        mOriginalAsset.loadPreviewImage(activity, imageView, placeholderColor);
     }
 }
