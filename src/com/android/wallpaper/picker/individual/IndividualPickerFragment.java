@@ -520,11 +520,19 @@ public class IndividualPickerFragment extends AppbarFragment
         maybeSetUpImageGrid();
         setUpBottomSheet();
         // For nav bar edge-to-edge effect.
-        view.findViewById(R.id.wallpaper_grid).setOnApplyWindowInsetsListener((v, windowInsets) -> {
+        view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
+            // For status bar height.
             v.setPadding(
                     v.getPaddingLeft(),
-                    v.getPaddingTop(),
+                    windowInsets.getSystemWindowInsetTop(),
                     v.getPaddingRight(),
+                    v.getPaddingBottom());
+
+            View gridView = v.findViewById(R.id.wallpaper_grid);
+            gridView.setPadding(
+                    gridView.getPaddingLeft(),
+                    gridView.getPaddingTop(),
+                    gridView.getPaddingRight(),
                     windowInsets.getSystemWindowInsetBottom());
             return windowInsets.consumeSystemWindowInsets();
         });
