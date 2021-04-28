@@ -67,7 +67,6 @@ import com.android.wallpaper.util.WallpaperCropUtils;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.BottomActionBar.AccessibilityCallback;
 import com.android.wallpaper.widget.LockScreenPreviewer2;
-import com.android.wallpaper.widget.WallpaperColorsLoader;
 import com.android.wallpaper.widget.WallpaperInfoView;
 
 import com.bumptech.glide.Glide;
@@ -84,7 +83,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Fragment which displays the UI for previewing an individual static wallpaper and its attribution
  * information.
  */
-public class ImagePreviewFragment extends PreviewFragment implements WallpaperColorsLoader.Callback{
+public class ImagePreviewFragment extends PreviewFragment {
 
     private static final String TAG = "ImagePreviewFragment";
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
@@ -175,9 +174,6 @@ public class ImagePreviewFragment extends PreviewFragment implements WallpaperCo
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        WallpaperColorsLoader.getWallpaperColors(getContext(),
-                mWallpaper.getThumbAsset(getContext()), this);
-
         mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
             // Don't continue loading the wallpaper if the Fragment is detached.
             if (getActivity() == null) {
@@ -201,8 +197,7 @@ public class ImagePreviewFragment extends PreviewFragment implements WallpaperCo
         });
     }
 
-    @Override
-    public void onLoaded(@Nullable WallpaperColors colors) {
+    protected void onWallpaperColorsChanged(@Nullable WallpaperColors colors) {
         mLockScreenPreviewer.setColor(colors);
     }
 
@@ -361,6 +356,7 @@ public class ImagePreviewFragment extends PreviewFragment implements WallpaperCo
                                         }, /* delayMillis= */ 100);
                                     }
                                 });
+                        mFullResImageView.post(this::recalculateColors);
                     }
                     getActivity().invalidateOptionsMenu();
                 });
@@ -372,7 +368,7 @@ public class ImagePreviewFragment extends PreviewFragment implements WallpaperCo
                 calculateCropRect(), /* adjustForRtl= */ false, new BitmapCropper.Callback() {
                     @Override
                     public void onBitmapCropped(Bitmap croppedBitmap) {
-                        onLoaded(WallpaperColors.fromBitmap(croppedBitmap));
+                        onWallpaperColorsChanged(WallpaperColors.fromBitmap(croppedBitmap));
                     }
 
                     @Override
