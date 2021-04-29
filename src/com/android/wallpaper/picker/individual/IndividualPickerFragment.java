@@ -125,6 +125,7 @@ public class IndividualPickerFragment extends AppbarFragment
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "individual_set_wallpaper_error_dialog";
     private static final String KEY_NIGHT_MODE = "IndividualPickerFragment.NIGHT_MODE";
+    private static final int MAX_CAPACITY_IN_FEWER_COLUMN_LAYOUT = 8;
 
     /**
      * An interface for updating the thumbnail with the specific wallpaper.
@@ -430,8 +431,6 @@ public class IndividualPickerFragment extends AppbarFragment
             mPackageStatusNotifier.addListener(mAppStatusListener,
                     WallpaperService.SERVICE_INTERFACE);
         }
-
-        maybeSetUpImageGrid();
     }
 
     void fetchWallpapers(boolean forceReload) {
@@ -446,6 +445,7 @@ public class IndividualPickerFragment extends AppbarFragment
                 for (WallpaperInfo wallpaper : wallpapers) {
                     mWallpapers.add(wallpaper);
                 }
+                maybeSetUpImageGrid();
 
                 // Wallpapers may load after the adapter is initialized, in which case we have
                 // to explicitly notify that the data set has changed.
@@ -520,11 +520,19 @@ public class IndividualPickerFragment extends AppbarFragment
         maybeSetUpImageGrid();
         setUpBottomSheet();
         // For nav bar edge-to-edge effect.
-        view.findViewById(R.id.wallpaper_grid).setOnApplyWindowInsetsListener((v, windowInsets) -> {
+        view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
+            // For status bar height.
             v.setPadding(
                     v.getPaddingLeft(),
-                    v.getPaddingTop(),
+                    windowInsets.getSystemWindowInsetTop(),
                     v.getPaddingRight(),
+                    v.getPaddingBottom());
+
+            View gridView = v.findViewById(R.id.wallpaper_grid);
+            gridView.setPadding(
+                    gridView.getPaddingLeft(),
+                    gridView.getPaddingTop(),
+                    gridView.getPaddingRight(),
                     windowInsets.getSystemWindowInsetBottom());
             return windowInsets.consumeSystemWindowInsets();
         });
@@ -557,7 +565,7 @@ public class IndividualPickerFragment extends AppbarFragment
         }
     }
 
-    private void maybeSetUpImageGrid() {
+    protected void maybeSetUpImageGrid() {
         // Skip if mImageGrid been initialized yet
         if (mImageGrid == null) {
             return;
@@ -575,7 +583,7 @@ public class IndividualPickerFragment extends AppbarFragment
         int edgePadding = getEdgePadding();
         mImageGrid.setPadding(edgePadding, mImageGrid.getPaddingTop(), edgePadding,
                 mImageGrid.getPaddingBottom());
-        mTileSizePx = mCategoryProvider.isFeaturedCategory(mCategory)
+        mTileSizePx = isFewerColumnLayout()
                 ? SizeCalculator.getFeaturedIndividualTileSize(getActivity())
                 : SizeCalculator.getIndividualTileSize(getActivity());
         setUpImageGrid();
@@ -584,8 +592,12 @@ public class IndividualPickerFragment extends AppbarFragment
                         mImageGrid, (BottomSheetHost) getParentFragment(), getNumColumns()));
     }
 
+    private boolean isFewerColumnLayout() {
+        return mWallpapers != null && mWallpapers.size() <= MAX_CAPACITY_IN_FEWER_COLUMN_LAYOUT;
+    }
+
     private int getGridItemPaddingHorizontal() {
-        return mCategoryProvider.isFeaturedCategory(mCategory)
+        return isFewerColumnLayout()
                 ? getResources().getDimensionPixelSize(
                 R.dimen.grid_item_featured_individual_padding_horizontal)
                 : getResources().getDimensionPixelSize(
@@ -593,14 +605,14 @@ public class IndividualPickerFragment extends AppbarFragment
     }
 
     private int getGridItemPaddingBottom() {
-        return mCategoryProvider.isFeaturedCategory(mCategory)
+        return isFewerColumnLayout()
                 ? getResources().getDimensionPixelSize(
                 R.dimen.grid_item_featured_individual_padding_bottom)
                 : getResources().getDimensionPixelSize(R.dimen.grid_item_individual_padding_bottom);
     }
 
     private int getEdgePadding() {
-        return mCategoryProvider.isFeaturedCategory(mCategory)
+        return isFewerColumnLayout()
                 ? getResources().getDimensionPixelSize(R.dimen.featured_wallpaper_grid_edge_space)
                 : getResources().getDimensionPixelSize(R.dimen.wallpaper_grid_edge_space);
     }
@@ -878,7 +890,7 @@ public class IndividualPickerFragment extends AppbarFragment
         if (activity == null) {
             return 1;
         }
-        return mCategoryProvider.isFeaturedCategory(mCategory)
+        return isFewerColumnLayout()
                 ? SizeCalculator.getNumFeaturedIndividualColumns(activity)
                 : SizeCalculator.getNumIndividualColumns(activity);
     }
