@@ -31,6 +31,8 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.service.wallpaper.WallpaperService;
+import android.text.TextUtils;
+import android.util.ArraySet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -99,6 +101,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Displays the Main UI for picking an individual wallpaper image.
@@ -295,6 +298,7 @@ public class IndividualPickerFragment extends AppbarFragment
     private WallpaperManager mWallpaperManager;
     private int mWallpaperDestination;
     private WallpaperSelectedListener mWallpaperSelectedListener;
+    private Set<String> mAppliedWallpaperIds;
 
     public static IndividualPickerFragment newInstance(String collectionId) {
         Bundle args = new Bundle();
@@ -508,6 +512,8 @@ public class IndividualPickerFragment extends AppbarFragment
                 setTitle(mCategory.getTitle());
             }
         }
+
+        mAppliedWallpaperIds = getAppliedWallpaperIds();
 
         mImageGrid = (RecyclerView) view.findViewById(R.id.wallpaper_grid);
         if (mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP) {
@@ -1107,6 +1113,28 @@ public class IndividualPickerFragment extends AppbarFragment
         }
     }
 
+    private Set<String> getAppliedWallpaperIds() {
+        WallpaperPreferences prefs =
+                InjectorProvider.getInjector().getPreferences(getContext());
+        android.app.WallpaperInfo wallpaperInfo = mWallpaperManager.getWallpaperInfo();
+        Set<String> appliedWallpaperIds = new ArraySet<>();
+
+        String homeWallpaperId = wallpaperInfo != null ? wallpaperInfo.getServiceName()
+                : prefs.getHomeWallpaperRemoteId();
+        if (!TextUtils.isEmpty(homeWallpaperId)) {
+            appliedWallpaperIds.add(homeWallpaperId);
+        }
+
+        boolean isLockWallpaperApplied =
+                mWallpaperManager.getWallpaperId(WallpaperManager.FLAG_LOCK) >= 0;
+        String lockWallpaperId = prefs.getLockWallpaperRemoteId();
+        if (isLockWallpaperApplied && !TextUtils.isEmpty(lockWallpaperId)) {
+            appliedWallpaperIds.add(lockWallpaperId);
+        }
+
+        return appliedWallpaperIds;
+    }
+
     private void showCheckMarkAndBorderForAppliedWallpaper(boolean show) {
         updateAppliedStatus(mAppliedWallpaperInfo, show);
         if (mSelectedWallpaperInfo == null) {
@@ -1389,8 +1417,7 @@ public class IndividualPickerFragment extends AppbarFragment
                     ? position - 1 : position;
             WallpaperInfo wallpaper = mWallpapers.get(wallpaperIndex);
             ((IndividualHolder) holder).bindWallpaper(wallpaper);
-            String appliedWallpaperId = getAppliedWallpaperId();
-            boolean isWallpaperApplied = wallpaper.getWallpaperId().equals(appliedWallpaperId);
+            boolean isWallpaperApplied = mAppliedWallpaperIds.contains(wallpaper.getWallpaperId());
             boolean isWallpaperSelected = wallpaper.equals(mSelectedWallpaperInfo);
             boolean hasUserSelectedWallpaper = mSelectedWallpaperInfo != null;
 
