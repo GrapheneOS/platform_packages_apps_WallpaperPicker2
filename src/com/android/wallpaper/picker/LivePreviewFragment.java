@@ -78,6 +78,7 @@ import com.android.wallpaper.widget.WallpaperInfoView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Fragment which displays the UI for previewing an individual live wallpaper, its attribution
@@ -110,11 +111,12 @@ public class LivePreviewFragment extends PreviewFragment implements
     private Point mScreenSize;
     private ViewGroup mPreviewContainer;
     private TouchForwardingLayout mTouchForwardingLayout;
-    private SurfaceView mWorkspaceSurface;
     private SurfaceView mWallpaperSurface;
-    private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     private WallpaperSurfaceCallback mWallpaperSurfaceCallback;
+    private Optional<Integer> mLastSelectedTabPositionOptional = Optional.empty();
 
+    protected SurfaceView mWorkspaceSurface;
+    protected WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     protected ViewGroup mLockPreviewContainer;
     protected LockScreenPreviewer2 mLockScreenPreviewer;
 
@@ -196,13 +198,11 @@ public class LivePreviewFragment extends PreviewFragment implements
         mWallpaperSurface = mHomePreviewCard.findViewById(R.id.wallpaper_surface);
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
 
-        mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(
-                mWorkspaceSurface, getContext());
+        mWorkspaceSurfaceCallback = createWorkspaceSurfaceCallback(mWorkspaceSurface);
         mWallpaperSurfaceCallback = new WallpaperSurfaceCallback(getContext(),
                 mHomePreview, mWallpaperSurface);
 
         setUpTabs(view.findViewById(R.id.pill_tabs));
-        updateScreenPreview(mViewAsHome);
 
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -230,7 +230,8 @@ public class LivePreviewFragment extends PreviewFragment implements
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                updateScreenPreview(tab.getPosition() == 0);
+                mLastSelectedTabPositionOptional = Optional.of(tab.getPosition());
+                updateScreenPreview(/* isHomeSelected= */ tab.getPosition() == 0);
             }
 
             @Override
@@ -243,7 +244,9 @@ public class LivePreviewFragment extends PreviewFragment implements
         // The TabLayout only contains below tabs
         // 0. Home tab
         // 1. Lock tab
-        tabs.getTabAt(mViewAsHome ? 0 : 1).select();
+        int tabPosition = mLastSelectedTabPositionOptional.orElseGet(() -> mViewAsHome ? 0 : 1);
+        tabs.getTabAt(tabPosition).select();
+        updateScreenPreview(/* isHomeSelected= */ tabPosition == 0);
     }
 
     private void updateWallpaperSurface() {
