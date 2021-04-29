@@ -278,6 +278,10 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     }
 
     private void reparentWallpaperSurface(SurfaceView parentSurface) {
+        if (mEngine == null) {
+            Log.i(TAG, "Engine is null, was the service disconnected?");
+            return;
+        }
         try {
             SurfaceControl wallpaperMirrorSC = mEngine.mirrorSurfaceControl();
             SurfaceControl parentSC = parentSurface.getSurfaceControl();
