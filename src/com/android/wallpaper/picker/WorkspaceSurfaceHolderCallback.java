@@ -75,13 +75,17 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
 
     /**
      * Set the current wallpaper's colors. This method must be called  if this instance was created
-     * with shouldUseWallpaperColors = true (even with {@code null} colors).
+     * with shouldUseWallpaperColors = true (even with {@code null} colors), and conversely, calling
+     * this method when {@code shouldUseWallpaperColors = false} will be a no-op.
      *
      * @param colors WallpaperColors extracted from the current wallpaper preview, or {@code null}
      *               if none are available.
      * @see #WorkspaceSurfaceHolderCallback(SurfaceView, Context, boolean)
      */
     public void setWallpaperColors(@Nullable WallpaperColors colors) {
+        if (!mShouldUseWallpaperColors) {
+            return;
+        }
         mWallpaperColors = colors;
         mIsWallpaperColorsReady = true;
         maybeRenderPreview();
