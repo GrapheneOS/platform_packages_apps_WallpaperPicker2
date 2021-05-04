@@ -98,12 +98,12 @@ public class ImagePreviewFragment extends PreviewFragment {
     private ImageView mLowResImageView;
     private TouchForwardingLayout mTouchForwardingLayout;
     private ConstraintLayout mContainer;
-    private SurfaceView mWorkspaceSurface;
     private SurfaceView mWallpaperSurface;
     private WallpaperInfoView mWallpaperInfoView;
     private Optional<Integer> mLastSelectedTabPositionOptional = Optional.empty();
     private AtomicInteger mImageScaleChangeCounter = new AtomicInteger(0);
 
+    protected SurfaceView mWorkspaceSurface;
     protected WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     protected ViewGroup mLockPreviewContainer;
     protected LockScreenPreviewer2 mLockScreenPreviewer;
