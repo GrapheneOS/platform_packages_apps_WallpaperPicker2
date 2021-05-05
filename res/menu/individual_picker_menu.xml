@@ -19,5 +19,6 @@
         android:id="@+id/daily_rotation"
         android:title="@string/bottom_action_bar_slideshow_wallpaper"
         android:icon="@drawable/ic_slideshow_24dp"
+        android:iconTint="?android:textColorPrimary"
         android:showAsAction="always"/>
 </menu>
