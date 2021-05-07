@@ -312,10 +312,6 @@ public class DefaultCategoryProvider implements CategoryProvider {
                                 || parser.getDepth() > categoryDepth)
                                 && type != XmlPullParser.END_DOCUMENT) {
                             if (type == XmlPullParser.START_TAG) {
-                                if (!publishedPlaceholder) {
-                                    publishProgress(categoryBuilder.buildPlaceholder());
-                                    publishedPlaceholder = true;
-                                }
                                 WallpaperInfo wallpaper = null;
                                 if (SystemStaticWallpaperInfo.TAG_NAME.equals(parser.getName())) {
                                     wallpaper = SystemStaticWallpaperInfo
@@ -329,12 +325,19 @@ public class DefaultCategoryProvider implements CategoryProvider {
                                 }
                                 if (wallpaper != null) {
                                     categoryBuilder.addWallpaper(wallpaper);
+                                    // Publish progress only if there's at least one wallpaper
+                                    if (!publishedPlaceholder) {
+                                        publishProgress(categoryBuilder.buildPlaceholder());
+                                        publishedPlaceholder = true;
+                                    }
                                 }
                             }
                         }
                         WallpaperCategory category = categoryBuilder.build();
-                        categories.add(category);
-                        publishProgress(category);
+                        if (!category.getUnmodifiableWallpapers().isEmpty()) {
+                            categories.add(category);
+                            publishProgress(category);
+                        }
                     }
                 }
             } catch (IOException | XmlPullParserException e) {
