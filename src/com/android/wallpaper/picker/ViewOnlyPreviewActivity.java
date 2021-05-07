@@ -51,11 +51,8 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
-    }
 
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
+        enableFullScreen();
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);

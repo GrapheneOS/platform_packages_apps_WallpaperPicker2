@@ -344,4 +344,11 @@
 
     <!-- Error message of the wallpaper's collection doesn't exist. [CHAR_LIMIT=NONE] -->
     <string name="collection_not_exist_msg">The collection doesn\'t exist</string>
+
+    <!-- Label for a button which lets user hide certain parts of the fullscreen preview UI. [CHAR LIMIT=30] -->
+    <string name="hide_ui_preview_text">Hide UI Preview</string>
+
+    <!-- Label for a button which lets user show certain parts of the fullscreen preview UI. [CHAR LIMIT=30] -->
+    <string name="show_ui_preview_text">Show UI Preview</string>
+
 </resources>
