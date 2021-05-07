@@ -122,9 +122,8 @@ public class LiveWallpaperThumbAsset extends Asset {
             if (mThumbnailDrawable != null) {
                 return mThumbnailDrawable;
             }
-            try {
-                AssetFileDescriptor assetFileDescriptor =
-                        mContext.getContentResolver().openAssetFileDescriptor(mUri, "r");
+            try (AssetFileDescriptor assetFileDescriptor =
+                         mContext.getContentResolver().openAssetFileDescriptor(mUri, "r")) {
                 if (assetFileDescriptor != null) {
                     mThumbnailDrawable = new BitmapDrawable(mContext.getResources(),
                             BitmapFactory.decodeStream(assetFileDescriptor.createInputStream()));
