@@ -37,6 +37,8 @@ import android.service.wallpaper.IWallpaperService;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceControl;
+import android.view.SurfaceHolder;
+import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.WindowManager.LayoutParams;
 
@@ -238,10 +240,10 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     public void engineShown(IWallpaperEngine engine)  {
         mEngineReady = true;
         if (mContainerView != null) {
-            reparentWallpaperSurface(mContainerView);
+            mContainerView.post(() -> reparentWallpaperSurface(mContainerView));
         }
         if (mSecondContainerView != null) {
-            reparentWallpaperSurface(mSecondContainerView);
+            mSecondContainerView.post(() -> reparentWallpaperSurface(mSecondContainerView));
         }
 
         mContainerView.post(() -> {
@@ -282,9 +284,37 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
             Log.i(TAG, "Engine is null, was the service disconnected?");
             return;
         }
+        if (parentSurface.getSurfaceControl() != null) {
+            mirrorAndReparent(parentSurface);
+        } else {
+            Log.d(TAG, "SurfaceView not initialized yet, adding callback");
+            parentSurface.getHolder().addCallback(new Callback() {
+                @Override
+                public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void surfaceCreated(SurfaceHolder surfaceHolder) {
+                    mirrorAndReparent(parentSurface);
+                    parentSurface.getHolder().removeCallback(this);
+                }
+
+                @Override
+                public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+
+                }
+            });
+        }
+    }
+
+    private void mirrorAndReparent(SurfaceView parentSurface) {
         try {
-            SurfaceControl wallpaperMirrorSC = mEngine.mirrorSurfaceControl();
             SurfaceControl parentSC = parentSurface.getSurfaceControl();
+            SurfaceControl wallpaperMirrorSC = mEngine.mirrorSurfaceControl();
+            if (wallpaperMirrorSC == null) {
+                return;
+            }
             float[] values = getScale(parentSurface);
             SurfaceControl.Transaction t = new SurfaceControl.Transaction();
             t.setMatrix(wallpaperMirrorSC, values[MSCALE_X], values[MSKEW_Y],
