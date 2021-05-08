@@ -15,6 +15,9 @@
  */
 package com.android.wallpaper.picker;
 
+import static com.android.wallpaper.picker.WallpaperPickerDelegate.PREVIEW_LIVE_WALLPAPER_REQUEST_CODE;
+import static com.android.wallpaper.picker.WallpaperPickerDelegate.PREVIEW_WALLPAPER_REQUEST_CODE;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -44,6 +47,8 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.CategoryProvider;
+import com.android.wallpaper.model.LiveWallpaperInfo;
+import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.util.DeepLinkUtils;
@@ -289,8 +294,9 @@ public class CategorySelectorFragment extends AppbarFragment {
 
         @Override
         public void onClick(View view) {
+            Activity activity = getActivity();
             final UserEventLogger eventLogger =
-                    InjectorProvider.getInjector().getUserEventLogger(getActivity());
+                    InjectorProvider.getInjector().getUserEventLogger(activity);
             eventLogger.logCategorySelected(mCategory.getCollectionId());
 
             if (mCategory.supportsCustomPhotos()) {
@@ -306,6 +312,20 @@ public class CategorySelectorFragment extends AppbarFragment {
                                 // No-op
                             }
                         });
+                return;
+            }
+
+            if (mCategory.isSingleWallpaperCategory()) {
+                WallpaperInfo wallpaper = mCategory.getSingleWallpaper();
+                // Log click on individual wallpaper
+                eventLogger.logIndividualWallpaperSelected(mCategory.getCollectionId());
+
+                InjectorProvider.getInjector().getWallpaperPersister(activity)
+                        .setWallpaperInfoInPreview(wallpaper);
+                wallpaper.showPreview(activity,
+                        new PreviewActivity.PreviewActivityIntentFactory(),
+                        wallpaper instanceof LiveWallpaperInfo ? PREVIEW_LIVE_WALLPAPER_REQUEST_CODE
+                                : PREVIEW_WALLPAPER_REQUEST_CODE);
                 return;
             }
 

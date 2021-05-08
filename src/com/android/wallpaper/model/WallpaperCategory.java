@@ -21,6 +21,7 @@ import android.content.res.Resources;
 import android.util.AttributeSet;
 
 import androidx.annotation.IdRes;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import com.android.wallpaper.asset.Asset;
@@ -81,6 +82,17 @@ public class WallpaperCategory extends Category {
     @Override
     public boolean isEnumerable() {
         return true;
+    }
+
+    @Override
+    public boolean isSingleWallpaperCategory() {
+        return mWallpapers != null && mWallpapers.size() == 1;
+    }
+
+    @Nullable
+    @Override
+    public WallpaperInfo getSingleWallpaper() {
+        return isSingleWallpaperCategory() ? mWallpapers.get(0) : null;
     }
 
     /**
