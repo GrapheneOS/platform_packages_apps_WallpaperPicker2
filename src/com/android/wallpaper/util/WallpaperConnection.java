@@ -141,8 +141,9 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
                 mEngine = null;
             }
             try {
+                mService.detach();
                 mContext.unbindService(this);
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException | RemoteException e) {
                 Log.i(TAG, "Can't unbind wallpaper service. "
                         + "It might have crashed, just ignoring.");
             }
