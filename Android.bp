@@ -79,8 +79,7 @@ genrule {
    out: ["wallpaperpicker2_res.zip"],
    cmd: "INPUTS=($(in)) && "
        + "RES_DIR=$$(dirname $$(dirname $${INPUTS[0]})) && "
-       + "$(location soong_zip) -o $(out) -C $$RES_DIR -D $$RES_DIR && "
-       + "cp $(out) ."
+       + "$(location soong_zip) -o $(out) -C $$RES_DIR -D $$RES_DIR"
 }
 
 java_defaults {
