@@ -17,6 +17,6 @@
 <shape android:shape="rectangle"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:androidprv="http://schemas.android.com/apk/prv/res/android">
-    <solid android:color="?androidprv:attr/colorSurfaceVariant" />
+    <solid android:color="?androidprv:attr/colorSurface" />
     <corners android:radius="@dimen/pill_tabs_corner_radius" />
 </shape>
