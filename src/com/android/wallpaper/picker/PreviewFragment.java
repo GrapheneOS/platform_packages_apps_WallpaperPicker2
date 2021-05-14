@@ -236,9 +236,9 @@ public abstract class PreviewFragment extends AppbarFragment implements
         setBottomActionBarAndToolbarActions();
     }
 
-    protected void setBottomActionBarAndToolbarActions() {
+    private void setBottomActionBarAndToolbarActions() {
         mBottomActionBar.setActionClickListener(EDIT, (view) -> {
-            setFullScreen(true);
+            mFullScreenAnimation.startAnimation(/* toFullScreen= */ true);
             mBottomActionBar.deselectAction(EDIT);
         });
 
@@ -261,7 +261,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
             @Override
             public void handleOnBackPressed() {
                 if (mFullScreenAnimation.isFullScreen()) {
-                    setFullScreen(false);
+                    mFullScreenAnimation.startAnimation(/* toFullScreen= */ false);
                 } else {
                     getActivity().finish();
                 }
@@ -459,9 +459,5 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected boolean isRtl() {
         return getResources().getConfiguration().getLayoutDirection()
                     == View.LAYOUT_DIRECTION_RTL;
-    }
-
-    protected void setFullScreen(boolean fullScreen) {
-        mFullScreenAnimation.startAnimation(fullScreen);
     }
 }
