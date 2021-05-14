@@ -140,6 +140,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         mLoadingProgressBar.hide();
         mContainer = view.findViewById(R.id.container);
         mTouchForwardingLayout = mContainer.findViewById(R.id.touch_forwarding_layout);
+        mTouchForwardingLayout.setForwardingEnabled(true);
 
         // Set aspect ratio on the preview card dynamically.
         ConstraintSet set = new ConstraintSet();
@@ -263,7 +264,6 @@ public class ImagePreviewFragment extends PreviewFragment {
             }
         });
 
-        // Will trigger onActionSelected callback to update the editing state.
         mBottomActionBar.show();
         // Loads wallpaper info and populate into view.
         setUpExploreIntentAndLabel(this::populateWallpaperInfo);
@@ -597,12 +597,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                 mHost = null;
             }
         }
-    };
-
-    @Override
-    protected void setFullScreen(boolean fullScreen) {
-        super.setFullScreen(fullScreen);
-        mTouchForwardingLayout.setForwardingEnabled(fullScreen);
     }
 
     private void updateScreenPreview(boolean isHomeSelected) {
