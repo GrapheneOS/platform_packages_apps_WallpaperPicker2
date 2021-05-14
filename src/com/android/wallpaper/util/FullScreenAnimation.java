@@ -65,7 +65,7 @@ public class FullScreenAnimation {
     private int mNavigationBarHeight;
 
     private static final float HIDE_ICONS_TOP_RATIO = 0.25f;
-    private static final float HIDE_ICONS_BOTTOM_RATIO = 0.875f;
+    private static final float HIDE_ICONS_BOTTOM_RATIO = 0.85f;
 
     private boolean mIsHomeSelected = true;
 
@@ -360,9 +360,9 @@ public class FullScreenAnimation {
                     + mView.getResources().getDimension(R.dimen.bottom_actions_height)
                     + mView.getResources().getDimension(R.dimen.pill_tabs_height);
 
-            mPillButtonsTranslation = -(
-                    mView.getResources()
-                            .getDimension(R.dimen.fullscreen_preview_button_margin_bottom)
+            mPillButtonsTranslation = -(getNavigationBarHeight()
+                    + mView.getResources().getDimension(
+                            R.dimen.fullscreen_preview_button_margin_bottom)
                     + mView.getResources().getDimension(R.dimen.pill_tabs_height));
 
             mScaleIsSet = true;
