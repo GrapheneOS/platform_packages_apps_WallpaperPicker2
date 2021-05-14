@@ -228,11 +228,15 @@ public class FullScreenAnimation {
      */
     public void ensureToolbarIsCorrectlyColored() {
         TextView textView = mView.findViewById(R.id.custom_toolbar_title);
-        Toolbar toolbar = mView.findViewById(R.id.toolbar);
-        ImageButton button = (ImageButton) toolbar.getNavigationView();
-
         textView.setTextColor(mCurrentTextColor);
-        button.setColorFilter(mCurrentTextColor);
+
+        Toolbar toolbar = mView.findViewById(R.id.toolbar);
+        // It may be null because there's no back arrow in some cases. For example: no back arrow
+        // for Photos launching case.
+        ImageButton button = (ImageButton) toolbar.getNavigationView();
+        if (button != null) {
+            button.setColorFilter(mCurrentTextColor);
+        }
     }
 
     /**
@@ -313,7 +317,11 @@ public class FullScreenAnimation {
         colorAnimator.addUpdateListener(animation -> {
             int color = (int) animation.getAnimatedValue();
             textView.setTextColor(color);
-            button.setColorFilter(color);
+            // It may be null because there's no back arrow in some cases. For example: no back
+            // arrow for Photos launching case.
+            if (button != null) {
+                button.setColorFilter(color);
+            }
         });
         colorAnimator.start();
 

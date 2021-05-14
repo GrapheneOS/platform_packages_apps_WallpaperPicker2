@@ -305,6 +305,10 @@ public class ImagePreviewFragment extends PreviewFragment {
      * initializing a zoom-scroll observer and click listener.
      */
     private void initFullResView() {
+        if (mRawWallpaperSize == null || mFullResImageView == null) {
+            return;
+        }
+
         // Minimum scale will only be respected under this scale type.
         mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
         // When we set a minimum scale bigger than the scale with which the full image is shown,
@@ -539,6 +543,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                         R.layout.fullscreen_wallpaper_preview, null);
                 mFullResImageView = wallpaperPreviewContainer.findViewById(R.id.full_res_image);
                 mLowResImageView = wallpaperPreviewContainer.findViewById(R.id.low_res_image);
+                initFullResView();
                 // Scale the mWallpaperSurface based on system zoom's scale so that the wallpaper is
                 // rendered in a larger surface than what preview shows, simulating the behavior of
                 // the actual wallpaper surface.
