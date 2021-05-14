@@ -18,6 +18,7 @@ package com.android.wallpaper.picker;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.CUSTOMIZE;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.DELETE;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.EDIT;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMATION;
 
 import android.annotation.SuppressLint;
@@ -64,6 +65,7 @@ import androidx.slice.widget.SliceView;
 import com.android.wallpaper.R;
 import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
+import com.android.wallpaper.util.FullScreenAnimation;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
@@ -213,6 +215,7 @@ public class LivePreviewFragment extends PreviewFragment implements
                 view.removeOnLayoutChangeListener(this);
             }
         });
+
         return view;
     }
 
@@ -257,6 +260,8 @@ public class LivePreviewFragment extends PreviewFragment implements
     private void updateScreenPreview(boolean isHomeSelected) {
         mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.INVISIBLE);
         mLockPreviewContainer.setVisibility(isHomeSelected ? View.INVISIBLE : View.VISIBLE);
+
+        mFullScreenAnimation.setIsHomeSelected(isHomeSelected);
     }
 
     private void setupCurrentWallpaperPreview() {
@@ -376,7 +381,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
-        mBottomActionBar.showActionsOnly(INFORMATION, DELETE, CUSTOMIZE, APPLY);
+        mBottomActionBar.showActionsOnly(INFORMATION, DELETE, EDIT, CUSTOMIZE, APPLY);
         mBottomActionBar.setActionClickListener(APPLY, unused -> onSetWallpaperClicked(null));
         mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
 
@@ -460,6 +465,12 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
         mLockScreenPreviewer.setColor(colors);
+
+        mFullScreenAnimation.setFullScreenTextColor(
+                colors == null || (colors.getColorHints()
+                        & WallpaperColors.HINT_SUPPORTS_DARK_TEXT) == 0
+                            ? FullScreenAnimation.FullScreenTextColor.LIGHT
+                            : FullScreenAnimation.FullScreenTextColor.DARK);
     }
 
     @Override

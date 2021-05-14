@@ -21,24 +21,26 @@
     android:layout_height="match_parent"
     android:background="?android:colorPrimary">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/bottom_actions_height"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <FrameLayout
-            android:id="@+id/section_header_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <include layout="@layout/section_header" />
+            android:id="@+id/pill_tabs_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/bottom_actions_height"
+            android:paddingHorizontal="@dimen/pill_tabs_horizontal_margin">
+            <include layout="@layout/pill_tabs" />
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/screen_preview_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_marginTop="?android:attr/actionBarSize"
+            android:layout_marginBottom="@dimen/bottom_actions_plus_pill_tabs">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -87,13 +89,15 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/pill_tabs_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/pill_tabs_horizontal_margin">
-            <include layout="@layout/pill_tabs" />
+            android:id="@+id/section_header_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <include layout="@layout/section_header" android:id="@+id/toolbar_container"/>
         </FrameLayout>
-    </LinearLayout>
+
+        <include layout="@layout/fullscreen_buttons" android:id="@+id/fullscreen_buttons"/>
+
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/bottom_action_bar_container"
