@@ -50,6 +50,8 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
 
+        enableFullScreen();
+
         mUserEventLogger = InjectorProvider.getInjector().getUserEventLogger(getApplicationContext());
         mUserEventLogger.logStandalonePreviewLaunched();
 
