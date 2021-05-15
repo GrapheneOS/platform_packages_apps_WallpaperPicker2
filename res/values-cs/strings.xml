@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Plocha"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Obrazovka uzamčení"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Plocha a uzamknutí"</string>
-    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Nastavení tapety"</string>
+    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Nastavení tapety"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Plocha"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Obrazovka uzamčení"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Plocha a obrazovka uzamčení"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Plocha a obrazovka uzamčení"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Střídající se obrázková tapeta"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Chcete-li zde zobrazit aktuální tapetu, aplikace <xliff:g id="APP_NAME">%1$s</xliff:g> potřebuje přístup k úložišti v zařízení."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Aby aplikace Tapety mohla zobrazit aktuální tapetu, potřebuje přístup k úložišti v zařízení.\n\nChcete-li toto nastavení změnit, v informacích o aplikaci Tapety přejděte do sekce Oprávnění."</string>

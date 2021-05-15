@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Ecrã principal"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Ecrã de bloqueio"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Ecrã principal e de bloqueio"</string>
-    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Definir imagem de fundo"</string>
+    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Definir imagem de fundo"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Ecrã principal"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Ecrã de bloqueio"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Ecrã principal e de bloqueio"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Ecrã principal e ecrã de bloqueio"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Imagem de fundo rotativa"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Para apresentar a imagem de fundo atual aqui, a aplicação <xliff:g id="APP_NAME">%1$s</xliff:g> necessita de acesso ao armazenamento do dispositivo."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Para apresentar a imagem de fundo atual aqui, a aplicação Imagens de fundo necessita de acesso ao armazenamento do dispositivo.\n\nPara alterar esta definição, aceda à área Autorizações das informações da aplicação Imagens de fundo."</string>

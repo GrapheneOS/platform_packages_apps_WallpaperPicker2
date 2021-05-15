@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Ecran de pornire"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Ecran de blocare"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"De pornire și de blocare"</string>
-    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Setați ca imagine de fundal"</string>
+    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Setați imaginea de fundal"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Ecran de pornire"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Ecran de blocare"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Ecranul de pornire și ecranul de blocare"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Ecranul de pornire și ecranul de blocare"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Rotirea imaginilor de fundal"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Pentru a afișa aici imaginea de fundal curentă, <xliff:g id="APP_NAME">%1$s</xliff:g> trebuie să poată accesa spațiul de stocare al dispozitivului."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Pentru a afișa imaginea de fundal actuală aici, aplicația Imagini de fundal trebuie să poată accesa spațiul de stocare al dispozitivului.\n\nPentru a schimba această setare, accesați zona Permisiuni din informațiile aplicației Imagini de fundal."</string>

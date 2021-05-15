@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"მთავარი ეკრანი"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"ჩაკეტილი ეკრანი"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"მთავარი და ჩაკეტილი ეკრანები"</string>
-    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"ფონის დაყენება"</string>
+    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"ფონის დაყენება"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"მთავარი ეკრანი"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"ჩაკეტილი ეკრანი"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"მთავარი და ჩაკეტილი ეკრანი"</string>
+    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"მთავარი ეკრანი და ჩაკეტილი ეკრანი"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"ფონი ცვალებადი სურათებით"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"ამჟამინდელი ფონის აქ საჩვენებლად <xliff:g id="APP_NAME">%1$s</xliff:g> საჭიროებს წვდომას თქვენი მოწყობილობის მეხსიერებაზე."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"ამჟამინდელი ფონის აქ საჩვენებლად Wallpapers საჭიროებს წვდომას თქვენი მოწყობილობის მეხსიერებაზე.\n\nამ პარამეტრის შესაცვლელად გადადით Wallpapers-ის აპის ინფორმაციის ნებართვების არეზე."</string>
