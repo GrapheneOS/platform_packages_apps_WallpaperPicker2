@@ -49,6 +49,8 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
 
+        enableFullScreen();
+
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
 

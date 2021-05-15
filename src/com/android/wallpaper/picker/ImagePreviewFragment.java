@@ -60,6 +60,7 @@ import com.android.wallpaper.module.BitmapCropper;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
+import com.android.wallpaper.util.FullScreenAnimation;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
@@ -139,6 +140,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         mLoadingProgressBar.hide();
         mContainer = view.findViewById(R.id.container);
         mTouchForwardingLayout = mContainer.findViewById(R.id.touch_forwarding_layout);
+        mTouchForwardingLayout.setForwardingEnabled(true);
 
         // Set aspect ratio on the preview card dynamically.
         ConstraintSet set = new ConstraintSet();
@@ -168,6 +170,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         // Trim some memory from Glide to make room for the full-size image in this fragment.
         Glide.get(activity).setMemoryCategory(MemoryCategory.LOW);
         setUpLoadingIndicator();
+
         return view;
     }
 
@@ -199,6 +202,12 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     protected void onWallpaperColorsChanged(@Nullable WallpaperColors colors) {
         mLockScreenPreviewer.setColor(colors);
+
+        mFullScreenAnimation.setFullScreenTextColor(
+                colors == null || (colors.getColorHints()
+                        & WallpaperColors.HINT_SUPPORTS_DARK_TEXT) == 0
+                            ? FullScreenAnimation.FullScreenTextColor.LIGHT
+                            : FullScreenAnimation.FullScreenTextColor.DARK);
     }
 
     @Override
@@ -237,10 +246,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                         R.layout.wallpaper_info_view, /* root= */null);
         mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
         mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
-        mBottomActionBar.setActionClickListener(EDIT, v ->
-                setEditingEnabled(mBottomActionBar.isActionSelected(EDIT))
-        );
-        mBottomActionBar.setActionSelectedListener(EDIT, this::setEditingEnabled);
+
         mBottomActionBar.setActionClickListener(APPLY, this::onSetWallpaperClicked);
 
         // Update target view's accessibility param since it will be blocked by the bottom sheet
@@ -258,8 +264,6 @@ public class ImagePreviewFragment extends PreviewFragment {
             }
         });
 
-        // Will trigger onActionSelected callback to update the editing state.
-        mBottomActionBar.setDefaultSelectedButton(EDIT);
         mBottomActionBar.show();
         // Loads wallpaper info and populate into view.
         setUpExploreIntentAndLabel(this::populateWallpaperInfo);
@@ -301,6 +305,10 @@ public class ImagePreviewFragment extends PreviewFragment {
      * initializing a zoom-scroll observer and click listener.
      */
     private void initFullResView() {
+        if (mRawWallpaperSize == null || mFullResImageView == null) {
+            return;
+        }
+
         // Minimum scale will only be respected under this scale type.
         mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
         // When we set a minimum scale bigger than the scale with which the full image is shown,
@@ -520,7 +528,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     }
 
     private class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
-
         private Surface mLastSurface;
         private SurfaceControlViewHost mHost;
 
@@ -536,6 +543,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                         R.layout.fullscreen_wallpaper_preview, null);
                 mFullResImageView = wallpaperPreviewContainer.findViewById(R.id.full_res_image);
                 mLowResImageView = wallpaperPreviewContainer.findViewById(R.id.low_res_image);
+                initFullResView();
                 // Scale the mWallpaperSurface based on system zoom's scale so that the wallpaper is
                 // rendered in a larger surface than what preview shows, simulating the behavior of
                 // the actual wallpaper surface.
@@ -594,14 +602,12 @@ public class ImagePreviewFragment extends PreviewFragment {
                 mHost = null;
             }
         }
-    };
-
-    private void setEditingEnabled(boolean enabled) {
-        mTouchForwardingLayout.setForwardingEnabled(enabled);
     }
 
     private void updateScreenPreview(boolean isHomeSelected) {
         mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.INVISIBLE);
         mLockPreviewContainer.setVisibility(isHomeSelected ? View.INVISIBLE : View.VISIBLE);
+
+        mFullScreenAnimation.setIsHomeSelected(isHomeSelected);
     }
 }
