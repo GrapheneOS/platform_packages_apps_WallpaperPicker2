@@ -201,6 +201,9 @@ public class ImagePreviewFragment extends PreviewFragment {
     }
 
     protected void onWallpaperColorsChanged(@Nullable WallpaperColors colors) {
+        // Make it enabled since the buttons are disabled while wallpaper is moving.
+        mBottomActionBar.enableActionButtonsWithBottomSheet(true);
+
         mLockScreenPreviewer.setColor(colors);
 
         mFullScreenAnimation.setFullScreenTextColor(
@@ -356,6 +359,9 @@ public class ImagePreviewFragment extends PreviewFragment {
                                     @Override
                                     public void onCenterChanged(PointF newCenter, int origin) {
                                         super.onCenterChanged(newCenter, origin);
+                                        // Disallow bottom sheet to popup when wallpaper is moving
+                                        // by user dragging.
+                                        mBottomActionBar.enableActionButtonsWithBottomSheet(false);
                                         mImageScaleChangeCounter.incrementAndGet();
                                         mFullResImageView.postDelayed(() -> {
                                             if (mImageScaleChangeCounter.decrementAndGet() == 0) {
@@ -368,6 +374,16 @@ public class ImagePreviewFragment extends PreviewFragment {
                     }
                     getActivity().invalidateOptionsMenu();
                 });
+
+        mFullResImageView.setOnTouchListener((v, ev) -> {
+            // Consume the touch event for collapsing bottom sheet while it is expanded or
+            // dragging (not collapsed).
+            if (mBottomActionBar != null && !mBottomActionBar.isBottomSheetCollapsed()) {
+                mBottomActionBar.collapseBottomSheetIfExpanded();
+                return true;
+            }
+            return false;
+        });
     }
 
     private void recalculateColors() {
