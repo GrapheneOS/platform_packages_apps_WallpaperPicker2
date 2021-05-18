@@ -427,6 +427,12 @@ public class LivePreviewFragment extends PreviewFragment implements
                     showDeleteConfirmDialog());
         }
         mBottomActionBar.show();
+        // Action buttons are disabled when live wallpaper is not loaded.
+        mBottomActionBar.disableActions();
+        // Enable buttons if loaded, or wait for it.
+        if (isLoaded()) {
+            mBottomActionBar.enableActions();
+        }
     }
 
     @Override
@@ -460,6 +466,10 @@ public class LivePreviewFragment extends PreviewFragment implements
                 .setUpdateListener(value -> placeholder.setAlpha(
                         (int) (255 * (1 - value.getAnimatedFraction()))))
                 .start();
+
+        if (mBottomActionBar != null) {
+            mBottomActionBar.enableActions();
+        }
     }
 
     @Override

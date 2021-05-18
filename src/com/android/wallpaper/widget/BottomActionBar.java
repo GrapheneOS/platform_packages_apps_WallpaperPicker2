@@ -207,6 +207,15 @@ public class BottomActionBar extends FrameLayout {
         hideBottomSheetAndDeselectButtonIfExpanded();
     }
 
+    /** Enables or disables action buttons that show the bottom sheet. */
+    public void enableActionButtonsWithBottomSheet(boolean enabled) {
+        if (enabled) {
+            enableActions(mContentViewMap.keySet().toArray(new BottomAction[0]));
+        } else {
+            disableActions(mContentViewMap.keySet().toArray(new BottomAction[0]));
+        }
+    }
+
     /**
      * Sets a click listener to a specific action.
      *
@@ -432,6 +441,11 @@ public class BottomActionBar extends FrameLayout {
 
     public boolean isActionSelected(BottomAction action) {
         return mActionMap.get(action).isSelected();
+    }
+
+    /** Returns {@code true} if the state of bottom sheet is collapsed. */
+    public boolean isBottomSheetCollapsed() {
+        return mBottomSheetBehavior.getState() == STATE_COLLAPSED;
     }
 
     /** Resets {@link BottomActionBar} to initial state. */
