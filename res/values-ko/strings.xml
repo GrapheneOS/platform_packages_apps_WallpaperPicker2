@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"홈 화면"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"잠금 화면"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"홈 및 잠금"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"배경화면 설정"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"배경화면으로 설정"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"홈 화면"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"잠금 화면"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"홈 화면 및 잠금 화면"</string>
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"홈 및 잠금 화면"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"회전 이미지 배경화면"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"현재 배경화면을 여기에 표시하려면 <xliff:g id="APP_NAME">%1$s</xliff:g>에서 기기의 저장용량에 액세스할 수 있어야 합니다."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"여기에 현재 배경화면을 표시하려면 배경화면 앱에서 기기의 저장소에 액세스할 수 있어야 합니다.\n\n이 설정을 변경하려면 배경화면 앱 정보의 권한 섹션으로 이동하세요."</string>
@@ -94,4 +94,8 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"배경화면"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"배경화면 미리보기"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"컬렉션이 없습니다."</string>
+    <!-- no translation found for hide_ui_preview_text (6766076482511252295) -->
+    <skip />
+    <!-- no translation found for show_ui_preview_text (5993063062417070806) -->
+    <skip />
 </resources>

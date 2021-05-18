@@ -26,16 +26,16 @@
     <string name="try_again" msgid="8278874823700921234">"Обиди се пак"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Тапетот не може да се постави."</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Тапетот не може да се вчита. Сликата е оштетена или недостапна."</string>
-    <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Моментално поставен"</string>
+    <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Моментално"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Дневен тапет"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"Почетен и заклучен екран"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Почетен екран"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Заклучен екран"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Почетен и заклучен екран"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Поставете го тапетот"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Постави тапет"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Почетен екран"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Заклучен екран"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Почетен и заклучен екран"</string>
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Почетен и заклучен екран"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Тапет со ротирачки слики"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"За да го прикаже тековниот тапет тука, <xliff:g id="APP_NAME">%1$s</xliff:g> бара пристап до меморијата на уредот."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"За да го прикаже тековниот тапет тука, Wallpapers бара пристап до меморијата на уредот.\n\nЗа да ја промените поставкава, одете во областа „Дозволи“ во информациите за апликацијата Wallpapers."</string>
@@ -94,4 +94,8 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"Тапет"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Преглед на тапет"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Збирката не постои"</string>
+    <!-- no translation found for hide_ui_preview_text (6766076482511252295) -->
+    <skip />
+    <!-- no translation found for show_ui_preview_text (5993063062417070806) -->
+    <skip />
 </resources>

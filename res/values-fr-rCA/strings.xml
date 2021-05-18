@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Écran d\'accueil"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Écran de verrouillage"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Écr. d\'accueil et de verrouill."</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Sélectionner"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Définir comme fond d\'écran"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Écran d\'accueil"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Écran de verrouillage"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Écran d\'accueil et écran de verrouillage"</string>
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Écran d\'accueil et écran de verrouillage"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Rotation de l\'image de fond d\'écran"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Pour afficher le fond d\'écran actuel ici, <xliff:g id="APP_NAME">%1$s</xliff:g> a besoin d\'accéder au répertoire de stockage de votre appareil."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Pour afficher le fond d\'écran actuel ici, l\'application Fonds d\'écran doit pouvoir accéder au répertoire de stockage de l\'appareil.\n\nPour modifier ce réglage, accédez à la section Autorisations de l\'application."</string>
@@ -94,4 +94,8 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"Fond d\'écran"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Aperçu du fond d\'écran"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"La collection n\'existe pas"</string>
+    <!-- no translation found for hide_ui_preview_text (6766076482511252295) -->
+    <skip />
+    <!-- no translation found for show_ui_preview_text (5993063062417070806) -->
+    <skip />
 </resources>
