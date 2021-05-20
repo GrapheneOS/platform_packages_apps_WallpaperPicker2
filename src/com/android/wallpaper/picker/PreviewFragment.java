@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources.NotFoundException;
 import android.content.res.TypedArray;
-import android.graphics.Insets;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -32,7 +31,6 @@ import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -46,7 +44,6 @@ import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
-import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.Injector;
@@ -207,21 +204,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
                     mFullScreenAnimation.setWindowInsets(windowInsets);
                     mFullScreenAnimation.placeViews();
-
-                    // Consume only the top inset (status bar), to let other content in the Activity
-                    // consume the nav bar (ie, by using "fitSystemWindows")
-                    return BuildCompat.isAtLeastQ()
-                            ? new WindowInsets.Builder(windowInsets).setSystemWindowInsets(
-                                    Insets.of(
-                                        windowInsets.getSystemWindowInsetLeft(),
-                                        /* top= */ 0,
-                                        windowInsets.getStableInsetRight(),
-                                        0)).build()
-                            : windowInsets.replaceSystemWindowInsets(
-                                    windowInsets.getSystemWindowInsetLeft(),
-                                    /* top= */ 0,
-                                    windowInsets.getStableInsetRight(),
-                                    0);
+                    return windowInsets.consumeSystemWindowInsets();
                 }
         );
 
