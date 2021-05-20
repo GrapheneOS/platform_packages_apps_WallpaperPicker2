@@ -20,6 +20,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -33,6 +34,7 @@ import com.android.wallpaper.util.SurfaceViewUtils;
 /** A surface holder callback that renders user's workspace on the passed in surface view. */
 public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
 
+    private static final String TAG = "WsSurfaceHolderCallback";
     private static final String KEY_WALLPAPER_COLORS = "wallpaper_colors";
     private final SurfaceView mWorkspaceSurface;
     private final PreviewUtils mPreviewUtils;
@@ -118,7 +120,7 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
             try {
                 mCallback.replyTo.send(mCallback);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                Log.w(TAG, "Couldn't call cleanup on workspace preview", e);
             } finally {
                 mCallback = null;
             }
