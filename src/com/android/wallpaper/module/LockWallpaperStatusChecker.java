@@ -16,10 +16,10 @@
 package com.android.wallpaper.module;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
-import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.compat.WallpaperManagerCompat;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class LockWallpaperStatusChecker {
      */
     public static boolean isLockWallpaperSet(Context context) {
         // Lock screen wallpapers are not supported until Android N.
-        if (!BuildCompat.isAtLeastN()) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             return false;
         }
 
