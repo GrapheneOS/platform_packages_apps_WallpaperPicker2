@@ -94,8 +94,6 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"വാൾപേപ്പർ"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"വാൾപേപ്പർ പ്രിവ്യൂ"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"ശേഖരം നിലവിലില്ല"</string>
-    <!-- no translation found for hide_ui_preview_text (6766076482511252295) -->
-    <skip />
-    <!-- no translation found for show_ui_preview_text (5993063062417070806) -->
-    <skip />
+    <string name="hide_ui_preview_text" msgid="6766076482511252295">"UI പ്രിവ്യൂ മറയ്‌ക്കുക"</string>
+    <string name="show_ui_preview_text" msgid="5993063062417070806">"UI പ്രിവ്യൂ കാണിക്കുക"</string>
 </resources>
