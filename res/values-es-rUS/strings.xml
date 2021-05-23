@@ -30,11 +30,11 @@
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Fondo de pantalla diario"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"Pantalla principal y de bloqueo"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Pantalla principal"</string>
-    <string name="lock_screen_message" msgid="1534506081955058013">"Pantalla bloqueada"</string>
+    <string name="lock_screen_message" msgid="1534506081955058013">"Pantalla de bloqueo"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Pantalla principal y bloqueada"</string>
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Establecer como fondo de pantalla en"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Pantalla principal"</string>
-    <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Pantalla bloqueada"</string>
+    <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Pantalla de bloqueo"</string>
     <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Página principal y bloqueada"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Fondo de pantalla rotatorio con imágenes"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Para mostrar el fondo de pantalla actual aquí, <xliff:g id="APP_NAME">%1$s</xliff:g> necesita acceso al almacenamiento de tu dispositivo."</string>
