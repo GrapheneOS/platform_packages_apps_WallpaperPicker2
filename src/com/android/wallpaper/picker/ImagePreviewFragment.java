@@ -372,7 +372,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                                 });
                         mFullResImageView.post(this::recalculateColors);
                     }
-                    getActivity().invalidateOptionsMenu();
                 });
 
         mFullResImageView.setOnTouchListener((v, ev) -> {
