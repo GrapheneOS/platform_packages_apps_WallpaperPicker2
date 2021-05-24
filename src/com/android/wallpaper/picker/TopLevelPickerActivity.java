@@ -48,7 +48,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
-import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.compat.ButtonDrawableSetterCompat;
 import com.android.wallpaper.config.Flags;
 import com.android.wallpaper.model.Category;
@@ -274,7 +273,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
                     view.getPaddingRight(), view.getPaddingBottom());
             // Consume only the top inset (status bar), to let other content in the Activity consume
             // the nav bar (ie, by using "fitSystemWindows")
-            if (BuildCompat.isAtLeastQ()) {
+            if (VERSION.SDK_INT >= VERSION_CODES.Q) {
                 WindowInsets.Builder builder = new WindowInsets.Builder(windowInsets);
                 builder.setSystemWindowInsets(Insets.of(windowInsets.getSystemWindowInsetLeft(),
                         0, windowInsets.getStableInsetRight(),
