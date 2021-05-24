@@ -66,9 +66,7 @@ public interface CategoryProvider {
     void resetIfNeeded();
 
     /**
-     * Checks if the category is a featured category.
-     *
-     * @param category the category to be verified
+     * Checks if featured collection available.
      */
-    boolean isFeaturedCategory(Category category);
+    boolean isFeaturedCollectionAvailable();
 }
