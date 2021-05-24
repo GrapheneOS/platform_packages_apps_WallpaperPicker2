@@ -171,8 +171,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
         mWallpaperSetter = new WallpaperSetter(injector.getWallpaperPersister(appContext),
                 injector.getPreferences(appContext), mUserEventLogger, mTestingModeEnabled);
 
-        setHasOptionsMenu(true);
-
         Activity activity = getActivity();
         List<String> attributions = getAttributions(activity);
         if (attributions.size() > 0 && attributions.get(0) != null) {
