@@ -122,6 +122,7 @@ public class CategorySelectorFragment extends AppbarFragment {
     private ArrayList<Category> mCategories = new ArrayList<>();
     private Point mTileSizePx;
     private boolean mAwaitingCategories;
+    private boolean mIsFeaturedCollectionAvailable;
 
     public CategorySelectorFragment() {
         mAdapter = new CategoryAdapter(mCategories);
@@ -250,6 +251,8 @@ public class CategorySelectorFragment extends AppbarFragment {
             mAdapter.notifyItemRemoved(mAdapter.getItemCount() - 1);
             mAwaitingCategories = false;
         }
+
+        mIsFeaturedCollectionAvailable = mCategoryProvider.isFeaturedCollectionAvailable();
     }
 
     void notifyDataSetChanged() {
@@ -443,7 +446,7 @@ public class CategorySelectorFragment extends AppbarFragment {
                 return ITEM_VIEW_TYPE_MY_PHOTOS;
             }
 
-            if (mCategoryProvider.isFeaturedCategory(mCategories.get(position))) {
+            if (mIsFeaturedCollectionAvailable && (position == 1 || position == 2)) {
                 return ITEM_VIEW_TYPE_FEATURED_CATEGORY;
             }
 
