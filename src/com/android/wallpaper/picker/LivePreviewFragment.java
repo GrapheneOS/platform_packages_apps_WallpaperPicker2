@@ -37,6 +37,7 @@ import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.service.wallpaper.IWallpaperConnection;
@@ -63,7 +64,6 @@ import androidx.slice.widget.SliceLiveData;
 import androidx.slice.widget.SliceView;
 
 import com.android.wallpaper.R;
-import com.android.wallpaper.compat.BuildCompat;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.util.FullScreenAnimation;
 import com.android.wallpaper.util.ResourceUtils;
@@ -490,7 +490,7 @@ public class LivePreviewFragment extends PreviewFragment implements
 
     @SuppressLint("NewApi") //Already checking with isAtLeastQ
     protected Uri getSettingsSliceUri(android.app.WallpaperInfo info) {
-        if (BuildCompat.isAtLeastQ()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             return info.getSettingsSliceUri();
         }
         return null;
