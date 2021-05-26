@@ -386,9 +386,16 @@ public class ImagePreviewFragment extends PreviewFragment {
     }
 
     private void recalculateColors() {
+        Context context = getContext();
+        if (context == null) {
+            Log.e(TAG, "Got null context, skip recalculating colors");
+            return;
+        }
+
         BitmapCropper bitmapCropper = InjectorProvider.getInjector().getBitmapCropper();
         bitmapCropper.cropAndScaleBitmap(mWallpaperAsset, mFullResImageView.getScale(),
-                calculateCropRect(), /* adjustForRtl= */ false, new BitmapCropper.Callback() {
+                calculateCropRect(context), /* adjustForRtl= */ false,
+                new BitmapCropper.Callback() {
                     @Override
                     public void onBitmapCropped(Bitmap croppedBitmap) {
                         onWallpaperColorsChanged(WallpaperColors.fromBitmap(croppedBitmap));
@@ -495,9 +502,9 @@ public class ImagePreviewFragment extends PreviewFragment {
         mFullResImageView.setScaleAndCenter(minWallpaperZoom, centerPosition);
     }
 
-    private Rect calculateCropRect() {
+    private Rect calculateCropRect(Context context) {
         float wallpaperZoom = mFullResImageView.getScale();
-        Context context = requireContext().getApplicationContext();
+        Context appContext = context.getApplicationContext();
 
         Rect visibleFileRect = new Rect();
         mFullResImageView.visibleFileRect(visibleFileRect);
@@ -508,10 +515,10 @@ public class ImagePreviewFragment extends PreviewFragment {
         int minCrop = Math.min(cropWidth, cropHeight);
         Point hostViewSize = new Point(cropWidth, cropHeight);
 
-        Resources res = context.getResources();
+        Resources res = appContext.getResources();
         Point cropSurfaceSize = WallpaperCropUtils.calculateCropSurfaceSize(res, maxCrop, minCrop);
 
-        Rect cropRect = WallpaperCropUtils.calculateCropRect(context, hostViewSize,
+        Rect cropRect = WallpaperCropUtils.calculateCropRect(appContext, hostViewSize,
                 cropSurfaceSize, mRawWallpaperSize, visibleFileRect, wallpaperZoom);
         return cropRect;
     }
@@ -519,7 +526,7 @@ public class ImagePreviewFragment extends PreviewFragment {
     @Override
     protected void setCurrentWallpaper(@Destination int destination) {
         mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, mWallpaperAsset,
-                destination, mFullResImageView.getScale(), calculateCropRect(),
+                destination, mFullResImageView.getScale(), calculateCropRect(getContext()),
                 new SetWallpaperCallback() {
                     @Override
                     public void onSuccess(WallpaperInfo wallpaperInfo) {
