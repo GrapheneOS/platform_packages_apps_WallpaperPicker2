@@ -423,7 +423,7 @@ public class FullScreenAnimation {
                         "translationY", bottomActionBarTranslation),
                 ObjectAnimator.ofFloat(mView.findViewById(R.id.pill_tabs_container),
                         "translationY", bottomActionBarTranslation),
-                ObjectAnimator.ofFloat(mView.findViewById(R.id.fullscreen_buttons),
+                ObjectAnimator.ofFloat(mView.findViewById(R.id.fullscreen_buttons_container),
                         "translationY", pillButtonsTranslation),
                 animationRounding,
                 animationHide
