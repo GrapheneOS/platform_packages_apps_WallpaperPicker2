@@ -214,18 +214,24 @@ public abstract class PreviewFragment extends AppbarFragment implements
         super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar = bottomActionBar;
         // TODO: Extract the common code here.
-        setBottomActionBarAndToolbarActions();
+        setBottomActionBarAndFullScreenActions();
     }
 
-    private void setBottomActionBarAndToolbarActions() {
+    private void setBottomActionBarAndFullScreenActions() {
         mBottomActionBar.setActionClickListener(EDIT, (view) -> {
             mFullScreenAnimation.startAnimation(/* toFullScreen= */ true);
             mBottomActionBar.deselectAction(EDIT);
         });
 
-        mRootView.findViewById(R.id.hide_ui_preview_button).setOnClickListener(
+        // Update the button text for the current workspace visibility.
+        Button hideUiPreviewButton = mRootView.findViewById(R.id.hide_ui_preview_button);
+        hideUiPreviewButton.setText(mFullScreenAnimation.getWorkspaceVisibility()
+                ? R.string.hide_ui_preview_text
+                : R.string.show_ui_preview_text);
+        hideUiPreviewButton.setOnClickListener(
                 (button) -> {
                     boolean visible = mFullScreenAnimation.getWorkspaceVisibility();
+                    // Update the button text for the next workspace visibility.
                     ((Button) button).setText(visible
                             ? R.string.show_ui_preview_text
                             : R.string.hide_ui_preview_text);

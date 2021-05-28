@@ -95,7 +95,15 @@
             <include layout="@layout/section_header" android:id="@+id/toolbar_container"/>
         </FrameLayout>
 
-        <include layout="@layout/fullscreen_buttons" android:id="@+id/fullscreen_buttons"/>
+        <FrameLayout
+            android:id="@+id/fullscreen_buttons_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="@dimen/fullscreen_preview_button_margin"
+            android:paddingHorizontal="@dimen/pill_tabs_horizontal_margin">
+            <include layout="@layout/fullscreen_buttons" />
+        </FrameLayout>
 
     </FrameLayout>
 
