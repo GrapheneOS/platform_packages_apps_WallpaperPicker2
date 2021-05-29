@@ -97,16 +97,21 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
         if ((mShouldUseWallpaperColors && !mIsWallpaperColorsReady) || mLastSurface == null) {
             return;
         }
-        Bundle result = requestPreview(mWorkspaceSurface);
-        if (result != null) {
-            mWorkspaceSurface.setChildSurfacePackage(
-                    SurfaceViewUtils.getSurfacePackage(result));
-            mCallback = SurfaceViewUtils.getCallback(result);
-
-            if (mNeedsToCleanUp) {
-                cleanUp();
+        mWorkspaceSurface.post(() -> {
+            if (mWorkspaceSurface == null) {
+                return;
             }
-        }
+            Bundle result = requestPreview(mWorkspaceSurface);
+            if (result != null) {
+                mWorkspaceSurface.setChildSurfacePackage(
+                        SurfaceViewUtils.getSurfacePackage(result));
+                mCallback = SurfaceViewUtils.getCallback(result);
+
+                if (mNeedsToCleanUp) {
+                    cleanUp();
+                }
+            }
+        });
     }
 
     @Override
