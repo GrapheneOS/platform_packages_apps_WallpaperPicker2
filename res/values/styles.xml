@@ -143,6 +143,7 @@
 
     <!-- Set wallpaper destination item -->
     <style name="set_wallpaper_destination_item">
+        <item name="android:fontFamily">@*android:string/config_bodyFontFamily</item>
         <item name="android:minHeight">@dimen/set_wallpaper_dialog_item_min_height</item>
         <item name="android:minWidth">@dimen/set_wallpaper_dialog_item_min_width</item>
         <item name="android:textAlignment">center</item>
