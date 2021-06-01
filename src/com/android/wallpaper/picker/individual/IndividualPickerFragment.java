@@ -598,7 +598,7 @@ public class IndividualPickerFragment extends AppbarFragment
                         mImageGrid, (BottomSheetHost) getParentFragment(), getNumColumns()));
     }
 
-    private boolean isFewerColumnLayout() {
+    boolean isFewerColumnLayout() {
         return mWallpapers != null && mWallpapers.size() <= MAX_CAPACITY_IN_FEWER_COLUMN_LAYOUT;
     }
 
@@ -1142,7 +1142,7 @@ public class IndividualPickerFragment extends AppbarFragment
         }
     }
 
-    private boolean shouldShowRotationTile() {
+    boolean shouldShowRotationTile() {
         return mFormFactor == FormFactorChecker.FORM_FACTOR_DESKTOP && isRotationEnabled();
     }
 

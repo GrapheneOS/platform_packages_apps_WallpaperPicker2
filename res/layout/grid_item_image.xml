@@ -62,6 +62,15 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true" />
 
+            <ImageView
+                android:id="@+id/indicator_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/ic_download_badge"
+                android:visibility="gone" />
+
             <FrameLayout
                 android:id="@+id/loading_indicator_container"
                 android:layout_width="match_parent"
