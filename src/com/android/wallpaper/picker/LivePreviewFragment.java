@@ -103,10 +103,14 @@ public class LivePreviewFragment extends PreviewFragment implements
     protected WallpaperInfoView mWallpaperInfoView;
     protected CardView mHomePreviewCard;
     protected ImageView mHomePreview;
+    protected SurfaceView mWorkspaceSurface;
+    protected WallpaperSurfaceCallback mWallpaperSurfaceCallback;
+    protected WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
+    protected ViewGroup mLockPreviewContainer;
+    protected LockScreenPreviewer2 mLockScreenPreviewer;
 
     private Intent mDeleteIntent;
     private Intent mSettingsIntent;
-
     private SliceView mSettingsSliceView;
     private LiveData<Slice> mSettingsLiveData;
     private View mLoadingScrim;
@@ -114,13 +118,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     private ViewGroup mPreviewContainer;
     private TouchForwardingLayout mTouchForwardingLayout;
     private SurfaceView mWallpaperSurface;
-    private WallpaperSurfaceCallback mWallpaperSurfaceCallback;
     private Optional<Integer> mLastSelectedTabPositionOptional = Optional.empty();
-
-    protected SurfaceView mWorkspaceSurface;
-    protected WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
-    protected ViewGroup mLockPreviewContainer;
-    protected LockScreenPreviewer2 mLockScreenPreviewer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -165,6 +163,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         mLoadingScrim = view.findViewById(R.id.loading);
+        mLoadingProgressBar.hide();
         setUpLoadingIndicator();
 
         Activity activity = requireActivity();
@@ -312,7 +311,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         mWallpaperSurface.getHolder().removeCallback(mWallpaperSurfaceCallback);
     }
 
-    private void previewLiveWallpaper(ImageView thumbnailView) {
+    protected void previewLiveWallpaper(ImageView thumbnailView) {
         thumbnailView.post(() -> {
             Activity activity = getActivity();
             if (activity == null) {
@@ -320,10 +319,12 @@ public class LivePreviewFragment extends PreviewFragment implements
             }
             if (mWallpaperSurfaceCallback.getHomeImageWallpaper() != null) {
                 mWallpaper.getThumbAsset(activity.getApplicationContext())
-                        .loadPreviewImage(activity,
+                        .loadLowResDrawable(activity,
                                 mWallpaperSurfaceCallback.getHomeImageWallpaper(),
                                 ResourceUtils.getColorAttr(getActivity(),
-                                        android.R.attr.colorSecondary));
+                                        android.R.attr.colorSecondary),
+                                new WallpaperPreviewBitmapTransformation(
+                                        activity.getApplicationContext(), isRtl()));
             }
 
             setUpLiveWallpaperPreview(mWallpaper, thumbnailView,
@@ -332,8 +333,9 @@ public class LivePreviewFragment extends PreviewFragment implements
         });
     }
 
-    private void setUpLiveWallpaperPreview(com.android.wallpaper.model.WallpaperInfo homeWallpaper,
-            ImageView previewView, Drawable thumbnail) {
+    protected void setUpLiveWallpaperPreview(
+            com.android.wallpaper.model.WallpaperInfo homeWallpaper, ImageView previewView,
+            Drawable thumbnail) {
         Activity activity = getActivity();
         if (activity == null || activity.isFinishing()) {
             return;
@@ -449,9 +451,6 @@ public class LivePreviewFragment extends PreviewFragment implements
                 .setInterpolator(AnimationUtils.loadInterpolator(activity,
                         android.R.interpolator.fast_out_linear_in))
                 .withEndAction(() -> {
-                    if (mLoadingProgressBar != null) {
-                        mLoadingProgressBar.hide();
-                    }
                     mLoadingScrim.setVisibility(View.GONE);
                 }));
         final Drawable placeholder = mHomePreview.getDrawable() == null
