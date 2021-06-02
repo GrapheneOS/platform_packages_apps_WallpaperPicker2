@@ -32,7 +32,10 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Key;
+import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -103,6 +106,19 @@ public class LiveWallpaperThumbAsset extends Asset {
                 .load(LiveWallpaperThumbAsset.this)
                 .apply(reqOptions)
                 .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageView);
+    }
+
+    @Override
+    public void loadLowResDrawable(Activity activity, ImageView imageView, int placeholderColor,
+            BitmapTransformation transformation) {
+        MultiTransformation multiTransformation =
+                new MultiTransformation(new FitCenter(), transformation);
+        Glide.with(activity)
+                .asDrawable()
+                .load(LiveWallpaperThumbAsset.this)
+                .apply(RequestOptions.bitmapTransform(multiTransformation)
+                        .placeholder(new ColorDrawable(placeholderColor)))
                 .into(imageView);
     }
 
