@@ -170,7 +170,7 @@
     <dimen name="option_title_line_height">20dp</dimen>
 
     <!-- Dimensions for the pill tabs. -->
-    <dimen name="pill_tabs_height">60dp</dimen>
+    <dimen name="pill_tabs_height">56dp</dimen>
     <dimen name="pill_tabs_corner_radius">50dp</dimen>
     <dimen name="pill_tabs_horizontal_margin">24dp</dimen>
 
