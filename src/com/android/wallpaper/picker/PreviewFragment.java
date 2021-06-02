@@ -249,9 +249,13 @@ public abstract class PreviewFragment extends AppbarFragment implements
             public void handleOnBackPressed() {
                 if (mFullScreenAnimation.isFullScreen()) {
                     mFullScreenAnimation.startAnimation(/* toFullScreen= */ false);
-                } else {
-                    getActivity().finish();
+                    return;
                 }
+                if (mBottomActionBar != null && !mBottomActionBar.isBottomSheetCollapsed()) {
+                    mBottomActionBar.collapseBottomSheetIfExpanded();
+                    return;
+                }
+                getActivity().finish();
             }
         };
 

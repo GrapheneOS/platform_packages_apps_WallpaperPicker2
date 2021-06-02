@@ -175,10 +175,6 @@ public class BottomActionBar extends FrameLayout {
     @Override
     public void onVisibilityAggregated(boolean isVisible) {
         super.onVisibilityAggregated(isVisible);
-        if (!isVisible) {
-            hideBottomSheetAndDeselectButtonIfExpanded();
-            mBottomSheetBehavior.reset();
-        }
         mVisibilityChangeListeners.forEach(listener -> listener.onVisibilityChange(isVisible));
     }
 
@@ -275,11 +271,6 @@ public class BottomActionBar extends FrameLayout {
     /** Set back button visibility. */
     public void setBackButtonVisibility(int visibility) {
         findViewById(R.id.action_back).setVisibility(visibility);
-    }
-
-    /** Get back button visibility. */
-    public int getBackButtonVisibility() {
-        return findViewById(R.id.action_back).getVisibility();
     }
 
     /** Binds the cancel button to back key. */
