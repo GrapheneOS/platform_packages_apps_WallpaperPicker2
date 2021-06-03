@@ -176,7 +176,6 @@
     </style>
 
     <style name="FullContentPreviewCard" parent="PreviewCard">
-        <item name="android:clipChildren">true</item>
         <item name="contentPadding">0dp</item>
     </style>
 
