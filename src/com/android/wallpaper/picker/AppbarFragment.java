@@ -205,11 +205,9 @@ public abstract class AppbarFragment extends BottomActionBarFragment
 
     @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
-        if (mUpArrowEnabled && mHost.isUpArrowSupported()) {
-            bottomActionBar.setBackButtonVisibility(GONE);
-        } else {
-            bottomActionBar.setBackButtonVisibility(VISIBLE);
-        }
+        bottomActionBar.setBackButtonVisibility(
+                mUpArrowEnabled && mHost.isUpArrowSupported() ? GONE : VISIBLE);
+        super.onBottomActionBarReady(bottomActionBar);
     }
 
     @Override
