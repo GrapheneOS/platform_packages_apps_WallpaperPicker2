@@ -30,5 +30,5 @@
         app:tabIndicatorFullWidth="true"
         app:tabIndicatorGravity="stretch"
         app:tabTextColor="@color/tab_text_color"
-        app:tabSelectedTextColor="@color/text_color_primary_on_accent"
+        app:tabSelectedTextColor="?androidprv:attr/textColorOnAccent"
         app:tabTextAppearance="@style/PillTabsTextAppearance" />
