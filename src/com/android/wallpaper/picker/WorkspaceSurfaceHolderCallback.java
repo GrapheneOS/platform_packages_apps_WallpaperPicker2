@@ -97,12 +97,11 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
         if ((mShouldUseWallpaperColors && !mIsWallpaperColorsReady) || mLastSurface == null) {
             return;
         }
-        mWorkspaceSurface.post(() -> {
-            if (mWorkspaceSurface == null) {
-                return;
-            }
-            Bundle result = requestPreview(mWorkspaceSurface);
+        requestPreview(mWorkspaceSurface, (result) -> {
             if (result != null) {
+                if (mLastSurface == null) {
+                    return;
+                }
                 mWorkspaceSurface.setChildSurfacePackage(
                         SurfaceViewUtils.getSurfacePackage(result));
                 mCallback = SurfaceViewUtils.getCallback(result);
@@ -118,7 +117,9 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder) { }
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        mLastSurface = null;
+    }
 
     public void cleanUp() {
         if (mCallback != null) {
@@ -138,11 +139,12 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
         mLastSurface = null;
     }
 
-    protected Bundle requestPreview(SurfaceView workspaceSurface) {
+    protected void requestPreview(SurfaceView workspaceSurface,
+            PreviewUtils.WorkspacePreviewCallback callback) {
         Bundle request = SurfaceViewUtils.createSurfaceViewRequest(workspaceSurface);
         if (mWallpaperColors != null) {
             request.putParcelable(KEY_WALLPAPER_COLORS, mWallpaperColors);
         }
-        return mPreviewUtils.renderPreview(request);
+        mPreviewUtils.renderPreview(request, callback);
     }
 }

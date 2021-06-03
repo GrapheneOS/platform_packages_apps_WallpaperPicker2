@@ -142,12 +142,14 @@
     </style>
 
     <!-- Set wallpaper destination item -->
+    <!-- Studio can't directly reference ?androidprv:attr/textColorOnAccent here,
+     so we set the text color on the dialog items instead. -->
     <style name="set_wallpaper_destination_item">
+        <item name="android:fontFamily">@*android:string/config_bodyFontFamily</item>
         <item name="android:minHeight">@dimen/set_wallpaper_dialog_item_min_height</item>
         <item name="android:minWidth">@dimen/set_wallpaper_dialog_item_min_width</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">@dimen/abc_text_size_small_material</item>
-        <item name="android:textColor">@color/text_color_primary_on_accent</item>
         <item name="android:letterSpacing">0.02</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/dialog_option_background</item>
@@ -175,7 +177,6 @@
     </style>
 
     <style name="FullContentPreviewCard" parent="PreviewCard">
-        <item name="android:clipChildren">true</item>
         <item name="contentPadding">0dp</item>
     </style>
 
