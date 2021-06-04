@@ -484,7 +484,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     private int setBitmapToWallpaperManagerCompat(Bitmap wallpaperBitmap, boolean allowBackup,
             int whichWallpaper) {
         ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
-        if (wallpaperBitmap.compress(CompressFormat.JPEG, DEFAULT_COMPRESS_QUALITY, tmpOut)) {
+        if (wallpaperBitmap.compress(CompressFormat.PNG, DEFAULT_COMPRESS_QUALITY, tmpOut)) {
             try {
                 byte[] outByteArray = tmpOut.toByteArray();
                 return mWallpaperManagerCompat.setStream(
