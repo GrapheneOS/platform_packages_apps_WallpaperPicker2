@@ -193,8 +193,8 @@ public final class WallpaperCropUtils {
     public static Rect calculateCropRect(Context context, float wallpaperZoom, Point wallpaperSize,
             Point defaultCropSurfaceSize, Point targetHostSize, int scrollX, int scrollY) {
         // Calculate Rect of wallpaper in physical pixel terms (i.e., scaled to current zoom).
-        int scaledWallpaperWidth = (int) (wallpaperSize.x * wallpaperZoom);
-        int scaledWallpaperHeight = (int) (wallpaperSize.y * wallpaperZoom);
+        int scaledWallpaperWidth = Math.round(wallpaperSize.x * wallpaperZoom);
+        int scaledWallpaperHeight = Math.round(wallpaperSize.y * wallpaperZoom);
         Rect rect = new Rect();
         rect.set(0, 0, scaledWallpaperWidth, scaledWallpaperHeight);
 
