@@ -76,10 +76,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.Locale;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -103,7 +101,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     private ConstraintLayout mContainer;
     private SurfaceView mWallpaperSurface;
     private WallpaperInfoView mWallpaperInfoView;
-    private Optional<Integer> mLastSelectedTabPositionOptional = Optional.empty();
     private AtomicInteger mImageScaleChangeCounter = new AtomicInteger(0);
 
     protected SurfaceView mWorkspaceSurface;
@@ -283,31 +280,6 @@ public class ImagePreviewFragment extends PreviewFragment {
         if (mRawWallpaperSize != null) {
             mBottomActionBar.enableActions();
         }
-    }
-
-    protected void setUpTabs(TabLayout tabs) {
-        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.home_screen_message)));
-        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.lock_screen_message)));
-        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mLastSelectedTabPositionOptional = Optional.of(tab.getPosition());
-                updateScreenPreview(/* isHomeSelected= */ tab.getPosition() == 0);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
-        });
-
-        // The TabLayout only contains below tabs
-        // 0. Home tab
-        // 1. Lock tab
-        int tabPosition = mLastSelectedTabPositionOptional.orElseGet(() -> mViewAsHome ? 0 : 1);
-        tabs.getTabAt(tabPosition).select();
-        updateScreenPreview(/* isHomeSelected= */ tabPosition == 0);
     }
 
     /**
@@ -633,8 +605,10 @@ public class ImagePreviewFragment extends PreviewFragment {
         }
     }
 
-    private void updateScreenPreview(boolean isHomeSelected) {
+    @Override
+    protected void updateScreenPreview(boolean isHomeSelected) {
         mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.INVISIBLE);
+
         mLockPreviewContainer.setVisibility(isHomeSelected ? View.INVISIBLE : View.VISIBLE);
 
         mFullScreenAnimation.setIsHomeSelected(isHomeSelected);
