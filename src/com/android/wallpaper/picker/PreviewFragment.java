@@ -55,8 +55,11 @@ import com.android.wallpaper.module.WallpaperSetter;
 import com.android.wallpaper.util.FullScreenAnimation;
 import com.android.wallpaper.widget.BottomActionBar;
 
+import com.google.android.material.tabs.TabLayout;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Base Fragment to display the UI for previewing an individual wallpaper
@@ -76,6 +79,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
      * wallpaper with pan and crop position to the device.
      */
     static final int MODE_CROP_AND_SET_WALLPAPER = 1;
+    private Optional<Integer> mLastSelectedTabPositionOptional = Optional.empty();
 
     /**
      * Possible preview modes for the fragment.
@@ -382,6 +386,33 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
         startActivity(mExploreIntent);
     }
+
+    protected void setUpTabs(TabLayout tabs) {
+        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.home_screen_message)));
+        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.lock_screen_message)));
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mLastSelectedTabPositionOptional = Optional.of(tab.getPosition());
+                updateScreenPreview(/* isHomeSelected= */ tab.getPosition() == 0);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
+        // The TabLayout only contains below tabs
+        // 0. Home tab
+        // 1. Lock tab
+        int tabPosition = mLastSelectedTabPositionOptional.orElseGet(() -> mViewAsHome ? 0 : 1);
+        tabs.getTabAt(tabPosition).select();
+        updateScreenPreview(/* isHomeSelected= */ tabPosition == 0);
+    }
+
+    protected abstract void updateScreenPreview(boolean isHomeSelected);
 
     /**
      * Sets current wallpaper to the device based on current zoom and scroll state.
