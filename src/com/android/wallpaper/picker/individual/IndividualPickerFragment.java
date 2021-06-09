@@ -42,6 +42,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -1418,14 +1419,16 @@ public class IndividualPickerFragment extends AppbarFragment
             WallpaperInfo wallpaper = mWallpapers.get(wallpaperIndex);
             ((IndividualHolder) holder).bindWallpaper(wallpaper);
             boolean isWallpaperApplied = mAppliedWallpaperIds.contains(wallpaper.getWallpaperId());
-            boolean isWallpaperSelected = wallpaper.equals(mSelectedWallpaperInfo);
-            boolean hasUserSelectedWallpaper = mSelectedWallpaperInfo != null;
 
             if (isWallpaperApplied) {
                 mSelectedAdapterPosition = position;
                 mAppliedWallpaperInfo = wallpaper;
             }
 
+            CardView container = holder.itemView.findViewById(R.id.wallpaper_container);
+            int radiusId = isFewerColumnLayout() ? R.dimen.grid_item_all_radius
+                    : R.dimen.grid_item_all_radius_small;
+            container.setRadius(getResources().getDimension(radiusId));
             CustomShapeImageView thumbnail = holder.itemView.findViewById(R.id.thumbnail);
             thumbnail.setClipped(isWallpaperApplied);
         }
