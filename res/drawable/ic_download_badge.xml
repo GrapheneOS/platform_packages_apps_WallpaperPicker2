@@ -6,7 +6,7 @@
             <size
                 android:width="@dimen/grid_item_badge_size"
                 android:height="@dimen/grid_item_badge_size" />
-            <solid android:color="?androidprv:attr/colorAccentPrimary" />
+            <solid android:color="?androidprv:attr/colorSurfaceVariant" />
         </shape>
     </item>
     <item
