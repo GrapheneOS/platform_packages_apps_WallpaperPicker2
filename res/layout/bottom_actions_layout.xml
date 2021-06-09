@@ -45,7 +45,6 @@
         android:layout_height="@dimen/bottom_actions_height"
         android:paddingTop="@dimen/bottom_actions_top_padding"
         android:paddingBottom="@dimen/bottom_actions_bottom_padding"
-        android:clickable="true"
         android:background="?android:colorBackground"
         android:theme="@style/BottomActionItemStyle"
         android:layout_alignParentBottom="true"
