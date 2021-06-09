@@ -15,6 +15,9 @@
  */
 package com.android.wallpaper.picker;
 
+import static android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS;
+import static android.view.View.IMPORTANT_FOR_ACCESSIBILITY_YES;
+
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.CUSTOMIZE;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.DELETE;
@@ -77,10 +80,7 @@ import com.android.wallpaper.widget.LockScreenPreviewer2;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
 import com.android.wallpaper.widget.WallpaperInfoView;
 
-import com.google.android.material.tabs.TabLayout;
-
 import java.util.Locale;
-import java.util.Optional;
 
 /**
  * Fragment which displays the UI for previewing an individual live wallpaper, its attribution
@@ -118,7 +118,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     private ViewGroup mPreviewContainer;
     private TouchForwardingLayout mTouchForwardingLayout;
     private SurfaceView mWallpaperSurface;
-    private Optional<Integer> mLastSelectedTabPositionOptional = Optional.empty();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -226,38 +225,17 @@ public class LivePreviewFragment extends PreviewFragment implements
         renderWorkspaceSurface();
     }
 
-    protected void setUpTabs(TabLayout tabs) {
-        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.home_screen_message)));
-        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.lock_screen_message)));
-        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mLastSelectedTabPositionOptional = Optional.of(tab.getPosition());
-                updateScreenPreview(/* isHomeSelected= */ tab.getPosition() == 0);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
-        });
-
-        // The TabLayout only contains below tabs
-        // 0. Home tab
-        // 1. Lock tab
-        int tabPosition = mLastSelectedTabPositionOptional.orElseGet(() -> mViewAsHome ? 0 : 1);
-        tabs.getTabAt(tabPosition).select();
-        updateScreenPreview(/* isHomeSelected= */ tabPosition == 0);
-    }
-
     private void updateWallpaperSurface() {
         mWallpaperSurface.getHolder().addCallback(mWallpaperSurfaceCallback);
         mWallpaperSurface.setZOrderMediaOverlay(true);
     }
 
-    private void updateScreenPreview(boolean isHomeSelected) {
+    @Override
+    protected void updateScreenPreview(boolean isHomeSelected) {
         mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.INVISIBLE);
+        if (!isHomeSelected) {
+            mWorkspaceSurfaceCallback.cleanUp();
+        }
         mLockPreviewContainer.setVisibility(isHomeSelected ? View.INVISIBLE : View.VISIBLE);
 
         mFullScreenAnimation.setIsHomeSelected(isHomeSelected);
@@ -387,19 +365,22 @@ public class LivePreviewFragment extends PreviewFragment implements
         mBottomActionBar.setActionClickListener(APPLY, unused -> onSetWallpaperClicked(null));
         mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
 
+        View pillTabsContainer = getView().findViewById(R.id.pill_tabs_container);
         // Update target view's accessibility param since it will be blocked by the bottom sheet
         // when expanded.
         mBottomActionBar.setAccessibilityCallback(new AccessibilityCallback() {
             @Override
             public void onBottomSheetCollapsed() {
-                mPreviewContainer.setImportantForAccessibility(
-                        View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+                mPreviewContainer.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
+                pillTabsContainer.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
             }
 
             @Override
             public void onBottomSheetExpanded() {
                 mPreviewContainer.setImportantForAccessibility(
-                        View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+                        IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+                pillTabsContainer.setImportantForAccessibility(
+                        IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
             }
         });
         final Uri uriSettingsSlice = getSettingsSliceUri(mWallpaper.getWallpaperComponent());

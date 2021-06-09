@@ -64,8 +64,7 @@ public class FullScreenAnimation {
     private int mStatusBarHeight;
     private int mNavigationBarHeight;
 
-    private static final float HIDE_ICONS_TOP_RATIO = 0.25f;
-    private static final float HIDE_ICONS_BOTTOM_RATIO = 0.85f;
+    private static final float HIDE_ICONS_TOP_RATIO = 0.2f;
 
     private boolean mIsHomeSelected = true;
 
@@ -266,7 +265,7 @@ public class FullScreenAnimation {
                     0,
                     Math.round(mWorkspaceHeight * HIDE_ICONS_TOP_RATIO),
                     mWorkspaceWidth,
-                    Math.round(mWorkspaceHeight * HIDE_ICONS_BOTTOM_RATIO)));
+                    mWorkspaceHeight + Math.round(mPillButtonsTranslation / mScale)));
             mView.findViewById(R.id.lock_screen_preview_container).setVisibility(View.VISIBLE);
         } else {
             int half = mWorkspaceHeight / 2;
@@ -392,8 +391,8 @@ public class FullScreenAnimation {
         // Animation to hide some of the home screen icons.
         float fromTop = toFullScreen ? 0f : HIDE_ICONS_TOP_RATIO;
         float toTop = toFullScreen ? HIDE_ICONS_TOP_RATIO : 0f;
-        float fromBottom = toFullScreen ? 1f : HIDE_ICONS_BOTTOM_RATIO;
-        float toBottom = toFullScreen ? HIDE_ICONS_BOTTOM_RATIO : 1f;
+        float fromBottom = toFullScreen ? 0 : mPillButtonsTranslation / mScale;
+        float toBottom = toFullScreen ? mPillButtonsTranslation / mScale : 0;
 
         ValueAnimator animationHide = ValueAnimator.ofFloat(0f, 1f);
         animationHide.addUpdateListener(animation -> {
@@ -404,7 +403,7 @@ public class FullScreenAnimation {
                     0,
                     Math.round(mWorkspaceHeight * top),
                     mWorkspaceWidth,
-                    Math.round(mWorkspaceHeight * bottom)));
+                    mWorkspaceHeight + Math.round(bottom)));
         });
 
         // Other animations.
