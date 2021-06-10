@@ -377,7 +377,16 @@ public class ImagePreviewFragment extends PreviewFragment {
                 new BitmapCropper.Callback() {
                     @Override
                     public void onBitmapCropped(Bitmap croppedBitmap) {
-                        onWallpaperColorsChanged(WallpaperColors.fromBitmap(croppedBitmap));
+                        boolean shouldRecycle = false;
+                        if (croppedBitmap.getConfig() == Bitmap.Config.HARDWARE) {
+                            croppedBitmap = croppedBitmap.copy(Bitmap.Config.ARGB_8888, false);
+                            shouldRecycle = true;
+                        }
+                        WallpaperColors colors = WallpaperColors.fromBitmap(croppedBitmap);
+                        if (shouldRecycle) {
+                            croppedBitmap.recycle();
+                        }
+                        onWallpaperColorsChanged(colors);
                     }
 
                     @Override
