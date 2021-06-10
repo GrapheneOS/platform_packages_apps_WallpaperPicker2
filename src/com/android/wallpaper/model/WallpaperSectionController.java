@@ -531,4 +531,23 @@ public class WallpaperSectionController implements
             mLockPreviewContainer.setVisibility(visibility);
         }
     }
+
+    @Override
+    public void onTransitionOut() {
+        if (mHomeWallpaperSurface != null) {
+            mHomeWallpaperSurface.setUseAlpha();
+            mHomeWallpaperSurface.setAlpha(0f);
+        }
+        if (mLockWallpaperSurface != null) {
+            mLockWallpaperSurface.setUseAlpha();
+            mLockWallpaperSurface.setAlpha(0f);
+        }
+        if (mWorkspaceSurface != null) {
+            mWorkspaceSurface.setUseAlpha();
+            mWorkspaceSurface.setAlpha(0f);
+        }
+        if (mLockPreviewContainer != null) {
+            mLockPreviewContainer.setAlpha(0f);
+        }
+    }
 }
