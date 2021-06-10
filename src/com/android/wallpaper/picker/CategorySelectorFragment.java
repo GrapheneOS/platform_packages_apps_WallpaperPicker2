@@ -293,6 +293,7 @@ public class CategorySelectorFragment extends AppbarFragment {
 
             CardView categoryView = itemView.findViewById(R.id.category);
             categoryView.getLayoutParams().height = mTileSizePx.y;
+            categoryView.setRadius(getResources().getDimension(R.dimen.grid_item_all_radius_small));
         }
 
         @Override
@@ -387,6 +388,7 @@ public class CategorySelectorFragment extends AppbarFragment {
             CardView categoryView = itemView.findViewById(R.id.category);
             categoryView.getLayoutParams().height =
                     SizeCalculator.getFeaturedCategoryTileSize(getActivity()).y;
+            categoryView.setRadius(getResources().getDimension(R.dimen.grid_item_all_radius));
         }
     }
 
