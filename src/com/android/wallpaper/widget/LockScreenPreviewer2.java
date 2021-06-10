@@ -49,6 +49,7 @@ import com.android.wallpaper.util.TimeUtils.TimeTicker;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.Executors;
 
 /** A class to load the new custom lockscreen view to the preview screen. */
 public class LockScreenPreviewer2 implements LifecycleObserver {
@@ -115,7 +116,13 @@ public class LockScreenPreviewer2 implements LifecycleObserver {
     @MainThread
     public void onResume() {
         if (mContext != null) {
-            mTicker = TimeTicker.registerNewReceiver(mContext, this::updateDateTime);
+            Executors.newSingleThreadExecutor().submit(() -> {
+                if (mContext != null && mLifecycle.getCurrentState().isAtLeast(
+                        Lifecycle.State.RESUMED)) {
+                    mTicker = TimeTicker.registerNewReceiver(mContext, this::updateDateTime);
+                }
+            });
+
             updateDateTime();
         }
     }
@@ -123,7 +130,7 @@ public class LockScreenPreviewer2 implements LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     @MainThread
     public void onPause() {
-        if (mContext != null) {
+        if (mContext != null && mTicker != null) {
             mContext.unregisterReceiver(mTicker);
         }
     }
