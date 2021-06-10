@@ -22,7 +22,6 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.Surface;
-import android.view.SurfaceControlViewHost;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -61,7 +60,6 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
     private WorkspaceRenderListener mListener;
 
     private boolean mNeedsToCleanUp;
-    private SurfaceControlViewHost.SurfacePackage mLastPackage;
 
     public WorkspaceSurfaceHolderCallback(SurfaceView workspaceSurface, Context context) {
         this(workspaceSurface, context, false);
@@ -117,20 +115,13 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
         if ((mShouldUseWallpaperColors && !mIsWallpaperColorsReady) || mLastSurface == null) {
             return;
         }
-        if (mLastPackage != null) {
-            mWorkspaceSurface.setChildSurfacePackage(mLastPackage);
-            if (mListener != null) {
-                mListener.onWorkspaceRendered();
-            }
-            return;
-        }
 
         mRequestPending.set(true);
         requestPreview(mWorkspaceSurface, (result) -> {
             mRequestPending.set(false);
             if (result != null && mLastSurface != null) {
-                mLastPackage = SurfaceViewUtils.getSurfacePackage(result);
-                mWorkspaceSurface.setChildSurfacePackage(mLastPackage);
+                mWorkspaceSurface.setChildSurfacePackage(
+                        SurfaceViewUtils.getSurfacePackage(result));
 
                 mCallback = SurfaceViewUtils.getCallback(result);
 
@@ -148,11 +139,9 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        mLastSurface = null;
     }
 
     public void cleanUp() {
-        mLastPackage = null;
         if (mCallback != null) {
             try {
                 mCallback.replyTo.send(mCallback);

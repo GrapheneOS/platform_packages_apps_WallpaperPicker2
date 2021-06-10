@@ -18,6 +18,10 @@
     <dimen name="grid_padding">4dp</dimen>
     <dimen name="grid_padding_desktop">8dp</dimen>
 
+    <!-- Dimensions for all grid item tiles. -->
+    <dimen name="grid_item_all_radius">28dp</dimen>
+    <dimen name="grid_item_all_radius_small">20dp</dimen>
+
     <!-- Dimensions for "category" tiles. -->
     <dimen name="grid_item_category_label_padding_top">6dp</dimen>
     <dimen name="grid_item_category_label_minimum_height">16dp</dimen>
@@ -34,7 +38,7 @@
     <!-- Dimensions for individual wallpaper tiles. -->
     <dimen name="grid_item_individual_padding_horizontal">4dp</dimen>
     <dimen name="grid_item_individual_padding_bottom">8dp</dimen>
-    <dimen name="grid_item_individual_label_padding_top">4dp</dimen>
+    <dimen name="grid_item_individual_label_padding_top">6dp</dimen>
     <dimen name="grid_item_individual_label_padding_bottom">4dp</dimen>
     <dimen name="wallpaper_grid_edge_space">20dp</dimen>
     <dimen name="wallpaper_grid_padding_top">32dp</dimen>
