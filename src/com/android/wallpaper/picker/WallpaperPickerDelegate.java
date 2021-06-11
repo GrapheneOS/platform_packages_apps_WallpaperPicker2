@@ -263,7 +263,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
      * they're cached when loading later.
      */
     public void prefetchCategories() {
-        mCategoryProvider.resetIfNeeded();
+        boolean forceRefresh = mCategoryProvider.resetIfNeeded();
         mCategoryProvider.fetchCategories(new CategoryReceiver() {
             @Override
             public void onCategoryReceived(Category category) {
@@ -274,7 +274,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
             public void doneFetchingCategories() {
                 // Do nothing
             }
-        }, false);
+        }, forceRefresh);
     }
 
     /**
