@@ -88,4 +88,6 @@ public interface Injector {
     Intent getDeepLinkRedirectIntent(Context context, Uri uri);
 
     String getDownloadableIntentAction();
+
+    HubSections getHubSections();
 }

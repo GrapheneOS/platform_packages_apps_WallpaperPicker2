@@ -31,6 +31,7 @@ import com.android.wallpaper.module.DefaultLiveWallpaperInfoFactory;
 import com.android.wallpaper.module.DrawableLayerResolver;
 import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.FormFactorChecker;
+import com.android.wallpaper.module.HubSections;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.LiveWallpaperInfoFactory;
 import com.android.wallpaper.module.LoggingOptInStatusProvider;
@@ -253,5 +254,10 @@ public class TestInjector implements Injector {
             mPerformanceMonitor = new TestPerformanceMonitor();
         }
         return mPerformanceMonitor;
+    }
+
+    @Override
+    public HubSections getHubSections() {
+        return null;
     }
 }
