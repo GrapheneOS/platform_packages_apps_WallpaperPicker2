@@ -425,7 +425,7 @@ public class TopLevelPickerActivity extends BaseActivity implements WallpapersUi
         // tab for a category not yet repopulated.
         mLastSelectedCategoryTabIndex = -1;
 
-        mDelegate.populateCategories(true /* forceCategoryRefresh */);
+        mDelegate.populateCategories(/* forceRefresh= */ true);
 
         setDesktopLoading(false);
         setCurrentWallpapersExpanded(false);
