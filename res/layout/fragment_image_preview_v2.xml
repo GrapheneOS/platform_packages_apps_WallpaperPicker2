@@ -22,89 +22,60 @@
     android:background="?android:colorBackground">
 
     <FrameLayout
+        android:id="@+id/pill_tabs_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/bottom_actions_height"
+        android:paddingHorizontal="@dimen/pill_tabs_horizontal_margin">
+        <include layout="@layout/pill_tabs" />
+    </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/pill_tabs_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="@dimen/bottom_actions_height"
-            android:paddingHorizontal="@dimen/pill_tabs_horizontal_margin">
-            <include layout="@layout/pill_tabs" />
-        </FrameLayout>
+    <FrameLayout
+        android:id="@+id/screen_preview_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_marginBottom="@dimen/bottom_actions_plus_pill_tabs">
 
-        <FrameLayout
-            android:id="@+id/screen_preview_layout"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="?android:attr/actionBarSize"
-            android:layout_marginBottom="@dimen/bottom_actions_plus_pill_tabs">
+            android:layout_gravity="center"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingVertical="@dimen/full_preview_page_default_padding_top">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <com.android.wallpaper.picker.TouchForwardingLayout
+                android:id="@+id/touch_forwarding_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+                <include layout="@layout/wallpaper_preview_card" />
+            </com.android.wallpaper.picker.TouchForwardingLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 
-                <ImageView
-                    android:id="@+id/low_res_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:background="@android:color/black" />
+    <FrameLayout
+        android:id="@+id/section_header_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <include layout="@layout/section_header" android:id="@+id/toolbar_container"/>
+    </FrameLayout>
 
-                <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-                    android:id="@+id/full_res_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <androidx.core.widget.ContentLoadingProgressBar
-                    android:id="@+id/loading_indicator"
-                    style="@android:style/Widget.DeviceDefault.ProgressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:indeterminate="true"/>
-            </FrameLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingVertical="@dimen/full_preview_page_default_padding_top"
-                android:clipChildren="false"
-                android:clipToPadding="false">
-
-                <com.android.wallpaper.picker.TouchForwardingLayout
-                    android:id="@+id/touch_forwarding_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-                    <include layout="@layout/wallpaper_preview_card" />
-                </com.android.wallpaper.picker.TouchForwardingLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/section_header_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <include layout="@layout/section_header" android:id="@+id/toolbar_container"/>
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/fullscreen_buttons_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:layout_marginBottom="@dimen/fullscreen_preview_button_margin"
-            android:paddingHorizontal="@dimen/pill_tabs_horizontal_margin">
-            <include layout="@layout/fullscreen_buttons" />
-        </FrameLayout>
-
+    <FrameLayout
+        android:id="@+id/fullscreen_buttons_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="@dimen/fullscreen_preview_button_margin"
+        android:paddingHorizontal="@dimen/pill_tabs_horizontal_margin">
+        <include layout="@layout/fullscreen_buttons" />
     </FrameLayout>
 
     <FrameLayout

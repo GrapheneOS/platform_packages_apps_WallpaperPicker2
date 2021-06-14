@@ -155,8 +155,6 @@ public class WallpaperSectionController implements
         WallpaperSectionView wallpaperSectionView = (WallpaperSectionView) LayoutInflater.from(
                 context).inflate(R.layout.wallpaper_section_view, /* root= */ null);
         mHomePreviewCard = wallpaperSectionView.findViewById(R.id.home_preview);
-        // TODO(santie) completely remove wallpaper_preview_image once we get rid of the old ui
-        mHomePreviewCard.findViewById(R.id.wallpaper_preview_image).setVisibility(View.GONE);
         mHomePreviewCard.setContentDescription(mAppContext.getString(
                 R.string.wallpaper_preview_card_content_description));
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
@@ -176,7 +174,6 @@ public class WallpaperSectionController implements
                 R.string.lockscreen_wallpaper_preview_card_content_description));
         mLockscreenPreviewProgress = mLockscreenPreviewCard.findViewById(
                 R.id.wallpaper_preview_spinner);
-        mLockscreenPreviewCard.findViewById(R.id.wallpaper_preview_image).setVisibility(View.GONE);
         mLockscreenPreviewCard.findViewById(R.id.workspace_surface).setVisibility(View.GONE);
         mLockWallpaperSurface = mLockscreenPreviewCard.findViewById(R.id.wallpaper_surface);
         mLockWallpaperSurfaceCallback = new WallpaperSurfaceCallback(mActivity,
@@ -339,6 +336,10 @@ public class WallpaperSectionController implements
                     mLockPreviewWallpaperInfo =
                             lockWallpaper == null ? homeWallpaper : lockWallpaper;
 
+                    mHomePreviewWallpaperInfo.computePlaceholderColor(mAppContext);
+                    if (lockWallpaper != null) {
+                        lockWallpaper.computePlaceholderColor(mAppContext);
+                    }
                     updatePreview(mHomePreviewWallpaperInfo, true);
                     updatePreview(mLockPreviewWallpaperInfo, false);
 
@@ -373,7 +374,7 @@ public class WallpaperSectionController implements
                 ? mHomeWallpaperSurfaceCallback : mLockWallpaperSurfaceCallback;
         // Load thumb regardless of live wallpaper to make sure we have a placeholder while
         // the live wallpaper initializes in that case.
-        Asset thumbAsset = maybeLoadThumbnail(wallpaperInfo, surfaceCallback);
+        maybeLoadThumbnail(wallpaperInfo, surfaceCallback);
 
         if (isHomeWallpaper) {
             if (mWallpaperConnection != null) {
