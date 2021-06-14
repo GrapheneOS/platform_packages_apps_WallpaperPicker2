@@ -95,7 +95,7 @@ public class BottomActionBar extends FrameLayout {
     // TODO(b/154299462): Separate downloadable related actions from WallpaperPicker.
     /** The action items in the bottom action bar. */
     public enum BottomAction {
-        ROTATION, DELETE, INFORMATION, EDIT, CUSTOMIZE, DOWNLOAD, PROGRESS, APPLY
+        ROTATION, DELETE, INFORMATION, EDIT, CUSTOMIZE, DOWNLOAD, PROGRESS, APPLY, APPLY_TEXT
     }
 
     private final Map<BottomAction, View> mActionMap = new EnumMap<>(BottomAction.class);
@@ -123,6 +123,7 @@ public class BottomActionBar extends FrameLayout {
         mActionMap.put(BottomAction.DOWNLOAD, findViewById(R.id.action_download));
         mActionMap.put(BottomAction.PROGRESS, findViewById(R.id.action_progress));
         mActionMap.put(BottomAction.APPLY, findViewById(R.id.action_apply));
+        mActionMap.put(BottomAction.APPLY_TEXT, findViewById(R.id.action_apply_text_button));
 
         mBottomSheetView = findViewById(R.id.action_bottom_sheet);
         SizeCalculator.adjustBackgroundCornerRadius(mBottomSheetView);
