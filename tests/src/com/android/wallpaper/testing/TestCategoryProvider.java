@@ -93,8 +93,9 @@ public class TestCategoryProvider implements CategoryProvider {
     }
 
     @Override
-    public void resetIfNeeded() {
+    public boolean resetIfNeeded() {
         mCategories.clear();
+        return true;
     }
 
     @Override
