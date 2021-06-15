@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
-/** The SectionView base for views hosting in the {@link HubFragment}. */
+/** The SectionView base for views hosting in the {@link CustomizationPickerFragment}. */
 public abstract class SectionView extends LinearLayout {
 
     /** The callback for the section view updates. */
