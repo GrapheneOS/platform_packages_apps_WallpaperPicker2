@@ -154,7 +154,7 @@ public class LiveWallpaperInfo extends WallpaperInfo {
         mCollectionId = collectionId;
     }
 
-    LiveWallpaperInfo(Parcel in) {
+    protected LiveWallpaperInfo(Parcel in) {
         mInfo = in.readParcelable(android.app.WallpaperInfo.class.getClassLoader());
         mVisibleTitle = in.readInt() == 1;
         mCollectionId = in.readString();
