@@ -68,6 +68,13 @@
       </intent-filter>
     </activity>
 
+    <activity android:name="com.android.wallpaper.picker.CustomizationPickerActivity"
+        android:label="@string/app_name"
+        android:resizeableActivity="false"
+        android:theme="@style/WallpaperTheme.NoBackground"
+        android:exported="false">
+    </activity>
+
     <activity android:name="com.android.wallpaper.picker.DeepLinkActivity"
         android:theme="@style/WallpaperTheme.NoBackground"
         android:exported="true">
