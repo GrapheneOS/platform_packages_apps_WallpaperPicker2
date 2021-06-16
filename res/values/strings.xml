@@ -321,7 +321,7 @@
     <!-- Content description of "slideshow wallpaper" button on the bottom action bar. [CHAR LIMIT=50] -->
     <string name="bottom_action_bar_slideshow_wallpaper">Slideshow Wallpaper</string>
 
-    <!-- Content description of apply button on the bottom action bar. [CHAR LIMIT=30] -->
+    <!-- Apply button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_apply">Apply</string>
 
     <!-- Accessibility label for paging indicator in theme picker preview [CHAR LIMIT=NONE] -->
