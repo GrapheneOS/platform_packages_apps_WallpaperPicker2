@@ -54,10 +54,6 @@ public class BottomActionBarFragment extends Fragment {
 
     /** Returns {@code true} if the fragment would handle the event. */
     public boolean onBackPressed() {
-        if (mBottomActionBar != null && mBottomActionBar.isVisible()) {
-            mBottomActionBar.hide();
-            return true;
-        }
         return false;
     }
 

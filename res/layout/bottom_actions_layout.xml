@@ -154,8 +154,22 @@
             android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/action_apply_text_button"
+            app:layout_constraintStart_toEndOf="@id/action_progress"/>
+
+        <Button
+            android:id="@+id/action_apply_text_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_transparent_background"
+            android:textColor="?android:attr/colorAccent"
+            android:text="@string/bottom_action_bar_apply"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/action_progress" />
+            app:layout_constraintStart_toEndOf="@id/action_apply"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>
