@@ -22,14 +22,11 @@ import android.view.ViewGroup;
 
 import androidx.cardview.widget.CardView;
 
-import com.android.wallpaper.picker.SectionView;
 import com.android.wallpaper.R;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
 
-/**
- * The wallpaper section view in the Customization Hub fragment.
- */
+/** The wallpaper section view in the customization picker fragment. */
 public final class WallpaperSectionView extends SectionView {
 
     private CardView mHomePreviewCard;

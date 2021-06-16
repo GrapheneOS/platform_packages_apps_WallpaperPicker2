@@ -64,7 +64,8 @@ import com.android.wallpaper.util.WallpaperSurfaceCallback;
 import com.android.wallpaper.widget.LockScreenPreviewer2;
 
 /** The class to control the wallpaper section view. */
-public class WallpaperSectionController implements HubSectionController<WallpaperSectionView>,
+public class WallpaperSectionController implements
+        CustomizationSectionController<WallpaperSectionView>,
         LifecycleObserver {
 
     private static final String PERMISSION_READ_WALLPAPER_INTERNAL =
@@ -97,14 +98,14 @@ public class WallpaperSectionController implements HubSectionController<Wallpape
     private final PermissionRequester mPermissionRequester;
     private final WallpaperColorsViewModel mWallpaperColorsViewModel;
     private final WorkspaceViewModel mWorkspaceViewModel;
-    private final HubSectionNavigationController mHubSectionNavigationController;
+    private final CustomizationSectionNavigationController mSectionNavigationController;
     private final WallpaperPreviewNavigator mWallpaperPreviewNavigator;
     private final Bundle mSavedInstanceState;
 
     public WallpaperSectionController(Activity activity, LifecycleOwner lifecycleOwner,
             PermissionRequester permissionRequester, WallpaperColorsViewModel colorsViewModel,
             WorkspaceViewModel workspaceViewModel,
-            HubSectionNavigationController hubSectionNavigationController,
+            CustomizationSectionNavigationController sectionNavigationController,
             WallpaperPreviewNavigator wallpaperPreviewNavigator,
             Bundle savedInstanceState) {
         mActivity = activity;
@@ -113,7 +114,7 @@ public class WallpaperSectionController implements HubSectionController<Wallpape
         mAppContext = mActivity.getApplicationContext();
         mWallpaperColorsViewModel = colorsViewModel;
         mWorkspaceViewModel = workspaceViewModel;
-        mHubSectionNavigationController = hubSectionNavigationController;
+        mSectionNavigationController = sectionNavigationController;
         mWallpaperPreviewNavigator = wallpaperPreviewNavigator;
         mSavedInstanceState = savedInstanceState;
     }
@@ -199,7 +200,7 @@ public class WallpaperSectionController implements HubSectionController<Wallpape
         updateWorkspaceSurface();
 
         wallpaperSectionView.findViewById(R.id.wallpaper_picker_entry).setOnClickListener(
-                v -> mHubSectionNavigationController.navigateTo(new CategorySelectorFragment()));
+                v -> mSectionNavigationController.navigateTo(new CategorySelectorFragment()));
 
         mWorkspaceViewModel.getUpdateWorkspace().observe(mLifecycleOwner, update ->
                 updateWorkspacePreview(mWorkspaceSurface, mWorkspaceSurfaceCallback,
