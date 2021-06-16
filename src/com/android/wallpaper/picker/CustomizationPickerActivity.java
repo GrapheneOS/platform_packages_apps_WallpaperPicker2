@@ -88,7 +88,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         // Restore this Activity's state before restoring contained Fragments state.
         super.onCreate(savedInstanceState);
         if (WALLPAPER_ONLY.equals(getIntent().getStringExtra(WALLPAPER_FLAVOR_EXTRA))
-                || !supportHubSections()) {
+                || !supportCustomizationSections()) {
             skipToWallpaperPicker();
             return;
         }
@@ -108,8 +108,8 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
             injector.getPreferences(this).incrementAppLaunched();
             DailyLoggingAlarmScheduler.setAlarm(getApplicationContext());
 
-            // Switch to the Hub fragment.
-            switchFragment(HubFragment.newInstance(getString(R.string.app_name)));
+            // Switch to the customization picker fragment.
+            switchFragment(CustomizationPickerFragment.newInstance(getString(R.string.app_name)));
         }
 
         // Deep link case
@@ -193,12 +193,12 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         finish();
     }
 
-    private boolean supportHubSections() {
+    private boolean supportCustomizationSections() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
                 || "S".equals(Build.VERSION.CODENAME)) {
             return true;
         }
-        Log.d(TAG, "Build version < S, Hub sections feature is not supported");
+        Log.d(TAG, "Build version < S, customization sections feature is not supported");
         return false;
     }
 
