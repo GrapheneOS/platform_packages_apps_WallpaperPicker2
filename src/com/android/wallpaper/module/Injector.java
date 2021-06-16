@@ -89,5 +89,5 @@ public interface Injector {
 
     String getDownloadableIntentAction();
 
-    HubSections getHubSections();
+    CustomizationSections getCustomizationSections();
 }
