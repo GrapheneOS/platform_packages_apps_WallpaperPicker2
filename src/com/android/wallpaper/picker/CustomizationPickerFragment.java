@@ -28,13 +28,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.wallpaper.R;
-import com.android.wallpaper.model.HubSectionController;
-import com.android.wallpaper.model.HubSectionController.HubSectionNavigationController;
+import com.android.wallpaper.model.CustomizationSectionController;
+import com.android.wallpaper.model.CustomizationSectionController.CustomizationSectionNavigationController;
 import com.android.wallpaper.model.PermissionRequester;
 import com.android.wallpaper.model.WallpaperColorsViewModel;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
 import com.android.wallpaper.model.WorkspaceViewModel;
-import com.android.wallpaper.module.HubSections;
+import com.android.wallpaper.module.CustomizationSections;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.util.ActivityUtils;
 
@@ -42,24 +42,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/** The Fragment UI for hub sections. */
-public class HubFragment extends AppbarFragment implements HubSectionNavigationController {
+/** The Fragment UI for customization sections. */
+public class CustomizationPickerFragment extends AppbarFragment implements
+        CustomizationSectionNavigationController {
 
-    private static final String TAG = "HubFragment";
+    private static final String TAG = "CustomizationPickerFragment";
     private static final String SCROLL_POSITION_Y = "SCROLL_POSITION_Y";
 
     // Note that the section views will be displayed by the list ordering.
-    private final List<HubSectionController<?>> mHubSectionControllers = new ArrayList<>();
+    private final List<CustomizationSectionController<?>> mSectionControllers = new ArrayList<>();
     private NestedScrollView mNestedScrollView;
 
-    /**
-     * Initiates HubFragment instance
-     *
-     * @param title The title string of the {@code HubFragment}
-     * @return HubFragment The {@code HubFragment} instance
-     */
-    public static HubFragment newInstance(CharSequence title) {
-        HubFragment fragment = new HubFragment();
+    /** Initiates CustomizationPickerFragment instance. */
+    public static CustomizationPickerFragment newInstance(CharSequence title) {
+        CustomizationPickerFragment fragment = new CustomizationPickerFragment();
         fragment.setArguments(AppbarFragment.createArguments(title));
         return fragment;
     }
@@ -69,7 +65,7 @@ public class HubFragment extends AppbarFragment implements HubSectionNavigationC
             Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.collapsing_toolbar_base_layout,
                 container, /* attachToRoot= */ false);
-        setContentView(view, R.layout.fragment_hub_home);
+        setContentView(view, R.layout.fragment_customization_picker);
         setUpToolbar(view, ActivityUtils.isLaunchedFromSettingsRelated(getActivity().getIntent()));
 
         ViewGroup sectionContainer = view.findViewById(R.id.section_container);
@@ -83,8 +79,8 @@ public class HubFragment extends AppbarFragment implements HubSectionNavigationC
         });
         mNestedScrollView = view.findViewById(R.id.scroll_container);
 
-        initHubSections(savedInstanceState);
-        mHubSectionControllers.forEach(controller ->
+        initSections(savedInstanceState);
+        mSectionControllers.forEach(controller ->
                 sectionContainer.addView(controller.createView(getContext())));
         restoreViewState(savedInstanceState);
         return view;
@@ -110,7 +106,7 @@ public class HubFragment extends AppbarFragment implements HubSectionNavigationC
         if (mNestedScrollView != null) {
             savedInstanceState.putInt(SCROLL_POSITION_Y, mNestedScrollView.getScrollY());
         }
-        mHubSectionControllers.forEach(c -> c.onSaveInstanceState(savedInstanceState));
+        mSectionControllers.forEach(c -> c.onSaveInstanceState(savedInstanceState));
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -121,8 +117,8 @@ public class HubFragment extends AppbarFragment implements HubSectionNavigationC
 
     @Override
     public void onDestroyView() {
-        mHubSectionControllers.forEach(HubSectionController::release);
-        mHubSectionControllers.clear();
+        mSectionControllers.forEach(CustomizationSectionController::release);
+        mSectionControllers.clear();
         super.onDestroyView();
     }
 
@@ -137,27 +133,27 @@ public class HubFragment extends AppbarFragment implements HubSectionNavigationC
         fragmentManager.executePendingTransactions();
     }
 
-    private void initHubSections(@Nullable Bundle savedInstanceState) {
+    private void initSections(@Nullable Bundle savedInstanceState) {
         // Release and clear if any.
-        mHubSectionControllers.forEach(HubSectionController::release);
-        mHubSectionControllers.clear();
+        mSectionControllers.forEach(CustomizationSectionController::release);
+        mSectionControllers.clear();
 
         WallpaperColorsViewModel wcViewModel = new ViewModelProvider(getActivity())
                 .get(WallpaperColorsViewModel.class);
         WorkspaceViewModel workspaceViewModel = new ViewModelProvider(getActivity())
                 .get(WorkspaceViewModel.class);
 
-        HubSections hubSections = InjectorProvider.getInjector().getHubSections();
-        List<HubSectionController<?>> allSectionControllers =
-                hubSections.getAllSectionControllers(getActivity(), getViewLifecycleOwner(),
+        CustomizationSections sections = InjectorProvider.getInjector().getCustomizationSections();
+        List<CustomizationSectionController<?>> allSectionControllers =
+                sections.getAllSectionControllers(getActivity(), getViewLifecycleOwner(),
                         wcViewModel, workspaceViewModel, getPermissionRequester(),
                         getWallpaperPreviewNavigator(), this, savedInstanceState);
 
-        mHubSectionControllers.addAll(getAvailableSections(allSectionControllers));
+        mSectionControllers.addAll(getAvailableSections(allSectionControllers));
     }
 
-    private List<HubSectionController<?>> getAvailableSections (
-            List<HubSectionController<?>> controllers) {
+    private List<CustomizationSectionController<?>> getAvailableSections (
+            List<CustomizationSectionController<?>> controllers) {
         return controllers.stream()
                 .filter(controller -> {
                     if(controller.isAvailable(getContext())) {
