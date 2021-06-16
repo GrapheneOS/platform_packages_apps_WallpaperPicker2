@@ -53,7 +53,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /** A class to load the new custom lockscreen view to the preview screen. */
-public class LockScreenPreviewer2 implements LifecycleObserver {
+public class LockScreenPreviewer implements LifecycleObserver {
 
     private static final String DEFAULT_DATE_PATTERN = "EEE, MMM d";
     private static final ExecutorService sExecutorService = Executors.newSingleThreadExecutor();
@@ -65,11 +65,11 @@ public class LockScreenPreviewer2 implements LifecycleObserver {
     private final TextView mLockDate;
     private TimeTicker mTicker;
 
-    public LockScreenPreviewer2(Lifecycle lifecycle, Context context, ViewGroup previewContainer) {
+    public LockScreenPreviewer(Lifecycle lifecycle, Context context, ViewGroup previewContainer) {
         mLifecycle = lifecycle;
         mContext = context;
         View contentView = LayoutInflater.from(mContext).inflate(
-                R.layout.lock_screen_preview2, /* root= */ null);
+                R.layout.lock_screen_preview, /* root= */ null);
         mLockTime = contentView.findViewById(R.id.lock_time);
         mLockDate = contentView.findViewById(R.id.lock_date);
         mDatePattern = DateFormat.getBestDateTimePattern(Locale.getDefault(), DEFAULT_DATE_PATTERN);
@@ -117,24 +117,21 @@ public class LockScreenPreviewer2 implements LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     @MainThread
     public void onResume() {
-        if (mContext != null) {
+        if (mTicker == null) {
             sExecutorService.submit(() -> {
                 if (mContext != null && mLifecycle.getCurrentState().isAtLeast(
                         Lifecycle.State.RESUMED)) {
                     mTicker = TimeTicker.registerNewReceiver(mContext, this::updateDateTime);
                 }
             });
-
-            updateDateTime();
         }
+        updateDateTime();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     @MainThread
     public void onPause() {
-        if (mContext != null && mTicker != null) {
-            sExecutorService.submit(() -> mContext.unregisterReceiver(mTicker));
-        }
+        unregisterReceiver();
     }
 
     /**
@@ -160,8 +157,27 @@ public class LockScreenPreviewer2 implements LifecycleObserver {
                 textShadowColor);
     }
 
+    /** Sets visibility for date view. */
+    public void setDateViewVisibility(boolean visible) {
+        mLockDate.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
     public void release() {
         mLifecycle.removeObserver(this);
+        unregisterReceiver();
+    }
+
+    private void unregisterReceiver() {
+        if (mTicker == null) {
+            return;
+        }
+
+        sExecutorService.submit(() -> {
+            if (mContext != null && mTicker != null) {
+                mContext.unregisterReceiver(mTicker);
+                mTicker = null;
+            }
+        });
     }
 
     private void updateDateTime() {

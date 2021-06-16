@@ -76,7 +76,7 @@ import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperSurfaceCallback;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.BottomActionBar.AccessibilityCallback;
-import com.android.wallpaper.widget.LockScreenPreviewer2;
+import com.android.wallpaper.widget.LockScreenPreviewer;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
 import com.android.wallpaper.widget.WallpaperInfoView;
 
@@ -107,7 +107,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     protected WallpaperSurfaceCallback mWallpaperSurfaceCallback;
     protected WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     protected ViewGroup mLockPreviewContainer;
-    protected LockScreenPreviewer2 mLockScreenPreviewer;
+    protected LockScreenPreviewer mLockScreenPreviewer;
 
     private Intent mDeleteIntent;
     private Intent mSettingsIntent;
@@ -193,8 +193,11 @@ public class LivePreviewFragment extends PreviewFragment implements
         mTouchForwardingLayout.setTargetView(mHomePreview);
         mTouchForwardingLayout.setForwardingEnabled(true);
         mLockPreviewContainer = mPreviewContainer.findViewById(R.id.lock_screen_preview_container);
-        mLockScreenPreviewer = new LockScreenPreviewer2(getLifecycle(), getContext(),
+        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getContext(),
                 mLockPreviewContainer);
+        mLockScreenPreviewer.setDateViewVisibility(!mFullScreenAnimation.isFullScreen());
+        mFullScreenAnimation.setFullScreenStatusListener(
+                isFullScreen -> mLockScreenPreviewer.setDateViewVisibility(!isFullScreen));
         mWallpaperSurface = mHomePreviewCard.findViewById(R.id.wallpaper_surface);
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
 
@@ -282,6 +285,9 @@ public class LivePreviewFragment extends PreviewFragment implements
         if (mWallpaperConnection != null) {
             mWallpaperConnection.disconnect();
             mWallpaperConnection = null;
+        }
+        if (mLockScreenPreviewer != null) {
+            mLockScreenPreviewer.release();
         }
         mWorkspaceSurfaceCallback.cleanUp();
         mWorkspaceSurface.getHolder().removeCallback(mWorkspaceSurfaceCallback);
