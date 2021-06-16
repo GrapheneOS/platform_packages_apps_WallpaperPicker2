@@ -142,12 +142,14 @@ public class DefaultCategoryProvider implements CategoryProvider {
     }
 
     @Override
-    public void resetIfNeeded() {
+    public boolean resetIfNeeded() {
         if (mNetworkStatus != mNetworkStatusNotifier.getNetworkStatus()
                 || mLocale != getLocale()) {
             mCategories.clear();
             mFetchedCategories = false;
+            return true;
         }
+        return false;
     }
 
     @Override
