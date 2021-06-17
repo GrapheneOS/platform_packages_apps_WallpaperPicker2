@@ -21,26 +21,23 @@ import static com.android.wallpaper.widget.BottomActionBar.BottomAction.EDIT;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.content.res.Resources.NotFoundException;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
+import android.view.animation.PathInterpolator;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.CallSuper;
-import androidx.annotation.IdRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
-import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
@@ -67,6 +64,8 @@ import java.util.Optional;
 public abstract class PreviewFragment extends AppbarFragment implements
         SetWallpaperDialogFragment.Listener, SetWallpaperErrorDialogFragment.Listener,
         LoadWallpaperErrorDialogFragment.Listener {
+
+    public static final Interpolator ALPHA_OUT = new PathInterpolator(0f, 0f, 0.8f, 1f);
 
     /**
      * User can view wallpaper and attributions in full screen, but "Set wallpaper" button is
@@ -136,7 +135,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected WallpaperSetter mWallpaperSetter;
     protected UserEventLogger mUserEventLogger;
     protected BottomActionBar mBottomActionBar;
-    protected ContentLoadingProgressBar mLoadingProgressBar;
 
     protected Intent mExploreIntent;
     protected CharSequence mActionLabel;
@@ -151,13 +149,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     // For full screen animations.
     protected View mRootView;
     protected FullScreenAnimation mFullScreenAnimation;
-
-    protected static int getAttrColor(Context context, int attr) {
-        TypedArray ta = context.obtainStyledAttributes(new int[]{attr});
-        int colorAccent = ta.getColor(0, 0);
-        ta.recycle();
-        return colorAccent;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -180,7 +171,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
         if (attributions.size() > 0 && attributions.get(0) != null) {
             activity.setTitle(attributions.get(0));
         }
-        setRetainInstance(true);
     }
 
     @Override
@@ -189,9 +179,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
                              Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutResId(), container, false);
         setUpToolbar(view);
-
-        mLoadingProgressBar = view.findViewById(getLoadingIndicatorResId());
-        mLoadingProgressBar.show();
 
         mRootView = view;
         mFullScreenAnimation = new FullScreenAnimation(view);
@@ -273,13 +260,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     @LayoutRes
     protected abstract int getLayoutResId();
 
-    @IdRes
-    protected abstract int getLoadingIndicatorResId();
-
-    protected int getDeviceDefaultTheme() {
-        return android.R.style.Theme_DeviceDefault;
-    }
-
     protected WorkspaceSurfaceHolderCallback createWorkspaceSurfaceCallback(
             SurfaceView workspaceSurface) {
         return new WorkspaceSurfaceHolderCallback(workspaceSurface, getContext());
@@ -323,16 +303,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
                     }
                 }
         );
-    }
-
-    /**
-     * Configure loading indicator with a MaterialProgressDrawable.
-     */
-    protected void setUpLoadingIndicator() {
-        mLoadingProgressBar.setProgressTintList(ColorStateList.valueOf(getAttrColor(
-                new ContextThemeWrapper(requireContext(), getDeviceDefaultTheme()),
-                android.R.attr.colorAccent)));
-        mLoadingProgressBar.show();
     }
 
     protected abstract boolean isLoaded();
