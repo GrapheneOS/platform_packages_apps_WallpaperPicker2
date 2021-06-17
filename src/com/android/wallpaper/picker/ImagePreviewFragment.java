@@ -78,6 +78,8 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -107,21 +109,18 @@ public class ImagePreviewFragment extends PreviewFragment {
     protected WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     protected ViewGroup mLockPreviewContainer;
     protected LockScreenPreviewer mLockScreenPreviewer;
+    private Future<Integer> mPlaceholderColorFuture;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWallpaperAsset = mWallpaper.getAsset(requireContext().getApplicationContext());
+        mPlaceholderColorFuture = mWallpaper.computePlaceholderColor(requireContext());
     }
 
     @Override
     protected int getLayoutResId() {
         return R.layout.fragment_image_preview_v2;
-    }
-
-    @Override
-    protected int getLoadingIndicatorResId() {
-        return R.id.loading_indicator;
     }
 
     @Override
@@ -133,10 +132,6 @@ public class ImagePreviewFragment extends PreviewFragment {
         mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
                 activity.getWindowManager().getDefaultDisplay());
 
-        // TODO: Consider moving some part of this to the base class when live preview is ready.
-        view.findViewById(R.id.low_res_image).setVisibility(View.GONE);
-        view.findViewById(R.id.full_res_image).setVisibility(View.GONE);
-        mLoadingProgressBar.hide();
         mContainer = view.findViewById(R.id.container);
         mTouchForwardingLayout = mContainer.findViewById(R.id.touch_forwarding_layout);
         mTouchForwardingLayout.setForwardingEnabled(true);
@@ -152,6 +147,9 @@ public class ImagePreviewFragment extends PreviewFragment {
         mWorkspaceSurfaceCallback = createWorkspaceSurfaceCallback(mWorkspaceSurface);
         mWallpaperSurface = mContainer.findViewById(R.id.wallpaper_surface);
         mLockPreviewContainer = mContainer.findViewById(R.id.lock_screen_preview_container);
+        int placeHolderColor = ResourceUtils.getColorAttr(getContext(),
+                android.R.attr.colorBackground);
+        mWorkspaceSurface.setResizeBackgroundColor(placeHolderColor);
         mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getContext(),
                 mLockPreviewContainer);
         mLockScreenPreviewer.setDateViewVisibility(!mFullScreenAnimation.isFullScreen());
@@ -170,7 +168,6 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         // Trim some memory from Glide to make room for the full-size image in this fragment.
         Glide.get(activity).setMemoryCategory(MemoryCategory.LOW);
-        setUpLoadingIndicator();
 
         return view;
     }
@@ -178,27 +175,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
-            // Don't continue loading the wallpaper if the Fragment is detached.
-            if (getActivity() == null) {
-                return;
-            }
-
-            // Return early and show a dialog if dimensions are null (signaling a decoding error).
-            if (dimensions == null) {
-                showLoadWallpaperErrorDialog();
-                return;
-            }
-
-            // To avoid applying the wallpaper when it's not parsed. Now it's parsed, enable the
-            // bottom action bar to allow applying the wallpaper.
-            if (mBottomActionBar != null) {
-                mBottomActionBar.enableActions();
-            }
-
-            mRawWallpaperSize = dimensions;
-            initFullResView();
-        });
     }
 
     protected void onWallpaperColorsChanged(@Nullable WallpaperColors colors) {
@@ -230,9 +206,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mLoadingProgressBar != null) {
-            mLoadingProgressBar.hide();
-        }
 
         if (mFullResImageView != null) {
             mFullResImageView.recycle();
@@ -303,14 +276,6 @@ public class ImagePreviewFragment extends PreviewFragment {
         // disallow user to pan outside the view we show the wallpaper in.
         mFullResImageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
 
-        // Set a solid black "page bitmap" so MosaicView draws a black background while waiting
-        // for the image to load or a transparent one if a thumbnail already loaded.
-        Bitmap backgroundBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
-        int preColor = ResourceUtils.getColorAttr(getActivity(), android.R.attr.colorSecondary);
-        int color = (mLowResImageView.getDrawable() == null) ? preColor : Color.TRANSPARENT;
-        backgroundBitmap.setPixel(0, 0, color);
-        mFullResImageView.setImage(ImageSource.bitmap(backgroundBitmap));
-
         // Then set a fallback "page bitmap" to cover the whole MosaicView, which is an actual
         // (lower res) version of the image to be displayed.
         Point targetPageBitmapSize = new Point(mRawWallpaperSize);
@@ -321,17 +286,15 @@ public class ImagePreviewFragment extends PreviewFragment {
                         return;
                     }
 
-                    // Some of these may be null depending on if the Fragment is paused, stopped,
-                    // or destroyed.
-                    if (mLoadingProgressBar != null) {
-                        mLoadingProgressBar.hide();
-                    }
                     // The page bitmap may be null if there was a decoding error, so show an
                     // error dialog.
                     if (pageBitmap == null) {
                         showLoadWallpaperErrorDialog();
                         return;
                     }
+                    // Some of these may be null depending on if the Fragment is paused, stopped,
+                    // or destroyed.
+                    mWallpaperSurface.setBackgroundColor(Color.TRANSPARENT);
                     if (mFullResImageView != null) {
                         // Set page bitmap.
                         mFullResImageView.setImage(ImageSource.bitmap(pageBitmap));
@@ -424,6 +387,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         mFullResImageView.setAlpha(0f);
         mFullResImageView.animate()
                 .alpha(1f)
+                .setInterpolator(ALPHA_OUT)
                 .setDuration(shortAnimationDuration)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
@@ -432,18 +396,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                         // visible.
                         if (mLowResImageView != null) {
                             mLowResImageView.setImageBitmap(null);
-                        }
-                    }
-                });
-
-        mLoadingProgressBar.animate()
-                .alpha(0f)
-                .setDuration(shortAnimationDuration)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        if (mLoadingProgressBar != null) {
-                            mLoadingProgressBar.hide();
                         }
                     }
                 });
@@ -512,9 +464,8 @@ public class ImagePreviewFragment extends PreviewFragment {
         Resources res = appContext.getResources();
         Point cropSurfaceSize = WallpaperCropUtils.calculateCropSurfaceSize(res, maxCrop, minCrop);
 
-        Rect cropRect = WallpaperCropUtils.calculateCropRect(appContext, hostViewSize,
+        return WallpaperCropUtils.calculateCropRect(appContext, hostViewSize,
                 cropSurfaceSize, mRawWallpaperSize, visibleFileRect, wallpaperZoom);
-        return cropRect;
     }
 
     @Override
@@ -559,7 +510,28 @@ public class ImagePreviewFragment extends PreviewFragment {
                         R.layout.fullscreen_wallpaper_preview, null);
                 mFullResImageView = wallpaperPreviewContainer.findViewById(R.id.full_res_image);
                 mLowResImageView = wallpaperPreviewContainer.findViewById(R.id.low_res_image);
-                initFullResView();
+                mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
+                    // Don't continue loading the wallpaper if the Fragment is detached.
+                    if (getActivity() == null) {
+                        return;
+                    }
+
+                    // Return early and show a dialog if dimensions are null (signaling a decoding
+                    // error).
+                    if (dimensions == null) {
+                        showLoadWallpaperErrorDialog();
+                        return;
+                    }
+
+                    // To avoid applying the wallpaper when it's not parsed. Now it's parsed, enable
+                    // the bottom action bar to allow applying the wallpaper.
+                    if (mBottomActionBar != null) {
+                        mBottomActionBar.enableActions();
+                    }
+
+                    mRawWallpaperSize = dimensions;
+                    initFullResView();
+                });
                 // Scale the mWallpaperSurface based on system zoom's scale so that the wallpaper is
                 // rendered in a larger surface than what preview shows, simulating the behavior of
                 // the actual wallpaper surface.
@@ -585,12 +557,23 @@ public class ImagePreviewFragment extends PreviewFragment {
 
                 // Load a low-res placeholder image if there's a thumbnail available from the asset
                 // that can be shown to the user more quickly than the full-sized image.
-                if (mWallpaperAsset.hasLowResDataSource()) {
-                    Activity activity = requireActivity();
-                    mWallpaperAsset.loadLowResDrawable(activity, mLowResImageView, Color.BLACK,
-                            new WallpaperPreviewBitmapTransformation(
-                                    activity.getApplicationContext(), isRtl()));
+                Activity activity = requireActivity();
+                int placeHolderColor = ResourceUtils.getColorAttr(activity,
+                        android.R.attr.colorBackground);
+                if (mPlaceholderColorFuture.isDone()) {
+                    try {
+                        placeHolderColor = mWallpaper.computePlaceholderColor(context).get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        // Do nothing
+                    }
                 }
+                mWallpaperSurface.setResizeBackgroundColor(placeHolderColor);
+                mWallpaperSurface.setBackgroundColor(placeHolderColor);
+
+                mWallpaperAsset.loadLowResDrawable(activity, mLowResImageView, placeHolderColor,
+                        new WallpaperPreviewBitmapTransformation(
+                                activity.getApplicationContext(), isRtl()));
+
                 wallpaperPreviewContainer.measure(
                         makeMeasureSpec(width, EXACTLY),
                         makeMeasureSpec(height, EXACTLY));
