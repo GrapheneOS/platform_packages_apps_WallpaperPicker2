@@ -1431,6 +1431,7 @@ public class IndividualPickerFragment extends AppbarFragment
             int wallpaperIndex = (shouldShowRotationTile() || mCategory.supportsCustomPhotos())
                     ? position - 1 : position;
             WallpaperInfo wallpaper = mWallpapers.get(wallpaperIndex);
+            wallpaper.computePlaceholderColor(holder.itemView.getContext());
             ((IndividualHolder) holder).bindWallpaper(wallpaper);
             boolean isWallpaperApplied = mAppliedWallpaperIds.contains(wallpaper.getWallpaperId());
 

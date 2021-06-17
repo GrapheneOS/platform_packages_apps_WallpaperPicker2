@@ -57,7 +57,7 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
         if (fragment == null) {
             Intent intent = getIntent();
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
-            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HODE, true);
+            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, true);
             boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context */ this,
