@@ -61,7 +61,7 @@ import com.android.wallpaper.picker.WorkspaceSurfaceHolderCallback;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperSurfaceCallback;
-import com.android.wallpaper.widget.LockScreenPreviewer2;
+import com.android.wallpaper.widget.LockScreenPreviewer;
 
 /** The class to control the wallpaper section view. */
 public class WallpaperSectionController implements
@@ -90,7 +90,7 @@ public class WallpaperSectionController implements
     // The wallpaper information which is currently shown on the lock preview.
     private WallpaperInfo mLockPreviewWallpaperInfo;
 
-    private LockScreenPreviewer2 mLockScreenPreviewer;
+    private LockScreenPreviewer mLockScreenPreviewer;
 
     private final Activity mActivity;
     private final Context mAppContext;
@@ -188,7 +188,7 @@ public class WallpaperSectionController implements
         mLockPreviewContainer = mLockscreenPreviewCard.findViewById(
                 R.id.lock_screen_preview_container);
         mLockPreviewContainer.setVisibility(View.INVISIBLE);
-        mLockScreenPreviewer = new LockScreenPreviewer2(mLifecycleOwner.getLifecycle(), context,
+        mLockScreenPreviewer = new LockScreenPreviewer(mLifecycleOwner.getLifecycle(), context,
                 mLockPreviewContainer);
 
         setupCurrentWallpaperPreview(wallpaperSectionView);
