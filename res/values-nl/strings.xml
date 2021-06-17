@@ -96,4 +96,6 @@
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"De collectie bestaat niet"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"Voorbeeld van UI verbergen"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"Voorbeeld van UI tonen"</string>
+    <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Achtergrond wijzigen"</string>
+    <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Voorbeeld achtergrond vergrendelscherm"</string>
 </resources>
