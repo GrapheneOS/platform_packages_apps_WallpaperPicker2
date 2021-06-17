@@ -120,6 +120,8 @@ public class IndividualPickerFragment extends AppbarFragment
     static final int SPECIAL_FIXED_TILE_ADAPTER_POSITION = 0;
     static final String ARG_CATEGORY_COLLECTION_ID = "category_collection_id";
 
+    protected static final int MAX_CAPACITY_IN_FEWER_COLUMN_LAYOUT = 8;
+
     private static final String TAG = "IndividualPickerFrgmnt";
     private static final int UNUSED_REQUEST_CODE = 1;
     private static final String TAG_START_ROTATION_DIALOG = "start_rotation_dialog";
@@ -129,7 +131,6 @@ public class IndividualPickerFragment extends AppbarFragment
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "individual_set_wallpaper_error_dialog";
     private static final String KEY_NIGHT_MODE = "IndividualPickerFragment.NIGHT_MODE";
-    private static final int MAX_CAPACITY_IN_FEWER_COLUMN_LAYOUT = 8;
 
     /**
      * An interface for updating the thumbnail with the specific wallpaper.
@@ -581,10 +582,23 @@ public class IndividualPickerFragment extends AppbarFragment
         if (mCategory == null) {
             return;
         }
-        // Skip if the adapter was already created
-        if (mAdapter != null) {
+
+        // Wallpaper count could change, so we may need to change the layout(2 or 3 columns layout)
+        GridLayoutManager gridLayoutManager = (GridLayoutManager) mImageGrid.getLayoutManager();
+        boolean needUpdateLayout =
+                gridLayoutManager != null && gridLayoutManager.getSpanCount() != getNumColumns();
+
+        // Skip if the adapter was already created and don't need to change the layout
+        if (mAdapter != null && !needUpdateLayout) {
             return;
         }
+
+        // Clear the old decoration
+        int decorationCount = mImageGrid.getItemDecorationCount();
+        for (int i = 0; i < decorationCount; i++) {
+            mImageGrid.removeItemDecorationAt(i);
+        }
+
         mImageGrid.addItemDecoration(new GridPaddingDecoration(getGridItemPaddingHorizontal(),
                 getGridItemPaddingBottom()));
         int edgePadding = getEdgePadding();
