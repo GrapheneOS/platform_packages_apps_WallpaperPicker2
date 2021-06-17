@@ -82,6 +82,13 @@ genrule {
        + "$(location soong_zip) -o $(out) -C $$RES_DIR -D $$RES_DIR"
 }
 
+filegroup {
+    name: "WallpaperPicker2_Manifest",
+    srcs: [
+        "AndroidManifest.xml",
+    ],
+}
+
 java_defaults {
     name: "WallpaperPicker2_defaults",
 
