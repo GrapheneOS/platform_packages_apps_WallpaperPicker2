@@ -32,6 +32,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 
 import com.android.wallpaper.module.BitmapCropper;
 import com.android.wallpaper.module.InjectorProvider;
@@ -124,6 +125,17 @@ public abstract class Asset {
     public void loadLowResDrawable(Activity activity, ImageView imageView, int placeholderColor,
             BitmapTransformation transformation) {
         // No op
+    }
+
+    /**
+     * Returns a Bitmap from the separate low resolution data source (if there is one) or
+     * {@code null} otherwise.
+     * This could be an I/O operation so DO NOT CALL ON UI THREAD
+     */
+    @WorkerThread
+    @Nullable
+    public Bitmap getLowResBitmap(Context context) {
+        return null;
     }
 
     /**
