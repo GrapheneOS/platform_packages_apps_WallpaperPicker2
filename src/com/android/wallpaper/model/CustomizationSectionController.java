@@ -24,25 +24,19 @@ import androidx.fragment.app.Fragment;
 import com.android.wallpaper.picker.SectionView;
 
 /**
- * The interface for the behavior of section in the Customization hub.
+ * The interface for the behavior of section in the customization picker.
  *
  * @param <T> the {@link SectionView} to create for the section
  */
-public interface HubSectionController<T extends SectionView> {
+public interface CustomizationSectionController<T extends SectionView> {
 
-    /** Interface for Customization hub section navigation. */
-    interface HubSectionNavigationController {
+    /** Interface for customization section navigation. */
+    interface CustomizationSectionNavigationController {
         /** Navigates to the given {@code fragment}. */
         void navigateTo(Fragment fragment);
     }
 
-    /** Interface for Customization hub section's dark mode responding to battery saver. */
-    interface HubSectionBatterySaverListener {
-        /** Callback when battery saver's state changed with given {@code isEnabled}. */
-        void onBatterySaverStateChanged(boolean isEnabled);
-    }
-
-    /** Returns {@code true} if the Customization hub section is available. */
+    /** Returns {@code true} if the customization section is available. */
     boolean isAvailable(@Nullable Context context);
 
     /**
