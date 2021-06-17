@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.util;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -63,6 +64,7 @@ public class FullScreenAnimation {
     private float mPillButtonsTranslation;
     private int mStatusBarHeight;
     private int mNavigationBarHeight;
+    private FullScreenStatusListener mFullScreenStatusListener;
 
     private static final float HIDE_ICONS_TOP_RATIO = 0.2f;
 
@@ -85,6 +87,12 @@ public class FullScreenAnimation {
 
     FullScreenTextColor mFullScreenTextColor = FullScreenTextColor.DEFAULT;
     private int mCurrentTextColor;
+
+    /** Callback for full screen status. */
+    public interface FullScreenStatusListener {
+        /** Gets called at animation end when full screen status gets changed. */
+        void onFullScreenStatusChange(boolean isFullScreen);
+    }
 
     /**
      * Constructor.
@@ -149,6 +157,11 @@ public class FullScreenAnimation {
         }
 
         mView.findViewById(viewId).setLayoutParams(layoutParams);
+    }
+
+    /** Sets a {@param listener} to listen full screen state changes. */
+    public void setFullScreenStatusListener(FullScreenStatusListener listener) {
+        mFullScreenStatusListener = listener;
     }
 
     /**
@@ -427,6 +440,23 @@ public class FullScreenAnimation {
                 animationRounding,
                 animationHide
         );
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationCancel(Animator animator) {}
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                if (mFullScreenStatusListener != null) {
+                    mFullScreenStatusListener.onFullScreenStatusChange(toFullScreen);
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {}
+
+            @Override
+            public void onAnimationStart(Animator animator) {}
+        });
         animatorSet.start();
 
         animateColor(toFullScreen);

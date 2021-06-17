@@ -68,7 +68,7 @@ import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
 import com.android.wallpaper.util.WallpaperSurfaceCallback;
-import com.android.wallpaper.widget.LockScreenPreviewer2;
+import com.android.wallpaper.widget.LockScreenPreviewer;
 import com.android.wallpaper.widget.PreviewPager;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
 import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate;
@@ -142,7 +142,7 @@ public class CategoryFragment extends AppbarFragment
     // The wallpaper information which is currently shown on the lock preview.
     private WallpaperInfo mLockPreviewWallpaperInfo;
 
-    private LockScreenPreviewer2 mLockScreenPreviewer;
+    private LockScreenPreviewer mLockScreenPreviewer;
     private View mRootContainer;
 
     private final Rect mPreviewLocalRect = new Rect();
@@ -179,7 +179,7 @@ public class CategoryFragment extends AppbarFragment
         ViewGroup lockPreviewContainer = lockscreenPreviewCard.findViewById(
                 R.id.lock_screen_preview_container);
         lockPreviewContainer.setVisibility(View.VISIBLE);
-        mLockScreenPreviewer = new LockScreenPreviewer2(getLifecycle(), getContext(),
+        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getContext(),
                 lockPreviewContainer);
         mWallPaperPreviews.add(lockscreenPreviewCard);
 
