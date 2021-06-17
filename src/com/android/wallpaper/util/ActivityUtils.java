@@ -83,7 +83,7 @@ public final class ActivityUtils {
      *
      * @param intent activity intent.
      */
-    private static boolean isLaunchedFromSettingsSearch(Intent intent) {
+    public static boolean isLaunchedFromSettingsSearch(Intent intent) {
         return (intent != null && intent.hasExtra(LAUNCH_SETTINGS_SEARCH));
     }
 
