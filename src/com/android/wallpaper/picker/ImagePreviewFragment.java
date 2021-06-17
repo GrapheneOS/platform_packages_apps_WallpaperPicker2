@@ -69,7 +69,7 @@ import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperCropUtils;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.BottomActionBar.AccessibilityCallback;
-import com.android.wallpaper.widget.LockScreenPreviewer2;
+import com.android.wallpaper.widget.LockScreenPreviewer;
 import com.android.wallpaper.widget.WallpaperInfoView;
 
 import com.bumptech.glide.Glide;
@@ -106,7 +106,7 @@ public class ImagePreviewFragment extends PreviewFragment {
     protected SurfaceView mWorkspaceSurface;
     protected WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     protected ViewGroup mLockPreviewContainer;
-    protected LockScreenPreviewer2 mLockScreenPreviewer;
+    protected LockScreenPreviewer mLockScreenPreviewer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -152,9 +152,11 @@ public class ImagePreviewFragment extends PreviewFragment {
         mWorkspaceSurfaceCallback = createWorkspaceSurfaceCallback(mWorkspaceSurface);
         mWallpaperSurface = mContainer.findViewById(R.id.wallpaper_surface);
         mLockPreviewContainer = mContainer.findViewById(R.id.lock_screen_preview_container);
-        mLockScreenPreviewer = new LockScreenPreviewer2(getLifecycle(), getContext(),
+        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getContext(),
                 mLockPreviewContainer);
-
+        mLockScreenPreviewer.setDateViewVisibility(!mFullScreenAnimation.isFullScreen());
+        mFullScreenAnimation.setFullScreenStatusListener(
+                isFullScreen -> mLockScreenPreviewer.setDateViewVisibility(!isFullScreen));
         setUpTabs(view.findViewById(R.id.pill_tabs));
 
         view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
@@ -234,6 +236,10 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         if (mFullResImageView != null) {
             mFullResImageView.recycle();
+        }
+
+        if (mLockScreenPreviewer != null) {
+            mLockScreenPreviewer.release();
         }
 
         mWallpaperSurfaceCallback.cleanUp();
