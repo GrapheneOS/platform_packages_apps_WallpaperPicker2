@@ -116,6 +116,15 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     }
 
     @Override
+    public boolean onBackPressed() {
+        // TODO(b/191120122) Improve glitchy animation in Settings.
+        if (ActivityUtils.isLaunchedFromSettingsSearch(getActivity().getIntent())) {
+            mSectionControllers.forEach(CustomizationSectionController::onTransitionOut);
+        }
+        return super.onBackPressed();
+    }
+
+    @Override
     public void onDestroyView() {
         mSectionControllers.forEach(CustomizationSectionController::release);
         mSectionControllers.clear();
