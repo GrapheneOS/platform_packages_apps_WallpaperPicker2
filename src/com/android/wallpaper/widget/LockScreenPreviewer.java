@@ -21,12 +21,8 @@ import static android.view.View.MeasureSpec.makeMeasureSpec;
 import android.app.WallpaperColors;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.text.SpannableString;
 import android.text.format.DateFormat;
-import android.text.style.ReplacementSpan;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +31,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.MainThread;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
@@ -183,55 +178,6 @@ public class LockScreenPreviewer implements LifecycleObserver {
     private void updateDateTime() {
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         mLockDate.setText(DateFormat.format(mDatePattern, calendar));
-        SpannableString timeWithMonospaceText = new SpannableString(
-                TimeUtils.getDoubleLineFormattedTime(mContext, calendar));
-        timeWithMonospaceText.setSpan(new MonospaceSpan(), /* start= */ 0,
-                timeWithMonospaceText.length(), /* flag= */ 0);
-        mLockTime.setText(timeWithMonospaceText);
-    }
-
-    /** Make text monospace without overriding the text fontFamily. */
-    private static class MonospaceSpan extends ReplacementSpan {
-
-        @Override
-        public int getSize(@NonNull Paint paint, @NonNull CharSequence text, int start, int end,
-                @Nullable Paint.FontMetricsInt fontMetricsInt) {
-            if (fontMetricsInt != null) {
-                paint.getFontMetricsInt(fontMetricsInt);
-            }
-            int count = end - start;
-            if (text.charAt(start) == '\n') {
-                count--;
-            }
-            if (text.charAt(end - 1) == '\n') {
-                count--;
-            }
-            return getMaxCharWidth(paint, text, /* start= */ 0, text.length())
-                    * Math.max(count, 0);
-        }
-
-        @Override
-        public void draw(@NonNull Canvas canvas, @NonNull CharSequence text, int start, int end,
-                float x, int top, int y, int bottom, @NonNull Paint paint) {
-            float[] widths = new float[end - start];
-            paint.getTextWidths(text, start, end, widths);
-            int maxCharWidth = getMaxCharWidth(paint, text, /* start= */ 0, text.length());
-            for (int i = 0; i < end - start; ++i) {
-                canvas.drawText(text, start + i, start + i + 1,
-                        x + maxCharWidth * i + (maxCharWidth - widths[i]) / 2, y, paint);
-            }
-        }
-
-        private int getMaxCharWidth(Paint paint, CharSequence text, int start, int end) {
-            float[] widths = new float[end - start];
-            paint.getTextWidths(text, start, end, widths);
-            float max = 0;
-            for (float w : widths) {
-                if (max < w) {
-                    max = w;
-                }
-            }
-            return Math.round(max);
-        }
+        mLockTime.setText(TimeUtils.getDoubleLineFormattedTime(mLockTime.getContext(), calendar));
     }
 }
