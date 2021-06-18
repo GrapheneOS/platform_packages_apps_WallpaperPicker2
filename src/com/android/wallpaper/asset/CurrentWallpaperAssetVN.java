@@ -15,14 +15,19 @@
  */
 package com.android.wallpaper.asset;
 
+import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.os.ParcelFileDescriptor;
 import android.os.ParcelFileDescriptor.AutoCloseInputStream;
 import android.util.Log;
 import android.widget.ImageView;
+
+import androidx.annotation.WorkerThread;
 
 import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.compat.WallpaperManagerCompat.WallpaperLocation;
@@ -30,11 +35,15 @@ import com.android.wallpaper.util.WallpaperCropUtils;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Key;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.io.InputStream;
 import java.security.MessageDigest;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Asset representing the currently-set image wallpaper on N+ devices, including when daily rotation
@@ -86,6 +95,35 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
 
         }
         return false;
+    }
+
+
+    @Override
+    public void loadLowResDrawable(Activity activity, ImageView imageView, int placeholderColor,
+            BitmapTransformation transformation) {
+        MultiTransformation<Bitmap> multiTransformation =
+                new MultiTransformation<>(new FitCenter(), transformation);
+        Glide.with(activity)
+                .asDrawable()
+                .load(this)
+                .apply(RequestOptions.bitmapTransform(multiTransformation)
+                        .placeholder(new ColorDrawable(placeholderColor)))
+                .into(imageView);
+    }
+
+    @Override
+    @WorkerThread
+    public Bitmap getLowResBitmap(Context context) {
+        try {
+            return Glide.with(context)
+                    .asBitmap()
+                    .load(this)
+                    .submit()
+                    .get();
+        } catch (InterruptedException | ExecutionException e) {
+            Log.w(TAG, "Couldn't obtain low res bitmap", e);
+        }
+        return null;
     }
 
     @Override
