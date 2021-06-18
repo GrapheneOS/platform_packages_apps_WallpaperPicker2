@@ -16,6 +16,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/lock_overlay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -34,19 +35,28 @@
         android:textSize="@dimen/lock_screen_preview_date_text_size"
         android:lineHeight="@dimen/lock_screen_preview_date_line_height" />
 
-    <TextView
-        android:id="@+id/lock_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal"
-        android:fontFamily="@*android:string/config_headlineFontFamily"
-        android:textColor="?androidprv:attr/colorAccentPrimary"
-        android:textSize="@dimen/lock_screen_preview_time_text_size"
-        android:lineHeight="@dimen/lock_screen_preview_time_line_height"
-        android:elegantTextHeight="false"
-        android:lineSpacingMultiplier="0.7"
-        android:letterSpacing="-0.04"
-        android:includeFontPadding="false" />
-
+    <!-- Not going to depend on dp but ratio to keep clock always at the same position. -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!-- Must specify android.widget.TextView to make android:fontVariationSettings work. -->
+        <android.widget.TextView
+            android:id="@+id/lock_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:fontFamily="@font/clock"
+            android:textColor="?androidprv:attr/colorAccentPrimary"
+            android:typeface="monospace"
+            android:textSize="@dimen/lock_screen_preview_time_text_size"
+            android:lineSpacingMultiplier="0.7"
+            android:elegantTextHeight="false"
+            android:fontVariationSettings="'wght' 300"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.57"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
