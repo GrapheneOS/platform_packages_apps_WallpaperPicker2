@@ -17,13 +17,8 @@
     style="@style/FullContentPreviewCard"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="true"
     android:contentDescription="@string/wallpaper_preview_card_content_description">
-
-    <ImageView
-        android:id="@+id/wallpaper_preview_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?android:colorPrimary" />
 
     <SurfaceView
         android:id="@+id/wallpaper_surface"
@@ -42,16 +37,10 @@
         android:layout_height="match_parent"
         android:importantForAccessibility="noHideDescendants" />
 
-    <View
-        android:id="@+id/fade_cover"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0"
-        android:background="?android:colorSecondary" />
-
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/wallpaper_preview_spinner"
         style="?android:progressBarStyleLarge"
+        android:background="@android:color/transparent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

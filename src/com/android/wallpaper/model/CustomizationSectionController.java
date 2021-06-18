@@ -51,4 +51,7 @@ public interface CustomizationSectionController<T extends SectionView> {
 
     /** Releases the controller. */
     default void release() {}
+
+    /** Gets called when the section gets transitioned out. */
+    default void onTransitionOut() {}
 }
