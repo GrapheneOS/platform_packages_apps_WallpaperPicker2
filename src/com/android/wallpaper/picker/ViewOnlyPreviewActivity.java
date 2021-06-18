@@ -44,7 +44,7 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
 
     protected static Intent newIntent(Context context, WallpaperInfo wallpaper,
             boolean isVewAsHome) {
-        return newIntent(context, wallpaper).putExtra(EXTRA_VIEW_AS_HODE, isVewAsHome);
+        return newIntent(context, wallpaper).putExtra(EXTRA_VIEW_AS_HOME, isVewAsHome);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
             Intent intent = getIntent();
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
             boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
-            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HODE, true);
+            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, true);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context */ this,
                     wallpaper,

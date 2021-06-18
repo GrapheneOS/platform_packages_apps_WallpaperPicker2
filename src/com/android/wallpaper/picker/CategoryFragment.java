@@ -68,7 +68,7 @@ import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperConnection.WallpaperConnectionListener;
 import com.android.wallpaper.util.WallpaperSurfaceCallback;
-import com.android.wallpaper.widget.LockScreenPreviewer2;
+import com.android.wallpaper.widget.LockScreenPreviewer;
 import com.android.wallpaper.widget.PreviewPager;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
 import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate;
@@ -121,12 +121,10 @@ public class CategoryFragment extends AppbarFragment
     private static final String PERMISSION_READ_WALLPAPER_INTERNAL =
             "android.permission.READ_WALLPAPER_INTERNAL";
 
-    private ImageView mHomePreview;
     private SurfaceView mWorkspaceSurface;
     private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     private SurfaceView mWallpaperSurface;
     private WallpaperSurfaceCallback mWallpaperSurfaceCallback;
-    private ImageView mLockscreenPreview;
     private PreviewPager mPreviewPager;
     private List<View> mWallPaperPreviews;
     private WallpaperConnection mWallpaperConnection;
@@ -142,7 +140,7 @@ public class CategoryFragment extends AppbarFragment
     // The wallpaper information which is currently shown on the lock preview.
     private WallpaperInfo mLockPreviewWallpaperInfo;
 
-    private LockScreenPreviewer2 mLockScreenPreviewer;
+    private LockScreenPreviewer mLockScreenPreviewer;
     private View mRootContainer;
 
     private final Rect mPreviewLocalRect = new Rect();
@@ -162,24 +160,22 @@ public class CategoryFragment extends AppbarFragment
         mWallPaperPreviews = new ArrayList<>();
         CardView homePreviewCard = (CardView) inflater.inflate(
                 R.layout.wallpaper_preview_card, null);
-        mHomePreview = homePreviewCard.findViewById(R.id.wallpaper_preview_image);
         mWorkspaceSurface = homePreviewCard.findViewById(R.id.workspace_surface);
         mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(
                 mWorkspaceSurface, getContext());
         mWallpaperSurface = homePreviewCard.findViewById(R.id.wallpaper_surface);
-        mWallpaperSurfaceCallback = new WallpaperSurfaceCallback(getContext(), mHomePreview,
+        mWallpaperSurfaceCallback = new WallpaperSurfaceCallback(getContext(), homePreviewCard,
                 mWallpaperSurface);
         mWallPaperPreviews.add(homePreviewCard);
 
         CardView lockscreenPreviewCard = (CardView) inflater.inflate(
                 R.layout.wallpaper_preview_card, null);
-        mLockscreenPreview = lockscreenPreviewCard.findViewById(R.id.wallpaper_preview_image);
         lockscreenPreviewCard.findViewById(R.id.workspace_surface).setVisibility(View.GONE);
         lockscreenPreviewCard.findViewById(R.id.wallpaper_surface).setVisibility(View.GONE);
         ViewGroup lockPreviewContainer = lockscreenPreviewCard.findViewById(
                 R.id.lock_screen_preview_container);
         lockPreviewContainer.setVisibility(View.VISIBLE);
-        mLockScreenPreviewer = new LockScreenPreviewer2(getLifecycle(), getContext(),
+        mLockScreenPreviewer = new LockScreenPreviewer(getLifecycle(), getContext(),
                 lockPreviewContainer);
         mWallPaperPreviews.add(lockscreenPreviewCard);
 
@@ -245,13 +241,12 @@ public class CategoryFragment extends AppbarFragment
                 int minimumHeight = mRootContainer.getHeight() - mPreviewPager.getMeasuredHeight();
                 mBottomSheetBehavior.setPeekHeight(minimumHeight);
                 containerView.setMinimumHeight(minimumHeight);
-                ((CardView) mHomePreview.getParent())
-                        .setRadius(SizeCalculator.getPreviewCornerRadius(
+                homePreviewCard.setRadius(SizeCalculator.getPreviewCornerRadius(
                                 getActivity(), homePreviewCard.getMeasuredWidth()));
-                if (mLockscreenPreview != null) {
-                    ((CardView) mLockscreenPreview.getParent())
+                if (lockscreenPreviewCard != null) {
+                    lockscreenPreviewCard
                             .setRadius(SizeCalculator.getPreviewCornerRadius(
-                                    getActivity(), mLockscreenPreview.getMeasuredWidth()));
+                                    getActivity(), lockPreviewContainer.getMeasuredWidth()));
                 }
             }});
         fragmentContainer.setOnApplyWindowInsetsListener((v, windowInsets) -> {
@@ -456,8 +451,8 @@ public class CategoryFragment extends AppbarFragment
 
             mHomePreviewWallpaperInfo = wallpaperInfo;
             mLockPreviewWallpaperInfo = wallpaperInfo;
-            updateThumbnail(mHomePreviewWallpaperInfo, mHomePreview, true);
-            updateThumbnail(mLockPreviewWallpaperInfo, mLockscreenPreview, false);
+            updateThumbnail(mHomePreviewWallpaperInfo,
+                    mWallpaperSurfaceCallback.getHomeImageWallpaper(), true);
             mShowSelectedWallpaper = true;
         });
     }
@@ -621,8 +616,8 @@ public class CategoryFragment extends AppbarFragment
                         mHomePreviewWallpaperInfo = homeWallpaper;
                         mLockPreviewWallpaperInfo =
                                 lockWallpaper == null ? homeWallpaper : lockWallpaper;
-                        updateThumbnail(mHomePreviewWallpaperInfo, mHomePreview, true);
-                        updateThumbnail(mLockPreviewWallpaperInfo, mLockscreenPreview, false);
+                        updateThumbnail(mHomePreviewWallpaperInfo,
+                                mWallpaperSurfaceCallback.getHomeImageWallpaper(), true);
                     }
                 });
             }
@@ -639,7 +634,7 @@ public class CategoryFragment extends AppbarFragment
         }
 
         if (WallpaperConnection.isPreviewAvailable()) {
-            ImageView previewView = mWallpaperIndex == 0 ? mHomePreview : mLockscreenPreview;
+            ImageView previewView = mWallpaperSurfaceCallback.getHomeImageWallpaper();
             mWallpaperConnection = new WallpaperConnection(
                     getWallpaperIntent(homeWallpaper.getWallpaperComponent()), activity,
                     new WallpaperConnectionListener() {
