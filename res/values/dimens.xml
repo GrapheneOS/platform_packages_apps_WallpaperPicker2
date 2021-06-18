@@ -185,14 +185,11 @@
     <dimen name="fullscreen_preview_button_margin_bottom">28dp</dimen>
 
     <!-- The size of lock screen widget on the full screen. -->
-    <dimen name="lock_screen_preview_lock_icon_size">42dp</dimen>
-    <dimen name="lock_screen_preview_time_text_size">54dp</dimen>
-    <dimen name="lock_screen_preview_date_text_size">18dp</dimen>
     <dimen name="smartspace_preview_key_ambient_shadow_blur">1.5dp</dimen>
-
-    <!-- The size of lock screen preview 2 on the full screen. -->
-    <dimen name="lock_screen_preview2_date_text_size">20dp</dimen>
-    <dimen name="lock_screen_preview2_time_text_size">170dp</dimen>
+    <dimen name="lock_screen_preview_date_text_size">20dp</dimen>
+    <dimen name="lock_screen_preview_date_line_height">24dp</dimen>
+    <dimen name="lock_screen_preview_time_text_size">200dp</dimen>
+    <dimen name="lock_screen_preview_time_line_height">168dp</dimen>
 
     <!-- Common dimensions for option sections -->
     <dimen name="section_container_vertical_margin">24dp</dimen>

@@ -155,6 +155,7 @@ public class LiveWallpaperInfo extends WallpaperInfo {
     }
 
     protected LiveWallpaperInfo(Parcel in) {
+        super(in);
         mInfo = in.readParcelable(android.app.WallpaperInfo.class.getClassLoader());
         mVisibleTitle = in.readInt() == 1;
         mCollectionId = in.readString();
@@ -408,6 +409,7 @@ public class LiveWallpaperInfo extends WallpaperInfo {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        super.writeToParcel(parcel, i);
         parcel.writeParcelable(mInfo, 0 /* flags */);
         parcel.writeInt(mVisibleTitle ? 1 : 0);
         parcel.writeString(mCollectionId);

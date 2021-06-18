@@ -107,10 +107,6 @@ public class PreviewPager extends LinearLayout {
                 // offset in (origin, rightBoundary)
                 alpha = (float) Math.abs(offset - origin) / Math.abs(rightBoundary - origin);
             }
-            View cover = view.findViewById(R.id.fade_cover);
-            if (cover != null) {
-                view.findViewById(R.id.fade_cover).setAlpha(alpha);
-            }
         }, LAYER_TYPE_NONE);
         mViewPager.setPageMargin(res.getDimensionPixelOffset(R.dimen.preview_page_gap));
         mViewPager.setClipToPadding(false);
