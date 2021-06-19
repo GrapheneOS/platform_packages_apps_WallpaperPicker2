@@ -189,7 +189,6 @@
     <dimen name="lock_screen_preview_date_text_size">20dp</dimen>
     <dimen name="lock_screen_preview_date_line_height">24dp</dimen>
     <dimen name="lock_screen_preview_time_text_size">200dp</dimen>
-    <dimen name="lock_screen_preview_time_line_height">168dp</dimen>
 
     <!-- Common dimensions for option sections -->
     <dimen name="section_container_vertical_margin">24dp</dimen>
