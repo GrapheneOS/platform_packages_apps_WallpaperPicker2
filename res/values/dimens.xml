@@ -200,5 +200,6 @@
     <!-- For the wallpaper section -->
     <dimen name="wallpaper_preview_margin_top">24dp</dimen>
     <dimen name="wallpaper_picker_entry_drawable_padding">8dp</dimen>
+    <dimen name="wallpaper_picker_entry_horizontal_padding">16dp</dimen>
     <dimen name="wallpaper_picker_entry_margin_vertical">18dp</dimen>
 </resources>
