@@ -161,7 +161,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
         mSectionControllers.addAll(getAvailableSections(allSectionControllers));
     }
 
-    private List<CustomizationSectionController<?>> getAvailableSections (
+    protected List<CustomizationSectionController<?>> getAvailableSections(
             List<CustomizationSectionController<?>> controllers) {
         return controllers.stream()
                 .filter(controller -> {
