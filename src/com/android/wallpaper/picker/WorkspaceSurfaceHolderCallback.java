@@ -164,6 +164,12 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
 
     protected void requestPreview(SurfaceView workspaceSurface,
             PreviewUtils.WorkspacePreviewCallback callback) {
+        if (workspaceSurface.getDisplay() == null) {
+            Log.w(TAG,
+                    "No display ID, avoiding asking for workspace preview, lest WallpaperPicker "
+                            + "crash");
+            return;
+        }
         Bundle request = SurfaceViewUtils.createSurfaceViewRequest(workspaceSurface);
         if (mWallpaperColors != null) {
             request.putParcelable(KEY_WALLPAPER_COLORS, mWallpaperColors);
