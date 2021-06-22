@@ -31,7 +31,9 @@ import android.app.WallpaperColors;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.ColorSpace;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
@@ -77,6 +79,7 @@ import com.bumptech.glide.MemoryCategory;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -347,6 +350,15 @@ public class ImagePreviewFragment extends PreviewFragment {
                     @Override
                     public void onBitmapCropped(Bitmap croppedBitmap) {
                         boolean shouldRecycle = false;
+                        ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
+                        if (croppedBitmap.compress(Bitmap.CompressFormat.PNG, 100, tmpOut)) {
+                            byte[] outByteArray = tmpOut.toByteArray();
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inPreferredColorSpace = ColorSpace.get(ColorSpace.Named.SRGB);
+                            Bitmap decodedPng = BitmapFactory.decodeByteArray(outByteArray, 0,
+                                    outByteArray.length);
+                            croppedBitmap = decodedPng;
+                        }
                         if (croppedBitmap.getConfig() == Bitmap.Config.HARDWARE) {
                             croppedBitmap = croppedBitmap.copy(Bitmap.Config.ARGB_8888, false);
                             shouldRecycle = true;
