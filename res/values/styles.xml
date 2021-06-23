@@ -99,7 +99,7 @@
 
     <style name="SubtitleTextAppearance" parent="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Subtitle"/>
 
-    <style name="PillTabsTextAppearance" parent="TitleTextAppearance">
+    <style name="SeparatedTabsTextAppearance" parent="TitleTextAppearance">
         <item name="android:textStyle" />
         <item name="textAllCaps">false</item>
         <item name="android:textSize">14sp</item>

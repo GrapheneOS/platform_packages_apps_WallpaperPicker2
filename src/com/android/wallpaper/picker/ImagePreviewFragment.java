@@ -158,7 +158,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         mLockScreenPreviewer.setDateViewVisibility(!mFullScreenAnimation.isFullScreen());
         mFullScreenAnimation.setFullScreenStatusListener(
                 isFullScreen -> mLockScreenPreviewer.setDateViewVisibility(!isFullScreen));
-        setUpTabs(view.findViewById(R.id.pill_tabs));
+        setUpTabs(view.findViewById(R.id.separated_tabs));
 
         view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
                 makeMeasureSpec(mScreenSize.y, EXACTLY));
@@ -233,21 +233,22 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         mBottomActionBar.setActionClickListener(APPLY, this::onSetWallpaperClicked);
 
-        View pillTabsContainer = getView().findViewById(R.id.pill_tabs_container);
+        View separatedTabsContainer = getView().findViewById(R.id.separated_tabs_container);
         // Update target view's accessibility param since it will be blocked by the bottom sheet
         // when expanded.
         mBottomActionBar.setAccessibilityCallback(new AccessibilityCallback() {
             @Override
             public void onBottomSheetCollapsed() {
                 mContainer.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
-                pillTabsContainer.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
+                separatedTabsContainer.setImportantForAccessibility(
+                        IMPORTANT_FOR_ACCESSIBILITY_YES);
             }
 
             @Override
             public void onBottomSheetExpanded() {
                 mContainer.setImportantForAccessibility(
                         IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
-                pillTabsContainer.setImportantForAccessibility(
+                separatedTabsContainer.setImportantForAccessibility(
                         IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
 
             }

@@ -203,7 +203,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         mWallpaperSurfaceCallback = new WallpaperSurfaceCallback(getContext(),
                 mHomePreviewCard, mWallpaperSurface, mPlaceholderColorFuture, null);
 
-        setUpTabs(view.findViewById(R.id.pill_tabs));
+        setUpTabs(view.findViewById(R.id.separated_tabs));
 
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -360,21 +360,22 @@ public class LivePreviewFragment extends PreviewFragment implements
         mBottomActionBar.setActionClickListener(APPLY, unused -> onSetWallpaperClicked(null));
         mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
 
-        View pillTabsContainer = getView().findViewById(R.id.pill_tabs_container);
+        View separatedTabsContainer = getView().findViewById(R.id.separated_tabs_container);
         // Update target view's accessibility param since it will be blocked by the bottom sheet
         // when expanded.
         mBottomActionBar.setAccessibilityCallback(new AccessibilityCallback() {
             @Override
             public void onBottomSheetCollapsed() {
                 mPreviewContainer.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
-                pillTabsContainer.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
+                separatedTabsContainer.setImportantForAccessibility(
+                        IMPORTANT_FOR_ACCESSIBILITY_YES);
             }
 
             @Override
             public void onBottomSheetExpanded() {
                 mPreviewContainer.setImportantForAccessibility(
                         IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
-                pillTabsContainer.setImportantForAccessibility(
+                separatedTabsContainer.setImportantForAccessibility(
                         IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
             }
         });
