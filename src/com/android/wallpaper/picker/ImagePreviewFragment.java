@@ -123,7 +123,7 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.fragment_image_preview_v2;
+        return R.layout.fragment_image_preview;
     }
 
     @Override
@@ -584,8 +584,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                 mWallpaperSurface.setBackgroundColor(placeHolderColor);
 
                 mWallpaperAsset.loadLowResDrawable(activity, mLowResImageView, placeHolderColor,
-                        new WallpaperPreviewBitmapTransformation(
-                                activity.getApplicationContext(), isRtl()));
+                        mPreviewBitmapTransformation);
 
                 wallpaperPreviewContainer.measure(
                         makeMeasureSpec(width, EXACTLY),
