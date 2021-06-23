@@ -117,7 +117,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     private ViewGroup mPreviewContainer;
     private TouchForwardingLayout mTouchForwardingLayout;
     private SurfaceView mWallpaperSurface;
-    private WallpaperPreviewBitmapTransformation mPreviewBitmapTransformation;
     private Future<Integer> mPlaceholderColorFuture;
 
     @Override
@@ -132,8 +131,6 @@ public class LivePreviewFragment extends PreviewFragment implements
             mDeleteIntent.setPackage(info.getPackageName());
             mDeleteIntent.putExtra(EXTRA_LIVE_WALLPAPER_INFO, info);
         }
-        mPreviewBitmapTransformation = new WallpaperPreviewBitmapTransformation(
-                requireContext().getApplicationContext(), isRtl());
         String settingsActivity = getSettingsActivity(info);
         if (settingsActivity != null) {
             mSettingsIntent = new Intent();
@@ -234,9 +231,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     protected void updateScreenPreview(boolean isHomeSelected) {
         mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.INVISIBLE);
-        if (!isHomeSelected) {
-            mWorkspaceSurfaceCallback.cleanUp();
-        }
+
         mLockPreviewContainer.setVisibility(isHomeSelected ? View.INVISIBLE : View.VISIBLE);
 
         mFullScreenAnimation.setIsHomeSelected(isHomeSelected);
@@ -398,8 +393,7 @@ public class LivePreviewFragment extends PreviewFragment implements
             }
         }
 
-        final String deleteAction = getDeleteAction(mWallpaper.getWallpaperComponent());
-        if (TextUtils.isEmpty(deleteAction)) {
+        if (TextUtils.isEmpty(getDeleteAction(mWallpaper.getWallpaperComponent()))) {
             mBottomActionBar.hideActions(DELETE);
         } else {
             mBottomActionBar.setActionClickListener(DELETE, listener ->
@@ -458,7 +452,7 @@ public class LivePreviewFragment extends PreviewFragment implements
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.fragment_live_preview_v2;
+        return R.layout.fragment_live_preview;
     }
 
     @Override
