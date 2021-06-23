@@ -132,6 +132,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected boolean mTestingModeEnabled;
 
     protected WallpaperInfo mWallpaper;
+    protected WallpaperPreviewBitmapTransformation mPreviewBitmapTransformation;
     protected WallpaperSetter mWallpaperSetter;
     protected UserEventLogger mUserEventLogger;
     protected BottomActionBar mBottomActionBar;
@@ -139,16 +140,16 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected Intent mExploreIntent;
     protected CharSequence mActionLabel;
 
+    // For full screen animations.
+    protected View mRootView;
+    protected FullScreenAnimation mFullScreenAnimation;
+
     /**
      * Staged error dialog fragments that were unable to be shown when the hosting activity didn't
      * allow committing fragment transactions.
      */
     private SetWallpaperErrorDialogFragment mStagedSetWallpaperErrorDialogFragment;
     private LoadWallpaperErrorDialogFragment mStagedLoadWallpaperErrorDialogFragment;
-
-    // For full screen animations.
-    protected View mRootView;
-    protected FullScreenAnimation mFullScreenAnimation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -158,6 +159,8 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
         mUserEventLogger = injector.getUserEventLogger(appContext);
         mWallpaper = getArguments().getParcelable(ARG_WALLPAPER);
+        mPreviewBitmapTransformation = new WallpaperPreviewBitmapTransformation(
+                appContext, isRtl());
 
         //noinspection ResourceType
         mPreviewMode = getArguments().getInt(ARG_PREVIEW_MODE);
@@ -204,7 +207,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar = bottomActionBar;
-        // TODO: Extract the common code here.
         setBottomActionBarAndFullScreenActions();
     }
 
