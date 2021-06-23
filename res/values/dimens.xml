@@ -159,8 +159,8 @@
     <dimen name="bottom_action_button_radius">100dp</dimen>
 
     <!-- Whenever updating this file, ensure that
-         bottom_actions_plus_pill_tabs == bottom_actions_height + pill_tabs_height -->
-    <dimen name="bottom_actions_plus_pill_tabs">144dp</dimen>
+         bottom_actions_plus_separated_tabs == bottom_actions_height + separated_tabs_height -->
+    <dimen name="bottom_actions_plus_separated_tabs">144dp</dimen>
 
     <dimen name="bottom_sheet_margin">24dp</dimen>
     <dimen name="wallpaper_info_pane_padding">24dp</dimen>
@@ -173,16 +173,19 @@
     <dimen name="option_title_font_text_size">14sp</dimen>
     <dimen name="option_title_line_height">20dp</dimen>
 
-    <!-- Dimensions for the pill tabs. -->
-    <dimen name="pill_tabs_height">56dp</dimen>
-    <dimen name="pill_tabs_corner_radius">50dp</dimen>
-    <dimen name="pill_tabs_horizontal_margin">24dp</dimen>
+    <!-- Dimensions for the separated tabs. -->
+    <dimen name="separated_tabs_height">56dp</dimen>
+    <dimen name="separated_tabs_corner_radius">12dp</dimen>
+    <dimen name="separated_tabs_inset_horizontal">4dp</dimen>
+    <!--  Default page horizontal margin (24dp) - separated tabs inset horizontal (4dp) -->
+    <dimen name="separated_tabs_horizontal_margin">20dp</dimen>
 
     <!-- Whenever updating this file, ensure that
-         fullscreen_preview_button_margin == - pill_tabs_height -->
+         fullscreen_preview_button_margin == - separated_tabs_height -->
     <dimen name="fullscreen_preview_button_margin">-60dp</dimen>
     <dimen name="fullscreen_preview_button_margin_between">15dp</dimen>
     <dimen name="fullscreen_preview_button_margin_bottom">28dp</dimen>
+    <dimen name="fullscreen_preview_buttons_horizontal_margin">24dp</dimen>
 
     <!-- The size of lock screen widget on the full screen. -->
     <dimen name="smartspace_preview_key_ambient_shadow_blur">1.5dp</dimen>
