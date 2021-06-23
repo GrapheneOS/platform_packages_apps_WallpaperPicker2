@@ -121,12 +121,7 @@
     </style>
 
     <!-- Preview attribution pane styles -->
-    <style name="WallpaperPicker.BottomPaneStyle" parent="@android:style/Theme.DeviceDefault.Settings">
-        <item name="tabTextAppearance">@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps</item>
-        <item name="tabIndicatorColor">?android:attr/textColorPrimary</item>
-        <item name="tabGravity">fill</item>
-        <item name="tabMaxWidth">0dp</item>
-    </style>
+    <style name="WallpaperPicker.BottomPaneStyle" parent="@android:style/Theme.DeviceDefault.Settings"/>
 
     <!-- Preview customization pane styles -->
     <style name="WallpaperPicker.CustomizationPaneStyle" parent="@android:style/Theme.DeviceDefault.Settings">
@@ -182,8 +177,6 @@
 
     <!-- Bottom action item -->
     <style name="BottomActionItemStyle">
-        <item name="android:tint">@color/bottom_action_button_color_tint</item>
-        <item name="android:background">@drawable/bottom_action_button_background</item>
         <item name="android:paddingHorizontal">@dimen/bottom_action_button_padding_horizontal</item>
     </style>
 
