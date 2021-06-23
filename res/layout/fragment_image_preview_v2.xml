@@ -22,13 +22,13 @@
     android:background="?android:colorBackground">
 
     <FrameLayout
-        android:id="@+id/pill_tabs_container"
+        android:id="@+id/separated_tabs_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginBottom="@dimen/bottom_actions_height"
-        android:paddingHorizontal="@dimen/pill_tabs_horizontal_margin">
-        <include layout="@layout/pill_tabs" />
+        android:paddingHorizontal="@dimen/separated_tabs_horizontal_margin">
+        <include layout="@layout/separated_tabs" />
     </FrameLayout>
 
     <FrameLayout
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?android:attr/actionBarSize"
-        android:layout_marginBottom="@dimen/bottom_actions_plus_pill_tabs">
+        android:layout_marginBottom="@dimen/bottom_actions_plus_separated_tabs">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container"
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:layout_marginBottom="@dimen/fullscreen_preview_button_margin"
-        android:paddingHorizontal="@dimen/pill_tabs_horizontal_margin">
+        android:paddingHorizontal="@dimen/fullscreen_preview_buttons_horizontal_margin">
         <include layout="@layout/fullscreen_buttons" />
     </FrameLayout>
 
