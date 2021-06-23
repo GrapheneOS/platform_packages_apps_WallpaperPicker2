@@ -24,12 +24,16 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.ImageViewCompat;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.SizeCalculator;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -127,6 +131,7 @@ public class BottomActionBar extends FrameLayout {
 
         mBottomSheetView = findViewById(R.id.action_bottom_sheet);
         SizeCalculator.adjustBackgroundCornerRadius(mBottomSheetView);
+        setColor(context);
 
         mBottomSheetBehavior = (QueueStateBottomSheetBehavior<ViewGroup>) BottomSheetBehavior.from(
                 mBottomSheetView);
@@ -458,6 +463,26 @@ public class BottomActionBar extends FrameLayout {
         mBottomSheetView.removeAllViews();
         mBottomSheetBehavior.reset();
         mSelectedAction = null;
+    }
+
+    /** Dynamic update color with {@code Context}. */
+    public void setColor(Context context) {
+        mBottomSheetView.setBackground(context.getDrawable(R.drawable.bottom_sheet_background));
+
+        ViewGroup actionTabs = findViewById(R.id.action_tabs);
+        actionTabs.setBackgroundColor(
+                ResourceUtils.getColorAttr(context, android.R.attr.colorBackground));
+        for (int i = 0; i < actionTabs.getChildCount(); i++) {
+            View v = actionTabs.getChildAt(i);
+            if (v instanceof ImageView) {
+                v.setBackground(context.getDrawable(R.drawable.bottom_action_button_background));
+                ImageViewCompat.setImageTintList((ImageView) v,
+                        context.getColorStateList(R.color.bottom_action_button_color_tint));
+            }
+        }
+        Button applyButton = findViewById(R.id.action_apply_text_button);
+        applyButton.setBackground(context.getDrawable(R.drawable.btn_transparent_background));
+        applyButton.setTextColor(ResourceUtils.getColorAttr(context, android.R.attr.colorAccent));
     }
 
     private void updateSelectedState(BottomAction bottomAction, boolean selected) {
