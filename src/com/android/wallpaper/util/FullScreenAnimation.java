@@ -61,7 +61,7 @@ public class FullScreenAnimation {
     private int mWorkspaceWidth;
     private int mWorkspaceHeight;
     private float mBottomActionBarTranslation;
-    private float mPillButtonsTranslation;
+    private float mFullScreenButtonsTranslation;
     private int mStatusBarHeight;
     private int mNavigationBarHeight;
     private FullScreenStatusListener mFullScreenStatusListener;
@@ -144,15 +144,16 @@ public class FullScreenAnimation {
         return dimension;
     }
 
-    private void setViewMargins(int viewId, float marginTop, float marginBottom, boolean pillTabs) {
+    private void setViewMargins(int viewId, float marginTop, float marginBottom,
+            boolean separatedTabs) {
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
-                pillTabs ? FrameLayout.LayoutParams.WRAP_CONTENT
+                separatedTabs ? FrameLayout.LayoutParams.WRAP_CONTENT
                         : FrameLayout.LayoutParams.MATCH_PARENT);
 
         layoutParams.setMargins(0, Math.round(marginTop), 0, Math.round(marginBottom));
 
-        if (pillTabs) {
+        if (separatedTabs) {
             layoutParams.gravity = Gravity.BOTTOM;
         }
 
@@ -191,13 +192,13 @@ public class FullScreenAnimation {
                 getStatusBarHeight() + getAttributeDimension(R.attr.actionBarSize),
                 getNavigationBarHeight()
                         + mView.getResources().getDimension(R.dimen.bottom_actions_height)
-                        + mView.getResources().getDimension(R.dimen.pill_tabs_height),
+                        + mView.getResources().getDimension(R.dimen.separated_tabs_height),
                 false);
         setViewMargins(R.id.bottom_action_bar_container,
                 0,
                 getNavigationBarHeight(),
                 false);
-        setViewMargins(R.id.pill_tabs_container,
+        setViewMargins(R.id.separated_tabs_container,
                 0,
                 getNavigationBarHeight()
                         + mView.getResources().getDimension(R.dimen.bottom_actions_height),
@@ -278,7 +279,7 @@ public class FullScreenAnimation {
                     0,
                     Math.round(mWorkspaceHeight * HIDE_ICONS_TOP_RATIO),
                     mWorkspaceWidth,
-                    mWorkspaceHeight + Math.round(mPillButtonsTranslation / mScale)));
+                    mWorkspaceHeight + Math.round(mFullScreenButtonsTranslation / mScale)));
             mView.findViewById(R.id.lock_screen_preview_container).setVisibility(View.VISIBLE);
         } else {
             int half = mWorkspaceHeight / 2;
@@ -378,12 +379,12 @@ public class FullScreenAnimation {
 
             mBottomActionBarTranslation = getNavigationBarHeight()
                     + mView.getResources().getDimension(R.dimen.bottom_actions_height)
-                    + mView.getResources().getDimension(R.dimen.pill_tabs_height);
+                    + mView.getResources().getDimension(R.dimen.separated_tabs_height);
 
-            mPillButtonsTranslation = -(getNavigationBarHeight()
+            mFullScreenButtonsTranslation = -(getNavigationBarHeight()
                     + mView.getResources().getDimension(
                             R.dimen.fullscreen_preview_button_margin_bottom)
-                    + mView.getResources().getDimension(R.dimen.pill_tabs_height));
+                    + mView.getResources().getDimension(R.dimen.separated_tabs_height));
 
             mScaleIsSet = true;
         }
@@ -404,8 +405,8 @@ public class FullScreenAnimation {
         // Animation to hide some of the home screen icons.
         float fromTop = toFullScreen ? 0f : HIDE_ICONS_TOP_RATIO;
         float toTop = toFullScreen ? HIDE_ICONS_TOP_RATIO : 0f;
-        float fromBottom = toFullScreen ? 0 : mPillButtonsTranslation / mScale;
-        float toBottom = toFullScreen ? mPillButtonsTranslation / mScale : 0;
+        float fromBottom = toFullScreen ? 0 : mFullScreenButtonsTranslation / mScale;
+        float toBottom = toFullScreen ? mFullScreenButtonsTranslation / mScale : 0;
 
         ValueAnimator animationHide = ValueAnimator.ofFloat(0f, 1f);
         animationHide.addUpdateListener(animation -> {
@@ -423,7 +424,7 @@ public class FullScreenAnimation {
         float scale = toFullScreen ? mScale : 1f;
         float offsetY = toFullScreen ? mOffsetY : 0f;
         float bottomActionBarTranslation = toFullScreen ? mBottomActionBarTranslation : 0;
-        float pillButtonsTranslation = toFullScreen ? mPillButtonsTranslation : 0;
+        float fullScreenButtonsTranslation = toFullScreen ? mFullScreenButtonsTranslation : 0;
         View frameLayout = mView.findViewById(R.id.screen_preview_layout);
 
         AnimatorSet animatorSet = new AnimatorSet();
@@ -433,10 +434,10 @@ public class FullScreenAnimation {
                 ObjectAnimator.ofFloat(frameLayout, "translationY", offsetY),
                 ObjectAnimator.ofFloat(mView.findViewById(R.id.bottom_actionbar),
                         "translationY", bottomActionBarTranslation),
-                ObjectAnimator.ofFloat(mView.findViewById(R.id.pill_tabs_container),
+                ObjectAnimator.ofFloat(mView.findViewById(R.id.separated_tabs_container),
                         "translationY", bottomActionBarTranslation),
                 ObjectAnimator.ofFloat(mView.findViewById(R.id.fullscreen_buttons_container),
-                        "translationY", pillButtonsTranslation),
+                        "translationY", fullScreenButtonsTranslation),
                 animationRounding,
                 animationHide
         );
