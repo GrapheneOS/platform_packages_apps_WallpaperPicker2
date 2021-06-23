@@ -188,7 +188,7 @@
     <dimen name="smartspace_preview_key_ambient_shadow_blur">1.5dp</dimen>
     <dimen name="lock_screen_preview_date_text_size">20dp</dimen>
     <dimen name="lock_screen_preview_date_line_height">24dp</dimen>
-    <dimen name="lock_screen_preview_time_text_size">200dp</dimen>
+    <dimen name="lock_screen_preview_time_text_size">150dp</dimen>
 
     <!-- Common dimensions for option sections -->
     <dimen name="section_container_vertical_margin">24dp</dimen>
@@ -200,5 +200,6 @@
     <!-- For the wallpaper section -->
     <dimen name="wallpaper_preview_margin_top">24dp</dimen>
     <dimen name="wallpaper_picker_entry_drawable_padding">8dp</dimen>
+    <dimen name="wallpaper_picker_entry_horizontal_padding">16dp</dimen>
     <dimen name="wallpaper_picker_entry_margin_vertical">18dp</dimen>
 </resources>

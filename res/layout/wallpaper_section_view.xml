@@ -68,6 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/wallpaper_picker_entry_margin_vertical"
+            android:paddingHorizontal="@dimen/wallpaper_picker_entry_horizontal_padding"
             android:background="@drawable/btn_transparent_background"
             android:textColor="?android:attr/colorAccent"
             android:drawablePadding="@dimen/wallpaper_picker_entry_drawable_padding"
