@@ -97,4 +97,14 @@ public final class ActivityUtils {
                 context.getContentResolver(), Settings.Secure.USER_SETUP_COMPLETE, SUW_COMPLETE)
                 == SUW_NOT_YET);
     }
+
+    /**
+     * Returns true if it's wallpaper only mode.
+     *
+     * @param intent activity intent.
+     */
+    public static boolean isWallpaperOnlyMode(Intent intent) {
+        return "wallpaper_only".equals(
+                intent.getStringExtra("com.android.launcher3.WALLPAPER_FLAVOR"));
+    }
 }
