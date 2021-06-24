@@ -16,7 +16,6 @@
 -->
 <com.google.android.material.tabs.TabLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/separated_tabs"
     android:layout_width="match_parent"
@@ -25,10 +24,9 @@
     app:tabRippleColor="?android:colorControlHighlight"
     app:tabIndicatorAnimationDuration="0"
     app:tabIndicator="@drawable/separated_tabs_indicator_background"
-    app:tabIndicatorColor="?androidprv:attr/colorAccentPrimary"
+    app:tabIndicatorColor="@color/separated_tabs_indicator_color"
     app:tabIndicatorFullWidth="true"
     app:tabIndicatorGravity="stretch"
     app:tabGravity="fill"
-    app:tabTextColor="@color/tab_text_color"
-    app:tabSelectedTextColor="?android:textColorPrimary"
+    app:tabTextColor="@color/separated_tabs_text_color"
     app:tabTextAppearance="@style/SeparatedTabsTextAppearance" />
