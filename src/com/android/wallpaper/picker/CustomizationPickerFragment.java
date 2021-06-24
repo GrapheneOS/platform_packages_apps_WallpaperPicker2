@@ -52,6 +52,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     // Note that the section views will be displayed by the list ordering.
     private final List<CustomizationSectionController<?>> mSectionControllers = new ArrayList<>();
     private NestedScrollView mNestedScrollView;
+    @Nullable private Bundle mBackStackSavedInstanceState;
 
     /** Initiates CustomizationPickerFragment instance. */
     public static CustomizationPickerFragment newInstance(CharSequence title) {
@@ -62,7 +63,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+            @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.collapsing_toolbar_base_layout,
                 container, /* attachToRoot= */ false);
         setContentView(view, R.layout.fragment_customization_picker);
@@ -78,6 +79,11 @@ public class CustomizationPickerFragment extends AppbarFragment implements
             return windowInsets.consumeSystemWindowInsets();
         });
         mNestedScrollView = view.findViewById(R.id.scroll_container);
+
+        if (mBackStackSavedInstanceState != null) {
+            savedInstanceState = mBackStackSavedInstanceState;
+            mBackStackSavedInstanceState = null;
+        }
 
         initSections(savedInstanceState);
         mSectionControllers.forEach(controller ->
@@ -103,10 +109,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        if (mNestedScrollView != null) {
-            savedInstanceState.putInt(SCROLL_POSITION_Y, mNestedScrollView.getScrollY());
-        }
-        mSectionControllers.forEach(c -> c.onSaveInstanceState(savedInstanceState));
+        onSaveInstanceStateInternal(savedInstanceState);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -126,6 +129,13 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
     @Override
     public void onDestroyView() {
+        // When add to back stack, #onDestroyView would be called, but #onDestroy wouldn't. So
+        // storing the state in variable to restore when back to foreground. If it's not a back
+        // stack case (i,e, config change), the variable would not be retained, see
+        // https://developer.android.com/guide/fragments/saving-state.
+        mBackStackSavedInstanceState = new Bundle();
+        onSaveInstanceStateInternal(mBackStackSavedInstanceState);
+
         mSectionControllers.forEach(CustomizationSectionController::release);
         mSectionControllers.clear();
         super.onDestroyView();
@@ -140,6 +150,14 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                 .addToBackStack(null)
                 .commit();
         fragmentManager.executePendingTransactions();
+    }
+
+    /** Saves state of the fragment. */
+    private void onSaveInstanceStateInternal(Bundle savedInstanceState) {
+        if (mNestedScrollView != null) {
+            savedInstanceState.putInt(SCROLL_POSITION_Y, mNestedScrollView.getScrollY());
+        }
+        mSectionControllers.forEach(c -> c.onSaveInstanceState(savedInstanceState));
     }
 
     private void initSections(@Nullable Bundle savedInstanceState) {
