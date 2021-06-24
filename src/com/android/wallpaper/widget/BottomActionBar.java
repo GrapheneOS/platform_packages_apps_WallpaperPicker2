@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.ImageViewCompat;
@@ -96,6 +97,52 @@ public class BottomActionBar extends FrameLayout {
         void onBottomSheetExpanded();
     }
 
+    /**
+     * Object to host content view for bottom sheet to display.
+     *
+     * <p> The view would be created in the constructor.
+     */
+    public static abstract class BottomSheetContent<T extends View> {
+
+        private T mContentView;
+        private boolean mIsVisible;
+
+        public BottomSheetContent(Context context) {
+            mContentView = createView(context);
+            setVisibility(false);
+        }
+
+        /** Gets the view id to inflate. */
+        @LayoutRes
+        public abstract int getViewId();
+
+        /** Gets called when the content view is created. */
+        public abstract void onViewCreated(T view);
+
+        /** Gets called when the current content view is going to recreate. */
+        public void onRecreateView(T oldView) {}
+
+        private void recreateView(Context context) {
+            // Inform that the view is going to recreate.
+            onRecreateView(mContentView);
+            // Create a new view with the given context.
+            mContentView = createView(context);
+            setVisibility(mIsVisible);
+        }
+
+        private T createView(Context context) {
+            T contentView = (T) LayoutInflater.from(context).inflate(getViewId(), null);
+            onViewCreated(contentView);
+            contentView.setFocusable(true);
+            return contentView;
+        }
+
+        private void setVisibility(boolean isVisible) {
+            mIsVisible = isVisible;
+            mContentView.setVisibility(mIsVisible ? VISIBLE : GONE);
+        }
+    }
+
     // TODO(b/154299462): Separate downloadable related actions from WallpaperPicker.
     /** The action items in the bottom action bar. */
     public enum BottomAction {
@@ -103,7 +150,8 @@ public class BottomActionBar extends FrameLayout {
     }
 
     private final Map<BottomAction, View> mActionMap = new EnumMap<>(BottomAction.class);
-    private final Map<BottomAction, View> mContentViewMap = new EnumMap<>(BottomAction.class);
+    private final Map<BottomAction, BottomSheetContent<?>> mContentViewMap =
+            new EnumMap<>(BottomAction.class);
     private final Map<BottomAction, OnActionSelectedListener> mActionSelectedListeners =
             new EnumMap<>(BottomAction.class);
 
@@ -185,17 +233,16 @@ public class BottomActionBar extends FrameLayout {
     }
 
     /**
-     * Adds content view to the bottom sheet and binds with a {@code BottomAction} to
-     * expand / collapse the bottom sheet.
+     * Binds the {@code bottomSheetContent} with the {@code action}, the {@code action} button
+     * would be able to expand/collapse the bottom sheet to show the content.
      *
-     * @param contentView the view with content to be added on the bottom sheet
+     * @param bottomSheetContent the content object with view being added to the bottom sheet
      * @param action the action to be bound to expand / collapse the bottom sheet
      */
-    public void attachViewToBottomSheetAndBindAction(View contentView, BottomAction action) {
-        contentView.setVisibility(GONE);
-        contentView.setFocusable(true);
-        mContentViewMap.put(action, contentView);
-        mBottomSheetView.addView(contentView);
+    public void bindBottomSheetContentWithAction(BottomSheetContent<?> bottomSheetContent,
+            BottomAction action) {
+        mContentViewMap.put(action, bottomSheetContent);
+        mBottomSheetView.addView(bottomSheetContent.mContentView);
         setActionClickListener(action, actionView -> {
             if (mBottomSheetBehavior.getState() == STATE_COLLAPSED) {
                 updateContentViewFor(action);
@@ -467,8 +514,18 @@ public class BottomActionBar extends FrameLayout {
 
     /** Dynamic update color with {@code Context}. */
     public void setColor(Context context) {
+        // Set bottom sheet background.
         mBottomSheetView.setBackground(context.getDrawable(R.drawable.bottom_sheet_background));
+        if (mBottomSheetView.getChildCount() > 0) {
+            // Update the bottom sheet content view if any.
+            mBottomSheetView.removeAllViews();
+            mContentViewMap.values().forEach(bottomSheetContent -> {
+                bottomSheetContent.recreateView(context);
+                mBottomSheetView.addView(bottomSheetContent.mContentView);
+            });
+        }
 
+        // Set the bar background and action buttons.
         ViewGroup actionTabs = findViewById(R.id.action_tabs);
         actionTabs.setBackgroundColor(
                 ResourceUtils.getColorAttr(context, android.R.attr.colorBackground));
@@ -507,7 +564,7 @@ public class BottomActionBar extends FrameLayout {
     }
 
     private void updateContentViewFor(BottomAction action) {
-        mContentViewMap.forEach((a, v) -> v.setVisibility(a.equals(action) ? VISIBLE : GONE));
+        mContentViewMap.forEach((a, content) -> content.setVisibility(a.equals(action)));
     }
 
     private boolean isExpandable(BottomAction action) {
