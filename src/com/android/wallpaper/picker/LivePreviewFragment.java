@@ -31,6 +31,7 @@ import android.app.WallpaperColors;
 import android.app.WallpaperInfo;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
@@ -73,9 +74,9 @@ import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperSurfaceCallback;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.BottomActionBar.AccessibilityCallback;
+import com.android.wallpaper.widget.BottomActionBar.BottomSheetContent;
 import com.android.wallpaper.widget.LockScreenPreviewer;
 import com.android.wallpaper.widget.WallpaperColorsLoader;
-import com.android.wallpaper.widget.WallpaperInfoView;
 
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
@@ -101,7 +102,6 @@ public class LivePreviewFragment extends PreviewFragment implements
      * @see IWallpaperConnection
      */
     protected WallpaperConnection mWallpaperConnection;
-    protected WallpaperInfoView mWallpaperInfoView;
     protected CardView mHomePreviewCard;
     protected SurfaceView mWorkspaceSurface;
     protected WallpaperSurfaceCallback mWallpaperSurfaceCallback;
@@ -164,17 +164,6 @@ public class LivePreviewFragment extends PreviewFragment implements
         Activity activity = requireActivity();
         mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
                 activity.getWindowManager().getDefaultDisplay());
-
-        mWallpaperInfoView = (WallpaperInfoView) LayoutInflater.from(getContext())
-                .inflate(R.layout.wallpaper_info_view, /* root= */ null);
-        setUpExploreIntentAndLabel(
-                () -> mWallpaperInfoView.populateWallpaperInfo(
-                        mWallpaper,
-                        mActionLabel,
-                        WallpaperInfoHelper.shouldShowExploreButton(getContext(), mExploreIntent),
-                        this::onExploreClicked)
-        );
-
         mPreviewContainer = view.findViewById(R.id.live_wallpaper_preview);
         mTouchForwardingLayout = view.findViewById(R.id.touch_forwarding_layout);
         // Set aspect ratio on the preview card.
@@ -271,7 +260,8 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (mSettingsLiveData != null && mSettingsLiveData.hasObservers()) {
+        if (mSettingsLiveData != null && mSettingsLiveData.hasObservers()
+                && mSettingsSliceView != null) {
             mSettingsLiveData.removeObserver(mSettingsSliceView);
             mSettingsLiveData = null;
         }
@@ -353,7 +343,8 @@ public class LivePreviewFragment extends PreviewFragment implements
         super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar.showActionsOnly(INFORMATION, DELETE, EDIT, CUSTOMIZE, APPLY);
         mBottomActionBar.setActionClickListener(APPLY, unused -> onSetWallpaperClicked(null));
-        mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
+        mBottomActionBar.bindBottomSheetContentWithAction(
+                new WallpaperInfoContent(getContext()), INFORMATION);
 
         View separatedTabsContainer = getView().findViewById(R.id.separated_tabs_container);
         // Update target view's accessibility param since it will be blocked by the bottom sheet
@@ -376,14 +367,9 @@ public class LivePreviewFragment extends PreviewFragment implements
         });
         final Uri uriSettingsSlice = getSettingsSliceUri(mWallpaper.getWallpaperComponent());
         if (uriSettingsSlice != null) {
-            View previewPage = LayoutInflater.from(getContext())
-                    .inflate(R.layout.preview_customize_settings, null);
-            mSettingsSliceView = previewPage.findViewById(R.id.settings_slice);
-            mSettingsSliceView.setMode(SliceView.MODE_LARGE);
-            mSettingsSliceView.setScrollable(false);
             mSettingsLiveData = SliceLiveData.fromUri(requireContext(), uriSettingsSlice);
-            mSettingsLiveData.observeForever(mSettingsSliceView);
-            mBottomActionBar.attachViewToBottomSheetAndBindAction(previewPage, CUSTOMIZE);
+            mBottomActionBar.bindBottomSheetContentWithAction(
+                    new PreviewCustomizeSettingsContent(getContext()), CUSTOMIZE);
         } else {
             if (mSettingsIntent != null) {
                 mBottomActionBar.setActionClickListener(CUSTOMIZE, listener ->
@@ -545,5 +531,36 @@ public class LivePreviewFragment extends PreviewFragment implements
 
     private boolean isPackagePreInstalled(ApplicationInfo info) {
         return info != null && (info.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+    }
+
+    private final class PreviewCustomizeSettingsContent extends BottomSheetContent<View> {
+
+        private PreviewCustomizeSettingsContent(Context context) {
+            super(context);
+        }
+
+        @Override
+        public int getViewId() {
+            return R.layout.preview_customize_settings;
+        }
+
+        @Override
+        public void onViewCreated(View previewPage) {
+            mSettingsSliceView = previewPage.findViewById(R.id.settings_slice);
+            mSettingsSliceView.setMode(SliceView.MODE_LARGE);
+            mSettingsSliceView.setScrollable(false);
+            if (mSettingsLiveData != null) {
+                mSettingsLiveData.observeForever(mSettingsSliceView);
+            }
+        }
+
+        @Override
+        public void onRecreateView(View oldPreviewPage) {
+            super.onRecreateView(oldPreviewPage);
+            if (mSettingsLiveData != null && mSettingsLiveData.hasObservers()
+                    && mSettingsSliceView != null) {
+                mSettingsLiveData.removeObserver(mSettingsSliceView);
+            }
+        }
     }
 }
