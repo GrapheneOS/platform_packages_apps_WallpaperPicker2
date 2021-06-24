@@ -15,6 +15,12 @@
      limitations under the License.
 -->
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
     android:color="?android:colorControlHighlight">
-    <item android:drawable="@drawable/pill_tabs_indicator_background" />
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="?androidprv:attr/colorAccentPrimary" />
+            <corners android:radius="@dimen/separated_tabs_corner_radius" />
+        </shape>
+    </item>
 </ripple>

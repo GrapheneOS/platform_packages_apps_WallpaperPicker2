@@ -68,7 +68,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     private final SurfaceView mContainerView;
     private final SurfaceView mSecondContainerView;
     private IWallpaperService mService;
-    private IWallpaperEngine mEngine;
+    @Nullable private IWallpaperEngine mEngine;
     private boolean mConnected;
     private boolean mIsVisible;
     private boolean mIsEngineVisible;
@@ -216,6 +216,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     /**
      * Returns the engine handled by this WallpaperConnection
      */
+    @Nullable
     public IWallpaperEngine getEngine() {
         return mEngine;
     }
@@ -309,6 +310,10 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     }
 
     private void mirrorAndReparent(SurfaceView parentSurface) {
+        if (mEngine == null) {
+            Log.i(TAG, "Engine is null, was the service disconnected?");
+            return;
+        }
         try {
             SurfaceControl parentSC = parentSurface.getSurfaceControl();
             SurfaceControl wallpaperMirrorSC = mEngine.mirrorSurfaceControl();
