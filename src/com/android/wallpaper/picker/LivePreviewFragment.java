@@ -117,7 +117,6 @@ public class LivePreviewFragment extends PreviewFragment implements
     private ViewGroup mPreviewContainer;
     private TouchForwardingLayout mTouchForwardingLayout;
     private SurfaceView mWallpaperSurface;
-    private WallpaperPreviewBitmapTransformation mPreviewBitmapTransformation;
     private Future<Integer> mPlaceholderColorFuture;
 
     @Override
@@ -132,8 +131,6 @@ public class LivePreviewFragment extends PreviewFragment implements
             mDeleteIntent.setPackage(info.getPackageName());
             mDeleteIntent.putExtra(EXTRA_LIVE_WALLPAPER_INFO, info);
         }
-        mPreviewBitmapTransformation = new WallpaperPreviewBitmapTransformation(
-                requireContext().getApplicationContext(), isRtl());
         String settingsActivity = getSettingsActivity(info);
         if (settingsActivity != null) {
             mSettingsIntent = new Intent();
@@ -203,7 +200,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         mWallpaperSurfaceCallback = new WallpaperSurfaceCallback(getContext(),
                 mHomePreviewCard, mWallpaperSurface, mPlaceholderColorFuture, null);
 
-        setUpTabs(view.findViewById(R.id.pill_tabs));
+        setUpTabs(view.findViewById(R.id.separated_tabs));
 
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -234,9 +231,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     protected void updateScreenPreview(boolean isHomeSelected) {
         mWorkspaceSurface.setVisibility(isHomeSelected ? View.VISIBLE : View.INVISIBLE);
-        if (!isHomeSelected) {
-            mWorkspaceSurfaceCallback.cleanUp();
-        }
+
         mLockPreviewContainer.setVisibility(isHomeSelected ? View.INVISIBLE : View.VISIBLE);
 
         mFullScreenAnimation.setIsHomeSelected(isHomeSelected);
@@ -360,21 +355,22 @@ public class LivePreviewFragment extends PreviewFragment implements
         mBottomActionBar.setActionClickListener(APPLY, unused -> onSetWallpaperClicked(null));
         mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
 
-        View pillTabsContainer = getView().findViewById(R.id.pill_tabs_container);
+        View separatedTabsContainer = getView().findViewById(R.id.separated_tabs_container);
         // Update target view's accessibility param since it will be blocked by the bottom sheet
         // when expanded.
         mBottomActionBar.setAccessibilityCallback(new AccessibilityCallback() {
             @Override
             public void onBottomSheetCollapsed() {
                 mPreviewContainer.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
-                pillTabsContainer.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
+                separatedTabsContainer.setImportantForAccessibility(
+                        IMPORTANT_FOR_ACCESSIBILITY_YES);
             }
 
             @Override
             public void onBottomSheetExpanded() {
                 mPreviewContainer.setImportantForAccessibility(
                         IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
-                pillTabsContainer.setImportantForAccessibility(
+                separatedTabsContainer.setImportantForAccessibility(
                         IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
             }
         });
@@ -397,8 +393,7 @@ public class LivePreviewFragment extends PreviewFragment implements
             }
         }
 
-        final String deleteAction = getDeleteAction(mWallpaper.getWallpaperComponent());
-        if (TextUtils.isEmpty(deleteAction)) {
+        if (TextUtils.isEmpty(getDeleteAction(mWallpaper.getWallpaperComponent()))) {
             mBottomActionBar.hideActions(DELETE);
         } else {
             mBottomActionBar.setActionClickListener(DELETE, listener ->
@@ -457,7 +452,7 @@ public class LivePreviewFragment extends PreviewFragment implements
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.fragment_live_preview_v2;
+        return R.layout.fragment_live_preview;
     }
 
     @Override
