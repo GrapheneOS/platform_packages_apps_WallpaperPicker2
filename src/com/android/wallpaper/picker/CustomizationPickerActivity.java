@@ -15,9 +15,11 @@
  */
 package com.android.wallpaper.picker;
 
+import static com.android.wallpaper.util.ActivityUtils.isSUWMode;
+import static com.android.wallpaper.util.ActivityUtils.isWallpaperOnlyMode;
+
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -61,12 +63,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         FragmentTransactionChecker, PermissionRequester, CategorySelectorFragmentHost,
         IndividualPickerFragmentHost, WallpaperPreviewNavigator {
 
-    public static final String WALLPAPER_FLAVOR_EXTRA =
-            "com.android.launcher3.WALLPAPER_FLAVOR";
-    public static final String WALLPAPER_FOCUS = "focus_wallpaper";
-
     private static final String TAG = "CustomizationPickerActivity";
-    private static final String WALLPAPER_ONLY = "wallpaper_only";
 
     private WallpaperPickerDelegate mDelegate;
     private UserEventLogger mUserEventLogger;
@@ -87,17 +84,11 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
 
         // Restore this Activity's state before restoring contained Fragments state.
         super.onCreate(savedInstanceState);
-        if (WALLPAPER_ONLY.equals(getIntent().getStringExtra(WALLPAPER_FLAVOR_EXTRA))
-                || !supportCustomizationSections()) {
-            skipToWallpaperPicker();
-            return;
-        }
-
         setContentView(R.layout.activity_customization_picker);
         mBottomActionBar = findViewById(R.id.bottom_actionbar);
 
         // See go/pdr-edge-to-edge-guide.
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), /* decorFitsSystemWindows= */ false);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), isSUWMode(this));
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment == null) {
@@ -108,8 +99,10 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
             injector.getPreferences(this).incrementAppLaunched();
             DailyLoggingAlarmScheduler.setAlarm(getApplicationContext());
 
-            // Switch to the customization picker fragment.
-            switchFragment(CustomizationPickerFragment.newInstance(getString(R.string.app_name)));
+            // Switch to the target fragment.
+            switchFragment(isWallpaperOnlyMode(getIntent())
+                    ? WallpaperOnlyFragment.newInstance(getString(R.string.wallpaper_app_name))
+                    : CustomizationPickerFragment.newInstance(getString(R.string.app_name)));
         }
 
         // Deep link case
@@ -146,8 +139,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
     protected void onResume() {
         super.onResume();
         mIsSafeToCommitFragmentTransaction = true;
-        boolean wallpaperOnly =
-                WALLPAPER_ONLY.equals(getIntent().getStringExtra(WALLPAPER_FLAVOR_EXTRA));
+        boolean wallpaperOnly = isWallpaperOnlyMode(getIntent());
         boolean provisioned = Settings.Global.getInt(getContentResolver(),
                 Settings.Global.DEVICE_PROVISIONED, 0) != 0;
 
@@ -168,38 +160,6 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
             mNetworkStatusListener = null;
         }
         super.onStop();
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        if (WALLPAPER_ONLY.equals(intent.getStringExtra(WALLPAPER_FLAVOR_EXTRA))) {
-            Log.d(TAG, "WALLPAPER_ONLY intent, reverting to Wallpaper Picker");
-            skipToWallpaperPicker();
-        }
-    }
-
-    private void skipToWallpaperPicker() {
-        Intent intent = new Intent(this, TopLevelPickerActivity.class);
-
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            intent.putExtras(getIntent().getExtras());
-        }
-
-        if (DeepLinkUtils.isDeepLink(getIntent())) {
-            intent.setData(getIntent().getData());
-        }
-        startActivity(intent);
-        finish();
-    }
-
-    private boolean supportCustomizationSections() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-                || "S".equals(Build.VERSION.CODENAME)) {
-            return true;
-        }
-        Log.d(TAG, "Build version < S, customization sections feature is not supported");
-        return false;
     }
 
     @Override
@@ -348,7 +308,11 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (mDelegate.handleActivityResult(requestCode, resultCode, data)) {
-            finishActivityWithResultOk();
+            if (isSUWMode(this)) {
+                finishActivityForSUW();
+            } else {
+                finishActivityWithResultOk();
+            }
         }
     }
 
@@ -359,6 +323,13 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
 
         // Go back to launcher home
         LaunchUtils.launchHome(this);
+    }
+
+    private void finishActivityForSUW() {
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        // Return RESULT_CANCELED to make the "Change wallpaper" tile in SUW not be disabled.
+        setResult(Activity.RESULT_CANCELED);
+        finish();
     }
 
     @Override
@@ -379,6 +350,6 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
 
     @Override
     public boolean isUpArrowSupported() {
-        return true;
+        return !isSUWMode(this);
     }
 }
