@@ -121,11 +121,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     private static final int UNUSED_REQUEST_CODE = 1;
     private static final String TAG = "PreviewFragment";
 
-    @PreviewMode
-    protected int mPreviewMode;
-
-    protected boolean mViewAsHome;
-
     /**
      * When true, enables a test mode of operation -- in which certain UI features are disabled to
      * allow for UI tests to run correctly. Works around issue in ProgressDialog currently where the
@@ -141,8 +136,10 @@ public abstract class PreviewFragment extends AppbarFragment implements
     // For full screen animations.
     protected View mRootView;
     protected FullScreenAnimation mFullScreenAnimation;
+    @PreviewMode protected int mPreviewMode;
+    protected boolean mViewAsHome;
 
-
+    private OnBackPressedCallback mOnBackPressedCallback;
 
     /**
      * Staged error dialog fragments that were unable to be shown when the hosting activity didn't
@@ -207,17 +204,34 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar = bottomActionBar;
-        setBottomActionBarAndFullScreenActions();
-    }
-
-    private void setBottomActionBarAndFullScreenActions() {
         mBottomActionBar.setActionClickListener(EDIT, (view) -> {
             mFullScreenAnimation.startAnimation(/* toFullScreen= */ true);
             mBottomActionBar.deselectAction(EDIT);
         });
+        setFullScreenActions(mRootView.findViewById(R.id.fullscreen_buttons_container));
 
+        if (mOnBackPressedCallback == null) {
+            mOnBackPressedCallback = new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    if (mFullScreenAnimation.isFullScreen()) {
+                        mFullScreenAnimation.startAnimation(/* toFullScreen= */ false);
+                        return;
+                    }
+                    if (mBottomActionBar != null && !mBottomActionBar.isBottomSheetCollapsed()) {
+                        mBottomActionBar.collapseBottomSheetIfExpanded();
+                        return;
+                    }
+                    getActivity().finish();
+                }
+            };
+            getActivity().getOnBackPressedDispatcher().addCallback(this, mOnBackPressedCallback);
+        }
+    }
+
+    protected void setFullScreenActions(View container) {
         // Update the button text for the current workspace visibility.
-        Button hideUiPreviewButton = mRootView.findViewById(R.id.hide_ui_preview_button);
+        Button hideUiPreviewButton = container.findViewById(R.id.hide_ui_preview_button);
         hideUiPreviewButton.setText(mFullScreenAnimation.getWorkspaceVisibility()
                 ? R.string.hide_ui_preview_text
                 : R.string.show_ui_preview_text);
@@ -231,28 +245,10 @@ public abstract class PreviewFragment extends AppbarFragment implements
                     mFullScreenAnimation.setWorkspaceVisibility(!visible);
                 }
         );
-        mRootView.findViewById(R.id.set_as_wallpaper_button).setOnClickListener(
-                this::onSetWallpaperClicked
-        );
+        container.findViewById(R.id.set_as_wallpaper_button).setOnClickListener(
+                this::onSetWallpaperClicked);
 
         mFullScreenAnimation.ensureBottomActionBarIsCorrectlyLocated();
-
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (mFullScreenAnimation.isFullScreen()) {
-                    mFullScreenAnimation.startAnimation(/* toFullScreen= */ false);
-                    return;
-                }
-                if (mBottomActionBar != null && !mBottomActionBar.isBottomSheetCollapsed()) {
-                    mBottomActionBar.collapseBottomSheetIfExpanded();
-                    return;
-                }
-                getActivity().finish();
-            }
-        };
-
-        getActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     protected List<String> getAttributions(Context context) {
