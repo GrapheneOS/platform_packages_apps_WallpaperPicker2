@@ -126,7 +126,7 @@
 
     <!-- Dimensions for the "disabled by admin" UI in desktop mode. -->
     <dimen name="disabled_by_admin_desktop_message_text_size">13sp</dimen>
-    <dimen name="preview_bottom_sheet_corner_radius">?android:attr/dialogCornerRadius</dimen>
+    <dimen name="preview_bottom_sheet_corner_radius">12dp</dimen>
 
     <!-- Dimensions for PreviewPager and PageIndicator. -->
     <dimen name="preview_indicator_width">16dp</dimen>
