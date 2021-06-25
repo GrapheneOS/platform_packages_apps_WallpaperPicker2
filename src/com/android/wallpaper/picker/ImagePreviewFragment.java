@@ -72,7 +72,6 @@ import com.android.wallpaper.util.WallpaperCropUtils;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.BottomActionBar.AccessibilityCallback;
 import com.android.wallpaper.widget.LockScreenPreviewer;
-import com.android.wallpaper.widget.WallpaperInfoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
@@ -105,7 +104,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     private TouchForwardingLayout mTouchForwardingLayout;
     private ConstraintLayout mContainer;
     private SurfaceView mWallpaperSurface;
-    private WallpaperInfoView mWallpaperInfoView;
     private AtomicInteger mImageScaleChangeCounter = new AtomicInteger(0);
 
     protected SurfaceView mWorkspaceSurface;
@@ -225,10 +223,8 @@ public class ImagePreviewFragment extends PreviewFragment {
     @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
-        mWallpaperInfoView = (WallpaperInfoView)
-                LayoutInflater.from(getContext()).inflate(
-                        R.layout.wallpaper_info_view, /* root= */null);
-        mBottomActionBar.attachViewToBottomSheetAndBindAction(mWallpaperInfoView, INFORMATION);
+        mBottomActionBar.bindBottomSheetContentWithAction(
+                new WallpaperInfoContent(getContext()), INFORMATION);
         mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
 
         mBottomActionBar.setActionClickListener(APPLY, this::onSetWallpaperClicked);
@@ -255,8 +251,6 @@ public class ImagePreviewFragment extends PreviewFragment {
         });
 
         mBottomActionBar.show();
-        // Loads wallpaper info and populate into view.
-        setUpExploreIntentAndLabel(this::populateWallpaperInfo);
         // To avoid applying the wallpaper when the wallpaper's not parsed.
         mBottomActionBar.disableActions();
         // If the wallpaper is parsed, enable the bottom action bar.
@@ -376,17 +370,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                         Log.w(TAG, "Recalculate colors, crop and scale bitmap failed.", e);
                     }
                 });
-    }
-
-    private void populateWallpaperInfo() {
-        if (mWallpaperInfoView != null && mWallpaper != null) {
-            mWallpaperInfoView.populateWallpaperInfo(
-                    mWallpaper,
-                    mActionLabel,
-                    WallpaperInfoHelper.shouldShowExploreButton(
-                            getContext(), mExploreIntent),
-                    this::onExploreClicked);
-        }
     }
 
     /**

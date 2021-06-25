@@ -51,6 +51,8 @@ import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
 import com.android.wallpaper.util.FullScreenAnimation;
 import com.android.wallpaper.widget.BottomActionBar;
+import com.android.wallpaper.widget.BottomActionBar.BottomSheetContent;
+import com.android.wallpaper.widget.WallpaperInfoView;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -136,13 +138,11 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected WallpaperSetter mWallpaperSetter;
     protected UserEventLogger mUserEventLogger;
     protected BottomActionBar mBottomActionBar;
-
-    protected Intent mExploreIntent;
-    protected CharSequence mActionLabel;
-
     // For full screen animations.
     protected View mRootView;
     protected FullScreenAnimation mFullScreenAnimation;
+
+
 
     /**
      * Staged error dialog fragments that were unable to be shown when the hosting activity didn't
@@ -290,23 +290,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
         }
     }
 
-    protected void setUpExploreIntentAndLabel(@Nullable Runnable callback) {
-        Context context = getContext();
-        if (context == null) {
-            return;
-        }
-
-        WallpaperInfoHelper.loadExploreIntent(context, mWallpaper,
-                (actionLabel, exploreIntent) -> {
-                    mActionLabel = actionLabel;
-                    mExploreIntent = exploreIntent;
-                    if (callback != null) {
-                        callback.run();
-                    }
-                }
-        );
-    }
-
     protected abstract boolean isLoaded();
 
     @Override
@@ -346,17 +329,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected void onSetWallpaperClicked(View button) {
         mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
                 mWallpaper instanceof LiveWallpaperInfo);
-    }
-
-    protected void onExploreClicked(View button) {
-        if (getContext() == null) {
-            return;
-        }
-        Context context = getContext();
-        mUserEventLogger.logActionClicked(mWallpaper.getCollectionId(context),
-                mWallpaper.getActionLabelRes(context));
-
-        startActivity(mExploreIntent);
     }
 
     protected void setUpTabs(TabLayout tabs) {
@@ -453,5 +425,71 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected boolean isRtl() {
         return getResources().getConfiguration().getLayoutDirection()
                     == View.LAYOUT_DIRECTION_RTL;
+    }
+
+    protected final class WallpaperInfoContent extends BottomSheetContent<WallpaperInfoView> {
+
+        @Nullable private Intent mExploreIntent;
+        private CharSequence mActionLabel;
+
+        protected WallpaperInfoContent(Context context) {
+            super(context);
+        }
+
+        @Override
+        public int getViewId() {
+            return R.layout.wallpaper_info_view;
+        }
+
+        @Override
+        public void onViewCreated(WallpaperInfoView view) {
+            if (mWallpaper == null) {
+                return;
+            }
+
+            if (mActionLabel == null) {
+                setUpExploreIntentAndLabel(() -> populateWallpaperInfo(view));
+            } else {
+                populateWallpaperInfo(view);
+            }
+        }
+
+        private void setUpExploreIntentAndLabel(@Nullable Runnable callback) {
+            Context context = getContext();
+            if (context == null) {
+                return;
+            }
+
+            WallpaperInfoHelper.loadExploreIntent(context, mWallpaper,
+                    (actionLabel, exploreIntent) -> {
+                        mActionLabel = actionLabel;
+                        mExploreIntent = exploreIntent;
+                        if (callback != null) {
+                            callback.run();
+                        }
+                    }
+            );
+        }
+
+        private void onExploreClicked(View button) {
+            Context context = getContext();
+            if (context == null) {
+                return;
+            }
+
+            mUserEventLogger.logActionClicked(mWallpaper.getCollectionId(context),
+                    mWallpaper.getActionLabelRes(context));
+
+            startActivity(mExploreIntent);
+        }
+
+        private void populateWallpaperInfo(WallpaperInfoView view) {
+            view.populateWallpaperInfo(
+                    mWallpaper,
+                    mActionLabel,
+                    WallpaperInfoHelper.shouldShowExploreButton(
+                            getContext(), mExploreIntent),
+                    this::onExploreClicked);
+        }
     }
 }
