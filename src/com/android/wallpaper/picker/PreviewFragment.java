@@ -51,6 +51,8 @@ import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
 import com.android.wallpaper.util.FullScreenAnimation;
 import com.android.wallpaper.widget.BottomActionBar;
+import com.android.wallpaper.widget.BottomActionBar.BottomSheetContent;
+import com.android.wallpaper.widget.WallpaperInfoView;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -119,11 +121,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     private static final int UNUSED_REQUEST_CODE = 1;
     private static final String TAG = "PreviewFragment";
 
-    @PreviewMode
-    protected int mPreviewMode;
-
-    protected boolean mViewAsHome;
-
     /**
      * When true, enables a test mode of operation -- in which certain UI features are disabled to
      * allow for UI tests to run correctly. Works around issue in ProgressDialog currently where the
@@ -136,13 +133,13 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected WallpaperSetter mWallpaperSetter;
     protected UserEventLogger mUserEventLogger;
     protected BottomActionBar mBottomActionBar;
-
-    protected Intent mExploreIntent;
-    protected CharSequence mActionLabel;
-
     // For full screen animations.
     protected View mRootView;
     protected FullScreenAnimation mFullScreenAnimation;
+    @PreviewMode protected int mPreviewMode;
+    protected boolean mViewAsHome;
+
+    private OnBackPressedCallback mOnBackPressedCallback;
 
     /**
      * Staged error dialog fragments that were unable to be shown when the hosting activity didn't
@@ -207,17 +204,34 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar = bottomActionBar;
-        setBottomActionBarAndFullScreenActions();
-    }
-
-    private void setBottomActionBarAndFullScreenActions() {
         mBottomActionBar.setActionClickListener(EDIT, (view) -> {
             mFullScreenAnimation.startAnimation(/* toFullScreen= */ true);
             mBottomActionBar.deselectAction(EDIT);
         });
+        setFullScreenActions(mRootView.findViewById(R.id.fullscreen_buttons_container));
 
+        if (mOnBackPressedCallback == null) {
+            mOnBackPressedCallback = new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    if (mFullScreenAnimation.isFullScreen()) {
+                        mFullScreenAnimation.startAnimation(/* toFullScreen= */ false);
+                        return;
+                    }
+                    if (mBottomActionBar != null && !mBottomActionBar.isBottomSheetCollapsed()) {
+                        mBottomActionBar.collapseBottomSheetIfExpanded();
+                        return;
+                    }
+                    getActivity().finish();
+                }
+            };
+            getActivity().getOnBackPressedDispatcher().addCallback(this, mOnBackPressedCallback);
+        }
+    }
+
+    protected void setFullScreenActions(View container) {
         // Update the button text for the current workspace visibility.
-        Button hideUiPreviewButton = mRootView.findViewById(R.id.hide_ui_preview_button);
+        Button hideUiPreviewButton = container.findViewById(R.id.hide_ui_preview_button);
         hideUiPreviewButton.setText(mFullScreenAnimation.getWorkspaceVisibility()
                 ? R.string.hide_ui_preview_text
                 : R.string.show_ui_preview_text);
@@ -231,28 +245,10 @@ public abstract class PreviewFragment extends AppbarFragment implements
                     mFullScreenAnimation.setWorkspaceVisibility(!visible);
                 }
         );
-        mRootView.findViewById(R.id.set_as_wallpaper_button).setOnClickListener(
-                this::onSetWallpaperClicked
-        );
+        container.findViewById(R.id.set_as_wallpaper_button).setOnClickListener(
+                this::onSetWallpaperClicked);
 
         mFullScreenAnimation.ensureBottomActionBarIsCorrectlyLocated();
-
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (mFullScreenAnimation.isFullScreen()) {
-                    mFullScreenAnimation.startAnimation(/* toFullScreen= */ false);
-                    return;
-                }
-                if (mBottomActionBar != null && !mBottomActionBar.isBottomSheetCollapsed()) {
-                    mBottomActionBar.collapseBottomSheetIfExpanded();
-                    return;
-                }
-                getActivity().finish();
-            }
-        };
-
-        getActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     protected List<String> getAttributions(Context context) {
@@ -288,23 +284,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
                     requireFragmentManager(), TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT);
             mStagedSetWallpaperErrorDialogFragment = null;
         }
-    }
-
-    protected void setUpExploreIntentAndLabel(@Nullable Runnable callback) {
-        Context context = getContext();
-        if (context == null) {
-            return;
-        }
-
-        WallpaperInfoHelper.loadExploreIntent(context, mWallpaper,
-                (actionLabel, exploreIntent) -> {
-                    mActionLabel = actionLabel;
-                    mExploreIntent = exploreIntent;
-                    if (callback != null) {
-                        callback.run();
-                    }
-                }
-        );
     }
 
     protected abstract boolean isLoaded();
@@ -346,17 +325,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected void onSetWallpaperClicked(View button) {
         mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
                 mWallpaper instanceof LiveWallpaperInfo);
-    }
-
-    protected void onExploreClicked(View button) {
-        if (getContext() == null) {
-            return;
-        }
-        Context context = getContext();
-        mUserEventLogger.logActionClicked(mWallpaper.getCollectionId(context),
-                mWallpaper.getActionLabelRes(context));
-
-        startActivity(mExploreIntent);
     }
 
     protected void setUpTabs(TabLayout tabs) {
@@ -453,5 +421,71 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected boolean isRtl() {
         return getResources().getConfiguration().getLayoutDirection()
                     == View.LAYOUT_DIRECTION_RTL;
+    }
+
+    protected final class WallpaperInfoContent extends BottomSheetContent<WallpaperInfoView> {
+
+        @Nullable private Intent mExploreIntent;
+        private CharSequence mActionLabel;
+
+        protected WallpaperInfoContent(Context context) {
+            super(context);
+        }
+
+        @Override
+        public int getViewId() {
+            return R.layout.wallpaper_info_view;
+        }
+
+        @Override
+        public void onViewCreated(WallpaperInfoView view) {
+            if (mWallpaper == null) {
+                return;
+            }
+
+            if (mActionLabel == null) {
+                setUpExploreIntentAndLabel(() -> populateWallpaperInfo(view));
+            } else {
+                populateWallpaperInfo(view);
+            }
+        }
+
+        private void setUpExploreIntentAndLabel(@Nullable Runnable callback) {
+            Context context = getContext();
+            if (context == null) {
+                return;
+            }
+
+            WallpaperInfoHelper.loadExploreIntent(context, mWallpaper,
+                    (actionLabel, exploreIntent) -> {
+                        mActionLabel = actionLabel;
+                        mExploreIntent = exploreIntent;
+                        if (callback != null) {
+                            callback.run();
+                        }
+                    }
+            );
+        }
+
+        private void onExploreClicked(View button) {
+            Context context = getContext();
+            if (context == null) {
+                return;
+            }
+
+            mUserEventLogger.logActionClicked(mWallpaper.getCollectionId(context),
+                    mWallpaper.getActionLabelRes(context));
+
+            startActivity(mExploreIntent);
+        }
+
+        private void populateWallpaperInfo(WallpaperInfoView view) {
+            view.populateWallpaperInfo(
+                    mWallpaper,
+                    mActionLabel,
+                    WallpaperInfoHelper.shouldShowExploreButton(
+                            getContext(), mExploreIntent),
+                    this::onExploreClicked);
+        }
     }
 }
