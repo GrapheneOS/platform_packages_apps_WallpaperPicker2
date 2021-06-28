@@ -14,14 +14,13 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<com.google.android.material.tabs.TabLayout
+<com.android.wallpaper.widget.SeparatedTabLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/separated_tabs"
     android:layout_width="match_parent"
     android:layout_height="@dimen/separated_tabs_height"
     app:tabBackground="@drawable/separated_tabs_background"
-    app:tabRippleColor="?android:colorControlHighlight"
     app:tabIndicatorAnimationDuration="0"
     app:tabIndicator="@drawable/separated_tabs_indicator_background"
     app:tabIndicatorColor="@color/separated_tabs_indicator_color"
