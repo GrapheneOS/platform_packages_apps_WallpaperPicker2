@@ -328,8 +328,8 @@ public abstract class PreviewFragment extends AppbarFragment implements
     }
 
     protected void setUpTabs(TabLayout tabs) {
-        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.home_screen_message)));
-        tabs.addTab(tabs.newTab().setText(getContext().getString(R.string.lock_screen_message)));
+        tabs.addTab(tabs.newTab().setText(R.string.home_screen_message));
+        tabs.addTab(tabs.newTab().setText(R.string.lock_screen_message));
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
