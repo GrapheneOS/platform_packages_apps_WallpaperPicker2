@@ -27,11 +27,12 @@ android_library {
     static_libs: [
         "androidx.appcompat_appcompat",
         "androidx.cardview_cardview",
+        "androidx-constraintlayout_constraintlayout",
         "androidx.exifinterface_exifinterface",
         "androidx.lifecycle_lifecycle-runtime-ktx",
         "androidx.recyclerview_recyclerview",
         "androidx.slice_slice-view",
-        "androidx-constraintlayout_constraintlayout",
+        "androidx.viewpager2_viewpager2",
         "com.google.android.material_material",
         "glide-prebuilt",
         "kotlinx-coroutines-android",
