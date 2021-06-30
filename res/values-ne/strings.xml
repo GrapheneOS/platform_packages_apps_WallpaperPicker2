@@ -60,7 +60,7 @@
     <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"हाल लक स्क्रिनमा सेट गरिएको वालपेपरको थम्बनेल"</string>
     <string name="currently_set_wallpaper_thumbnail" msgid="8651887838745545107">"हाल सेट गरिएको वालपेपरको थम्बनेल"</string>
     <string name="wallpaper_thumbnail" msgid="569931475923605974">"वालपेपरको थम्बनेल"</string>
-    <string name="explore_home_screen" msgid="8756346794535765482">"गृह स्क्रिनको वालपेपरको अन्वेषण गर्नुहोस्"</string>
+    <string name="explore_home_screen" msgid="8756346794535765482">"होम स्क्रिनको वालपेपरको अन्वेषण गर्नुहोस्"</string>
     <string name="explore_lock_screen" msgid="268938342103703665">"लक स्क्रिनको वालपेपरको अन्वेषण गर्नुहोस्"</string>
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"गृहपृष्ठको दैनिक वालपेपर पुनः ताजा गर्नुहोस्"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"दैनिक वालपेपर पुनः ताजा गर्नुहोस्"</string>
