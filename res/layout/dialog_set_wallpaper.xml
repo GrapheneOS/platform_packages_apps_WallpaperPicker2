@@ -19,6 +19,7 @@
     xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?androidprv:attr/colorSurface"
     android:padding="@dimen/set_wallpaper_dialog_padding">
 
     <LinearLayout
