@@ -89,7 +89,7 @@
     <dimen name="set_wallpaper_dialog_item_min_width">300dp</dimen>
     <dimen name="set_wallpaper_dialog_item_outer_corner_radius">12dp</dimen>
     <dimen name="set_wallpaper_dialog_item_inner_corner_radius">4dp</dimen>
-    <dimen name="set_wallpaper_dialog_icon_size">24dp</dimen>
+    <dimen name="set_wallpaper_dialog_icon_size">32dp</dimen>
 
     <!-- Dimensions for the "wallpaper disabled by administrator" UI. -->
     <dimen name="wallpaper_disabled_asset_margin_bottom">26dp</dimen>
