@@ -88,6 +88,9 @@
     <style name="LightDialogTheme" parent="@android:style/Theme.DeviceDefault.Dialog.NoActionBar">
         <item name="android:layout">@layout/abc_alert_dialog_material</item>
         <item name="windowActionBar">false</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="android:dialogCornerRadius">24dp</item>
     </style>
 
     <style name="ProgressDialogThemePreL" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
@@ -140,7 +143,7 @@
     <!-- Studio can't directly reference ?androidprv:attr/textColorOnAccent here,
      so we set the text color on the dialog items instead. -->
     <style name="set_wallpaper_destination_item">
-        <item name="android:fontFamily">@*android:string/config_bodyFontFamily</item>
+        <item name="android:fontFamily">@*android:string/config_bodyFontFamilyMedium</item>
         <item name="android:minHeight">@dimen/set_wallpaper_dialog_item_min_height</item>
         <item name="android:minWidth">@dimen/set_wallpaper_dialog_item_min_width</item>
         <item name="android:textAlignment">center</item>
