@@ -44,5 +44,8 @@
     <style name="LightDialogTheme" parent="@android:style/Theme.DeviceDefault.Light.Dialog.NoActionBar">
         <item name="android:layout">@layout/abc_alert_dialog_material</item>
         <item name="windowActionBar">false</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="android:dialogCornerRadius">24dp</item>
     </style>
 </resources>
