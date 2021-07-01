@@ -582,6 +582,9 @@ public class IndividualPickerFragment extends AppbarFragment
         if (mCategory == null) {
             return;
         }
+        if (getContext() == null) {
+            return;
+        }
 
         // Wallpaper count could change, so we may need to change the layout(2 or 3 columns layout)
         GridLayoutManager gridLayoutManager = (GridLayoutManager) mImageGrid.getLayoutManager();
