@@ -87,8 +87,15 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
         initSections(savedInstanceState);
         mSectionControllers.forEach(controller ->
-                sectionContainer.addView(controller.createView(getContext())));
-        restoreViewState(savedInstanceState);
+                mNestedScrollView.post(() ->
+                        sectionContainer.addView(controller.createView(getContext()))
+                )
+        );
+        final Bundle savedInstanceStateRef = savedInstanceState;
+        // Post it to the end of adding views to ensure restoring view state the last task.
+        mNestedScrollView.post(() ->
+                restoreViewState(savedInstanceStateRef)
+        );
         return view;
     }
 
