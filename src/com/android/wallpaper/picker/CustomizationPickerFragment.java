@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.picker;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -87,8 +88,14 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
         initSections(savedInstanceState);
         mSectionControllers.forEach(controller ->
-                mNestedScrollView.post(() ->
-                        sectionContainer.addView(controller.createView(getContext()))
+                mNestedScrollView.post(() -> {
+                            final Context context = getContext();
+                            if (context == null) {
+                                Log.w(TAG, "Adding section views with null context");
+                                return;
+                            }
+                            sectionContainer.addView(controller.createView(context));
+                        }
                 )
         );
         final Bundle savedInstanceStateRef = savedInstanceState;
