@@ -17,6 +17,7 @@ package com.android.wallpaper.module;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.WallpaperColors;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.res.Resources;
@@ -30,6 +31,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
@@ -797,6 +799,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperManager.forgetLoadedWallpaper();
             mBitmap = ((BitmapDrawable) mWallpaperManagerCompat.getDrawable()).getBitmap();
             long bitmapHash = BitmapUtils.generateHashCode(mBitmap);
+            WallpaperColors colors = WallpaperColors.fromBitmap(mBitmap);
 
             mWallpaperPreferences.setHomeWallpaperHashCode(bitmapHash);
 
@@ -811,6 +814,10 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setHomeWallpaperCollectionId(
                     mWallpaper.getCollectionId(mAppContext));
             mWallpaperPreferences.setHomeWallpaperRemoteId(mWallpaper.getWallpaperId());
+            mWallpaperPreferences.storeLatestHomeWallpaper(
+                    TextUtils.isEmpty(mWallpaper.getWallpaperId()) ? String.valueOf(bitmapHash)
+                            : mWallpaper.getWallpaperId(),
+                    mWallpaper, mBitmap, colors);
         }
 
         private void setImageWallpaperLockMetadata(int lockWallpaperId) {
