@@ -941,7 +941,7 @@ public class IndividualPickerFragment extends AppbarFragment
         mWallpaperPersister.setWallpaperInfoInPreview(mSelectedWallpaperInfo);
         if (mSelectedWallpaperInfo instanceof LiveWallpaperInfo) {
             mWallpaperSetter.setCurrentWallpaper(getActivity(), mSelectedWallpaperInfo, null,
-                    destination, 0, null, mSetWallpaperCallback);
+                    destination, 0, null, null, mSetWallpaperCallback);
         } else {
             mWallpaperSetter.setCurrentWallpaper(
                     getActivity(), mSelectedWallpaperInfo, destination, mSetWallpaperCallback);
