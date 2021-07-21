@@ -118,6 +118,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     private TouchForwardingLayout mTouchForwardingLayout;
     private SurfaceView mWallpaperSurface;
     private Future<Integer> mPlaceholderColorFuture;
+    private WallpaperColors mWallpaperColors;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -326,7 +327,7 @@ public class LivePreviewFragment extends PreviewFragment implements
             WallpaperColorsLoader.getWallpaperColors(
                     activity,
                     homeWallpaper.getThumbAsset(activity),
-                    mLockScreenPreviewer::setColor);
+                    colors -> onWallpaperColorsChanged(colors, 0));
         }
         if (mWallpaperConnection != null && !mWallpaperConnection.connect()) {
             mWallpaperConnection = null;
@@ -414,6 +415,7 @@ public class LivePreviewFragment extends PreviewFragment implements
 
     @Override
     public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
+        mWallpaperColors = colors;
         mLockScreenPreviewer.setColor(colors);
 
         mFullScreenAnimation.setFullScreenTextColor(
@@ -444,7 +446,8 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     protected void setCurrentWallpaper(int destination) {
         mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, null,
-                destination, 0, null, new SetWallpaperCallback() {
+                destination, 0, null, mWallpaperColors,
+                new SetWallpaperCallback() {
                     @Override
                     public void onSuccess(com.android.wallpaper.model.WallpaperInfo wallpaperInfo) {
                         finishActivity(/* success= */ true);

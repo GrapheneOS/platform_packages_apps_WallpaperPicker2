@@ -111,6 +111,7 @@ public class ImagePreviewFragment extends PreviewFragment {
     private TouchForwardingLayout mTouchForwardingLayout;
     private ConstraintLayout mContainer;
     private SurfaceView mWallpaperSurface;
+    private WallpaperColors mWallpaperColors;
 
     protected SurfaceView mWorkspaceSurface;
     protected WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
@@ -188,6 +189,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         // Make it enabled since the buttons are disabled while wallpaper is moving.
         mBottomActionBar.enableActionButtonsWithBottomSheet(true);
 
+        mWallpaperColors = colors;
         mLockScreenPreviewer.setColor(colors);
 
         mFullScreenAnimation.setFullScreenTextColor(
@@ -480,7 +482,7 @@ public class ImagePreviewFragment extends PreviewFragment {
     protected void setCurrentWallpaper(@Destination int destination) {
         mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, mWallpaperAsset,
                 destination, mFullResImageView.getScale(), calculateCropRect(getContext()),
-                new SetWallpaperCallback() {
+                mWallpaperColors, new SetWallpaperCallback() {
                     @Override
                     public void onSuccess(WallpaperInfo wallpaperInfo) {
                         finishActivity(/* success= */ true);

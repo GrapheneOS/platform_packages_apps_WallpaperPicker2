@@ -2,6 +2,7 @@ package com.android.wallpaper.module;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.WallpaperColors;
 import android.app.WallpaperManager;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
@@ -96,7 +97,7 @@ public class WallpaperSetter {
                     dimensions, visibleRawWallpaperRect, wallpaperScale);
 
             setCurrentWallpaper(containerActivity, wallpaper, wallpaperAsset, destination,
-                    wallpaperScale, cropRect, callback);
+                    wallpaperScale, cropRect, null, callback);
         });
     }
 
@@ -116,10 +117,10 @@ public class WallpaperSetter {
     public void setCurrentWallpaper(Activity containerActivity, WallpaperInfo wallpaper,
             @Nullable Asset wallpaperAsset, @Destination final int destination,
             float wallpaperScale, @Nullable Rect cropRect,
-            @Nullable SetWallpaperCallback callback) {
+            @Nullable WallpaperColors wallpaperColors, @Nullable SetWallpaperCallback callback) {
         if (wallpaper instanceof LiveWallpaperInfo) {
             setCurrentLiveWallpaper(containerActivity, (LiveWallpaperInfo) wallpaper, destination,
-                    callback);
+                    wallpaperColors, callback);
             return;
         }
         mPreferences.setPendingWallpaperSetStatus(
@@ -183,7 +184,8 @@ public class WallpaperSetter {
     }
 
     public void setCurrentLiveWallpaper(Activity activity, LiveWallpaperInfo wallpaper,
-            @Destination final int destination, @Nullable SetWallpaperCallback callback) {
+            @Destination final int destination, @Nullable WallpaperColors colors,
+            @Nullable SetWallpaperCallback callback) {
         try {
             // Save current screen rotation so we can temporarily disable rotation while setting the
             // wallpaper and restore after setting the wallpaper finishes.
@@ -203,6 +205,10 @@ public class WallpaperSetter {
             if (destination == WallpaperPersister.DEST_BOTH) {
                 wallpaperManager.clear(WallpaperManager.FLAG_LOCK);
             }
+            mPreferences.storeLatestHomeWallpaper(wallpaper.getWallpaperId(), wallpaper,
+                    colors != null ? colors :
+                            WallpaperColors.fromBitmap(wallpaper.getThumbAsset(activity)
+                                    .getLowResBitmap(activity)));
             onWallpaperApplied(wallpaper, activity);
             if (callback != null) {
                 callback.onSuccess(wallpaper);
@@ -224,7 +230,6 @@ public class WallpaperSetter {
                 WallpaperPreferences.WALLPAPER_SET_NOT_PENDING);
         mUserEventLogger.logWallpaperSetResult(
                 UserEventLogger.WALLPAPER_SET_RESULT_SUCCESS);
-
         cleanUp();
         restoreScreenOrientationIfNeeded(containerActivity);
     }
