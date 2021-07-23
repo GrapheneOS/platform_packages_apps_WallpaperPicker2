@@ -27,7 +27,7 @@
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground">
 
-        <com.android.wallpaper.picker.individual.CustomShapeImageView
+        <ImageView
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
