@@ -38,8 +38,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -1068,6 +1071,7 @@ public class IndividualPickerFragment extends AppbarFragment
         startActivity(exploreIntent);
     }
 
+    // TODO: Dead code. Should remove this method in the future.
     private void updateActivatedStatus(WallpaperInfo wallpaperInfo, boolean isActivated) {
         if (wallpaperInfo == null) {
             return;
@@ -1077,14 +1081,14 @@ public class IndividualPickerFragment extends AppbarFragment
                 ? index + 1 : index;
         ViewHolder holder = mImageGrid.findViewHolderForAdapterPosition(index);
         if (holder != null) {
-            CustomShapeImageView thumbnail = holder.itemView.findViewById(R.id.thumbnail);
-            thumbnail.setClipped(isActivated);
+            holder.itemView.setActivated(isActivated);
         } else {
             // Item is not visible, make sure the item is re-bound when it becomes visible.
             mAdapter.notifyItemChanged(index);
         }
     }
 
+    // TODO: Dead code. Should remove this method in the future.
     private void updateAppliedStatus(WallpaperInfo wallpaperInfo, boolean isApplied) {
         if (wallpaperInfo == null) {
             return;
@@ -1093,7 +1097,9 @@ public class IndividualPickerFragment extends AppbarFragment
         index = (shouldShowRotationTile() || mCategory.supportsCustomPhotos())
                 ? index + 1 : index;
         ViewHolder holder = mImageGrid.findViewHolderForAdapterPosition(index);
-        if (holder == null) {
+        if (holder != null) {
+            mAdapter.showBadge(holder, R.drawable.wallpaper_check_circle_24dp, isApplied);
+        } else {
             // Item is not visible, make sure the item is re-bound when it becomes visible.
             mAdapter.notifyItemChanged(index);
         }
@@ -1436,7 +1442,7 @@ public class IndividualPickerFragment extends AppbarFragment
             WallpaperInfo wallpaper = mWallpapers.get(wallpaperIndex);
             wallpaper.computePlaceholderColor(holder.itemView.getContext());
             ((IndividualHolder) holder).bindWallpaper(wallpaper);
-            boolean isWallpaperApplied = mAppliedWallpaperIds.contains(wallpaper.getWallpaperId());
+            boolean isWallpaperApplied = isWallpaperApplied(wallpaper);
 
             if (isWallpaperApplied) {
                 mSelectedAdapterPosition = position;
@@ -1447,8 +1453,29 @@ public class IndividualPickerFragment extends AppbarFragment
             int radiusId = isFewerColumnLayout() ? R.dimen.grid_item_all_radius
                     : R.dimen.grid_item_all_radius_small;
             container.setRadius(getResources().getDimension(radiusId));
-            CustomShapeImageView thumbnail = holder.itemView.findViewById(R.id.thumbnail);
-            thumbnail.setClipped(isWallpaperApplied);
+            showBadge(holder, R.drawable.wallpaper_check_circle_24dp, isWallpaperApplied);
+        }
+
+        protected boolean isWallpaperApplied(WallpaperInfo wallpaper) {
+            return mAppliedWallpaperIds.contains(wallpaper.getWallpaperId());
+        }
+
+        protected void showBadge(ViewHolder holder, @DrawableRes int icon, boolean show) {
+            ImageView badge = holder.itemView.findViewById(R.id.indicator_icon);
+            if (show) {
+                final float margin = isFewerColumnLayout() ? getResources().getDimension(
+                        R.dimen.grid_item_badge_margin) : getResources().getDimension(
+                        R.dimen.grid_item_badge_margin_small);
+                final RelativeLayout.LayoutParams layoutParams =
+                        (RelativeLayout.LayoutParams) badge.getLayoutParams();
+                layoutParams.setMargins(/* left= */ (int) margin, /* top= */ (int) margin,
+                        /* right= */ (int) margin, /* bottom= */ (int) margin);
+                badge.setLayoutParams(layoutParams);
+                badge.setBackgroundResource(icon);
+                badge.setVisibility(View.VISIBLE);
+            } else {
+                badge.setVisibility(View.GONE);
+            }
         }
     }
 
