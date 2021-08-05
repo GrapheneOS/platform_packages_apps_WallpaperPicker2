@@ -229,7 +229,7 @@ public class SizeCalculator {
      * to the screen's corner radius
      */
     public static float getPreviewCornerRadius(@NonNull Activity activity, int previewWidth) {
-        return QuickStepContract.getWindowCornerRadius(Resources.getSystem())
+        return QuickStepContract.getWindowCornerRadius(activity)
                 / ((float) getActivityWindowWidthPx(activity) / previewWidth);
     }
 
