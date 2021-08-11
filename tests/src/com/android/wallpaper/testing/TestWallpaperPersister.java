@@ -226,4 +226,18 @@ public class TestWallpaperPersister implements WallpaperPersister {
     public int getWallpaperPosition() {
         return mWallpaperPosition;
     }
+
+    public boolean saveStaticWallpaperMetadata(List<String> attributions, String actionUrl,
+            int actionLabelRes, int actionIconRes, String collectionId, int wallpaperId) {
+        return false;
+    }
+
+    public int getDefaultWhichWallpaper() {
+        return 0;
+    }
+
+    public int setBitmapToWallpaperManagerCompat(Bitmap wallpaperBitmap, boolean allowBackup,
+            int whichWallpaper) {
+        return 0;
+    }
 }
