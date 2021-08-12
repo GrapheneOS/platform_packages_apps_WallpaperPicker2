@@ -23,6 +23,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.asset.Asset;
+import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.model.WallpaperInfo;
 
 import java.util.List;
@@ -111,6 +112,43 @@ public interface WallpaperPersister {
     boolean finalizeWallpaperForNextRotation(List<String> attributions, String actionUrl,
                                              int actionLabelRes, int actionIconRes,
                                              String collectionId, int wallpaperId);
+
+    /**
+     * Finalizes wallpaper metadata by persisting them to SharedPreferences and finalizes the
+     * wallpaper image for live rotating components by copying the "preview" image to the "final"
+     * image file location.
+     *
+     * @param attributions List of attribution items.
+     * @param actionUrl    The action or "explore" URL for the wallpaper.
+     * @param actionLabelRes Resource ID of the action label
+     * @param actionIconRes Resource ID of the action icon
+     * @param collectionId ID of this wallpaper's collection.
+     * @param wallpaperId  Wallpaper ID that uniquely identifies the wallpaper image.
+     * @return Whether the operation was successful.
+     */
+    boolean saveStaticWallpaperMetadata(List<String> attributions,
+            String actionUrl,
+            int actionLabelRes,
+            int actionIconRes,
+            String collectionId,
+            int wallpaperId);
+
+    /**
+     * @return the flag indicating which wallpaper to set when we're trying to set a wallpaper with
+     * no user intervention. The idea is that if there's a static wallpaper on lock, we will only
+     * override home, otherwise both
+     */
+    int getDefaultWhichWallpaper();
+
+    /**
+     * Sets a wallpaper bitmap to the {@link WallpaperManagerCompat}.
+     *
+     * @return an integer wallpaper ID. This is an actual wallpaper ID on N and later versions of
+     * Android, otherwise on pre-N versions of Android will return a positive integer when the
+     * operation was successful and zero if the operation encountered an error.
+     */
+    int setBitmapToWallpaperManagerCompat(Bitmap wallpaperBitmap, boolean allowBackup,
+            int whichWallpaper);
 
     /**
      * Saves the last wallpaper which showed a preview from this app.
