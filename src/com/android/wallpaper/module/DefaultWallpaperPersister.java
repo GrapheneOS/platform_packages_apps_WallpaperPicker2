@@ -349,7 +349,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     @Override
     public boolean finalizeWallpaperForNextRotation(List<String> attributions, String actionUrl,
             int actionLabelRes, int actionIconRes, String collectionId, int wallpaperId) {
-        return finalizeWallpaperForRotatingComponent(attributions, actionUrl, actionLabelRes,
+        return saveStaticWallpaperMetadata(attributions, actionUrl, actionLabelRes,
                 actionIconRes, collectionId, wallpaperId);
     }
 
@@ -366,18 +366,12 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             return false;
         }
 
-        return finalizeWallpaperForRotatingComponent(attributions, actionUrl, actionLabelRes,
+        return saveStaticWallpaperMetadata(attributions, actionUrl, actionLabelRes,
                 actionIconRes, collectionId, wallpaperId);
     }
 
-    /**
-     * Finalizes wallpaper metadata by persisting them to SharedPreferences and finalizes the
-     * wallpaper image for live rotating components by copying the "preview" image to the "final"
-     * image file location.
-     *
-     * @return Whether the operation was successful.
-     */
-    private boolean finalizeWallpaperForRotatingComponent(List<String> attributions,
+    @Override
+    public boolean saveStaticWallpaperMetadata(List<String> attributions,
             String actionUrl,
             int actionLabelRes,
             int actionIconRes,
@@ -463,27 +457,25 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                 scaledCropRect.top,
                 scaledCropRect.width(),
                 scaledCropRect.height());
-
-        // Set wallpaper to home-only instead of both home and lock if there's a distinct lock-only
-        // static wallpaper set so we don't override the lock wallpaper.
-        boolean isLockWallpaperSet = isSeparateLockScreenWallpaperSet();
-
-        int whichWallpaper = (isLockWallpaperSet)
-                ? WallpaperManagerCompat.FLAG_SYSTEM
-                : WallpaperManagerCompat.FLAG_SYSTEM | WallpaperManagerCompat.FLAG_LOCK;
+        int whichWallpaper = getDefaultWhichWallpaper();
 
         return setBitmapToWallpaperManagerCompat(wallpaperBitmap, false /* allowBackup */,
                 whichWallpaper);
     }
 
-    /**
-     * Sets a wallpaper bitmap to the {@link WallpaperManagerCompat}.
-     *
-     * @return an integer wallpaper ID. This is an actual wallpaper ID on N and later versions of
-     * Android, otherwise on pre-N versions of Android will return a positive integer when the
-     * operation was successful and zero if the operation encountered an error.
+    /*
+     * Note: this method will return use home-only (FLAG_SYSTEM) instead of both home and lock
+     * if there's a distinct lock-only static wallpaper set so we don't override the lock wallpaper.
      */
-    private int setBitmapToWallpaperManagerCompat(Bitmap wallpaperBitmap, boolean allowBackup,
+    @Override
+    public int getDefaultWhichWallpaper() {
+        return isSeparateLockScreenWallpaperSet()
+                ? WallpaperManagerCompat.FLAG_SYSTEM
+                : WallpaperManagerCompat.FLAG_SYSTEM | WallpaperManagerCompat.FLAG_LOCK;
+    }
+
+    @Override
+    public int setBitmapToWallpaperManagerCompat(Bitmap wallpaperBitmap, boolean allowBackup,
             int whichWallpaper) {
         ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
         if (wallpaperBitmap.compress(CompressFormat.PNG, DEFAULT_COMPRESS_QUALITY, tmpOut)) {
