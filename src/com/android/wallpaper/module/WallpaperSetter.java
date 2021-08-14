@@ -21,6 +21,7 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
+import com.android.wallpaper.asset.BuiltInWallpaperAsset;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.UserEventLogger.WallpaperSetFailureReason;
@@ -302,7 +303,9 @@ public class WallpaperSetter {
             SetWallpaperDialogFragment setWallpaperDialog = new SetWallpaperDialogFragment();
             setWallpaperDialog.setTitleResId(titleResId);
             setWallpaperDialog.setListener(listenerWrapper);
-            if (homeWallpaper instanceof LiveWallpaperInfo && lockWallpaper == null) {
+            boolean isBuiltIn = homeWallpaper.getAsset(activity) instanceof BuiltInWallpaperAsset;
+            if ((homeWallpaper instanceof LiveWallpaperInfo || isBuiltIn)
+                    && lockWallpaper == null) {
                 if (isLiveWallpaper) {
                     // If lock wallpaper is live and we're setting a live wallpaper, we can only
                     // set it to both, so bypass the dialog.
