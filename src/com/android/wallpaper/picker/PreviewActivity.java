@@ -26,12 +26,14 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
+import com.android.wallpaper.util.ActivityUtils;
 
 /**
  * Activity that displays a preview of a specific wallpaper and provides the ability to set the
  * wallpaper as the user's current wallpaper.
  */
-public class PreviewActivity extends BasePreviewActivity {
+public class PreviewActivity extends BasePreviewActivity implements AppbarFragmentHost {
 
     /**
      * Returns a new Intent with the provided WallpaperInfo instance put as an extra.
@@ -47,13 +49,15 @@ public class PreviewActivity extends BasePreviewActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
 
+        enableFullScreen();
+
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
 
         if (fragment == null) {
             Intent intent = getIntent();
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
-            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HODE, true);
+            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, true);
             boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context */ this,
@@ -67,6 +71,15 @@ public class PreviewActivity extends BasePreviewActivity {
         }
     }
 
+    @Override
+    public void onUpArrowPressed() {
+        onBackPressed();
+    }
+
+    @Override
+    public boolean isUpArrowSupported() {
+        return !ActivityUtils.isSUWMode(getBaseContext());
+    }
 
     /**
      * Implementation that provides an intent to start a PreviewActivity.

@@ -26,11 +26,13 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
+import com.android.wallpaper.util.ActivityUtils;
 
 /**
  * Activity that displays a view-only preview of a specific wallpaper.
  */
-public class ViewOnlyPreviewActivity extends BasePreviewActivity {
+public class ViewOnlyPreviewActivity extends BasePreviewActivity implements AppbarFragmentHost {
 
     /**
      * Returns a new Intent with the provided WallpaperInfo instance put as an extra.
@@ -42,18 +44,15 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity {
 
     protected static Intent newIntent(Context context, WallpaperInfo wallpaper,
             boolean isVewAsHome) {
-        return newIntent(context, wallpaper).putExtra(EXTRA_VIEW_AS_HODE, isVewAsHome);
+        return newIntent(context, wallpaper).putExtra(EXTRA_VIEW_AS_HOME, isVewAsHome);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
-    }
 
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
+        enableFullScreen();
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
@@ -62,7 +61,7 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity {
             Intent intent = getIntent();
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
             boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
-            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HODE, true);
+            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, true);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context */ this,
                     wallpaper,
@@ -73,6 +72,16 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity {
                     .add(R.id.fragment_container, fragment)
                     .commit();
         }
+    }
+
+    @Override
+    public void onUpArrowPressed() {
+        onBackPressed();
+    }
+
+    @Override
+    public boolean isUpArrowSupported() {
+        return !ActivityUtils.isSUWMode(getBaseContext());
     }
 
     /**

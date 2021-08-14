@@ -24,15 +24,17 @@ import android.view.Surface;
 import android.view.SurfaceControlViewHost;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
-import com.android.wallpaper.R;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.PackageStatusNotifier;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * Default implementation of {@link SurfaceHolder.Callback} to render a static wallpaper when the
@@ -56,19 +58,22 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
     // the live wallpaper. This view is rendered on here for home image wallpaper.
     private ImageView mHomeImageWallpaper;
     private final Context mContext;
-    private final ImageView mHomePreview;
+    private final View mContainerView;
     private final SurfaceView mWallpaperSurface;
     @Nullable
     private final SurfaceListener mListener;
+    @Nullable
+    private final Future<Integer> mPlaceholderColor;
     private boolean mSurfaceCreated;
 
     private PackageStatusNotifier.Listener mAppStatusListener;
     private PackageStatusNotifier mPackageStatusNotifier;
 
-    public WallpaperSurfaceCallback(Context context, ImageView homePreview,
-            SurfaceView wallpaperSurface, @Nullable  SurfaceListener listener) {
-        mContext = context;
-        mHomePreview = homePreview;
+    public WallpaperSurfaceCallback(Context context, View containerView,
+            SurfaceView wallpaperSurface, @Nullable Future<Integer> placeholderColor,
+            @Nullable SurfaceListener listener) {
+        mContext = context.getApplicationContext();
+        mContainerView = containerView;
         mWallpaperSurface = wallpaperSurface;
         mListener = listener;
 
@@ -83,11 +88,17 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
         };
         mPackageStatusNotifier.addListener(mAppStatusListener,
                 WallpaperService.SERVICE_INTERFACE);
+        mPlaceholderColor = placeholderColor;
     }
 
-    public WallpaperSurfaceCallback(Context context, ImageView homePreview,
+    public WallpaperSurfaceCallback(Context context, View containerView,
+            SurfaceView wallpaperSurface, @Nullable SurfaceListener listener) {
+        this(context, containerView, wallpaperSurface, null, listener);
+    }
+
+    public WallpaperSurfaceCallback(Context context, View containerView,
             SurfaceView wallpaperSurface) {
-        this(context, homePreview, wallpaperSurface, null);
+        this(context, containerView, wallpaperSurface, null);
     }
 
     @Override
@@ -115,6 +126,9 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
      */
     public void cleanUp() {
         releaseHost();
+        if (mHomeImageWallpaper != null) {
+            mHomeImageWallpaper.setImageDrawable(null);
+        }
         mPackageStatusNotifier.removeListener(mAppStatusListener);
     }
 
@@ -141,16 +155,24 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
 
     private void setupSurfaceWallpaper(boolean forceClean) {
         mHomeImageWallpaper = new ImageView(mContext);
-        mHomeImageWallpaper.setBackgroundColor(
-                ContextCompat.getColor(mContext, R.color.primary_color));
-        mHomeImageWallpaper.measure(makeMeasureSpec(mHomePreview.getWidth(), EXACTLY),
-                makeMeasureSpec(mHomePreview.getHeight(), EXACTLY));
-        mHomeImageWallpaper.layout(0, 0, mHomePreview.getWidth(),
-                mHomePreview.getHeight());
+        Integer placeholder = null;
+        if (mPlaceholderColor != null && mPlaceholderColor.isDone()) {
+            try {
+                placeholder = mPlaceholderColor.get();
+            } catch (InterruptedException | ExecutionException e) {
+                // Ignore
+            }
+        }
+        mHomeImageWallpaper.setBackgroundColor((placeholder != null) ? placeholder
+                : ResourceUtils.getColorAttr(mContext, android.R.attr.colorSecondary));
+        mHomeImageWallpaper.measure(makeMeasureSpec(mContainerView.getWidth(), EXACTLY),
+                makeMeasureSpec(mContainerView.getHeight(), EXACTLY));
+        mHomeImageWallpaper.layout(0, 0, mContainerView.getWidth(),
+                mContainerView.getHeight());
         if (forceClean) {
             releaseHost();
             mHost = new SurfaceControlViewHost(mContext,
-                    mContext.getDisplay(), mWallpaperSurface.getHostToken());
+                    mContainerView.getDisplay(), mWallpaperSurface.getHostToken());
         }
         mHost.setView(mHomeImageWallpaper, mHomeImageWallpaper.getWidth(),
                 mHomeImageWallpaper.getHeight());

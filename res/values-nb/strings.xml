@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Startskjerm"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Låseskjermen"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Startskjermen og låseskjermen"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Angi bakgrunn"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Angi bakgrunn på"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Startskjerm"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Låseskjermen"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Startskjerm og låseskjerm"</string>
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Startskjerm og låseskjerm"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Bakgrunn med skiftende bilder"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"For å vise gjeldende bakgrunn her må <xliff:g id="APP_NAME">%1$s</xliff:g> ha tilgang til lagring på enheten din."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"For å vise bakgrunnen din her må du gi Bakgrunner tilgang til enhetens lagringsplass.\n\nFor å endre denne innstillingen, gå til Tillatelser-områder i appinformasjonen for Bakgrunner."</string>
@@ -77,7 +77,7 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Midtstilt"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Midtstilt beskjæring"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Strekk"</string>
-    <string name="preview" msgid="1774602101743861071">"Se forhåndsvisning"</string>
+    <string name="preview" msgid="1774602101743861071">"Forhåndsvisning"</string>
     <string name="tab_info" msgid="818614080690111416">"Informasjon"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Tilpass"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Innstillinger"</string>

@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Негізгі экран"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Құлыпталған экран"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Негізгі және құлыпталған экран"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Тұсқағаз етіп орнату"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Тұсқағаз ретінде орнату"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Негізгі экран"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Құлыпталған экран"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Негізгі экран және құлыпталған экран"</string>
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Негізгі экран мен құлып экраны"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Тұсқағазды ауыстырып тұру"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Ағымдағы тұсқағазды көрсету үшін <xliff:g id="APP_NAME">%1$s</xliff:g> қолданбасына құрылғының жадына кіру рұқсаты қажет."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Ағымдағы тұсқағаз осы жерге шығуы үшін, \"Тұсқағаздар\" қолданбасына құрылғы жадына кіру рұқсаты қажет.\n\nБұл параметрді осы қолданба ақпаратындағы \"Рұқсаттар\" бөлімінен өзгертуге болады."</string>

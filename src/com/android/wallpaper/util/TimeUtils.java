@@ -26,17 +26,37 @@ import androidx.annotation.Nullable;
 import java.util.Calendar;
 
 /** Utility class for clock time preview. */
-public class TimeUtils {
+public final class TimeUtils {
 
-    private static final String CLOCK_FORMAT_12HOUR = "h:mm";
-    private static final String CLOCK_FORMAT_24HOUR = "H:mm";
+    private static final CharSequence CLOCK_FORMAT_12HOUR = "h:mm";
+    private static final CharSequence CLOCK_FORMAT_24HOUR = "H:mm";
+    private static final CharSequence CLOCK_DOUBLE_LINE_FORMAT_12_HOUR = "hh\nmm";
+    private static final CharSequence CLOCK_DOUBLE_LINE_FORMAT_24_HOUR = "HH\nmm";
 
-    /** Returns the clock formatted time. For 12-hour format, there's no AM/PM field displayed. */
+    /**
+     *  Returns the default clock formatted time. For example: 4:35 or 16:35.
+     *
+     *  <p> For 12-hour format, there's no AM/PM field displayed.
+     */
     public static CharSequence getFormattedTime(Context context, Calendar calendar) {
         return DateFormat.format(
                 DateFormat.is24HourFormat(context)
                         ? CLOCK_FORMAT_24HOUR
                         : CLOCK_FORMAT_12HOUR,
+                calendar);
+    }
+
+    /**
+     * Returns the double line clock formatted time.
+     *
+     * <p> For 12-hour format, there's no AM/PM field displayed.
+     */
+    public static CharSequence getDoubleLineFormattedTime(Context context,
+            Calendar calendar) {
+        return DateFormat.format(
+                DateFormat.is24HourFormat(context)
+                        ? CLOCK_DOUBLE_LINE_FORMAT_24_HOUR
+                        : CLOCK_DOUBLE_LINE_FORMAT_12_HOUR,
                 calendar);
     }
 
