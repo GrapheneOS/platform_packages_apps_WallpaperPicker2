@@ -56,10 +56,10 @@
     <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"మీ పరికర నిర్వాహకులు వాల్‌పేపర్‌ను సెట్ చేయడం నిలిపివేసారు"</string>
     <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"వాల్‌పేపర్ విజయవంతంగా సెట్ చేయబడింది"</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"వాల్‌పేపర్‌లను చూడాలంటే మీరు ఇంటర్నెట్ కనెక్షన్‌ని కలిగి ఉండాలి. దయచేసి కనెక్ట్ చేసి, మళ్లీ ప్రయత్నించండి."</string>
-    <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"ప్రస్తుతం సెట్ చేసిన హోమ్ స్క్రీన్ వాల్‌పేపర్ సూక్ష్మచిత్రం"</string>
-    <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"ప్రస్తుతం సెట్ చేసిన లాక్ స్క్రీన్ వాల్‌పేపర్ సూక్ష్మచిత్రం"</string>
-    <string name="currently_set_wallpaper_thumbnail" msgid="8651887838745545107">"ప్రస్తుతం సెట్ చేసిన వాల్‌పేపర్ సూక్ష్మచిత్రం"</string>
-    <string name="wallpaper_thumbnail" msgid="569931475923605974">"వాల్‌పేపర్ సూక్ష్మచిత్రం"</string>
+    <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"ప్రస్తుతం సెట్ చేసిన హోమ్ స్క్రీన్ వాల్‌పేపర్ థంబ్‌నెయిల్‌"</string>
+    <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"ప్రస్తుతం సెట్ చేసిన లాక్ స్క్రీన్ వాల్‌పేపర్ థంబ్‌నెయిల్‌"</string>
+    <string name="currently_set_wallpaper_thumbnail" msgid="8651887838745545107">"ప్రస్తుతం సెట్ చేసిన వాల్‌పేపర్ థంబ్‌నెయిల్‌"</string>
+    <string name="wallpaper_thumbnail" msgid="569931475923605974">"వాల్‌పేపర్ థంబ్‌నెయిల్‌"</string>
     <string name="explore_home_screen" msgid="8756346794535765482">"హోమ్ స్క్రీన్ వాల్‌పేపర్‌ను అన్వేషిస్తుంది"</string>
     <string name="explore_lock_screen" msgid="268938342103703665">"లాక్ స్క్రీన్ వాల్‌పేపర్‌ను అన్వేషిస్తుంది"</string>
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"రోజువారీ హోమ్ స్క్రీన్ వాల్‌పేపర్‌ను రిఫ్రెష్ చేస్తుంది"</string>
