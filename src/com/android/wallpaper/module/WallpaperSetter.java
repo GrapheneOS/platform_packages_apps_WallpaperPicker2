@@ -154,6 +154,7 @@ public class WallpaperSetter {
                                 if (event == Event.ON_DESTROY) {
                                     if (mProgressDialog != null) {
                                         mProgressDialog.dismiss();
+                                        mProgressDialog = null;
                                     }
                                 }
                             }
