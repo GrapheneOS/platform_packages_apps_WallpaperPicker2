@@ -320,7 +320,10 @@ public class LiveWallpaperInfo extends WallpaperInfo {
         return wallpaperInfos;
     }
 
-    private static boolean isSystemApp(ApplicationInfo appInfo) {
+    /**
+     * @return whether the given app is a system app
+     */
+    public static boolean isSystemApp(ApplicationInfo appInfo) {
         return (appInfo.flags & (ApplicationInfo.FLAG_SYSTEM
                 | ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)) != 0;
     }
