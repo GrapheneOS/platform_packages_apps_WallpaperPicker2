@@ -35,6 +35,8 @@ android_library {
         "androidx.viewpager2_viewpager2",
         "com.google.android.material_material",
         "glide-prebuilt",
+        "glide-gifdecoder-prebuilt",
+        "glide-disklrucache-prebuilt",
         "kotlinx-coroutines-android",
         "kotlinx-coroutines-core",
         "libbackup",
