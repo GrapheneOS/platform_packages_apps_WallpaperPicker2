@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"主畫面"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"上鎖畫面"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"主畫面及上鎖畫面"</string>
-    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"設定以下畫面的桌布："</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"設定桌布"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"主畫面"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"上鎖畫面"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"主畫面和螢幕鎖定畫面"</string>
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"主畫面和上鎖畫面"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"正在輪替顯示圖片桌布"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"如要在此顯示目前的桌布，「<xliff:g id="APP_NAME">%1$s</xliff:g>」需要存取您裝置的儲存空間。"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"如要在此顯示目前的桌布，「桌布」需要存取您裝置的儲存空間。\n\n如要變更此設定，請前往「桌布」應用程式資訊的「權限」部分。"</string>
