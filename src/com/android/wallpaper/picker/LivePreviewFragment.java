@@ -188,7 +188,13 @@ public class LivePreviewFragment extends PreviewFragment implements
 
         mWorkspaceSurfaceCallback = createWorkspaceSurfaceCallback(mWorkspaceSurface);
         mWallpaperSurfaceCallback = new WallpaperSurfaceCallback(getContext(),
-                mHomePreviewCard, mWallpaperSurface, mPlaceholderColorFuture, null);
+                mHomePreviewCard, mWallpaperSurface, mPlaceholderColorFuture,
+                new WallpaperSurfaceCallback.SurfaceListener() {
+                    @Override
+                    public void onSurfaceCreated() {
+                        previewLiveWallpaper(null);
+                    }
+                });
 
         setUpTabs(view.findViewById(R.id.separated_tabs));
 
@@ -471,12 +477,6 @@ public class LivePreviewFragment extends PreviewFragment implements
             return metaData.getString(KEY_ACTION_DELETE_LIVE_WALLPAPER);
         }
         return null;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        previewLiveWallpaper(null);
     }
 
     @Override
