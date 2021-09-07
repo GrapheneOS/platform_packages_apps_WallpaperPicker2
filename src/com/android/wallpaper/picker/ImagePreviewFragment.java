@@ -144,6 +144,10 @@ public class ImagePreviewFragment extends PreviewFragment {
         mTouchForwardingLayout = mContainer.findViewById(R.id.touch_forwarding_layout);
         mTouchForwardingLayout.setForwardingEnabled(true);
 
+        // Update preview header color which covers toolbar and status bar area.
+        View previewHeader = view.findViewById(R.id.preview_header);
+        previewHeader.setBackgroundColor(activity.getColor(R.color.settingslib_colorSurfaceHeader));
+
         // Set aspect ratio on the preview card dynamically.
         ConstraintSet set = new ConstraintSet();
         set.clone(mContainer);
