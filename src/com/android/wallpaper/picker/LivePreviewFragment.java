@@ -65,7 +65,7 @@ import androidx.slice.widget.SliceView;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.compat.BuildCompat;
-import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
+import com.android.wallpaper.model.SetWallpaperViewModel;
 import com.android.wallpaper.util.FullScreenAnimation;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
@@ -444,17 +444,7 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     protected void setCurrentWallpaper(int destination) {
         mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, null,
-                destination, 0, null, new SetWallpaperCallback() {
-                    @Override
-                    public void onSuccess(com.android.wallpaper.model.WallpaperInfo wallpaperInfo) {
-                        finishActivity(/* success= */ true);
-                    }
-
-                    @Override
-                    public void onError(@Nullable Throwable throwable) {
-                        showSetWallpaperErrorDialog(destination);
-                    }
-                });
+                destination, 0, null, SetWallpaperViewModel.getCallback(mViewModelProvider));
     }
 
     @Nullable
