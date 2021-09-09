@@ -33,6 +33,7 @@ public abstract class BaseWallpaperInjector implements Injector {
     private WallpaperRefresher mWallpaperRefresher;
     private Requester mRequester;
     private WallpaperManagerCompat mWallpaperManagerCompat;
+    private WallpaperStatusChecker mWallpaperStatusChecker;
     private CurrentWallpaperInfoFactory mCurrentWallpaperFactory;
     private NetworkStatusNotifier mNetworkStatusNotifier;
     private AlarmManagerWrapper mAlarmManagerWrapper;
@@ -98,6 +99,14 @@ public abstract class BaseWallpaperInjector implements Injector {
             mWallpaperManagerCompat = WallpaperManagerCompat.getInstance(context);
         }
         return mWallpaperManagerCompat;
+    }
+
+    @Override
+    public WallpaperStatusChecker getWallpaperStatusChecker() {
+        if (mWallpaperStatusChecker == null) {
+            mWallpaperStatusChecker = new DefaultWallpaperStatusChecker();
+        }
+        return mWallpaperStatusChecker;
     }
 
     @Override

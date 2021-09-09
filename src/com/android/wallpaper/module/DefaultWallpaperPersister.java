@@ -656,8 +656,9 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             }
 
 
-            boolean wasLockWallpaperSet = LockWallpaperStatusChecker.isLockWallpaperSet(
-                    mAppContext);
+            boolean wasLockWallpaperSet =
+                    InjectorProvider.getInjector().getWallpaperStatusChecker().isLockWallpaperSet(
+                            mAppContext);
 
             boolean allowBackup = mWallpaper.getBackupPermission() == WallpaperInfo.BACKUP_ALLOWED;
             final int wallpaperId;
