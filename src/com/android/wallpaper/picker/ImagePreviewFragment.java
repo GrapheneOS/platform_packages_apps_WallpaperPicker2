@@ -60,11 +60,10 @@ import androidx.fragment.app.FragmentActivity;
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.CurrentWallpaperAssetVN;
-import com.android.wallpaper.model.WallpaperInfo;
+import com.android.wallpaper.model.SetWallpaperViewModel;
 import com.android.wallpaper.module.BitmapCropper;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
-import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.util.FullScreenAnimation;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
@@ -480,17 +479,7 @@ public class ImagePreviewFragment extends PreviewFragment {
     protected void setCurrentWallpaper(@Destination int destination) {
         mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, mWallpaperAsset,
                 destination, mFullResImageView.getScale(), calculateCropRect(getContext()),
-                new SetWallpaperCallback() {
-                    @Override
-                    public void onSuccess(WallpaperInfo wallpaperInfo) {
-                        finishActivity(/* success= */ true);
-                    }
-
-                    @Override
-                    public void onError(@Nullable Throwable throwable) {
-                        showSetWallpaperErrorDialog(destination);
-                    }
-                });
+                SetWallpaperViewModel.getCallback(mViewModelProvider));
     }
 
     private void renderWorkspaceSurface() {
