@@ -143,7 +143,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
     protected SetWallpaperViewModel mSetWallpaperViewModel;
     protected ViewModelProvider mViewModelProvider;
-    private Optional<Integer> mLastSelectedTabPositionOptional = Optional.empty();
+    protected Optional<Integer> mLastSelectedTabPositionOptional = Optional.empty();
     private OnBackPressedCallback mOnBackPressedCallback;
 
     /**
