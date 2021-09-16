@@ -617,8 +617,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         mWorkspaceSurface.setVisibility(isHomeSelected && mIsSurfaceCreated ? View.VISIBLE :
                 View.GONE);
 
-        mLockPreviewContainer.setVisibility(isHomeSelected && mIsSurfaceCreated ? View.VISIBLE :
-                View.GONE);
+        mLockPreviewContainer.setVisibility(isHomeSelected ? View.INVISIBLE : View.VISIBLE);
 
         mFullScreenAnimation.setIsHomeSelected(isHomeSelected);
     }
