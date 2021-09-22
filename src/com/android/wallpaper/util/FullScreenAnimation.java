@@ -128,7 +128,12 @@ public class FullScreenAnimation {
         mIsHomeSelected = isHomeSelected;
     }
 
-    private int getStatusBarHeight() {
+    /**
+     * Returns the height of status bar.
+     *
+     * @return height of status bar.
+     */
+    public int getStatusBarHeight() {
         return mStatusBarHeight;
     }
 
