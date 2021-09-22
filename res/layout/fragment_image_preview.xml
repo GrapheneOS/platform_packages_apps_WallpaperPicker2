@@ -21,6 +21,15 @@
     android:layout_height="match_parent"
     android:background="?android:colorBackground">
 
+    <!-- Preview header (toolbar + status bar) is used to solve preview with full screen animated
+         to non-full screen cases. -->
+    <FrameLayout
+        android:id="@+id/preview_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="?android:attr/actionBarSize">
+    </FrameLayout>
+
     <FrameLayout
         android:id="@+id/separated_tabs_container"
         android:layout_width="match_parent"

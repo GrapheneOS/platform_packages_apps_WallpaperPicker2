@@ -133,6 +133,11 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     }
 
     @Override
+    protected int getToolbarColorId() {
+        return android.R.color.transparent;
+    }
+
+    @Override
     public boolean onBackPressed() {
         // TODO(b/191120122) Improve glitchy animation in Settings.
         if (ActivityUtils.isLaunchedFromSettingsSearch(getActivity().getIntent())) {
