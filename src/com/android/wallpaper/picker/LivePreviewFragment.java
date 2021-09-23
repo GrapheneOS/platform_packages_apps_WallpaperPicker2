@@ -167,6 +167,11 @@ public class LivePreviewFragment extends PreviewFragment implements
                 activity.getWindowManager().getDefaultDisplay());
         mPreviewContainer = view.findViewById(R.id.live_wallpaper_preview);
         mTouchForwardingLayout = view.findViewById(R.id.touch_forwarding_layout);
+
+        // Update preview header color which covers toolbar and status bar area.
+        View previewHeader = view.findViewById(R.id.preview_header);
+        previewHeader.setBackgroundColor(activity.getColor(R.color.settingslib_colorSurfaceHeader));
+
         // Set aspect ratio on the preview card.
         ConstraintSet set = new ConstraintSet();
         set.clone((ConstraintLayout) mPreviewContainer);

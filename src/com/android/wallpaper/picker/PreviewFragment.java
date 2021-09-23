@@ -182,6 +182,11 @@ public abstract class PreviewFragment extends AppbarFragment implements
     }
 
     @Override
+    protected int getToolbarColorId() {
+        return android.R.color.transparent;
+    }
+
+    @Override
     @CallSuper
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -201,6 +206,13 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
                     mFullScreenAnimation.setWindowInsets(windowInsets);
                     mFullScreenAnimation.placeViews();
+
+                    // Update preview header's padding top to align status bar height.
+                    View previewHeader = v.findViewById(R.id.preview_header);
+                    previewHeader.setPadding(previewHeader.getPaddingLeft(),
+                            mFullScreenAnimation.getStatusBarHeight(),
+                            previewHeader.getPaddingRight(), previewHeader.getPaddingBottom());
+
                     return windowInsets.consumeSystemWindowInsets();
                 }
         );
