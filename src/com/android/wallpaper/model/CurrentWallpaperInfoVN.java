@@ -18,8 +18,6 @@ package com.android.wallpaper.model;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.util.Log;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
@@ -31,7 +29,6 @@ import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.compat.WallpaperManagerCompat.WallpaperLocation;
 import com.android.wallpaper.module.InjectorProvider;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -140,23 +137,10 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
      * Constructs and returns an Asset instance representing the currently-set wallpaper asset.
      */
     private Asset createCurrentWallpaperAssetVN(Context context) {
-        WallpaperManagerCompat wallpaperManagerCompat = InjectorProvider.getInjector()
-                .getWallpaperManagerCompat(context);
-
-        ParcelFileDescriptor systemWallpaperFile = wallpaperManagerCompat.getWallpaperFile(
-                WallpaperManagerCompat.FLAG_SYSTEM);
-
         // Whether the wallpaper this object represents is the default built-in wallpaper.
         boolean isSystemBuiltIn = mWallpaperManagerFlag == WallpaperManagerCompat.FLAG_SYSTEM
-                && systemWallpaperFile == null;
-
-        if (systemWallpaperFile != null) {
-            try {
-                systemWallpaperFile.close();
-            } catch (IOException e) {
-                Log.e(TAG, "Unable to close system wallpaper ParcelFileDescriptor", e);
-            }
-        }
+                && !InjectorProvider.getInjector().getWallpaperStatusChecker()
+                .isHomeStaticWallpaperSet(context);
 
         return (isSystemBuiltIn)
                 ? new BuiltInWallpaperAsset(context)
