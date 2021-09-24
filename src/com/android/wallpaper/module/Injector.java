@@ -62,6 +62,8 @@ public interface Injector {
 
     WallpaperManagerCompat getWallpaperManagerCompat(Context context);
 
+    WallpaperStatusChecker getWallpaperStatusChecker();
+
     WallpaperPersister getWallpaperPersister(Context context);
 
     WallpaperPreferences getPreferences(Context context);
