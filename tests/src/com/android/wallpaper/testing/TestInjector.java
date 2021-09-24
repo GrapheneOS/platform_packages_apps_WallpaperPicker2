@@ -44,6 +44,7 @@ import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperRefresher;
 import com.android.wallpaper.module.WallpaperRotationRefresher;
+import com.android.wallpaper.module.WallpaperStatusChecker;
 import com.android.wallpaper.monitor.PerformanceMonitor;
 import com.android.wallpaper.network.Requester;
 import com.android.wallpaper.picker.ImagePreviewFragment;
@@ -133,6 +134,11 @@ public class TestInjector implements Injector {
                     context.getApplicationContext());
         }
         return mWallpaperManagerCompat;
+    }
+
+    @Override
+    public WallpaperStatusChecker getWallpaperStatusChecker() {
+        return null;
     }
 
     @Override
