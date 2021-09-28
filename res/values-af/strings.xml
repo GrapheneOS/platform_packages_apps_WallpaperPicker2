@@ -56,9 +56,9 @@
     <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"Jou toesteladministrateur het die stel van \'n muurpapier gedeaktiveer"</string>
     <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"Muurpapier is suksesvol gestel"</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"Jy moet \'n internetverbinding hê om muurpapiere te bekyk. Koppel en probeer weer."</string>
-    <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"Kleinkiekie van die muurpapier wat tans op die tuisskerm gestel is"</string>
-    <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"Kleinkiekie van die muurpapier wat tans op die sluitskerm gestel is"</string>
-    <string name="currently_set_wallpaper_thumbnail" msgid="8651887838745545107">"Kleinkiekie van die muurpapier wat tans gestel is"</string>
+    <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"Miniprent van die muurpapier wat tans op die tuisskerm gestel is"</string>
+    <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"Miniprent van die muurpapier wat tans op die sluitskerm gestel is"</string>
+    <string name="currently_set_wallpaper_thumbnail" msgid="8651887838745545107">"Miniprent van die muurpapier wat tans gestel is"</string>
     <string name="wallpaper_thumbnail" msgid="569931475923605974">"Muurpapierkleinkiekie"</string>
     <string name="explore_home_screen" msgid="8756346794535765482">"Verken tuisskermmuurpapier"</string>
     <string name="explore_lock_screen" msgid="268938342103703665">"Verken sluitskermmuurpapier"</string>
