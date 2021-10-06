@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"গৃহ স্ক্ৰীণ"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"লক স্ক্ৰীণ"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"গৃহ স্ক্ৰীণ আৰু লক স্ক্ৰীণ"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"ৱালপেপাৰ ছেট কৰক"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"ইয়াত ৱালপেপাৰ ছেট কৰক"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"গৃহ স্ক্ৰীণ"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"লক স্ক্ৰীণ"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"গৃহ স্ক্ৰীণ আৰু লক স্ক্ৰীণ"</string>
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"গৃহ স্ক্ৰীন আৰু লক স্ক্ৰীন"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"আৱৰ্তিত প্ৰতিচ্ছবিৰ ৱালপেপাৰ"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"ইয়াত বর্তমানৰ ৱালপেপাৰখন দেখুওৱাবলৈ <xliff:g id="APP_NAME">%1$s</xliff:g>ক আপোনাৰ ডিভাইচৰ সঞ্চয়াগাৰ ব্যৱহাৰ কৰাৰ অনুমতিৰ দৰকাৰ।"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"ইয়াত বর্তমানৰ ৱালপেপাৰখন দেখুওৱাবলৈ ৱালপেপাৰ-এ আপোনাৰ ডিভাইচৰ সঞ্চয়াগাৰ ব্যৱহাৰ কৰা দৰকাৰ।\n\nএই ছেটিংটো সলনি কৰিবলৈ ৱালপেপাৰ এপৰ তথ্যৰ অন্তৰ্গত অনুমতি ক্ষেত্ৰলৈ যাওক।"</string>

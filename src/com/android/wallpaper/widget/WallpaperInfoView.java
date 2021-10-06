@@ -16,7 +16,6 @@
 package com.android.wallpaper.widget;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -54,7 +53,7 @@ public class WallpaperInfoView extends LinearLayout {
     /** Populates wallpaper info. */
     public void populateWallpaperInfo(@NonNull WallpaperInfo wallpaperInfo,
                                       CharSequence actionLabel,
-                                      @Nullable Intent exploreIntent,
+                                      boolean shouldShowExploreButton,
                                       OnClickListener exploreButtonClickListener) {
         final List<String> attributions = wallpaperInfo.getAttributions(getContext());
 
@@ -83,7 +82,7 @@ public class WallpaperInfoView extends LinearLayout {
                 mSubtitle2.setText(attributions.get(2));
             }
 
-            if (exploreIntent != null) {
+            if (shouldShowExploreButton) {
                 mExploreButton.setVisibility(View.VISIBLE);
                 mExploreButton.setText(actionLabel);
                 mExploreButton.setOnClickListener(exploreButtonClickListener);

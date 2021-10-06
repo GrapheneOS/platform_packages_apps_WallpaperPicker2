@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Aloitusnäyttö"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Lukitusnäyttö"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Aloitus- ja lukitusnäyttö"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Aseta taustakuva"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Ota taustakuva käyttöön"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Aloitusnäyttö"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Lukitusnäyttö"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Aloitusnäyttö ja lukitusnäyttö"</string>
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Aloitusnäyttö ja lukitusnäyttö"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Vaihtuva taustakuva"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"<xliff:g id="APP_NAME">%1$s</xliff:g> tarvitsee laitteen tallennustilan käyttöoikeuden, jotta nykyinen taustakuva voidaan näyttää tässä."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Jotta Taustakuvat voi näyttää nykyisen taustakuvan tässä, se tarvitsee laitteesi tallennustilan käyttöoikeuden.\n\nVoit muokata tätä asetusta Taustakuvien sovellustiedoissa olevassa käyttöoikeusosiossa."</string>
@@ -70,8 +70,8 @@
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"Laitteella"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Android-taustakuva"</string>
     <string name="live_wallpapers_category_title" msgid="1814374812192366349">"Live-taustakuvat"</string>
-    <string name="my_photos_category_title" msgid="4294567122144565273">"Omat valokuvat"</string>
-    <string name="my_photos_generic_wallpaper_title" msgid="7002867526154631172">"Oma valokuva"</string>
+    <string name="my_photos_category_title" msgid="4294567122144565273">"Omat kuvat"</string>
+    <string name="my_photos_generic_wallpaper_title" msgid="7002867526154631172">"Oma kuva"</string>
     <string name="fallback_wallpaper_title" msgid="6154655421012506001">"Taustakuva"</string>
     <string name="app_not_found" msgid="4431461707854088231">"Sovellusta ei ole asennettu."</string>
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Keskusta"</string>

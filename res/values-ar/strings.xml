@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"فئات الخلفيات"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"تعيين كخلفية"</string>
+    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"ضبط كصورة خلفية"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"جارٍ تعيين الخلفية…"</string>
     <string name="try_again" msgid="8278874823700921234">"إعادة المحاولة"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"يتعذّر تعيين الخلفية."</string>
@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"الشاشة الرئيسية"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"شاشة القفل"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"الشاشة الرئيسية وشاشة القفل"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"تعيين كخلفية"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"ضبط كخلفية"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"الشاشة الرئيسية"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"شاشة القفل"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"الشاشة الرئيسية وشاشة القفل"</string>
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"الشاشة الرئيسية وشاشة القفل"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"خلفية الصور التي يتم عرضها بالتناوب"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"لعرض الخلفية الحالية هنا، يحتاج تطبيق <xliff:g id="APP_NAME">%1$s</xliff:g> إلى الوصول إلى مساحة تخزين الجهاز."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"لعرض الخلفية الحالية هنا، يحتاج تطبيق \"الخلفيات\" إلى الدخول إلى مساحة تخزين جهازك.\n\nلتغيير هذا الإعداد، انتقل إلى \"منطقة الأذونات\" في المعلومات التي يقدّمها تطبيق \"الخلفيات\"."</string>

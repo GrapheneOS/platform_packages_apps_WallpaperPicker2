@@ -27,6 +27,7 @@ import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.util.ActivityUtils;
 
 /** A helper class for wallpaper info. */
 public class WallpaperInfoHelper {
@@ -53,6 +54,11 @@ public class WallpaperInfoHelper {
         } else {
             callback.onReceiveExploreIntent(actionLabel, null);
         }
+    }
+
+    /** Indicates if the explore button should show up in the wallpaper info view. */
+    public static boolean shouldShowExploreButton(Context context, @Nullable Intent exploreIntent) {
+        return exploreIntent != null && !ActivityUtils.isSUWMode(context);
     }
 
     private static CharSequence getActionLabel(Context context, WallpaperInfo wallpaperInfo) {

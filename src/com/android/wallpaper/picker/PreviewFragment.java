@@ -16,27 +16,28 @@
 package com.android.wallpaper.picker;
 
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.EDIT;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.content.res.Resources.NotFoundException;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
+import android.view.animation.PathInterpolator;
+import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.CallSuper;
-import androidx.annotation.IdRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
-import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
@@ -48,10 +49,16 @@ import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
+import com.android.wallpaper.util.FullScreenAnimation;
 import com.android.wallpaper.widget.BottomActionBar;
+import com.android.wallpaper.widget.BottomActionBar.BottomSheetContent;
+import com.android.wallpaper.widget.WallpaperInfoView;
+
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Base Fragment to display the UI for previewing an individual wallpaper
@@ -59,6 +66,8 @@ import java.util.List;
 public abstract class PreviewFragment extends AppbarFragment implements
         SetWallpaperDialogFragment.Listener, SetWallpaperErrorDialogFragment.Listener,
         LoadWallpaperErrorDialogFragment.Listener {
+
+    public static final Interpolator ALPHA_OUT = new PathInterpolator(0f, 0f, 0.8f, 1f);
 
     /**
      * User can view wallpaper and attributions in full screen, but "Set wallpaper" button is
@@ -71,6 +80,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
      * wallpaper with pan and crop position to the device.
      */
     static final int MODE_CROP_AND_SET_WALLPAPER = 1;
+    private Optional<Integer> mLastSelectedTabPositionOptional = Optional.empty();
 
     /**
      * Possible preview modes for the fragment.
@@ -111,11 +121,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     private static final int UNUSED_REQUEST_CODE = 1;
     private static final String TAG = "PreviewFragment";
 
-    @PreviewMode
-    protected int mPreviewMode;
-
-    protected boolean mViewAsHome;
-
     /**
      * When true, enables a test mode of operation -- in which certain UI features are disabled to
      * allow for UI tests to run correctly. Works around issue in ProgressDialog currently where the
@@ -124,13 +129,17 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected boolean mTestingModeEnabled;
 
     protected WallpaperInfo mWallpaper;
+    protected WallpaperPreviewBitmapTransformation mPreviewBitmapTransformation;
     protected WallpaperSetter mWallpaperSetter;
     protected UserEventLogger mUserEventLogger;
     protected BottomActionBar mBottomActionBar;
-    protected ContentLoadingProgressBar mLoadingProgressBar;
+    // For full screen animations.
+    protected View mRootView;
+    protected FullScreenAnimation mFullScreenAnimation;
+    @PreviewMode protected int mPreviewMode;
+    protected boolean mViewAsHome;
 
-    protected Intent mExploreIntent;
-    protected CharSequence mActionLabel;
+    private OnBackPressedCallback mOnBackPressedCallback;
 
     /**
      * Staged error dialog fragments that were unable to be shown when the hosting activity didn't
@@ -138,13 +147,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
      */
     private SetWallpaperErrorDialogFragment mStagedSetWallpaperErrorDialogFragment;
     private LoadWallpaperErrorDialogFragment mStagedLoadWallpaperErrorDialogFragment;
-
-    protected static int getAttrColor(Context context, int attr) {
-        TypedArray ta = context.obtainStyledAttributes(new int[]{attr});
-        int colorAccent = ta.getColor(0, 0);
-        ta.recycle();
-        return colorAccent;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -154,6 +156,8 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
         mUserEventLogger = injector.getUserEventLogger(appContext);
         mWallpaper = getArguments().getParcelable(ARG_WALLPAPER);
+        mPreviewBitmapTransformation = new WallpaperPreviewBitmapTransformation(
+                appContext, isRtl());
 
         //noinspection ResourceType
         mPreviewMode = getArguments().getInt(ARG_PREVIEW_MODE);
@@ -161,8 +165,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
         mTestingModeEnabled = getArguments().getBoolean(ARG_TESTING_MODE_ENABLED);
         mWallpaperSetter = new WallpaperSetter(injector.getWallpaperPersister(appContext),
                 injector.getPreferences(appContext), mUserEventLogger, mTestingModeEnabled);
-
-        setHasOptionsMenu(true);
 
         Activity activity = getActivity();
         List<String> attributions = getAttributions(activity);
@@ -178,15 +180,75 @@ public abstract class PreviewFragment extends AppbarFragment implements
         View view = inflater.inflate(getLayoutResId(), container, false);
         setUpToolbar(view);
 
-        mLoadingProgressBar = view.findViewById(getLoadingIndicatorResId());
-        mLoadingProgressBar.show();
+        mRootView = view;
+        mFullScreenAnimation = new FullScreenAnimation(view);
+
+        getActivity().getWindow().getDecorView().setOnApplyWindowInsetsListener(
+                (v, windowInsets) -> {
+                    v.setPadding(
+                            v.getPaddingLeft(),
+                            0,
+                            v.getPaddingRight(),
+                            0);
+
+                    mFullScreenAnimation.setWindowInsets(windowInsets);
+                    mFullScreenAnimation.placeViews();
+                    return windowInsets.consumeSystemWindowInsets();
+                }
+        );
+
         return view;
     }
 
     @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
+        super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar = bottomActionBar;
-        // TODO: Extract the common code here.
+        mBottomActionBar.setActionClickListener(EDIT, (view) -> {
+            mFullScreenAnimation.startAnimation(/* toFullScreen= */ true);
+            mBottomActionBar.deselectAction(EDIT);
+        });
+        setFullScreenActions(mRootView.findViewById(R.id.fullscreen_buttons_container));
+
+        if (mOnBackPressedCallback == null) {
+            mOnBackPressedCallback = new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    if (mFullScreenAnimation.isFullScreen()) {
+                        mFullScreenAnimation.startAnimation(/* toFullScreen= */ false);
+                        return;
+                    }
+                    if (mBottomActionBar != null && !mBottomActionBar.isBottomSheetCollapsed()) {
+                        mBottomActionBar.collapseBottomSheetIfExpanded();
+                        return;
+                    }
+                    getActivity().finish();
+                }
+            };
+            getActivity().getOnBackPressedDispatcher().addCallback(this, mOnBackPressedCallback);
+        }
+    }
+
+    protected void setFullScreenActions(View container) {
+        // Update the button text for the current workspace visibility.
+        Button hideUiPreviewButton = container.findViewById(R.id.hide_ui_preview_button);
+        hideUiPreviewButton.setText(mFullScreenAnimation.getWorkspaceVisibility()
+                ? R.string.hide_ui_preview_text
+                : R.string.show_ui_preview_text);
+        hideUiPreviewButton.setOnClickListener(
+                (button) -> {
+                    boolean visible = mFullScreenAnimation.getWorkspaceVisibility();
+                    // Update the button text for the next workspace visibility.
+                    ((Button) button).setText(visible
+                            ? R.string.show_ui_preview_text
+                            : R.string.hide_ui_preview_text);
+                    mFullScreenAnimation.setWorkspaceVisibility(!visible);
+                }
+        );
+        container.findViewById(R.id.set_as_wallpaper_button).setOnClickListener(
+                this::onSetWallpaperClicked);
+
+        mFullScreenAnimation.ensureBottomActionBarIsCorrectlyLocated();
     }
 
     protected List<String> getAttributions(Context context) {
@@ -196,11 +258,9 @@ public abstract class PreviewFragment extends AppbarFragment implements
     @LayoutRes
     protected abstract int getLayoutResId();
 
-    @IdRes
-    protected abstract int getLoadingIndicatorResId();
-
-    protected int getDeviceDefaultTheme() {
-        return android.R.style.Theme_DeviceDefault;
+    protected WorkspaceSurfaceHolderCallback createWorkspaceSurfaceCallback(
+            SurfaceView workspaceSurface) {
+        return new WorkspaceSurfaceHolderCallback(workspaceSurface, getContext());
     }
 
     @Override
@@ -224,33 +284,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
                     requireFragmentManager(), TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT);
             mStagedSetWallpaperErrorDialogFragment = null;
         }
-    }
-
-    protected void setUpExploreIntentAndLabel(@Nullable Runnable callback) {
-        Context context = getContext();
-        if (context == null) {
-            return;
-        }
-
-        WallpaperInfoHelper.loadExploreIntent(context, mWallpaper,
-                (actionLabel, exploreIntent) -> {
-                    mActionLabel = actionLabel;
-                    mExploreIntent = exploreIntent;
-                    if (callback != null) {
-                        callback.run();
-                    }
-                }
-        );
-    }
-
-    /**
-     * Configure loading indicator with a MaterialProgressDrawable.
-     */
-    protected void setUpLoadingIndicator() {
-        mLoadingProgressBar.setProgressTintList(ColorStateList.valueOf(getAttrColor(
-                new ContextThemeWrapper(requireContext(), getDeviceDefaultTheme()),
-                android.R.attr.colorAccent)));
-        mLoadingProgressBar.show();
     }
 
     protected abstract boolean isLoaded();
@@ -294,16 +327,32 @@ public abstract class PreviewFragment extends AppbarFragment implements
                 mWallpaper instanceof LiveWallpaperInfo);
     }
 
-    protected void onExploreClicked(View button) {
-        if (getContext() == null) {
-            return;
-        }
-        Context context = getContext();
-        mUserEventLogger.logActionClicked(mWallpaper.getCollectionId(context),
-                mWallpaper.getActionLabelRes(context));
+    protected void setUpTabs(TabLayout tabs) {
+        tabs.addTab(tabs.newTab().setText(R.string.home_screen_message));
+        tabs.addTab(tabs.newTab().setText(R.string.lock_screen_message));
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mLastSelectedTabPositionOptional = Optional.of(tab.getPosition());
+                updateScreenPreview(/* isHomeSelected= */ tab.getPosition() == 0);
+            }
 
-        startActivity(mExploreIntent);
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
+        // The TabLayout only contains below tabs
+        // 0. Home tab
+        // 1. Lock tab
+        int tabPosition = mLastSelectedTabPositionOptional.orElseGet(() -> mViewAsHome ? 0 : 1);
+        tabs.getTabAt(tabPosition).select();
+        updateScreenPreview(/* isHomeSelected= */ tabPosition == 0);
     }
+
+    protected abstract void updateScreenPreview(boolean isHomeSelected);
 
     /**
      * Sets current wallpaper to the device based on current zoom and scroll state.
@@ -372,5 +421,71 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected boolean isRtl() {
         return getResources().getConfiguration().getLayoutDirection()
                     == View.LAYOUT_DIRECTION_RTL;
+    }
+
+    protected final class WallpaperInfoContent extends BottomSheetContent<WallpaperInfoView> {
+
+        @Nullable private Intent mExploreIntent;
+        private CharSequence mActionLabel;
+
+        protected WallpaperInfoContent(Context context) {
+            super(context);
+        }
+
+        @Override
+        public int getViewId() {
+            return R.layout.wallpaper_info_view;
+        }
+
+        @Override
+        public void onViewCreated(WallpaperInfoView view) {
+            if (mWallpaper == null) {
+                return;
+            }
+
+            if (mActionLabel == null) {
+                setUpExploreIntentAndLabel(() -> populateWallpaperInfo(view));
+            } else {
+                populateWallpaperInfo(view);
+            }
+        }
+
+        private void setUpExploreIntentAndLabel(@Nullable Runnable callback) {
+            Context context = getContext();
+            if (context == null) {
+                return;
+            }
+
+            WallpaperInfoHelper.loadExploreIntent(context, mWallpaper,
+                    (actionLabel, exploreIntent) -> {
+                        mActionLabel = actionLabel;
+                        mExploreIntent = exploreIntent;
+                        if (callback != null) {
+                            callback.run();
+                        }
+                    }
+            );
+        }
+
+        private void onExploreClicked(View button) {
+            Context context = getContext();
+            if (context == null) {
+                return;
+            }
+
+            mUserEventLogger.logActionClicked(mWallpaper.getCollectionId(context),
+                    mWallpaper.getActionLabelRes(context));
+
+            startActivity(mExploreIntent);
+        }
+
+        private void populateWallpaperInfo(WallpaperInfoView view) {
+            view.populateWallpaperInfo(
+                    mWallpaper,
+                    mActionLabel,
+                    WallpaperInfoHelper.shouldShowExploreButton(
+                            getContext(), mExploreIntent),
+                    this::onExploreClicked);
+        }
     }
 }

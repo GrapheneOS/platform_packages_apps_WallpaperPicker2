@@ -14,11 +14,12 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:androidprv="http://schemas.android.com/apk/prv/res/android">
     <item
         android:state_selected="false"
-        android:color="@color/bottom_bar_icon_unchecked_color" />
+        android:color="?android:textColorTertiary" />
     <item
         android:state_selected="true"
-        android:color="?android:colorAccent" />
+        android:color="?androidprv:attr/textColorOnAccent" />
 </selector>

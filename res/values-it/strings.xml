@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Schermata Home"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Schermata di blocco"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Schermate Home e di blocco"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Imposta sfondo"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Imposta sfondo su"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Schermata Home"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Schermata di blocco"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Schermata Home e schermata di blocco"</string>
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Schermate Home e di blocco"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Sfondo di immagini a rotazione"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Per visualizzare qui lo sfondo corrente, <xliff:g id="APP_NAME">%1$s</xliff:g> deve avere accesso allo spazio di archiviazione del dispositivo."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Per visualizzare qui lo sfondo corrente, l\'app Sfondi deve avere accesso allo spazio di archiviazione del dispositivo.\n\nPer modificare questa impostazione, vai all\'area Autorizzazioni nella sezione Informazioni app di Sfondi."</string>

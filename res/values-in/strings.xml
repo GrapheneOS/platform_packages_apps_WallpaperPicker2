@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Layar utama"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Layar kunci"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Beranda &amp; Layar Kunci"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Setel wallpaper"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Setel wallpaper"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Layar utama"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Layar kunci"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Layar Utama dan layar kunci"</string>
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Layar utama dan layar kunci"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Memutar Wallpaper Gambar"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Untuk menampilkan wallpaper yang dipilih di sini, <xliff:g id="APP_NAME">%1$s</xliff:g> perlu akses ke penyimpanan perangkat."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Untuk menampilkan wallpaper yang saat ini digunakan di sini, Wallpaper memerlukan akses ke penyimpanan perangkat.\n\nUntuk mengubah setelan ini, buka bagian Izin pada info aplikasi Wallpaper."</string>

@@ -54,6 +54,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -68,7 +69,7 @@ public class DefaultCategoryProvider implements CategoryProvider {
      * Relative category priorities. Lower numbers correspond to higher priorities (i.e., should
      * appear higher in the categories list).
      */
-    private static final int PRIORITY_MY_PHOTOS = 1;
+    protected static final int PRIORITY_MY_PHOTOS = 1;
     private static final int PRIORITY_SYSTEM = 100;
     private static final int PRIORITY_ON_DEVICE = 200;
     private static final int PRIORITY_LIVE = 300;
@@ -83,6 +84,7 @@ public class DefaultCategoryProvider implements CategoryProvider {
     // The network status of the last fetch from the server.
     @NetworkStatus
     private int mNetworkStatus;
+    private Locale mLocale;
 
     public DefaultCategoryProvider(Context context) {
         mAppContext = context.getApplicationContext();
@@ -105,6 +107,7 @@ public class DefaultCategoryProvider implements CategoryProvider {
         }
 
         mNetworkStatus = mNetworkStatusNotifier.getNetworkStatus();
+        mLocale = getLocale();
         doFetch(receiver, forceRefresh);
     }
 
@@ -139,11 +142,19 @@ public class DefaultCategoryProvider implements CategoryProvider {
     }
 
     @Override
-    public void resetIfNeeded() {
-        if (mNetworkStatus != mNetworkStatusNotifier.getNetworkStatus()) {
+    public boolean resetIfNeeded() {
+        if (mNetworkStatus != mNetworkStatusNotifier.getNetworkStatus()
+                || mLocale != getLocale()) {
             mCategories.clear();
             mFetchedCategories = false;
+            return true;
         }
+        return false;
+    }
+
+    @Override
+    public boolean isFeaturedCollectionAvailable() {
+        return false;
     }
 
     protected void doFetch(final CategoryReceiver receiver, boolean forceRefresh) {
@@ -164,24 +175,28 @@ public class DefaultCategoryProvider implements CategoryProvider {
         new FetchCategoriesTask(delegatingReceiver, mAppContext).execute();
     }
 
+    private Locale getLocale() {
+        return mAppContext.getResources().getConfiguration().getLocales().get(0);
+    }
+
     /**
      * AsyncTask subclass used for fetching all the categories and pushing them one at a time to
      * the receiver.
      */
     protected static class FetchCategoriesTask extends AsyncTask<Void, Category, Void> {
         private CategoryReceiver mReceiver;
+        private PartnerProvider mPartnerProvider;
         protected final Context mAppContext;
-        protected final PartnerProvider mPartnerProvider;
 
         public FetchCategoriesTask(CategoryReceiver receiver, Context context) {
             mReceiver = receiver;
             mAppContext = context.getApplicationContext();
-            mPartnerProvider = InjectorProvider.getInjector().getPartnerProvider(
-                    mAppContext);
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
+            mPartnerProvider = InjectorProvider.getInjector().getPartnerProvider(
+                    mAppContext);
             FormFactorChecker formFactorChecker =
                     InjectorProvider.getInjector().getFormFactorChecker(mAppContext);
             @FormFactor int formFactor = formFactorChecker.getFormFactor();
@@ -299,10 +314,6 @@ public class DefaultCategoryProvider implements CategoryProvider {
                                 || parser.getDepth() > categoryDepth)
                                 && type != XmlPullParser.END_DOCUMENT) {
                             if (type == XmlPullParser.START_TAG) {
-                                if (!publishedPlaceholder) {
-                                    publishProgress(categoryBuilder.buildPlaceholder());
-                                    publishedPlaceholder = true;
-                                }
                                 WallpaperInfo wallpaper = null;
                                 if (SystemStaticWallpaperInfo.TAG_NAME.equals(parser.getName())) {
                                     wallpaper = SystemStaticWallpaperInfo
@@ -316,12 +327,19 @@ public class DefaultCategoryProvider implements CategoryProvider {
                                 }
                                 if (wallpaper != null) {
                                     categoryBuilder.addWallpaper(wallpaper);
+                                    // Publish progress only if there's at least one wallpaper
+                                    if (!publishedPlaceholder) {
+                                        publishProgress(categoryBuilder.buildPlaceholder());
+                                        publishedPlaceholder = true;
+                                    }
                                 }
                             }
                         }
                         WallpaperCategory category = categoryBuilder.build();
-                        categories.add(category);
-                        publishProgress(category);
+                        if (!category.getUnmodifiableWallpapers().isEmpty()) {
+                            categories.add(category);
+                            publishProgress(category);
+                        }
                     }
                 }
             } catch (IOException | XmlPullParserException e) {

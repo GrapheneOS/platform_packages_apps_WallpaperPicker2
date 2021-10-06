@@ -19,23 +19,7 @@
     android:id="@+id/tile"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/grid_item_individual_padding_top">
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/grid_item_individual_label_padding_top"
-        android:layout_marginBottom="@dimen/grid_item_individual_label_padding_bottom"
-        android:background="@color/category_title_scrim_color"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxLines="1"
-        android:minHeight="@dimen/grid_item_category_label_minimum_height"
-        android:textAppearance="@style/OptionTitleTextAppearance"
-        android:visibility="gone"
-        tools:text="Wallpaper" />
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/wallpaper_container"
@@ -43,6 +27,7 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/wallpaper_thumbnail"
         app:cardCornerRadius="?android:dialogCornerRadius"
+        app:cardBackgroundColor="@android:color/transparent"
         app:cardElevation="0dp">
 
         <RelativeLayout
@@ -54,7 +39,6 @@
                 android:id="@+id/thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/secondary_color"
                 android:scaleType="centerCrop" />
 
             <ImageView
@@ -63,11 +47,18 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true" />
 
+            <ImageView
+                android:id="@+id/indicator_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:visibility="gone" />
+
             <FrameLayout
                 android:id="@+id/loading_indicator_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/black_67_alpha"
                 android:visibility="gone">
 
                 <ProgressBar
@@ -76,20 +67,24 @@
                     android:layout_height="@dimen/tile_desktop_progress_bar_size"
                     android:layout_gravity="center"
                     android:indeterminate="true"
-                    android:indeterminateTint="@color/accent_color" />
+                    android:indeterminateTint="?android:colorAccent" />
 
             </FrameLayout>
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/check_circle"
-            android:layout_width="@dimen/grid_item_individual_wallpaper_check_circle_size"
-            android:layout_height="@dimen/grid_item_individual_wallpaper_check_circle_size"
-            android:layout_gravity="bottom|right"
-            android:layout_marginEnd="@dimen/grid_item_individual_wallpaper_check_circle_offset"
-            android:layout_marginBottom="@dimen/grid_item_individual_wallpaper_check_circle_offset"
-            android:src="@drawable/check_circle_accent_24dp"
-            android:visibility="gone" />
-
     </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/grid_item_individual_label_padding_top"
+        android:layout_marginBottom="@dimen/grid_item_individual_label_padding_bottom"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:minHeight="@dimen/grid_item_category_label_minimum_height"
+        android:textAppearance="@style/OptionTitleTextAppearance"
+        android:visibility="gone"
+        tools:text="Wallpaper" />
 </LinearLayout>

@@ -32,10 +32,10 @@
     <string name="home_screen_message" msgid="106444102822522813">"Početni ekran"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Zaključan ekran"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Početni i zaključani ekran"</string>
-    <string name="set_wallpaper_dialog_message" msgid="6114951028768599417">"Podesite pozadinu"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Podesite pozadinu na"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Početni ekran"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Zaključan ekran"</string>
-    <string name="set_wallpaper_both_destination" msgid="6967226064958263939">"Početni ekran i zaključani ekran"</string>
+    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Početni i zaključani ekran"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Rotirajuća pozadina sa slikom"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Da bi se aktuelna pozadina prikazivala ovde, aplikacija <xliff:g id="APP_NAME">%1$s</xliff:g> treba da ima pristup memorijskom prostoru na uređaju."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Da bi se aktuelna pozadina prikazivala ovde, aplikacija Pozadine mora da ima pristup memorijskom prostoru na uređaju.\n\nDa biste promenili ovo podešavanje, idite u odeljak Dozvole u informacijama o aplikaciji Pozadine."</string>
@@ -44,7 +44,7 @@
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Dnevna pozadina"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Dodirnite da biste uključili"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Pozadina se automatski menja svaki dan. Da biste dovršili podešavanje, dodirnite &lt;strong&gt;Podesi pozadinu&lt;/strong&gt; na sledećem ekranu."</string>
-    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Preuzimaj buduće pozadine samo preko Wi-Fi mreže"</string>
+    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Preuzimaj buduće pozadine samo preko WiFi mreže"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Nastavi"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Preuzima se prva pozadina…"</string>
     <string name="start_rotation_error_message" msgid="3053799836719618972">"Preuzimanje prve pozadine nije uspelo. Proverite podešavanja mreže i probajte ponovo."</string>

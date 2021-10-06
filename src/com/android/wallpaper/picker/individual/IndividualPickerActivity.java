@@ -46,6 +46,7 @@ import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.picker.BaseActivity;
 import com.android.wallpaper.picker.PreviewActivity.PreviewActivityIntentFactory;
 import com.android.wallpaper.util.DiskBasedLogger;
+import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.BottomActionBar.BottomActionBarHost;
 
@@ -53,7 +54,8 @@ import com.android.wallpaper.widget.BottomActionBar.BottomActionBarHost;
  * Activity that can be launched from the Android wallpaper picker and allows users to pick from
  * various wallpapers and enter a preview mode for specific ones.
  */
-public class IndividualPickerActivity extends BaseActivity implements BottomActionBarHost {
+public class IndividualPickerActivity extends BaseActivity implements BottomActionBarHost,
+        IndividualPickerFragment.IndividualPickerFragmentHost {
     private static final String TAG = "IndividualPickerAct";
     private static final String EXTRA_CATEGORY_COLLECTION_ID =
             "com.android.wallpaper.category_collection_id";
@@ -142,7 +144,9 @@ public class IndividualPickerActivity extends BaseActivity implements BottomActi
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        toolbar.getNavigationIcon().setTint(getColor(R.color.toolbar_icon_color));
+        toolbar.getNavigationIcon().setTint(
+                ResourceUtils.getColorAttr(this, android.R.attr.textColorPrimary)
+        );
         toolbar.getNavigationIcon().setAutoMirrored(true);
 
         if (fragment == null) {
@@ -227,6 +231,32 @@ public class IndividualPickerActivity extends BaseActivity implements BottomActi
     @Override
     public BottomActionBar getBottomActionBar() {
         return findViewById(R.id.bottom_actionbar);
+    }
+
+    @Override
+    public boolean isHostToolbarShown() {
+        return true;
+    }
+
+    @Override
+    public void setToolbarTitle(CharSequence title) {
+        setTitle(title);
+        getSupportActionBar().setTitle(title);
+    }
+
+    @Override
+    public void setToolbarMenu(int menuResId) {
+
+    }
+
+    @Override
+    public void removeToolbarMenu() {
+
+    }
+
+    @Override
+    public void moveToPreviousFragment() {
+        getSupportFragmentManager().popBackStack();
     }
 
     /**
