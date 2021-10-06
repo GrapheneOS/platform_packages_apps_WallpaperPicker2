@@ -274,7 +274,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
 
     @Override
     public void fetchCategories() {
-        mDelegate.initialize(!mDelegate.getCategoryProvider().isCategoriesFetched());
+        mDelegate.initialize(mDelegate.getCategoryProvider().shouldForceReload(this));
     }
 
     @Override
