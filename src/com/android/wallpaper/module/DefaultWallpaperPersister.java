@@ -48,6 +48,7 @@ import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.BitmapCropper.Callback;
 import com.android.wallpaper.util.BitmapTransformer;
+import com.android.wallpaper.util.DisplayUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.WallpaperCropUtils;
 
@@ -73,6 +74,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     private final WallpaperManagerCompat mWallpaperManagerCompat;
     private final WallpaperPreferences mWallpaperPreferences;
     private final WallpaperChangedNotifier mWallpaperChangedNotifier;
+    private final DisplayUtils mDisplayUtils;
 
     private WallpaperInfo mWallpaperInfoInPreview;
 
@@ -86,6 +88,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         mWallpaperManagerCompat = injector.getWallpaperManagerCompat(context);
         mWallpaperPreferences = injector.getPreferences(context);
         mWallpaperChangedNotifier = WallpaperChangedNotifier.getInstance();
+        mDisplayUtils = injector.getDisplayUtils(context);
     }
 
     @Override
@@ -421,13 +424,11 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     private int cropAndSetWallpaperBitmapInRotationStatic(Bitmap wallpaperBitmap) {
         // Calculate crop and scale of the wallpaper to match the default one used in preview
         Point wallpaperSize = new Point(wallpaperBitmap.getWidth(), wallpaperBitmap.getHeight());
-        WindowManager windowManager =
-                (WindowManager) mAppContext.getSystemService(Context.WINDOW_SERVICE);
         Resources resources = mAppContext.getResources();
+        Display croppingDisplay = mDisplayUtils.getWallpaperDisplay();
         Point defaultCropSurfaceSize = WallpaperCropUtils.getDefaultCropSurfaceSize(
-                resources, windowManager.getDefaultDisplay());
-        Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(
-                windowManager.getDefaultDisplay());
+                resources, croppingDisplay);
+        Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(croppingDisplay);
 
         // Determine minimum zoom to fit maximum visible area of wallpaper on crop surface.
         float minWallpaperZoom =
