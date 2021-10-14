@@ -62,6 +62,7 @@ import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.CurrentWallpaperAssetVN;
 import com.android.wallpaper.model.SetWallpaperViewModel;
 import com.android.wallpaper.module.BitmapCropper;
+import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.util.FullScreenAnimation;
@@ -101,9 +102,18 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     private final AtomicInteger mImageScaleChangeCounter = new AtomicInteger(0);
     private final AtomicInteger mRecalculateColorCounter = new AtomicInteger(0);
+    private final Injector mInjector = InjectorProvider.getInjector();
 
     private SubsamplingScaleImageView mFullResImageView;
     private Asset mWallpaperAsset;
+    /**
+     * Size of the screen considered for cropping the wallpaper (typically the same as
+     * {@link #mScreenSize} but it could be different on multi-display)
+     */
+    private Point mWallpaperScreenSize;
+    /**
+     * The size of the current screen
+     */
     private Point mScreenSize;
     private Point mRawWallpaperSize; // Native size of wallpaper image.
     private ImageView mLowResImageView;
@@ -137,8 +147,12 @@ public class ImagePreviewFragment extends PreviewFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         Activity activity = requireActivity();
-        mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
+        ScreenSizeCalculator screenSizeCalculator = ScreenSizeCalculator.getInstance();
+        mScreenSize = screenSizeCalculator.getScreenSize(
                 activity.getWindowManager().getDefaultDisplay());
+        // "Wallpaper screen" size will be the size of the largest screen available
+        mWallpaperScreenSize = screenSizeCalculator.getScreenSize(
+                mInjector.getDisplayUtils(activity).getWallpaperDisplay());
 
         mContainer = view.findViewById(R.id.container);
         mTouchForwardingLayout = mContainer.findViewById(R.id.touch_forwarding_layout);
@@ -351,7 +365,7 @@ public class ImagePreviewFragment extends PreviewFragment {
             return;
         }
 
-        BitmapCropper bitmapCropper = InjectorProvider.getInjector().getBitmapCropper();
+        BitmapCropper bitmapCropper = mInjector.getBitmapCropper();
         bitmapCropper.cropAndScaleBitmap(mWallpaperAsset, mFullResImageView.getScale(),
                 calculateCropRect(context), /* adjustForRtl= */ false,
                 new BitmapCropper.Callback() {
@@ -537,13 +551,21 @@ public class ImagePreviewFragment extends PreviewFragment {
                     mRawWallpaperSize = dimensions;
                     initFullResView();
                 });
-                // Scale the mWallpaperSurface based on system zoom's scale so that the wallpaper is
+
+                // Calculate the size of mWallpaperSurface based on system zoom's scale and
+                // on the larger screen size (if more than one) so that the wallpaper is
                 // rendered in a larger surface than what preview shows, simulating the behavior of
-                // the actual wallpaper surface.
+                // the actual wallpaper surface and so we can crop it to a size that fits in all
+                // screens.
                 float scale = WallpaperCropUtils.getSystemWallpaperMaximumScale(context);
                 int origWidth = mWallpaperSurface.getWidth();
-                int width = (int) (origWidth * scale);
                 int origHeight = mWallpaperSurface.getHeight();
+
+                if (!mScreenSize.equals(mWallpaperScreenSize)) {
+                    float previewToScreenScale = (float) origWidth / mScreenSize.x;
+                    origWidth = (int) (mWallpaperScreenSize.x * previewToScreenScale);
+                }
+                int width = (int) (origWidth * scale);
                 int height = (int) (origHeight * scale);
                 int left = (origWidth - width) / 2;
                 int top = (origHeight - height) / 2;
