@@ -49,6 +49,7 @@ import com.android.wallpaper.monitor.PerformanceMonitor;
 import com.android.wallpaper.network.Requester;
 import com.android.wallpaper.picker.ImagePreviewFragment;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
+import com.android.wallpaper.util.DisplayUtils;
 
 /**
  * Test implementation of the dependency injector.
@@ -264,6 +265,11 @@ public class TestInjector implements Injector {
 
     @Override
     public CustomizationSections getCustomizationSections() {
+        return null;
+    }
+
+    @Override
+    public DisplayUtils getDisplayUtils(Context context) {
         return null;
     }
 }
