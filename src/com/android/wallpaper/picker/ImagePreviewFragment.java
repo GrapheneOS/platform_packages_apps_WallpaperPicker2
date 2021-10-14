@@ -275,8 +275,9 @@ public class ImagePreviewFragment extends PreviewFragment {
      * Initializes MosaicView by initializing tiling, setting a fallback page bitmap, and
      * initializing a zoom-scroll observer and click listener.
      */
-    private void initFullResView() {
-        if (mRawWallpaperSize == null || mFullResImageView == null) {
+    private synchronized void initFullResView() {
+        if (mRawWallpaperSize == null || mFullResImageView == null
+                || mFullResImageView.isImageLoaded()) {
             return;
         }
 
