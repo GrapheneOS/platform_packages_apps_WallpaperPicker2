@@ -21,6 +21,7 @@ import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.network.Requester;
 import com.android.wallpaper.network.WallpaperRequester;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
+import com.android.wallpaper.util.DisplayUtils;
 
 /**
  * Base implementation of Injector.
@@ -44,6 +45,7 @@ public abstract class BaseWallpaperInjector implements Injector {
     private LiveWallpaperInfoFactory mLiveWallpaperInfoFactory;
     private DrawableLayerResolver mDrawableLayerResolver;
     private CustomizationSections mCustomizationSections;
+    private DisplayUtils mDisplayUtils;
 
     @Override
     public synchronized BitmapCropper getBitmapCropper() {
@@ -194,5 +196,13 @@ public abstract class BaseWallpaperInjector implements Injector {
             mCustomizationSections = new WallpaperPickerSections();
         }
         return mCustomizationSections;
+    }
+
+    @Override
+    public DisplayUtils getDisplayUtils(Context context) {
+        if (mDisplayUtils == null) {
+            mDisplayUtils = new DisplayUtils(context.getApplicationContext());
+        }
+        return mDisplayUtils;
     }
 }
