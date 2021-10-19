@@ -19,22 +19,22 @@ import android.content.Context
 import android.content.Intent
 
 /**
- * Checks if the device is supporting two panes' features
+ * Checks if the device is supporting multi panes' features
  */
-interface TwoPanesChecker {
+interface MultiPanesChecker {
     /**
-     * Checks if the device is supporting two-panes landscape
+     * Checks if the device is supporting multi-panes landscape
      *
      * @param context the Activity's context
      * @return `true` if supported, `false` otherwise.
      */
-    fun isTwoPanesEnabled(context: Context): Boolean
+    fun isMultiPanesEnabled(context: Context): Boolean
 
     /**
-     * Gets the intent to start two-panes landscape Activity
+     * Gets the intent to start multi-panes landscape Activity
      *
      * @param context the Activity's context
-     * @return [Intent] to start two panels
+     * @return [Intent] to start multi panels
      */
-    fun getTwoPanesIntent(context: Context): Intent?
+    fun getMultiPanesIntent(context: Context): Intent?
 }
