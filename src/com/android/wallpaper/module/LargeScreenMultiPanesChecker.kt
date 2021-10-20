@@ -22,29 +22,29 @@ import android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
 import android.provider.Settings.*
 
 /**
- * Utility class to check the support of two panes integration (trampoline)
+ * Utility class to check the support of multi panes integration (trampoline)
  */
-class LargeScreenTwoPanesChecker : TwoPanesChecker {
+class LargeScreenMultiPanesChecker : MultiPanesChecker {
     companion object {
-        private const val TAG = "LargeScreenTwoPanesChecker"
+        private const val TAG = "LargeScreenMultiPanesChecker"
         private const val VALUE_HIGHLIGHT_MENU = "top_level_wallpaper"
     }
 
-    override fun isTwoPanesEnabled(context: Context): Boolean {
+    override fun isMultiPanesEnabled(context: Context): Boolean {
         val pm = context.packageManager
-        val intent = getTwoPanesIntent(context)
+        val intent = getMultiPanesIntent(context)
 
         val resolveInfo = pm.resolveActivity(intent, MATCH_DEFAULT_ONLY)?.activityInfo?.enabled
         return resolveInfo != null
     }
 
-    override fun getTwoPanesIntent(context: Context): Intent {
+    override fun getMultiPanesIntent(context: Context): Intent {
         val intentUri = Intent(ACTION_SET_WALLPAPER)
                 .setPackage(context.packageName).toUri(Intent.URI_INTENT_SCHEME)
 
-        return Intent(ACTION_SETTINGS_LARGE_SCREEN_DEEP_LINK).apply {
-            putExtra(EXTRA_SETTINGS_LARGE_SCREEN_HIGHLIGHT_MENU_KEY, VALUE_HIGHLIGHT_MENU)
-            putExtra(EXTRA_SETTINGS_LARGE_SCREEN_DEEP_LINK_INTENT_URI, intentUri)
+        return Intent(ACTION_SETTINGS_EMBED_DEEP_LINK_ACTIVITY).apply {
+            putExtra(EXTRA_SETTINGS_EMBEDDED_DEEP_LINK_HIGHLIGHT_MENU_KEY, VALUE_HIGHLIGHT_MENU)
+            putExtra(EXTRA_SETTINGS_EMBEDDED_DEEP_LINK_INTENT_URI, intentUri)
         };
     }
 }
