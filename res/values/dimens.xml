@@ -157,6 +157,8 @@
     <dimen name="bottom_action_button_height">48dp</dimen>
     <dimen name="bottom_action_button_padding_horizontal">26dp</dimen>
     <dimen name="bottom_action_button_radius">100dp</dimen>
+    <dimen name="apply_button_background_width">60dp</dimen>
+    <dimen name="apply_button_background_height">36dp</dimen>
 
     <!-- Whenever updating this file, ensure that
          bottom_actions_plus_separated_tabs == bottom_actions_height + separated_tabs_height -->
