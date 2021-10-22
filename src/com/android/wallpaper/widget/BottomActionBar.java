@@ -24,7 +24,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -537,9 +536,6 @@ public class BottomActionBar extends FrameLayout {
                         context.getColorStateList(R.color.bottom_action_button_color_tint));
             }
         }
-        Button applyButton = findViewById(R.id.action_apply_text_button);
-        applyButton.setBackground(context.getDrawable(R.drawable.btn_transparent_background));
-        applyButton.setTextColor(ResourceUtils.getColorAttr(context, android.R.attr.colorAccent));
     }
 
     private void updateSelectedState(BottomAction bottomAction, boolean selected) {
