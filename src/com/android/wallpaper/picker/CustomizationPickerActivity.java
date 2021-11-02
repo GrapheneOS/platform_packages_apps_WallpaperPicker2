@@ -117,8 +117,8 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
 
             // Switch to the target fragment.
             switchFragment(isWallpaperOnlyMode(getIntent())
-                    ? WallpaperOnlyFragment.newInstance(getString(R.string.wallpaper_app_name))
-                    : CustomizationPickerFragment.newInstance(getString(R.string.app_name)));
+                    ? new WallpaperOnlyFragment()
+                    : new CustomizationPickerFragment());
         }
 
         // Deep link case
