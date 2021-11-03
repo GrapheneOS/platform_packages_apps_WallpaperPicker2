@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginBottom="@dimen/bottom_actions_height"
-        android:paddingHorizontal="@dimen/separated_tabs_horizontal_margin">
+        android:paddingHorizontal="@dimen/separated_tabs_horizontal_padding">
         <include layout="@layout/separated_tabs" />
     </FrameLayout>
 
