@@ -54,12 +54,12 @@
             android:layout_gravity="center"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:paddingVertical="@dimen/full_preview_page_default_padding_top">
+            android:padding="@dimen/full_preview_page_default_padding_top">
 
             <com.android.wallpaper.picker.TouchForwardingLayout
                 android:id="@+id/touch_forwarding_layout"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:background="@android:color/transparent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
