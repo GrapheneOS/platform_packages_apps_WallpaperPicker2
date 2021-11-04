@@ -229,8 +229,11 @@ public class SizeCalculator {
      * to the screen's corner radius
      */
     public static float getPreviewCornerRadius(@NonNull Activity activity, int previewWidth) {
+        Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(
+                activity.getWindowManager().getDefaultDisplay());
+
         return QuickStepContract.getWindowCornerRadius(activity)
-                / ((float) getActivityWindowWidthPx(activity) / previewWidth);
+                / ((float) screenSize.x / previewWidth);
     }
 
     /**
