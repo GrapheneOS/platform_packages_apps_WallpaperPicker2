@@ -183,11 +183,16 @@ public class ImagePreviewFragment extends PreviewFragment {
                 isFullScreen -> mLockScreenPreviewer.setDateViewVisibility(!isFullScreen));
         setUpTabs(view.findViewById(R.id.separated_tabs));
 
-        view.measure(makeMeasureSpec(mScreenSize.x, EXACTLY),
-                makeMeasureSpec(mScreenSize.y, EXACTLY));
-        ((CardView) mWorkspaceSurface.getParent())
-                .setRadius(SizeCalculator.getPreviewCornerRadius(
-                        activity, mContainer.getMeasuredWidth()));
+        view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View thisView, int left, int top, int right, int bottom,
+                    int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                ((CardView) mWorkspaceSurface.getParent()).setRadius(
+                        SizeCalculator.getPreviewCornerRadius(activity,
+                                ((CardView) mWorkspaceSurface.getParent()).getMeasuredWidth()));
+                view.removeOnLayoutChangeListener(this);
+            }
+        });
 
         renderImageWallpaper();
         renderWorkspaceSurface();
