@@ -60,6 +60,7 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
     private String mCollectionId;
     @WallpaperLocation
     private int mWallpaperManagerFlag;
+    public static final String UNKNOWN_CURRENT_WALLPAPER_ID = "unknown_current_wallpaper_id";
 
     /**
      * Constructs a new instance of this class.
@@ -89,6 +90,11 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
         mCollectionId = in.readString();
         mActionLabelRes = in.readInt();
         mActionIconRes = in.readInt();
+    }
+
+    @Override
+    public String getWallpaperId() {
+        return UNKNOWN_CURRENT_WALLPAPER_ID;
     }
 
     @Override
