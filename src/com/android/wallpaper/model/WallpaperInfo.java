@@ -184,6 +184,16 @@ public abstract class WallpaperInfo implements Parcelable {
     }
 
     /**
+     * Returns the distinct ID of the stored wallpaper or null if there is no ID.
+     */
+    public String getStoredWallpaperId(Context context) {
+        if (getWallpaperId() == null) {
+            return null;
+        }
+        return getCollectionId(context) + "-" + getWallpaperId();
+    }
+
+    /**
      * Returns whether backup is allowed for this wallpaper.
      */
     @BackupPermission
