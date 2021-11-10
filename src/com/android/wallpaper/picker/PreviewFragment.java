@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
@@ -39,9 +40,11 @@ import androidx.annotation.IntDef;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.LiveWallpaperInfo;
+import com.android.wallpaper.model.SetWallpaperViewModel;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
@@ -80,7 +83,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
      * wallpaper with pan and crop position to the device.
      */
     static final int MODE_CROP_AND_SET_WALLPAPER = 1;
-    private Optional<Integer> mLastSelectedTabPositionOptional = Optional.empty();
 
     /**
      * Possible preview modes for the fragment.
@@ -139,6 +141,9 @@ public abstract class PreviewFragment extends AppbarFragment implements
     @PreviewMode protected int mPreviewMode;
     protected boolean mViewAsHome;
 
+    protected SetWallpaperViewModel mSetWallpaperViewModel;
+    protected ViewModelProvider mViewModelProvider;
+    protected Optional<Integer> mLastSelectedTabPositionOptional = Optional.empty();
     private OnBackPressedCallback mOnBackPressedCallback;
 
     /**
@@ -165,6 +170,9 @@ public abstract class PreviewFragment extends AppbarFragment implements
         mTestingModeEnabled = getArguments().getBoolean(ARG_TESTING_MODE_ENABLED);
         mWallpaperSetter = new WallpaperSetter(injector.getWallpaperPersister(appContext),
                 injector.getPreferences(appContext), mUserEventLogger, mTestingModeEnabled);
+
+        mViewModelProvider = new ViewModelProvider(requireActivity());
+        mSetWallpaperViewModel = mViewModelProvider.get(SetWallpaperViewModel.class);
 
         Activity activity = getActivity();
         List<String> attributions = getAttributions(activity);
@@ -284,12 +292,28 @@ public abstract class PreviewFragment extends AppbarFragment implements
                     requireFragmentManager(), TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT);
             mStagedSetWallpaperErrorDialogFragment = null;
         }
+
+        mSetWallpaperViewModel.getStatus().observe(requireActivity(), setWallpaperStatus -> {
+            switch (setWallpaperStatus) {
+                case SUCCESS:
+                    // Give a few millis before finishing to allow for the dialog dismiss
+                    // and animations to finish
+                    Handler.getMain().postDelayed(() -> finishActivity(true), 300);
+                    break;
+                case ERROR:
+                    showSetWallpaperErrorDialog(mSetWallpaperViewModel.getDestination());
+                    break;
+                default:
+                    // Do nothing in this case, either status is pending, or unknown
+            }
+        });
     }
 
     protected abstract boolean isLoaded();
 
     @Override
     public void onSet(int destination) {
+        mSetWallpaperViewModel.setDestination(destination);
         setCurrentWallpaper(destination);
     }
 
@@ -300,6 +324,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
     @Override
     public void onClickTryAgain(@Destination int wallpaperDestination) {
+        mSetWallpaperViewModel.setDestination(wallpaperDestination);
         setCurrentWallpaper(wallpaperDestination);
     }
 
@@ -375,8 +400,8 @@ public abstract class PreviewFragment extends AppbarFragment implements
             }
             activity.setResult(Activity.RESULT_OK);
         }
-        activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         activity.finish();
+        activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     protected void showSetWallpaperErrorDialog(@Destination int wallpaperDestination) {
