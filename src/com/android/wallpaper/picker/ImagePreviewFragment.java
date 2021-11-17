@@ -328,10 +328,12 @@ public class ImagePreviewFragment extends PreviewFragment {
                     if (mFullResImageView != null) {
                         // Set page bitmap.
                         mFullResImageView.setImage(ImageSource.bitmap(pageBitmap));
+                        // Hide full image view then show it when wallpaper color is obtained
+                        // (and updated)
+                        mFullResImageView.setAlpha(0f);
 
                         setDefaultWallpaperZoomAndScroll(
                                 mWallpaperAsset instanceof CurrentWallpaperAssetVN);
-                        crossFadeInMosaicView();
                         mFullResImageView.setOnStateChangedListener(
                                 new SubsamplingScaleImageView.DefaultOnStateChangedListener() {
                                     @Override
@@ -398,7 +400,12 @@ public class ImagePreviewFragment extends PreviewFragment {
                                 cropped.recycle();
                             }
                             if (mRecalculateColorCounter.decrementAndGet() == 0) {
-                                Handler.getMain().post(() -> onWallpaperColorsChanged(colors));
+                                Handler.getMain().post(() -> {
+                                    onWallpaperColorsChanged(colors);
+                                    if (mFullResImageView.getAlpha() == 0f) {
+                                        crossFadeInMosaicView();
+                                    }
+                                });
                             }
                         });
                     }
