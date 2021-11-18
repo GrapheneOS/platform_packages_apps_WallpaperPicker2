@@ -415,24 +415,26 @@ public class ImagePreviewFragment extends PreviewFragment {
      * indicator.
      */
     private void crossFadeInMosaicView() {
-        long shortAnimationDuration = getResources().getInteger(
-                android.R.integer.config_shortAnimTime);
+        if (getActivity() != null && isAdded()) {
+            long shortAnimationDuration = getResources().getInteger(
+                    android.R.integer.config_shortAnimTime);
 
-        mFullResImageView.setAlpha(0f);
-        mFullResImageView.animate()
-                .alpha(1f)
-                .setInterpolator(ALPHA_OUT)
-                .setDuration(shortAnimationDuration)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        // Clear the thumbnail bitmap reference to save memory since it's no longer
-                        // visible.
-                        if (mLowResImageView != null) {
-                            mLowResImageView.setImageBitmap(null);
+            mFullResImageView.setAlpha(0f);
+            mFullResImageView.animate()
+                    .alpha(1f)
+                    .setInterpolator(ALPHA_OUT)
+                    .setDuration(shortAnimationDuration)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            // Clear the thumbnail bitmap reference to save memory since it's no
+                            // longer visible.
+                            if (mLowResImageView != null) {
+                                mLowResImageView.setImageBitmap(null);
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
     /**
