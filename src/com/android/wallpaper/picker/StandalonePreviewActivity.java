@@ -147,6 +147,7 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
                 wallpaper,
                 PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
                 /* viewAsHome= */ true,
+                /* viewFullScreen= */ false,
                 testingModeEnabled);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, fragment)

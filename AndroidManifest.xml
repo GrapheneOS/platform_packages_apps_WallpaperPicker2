@@ -112,6 +112,13 @@
          android:theme="@style/WallpaperTheme.Preview">
     </activity>
 
+    <activity
+         android:name="com.android.wallpaper.picker.FullPreviewActivity"
+         android:taskAffinity="@string/full_screen_task_affinity"
+         android:resizeableActivity="false"
+         android:theme="@style/WallpaperTheme.Preview">
+    </activity>
+
     <activity android:name="com.android.wallpaper.picker.StandalonePreviewActivity"
          android:resizeableActivity="false"
          android:theme="@style/WallpaperTheme.Preview"

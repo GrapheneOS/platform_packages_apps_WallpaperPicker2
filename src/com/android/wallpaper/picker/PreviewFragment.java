@@ -19,6 +19,7 @@ import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.EDIT;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
@@ -48,6 +49,7 @@ import com.android.wallpaper.model.SetWallpaperViewModel;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.module.LargeScreenMultiPanesChecker;
 import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
@@ -96,6 +98,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
     public static final String ARG_WALLPAPER = "wallpaper";
     public static final String ARG_PREVIEW_MODE = "preview_mode";
     public static final String ARG_VIEW_AS_HOME = "view_as_home";
+    public static final String ARG_FULL_SCREEN = "view_full_screen";
     public static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
 
     /**
@@ -103,11 +106,12 @@ public abstract class PreviewFragment extends AppbarFragment implements
      * set as an argument.
      */
     public static PreviewFragment newInstance(WallpaperInfo wallpaperInfo, @PreviewMode int mode,
-            boolean viewAsHome, boolean testingModeEnabled) {
+            boolean viewAsHome, boolean viewFullScreen, boolean testingModeEnabled) {
         Bundle args = new Bundle();
         args.putParcelable(ARG_WALLPAPER, wallpaperInfo);
         args.putInt(ARG_PREVIEW_MODE, mode);
         args.putBoolean(ARG_VIEW_AS_HOME, viewAsHome);
+        args.putBoolean(ARG_FULL_SCREEN, viewFullScreen);
         args.putBoolean(ARG_TESTING_MODE_ENABLED, testingModeEnabled);
 
         PreviewFragment fragment = wallpaperInfo instanceof LiveWallpaperInfo
@@ -140,6 +144,8 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected FullScreenAnimation mFullScreenAnimation;
     @PreviewMode protected int mPreviewMode;
     protected boolean mViewAsHome;
+    // For full screen preview in a separate Activity.
+    protected boolean mShowInFullScreen;
 
     protected SetWallpaperViewModel mSetWallpaperViewModel;
     protected ViewModelProvider mViewModelProvider;
@@ -167,6 +173,8 @@ public abstract class PreviewFragment extends AppbarFragment implements
         //noinspection ResourceType
         mPreviewMode = getArguments().getInt(ARG_PREVIEW_MODE);
         mViewAsHome = getArguments().getBoolean(ARG_VIEW_AS_HOME);
+        mShowInFullScreen = getArguments().getBoolean(ARG_FULL_SCREEN);
+
         mTestingModeEnabled = getArguments().getBoolean(ARG_TESTING_MODE_ENABLED);
         mWallpaperSetter = new WallpaperSetter(injector.getWallpaperPersister(appContext),
                 injector.getPreferences(appContext), mUserEventLogger, mTestingModeEnabled);
@@ -224,17 +232,28 @@ public abstract class PreviewFragment extends AppbarFragment implements
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar = bottomActionBar;
-        mBottomActionBar.setActionClickListener(EDIT, (view) -> {
-            mFullScreenAnimation.startAnimation(/* toFullScreen= */ true);
-            mBottomActionBar.deselectAction(EDIT);
-        });
+        if (!mShowInFullScreen) {
+            mBottomActionBar.setActionClickListener(EDIT, (view) -> {
+                // Starts a full preview Activity when in multi-pane resolution
+                LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
+                if (multiPanesChecker.isMultiPanesEnabled(getContext())) {
+                    showInFullScreenActivity(mWallpaper);
+                } else {
+                    mFullScreenAnimation.startAnimation(/* toFullScreen= */ true);
+                }
+                mBottomActionBar.deselectAction(EDIT);
+            });
+        } else {
+            bottomActionBar.post(
+                    () -> mFullScreenAnimation.startAnimation(/* toFullScreen= */ true));
+        }
         setFullScreenActions(mRootView.findViewById(R.id.fullscreen_buttons_container));
 
         if (mOnBackPressedCallback == null) {
             mOnBackPressedCallback = new OnBackPressedCallback(true) {
                 @Override
                 public void handleOnBackPressed() {
-                    if (mFullScreenAnimation.isFullScreen()) {
+                    if (mFullScreenAnimation.isFullScreen() && !mShowInFullScreen) {
                         mFullScreenAnimation.startAnimation(/* toFullScreen= */ false);
                         return;
                     }
@@ -247,6 +266,15 @@ public abstract class PreviewFragment extends AppbarFragment implements
             };
             getActivity().getOnBackPressedDispatcher().addCallback(this, mOnBackPressedCallback);
         }
+    }
+
+    private void showInFullScreenActivity(WallpaperInfo wallpaperInfo) {
+        if (wallpaperInfo == null) {
+            return;
+        }
+        startActivity(FullPreviewActivity.newIntent(getActivity(), wallpaperInfo,
+                /* viewAsHome= */ mLastSelectedTabPositionOptional.orElse(0) == 0),
+                ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
     }
 
     protected void setFullScreenActions(View container) {
