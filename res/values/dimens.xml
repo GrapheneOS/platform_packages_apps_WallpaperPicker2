@@ -208,4 +208,15 @@
     <dimen name="wallpaper_picker_entry_drawable_padding">8dp</dimen>
     <dimen name="wallpaper_picker_entry_horizontal_padding">16dp</dimen>
     <dimen name="wallpaper_picker_entry_margin_vertical">18dp</dimen>
+
+    <!-- For the full screen preview activity's hide UI menu item -->
+    <dimen name="menu_item_hide_ui_background_width">46dp</dimen>
+    <dimen name="menu_item_hide_ui_background_height">46dp</dimen>
+    <dimen name="menu_item_hide_ui_icon_size">24dp</dimen>
+    <dimen name="menu_item_full_preview_margin">12dp</dimen>
+
+    <!-- For the full screen preview activity's set wallpaper menu item -->
+    <dimen name="menu_item_set_wallpaper_background_width">92dp</dimen>
+    <dimen name="menu_item_set_wallpaper_background_height">46dp</dimen>
+    <dimen name="menu_item_set_wallpaper_background_radius">24dp</dimen>
 </resources>

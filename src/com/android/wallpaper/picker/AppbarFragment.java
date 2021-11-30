@@ -141,6 +141,11 @@ public abstract class AppbarFragment extends BottomActionBarFragment
         mToolbar.setOnMenuItemClickListener(this);
     }
 
+    protected void setUpToolbarMenuClickListener(int menuItemResId, View.OnClickListener listener) {
+        MenuItem menuItem = mToolbar.getMenu().findItem(menuItemResId);
+        menuItem.getActionView().setOnClickListener(listener);
+    }
+
     protected int getToolbarId() {
         return R.id.toolbar;
     }

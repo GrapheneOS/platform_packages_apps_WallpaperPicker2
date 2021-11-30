@@ -360,4 +360,6 @@
     <!-- Task affinity name for full screen preview's Activity stack -->
     <string name="full_screen_task_affinity" translatable="false">.fullscreen</string>
 
+    <!-- Label for a button / menu item that allows the user to apply the currently selected customization option. [CHAR LIMIT=20] -->
+    <string name="apply_btn" msgid="7965877231041987336">Apply</string>
 </resources>
