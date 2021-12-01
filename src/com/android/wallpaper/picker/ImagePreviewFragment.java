@@ -512,8 +512,17 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     @Override
     protected void setCurrentWallpaper(@Destination int destination) {
+        Rect cropRect = calculateCropRect(getContext());
+        float screenScale = WallpaperCropUtils.getScaleOfScreenResolution(
+                mFullResImageView.getScale(), cropRect, mWallpaperScreenSize.x,
+                mWallpaperScreenSize.y);
+        Rect scaledCropRect = new Rect(
+                Math.round((float) cropRect.left * screenScale),
+                Math.round((float) cropRect.top * screenScale),
+                Math.round((float) cropRect.right * screenScale),
+                Math.round((float) cropRect.bottom * screenScale));
         mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, mWallpaperAsset,
-                destination, mFullResImageView.getScale(), calculateCropRect(getContext()),
+                destination, mFullResImageView.getScale() * screenScale, scaledCropRect,
                 mWallpaperColors, SetWallpaperViewModel.getCallback(mViewModelProvider));
     }
 
