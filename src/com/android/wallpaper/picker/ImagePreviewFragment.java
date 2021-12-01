@@ -504,8 +504,8 @@ public class ImagePreviewFragment extends PreviewFragment {
         Point hostViewSize = new Point(cropWidth, cropHeight);
 
         Resources res = appContext.getResources();
-        Point cropSurfaceSize = WallpaperCropUtils.calculateCropSurfaceSize(res, maxCrop, minCrop);
-
+        Point cropSurfaceSize = WallpaperCropUtils.calculateCropSurfaceSize(res, maxCrop, minCrop,
+                cropWidth, cropHeight);
         return WallpaperCropUtils.calculateCropRect(appContext, hostViewSize,
                 cropSurfaceSize, mRawWallpaperSize, visibleFileRect, wallpaperZoom);
     }

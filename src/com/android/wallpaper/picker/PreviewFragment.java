@@ -23,6 +23,9 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.RippleDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -55,6 +58,7 @@ import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
 import com.android.wallpaper.util.FullScreenAnimation;
+import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.BottomActionBar.BottomSheetContent;
 import com.android.wallpaper.widget.WallpaperInfoView;
@@ -278,23 +282,44 @@ public abstract class PreviewFragment extends AppbarFragment implements
     }
 
     protected void setFullScreenActions(View container) {
-        // Update the button text for the current workspace visibility.
-        Button hideUiPreviewButton = container.findViewById(R.id.hide_ui_preview_button);
-        hideUiPreviewButton.setText(mFullScreenAnimation.getWorkspaceVisibility()
-                ? R.string.hide_ui_preview_text
-                : R.string.show_ui_preview_text);
-        hideUiPreviewButton.setOnClickListener(
-                (button) -> {
-                    boolean visible = mFullScreenAnimation.getWorkspaceVisibility();
-                    // Update the button text for the next workspace visibility.
-                    ((Button) button).setText(visible
-                            ? R.string.show_ui_preview_text
-                            : R.string.hide_ui_preview_text);
-                    mFullScreenAnimation.setWorkspaceVisibility(!visible);
-                }
-        );
-        container.findViewById(R.id.set_as_wallpaper_button).setOnClickListener(
-                this::onSetWallpaperClicked);
+        if (!mShowInFullScreen) {
+            // Update the button text for the current workspace visibility.
+            Button hideUiPreviewButton = container.findViewById(R.id.hide_ui_preview_button);
+            hideUiPreviewButton.setText(mFullScreenAnimation.getWorkspaceVisibility()
+                    ? R.string.hide_ui_preview_text
+                    : R.string.show_ui_preview_text);
+            hideUiPreviewButton.setOnClickListener(
+                    (button) -> {
+                        boolean visible = mFullScreenAnimation.getWorkspaceVisibility();
+                        // Update the button text for the next workspace visibility.
+                        ((Button) button).setText(visible
+                                ? R.string.show_ui_preview_text
+                                : R.string.hide_ui_preview_text);
+                        mFullScreenAnimation.setWorkspaceVisibility(!visible);
+                    }
+            );
+            container.findViewById(R.id.set_as_wallpaper_button).setOnClickListener(
+                    this::onSetWallpaperClicked);
+        } else {
+            container.findViewById(R.id.hide_ui_preview_button).setVisibility(View.GONE);
+            container.findViewById(R.id.set_as_wallpaper_button).setVisibility(View.GONE);
+            setUpToolbarMenu(R.menu.fullpreview_menu);
+            setUpToolbarMenuClickListener(R.id.action_hide_ui, view -> {
+                boolean visible = mFullScreenAnimation.getWorkspaceVisibility();
+                mFullScreenAnimation.setWorkspaceVisibility(!visible);
+                View hideUiView = view.findViewById(R.id.hide_ui_view);
+                RippleDrawable ripple = (RippleDrawable) hideUiView.getBackground();
+                LayerDrawable layerDrawable = (LayerDrawable) ripple.getDrawable(/* index= */ 0);
+                Drawable backgroundDrawable = layerDrawable.getDrawable(/* index= */ 0);
+                backgroundDrawable.setTint(!visible ? ResourceUtils.getColorAttr(getActivity(),
+                        com.android.internal.R.attr.colorAccentSecondary)
+                        : ResourceUtils.getColorAttr(getActivity(),
+                                com.android.internal.R.attr.colorAccentPrimary));
+            });
+            setUpToolbarMenuClickListener(R.id.action_set_wallpaper,
+                    view -> mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(),
+                            this, mWallpaper instanceof LiveWallpaperInfo));
+        }
 
         mFullScreenAnimation.ensureBottomActionBarIsCorrectlyLocated();
     }
