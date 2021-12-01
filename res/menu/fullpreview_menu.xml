@@ -14,13 +14,16 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_hide_ui"
+        android:actionLayout="@layout/menu_item_hide_ui"
+        android:showAsAction="always"
+        android:title="@string/hide_ui_preview_text" />
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</FrameLayout>
+    <item
+        android:id="@+id/action_set_wallpaper"
+        android:actionLayout="@layout/menu_item_set_wallpaper"
+        android:showAsAction="always"
+        android:title="@string/apply_btn" />
+</menu>
