@@ -32,19 +32,18 @@ class LargeScreenMultiPanesChecker : MultiPanesChecker {
 
     override fun isMultiPanesEnabled(context: Context): Boolean {
         val pm = context.packageManager
-        val intent = getMultiPanesIntent(context)
+        val intent = getMultiPanesIntent(
+                Intent(ACTION_SET_WALLPAPER).setPackage(context.packageName))
 
         val resolveInfo = pm.resolveActivity(intent, MATCH_DEFAULT_ONLY)?.activityInfo?.enabled
         return resolveInfo != null
     }
 
-    override fun getMultiPanesIntent(context: Context): Intent {
-        val intentUri = Intent(ACTION_SET_WALLPAPER)
-                .setPackage(context.packageName).toUri(Intent.URI_INTENT_SCHEME)
-
+    override fun getMultiPanesIntent(intent: Intent): Intent {
         return Intent(ACTION_SETTINGS_EMBED_DEEP_LINK_ACTIVITY).apply {
             putExtra(EXTRA_SETTINGS_EMBEDDED_DEEP_LINK_HIGHLIGHT_MENU_KEY, VALUE_HIGHLIGHT_MENU)
-            putExtra(EXTRA_SETTINGS_EMBEDDED_DEEP_LINK_INTENT_URI, intentUri)
+            putExtra(EXTRA_SETTINGS_EMBEDDED_DEEP_LINK_INTENT_URI,
+                    intent.toUri(Intent.URI_INTENT_SCHEME))
         };
     }
 }
