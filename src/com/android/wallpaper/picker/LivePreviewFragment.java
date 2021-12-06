@@ -185,7 +185,12 @@ public class LivePreviewFragment extends PreviewFragment implements
                 mLockPreviewContainer);
         mLockScreenPreviewer.setDateViewVisibility(!mFullScreenAnimation.isFullScreen());
         mFullScreenAnimation.setFullScreenStatusListener(
-                isFullScreen -> mLockScreenPreviewer.setDateViewVisibility(!isFullScreen));
+                isFullScreen -> {
+                    mLockScreenPreviewer.setDateViewVisibility(!isFullScreen);
+                    if (!isFullScreen) {
+                        mBottomActionBar.focusAccessibilityAction(EDIT);
+                    }
+                });
         mWallpaperSurface = mHomePreviewCard.findViewById(R.id.wallpaper_surface);
         mTouchForwardingLayout.setTargetView(mHomePreviewCard);
         mTouchForwardingLayout.setForwardingEnabled(true);

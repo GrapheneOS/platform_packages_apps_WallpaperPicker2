@@ -24,6 +24,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -391,6 +392,15 @@ public class BottomActionBar extends FrameLayout {
                 hideBottomSheetAndDeselectButtonIfExpanded();
             }
         }
+    }
+
+    /**
+     * Focus the specific action.
+     *
+     * @param action the specific action
+     */
+    public void focusAccessibilityAction(BottomAction action) {
+        mActionMap.get(action).sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
     }
 
     /**
