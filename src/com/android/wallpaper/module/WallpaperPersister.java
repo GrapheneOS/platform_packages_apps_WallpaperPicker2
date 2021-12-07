@@ -88,15 +88,19 @@ public interface WallpaperPersister {
                                    String actionUrl, String collectionId);
 
     /**
-     * Sets only the bitmap of a rotating wallpaper of the next rotation to the system (and not
-     * metadata).
+     * Sets only the bitmap of a rotating wallpaper of the next rotation to the system and stores
+     * the given static wallpaper data in the recent wallpapers list (and not metadata).
      *
      * @param wallpaperBitmap The rotating wallpaper's bitmap.
+     * @param attributions List of attribution items.
+     * @param actionUrl    The action or "explore" URL for the wallpaper.
+     * @param collectionId ID of this wallpaper's collection.
      * @return wallpaper ID, which is a positive integer if the set wallpaper operation was
      * successful, or 0 otherwise. On Android versions prior to N, this method will always return
      * 1 if the operation was successful because wallpaper IDs are not supported prior to N.
      */
-    int setWallpaperBitmapInNextRotation(Bitmap wallpaperBitmap);
+    int setWallpaperBitmapInNextRotation(Bitmap wallpaperBitmap, List<String> attributions,
+            String actionUrl, String collectionId);
 
     /**
      * Persists rotating wallpaper metadata for the next rotation and finalizes the preview wallpaper
