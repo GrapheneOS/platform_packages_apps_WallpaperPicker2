@@ -180,7 +180,12 @@ public class ImagePreviewFragment extends PreviewFragment {
                 mLockPreviewContainer);
         mLockScreenPreviewer.setDateViewVisibility(!mFullScreenAnimation.isFullScreen());
         mFullScreenAnimation.setFullScreenStatusListener(
-                isFullScreen -> mLockScreenPreviewer.setDateViewVisibility(!isFullScreen));
+                isFullScreen -> {
+                    mLockScreenPreviewer.setDateViewVisibility(!isFullScreen);
+                    if (!isFullScreen) {
+                        mBottomActionBar.focusAccessibilityAction(EDIT);
+                    }
+                });
         setUpTabs(view.findViewById(R.id.separated_tabs));
 
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
