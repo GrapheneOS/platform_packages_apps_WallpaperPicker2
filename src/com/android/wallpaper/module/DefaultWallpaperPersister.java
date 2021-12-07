@@ -447,10 +447,10 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                 wallpaperSize, defaultCropSurfaceSize, screenSize, offsetX, offsetY);
 
         Rect scaledCropRect = new Rect(
-                Math.round((float) cropRect.left / minWallpaperZoom),
-                Math.round((float) cropRect.top / minWallpaperZoom),
-                Math.round((float) cropRect.right / minWallpaperZoom),
-                Math.round((float) cropRect.bottom / minWallpaperZoom));
+                (int) Math.floor((float) cropRect.left / minWallpaperZoom),
+                (int) Math.floor((float) cropRect.top / minWallpaperZoom),
+                (int) Math.floor((float) cropRect.right / minWallpaperZoom),
+                (int) Math.floor((float) cropRect.bottom / minWallpaperZoom));
 
         // Scale and crop the bitmap
         wallpaperBitmap = Bitmap.createBitmap(wallpaperBitmap,
