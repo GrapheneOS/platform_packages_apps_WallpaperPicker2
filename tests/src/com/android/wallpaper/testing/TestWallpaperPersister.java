@@ -135,9 +135,12 @@ public class TestWallpaperPersister implements WallpaperPersister {
     }
 
     @Override
-    public int setWallpaperBitmapInNextRotation(Bitmap wallpaperBitmap) {
+    public int setWallpaperBitmapInNextRotation(Bitmap wallpaperBitmap, List<String> attributions,
+            String actionUrl, String collectionId) {
         mCurrentHomeWallpaper = wallpaperBitmap;
         mCurrentLockWallpaper = wallpaperBitmap;
+        mHomeAttributions = attributions;
+        mHomeActionUrl = actionUrl;
         return 1;
     }
 
