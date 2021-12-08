@@ -540,4 +540,19 @@ public interface WallpaperPreferences {
             @NonNull Bitmap croppedWallpaperBitmap, WallpaperColors colors) {
         // Do nothing in the default case.
     }
+
+    /**
+     * Stores the given static wallpaper data in the recent wallpapers list.
+     * @param wallpaperId unique identifier for this wallpaper
+     * @param attributions List of attribution items.
+     * @param actionUrl The action or "explore" URL for the wallpaper.
+     * @param collectionId identifier of this wallpaper's collection.
+     * @param croppedWallpaperBitmap wallpaper bitmap exactly as applied to WallaperManager
+     * @param colors {@link WallpaperColors} to be used as placeholder for quickswitching
+     */
+    default void storeLatestHomeWallpaper(String wallpaperId, List<String> attributions,
+            String actionUrl, String collectionId,
+            @NonNull Bitmap croppedWallpaperBitmap, WallpaperColors colors) {
+        // Do nothing in the default case.
+    }
 }
