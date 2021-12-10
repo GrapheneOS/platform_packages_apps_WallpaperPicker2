@@ -121,6 +121,7 @@
 
     <activity android:name="com.android.wallpaper.picker.StandalonePreviewActivity"
          android:resizeableActivity="false"
+         android:relinquishTaskIdentity="true"
          android:theme="@style/WallpaperTheme.Preview"
          android:exported="true">
       <intent-filter>
