@@ -33,8 +33,8 @@ interface MultiPanesChecker {
     /**
      * Gets the intent to start multi-panes landscape Activity
      *
-     * @param context the Activity's context
+     * @param intent the Activity's intent
      * @return [Intent] to start multi panels
      */
-    fun getMultiPanesIntent(context: Context): Intent?
+    fun getMultiPanesIntent(intent: Intent): Intent?
 }

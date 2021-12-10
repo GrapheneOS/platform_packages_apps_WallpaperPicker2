@@ -95,7 +95,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
             if (!ActivityUtils.isLaunchedFromSettingsTrampoline(intent)
                     && !ActivityUtils.isLaunchedFromSettingsRelated(intent)) {
                 startActivityForResultSafely(this,
-                        mMultiPanesChecker.getMultiPanesIntent(this), /* requestCode= */ 0);
+                        mMultiPanesChecker.getMultiPanesIntent(intent), /* requestCode= */ 0);
                 finish();
             }
         }
