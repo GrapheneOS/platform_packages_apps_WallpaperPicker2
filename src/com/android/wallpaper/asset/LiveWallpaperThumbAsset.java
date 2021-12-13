@@ -60,7 +60,7 @@ public class LiveWallpaperThumbAsset extends Asset {
     protected final android.app.WallpaperInfo mInfo;
     // The content Uri of thumbnail
     protected Uri mUri;
-    private Drawable mThumbnailDrawable;
+    protected Drawable mThumbnailDrawable;
 
     public LiveWallpaperThumbAsset(Context context, android.app.WallpaperInfo info) {
         mContext = context.getApplicationContext();
@@ -291,6 +291,19 @@ public class LiveWallpaperThumbAsset extends Asset {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             mReceiver.onBitmapDecoded(bitmap);
+        }
+    }
+
+    /**
+     * Frees the drawable.
+     */
+    @Override
+    public void release() {
+        if (mThumbnailDrawable != null) {
+            if (mThumbnailDrawable instanceof BitmapDrawable) {
+                ((BitmapDrawable) mThumbnailDrawable).getBitmap().recycle();
+            }
+            mThumbnailDrawable = null;
         }
     }
 }
