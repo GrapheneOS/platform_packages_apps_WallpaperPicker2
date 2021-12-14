@@ -731,6 +731,12 @@ public class IndividualPickerFragment extends AppbarFragment
     public void onDestroyView() {
         super.onDestroyView();
         getIndividualPickerFragmentHost().removeToolbarMenu();
+        for (WallpaperInfo wallpaperInfo : mWallpapers) {
+            Asset asset = wallpaperInfo.getThumbAsset(getActivity().getApplicationContext());
+            if (asset != null) {
+                asset.release();
+            }
+        }
     }
 
     @Override
