@@ -53,7 +53,7 @@
     <string name="explore" msgid="7468719504199497281">"Bekijken"</string>
     <string name="next_wallpaper" msgid="3911873152952596232">"Volgende achtergrond"</string>
     <string name="wallpaper_disabled_message" msgid="7309484130562148185">"Het instellen van een achtergrond is uitgeschakeld op dit apparaat"</string>
-    <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"Het instellen van een achtergrond is uitgeschakeld door je apparaatbeheerder"</string>
+    <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"Het instellen van een achtergrond is uitgezet door je apparaatbeheerder"</string>
     <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"Achtergrond is ingesteld"</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"Je hebt verbinding met internet nodig om achtergronden te bekijken. Maak verbinding en probeer het opnieuw."</string>
     <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"Thumbnail van momenteel ingestelde achtergrond voor startscherm"</string>
@@ -98,4 +98,5 @@
     <string name="show_ui_preview_text" msgid="5993063062417070806">"Voorbeeld van UI tonen"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Achtergrond wijzigen"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Voorbeeld achtergrond vergrendelscherm"</string>
+    <string name="apply_btn" msgid="5764555565943538528">"Toepassen"</string>
 </resources>
