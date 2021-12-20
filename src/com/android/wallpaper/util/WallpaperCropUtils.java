@@ -352,4 +352,33 @@ public final class WallpaperCropUtils {
         return context.getResources().getConfiguration().getLayoutDirection()
                 == View.LAYOUT_DIRECTION_RTL;
     }
+
+    /**
+     * Gets the scale of screen size and crop rect real size
+     *
+     * @param wallpaperScale The scale of crop rect and real size rect
+     * @param cropRect The area wallpaper cropped
+     * @param screenWidth  The width of screen size
+     * @param screenHeight The height of screen size
+     */
+    public static float getScaleOfScreenResolution(float wallpaperScale, Rect cropRect,
+            int screenWidth, int screenHeight) {
+        int rectRealWidth = Math.round((float) cropRect.width() / wallpaperScale);
+        int rectRealHeight = Math.round((float) cropRect.height() / wallpaperScale);
+        int cropWidth = cropRect.width();
+        int cropHeight = cropRect.height();
+        // Not scale with screen resolution because cropRect is bigger than screen size.
+        if (cropWidth >= screenWidth || cropHeight >= screenHeight) {
+            return 1;
+        }
+
+        int newWidth = screenWidth;
+        int newHeight = screenHeight;
+        // Screen size is bigger than crop real size so we only need enlarge to real size
+        if (newWidth > rectRealWidth || newHeight > rectRealHeight) {
+            newWidth = rectRealWidth;
+            newHeight = rectRealWidth;
+        }
+        return Math.min((float) newWidth / cropWidth, (float) newHeight / cropHeight);
+    }
 }
