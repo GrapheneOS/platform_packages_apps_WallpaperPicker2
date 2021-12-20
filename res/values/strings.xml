@@ -374,4 +374,10 @@
 
     <!-- Content description for info panel is shown. [CHAR_LIMIT=50] -->
     <string name="accessibility_info_shown">Info shown</string>
+
+    <!-- Description of navigation to settings. [CHAR LIMIT=NONE] -->
+    <string name="settings_snackbar_description">Please enable files and media in settings.</string>
+
+    <!-- Label for a button which lets user try to navigation to settings. [CHAR LIMIT=25] -->
+    <string name="settings_snackbar_enable">Enable</string>
 </resources>
