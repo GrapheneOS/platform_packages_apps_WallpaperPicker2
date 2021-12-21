@@ -548,6 +548,18 @@ public class BottomActionBar extends FrameLayout {
         }
     }
 
+    /** Sets action button accessibility traversal after. */
+    public void setActionAccessibilityTraversalAfter(BottomAction action, int afterId) {
+        View bottomActionView = mActionMap.get(action);
+        bottomActionView.setAccessibilityTraversalAfter(afterId);
+    }
+
+    /** Sets action button accessibility traversal before. */
+    public void setActionAccessibilityTraversalBefore(BottomAction action, int beforeId) {
+        View bottomActionView = mActionMap.get(action);
+        bottomActionView.setAccessibilityTraversalBefore(beforeId);
+    }
+
     private void updateSelectedState(BottomAction bottomAction, boolean selected) {
         View bottomActionView = mActionMap.get(bottomAction);
         if (bottomActionView.isSelected() == selected) {
