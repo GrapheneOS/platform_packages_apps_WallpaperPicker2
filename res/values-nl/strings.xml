@@ -42,7 +42,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Toegang toestaan"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Service voor interactieve achtergrond met roulerende achtergronden"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Dagelijkse achtergrond"</string>
-    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Tik om in te schakelen"</string>
+    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Tik om aan te zetten"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"De achtergrond wordt automatisch elke dag gewijzigd. Tik op het volgende scherm op &lt;strong&gt;Achtergrond instellen&lt;/strong&gt; om de configuratie te voltooien."</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Toekomstige achtergronden alleen downloaden via wifi"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Doorgaan"</string>
@@ -52,7 +52,7 @@
     <string name="settings_button_label" msgid="8724734130079207955">"Instellingen"</string>
     <string name="explore" msgid="7468719504199497281">"Bekijken"</string>
     <string name="next_wallpaper" msgid="3911873152952596232">"Volgende achtergrond"</string>
-    <string name="wallpaper_disabled_message" msgid="7309484130562148185">"Het instellen van een achtergrond is uitgeschakeld op dit apparaat"</string>
+    <string name="wallpaper_disabled_message" msgid="7309484130562148185">"Het instellen van een achtergrond is uitgezet op dit apparaat"</string>
     <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"Het instellen van een achtergrond is uitgezet door je apparaatbeheerder"</string>
     <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"Achtergrond is ingesteld"</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"Je hebt verbinding met internet nodig om achtergronden te bekijken. Maak verbinding en probeer het opnieuw."</string>
