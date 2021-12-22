@@ -362,4 +362,16 @@
 
     <!-- Label for a button / menu item that allows the user to apply the currently selected customization option. [CHAR LIMIT=20] -->
     <string name="apply_btn" msgid="7965877231041987336">Apply</string>
+
+    <!-- Content description for customize panel is hidden. [CHAR_LIMIT=50] -->
+    <string name="accessibility_customize_hidden">Customize hidden</string>
+
+    <!-- Content description for customize panel is shown. [CHAR_LIMIT=50] -->
+    <string name="accessibility_customize_shown">Customize shown</string>
+
+    <!-- Content description for info panel is hidden. [CHAR_LIMIT=50] -->
+    <string name="accessibility_info_hidden">Info hidden</string>
+
+    <!-- Content description for info panel is shown. [CHAR_LIMIT=50] -->
+    <string name="accessibility_info_shown">Info shown</string>
 </resources>
