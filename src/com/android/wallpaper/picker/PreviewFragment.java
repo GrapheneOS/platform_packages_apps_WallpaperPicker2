@@ -296,6 +296,9 @@ public abstract class PreviewFragment extends AppbarFragment implements
                                 ? R.string.show_ui_preview_text
                                 : R.string.hide_ui_preview_text);
                         mFullScreenAnimation.setWorkspaceVisibility(!visible);
+                        button.announceForAccessibility(
+                                visible ? getString(R.string.hint_hide_ui_preview)
+                                        : getString(R.string.hint_show_ui_preview));
                     }
             );
             container.findViewById(R.id.set_as_wallpaper_button).setOnClickListener(
