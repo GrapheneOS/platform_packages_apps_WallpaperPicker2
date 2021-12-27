@@ -51,7 +51,7 @@ public class ImageCategory extends Category {
     }
 
     @Override
-    public void show(Activity srcActivity, PickerIntentFactory factory, int requestCode) {
+    public void show(Activity srcActivity, int requestCode) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         srcActivity.startActivityForResult(intent, requestCode);

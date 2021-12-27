@@ -243,8 +243,7 @@ public class CategorySelectorFragment extends AppbarFragment {
     }
 
     /**
-     * Notifies the CategoryFragment that no further categories are expected so it may hide
-     * the loading indicator.
+     * Notifies that no further categories are expected so it may hide the loading indicator.
      */
     void doneFetchingCategories() {
         if (mAwaitingCategories) {
