@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -94,6 +93,7 @@ import com.android.wallpaper.picker.individual.SetIndividualHolder.OnSetListener
 import com.android.wallpaper.util.DiskBasedLogger;
 import com.android.wallpaper.util.LaunchUtils;
 import com.android.wallpaper.util.SizeCalculator;
+import com.android.wallpaper.widget.GridPaddingDecoration;
 import com.android.wallpaper.widget.WallpaperInfoView;
 import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate;
 import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate.BottomSheetHost;
@@ -1485,28 +1485,6 @@ public class IndividualPickerFragment extends AppbarFragment
                 badge.setVisibility(View.VISIBLE);
             } else {
                 badge.setVisibility(View.GONE);
-            }
-        }
-    }
-
-    private class GridPaddingDecoration extends RecyclerView.ItemDecoration {
-
-        private final int mPaddingHorizontal;
-        private final int mPaddingBottom;
-
-        GridPaddingDecoration(int paddingHorizontal, int paddingBottom) {
-            mPaddingHorizontal = paddingHorizontal;
-            mPaddingBottom = paddingBottom;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-                                   RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view);
-            if (position >= 0) {
-                outRect.left = mPaddingHorizontal;
-                outRect.right = mPaddingHorizontal;
-                outRect.bottom = mPaddingBottom;
             }
         }
     }

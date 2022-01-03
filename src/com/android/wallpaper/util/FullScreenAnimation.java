@@ -52,6 +52,7 @@ public class FullScreenAnimation {
     private final TouchForwardingLayout mTouchForwardingLayout;
     private final SurfaceView mWorkspaceSurface;
     private boolean mIsFullScreen = false;
+    private boolean mShowInFullScreen = false;
 
     private boolean mScaleIsSet = false;
     private boolean mWorkspaceVisibility = true;
@@ -126,6 +127,17 @@ public class FullScreenAnimation {
      */
     public void setIsHomeSelected(boolean isHomeSelected) {
         mIsHomeSelected = isHomeSelected;
+    }
+
+    /**
+     * Informs this object whether the full screen is separate activity.
+     *
+     * Used to determine the height of workspace.
+     *
+     * @param isShowInFullScreen whether the full screen is separate activity.
+     */
+    public void setShowInFullScreen(boolean isShowInFullScreen) {
+        mShowInFullScreen = isShowInFullScreen;
     }
 
     /**
@@ -284,7 +296,8 @@ public class FullScreenAnimation {
                     0,
                     Math.round(mWorkspaceHeight * HIDE_ICONS_TOP_RATIO),
                     mWorkspaceWidth,
-                    mWorkspaceHeight + Math.round(mFullScreenButtonsTranslation / mScale)));
+                    mShowInFullScreen ? mWorkspaceHeight : mWorkspaceHeight + Math.round(
+                            mFullScreenButtonsTranslation / mScale)));
             mView.findViewById(R.id.lock_screen_preview_container).setVisibility(View.VISIBLE);
         } else {
             mWorkspaceSurface.setClipBounds(new Rect(
@@ -421,7 +434,7 @@ public class FullScreenAnimation {
                     0,
                     Math.round(mWorkspaceHeight * top),
                     mWorkspaceWidth,
-                    mWorkspaceHeight + Math.round(bottom)));
+                    mShowInFullScreen ? mWorkspaceHeight : mWorkspaceHeight + Math.round(bottom)));
         });
 
         // Other animations.

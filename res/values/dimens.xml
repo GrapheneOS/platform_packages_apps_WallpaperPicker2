@@ -148,12 +148,14 @@
     <!-- Dimensions for full preview page -->
     <dimen name="full_preview_page_default_padding_top">24dp</dimen>
     <dimen name="full_preview_page_default_padding_bottom">32dp</dimen>
+    <dimen name="full_preview_page_default_horizontal_padding">24dp</dimen>
+    <dimen name="full_preview_page_tabs_horizontal_padding">20dp</dimen>
 
     <!-- Dimensions for the bottom bar. -->
     <dimen name="bottom_actions_height">84dp</dimen>
     <dimen name="bottom_actions_top_padding">24dp</dimen>
     <dimen name="bottom_actions_bottom_padding">12dp</dimen>
-    <dimen name="bottom_actions_horizontal_margin">0dp</dimen>
+    <dimen name="bottom_actions_horizontal_padding">0dp</dimen>
     <dimen name="bottom_action_button_width">72dp</dimen>
     <dimen name="bottom_action_button_height">48dp</dimen>
     <dimen name="bottom_action_button_padding_horizontal">26dp</dimen>
@@ -198,16 +200,19 @@
 
     <!-- Common dimensions for option sections -->
     <dimen name="section_container_vertical_margin">24dp</dimen>
+    <dimen name="wallpaper_section_horizontal_padding">24dp</dimen>
     <dimen name="section_horizontal_padding">24dp</dimen>
     <dimen name="section_vertical_padding">24dp</dimen>
-    <dimen name="section_top_padding">16dp</dimen>
-    <dimen name="section_bottom_padding">16dp</dimen>
+    <dimen name="section_top_padding">24dp</dimen>
+    <dimen name="section_bottom_padding">24dp</dimen>
 
     <!-- For the wallpaper section -->
-    <dimen name="wallpaper_preview_margin_top">24dp</dimen>
+    <dimen name="wallpaper_preview_margin_top">16dp</dimen>
+    <dimen name="wallpaper_preview_horizontal_padding">16dp</dimen>
+    <dimen name="wallpaper_preview_home_and_lock_margin">8dp</dimen>
     <dimen name="wallpaper_picker_entry_drawable_padding">8dp</dimen>
     <dimen name="wallpaper_picker_entry_horizontal_padding">16dp</dimen>
-    <dimen name="wallpaper_picker_entry_margin_vertical">18dp</dimen>
+    <dimen name="wallpaper_picker_entry_margin_vertical">16dp</dimen>
 
     <!-- For the full screen preview activity's hide UI menu item -->
     <dimen name="menu_item_hide_ui_background_width">46dp</dimen>
