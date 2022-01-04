@@ -21,7 +21,6 @@ import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Point;
@@ -43,7 +42,6 @@ import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.DialogFragment;
@@ -59,7 +57,6 @@ import com.android.wallpaper.asset.Asset.DrawableLoadedListener;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.CategoryProvider;
 import com.android.wallpaper.model.CategoryReceiver;
-import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperCategory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.model.WallpaperReceiver;
@@ -71,30 +68,25 @@ import com.android.wallpaper.module.FormFactorChecker.FormFactor;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.PackageStatusNotifier;
-import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperChangedNotifier;
 import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
-import com.android.wallpaper.module.WallpaperSetter;
 import com.android.wallpaper.picker.AppbarFragment;
 import com.android.wallpaper.picker.BaseActivity;
 import com.android.wallpaper.picker.CurrentWallpaperBottomSheetPresenter;
 import com.android.wallpaper.picker.FragmentTransactionChecker;
 import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
 import com.android.wallpaper.picker.RotationStarter;
-import com.android.wallpaper.picker.SetWallpaperDialogFragment;
 import com.android.wallpaper.picker.SetWallpaperErrorDialogFragment;
 import com.android.wallpaper.picker.StartRotationDialogFragment;
 import com.android.wallpaper.picker.StartRotationErrorDialogFragment;
-import com.android.wallpaper.picker.WallpaperInfoHelper;
 import com.android.wallpaper.picker.WallpapersUiContainer;
 import com.android.wallpaper.picker.individual.SetIndividualHolder.OnSetListener;
 import com.android.wallpaper.util.DiskBasedLogger;
 import com.android.wallpaper.util.LaunchUtils;
 import com.android.wallpaper.util.SizeCalculator;
 import com.android.wallpaper.widget.GridPaddingDecoration;
-import com.android.wallpaper.widget.WallpaperInfoView;
 import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate;
 import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate.BottomSheetHost;
 
@@ -104,7 +96,6 @@ import com.bumptech.glide.MemoryCategory;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
@@ -114,8 +105,7 @@ import java.util.Set;
 public class IndividualPickerFragment extends AppbarFragment
         implements RotationStarter, StartRotationErrorDialogFragment.Listener,
         CurrentWallpaperBottomSheetPresenter.RefreshListener,
-        SetWallpaperErrorDialogFragment.Listener, SetWallpaperDialogFragment.Listener,
-        StartRotationDialogFragment.Listener {
+        SetWallpaperErrorDialogFragment.Listener, StartRotationDialogFragment.Listener {
 
     /**
      * Position of a special tile that doesn't belong to an individual wallpaper of the category,
@@ -135,46 +125,6 @@ public class IndividualPickerFragment extends AppbarFragment
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "individual_set_wallpaper_error_dialog";
     private static final String KEY_NIGHT_MODE = "IndividualPickerFragment.NIGHT_MODE";
-
-    /**
-     * An interface for updating the thumbnail with the specific wallpaper.
-     */
-    public interface ThumbnailUpdater {
-        /**
-         * Updates the thumbnail with the specific wallpaper.
-         */
-        void updateThumbnail(WallpaperInfo wallpaperInfo);
-
-        /**
-         * Restores to the thumbnails of the wallpapers which were applied.
-         */
-        void restoreThumbnails();
-    }
-
-    /**
-     * An interface for receiving the destination of the new applied wallpaper.
-     */
-    public interface WallpaperDestinationCallback {
-        /**
-         * Called when the destination of the wallpaper is set.
-         *
-         * @param destination the destination which a wallpaper may be set.
-         *                    See {@link Destination} for more details.
-         */
-        void onDestinationSet(@Destination int destination);
-    }
-
-    /**
-     * The listener which will be notified when the wallpaper is selected.
-     */
-    public interface WallpaperSelectedListener {
-        /**
-         * Called when the wallpaper is selected.
-         *
-         * @param position the position of the selected wallpaper
-         */
-        void onWallpaperSelected(int position);
-    }
 
     /**
      * Interface to be implemented by a Fragment(or an Activity) hosting
@@ -251,10 +201,7 @@ public class IndividualPickerFragment extends AppbarFragment
         }
     };
     PackageStatusNotifier.Listener mAppStatusListener;
-    WallpaperInfoView mWallpaperInfoView;
-    @Nullable WallpaperInfo mSelectedWallpaperInfo;
 
-    private UserEventLogger mUserEventLogger;
     private ProgressDialog mProgressDialog;
     private boolean mTestingMode;
     private CurrentWallpaperBottomSheetPresenter mCurrentWallpaperBottomSheetPresenter;
@@ -299,11 +246,7 @@ public class IndividualPickerFragment extends AppbarFragment
         }
     };
 
-    private WallpaperSetter mWallpaperSetter;
-    private WallpaperInfo mAppliedWallpaperInfo;
     private WallpaperManager mWallpaperManager;
-    private int mWallpaperDestination;
-    private WallpaperSelectedListener mWallpaperSelectedListener;
     private Set<String> mAppliedWallpaperIds;
 
     public static IndividualPickerFragment newInstance(String collectionId) {
@@ -313,21 +256,6 @@ public class IndividualPickerFragment extends AppbarFragment
         IndividualPickerFragment fragment = new IndividualPickerFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    /**
-     * Highlights the applied wallpaper (if it exists) according to the destination a wallpaper
-     * would be set.
-     *
-     * @param wallpaperDestination the destination a wallpaper would be set.
-     *                             It will be either {@link Destination#DEST_HOME_SCREEN}
-     *                             or {@link Destination#DEST_LOCK_SCREEN}.
-     */
-    public void highlightAppliedWallpaper(@Destination int wallpaperDestination) {
-        mWallpaperDestination = wallpaperDestination;
-        if (mWallpapers != null) {
-            refreshAppliedWallpaper();
-        }
     }
 
     private void updateDesktopDailyRotationThumbnail(DesktopRotationHolder holder) {
@@ -366,14 +294,7 @@ public class IndividualPickerFragment extends AppbarFragment
 
         mPackageStatusNotifier = injector.getPackageStatusNotifier(appContext);
 
-        mUserEventLogger = injector.getUserEventLogger(appContext);
-
         mWallpaperPersister = injector.getWallpaperPersister(appContext);
-        mWallpaperSetter = new WallpaperSetter(
-                mWallpaperPersister,
-                injector.getPreferences(appContext),
-                injector.getUserEventLogger(appContext),
-                false);
 
         mWallpapers = new ArrayList<>();
         mRandom = new Random();
@@ -749,7 +670,6 @@ public class IndividualPickerFragment extends AppbarFragment
         if (mAppStatusListener != null) {
             mPackageStatusNotifier.removeListener(mAppStatusListener);
         }
-        mWallpaperSetter.cleanUp();
     }
 
     @Override
@@ -772,29 +692,6 @@ public class IndividualPickerFragment extends AppbarFragment
 
     public void setWallpapersUiContainer(WallpapersUiContainer uiContainer) {
         mWallpapersUiContainer = uiContainer;
-    }
-
-    public void setOnWallpaperSelectedListener(
-            WallpaperSelectedListener wallpaperSelectedListener) {
-        mWallpaperSelectedListener = wallpaperSelectedListener;
-    }
-
-    /**
-     * Resizes the layout's height.
-     */
-    public void resizeLayout(int height) {
-        mImageGrid.getLayoutParams().height = height;
-        mImageGrid.requestLayout();
-    }
-
-    /**
-     * Scrolls to the specific item.
-     *
-     * @param position the position of the item
-     */
-    public void scrollToPosition(int position) {
-        ((GridLayoutManager) mImageGrid.getLayoutManager())
-                .scrollToPositionWithOffset(position, /* offset= */ 0);
     }
 
     /**
@@ -945,41 +842,6 @@ public class IndividualPickerFragment extends AppbarFragment
     }
 
     @Override
-    public void onSet(int destination) {
-        if (mSelectedWallpaperInfo == null) {
-            Log.e(TAG, "Unable to set wallpaper since the selected wallpaper info is null");
-            return;
-        }
-
-        mWallpaperPersister.setWallpaperInfoInPreview(mSelectedWallpaperInfo);
-        if (mSelectedWallpaperInfo instanceof LiveWallpaperInfo) {
-            mWallpaperSetter.setCurrentWallpaper(getActivity(), mSelectedWallpaperInfo, null,
-                    destination, 0, null, null, mSetWallpaperCallback);
-        } else {
-            mWallpaperSetter.setCurrentWallpaper(
-                    getActivity(), mSelectedWallpaperInfo, destination, mSetWallpaperCallback);
-        }
-        onWallpaperDestinationSet(destination);
-    }
-
-    private WallpaperPersister.SetWallpaperCallback mSetWallpaperCallback =
-            new WallpaperPersister.SetWallpaperCallback() {
-                @Override
-                public void onSuccess(WallpaperInfo wallpaperInfo) {
-                    mWallpaperPersister.onLiveWallpaperSet();
-                    Toast.makeText(getActivity(), R.string.wallpaper_set_successfully_message,
-                            Toast.LENGTH_SHORT).show();
-                    getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    getActivity().finish();
-                }
-
-                @Override
-                public void onError(@Nullable Throwable throwable) {
-                    Log.e(TAG, "Can't apply the wallpaper.");
-                }
-            };
-
-    @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.daily_rotation) {
             showRotationDialog();
@@ -1013,140 +875,6 @@ public class IndividualPickerFragment extends AppbarFragment
         }
     }
 
-    private void updateThumbnail(WallpaperInfo selectedWallpaperInfo) {
-        ThumbnailUpdater thumbnailUpdater = (ThumbnailUpdater) getParentFragment();
-        if (thumbnailUpdater == null) {
-            return;
-        }
-
-        if (selectedWallpaperInfo != null) {
-            thumbnailUpdater.updateThumbnail(selectedWallpaperInfo);
-        } else {
-            thumbnailUpdater.restoreThumbnails();
-        }
-    }
-
-    private void onWallpaperDestinationSet(int destination) {
-        WallpaperDestinationCallback wallpaperDestinationCallback =
-                (WallpaperDestinationCallback) getParentFragment();
-        if (wallpaperDestinationCallback == null) {
-            return;
-        }
-
-        wallpaperDestinationCallback.onDestinationSet(destination);
-    }
-
-    void onWallpaperSelected(@Nullable WallpaperInfo newSelectedWallpaperInfo,
-                                     int position) {
-        if (mSelectedWallpaperInfo == newSelectedWallpaperInfo) {
-            return;
-        }
-        // Update current wallpaper.
-        updateActivatedStatus(mSelectedWallpaperInfo == null
-                ? mAppliedWallpaperInfo : mSelectedWallpaperInfo, false);
-        // Update new selected wallpaper.
-        updateActivatedStatus(newSelectedWallpaperInfo == null
-                ? mAppliedWallpaperInfo : newSelectedWallpaperInfo, true);
-
-        mSelectedWallpaperInfo = newSelectedWallpaperInfo;
-        updateThumbnail(mSelectedWallpaperInfo);
-        // Populate wallpaper info into view.
-        if (mSelectedWallpaperInfo != null && mWallpaperInfoView != null) {
-            WallpaperInfoHelper.loadExploreIntent(
-                    getContext(),
-                    mSelectedWallpaperInfo,
-                    (actionLabel, exploreIntent) ->
-                            mWallpaperInfoView.populateWallpaperInfo(
-                                    mSelectedWallpaperInfo,
-                                    actionLabel,
-                                    WallpaperInfoHelper.shouldShowExploreButton(
-                                            getContext(), exploreIntent),
-                                    v -> onExploreClicked(exploreIntent))
-            );
-        }
-
-        if (mWallpaperSelectedListener != null) {
-            mWallpaperSelectedListener.onWallpaperSelected(position);
-        }
-    }
-
-    private void onExploreClicked(Intent exploreIntent) {
-        if (getContext() == null) {
-            return;
-        }
-        Context context = getContext();
-        mUserEventLogger.logActionClicked(mSelectedWallpaperInfo.getCollectionId(context),
-                mSelectedWallpaperInfo.getActionLabelRes(context));
-
-        startActivity(exploreIntent);
-    }
-
-    // TODO: Dead code. Should remove this method in the future.
-    private void updateActivatedStatus(WallpaperInfo wallpaperInfo, boolean isActivated) {
-        if (wallpaperInfo == null) {
-            return;
-        }
-        int index = mWallpapers.indexOf(wallpaperInfo);
-        index = (shouldShowRotationTile() || mCategory.supportsCustomPhotos())
-                ? index + 1 : index;
-        ViewHolder holder = mImageGrid.findViewHolderForAdapterPosition(index);
-        if (holder != null) {
-            holder.itemView.setActivated(isActivated);
-        } else {
-            // Item is not visible, make sure the item is re-bound when it becomes visible.
-            mAdapter.notifyItemChanged(index);
-        }
-    }
-
-    // TODO: Dead code. Should remove this method in the future.
-    private void updateAppliedStatus(WallpaperInfo wallpaperInfo, boolean isApplied) {
-        if (wallpaperInfo == null) {
-            return;
-        }
-        int index = mWallpapers.indexOf(wallpaperInfo);
-        index = (shouldShowRotationTile() || mCategory.supportsCustomPhotos())
-                ? index + 1 : index;
-        ViewHolder holder = mImageGrid.findViewHolderForAdapterPosition(index);
-        if (holder != null) {
-            mAdapter.showBadge(holder, R.drawable.wallpaper_check_circle_24dp, isApplied);
-        } else {
-            // Item is not visible, make sure the item is re-bound when it becomes visible.
-            mAdapter.notifyItemChanged(index);
-        }
-    }
-
-    private void refreshAppliedWallpaper() {
-        // Clear the check mark and blue border(if it shows) of the old applied wallpaper.
-        showCheckMarkAndBorderForAppliedWallpaper(false);
-
-        // Update to the new applied wallpaper.
-        String appliedWallpaperId = getAppliedWallpaperId();
-        Optional<WallpaperInfo> wallpaperInfoOptional = mWallpapers
-                .stream()
-                .filter(wallpaper -> wallpaper.getWallpaperId() != null)
-                .filter(wallpaper -> wallpaper.getWallpaperId().equals(appliedWallpaperId))
-                .findFirst();
-        mAppliedWallpaperInfo = wallpaperInfoOptional.orElse(null);
-
-        // Set the check mark and blue border(if user doesn't select) of the new applied wallpaper.
-        showCheckMarkAndBorderForAppliedWallpaper(true);
-    }
-
-    private String getAppliedWallpaperId() {
-        WallpaperPreferences prefs =
-                InjectorProvider.getInjector().getPreferences(getContext());
-        android.app.WallpaperInfo wallpaperInfo = mWallpaperManager.getWallpaperInfo();
-        boolean isDestinationBoth =
-                mWallpaperManager.getWallpaperId(WallpaperManager.FLAG_LOCK) < 0;
-
-        if (isDestinationBoth || mWallpaperDestination == WallpaperPersister.DEST_HOME_SCREEN) {
-            return wallpaperInfo != null
-                    ? wallpaperInfo.getServiceName() : prefs.getHomeWallpaperRemoteId();
-        } else {
-            return prefs.getLockWallpaperRemoteId();
-        }
-    }
-
     private Set<String> getAppliedWallpaperIds() {
         WallpaperPreferences prefs =
                 InjectorProvider.getInjector().getPreferences(getContext());
@@ -1167,13 +895,6 @@ public class IndividualPickerFragment extends AppbarFragment
         }
 
         return appliedWallpaperIds;
-    }
-
-    private void showCheckMarkAndBorderForAppliedWallpaper(boolean show) {
-        updateAppliedStatus(mAppliedWallpaperInfo, show);
-        if (mSelectedWallpaperInfo == null) {
-            updateActivatedStatus(mAppliedWallpaperInfo, show);
-        }
     }
 
     boolean shouldShowRotationTile() {
@@ -1456,7 +1177,6 @@ public class IndividualPickerFragment extends AppbarFragment
 
             if (isWallpaperApplied) {
                 mSelectedAdapterPosition = position;
-                mAppliedWallpaperInfo = wallpaper;
             }
 
             CardView container = holder.itemView.findViewById(R.id.wallpaper_container);
