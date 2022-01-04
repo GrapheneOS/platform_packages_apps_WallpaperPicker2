@@ -18,6 +18,7 @@ package com.android.wallpaper.module;
 import android.content.Context;
 
 import com.android.wallpaper.compat.WallpaperManagerCompat;
+import com.android.wallpaper.effects.EffectsController;
 import com.android.wallpaper.network.Requester;
 import com.android.wallpaper.network.WallpaperRequester;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
@@ -195,5 +196,11 @@ public abstract class BaseWallpaperInjector implements Injector {
             mDisplayUtils = new DisplayUtils(context.getApplicationContext());
         }
         return mDisplayUtils;
+    }
+
+    @Override
+    public EffectsController createEffectsController(Context context,
+            EffectsController.EffectsServiceListener listener) {
+        return null;
     }
 }

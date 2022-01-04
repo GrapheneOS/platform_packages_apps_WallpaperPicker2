@@ -19,9 +19,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.android.wallpaper.compat.WallpaperManagerCompat;
+import com.android.wallpaper.effects.EffectsController;
 import com.android.wallpaper.model.CategoryProvider;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.AlarmManagerWrapper;
@@ -260,6 +262,13 @@ public class TestInjector implements Injector {
 
     @Override
     public DisplayUtils getDisplayUtils(Context context) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public EffectsController createEffectsController(Context context,
+            EffectsController.EffectsServiceListener listener) {
         return null;
     }
 }
