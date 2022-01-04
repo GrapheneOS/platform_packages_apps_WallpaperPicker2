@@ -20,7 +20,10 @@ import static com.android.wallpaper.picker.WallpaperPickerDelegate.PREVIEW_WALLP
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -59,6 +62,7 @@ import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDele
 import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate.BottomSheetHost;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,6 +131,11 @@ public class CategorySelectorFragment extends AppbarFragment {
     public CategorySelectorFragment() {
         mAdapter = new CategoryAdapter(mCategories);
         mCategoryProvider = InjectorProvider.getInjector().getCategoryProvider(getContext());
+    }
+
+    public CategorySelectorFragment(Context context) {
+        mAdapter = new CategoryAdapter(mCategories);
+        mCategoryProvider = InjectorProvider.getInjector().getCategoryProvider(context);
     }
 
     @Nullable
@@ -313,7 +322,9 @@ public class CategorySelectorFragment extends AppbarFragment {
 
                             @Override
                             public void onPermissionsDenied(boolean dontAskAgain) {
-                                // No-op
+                                if (dontAskAgain) {
+                                    showPermissionSnackbar();
+                                }
                             }
                         });
                 return;
@@ -379,6 +390,40 @@ public class CategorySelectorFragment extends AppbarFragment {
 
             }
         }
+    }
+
+    private void showPermissionSnackbar() {
+        Snackbar snackbar = Snackbar.make(getView(), R.string.settings_snackbar_description,
+                Snackbar.LENGTH_LONG);
+        Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
+        TextView textView = (TextView) layout.findViewById(R.id.snackbar_text);
+        layout.setBackgroundResource(R.drawable.snackbar_background);
+        TypedArray typedArray = getContext().obtainStyledAttributes(
+                new int[]{android.R.attr.textColorPrimary,
+                        com.android.internal.R.attr.colorAccentPrimaryVariant});
+        textView.setTextColor(typedArray.getColor(0, Color.TRANSPARENT));
+        snackbar.setActionTextColor(typedArray.getColor(1, Color.TRANSPARENT));
+        typedArray.recycle();
+
+        snackbar.setAction(getContext().getString(R.string.settings_snackbar_enable),
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startSettings(SETTINGS_APP_INFO_REQUEST_CODE);
+                    }
+                });
+        snackbar.show();
+    }
+
+    private void startSettings(int resultCode) {
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        Intent appInfoIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", activity.getPackageName(), /* fragment= */ null);
+        appInfoIntent.setData(uri);
+        startActivityForResult(appInfoIntent, resultCode);
     }
 
     private class FeaturedCategoryHolder extends CategoryHolder {
@@ -535,13 +580,7 @@ public class CategorySelectorFragment extends AppbarFragment {
                     .setNegativeButton(
                             R.string.settings_button_label,
                             (dialogInterface, i) -> {
-                                Intent appInfoIntent =
-                                        new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri uri = Uri.fromParts("package",
-                                        getActivity().getPackageName(), /* fragment= */ null);
-                                appInfoIntent.setData(uri);
-                                startActivityForResult(
-                                        appInfoIntent, SETTINGS_APP_INFO_REQUEST_CODE);
+                                startSettings(SETTINGS_APP_INFO_REQUEST_CODE);
                             })
                     .create();
             dialog.show();
@@ -576,7 +615,12 @@ public class CategorySelectorFragment extends AppbarFragment {
             }
         }
     }
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SETTINGS_APP_INFO_REQUEST_CODE) {
+            notifyDataSetChanged();
+        }
+    }
     /**
      * SpanSizeLookup subclass which provides that the item in the first position spans the number
      * of columns in the RecyclerView and all other items only take up a single span.
