@@ -40,7 +40,6 @@ public abstract class BaseWallpaperInjector implements Injector {
     private AlarmManagerWrapper mAlarmManagerWrapper;
     private ExploreIntentChecker mExploreIntentChecker;
     private SystemFeatureChecker mSystemFeatureChecker;
-    private FormFactorChecker mFormFactorChecker;
     private PackageStatusNotifier mPackageStatusNotifier;
     private LiveWallpaperInfoFactory mLiveWallpaperInfoFactory;
     private DrawableLayerResolver mDrawableLayerResolver;
@@ -159,14 +158,6 @@ public abstract class BaseWallpaperInjector implements Injector {
             mSystemFeatureChecker = new DefaultSystemFeatureChecker();
         }
         return mSystemFeatureChecker;
-    }
-
-    @Override
-    public synchronized FormFactorChecker getFormFactorChecker(Context context) {
-        if (mFormFactorChecker == null) {
-            mFormFactorChecker = new DefaultFormFactorChecker(context.getApplicationContext());
-        }
-        return mFormFactorChecker;
     }
 
     @Override
