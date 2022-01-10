@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginBottom="@dimen/bottom_actions_height"
-        android:paddingHorizontal="@dimen/separated_tabs_horizontal_padding">
+        android:paddingHorizontal="@dimen/full_preview_page_tabs_horizontal_padding">
         <include layout="@layout/separated_tabs" />
     </FrameLayout>
 
@@ -54,7 +54,8 @@
             android:layout_gravity="center"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:padding="@dimen/full_preview_page_default_padding_top">
+            android:paddingHorizontal="@dimen/full_preview_page_default_horizontal_padding"
+            android:paddingVertical="@dimen/full_preview_page_default_padding_top">
 
             <com.android.wallpaper.picker.TouchForwardingLayout
                 android:id="@+id/touch_forwarding_layout"
