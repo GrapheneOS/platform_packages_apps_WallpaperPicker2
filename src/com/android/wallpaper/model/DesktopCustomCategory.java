@@ -39,7 +39,7 @@ public class DesktopCustomCategory extends WallpaperCategory {
     }
 
     @Override
-    public void show(Activity srcActivity, PickerIntentFactory factory, int requestCode) {
+    public void show(Activity srcActivity, int requestCode) {
         // no op
     }
 
