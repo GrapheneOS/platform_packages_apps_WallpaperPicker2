@@ -60,7 +60,7 @@
     <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"हाल लक स्क्रिनमा सेट गरिएको वालपेपरको थम्बनेल"</string>
     <string name="currently_set_wallpaper_thumbnail" msgid="8651887838745545107">"हाल सेट गरिएको वालपेपरको थम्बनेल"</string>
     <string name="wallpaper_thumbnail" msgid="569931475923605974">"वालपेपरको थम्बनेल"</string>
-    <string name="explore_home_screen" msgid="8756346794535765482">"गृह स्क्रिनको वालपेपरको अन्वेषण गर्नुहोस्"</string>
+    <string name="explore_home_screen" msgid="8756346794535765482">"होम स्क्रिनको वालपेपरको अन्वेषण गर्नुहोस्"</string>
     <string name="explore_lock_screen" msgid="268938342103703665">"लक स्क्रिनको वालपेपरको अन्वेषण गर्नुहोस्"</string>
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"गृहपृष्ठको दैनिक वालपेपर पुनः ताजा गर्नुहोस्"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"दैनिक वालपेपर पुनः ताजा गर्नुहोस्"</string>
@@ -94,4 +94,8 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"वालपेपर"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"वालपेपरको प्रिभ्यु"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"यो सङ्ग्रह छैन"</string>
+    <string name="hide_ui_preview_text" msgid="6766076482511252295">"UI प्रिभ्यू लुकाइयोस्"</string>
+    <string name="show_ui_preview_text" msgid="5993063062417070806">"UI प्रिभ्यू देखाइयोस्"</string>
+    <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"वालपेपर बदल्नुहोस्"</string>
+    <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"लकस्क्रिनमा देखिने वालपेपरको प्रिभ्यू"</string>
 </resources>
