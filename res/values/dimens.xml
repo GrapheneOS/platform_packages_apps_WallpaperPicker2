@@ -139,6 +139,7 @@
     <dimen name="preview_page_horizontal_margin">56dp</dimen>
     <dimen name="preview_page_top_margin">24dp</dimen>
     <dimen name="preview_page_bottom_margin">24dp</dimen>
+    <dimen name="preview_card_vertical_bias">0.5</dimen>
     <dimen name="preview_card_padding">20dp</dimen>
     <dimen name="preview_pager_max_height">450dp</dimen>
     <dimen name="preview_pager_min_height">350dp</dimen>
@@ -146,6 +147,7 @@
     <item name="preview_pager_maximum_height_ratio" format="float" type="dimen">0.7</item>
 
     <!-- Dimensions for full preview page -->
+    <dimen name="full_preview_page_vertical_bias">0.5</dimen>
     <dimen name="full_preview_page_default_padding_top">24dp</dimen>
     <dimen name="full_preview_page_default_padding_bottom">32dp</dimen>
     <dimen name="full_preview_page_default_horizontal_padding">24dp</dimen>
