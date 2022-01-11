@@ -58,13 +58,6 @@
     <meta-data android:name="com.android.wallpaper.asset.WallpaperGlideModule"
          android:value="GlideModule"/>
 
-    <activity android:name="com.android.wallpaper.picker.TopLevelPickerActivity"
-         android:label="@string/app_name"
-         android:theme="@style/WallpaperTheme.NoBackground"
-         android:resizeableActivity="false"
-         android:exported="false">
-    </activity>
-
     <activity android:name="com.android.wallpaper.picker.CustomizationPickerActivity"
         android:label="@string/app_name"
         android:resizeableActivity="false"
@@ -99,13 +92,6 @@
         <action android:name="android.intent.action.MAIN"/>
       </intent-filter>
     </activity-alias>
-
-    <activity android:name="com.android.wallpaper.picker.individual.IndividualPickerActivity"
-        android:label="@string/app_name"
-        android:theme="@style/WallpaperTheme"
-        android:resizeableActivity="false"
-        android:parentActivityName="com.android.wallpaper.picker.TopLevelPickerActivity">
-    </activity>
 
     <activity android:name="com.android.wallpaper.picker.PreviewActivity"
          android:resizeableActivity="false"

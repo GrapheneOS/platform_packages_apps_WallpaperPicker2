@@ -48,14 +48,13 @@ import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.picker.PreviewActivity.PreviewActivityIntentFactory;
 import com.android.wallpaper.picker.ViewOnlyPreviewActivity.ViewOnlyPreviewActivityIntentFactory;
 import com.android.wallpaper.picker.WallpaperDisabledFragment.WallpaperSupportLevel;
-import com.android.wallpaper.picker.individual.IndividualPickerActivity.IndividualPickerActivityIntentFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Implements all the logic for handling a WallpaperPicker container Activity.
- * @see TopLevelPickerActivity for usage details.
+ * @see CustomizationPickerActivity for usage details.
  */
 public class WallpaperPickerDelegate implements MyPhotosStarter {
 
@@ -66,8 +65,6 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     public static final int VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE = 2;
     public static final int READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 3;
     public static final int PREVIEW_LIVE_WALLPAPER_REQUEST_CODE = 4;
-
-    private IndividualPickerActivityIntentFactory mPickerIntentFactory;
 
     private InlinePreviewIntentFactory mPreviewIntentFactory;
     private InlinePreviewIntentFactory mViewOnlyPreviewIntentFactory;
@@ -89,7 +86,6 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
             Injector injector) {
         mContainer = container;
         mActivity = activity;
-        mPickerIntentFactory = new IndividualPickerActivityIntentFactory();
         mPreviewIntentFactory = new PreviewActivityIntentFactory();
         mViewOnlyPreviewIntentFactory =
                 new ViewOnlyPreviewActivityIntentFactory();
@@ -361,7 +357,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
         if (category == null) {
             return;
         }
-        category.show(mActivity, mPickerIntentFactory, SHOW_CATEGORY_REQUEST_CODE);
+        category.show(mActivity, SHOW_CATEGORY_REQUEST_CODE);
     }
 
     @Nullable
@@ -393,10 +389,6 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
             return isSupported ? WallpaperDisabledFragment.SUPPORTED_CAN_SET
                     : WallpaperDisabledFragment.NOT_SUPPORTED_BY_DEVICE;
         }
-    }
-
-    public IndividualPickerActivityIntentFactory getPickerIntentFactory() {
-        return mPickerIntentFactory;
     }
 
     public InlinePreviewIntentFactory getPreviewIntentFactory() {
