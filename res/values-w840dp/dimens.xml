@@ -43,6 +43,7 @@
     <!-- Dimensions for PreviewFragment. -->
     <dimen name="full_preview_page_default_padding_top">48dp</dimen>
     <dimen name="full_preview_page_default_horizontal_padding">127dp</dimen>
+
     <!--  Default page horizontal margin (127dp) - separated tabs inset horizontal (8dp) -->
     <dimen name="full_preview_page_tabs_horizontal_padding">119dp</dimen>
 

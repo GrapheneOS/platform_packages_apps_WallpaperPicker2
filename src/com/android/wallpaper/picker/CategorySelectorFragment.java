@@ -173,19 +173,11 @@ public class CategorySelectorFragment extends AppbarFragment {
         }
 
         // For nav bar edge-to-edge effect.
-        view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
-            // For status bar height.
+        mImageGrid.setOnApplyWindowInsetsListener((v, windowInsets) -> {
             v.setPadding(
                     v.getPaddingLeft(),
-                    windowInsets.getSystemWindowInsetTop(),
+                    v.getPaddingTop(),
                     v.getPaddingRight(),
-                    v.getPaddingBottom());
-
-            View gridView = v.findViewById(R.id.category_grid);
-            gridView.setPadding(
-                    gridView.getPaddingLeft(),
-                    gridView.getPaddingTop(),
-                    gridView.getPaddingRight(),
                     windowInsets.getSystemWindowInsetBottom());
             return windowInsets.consumeSystemWindowInsets();
         });
