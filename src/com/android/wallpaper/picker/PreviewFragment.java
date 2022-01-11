@@ -207,6 +207,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
         mRootView = view;
         mFullScreenAnimation = new FullScreenAnimation(view);
+        mFullScreenAnimation.setShowInFullScreen(mShowInFullScreen);
 
         getActivity().getWindow().getDecorView().setOnApplyWindowInsetsListener(
                 (v, windowInsets) -> {

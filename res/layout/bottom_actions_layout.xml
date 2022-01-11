@@ -44,10 +44,10 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_actions_height"
         android:layout_alignParentBottom="true"
-        android:layout_marginHorizontal="@dimen/bottom_actions_horizontal_margin"
-        android:layoutDirection="locale"
         android:clipToPadding="false"
+        android:layoutDirection="locale"
         android:paddingBottom="@dimen/bottom_actions_bottom_padding"
+        android:paddingHorizontal="@dimen/bottom_actions_horizontal_padding"
         android:paddingTop="@dimen/bottom_actions_top_padding"
         android:theme="@style/BottomActionItemStyle">
 
