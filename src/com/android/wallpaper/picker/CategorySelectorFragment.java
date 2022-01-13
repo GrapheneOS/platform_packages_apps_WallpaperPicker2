@@ -372,11 +372,7 @@ public class CategorySelectorFragment extends AppbarFragment {
 
             Asset thumbnail = mCategory.getThumbnail(getActivity().getApplicationContext());
             if (thumbnail != null) {
-                thumbnail.loadDrawable(getActivity(), mImageView,
-                        ResourceUtils.getColorAttr(
-                            getActivity(),
-                            android.R.attr.colorSecondary
-                        ));
+                thumbnail.loadDrawable(getActivity(), mImageView, Color.TRANSPARENT);
             } else {
                 // TODO(orenb): Replace this workaround for b/62584914 with a proper way of
                 //  unloading the ImageView such that no incorrect image is improperly loaded upon
