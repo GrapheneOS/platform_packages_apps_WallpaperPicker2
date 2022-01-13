@@ -109,6 +109,7 @@ public class LiveWallpaperThumbAsset extends Asset {
             reqOptions = RequestOptions.centerCropTransform()
                     .placeholder(new ColorDrawable(placeholderColor));
         }
+        imageView.setBackgroundColor(placeholderColor);
         Glide.with(context)
                 .asDrawable()
                 .load(LiveWallpaperThumbAsset.this)
