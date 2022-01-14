@@ -37,8 +37,6 @@ import com.android.wallpaper.model.CategoryReceiver;
 import com.android.wallpaper.model.ImageWallpaperInfo;
 import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
-import com.android.wallpaper.module.FormFactorChecker;
-import com.android.wallpaper.module.FormFactorChecker.FormFactor;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.PackageStatusNotifier;
@@ -69,7 +67,6 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     private InlinePreviewIntentFactory mPreviewIntentFactory;
     private InlinePreviewIntentFactory mViewOnlyPreviewIntentFactory;
 
-    @FormFactor private int mFormFactor;
     private WallpaperPreferences mPreferences;
     private PackageStatusNotifier mPackageStatusNotifier;
 
@@ -95,8 +92,6 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
 
         mPackageStatusNotifier = injector.getPackageStatusNotifier(activity);
         mWallpaperPersister = injector.getWallpaperPersister(activity);
-        final FormFactorChecker formFactorChecker = injector.getFormFactorChecker(activity);
-        mFormFactor = formFactorChecker.getFormFactor();
 
         mPermissionChangedListeners = new ArrayList<>();
         mDownloadableIntentAction = injector.getDownloadableIntentAction();
@@ -274,7 +269,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     }
 
     /**
-     * Populates the categories appropriately depending on the device form factor.
+     * Populates the categories appropriately.
      *
      * @param forceRefresh        Whether to force a refresh of categories from the
      *                            CategoryProvider. True if
@@ -302,13 +297,9 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     }
 
     private void notifyDoneFetchingCategories() {
-        if (mFormFactor == FormFactorChecker.FORM_FACTOR_MOBILE) {
-            CategorySelectorFragment categorySelectorFragment = getCategorySelectorFragment();
-            if (categorySelectorFragment != null) {
-                categorySelectorFragment.doneFetchingCategories();
-            }
-        } else {
-            mContainer.doneFetchingCategories();
+        CategorySelectorFragment categorySelectorFragment = getCategorySelectorFragment();
+        if (categorySelectorFragment != null) {
+            categorySelectorFragment.doneFetchingCategories();
         }
     }
 
@@ -393,11 +384,6 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
 
     public InlinePreviewIntentFactory getPreviewIntentFactory() {
         return mPreviewIntentFactory;
-    }
-
-    @FormFactor
-    public int getFormFactor() {
-        return mFormFactor;
     }
 
     public WallpaperPreferences getPreferences() {
