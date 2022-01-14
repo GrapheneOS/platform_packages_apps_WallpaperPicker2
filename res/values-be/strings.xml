@@ -105,8 +105,6 @@
     <string name="accessibility_customize_shown" msgid="590964727831547651">"Панэль наладкі бачная"</string>
     <string name="accessibility_info_hidden" msgid="2288603712350168107">"Панэль інфармацыі схавана"</string>
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Панэль інфармацыі бачная"</string>
-    <!-- no translation found for settings_snackbar_description (890168814524778486) -->
-    <skip />
-    <!-- no translation found for settings_snackbar_enable (5992112808061426068) -->
-    <skip />
+    <string name="settings_snackbar_description" msgid="890168814524778486">"Уключыце файлы і мультымедыя ў наладах."</string>
+    <string name="settings_snackbar_enable" msgid="5992112808061426068">"Уключыць"</string>
 </resources>
