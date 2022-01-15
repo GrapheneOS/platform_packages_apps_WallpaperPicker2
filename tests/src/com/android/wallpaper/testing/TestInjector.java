@@ -31,7 +31,6 @@ import com.android.wallpaper.module.CustomizationSections;
 import com.android.wallpaper.module.DefaultLiveWallpaperInfoFactory;
 import com.android.wallpaper.module.DrawableLayerResolver;
 import com.android.wallpaper.module.ExploreIntentChecker;
-import com.android.wallpaper.module.FormFactorChecker;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.LiveWallpaperInfoFactory;
 import com.android.wallpaper.module.LoggingOptInStatusProvider;
@@ -70,7 +69,6 @@ public class TestInjector implements Injector {
     private UserEventLogger mUserEventLogger;
     private ExploreIntentChecker mExploreIntentChecker;
     private SystemFeatureChecker mSystemFeatureChecker;
-    private FormFactorChecker mFormFactorChecker;
     private WallpaperRotationRefresher mWallpaperRotationRefresher;
     private PerformanceMonitor mPerformanceMonitor;
     private LoggingOptInStatusProvider mLoggingOptInStatusProvider;
@@ -197,14 +195,6 @@ public class TestInjector implements Injector {
             mSystemFeatureChecker = new com.android.wallpaper.testing.TestSystemFeatureChecker();
         }
         return mSystemFeatureChecker;
-    }
-
-    @Override
-    public FormFactorChecker getFormFactorChecker(Context unused) {
-        if (mFormFactorChecker == null) {
-            mFormFactorChecker = new TestFormFactorChecker();
-        }
-        return mFormFactorChecker;
     }
 
     @Override

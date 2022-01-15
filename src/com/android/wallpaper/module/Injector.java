@@ -45,8 +45,6 @@ public interface Injector {
 
     ExploreIntentChecker getExploreIntentChecker(Context context);
 
-    FormFactorChecker getFormFactorChecker(Context context);
-
     LoggingOptInStatusProvider getLoggingOptInStatusProvider(Context context);
 
     NetworkStatusNotifier getNetworkStatusNotifier(Context context);
