@@ -105,8 +105,6 @@
     <string name="accessibility_customize_shown" msgid="590964727831547651">"맞춤설정 표시"</string>
     <string name="accessibility_info_hidden" msgid="2288603712350168107">"정보 숨김"</string>
     <string name="accessibility_info_shown" msgid="6626025722456105632">"정보 표시"</string>
-    <!-- no translation found for settings_snackbar_description (890168814524778486) -->
-    <skip />
-    <!-- no translation found for settings_snackbar_enable (5992112808061426068) -->
-    <skip />
+    <string name="settings_snackbar_description" msgid="890168814524778486">"설정에서 파일 및 미디어를 사용 설정하세요."</string>
+    <string name="settings_snackbar_enable" msgid="5992112808061426068">"사용"</string>
 </resources>
