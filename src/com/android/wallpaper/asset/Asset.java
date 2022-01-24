@@ -152,12 +152,6 @@ public abstract class Asset {
     }
 
     /**
-     * Release memory.
-     */
-    public void release() {
-        // No op
-    }
-    /**
      * Returns whether the asset supports rendering tile regions at varying pixel densities.
      */
     public abstract boolean supportsTiling();

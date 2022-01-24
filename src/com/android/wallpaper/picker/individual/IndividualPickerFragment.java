@@ -50,7 +50,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.wallpaper.R;
-import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.CategoryProvider;
 import com.android.wallpaper.model.CategoryReceiver;
@@ -456,12 +455,6 @@ public class IndividualPickerFragment extends AppbarFragment
     public void onDestroyView() {
         super.onDestroyView();
         getIndividualPickerFragmentHost().removeToolbarMenu();
-        for (WallpaperInfo wallpaperInfo : mWallpapers) {
-            Asset asset = wallpaperInfo.getThumbAsset(getActivity().getApplicationContext());
-            if (asset != null) {
-                asset.release();
-            }
-        }
     }
 
     @Override
