@@ -582,4 +582,9 @@ public abstract class PreviewFragment extends AppbarFragment implements
                     this::onExploreClicked);
         }
     }
+
+    protected void updatePreviewHeader(View fragmentView) {
+        View previewHeader = fragmentView.findViewById(R.id.preview_header);
+        previewHeader.setBackgroundColor(getContext().getColor(R.color.toolbar_color));
+    }
 }
