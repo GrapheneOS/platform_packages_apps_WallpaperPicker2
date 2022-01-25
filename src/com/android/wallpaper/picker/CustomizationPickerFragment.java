@@ -58,7 +58,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.collapsing_toolbar_base_layout,
+        final View view = inflater.inflate(R.layout.collapsing_toolbar_container_layout,
                 container, /* attachToRoot= */ false);
         setContentView(view, R.layout.fragment_customization_picker);
         setUpToolbar(view, ActivityUtils.isLaunchedFromSettingsRelated(getActivity().getIntent()));

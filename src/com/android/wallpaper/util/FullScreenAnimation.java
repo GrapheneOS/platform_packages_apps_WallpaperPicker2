@@ -39,8 +39,6 @@ import androidx.cardview.widget.CardView;
 import com.android.wallpaper.R;
 import com.android.wallpaper.picker.TouchForwardingLayout;
 
-import com.google.android.material.appbar.AppBarLayout;
-
 /**
  * A class storing information about a preview fragment's full-screen layout.
  *
@@ -206,7 +204,8 @@ public class FullScreenAnimation {
      */
     public void placeViews() {
         setViewMargins(R.id.screen_preview_layout,
-                getStatusBarHeight() + getAttributeDimension(R.attr.actionBarSize),
+                (float) getStatusBarHeight() + mView.findViewById(
+                        R.id.preview_header).getPaddingBottom(),
                 getNavigationBarHeight()
                         + mView.getResources().getDimension(R.dimen.bottom_actions_height)
                         + mView.getResources().getDimension(R.dimen.separated_tabs_height),
@@ -242,13 +241,12 @@ public class FullScreenAnimation {
      * correctly located when it is redrawn.
      */
     public void ensureToolbarIsCorrectlyLocated() {
-        AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(
-                AppBarLayout.LayoutParams.MATCH_PARENT,
-                AppBarLayout.LayoutParams.MATCH_PARENT);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT);
 
         layoutParams.setMargins(0, getStatusBarHeight(), 0, 0);
-
-        mView.findViewById(R.id.toolbar).setLayoutParams(layoutParams);
+        mView.findViewById(R.id.section_header_container).setLayoutParams(layoutParams);
     }
 
     /**
@@ -258,7 +256,9 @@ public class FullScreenAnimation {
      */
     public void ensureToolbarIsCorrectlyColored() {
         TextView textView = mView.findViewById(R.id.custom_toolbar_title);
-        textView.setTextColor(mCurrentTextColor);
+        if (textView != null) {
+            textView.setTextColor(mCurrentTextColor);
+        }
 
         Toolbar toolbar = mView.findViewById(R.id.toolbar);
         // It may be null because there's no back arrow in some cases. For example: no back arrow
@@ -346,7 +346,9 @@ public class FullScreenAnimation {
         ValueAnimator colorAnimator = ValueAnimator.ofArgb(mCurrentTextColor, targetColor);
         colorAnimator.addUpdateListener(animation -> {
             int color = (int) animation.getAnimatedValue();
-            textView.setTextColor(color);
+            if (textView != null) {
+                textView.setTextColor(color);
+            }
             // It may be null because there's no back arrow in some cases. For example: no back
             // arrow for Photos launching case.
             if (button != null) {

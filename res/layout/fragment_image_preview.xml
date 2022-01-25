@@ -25,9 +25,9 @@
          to non-full screen cases. -->
     <FrameLayout
         android:id="@+id/preview_header"
+        style="@style/PreviewHeaderStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="?android:attr/actionBarSize">
+        android:layout_height="wrap_content">
     </FrameLayout>
 
     <FrameLayout
@@ -42,9 +42,9 @@
 
     <FrameLayout
         android:id="@+id/screen_preview_layout"
+        style="@style/ScreenPreviewLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?android:attr/actionBarSize"
         android:layout_marginBottom="@dimen/bottom_actions_plus_separated_tabs">
 
         <androidx.constraintlayout.widget.ConstraintLayout

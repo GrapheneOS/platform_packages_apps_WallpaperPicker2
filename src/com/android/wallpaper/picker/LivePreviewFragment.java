@@ -170,7 +170,7 @@ public class LivePreviewFragment extends PreviewFragment implements
 
         // Update preview header color which covers toolbar and status bar area.
         View previewHeader = view.findViewById(R.id.preview_header);
-        previewHeader.setBackgroundColor(activity.getColor(R.color.settingslib_colorSurfaceHeader));
+        previewHeader.setBackgroundColor(activity.getColor(R.color.toolbar_color));
 
         // Set aspect ratio on the preview card.
         ConstraintSet set = new ConstraintSet();
