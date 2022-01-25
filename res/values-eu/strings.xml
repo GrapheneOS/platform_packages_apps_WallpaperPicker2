@@ -44,7 +44,7 @@
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Eguneko horma-papera"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Sakatu aktibatzeko"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Horma-papera automatikoki aldatuko da egunero. Konfiguratzen amaitzeko, hurrengo pantailan, sakatu &lt;strong&gt;Ezarri horma-papera&lt;/strong&gt;."</string>
-    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Aurrerantzean, deskargatu Wi-Fi bidez soilik horma-paperak"</string>
+    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Aurrerantzean, deskargatu wifi bidez soilik horma-paperak"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Egin aurrera"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Lehen horma-papera deskargatzen…"</string>
     <string name="start_rotation_error_message" msgid="3053799836719618972">"Ezin da deskargatu lehen horma-papera. Egiaztatu sarearen ezarpenak zuzenak direla eta saiatu berriro."</string>
