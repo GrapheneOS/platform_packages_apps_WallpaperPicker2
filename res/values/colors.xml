@@ -34,4 +34,6 @@
 
     <color name="smartspace_preview_shadow_color_dark">#B0000000</color>
     <color name="smartspace_preview_shadow_color_transparent">@android:color/transparent</color>
+
+    <color name="toolbar_color">@color/settingslib_colorSurfaceHeader</color>
 </resources>
