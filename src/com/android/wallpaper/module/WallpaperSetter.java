@@ -39,6 +39,8 @@ import com.bumptech.glide.Glide;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Helper class used to set the current wallpaper. It handles showing the destination request dialog
@@ -59,6 +61,7 @@ public class WallpaperSetter {
     private final WallpaperPreferences mPreferences;
     private final boolean mTestingModeEnabled;
     private final UserEventLogger mUserEventLogger;
+    private final ExecutorService mSingleThreadExecutor = Executors.newSingleThreadExecutor();
     private ProgressDialog mProgressDialog;
     private Optional<Integer> mCurrentScreenOrientation = Optional.empty();
 
@@ -208,10 +211,11 @@ public class WallpaperSetter {
             if (destination == WallpaperPersister.DEST_BOTH) {
                 wallpaperManager.clear(FLAG_LOCK);
             }
-            mPreferences.storeLatestHomeWallpaper(wallpaper.getWallpaperId(), wallpaper,
-                    colors != null ? colors :
+            mSingleThreadExecutor.execute(() ->
+                    mPreferences.storeLatestHomeWallpaper(wallpaper.getWallpaperId(), wallpaper,
+                        colors != null ? colors :
                             WallpaperColors.fromBitmap(wallpaper.getThumbAsset(activity)
-                                    .getLowResBitmap(activity)));
+                                    .getLowResBitmap(activity))));
             onWallpaperApplied(wallpaper, activity);
             if (callback != null) {
                 callback.onSuccess(wallpaper);
