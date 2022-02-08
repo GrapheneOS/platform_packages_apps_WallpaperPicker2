@@ -359,7 +359,8 @@ public class LivePreviewFragment extends PreviewFragment implements
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar.showActionsOnly(INFORMATION, DELETE, EDIT, CUSTOMIZE, APPLY);
-        mBottomActionBar.setActionClickListener(APPLY, unused -> onSetWallpaperClicked(null));
+        mBottomActionBar.setActionClickListener(APPLY,
+                unused -> onSetWallpaperClicked(null, mWallpaper));
         mBottomActionBar.bindBottomSheetContentWithAction(
                 new WallpaperInfoContent(getContext()), INFORMATION);
 

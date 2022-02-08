@@ -153,6 +153,7 @@ public class BottomActionBar extends FrameLayout {
         INFORMATION(R.string.accessibility_info_shown, R.string.accessibility_info_hidden),
         EDIT,
         CUSTOMIZE(R.string.accessibility_customize_shown, R.string.accessibility_customize_hidden),
+        EFFECTS,
         DOWNLOAD,
         PROGRESS,
         APPLY,
@@ -204,6 +205,7 @@ public class BottomActionBar extends FrameLayout {
         mActionMap.put(BottomAction.INFORMATION, findViewById(R.id.action_information));
         mActionMap.put(BottomAction.EDIT, findViewById(R.id.action_edit));
         mActionMap.put(BottomAction.CUSTOMIZE, findViewById(R.id.action_customize));
+        mActionMap.put(BottomAction.EFFECTS, findViewById(R.id.action_effects));
         mActionMap.put(BottomAction.DOWNLOAD, findViewById(R.id.action_download));
         mActionMap.put(BottomAction.PROGRESS, findViewById(R.id.action_progress));
         mActionMap.put(BottomAction.APPLY, findViewById(R.id.action_apply));
