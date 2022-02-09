@@ -117,9 +117,9 @@ public class ImagePreviewFragment extends PreviewFragment {
     private Point mScreenSize;
     private Point mRawWallpaperSize; // Native size of wallpaper image.
     private ImageView mLowResImageView;
-    private TouchForwardingLayout mTouchForwardingLayout;
-    private ConstraintLayout mContainer;
-    private SurfaceView mWallpaperSurface;
+    protected TouchForwardingLayout mTouchForwardingLayout;
+    protected ConstraintLayout mContainer;
+    protected SurfaceView mWallpaperSurface;
     private boolean mIsSurfaceCreated = false;
     private WallpaperColors mWallpaperColors;
 
@@ -256,15 +256,18 @@ public class ImagePreviewFragment extends PreviewFragment {
         mWorkspaceSurfaceCallback.cleanUp();
     }
 
-    @Override
-    protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
-        super.onBottomActionBarReady(bottomActionBar);
+    protected void setupActionBar() {
         mBottomActionBar.bindBottomSheetContentWithAction(
                 new WallpaperInfoContent(getContext()), INFORMATION);
         mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
+        mBottomActionBar.setActionClickListener(APPLY,
+                unused -> onSetWallpaperClicked(null, mWallpaper));
+    }
 
-        mBottomActionBar.setActionClickListener(APPLY, this::onSetWallpaperClicked);
-
+    @Override
+    protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
+        super.onBottomActionBarReady(bottomActionBar);
+        setupActionBar();
         View separatedTabsContainer = getView().findViewById(R.id.separated_tabs_container);
         // Update target view's accessibility param since it will be blocked by the bottom sheet
         // when expanded.
