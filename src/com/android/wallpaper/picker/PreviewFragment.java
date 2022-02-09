@@ -146,7 +146,8 @@ public abstract class PreviewFragment extends AppbarFragment implements
     // For full screen animations.
     protected View mRootView;
     protected FullScreenAnimation mFullScreenAnimation;
-    @PreviewMode protected int mPreviewMode;
+    @PreviewMode
+    protected int mPreviewMode;
     protected boolean mViewAsHome;
     // For full screen preview in a separate Activity.
     protected boolean mShowInFullScreen;
@@ -201,7 +202,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
     @Override
     @CallSuper
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutResId(), container, false);
         setUpToolbar(view);
 
@@ -303,7 +304,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
                     }
             );
             container.findViewById(R.id.set_as_wallpaper_button).setOnClickListener(
-                    this::onSetWallpaperClicked);
+                    unused -> onSetWallpaperClicked(null, mWallpaper));
         } else {
             container.findViewById(R.id.hide_ui_preview_button).setVisibility(View.GONE);
             container.findViewById(R.id.set_as_wallpaper_button).setVisibility(View.GONE);
@@ -416,9 +417,9 @@ public abstract class PreviewFragment extends AppbarFragment implements
         return getContext().getString(R.string.preview);
     }
 
-    protected void onSetWallpaperClicked(View button) {
+    protected void onSetWallpaperClicked(View button, WallpaperInfo wallpaperInfo) {
         mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
-                mWallpaper instanceof LiveWallpaperInfo);
+                wallpaperInfo instanceof LiveWallpaperInfo);
     }
 
     protected void setUpTabs(TabLayout tabs) {
@@ -514,12 +515,13 @@ public abstract class PreviewFragment extends AppbarFragment implements
      */
     protected boolean isRtl() {
         return getResources().getConfiguration().getLayoutDirection()
-                    == View.LAYOUT_DIRECTION_RTL;
+                == View.LAYOUT_DIRECTION_RTL;
     }
 
     protected final class WallpaperInfoContent extends BottomSheetContent<WallpaperInfoView> {
 
-        @Nullable private Intent mExploreIntent;
+        @Nullable
+        private Intent mExploreIntent;
         private CharSequence mActionLabel;
 
         protected WallpaperInfoContent(Context context) {

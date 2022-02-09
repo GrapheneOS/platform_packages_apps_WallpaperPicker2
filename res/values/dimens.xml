@@ -226,4 +226,9 @@
     <dimen name="menu_item_set_wallpaper_background_width">92dp</dimen>
     <dimen name="menu_item_set_wallpaper_background_height">46dp</dimen>
     <dimen name="menu_item_set_wallpaper_background_radius">24dp</dimen>
+
+    <!-- For the wallpaper effect -->
+    <dimen name="wallpaper_effect_failed_button_background_radius">50dp</dimen>
+    <dimen name="wallpaper_effect_failed_button_height">36dp</dimen>
+    <dimen name="wallpaper_effect_failed_button_horizontal_padding">16dp</dimen>
 </resources>
