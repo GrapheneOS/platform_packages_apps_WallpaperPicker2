@@ -33,7 +33,7 @@
             android:id="@+id/custom_toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/CollapsingToolbarTitle.Collapsed"/>
+            android:textAppearance="@style/CollapsingToolbar.Collapsed"/>
     </Toolbar>
 
 </com.google.android.material.appbar.AppBarLayout>

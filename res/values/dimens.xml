@@ -215,6 +215,7 @@
     <dimen name="wallpaper_picker_entry_drawable_padding">8dp</dimen>
     <dimen name="wallpaper_picker_entry_horizontal_padding">16dp</dimen>
     <dimen name="wallpaper_picker_entry_margin_vertical">16dp</dimen>
+    <dimen name="wallpaper_picker_entry_card_corner_radius">12dp</dimen>
 
     <!-- For the full screen preview activity's hide UI menu item -->
     <dimen name="menu_item_hide_ui_background_width">46dp</dimen>
