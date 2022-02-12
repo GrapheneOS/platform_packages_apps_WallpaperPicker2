@@ -80,6 +80,20 @@
     <string name="preview" msgid="1774602101743861071">"Перадпрагляд"</string>
     <string name="tab_info" msgid="818614080690111416">"Інфармацыя"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Наладка"</string>
+    <!-- no translation found for tab_effects (3213606157589233901) -->
+    <skip />
+    <!-- no translation found for wallpaper_effects_title (5110174050421199311) -->
+    <skip />
+    <!-- no translation found for wallpaper_effects_subtitle (3361423448179458015) -->
+    <skip />
+    <!-- no translation found for cinematic_effects_toogle (5696400014676763458) -->
+    <skip />
+    <!-- no translation found for effect_error_dialog_title (4071975649967210990) -->
+    <skip />
+    <!-- no translation found for effect_error_dialog_body (1975016108816493359) -->
+    <skip />
+    <!-- no translation found for my_photos (8613021349284084982) -->
+    <skip />
     <string name="configure_wallpaper" msgid="849882179182976621">"Налады…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Выдаліць"</string>
     <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Выдаліць гэтыя шпалеры з тэлефона?"</string>
@@ -94,6 +108,8 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"Шпалеры"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Перадпрагляд шпалер"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Калекцыя не існуе"</string>
+    <!-- no translation found for cancel (4970902691067201584) -->
+    <skip />
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"Схаваць перадпрагляд UI"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"Інтэрфейс схаваны. Двойчы націсніце, каб убачыць"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"Паказаць перадпрагляд UI"</string>
