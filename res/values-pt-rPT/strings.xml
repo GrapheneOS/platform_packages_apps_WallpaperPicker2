@@ -80,6 +80,13 @@
     <string name="preview" msgid="1774602101743861071">"Pré-visualizar"</string>
     <string name="tab_info" msgid="818614080690111416">"Informações"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Personalizar"</string>
+    <string name="tab_effects" msgid="3213606157589233901">"Efeitos"</string>
+    <string name="wallpaper_effects_title" msgid="5110174050421199311">"Imagem de fundo: efeitos"</string>
+    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"Melhore a sua imagem de fundo com os belos efeitos aprendidos automaticamente."</string>
+    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"Ativar efeito cinematográfico"</string>
+    <string name="effect_error_dialog_title" msgid="4071975649967210990">"Oh, não!"</string>
+    <string name="effect_error_dialog_body" msgid="1975016108816493359">"Não foi possível aplicar efeitos cinematográficos.\nExperimente com outra foto."</string>
+    <string name="my_photos" msgid="8613021349284084982">"As minhas fotos"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Definições…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Eliminar"</string>
     <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Pretende eliminar esta imagem de fundo do telemóvel?"</string>
@@ -94,6 +101,7 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"Imagem de fundo"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Pré-visual. da imagem de fundo"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"A coleção não existe."</string>
+    <string name="cancel" msgid="4970902691067201584">"Cancelar"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"Ocultar pré-visualização da IU"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"IU oculta na pré-visualização. Toque 2x p/ mostrar"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"Mostrar pré-visualização da IU"</string>

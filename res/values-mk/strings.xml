@@ -80,6 +80,13 @@
     <string name="preview" msgid="1774602101743861071">"Преглед"</string>
     <string name="tab_info" msgid="818614080690111416">"Информации"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Приспособување"</string>
+    <string name="tab_effects" msgid="3213606157589233901">"Ефекти"</string>
+    <string name="wallpaper_effects_title" msgid="5110174050421199311">"Ефекти на тапет"</string>
+    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"Подобрете го тапетот со прекрасни ефекти научени машински."</string>
+    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"Овозможете кинематографски ефект"</string>
+    <string name="effect_error_dialog_title" msgid="4071975649967210990">"О не!"</string>
+    <string name="effect_error_dialog_body" msgid="1975016108816493359">"Не можевме да примениме кинематографски ефекти.\nПробајте со друга фотографија."</string>
+    <string name="my_photos" msgid="8613021349284084982">"Мои фотографии"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Поставки…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Избриши"</string>
     <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Да се избрише тапетов од телефонот?"</string>
@@ -94,6 +101,7 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"Тапет"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Преглед на тапет"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Збирката не постои"</string>
+    <string name="cancel" msgid="4970902691067201584">"Откажи"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"Сокриј го прегледот на UI"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"UI е скриен во прегледот. Допрете двапати за да се прикаже"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"Прикажи го прегледот на UI"</string>
