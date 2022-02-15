@@ -80,6 +80,13 @@
     <string name="preview" msgid="1774602101743861071">"پیش منظر"</string>
     <string name="tab_info" msgid="818614080690111416">"معلومات"</string>
     <string name="tab_customize" msgid="2533745409174959960">"حسب ضرورت بنائیں"</string>
+    <string name="tab_effects" msgid="3213606157589233901">"اثرات"</string>
+    <string name="wallpaper_effects_title" msgid="5110174050421199311">"وال پیپر کے اثرات"</string>
+    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"خوبصورت مشین کے سیکھے ہوئے اثرات کے ساتھ اپنے وال پیپر کو بہتر بنائیں۔"</string>
+    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"سنیمیٹک اثر فعال کریں"</string>
+    <string name="effect_error_dialog_title" msgid="4071975649967210990">"ارے نہیں!"</string>
+    <string name="effect_error_dialog_body" msgid="1975016108816493359">"ہم سنیمیٹک اثرات لاگو کرنے سے قاصر تھے۔\nدوسری تصویر کے ساتھ کوشش کریں۔"</string>
+    <string name="my_photos" msgid="8613021349284084982">"میری تصاویر"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"ترتیبات…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"حذف کریں"</string>
     <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"اس وال پیپر کو آپ کے فون سے حذف کریں؟"</string>
@@ -94,8 +101,18 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"وال پیپر"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"وال پیپر کا پیش منظر"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"مجموعہ موجود نہیں ہے"</string>
+    <string name="cancel" msgid="4970902691067201584">"منسوخ کریں"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"‏UI کا پیش منظر چھپائیں"</string>
+    <string name="hint_hide_ui_preview" msgid="4527603797714586070">"‏پیش منظر میں UI مخفی ہے۔ پوشیدگی ختم کرنے کیلئے دوبار تھپتھپائیں"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"‏UI کا پیش منظر دکھائیں"</string>
+    <string name="hint_show_ui_preview" msgid="2744155435325318349">"‏پیش منظر میں UI ڈسپلے کیا جاتا ہے۔ چھپانے کے لیے دو بار تھپتھپائیں"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"وال پیپر تبدیل کریں"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"لاک اسکرین وال پیپر کا پیش منظر"</string>
+    <string name="apply_btn" msgid="5764555565943538528">"لاگو کریں"</string>
+    <string name="accessibility_customize_hidden" msgid="6320568529768181691">"پوشیدہ کو حسب ضرورت بنائیں"</string>
+    <string name="accessibility_customize_shown" msgid="590964727831547651">"دکھایا گیا کو حسب ضرورت بنائیں"</string>
+    <string name="accessibility_info_hidden" msgid="2288603712350168107">"معلومات پوشیدہ ہے"</string>
+    <string name="accessibility_info_shown" msgid="6626025722456105632">"معلومات دکھائی گئی ہے"</string>
+    <string name="settings_snackbar_description" msgid="890168814524778486">"براہ کرم ترتیبات میں فائلز اور میڈیا فعال کریں۔"</string>
+    <string name="settings_snackbar_enable" msgid="5992112808061426068">"فعال کریں"</string>
 </resources>

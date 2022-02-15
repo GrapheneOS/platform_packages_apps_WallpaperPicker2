@@ -65,6 +65,7 @@ import com.android.wallpaper.module.BitmapCropper;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
+import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.util.FullScreenAnimation;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
@@ -117,11 +118,12 @@ public class ImagePreviewFragment extends PreviewFragment {
     private Point mScreenSize;
     private Point mRawWallpaperSize; // Native size of wallpaper image.
     private ImageView mLowResImageView;
-    private TouchForwardingLayout mTouchForwardingLayout;
-    private ConstraintLayout mContainer;
-    private SurfaceView mWallpaperSurface;
+    protected TouchForwardingLayout mTouchForwardingLayout;
+    protected ConstraintLayout mContainer;
+    protected SurfaceView mWallpaperSurface;
     private boolean mIsSurfaceCreated = false;
     private WallpaperColors mWallpaperColors;
+    private WallpaperPreferences mWallpaperPreferences;
 
     protected SurfaceView mWorkspaceSurface;
     protected WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
@@ -134,6 +136,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         super.onCreate(savedInstanceState);
         mWallpaperAsset = mWallpaper.getAsset(requireContext().getApplicationContext());
         mPlaceholderColorFuture = mWallpaper.computePlaceholderColor(requireContext());
+        mWallpaperPreferences = mInjector.getPreferences(getContext());
     }
 
     @Override
@@ -159,8 +162,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         mTouchForwardingLayout.setForwardingEnabled(true);
 
         // Update preview header color which covers toolbar and status bar area.
-        View previewHeader = view.findViewById(R.id.preview_header);
-        previewHeader.setBackgroundColor(activity.getColor(R.color.settingslib_colorSurfaceHeader));
+        updatePreviewHeader(view);
 
         // Set aspect ratio on the preview card dynamically.
         ConstraintSet set = new ConstraintSet();
@@ -256,15 +258,18 @@ public class ImagePreviewFragment extends PreviewFragment {
         mWorkspaceSurfaceCallback.cleanUp();
     }
 
-    @Override
-    protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
-        super.onBottomActionBarReady(bottomActionBar);
+    protected void setupActionBar() {
         mBottomActionBar.bindBottomSheetContentWithAction(
                 new WallpaperInfoContent(getContext()), INFORMATION);
         mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
+        mBottomActionBar.setActionClickListener(APPLY,
+                unused -> onSetWallpaperClicked(null, mWallpaper));
+    }
 
-        mBottomActionBar.setActionClickListener(APPLY, this::onSetWallpaperClicked);
-
+    @Override
+    protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
+        super.onBottomActionBarReady(bottomActionBar);
+        setupActionBar();
         View separatedTabsContainer = getView().findViewById(R.id.separated_tabs_container);
         // Update target view's accessibility param since it will be blocked by the bottom sheet
         // when expanded.
@@ -304,6 +309,15 @@ public class ImagePreviewFragment extends PreviewFragment {
                 || mFullResImageView.isImageLoaded()) {
             return;
         }
+        final boolean isWallpaperColorCached = isWallpaperColorInCache(
+                mWallpaper.getStoredWallpaperId(getContext()));
+
+        // If the color is cached, get the colors from SharedPreferences.
+        if (isWallpaperColorCached) {
+            Handler.getMain().post(() -> onWallpaperColorsChanged(
+                    mWallpaperPreferences.getWallpaperColors(
+                            mWallpaper.getStoredWallpaperId(getContext()))));
+        }
 
         // Minimum scale will only be respected under this scale type.
         mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
@@ -333,8 +347,13 @@ public class ImagePreviewFragment extends PreviewFragment {
                     if (mFullResImageView != null) {
                         // Set page bitmap.
                         mFullResImageView.setImage(ImageSource.bitmap(pageBitmap));
-                        // Hide full image view then show it when wallpaper color is updated
-                        mFullResImageView.setAlpha(0f);
+
+                        if (isWallpaperColorCached) {
+                            crossFadeInMosaicView();
+                        } else {
+                            // Hide full image view then show it when wallpaper color is updated
+                            mFullResImageView.setAlpha(0f);
+                        }
 
                         setDefaultWallpaperZoomAndScroll(
                                 mWallpaperAsset instanceof CurrentWallpaperAssetVN);
@@ -349,12 +368,18 @@ public class ImagePreviewFragment extends PreviewFragment {
                                         mImageScaleChangeCounter.incrementAndGet();
                                         mFullResImageView.postDelayed(() -> {
                                             if (mImageScaleChangeCounter.decrementAndGet() == 0) {
-                                                recalculateColors();
+                                                recalculateColors(false);
                                             }
                                         }, /* delayMillis= */ 100);
                                     }
                                 });
-                        mFullResImageView.post(this::recalculateColors);
+
+                        // If the color isn't cached in SharedPreference, recalculate the Colors.
+                        if (!isWallpaperColorCached) {
+                            Handler.getMain().post(() -> {
+                                recalculateColors(true);
+                            });
+                        }
                     }
                 });
 
@@ -369,7 +394,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         });
     }
 
-    private void recalculateColors() {
+    private void recalculateColors(boolean cacheColor) {
         Context context = getContext();
         if (context == null) {
             Log.e(TAG, "Got null context, skip recalculating colors");
@@ -410,6 +435,11 @@ public class ImagePreviewFragment extends PreviewFragment {
                                         crossFadeInMosaicView();
                                     }
                                 });
+                            }
+
+                            if (cacheColor) {
+                                mWallpaperPreferences.storeWallpaperColors(
+                                        mWallpaper.getStoredWallpaperId(context), colors);
                             }
                         });
                     }
@@ -517,8 +547,17 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     @Override
     protected void setCurrentWallpaper(@Destination int destination) {
+        Rect cropRect = calculateCropRect(getContext());
+        float screenScale = WallpaperCropUtils.getScaleOfScreenResolution(
+                mFullResImageView.getScale(), cropRect, mWallpaperScreenSize.x,
+                mWallpaperScreenSize.y);
+        Rect scaledCropRect = new Rect(
+                Math.round((float) cropRect.left * screenScale),
+                Math.round((float) cropRect.top * screenScale),
+                Math.round((float) cropRect.right * screenScale),
+                Math.round((float) cropRect.bottom * screenScale));
         mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, mWallpaperAsset,
-                destination, mFullResImageView.getScale(), calculateCropRect(getContext()),
+                destination, mFullResImageView.getScale() * screenScale, scaledCropRect,
                 mWallpaperColors, SetWallpaperViewModel.getCallback(mViewModelProvider));
     }
 
@@ -654,6 +693,14 @@ public class ImagePreviewFragment extends PreviewFragment {
             }
             mIsSurfaceCreated = false;
         }
+    }
+
+    private boolean isWallpaperColorInCache(String storedWallpaperId) {
+        if (storedWallpaperId == null || mWallpaperPreferences.getWallpaperColors(
+                storedWallpaperId) == null) {
+            return false;
+        }
+        return true;
     }
 
     @Override

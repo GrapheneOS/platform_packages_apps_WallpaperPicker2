@@ -27,6 +27,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Display;
 import android.view.View;
 import android.widget.ImageView;
@@ -80,6 +82,17 @@ public abstract class Asset {
      *                     bitmap.
      */
     public abstract void decodeBitmap(int targetWidth, int targetHeight, BitmapReceiver receiver);
+
+    /**
+     * For {@link #decodeBitmap(int, int, BitmapReceiver)} to use when it is done. It then call
+     * the receiver with decoded bitmap in the main thread.
+     *
+     * @param receiver The receiver to handle decoded bitmap or null if decoding failed.
+     * @param decodedBitmap The bitmap which is already decoded.
+     */
+    protected void decodeBitmapCompleted(BitmapReceiver receiver, Bitmap decodedBitmap) {
+        new Handler(Looper.getMainLooper()).post(() -> receiver.onBitmapDecoded(decodedBitmap));
+    }
 
     /**
      * Decodes and downscales a bitmap region off the main UI thread.
@@ -138,12 +151,6 @@ public abstract class Asset {
         return null;
     }
 
-    /**
-     * Release memory.
-     */
-    public void release() {
-        // No op
-    }
     /**
      * Returns whether the asset supports rendering tile regions at varying pixel densities.
      */

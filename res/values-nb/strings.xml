@@ -80,6 +80,20 @@
     <string name="preview" msgid="1774602101743861071">"Forhåndsvisning"</string>
     <string name="tab_info" msgid="818614080690111416">"Informasjon"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Tilpass"</string>
+    <!-- no translation found for tab_effects (3213606157589233901) -->
+    <skip />
+    <!-- no translation found for wallpaper_effects_title (5110174050421199311) -->
+    <skip />
+    <!-- no translation found for wallpaper_effects_subtitle (3361423448179458015) -->
+    <skip />
+    <!-- no translation found for cinematic_effects_toogle (5696400014676763458) -->
+    <skip />
+    <!-- no translation found for effect_error_dialog_title (4071975649967210990) -->
+    <skip />
+    <!-- no translation found for effect_error_dialog_body (1975016108816493359) -->
+    <skip />
+    <!-- no translation found for my_photos (8613021349284084982) -->
+    <skip />
     <string name="configure_wallpaper" msgid="849882179182976621">"Innstillinger"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Slett"</string>
     <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Vil du slette denne bakgrunnen fra telefonen din?"</string>
@@ -94,8 +108,19 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"Bakgrunn"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Forhåndsvisning av bakgrunn"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Samlingen eksisterer ikke"</string>
+    <!-- no translation found for cancel (4970902691067201584) -->
+    <skip />
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"Skjul UI-forhåndsvisning"</string>
+    <string name="hint_hide_ui_preview" msgid="4527603797714586070">"UI skjult i forhåndsvisn. Dobbelttrykk for å vise"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"Vis UI-forhåndsvisning"</string>
+    <string name="hint_show_ui_preview" msgid="2744155435325318349">"UI skjult i forhåndsvsn. Dobbelttrykk for å skjule"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Endre bakgrunn"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Forhåndsvisning av låseskjermbakgrunn"</string>
+    <string name="apply_btn" msgid="5764555565943538528">"Bruk"</string>
+    <string name="accessibility_customize_hidden" msgid="6320568529768181691">"Tilpasning er skjult"</string>
+    <string name="accessibility_customize_shown" msgid="590964727831547651">"Tilpasning vises"</string>
+    <string name="accessibility_info_hidden" msgid="2288603712350168107">"Informasjon er skjult"</string>
+    <string name="accessibility_info_shown" msgid="6626025722456105632">"Informasjon vises"</string>
+    <string name="settings_snackbar_description" msgid="890168814524778486">"Slå på filer og medier i innstillingene."</string>
+    <string name="settings_snackbar_enable" msgid="5992112808061426068">"Slå på"</string>
 </resources>

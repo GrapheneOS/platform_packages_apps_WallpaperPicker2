@@ -58,9 +58,8 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.collapsing_toolbar_base_layout,
+        final View view = inflater.inflate(R.layout.fragment_customization_picker,
                 container, /* attachToRoot= */ false);
-        setContentView(view, R.layout.fragment_customization_picker);
         setUpToolbar(view, ActivityUtils.isLaunchedFromSettingsRelated(getActivity().getIntent()));
 
         ViewGroup sectionContainer = view.findViewById(R.id.section_container);
@@ -97,14 +96,6 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                 restoreViewState(savedInstanceStateRef)
         );
         return view;
-    }
-
-    private void setContentView(View view, int layoutResId) {
-        final ViewGroup parent = view.findViewById(R.id.content_frame);
-        if (parent != null) {
-            parent.removeAllViews();
-        }
-        LayoutInflater.from(view.getContext()).inflate(layoutResId, parent);
     }
 
     private void restoreViewState(@Nullable Bundle savedInstanceState) {

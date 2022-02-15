@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.WallpaperColors;
 import android.app.WallpaperManager;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -39,6 +40,8 @@ import com.bumptech.glide.Glide;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Helper class used to set the current wallpaper. It handles showing the destination request dialog
@@ -59,6 +62,7 @@ public class WallpaperSetter {
     private final WallpaperPreferences mPreferences;
     private final boolean mTestingModeEnabled;
     private final UserEventLogger mUserEventLogger;
+    private final ExecutorService mSingleThreadExecutor = Executors.newSingleThreadExecutor();
     private ProgressDialog mProgressDialog;
     private Optional<Integer> mCurrentScreenOrientation = Optional.empty();
 
@@ -208,10 +212,11 @@ public class WallpaperSetter {
             if (destination == WallpaperPersister.DEST_BOTH) {
                 wallpaperManager.clear(FLAG_LOCK);
             }
-            mPreferences.storeLatestHomeWallpaper(wallpaper.getWallpaperId(), wallpaper,
-                    colors != null ? colors :
+            mSingleThreadExecutor.execute(() ->
+                    mPreferences.storeLatestHomeWallpaper(wallpaper.getWallpaperId(), wallpaper,
+                        colors != null ? colors :
                             WallpaperColors.fromBitmap(wallpaper.getThumbAsset(activity)
-                                    .getLowResBitmap(activity)));
+                                    .getLowResBitmap(activity))));
             onWallpaperApplied(wallpaper, activity);
             if (callback != null) {
                 callback.onSuccess(wallpaper);
@@ -222,7 +227,45 @@ public class WallpaperSetter {
                 callback.onError(e);
             }
         }
+    }
 
+    /**
+     * Sets current live wallpaper to the device (restore case)
+     *
+     * @param context The context for initiating wallpaper manager
+     * @param wallpaper Information for the actual wallpaper to set
+     * @param destination The wallpaper destination i.e. home vs. lockscreen vs. both
+     * @param colors The {@link WallpaperColors} for placeholder of quickswitching
+     * @param callback Optional callback to be notified when the wallpaper is set.
+     */
+    public void setCurrentLiveWallpaper(Context context, LiveWallpaperInfo wallpaper,
+            @Destination final int destination, @Nullable WallpaperColors colors,
+            @Nullable SetWallpaperCallback callback) {
+        try {
+            if (destination == WallpaperPersister.DEST_LOCK_SCREEN) {
+                throw new IllegalArgumentException(
+                        "Live wallpaper cannot be applied on lock screen only");
+            }
+            WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
+            wallpaperManager.setWallpaperComponent(
+                    wallpaper.getWallpaperComponent().getComponent());
+            if (destination == WallpaperPersister.DEST_BOTH) {
+                wallpaperManager.clear(FLAG_LOCK);
+            }
+            mPreferences.storeLatestHomeWallpaper(wallpaper.getWallpaperId(), wallpaper,
+                    colors != null ? colors :
+                            WallpaperColors.fromBitmap(wallpaper.getThumbAsset(context)
+                                    .getLowResBitmap(context)));
+            // Not call onWallpaperApplied() as no UI is presented.
+            if (callback != null) {
+                callback.onSuccess(wallpaper);
+            }
+        } catch (RuntimeException | IOException e) {
+            // Not call onWallpaperApplyError() as no UI is presented.
+            if (callback != null) {
+                callback.onError(e);
+            }
+        }
     }
 
     private void onWallpaperApplied(WallpaperInfo wallpaper, Activity containerActivity) {

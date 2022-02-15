@@ -169,8 +169,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         mTouchForwardingLayout = view.findViewById(R.id.touch_forwarding_layout);
 
         // Update preview header color which covers toolbar and status bar area.
-        View previewHeader = view.findViewById(R.id.preview_header);
-        previewHeader.setBackgroundColor(activity.getColor(R.color.settingslib_colorSurfaceHeader));
+        updatePreviewHeader(view);
 
         // Set aspect ratio on the preview card.
         ConstraintSet set = new ConstraintSet();
@@ -359,7 +358,8 @@ public class LivePreviewFragment extends PreviewFragment implements
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
         mBottomActionBar.showActionsOnly(INFORMATION, DELETE, EDIT, CUSTOMIZE, APPLY);
-        mBottomActionBar.setActionClickListener(APPLY, unused -> onSetWallpaperClicked(null));
+        mBottomActionBar.setActionClickListener(APPLY,
+                unused -> onSetWallpaperClicked(null, mWallpaper));
         mBottomActionBar.bindBottomSheetContentWithAction(
                 new WallpaperInfoContent(getContext()), INFORMATION);
 
