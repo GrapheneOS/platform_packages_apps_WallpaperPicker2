@@ -81,7 +81,7 @@
 
     <!-- Label referring to both the home screen and the lock screen of the
          device. [CHAR LIMIT=100] -->
-    <string name="set_wallpaper_both_destination">Home and lock screen</string>
+    <string name="set_wallpaper_both_destination">Home and lock screens</string>
 
     <!-- Label describing a live wallpaper whose responsibility is to display a different wallpaper
          on a periodic basis (i.e., in a daily rotation). [CHAR LIMIT=80] -->
