@@ -20,6 +20,7 @@ import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -579,12 +581,15 @@ public class BottomActionBar extends FrameLayout {
         ViewGroup actionTabs = findViewById(R.id.action_tabs);
         actionTabs.setBackgroundColor(
                 ResourceUtils.getColorAttr(context, android.R.attr.colorBackground));
+        ColorStateList colorStateList = context.getColorStateList(
+                R.color.bottom_action_button_color_tint);
         for (int i = 0; i < actionTabs.getChildCount(); i++) {
             View v = actionTabs.getChildAt(i);
             if (v instanceof ImageView) {
                 v.setBackground(context.getDrawable(R.drawable.bottom_action_button_background));
-                ImageViewCompat.setImageTintList((ImageView) v,
-                        context.getColorStateList(R.color.bottom_action_button_color_tint));
+                ImageViewCompat.setImageTintList((ImageView) v, colorStateList);
+            } else if (v instanceof ProgressBar) {
+                ((ProgressBar) v).setIndeterminateTintList(colorStateList);
             }
         }
     }
