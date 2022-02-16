@@ -25,8 +25,6 @@ import android.os.Build.VERSION_CODES;
 import android.view.Display;
 import android.view.View;
 
-import com.android.systemui.shared.system.WallpaperManagerCompat;
-
 /**
  * Static utility methods for wallpaper cropping operations.
  */
@@ -341,7 +339,11 @@ public final class WallpaperCropUtils {
      * Get the system wallpaper's maximum scale value.
      */
     public static float getSystemWallpaperMaximumScale(Context context) {
-        return WallpaperManagerCompat.getWallpaperZoomOutMaxScale(context);
+        return context.getResources()
+                .getFloat(Resources.getSystem().getIdentifier(
+                        /* name= */ "config_wallpaperMaxScale",
+                        /* defType= */ "dimen",
+                        /* defPackage= */ "android"));
     }
 
     /**
