@@ -303,24 +303,6 @@
          [CHAR_LIMIT=25] -->
     <string name="tab_effects">Effects</string>
 
-    <!-- Label for the 'wallpaper effects' text of the view pager in wallpaper preview activity.
-         [CHAR_LIMIT=25] -->
-    <string name="wallpaper_effects_title">Wallpaper effects</string>
-
-    <!-- Label for the 'wallpaper effects subtitle' text of the view pager in wallpaper preview activity. -->
-    <string name="wallpaper_effects_subtitle">Enhance your wallpaper with beautiful machine learned
-        effects.</string>
-
-    <!-- Label for the 'cinematic effects toogle' text of the view pager in wallpaper preview activity. -->
-    <string name="cinematic_effects_toogle">Enable Cinematic Effect</string>
-
-    <!-- Label for the 'effect error dialog title' tab of view pager in wallpaper preview activity.
-     [CHAR_LIMIT=25] -->
-    <string name="effect_error_dialog_title">Oh no!</string>
-
-    <!-- Label for the 'effect error dialog body' tab of view pager in wallpaper preview activity. -->
-    <string name="effect_error_dialog_body">We were unable to apply cinematic effects.\nTry with another photo.</string>
-
     <!-- Generic label for the my photos action [CHAR_LIMIT=20] -->
     <string name="my_photos">My Photos</string>
 
