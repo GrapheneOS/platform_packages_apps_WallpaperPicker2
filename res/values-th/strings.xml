@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"ตั้งเปิดวอลเปเปอร์"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"หน้าจอหลัก"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"หน้าจอล็อก"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"หน้าจอหลักและหน้าจอล็อก"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"หน้าจอหลักและหน้าจอล็อก"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"หมุนภาพวอลเปเปอร์"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"<xliff:g id="APP_NAME">%1$s</xliff:g> ต้องได้รับสิทธิ์เข้าถึงที่เก็บข้อมูลของอุปกรณ์จึงจะแสดงวอลเปเปอร์ปัจจุบันที่นี่ได้"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"วอลเปเปอร์ต้องได้สิทธิ์เข้าถึงพื้นที่เก็บข้อมูลของอุปกรณ์จึงจะแสดงวอลเปเปอร์ปัจจุบันที่นี่ได้\n\nหากต้องการเปลี่ยนการตั้งค่านี้ ให้ไปที่พื้นที่สิทธิ์ของข้อมูลแอปของวอลเปเปอร์"</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"ข้อมูล"</string>
     <string name="tab_customize" msgid="2533745409174959960">"ปรับแต่ง"</string>
     <string name="tab_effects" msgid="3213606157589233901">"เอฟเฟกต์"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"เอฟเฟกต์วอลเปเปอร์"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"ปรับปรุงวอลเปเปอร์ด้วยเอฟเฟกต์แมชชีนเลิร์นนิงสวยๆ"</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"เปิดใช้เอฟเฟกต์ภาพยนตร์"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"ขออภัย"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"เราใช้เอฟเฟกต์ภาพยนตร์ไม่ได้\nโปรดลองใช้กับรูปภาพอื่น"</string>
     <string name="my_photos" msgid="8613021349284084982">"รูปภาพของฉัน"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"การตั้งค่า…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"ลบ"</string>

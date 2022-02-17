@@ -35,7 +35,8 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"വാൾപേപ്പർ ആയി സജ്ജീകരിക്കുക"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"ഹോം സ്‌ക്രീൻ"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"ലോക്ക് സ്‌ക്രീൻ"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"ഹോം സ്ക്രീനും ലോക്ക് സ്ക്രീനും"</string>
+    <!-- no translation found for set_wallpaper_both_destination (2536004558738350775) -->
+    <skip />
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"ചിത്ര വാൾപേപ്പർ തിരിക്കുന്നു"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"നിലവിലെ വാൾപേപ്പർ ഇവിടെ പ്രദർശിപ്പിക്കുന്നതിന്, <xliff:g id="APP_NAME">%1$s</xliff:g> എന്നതിന് നിങ്ങളുടെ ഉപകരണത്തിന്‍റെ സ്‌റ്റോറേജിലേക്ക് ആക്‌സസ് ആവശ്യമാണ്."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"നിലവിലെ വാൾപേപ്പർ ഇവിടെ പ്രദർശിപ്പിക്കുന്നതിന്, Wallpapers-ന് നിങ്ങളുടെ ഉപകരണത്തിന്റെ സ്റ്റോറേജിലേക്ക് ആക്സസ് ആവശ്യമാണ്.\n\nഈ ക്രമീകരണം മാറ്റുന്നതിന്, Wallpapers ആപ്പ് വിവരങ്ങളുടെ അനുമതികളിലേക്ക് പോവുക."</string>
@@ -81,11 +82,6 @@
     <string name="tab_info" msgid="818614080690111416">"വിവരം"</string>
     <string name="tab_customize" msgid="2533745409174959960">"ഇഷ്‌ടാനുസൃതമാക്കുക"</string>
     <string name="tab_effects" msgid="3213606157589233901">"ഇഫക്റ്റുകൾ"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"വാൾപേപ്പർ ഇഫക്റ്റുകൾ"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"മനോഹരമായ, മെഷീൻ ലേണിംഗ് ഉപയോഗിച്ചുള്ള ഇഫക്റ്റുകൾ കൊണ്ട് വാൾപേപ്പർ മെച്ചപ്പെടുത്തുക."</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"സിനിമാറ്റിക് ഇഫക്റ്റ് പ്രവർത്തനക്ഷമമാക്കുക"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"ക്ഷമിക്കണം!"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"ഞങ്ങൾക്ക് സിനിമാറ്റിക് ഇഫക്റ്റുകൾ പ്രയോഗിക്കാൻ കഴിഞ്ഞില്ല.\nമറ്റൊരു ഫോട്ടോ ഉപയോഗിച്ച് ശ്രമിക്കുക."</string>
     <string name="my_photos" msgid="8613021349284084982">"എന്റെ ഫോട്ടോകൾ"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"ക്രമീകരണം…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"ഇല്ലാതാക്കുക"</string>

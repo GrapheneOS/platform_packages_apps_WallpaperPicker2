@@ -35,7 +35,8 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Постави тапет"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Почетен екран"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Заклучен екран"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Почетен и заклучен екран"</string>
+    <!-- no translation found for set_wallpaper_both_destination (2536004558738350775) -->
+    <skip />
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Тапет со ротирачки слики"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"За да го прикаже тековниот тапет тука, <xliff:g id="APP_NAME">%1$s</xliff:g> бара пристап до меморијата на уредот."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"За да го прикаже тековниот тапет тука, Wallpapers бара пристап до меморијата на уредот.\n\nЗа да ја промените поставкава, одете во областа „Дозволи“ во информациите за апликацијата Wallpapers."</string>
@@ -81,11 +82,6 @@
     <string name="tab_info" msgid="818614080690111416">"Информации"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Приспособување"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Ефекти"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"Ефекти на тапет"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"Подобрете го тапетот со прекрасни ефекти научени машински."</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"Овозможете кинематографски ефект"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"О не!"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"Не можевме да примениме кинематографски ефекти.\nПробајте со друга фотографија."</string>
     <string name="my_photos" msgid="8613021349284084982">"Мои фотографии"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Поставки…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Избриши"</string>
