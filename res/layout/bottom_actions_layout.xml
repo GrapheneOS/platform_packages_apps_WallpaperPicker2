@@ -130,7 +130,7 @@
             android:layout_height="@dimen/bottom_action_button_height"
             android:src="@drawable/ic_effect_black_24dp"
             android:contentDescription="@string/tab_effects"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/action_download"
