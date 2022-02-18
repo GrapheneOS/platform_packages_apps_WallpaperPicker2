@@ -44,7 +44,7 @@
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Dnevna pozadinska slika"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Dodirnite da uključite"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Pozadinska slika će se automatski mijenjati svakodnevno. Da završite postavljanje, na sljedećem ekranu dodirnite &lt;strong&gt;Postavi pozadinsku sliku&lt;/strong&gt;."</string>
-    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Preuzimaj nove pozadinske slike samo putem WiFi mreže"</string>
+    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Preuzimaj nove pozadinske slike samo putem WiFi-ja"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Nastavi"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Preuzimanje prve pozadinske slike…"</string>
     <string name="start_rotation_error_message" msgid="3053799836719618972">"Nije moguće preuzeti prvu pozadinsku sliku. Provjerite postavke mreže i pokušajte ponovo."</string>
