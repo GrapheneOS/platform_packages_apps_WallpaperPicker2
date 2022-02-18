@@ -46,8 +46,8 @@
             app:scrimVisibleHeightTrigger="@dimen/settingslib_scrim_visible_height_trigger"
             app:statusBarScrim="@null"
             app:titleCollapseMode="fade"
-            app:collapsedTitleTextAppearance="@style/CollapsingToolbarTitle.Collapsed"
-            app:expandedTitleTextAppearance="@style/CollapsingToolbarTitle.Expanded"
+            app:collapsedTitleTextAppearance="@style/CollapsingToolbar.Collapsed"
+            app:expandedTitleTextAppearance="@style/CollapsingToolbar.Expanded"
             app:expandedTitleMarginEnd="@dimen/expanded_title_margin_end"
             app:toolbarId="@id/action_bar">
 

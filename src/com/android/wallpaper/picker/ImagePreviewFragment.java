@@ -52,6 +52,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -213,6 +214,11 @@ public class ImagePreviewFragment extends PreviewFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    public SubsamplingScaleImageView getFullResImageView() {
+        return mFullResImageView;
     }
 
     protected void onWallpaperColorsChanged(@Nullable WallpaperColors colors) {

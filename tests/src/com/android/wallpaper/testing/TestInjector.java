@@ -139,7 +139,17 @@ public class TestInjector implements Injector {
 
     @Override
     public WallpaperStatusChecker getWallpaperStatusChecker() {
-        return null;
+        return new WallpaperStatusChecker() {
+            @Override
+            public boolean isHomeStaticWallpaperSet(Context context) {
+                return true;
+            }
+
+            @Override
+            public boolean isLockWallpaperSet(Context context) {
+                return true;
+            }
+        };
     }
 
     @Override
@@ -262,7 +272,7 @@ public class TestInjector implements Injector {
 
     @Override
     public DisplayUtils getDisplayUtils(Context context) {
-        return null;
+        return new DisplayUtils(context);
     }
 
     @Nullable

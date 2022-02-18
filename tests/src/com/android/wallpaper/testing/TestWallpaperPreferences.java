@@ -100,6 +100,7 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
         mLastDailyWallpaperRotationStatusTimestamp = 0;
         mLastSyncTimestamp = 0;
         mPendingWallpaperSetStatus = WALLPAPER_SET_NOT_PENDING;
+        mWallStoredColor = new HashMap<>();
     }
 
     @Override
@@ -538,6 +539,9 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
 
     @Override
     public WallpaperColors getWallpaperColors(String storedWallpaperId) {
+        if (mWallStoredColor == null || mWallStoredColor.isEmpty()) {
+            return null;
+        }
         String value = mWallStoredColor.get(storedWallpaperId);
         if (value.equals("")) {
             return null;
