@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Set wallpaper on"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Home screen"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Lock screen"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Home and lock screen"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Home and lock screens"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Rotating Image Wallpaper"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"To display the current wallpaper here, <xliff:g id="APP_NAME">%1$s</xliff:g> needs access to your device\'s storage."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"To display the current wallpaper here, Wallpapers needs access to your device’s storage.\n\nTo change this setting, go to the Permissions area of the Wallpapers’ app info."</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"Info"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Customise"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Effects"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"Wallpaper effects"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"Enhance your wallpaper with beautiful machine-learned effects."</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"Enable cinematic effect"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"Oh no!"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"We were unable to apply cinematic effects.\nTry with another photo."</string>
     <string name="my_photos" msgid="8613021349284084982">"My Photos"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Settings…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Delete"</string>

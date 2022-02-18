@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"यहाँ वालपेपर सेट गर्नुहोस्"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"गृह स्क्रिन"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"लक स्क्रिन"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"होम र लक स्क्रिन"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"होम र लक स्क्रिन"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"छवि परिवर्तन हुने वालपेपर"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"यहाँ हालको वालपेपर देखाउन <xliff:g id="APP_NAME">%1$s</xliff:g> लाई तपाईंको डिभाइसको भण्डारणमाथिको पहुँच अनिवार्य हुन्छ।"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"यहाँ हालैको वालपेपर देखाउन वालपेपरहरूलाई तपाईंको डिभाइसको भण्डारणमाथिको पहुँच अनिवार्य हुन्छ।\n\nयो सेटिङ बदल्न वालपेपरहरूको एपसम्बन्धी जानकारीमा रहेको अनुमति क्षेत्रमा जानुहोस्।"</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"जानकारी"</string>
     <string name="tab_customize" msgid="2533745409174959960">"आफू अनुकूल पार्नुहोस्"</string>
     <string name="tab_effects" msgid="3213606157589233901">"इफेक्टहरू"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"वालपेपर इफेक्टहरू"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"सुन्दर मेसिन लर्निङ इफेक्टहरू लागू गरेर आफ्नो वालपेपर परिष्कार गर्नुहोस्।"</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"सिनेम्याटिक इफेक्ट अन गर्नुहोस्"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"हत्तेरिका!"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"हामीले सिनेम्याटिक इफेक्टहरू लागू गर्न सकेनौँ।\nअर्को फोटोमा यी इफेक्टहरू लागू गरेर हेर्नुहोस्।"</string>
     <string name="my_photos" msgid="8613021349284084982">"मेरा फोटोहरू"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"सेटिङ…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"मेट्नुहोस्"</string>

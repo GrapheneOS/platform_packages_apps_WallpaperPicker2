@@ -35,7 +35,8 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"壁紙の設定"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"ホーム画面"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"ロック画面"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"ホーム画面とロック画面"</string>
+    <!-- no translation found for set_wallpaper_both_destination (2536004558738350775) -->
+    <skip />
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"画像が切り替わる壁紙"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"現在の壁紙をここに表示するには、<xliff:g id="APP_NAME">%1$s</xliff:g>にデバイスのストレージへのアクセスを許可する必要があります。"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"現在の壁紙をここに表示するには、壁紙にデバイスのストレージへのアクセス権限を許可する必要があります。\n\nこの設定を変更するには、壁紙のアプリ情報の [権限] に移動してください。"</string>
@@ -81,11 +82,6 @@
     <string name="tab_info" msgid="818614080690111416">"情報"</string>
     <string name="tab_customize" msgid="2533745409174959960">"カスタマイズ"</string>
     <string name="tab_effects" msgid="3213606157589233901">"効果"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"壁紙への効果"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"機械学習による美しい効果を壁紙に適用します。"</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"映画のようなエフェクトを有効にする"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"利用できません"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"映画のようなエフェクトを有効にできませんでした。\n別の写真でお試しください。"</string>
     <string name="my_photos" msgid="8613021349284084982">"マイ フォト"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"設定…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"削除"</string>

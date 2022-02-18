@@ -35,7 +35,8 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"နောက်ခံ သတ်မှတ်ရန်"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"ပင်မစာမျက်နှာ"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"လော့ခ်ချထားချိန် မျက်နှာပြင်"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"ပင်မစာမျက်နှာနှင့် လော့ခ်မျက်နှာပြင်"</string>
+    <!-- no translation found for set_wallpaper_both_destination (2536004558738350775) -->
+    <skip />
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"နောက်ခံပုံကို လှည့်နေသည်"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"ဤနေရာတွင် လက်ရှိနောက်ခံကို ပြသရန်အတွက် <xliff:g id="APP_NAME">%1$s</xliff:g> သည် သင့်စက်၏ သိုလှောင်ခန်းကို အသုံးပြုခွင့်လိုအပ်သည်။"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"ဤနေရာတွင် လက်ရှိနောက်ခံကို ပြသရန်အတွက် Wallpapers သည် သင့်စက်၏ သိုလှောင်ခန်းကို အသုံးပြုခွင့်လိုအပ်သည်။\n\nဤဆက်တင်ကို ပြောင်းရန် Wallpapers ၏ အက်ပ်အချက်အလက်များထဲရှိ \'ခွင့်ပြုချက်များ\' ဧရိယာသို့ သွားပါ။"</string>
@@ -81,11 +82,6 @@
     <string name="tab_info" msgid="818614080690111416">"အချက်အလက်"</string>
     <string name="tab_customize" msgid="2533745409174959960">"စိတ်ကြိုက်ပြုလုပ်ရန်"</string>
     <string name="tab_effects" msgid="3213606157589233901">"အထူးပြုလုပ်ချက်များ"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"နောက်ခံ အထူးပြုလုပ်ချက်"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"လှပသော စက်လေ့လာသင်ယူမှု အထူးပြုလုပ်ချက်များဖြင့် သင်၏နောက်ခံကို အရည်အသွေးမြှင့်တင်ပါ။"</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"ရုပ်ရှင်ရသ ရိုက်ကွက် အထူးပြုလုပ်ချက်ကိုဖွင့်ရန်"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"ဝမ်းနည်းပါသည်။"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"ရုပ်ရှင်ရသ ရိုက်ကွက် အထူးပြုလုပ်ချက်များကို အသုံးပြု၍မရပါ။\nအခြားဓာတ်ပုံဖြင့် စမ်းကြည့်ပါ။"</string>
     <string name="my_photos" msgid="8613021349284084982">"ကျွန်ုပ်၏ဓာတ်ပုံများ"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"ဆက်တင်များ…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"ဖျက်ရန်"</string>
