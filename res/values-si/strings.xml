@@ -35,7 +35,8 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"වෝල්පේපරය සැකසීම ක්‍රියාත්මකයි"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"මුල් පිටු තිරය"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"අගුලු තිරය"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"මුල් පිටු සහ අගුලු තිරය"</string>
+    <!-- no translation found for set_wallpaper_both_destination (2536004558738350775) -->
+    <skip />
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"කැරකෙන රූප වෝල්පේපරය"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"මෙහි වත්මන් වෝල්පේපරය සංදර්ශනය කිරීමට, <xliff:g id="APP_NAME">%1$s</xliff:g> හට ඔබේ උපාංගයේ ගබඩාව වෙත ප්‍රවේශය අවශ්‍යයි."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"මෙහි වත්මන් වෝල්පේපරය පෙන්වීමට, වෝල්පේපර වෙත ඔබගේ උපාංග ගබඩාව වෙත ප්‍රවේශය අවශ්‍යයි.\n\nමෙම සැකසීම වෙනස් කිරීමට, වෝල්පේපර යෙදුම් තොරතුරු වල අවසර වෙත යන්න."</string>
@@ -81,11 +82,6 @@
     <string name="tab_info" msgid="818614080690111416">"තතු"</string>
     <string name="tab_customize" msgid="2533745409174959960">"අභිරුචිකරණය කරන්න"</string>
     <string name="tab_effects" msgid="3213606157589233901">"ප්‍රයෝග"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"වෝල්පේපර ප්‍රයෝග"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"අලංකාර යන්ත්‍ර ඉගෙනුම් ප්‍රයෝග සමඟ ඔබගේ වෝල්පේපරය වැඩි දියුණු කරන්න."</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"සිනමා ප්‍රයෝගය සබල කරන්න"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"අනේ අපොයි!"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"අපට සිනමා ප්‍රයෝග යෙදීමට නොහැකි විය.\nවෙනත් ඡායාරූපයක් සමඟ උත්සාහ කරන්න."</string>
     <string name="my_photos" msgid="8613021349284084982">"මගේ ඡායාරූප"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"සැකසීම්…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"මකන්න"</string>

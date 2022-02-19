@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"वॉलपेपर सेट करा"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"होम स्क्रीन"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"लॉक स्क्रीन"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"होम आणि लॉक स्क्रीन"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"होम आणि लॉक स्‍क्रीन"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"फिरती इमेज वॉलपेपर"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"येथे सध्याचा वॉलपेपर दाखवण्यासाठी, <xliff:g id="APP_NAME">%1$s</xliff:g> ला तुमच्या डिव्हाइसच्या स्टोरेजचा ॲक्सेस हवा आहे."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"येथे सध्याचा वॉलपेपर दाखवण्यासाठी, वॉलपेपरला तुमच्या डिव्हाइसच्या स्टोरेजचा ॲक्सेस हवा आहे.\n\nहे सेटिंग बदलण्यासाठी, वॉलपेपरच्या ॲप माहितीच्या परवानग्या भागावर जा."</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"माहिती"</string>
     <string name="tab_customize" msgid="2533745409174959960">"कस्टमाइझ करा"</string>
     <string name="tab_effects" msgid="3213606157589233901">"इफेक्ट"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"वॉलपेपर इफेक्ट"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"तुमचा वॉलपेपर सुंदर मशीन लर्न इफेक्ट वापरून वर्धित करा."</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"सिनेमॅटिक इफेक्ट सुरू करा"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"अरेरे नाही!"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"आम्हाला सिनेमॅटिक इफेक्ट लागू करता आला नाही.\nदुसरा फोटो वापरून पहा."</string>
     <string name="my_photos" msgid="8613021349284084982">"माझे फोटो"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"सेटिंग्ज…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"हटवा"</string>

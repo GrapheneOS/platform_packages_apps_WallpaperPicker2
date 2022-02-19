@@ -35,7 +35,8 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Nastavení tapety"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Plocha"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Obrazovka uzamčení"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Plocha a obrazovka uzamčení"</string>
+    <!-- no translation found for set_wallpaper_both_destination (2536004558738350775) -->
+    <skip />
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Střídající se obrázková tapeta"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Chcete-li zde zobrazit aktuální tapetu, aplikace <xliff:g id="APP_NAME">%1$s</xliff:g> potřebuje přístup k úložišti v zařízení."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Aby aplikace Tapety mohla zobrazit aktuální tapetu, potřebuje přístup k úložišti v zařízení.\n\nChcete-li toto nastavení změnit, v informacích o aplikaci Tapety přejděte do sekce Oprávnění."</string>
@@ -80,20 +81,8 @@
     <string name="preview" msgid="1774602101743861071">"Náhled"</string>
     <string name="tab_info" msgid="818614080690111416">"Informace"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Přizpůsobení"</string>
-    <!-- no translation found for tab_effects (3213606157589233901) -->
-    <skip />
-    <!-- no translation found for wallpaper_effects_title (5110174050421199311) -->
-    <skip />
-    <!-- no translation found for wallpaper_effects_subtitle (3361423448179458015) -->
-    <skip />
-    <!-- no translation found for cinematic_effects_toogle (5696400014676763458) -->
-    <skip />
-    <!-- no translation found for effect_error_dialog_title (4071975649967210990) -->
-    <skip />
-    <!-- no translation found for effect_error_dialog_body (1975016108816493359) -->
-    <skip />
-    <!-- no translation found for my_photos (8613021349284084982) -->
-    <skip />
+    <string name="tab_effects" msgid="3213606157589233901">"Efekty"</string>
+    <string name="my_photos" msgid="8613021349284084982">"Moje fotky"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Nastavení…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Smazat"</string>
     <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Smazat tapetu z telefonu?"</string>
@@ -108,8 +97,7 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"Tapeta"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Náhled prezentace"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Sbírka neexistuje"</string>
-    <!-- no translation found for cancel (4970902691067201584) -->
-    <skip />
+    <string name="cancel" msgid="4970902691067201584">"Zrušit"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"Skrýt náhled rozhraní"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"V náhledu je skryto uživatelské rozhraní. Zobrazíte ho dvojitým klepnutím."</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"Zobrazit náhled rozhraní"</string>
