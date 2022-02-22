@@ -35,8 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Postavljanje pozadine"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Početni zaslon"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Zaključan zaslon"</string>
-    <!-- no translation found for set_wallpaper_both_destination (2536004558738350775) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Početni i zaključani zaslon"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Pozadina s izmjenom slika"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Da bi se ovdje prikazala trenutačna pozadina, <xliff:g id="APP_NAME">%1$s</xliff:g> treba pristup pohrani vašeg uređaja."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Da bi se ovdje prikazala trenutačna pozadina, Pozadine moraju imati pristup pohrani uređaja.\n\nDa biste promijenili tu postavku, otvorite područje Dopuštenja u informacijama o aplikaciji Pozadine."</string>

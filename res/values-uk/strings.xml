@@ -35,8 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Установити як фоновий малюнок"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Головний екран"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Заблокований екран"</string>
-    <!-- no translation found for set_wallpaper_both_destination (2536004558738350775) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Головний і заблокований екрани"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Чергування фонових малюнків"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Щоб показувати тут поточний фоновий малюнок, потрібно надати додатку <xliff:g id="APP_NAME">%1$s</xliff:g> доступ до пам’яті пристрою."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Щоб показувати тут поточний фоновий малюнок, потрібно надати додатку Фонові малюнки доступ до пам’яті пристрою.\n\nЩоб змінити це налаштування, перейдіть у розділ \"Дозволи\" на сторінці інформації про додаток."</string>
