@@ -35,8 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Դնել պաստառ՝"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Հիմնական էկրան"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Կողպէկրան"</string>
-    <!-- no translation found for set_wallpaper_both_destination (2536004558738350775) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Հիմնական էկրան և կողպէկրան"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Փոխվող պատկերներով պաստառ"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Ընթացիկ պաստառն այստեղ տեսնելու համար թույլատրեք «<xliff:g id="APP_NAME">%1$s</xliff:g>» հավելվածին օգտագործել սարքի հիշողությունը։"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Ընթացիկ պաստառն այստեղ տեսնելու համար թույլատրեք «Պաստառներ» հավելվածին օգտագործել սարքի հիշողությունը:\n\nԱյս կարգավորումը փոխելու համար անցեք Կարգավորումներ &gt; Հավելվածներ &gt; Պաստառներ &gt; Թույլտվություններ։"</string>

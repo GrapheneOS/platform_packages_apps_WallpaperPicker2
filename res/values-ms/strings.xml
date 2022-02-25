@@ -35,8 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Tetapkan kertas dinding"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Skrin utama"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Kunci skrin"</string>
-    <!-- no translation found for set_wallpaper_both_destination (2536004558738350775) -->
-    <skip />
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Skrin utama dan skrin kunci"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Menggilirkan Kertas Dinding Imej"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Untuk memaparkan kertas dinding semasa di sini, <xliff:g id="APP_NAME">%1$s</xliff:g> memerlukan akses kepada storan peranti anda."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Untuk memaparkan kertas dinding semasa di sini, Kertas Dinding memerlukan akses kepada storan peranti anda.\n\nUntuk menukar tetapan ini, pergi ke kawasan Kebenaran bagi maklumat apl Kertas Dinding."</string>
