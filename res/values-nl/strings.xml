@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Achtergrond instellen op"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Startscherm"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Vergrendelscherm"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Start- en vergrendelscherm"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Start- en vergrendelscherm"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Achtergrond met roulerende afbeelding"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"<xliff:g id="APP_NAME">%1$s</xliff:g> heeft toegang nodig tot de opslag van je apparaat om de huidige achtergrond hier weer te geven."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Achtergronden heeft toegang nodig tot de opslag van je apparaat om de huidige achtergrond hier weer te geven.\n\nAls je deze instelling wilt wijzigen, ga je naar het gedeelte Rechten in de app-informatie van Achtergronden."</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"Informatie"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Aanpassen"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Effecten"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"Achtergrondeffecten"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"Breid je achtergrond uit met prachtige effecten die via machine learning zijn gemaakt."</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"Cinematisch effect aanzetten"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"O jee."</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"We kunnen geen cinematische effecten toepassen.\nProbeer het met een andere foto."</string>
     <string name="my_photos" msgid="8613021349284084982">"Mijn foto\'s"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Instellingen…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Verwijderen"</string>
