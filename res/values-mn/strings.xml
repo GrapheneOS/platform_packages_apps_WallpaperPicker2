@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Дараахад дэлгэцийн зураг тохируулах"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Үндсэн нүүр"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Түгжигдсэн дэлгэц"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Үндсэн нүүр болон түгжигдсэн дэлгэц"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Үндсэн нүүр болон түгжигдсэн дэлгэц"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Дэлгэцийн зургийг эргүүлж байна"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Одоогийн дэлгэцийн зургийг энд харуулахын тулд <xliff:g id="APP_NAME">%1$s</xliff:g> таны төхөөрөмжийн санд хандах шаардлагатай байна."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Одоогийн дэлгэцийн зургийг энд харуулахын тулд Дэлгэцийн зураг таны төхөөрөмжийн санд хандах шаардлагатай байна.\n\nЭнэ тохиргоог өөрчлөх бол Дэлгэцийн зургийн аппын мэдээллийн Зөвшөөрөл хэсэгт очно уу."</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"Мэдээлэл"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Өөрчлөх"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Эффект"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"Дэлгэцийн зургийн эффект"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"Машин сургалтын гайхалтай эффектүүдээр дэлгэцийн зургаа сайжруулаарай."</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"Кино зургийн эффектийг идэвхжүүлэх"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"Өө!"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"Бид кино зургийн эффектийг ашиглаж чадсангүй.\nӨөр зураг оруулж үзнэ үү."</string>
     <string name="my_photos" msgid="8613021349284084982">"Миний Зураг"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Тохиргоо…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Устгах"</string>

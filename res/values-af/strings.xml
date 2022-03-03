@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Stel as muurpapier"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Tuisskerm"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Sluitskerm"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Tuisskerm en sluitskerm"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Tuisskerm en sluitskerm"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Muurpapier met afwisselende prent"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"<xliff:g id="APP_NAME">%1$s</xliff:g> moet toegang tot jou toestel se berging hê om die huidige muurpapier hier te wys."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Muurpapiere moet toegang tot jou toestel se berging hê om die huidige muurpapier hier te wys.\n\nGaan na die Toestemmings-gedeelte van Muurpapiere se programinligting om hierdie instelling te verander."</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"Inligting"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Pasmaak"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Effekte"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"Muurpapier-effekte"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"Verbeter jou muurpapier met pragtige masjiengeleerde effekte."</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"Aktiveer kinomatiese effek"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"Ag nee!"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"Ons kan nie kinomatiese effekte toepas nie.\nProbeer met \'n ander foto."</string>
     <string name="my_photos" msgid="8613021349284084982">"My foto\'s"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Instellings …"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Vee uit"</string>

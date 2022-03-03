@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Fon rasmi oʻrnatiladigan joyni tanlang"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Bosh ekran"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Ekran qulfi"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Bosh ekran va ekran qulfi"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Bosh ekran va ekran qulflari"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Fon rasmlarini aylantirish"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Bu yerda joriy fon rasmini chiqarish uchun <xliff:g id="APP_NAME">%1$s</xliff:g> xizmatiga qurilmangiz xotirasiga kirishi uchun ruxsat lozim."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Bu yerda joriy fon rasmini chiqarish uchun Fon rasmlari xizmatiga qurilmaning xotirasiga kirishi uchun ruxsat zarur.\n\nBu parametrni o‘zgartirish uchun Fon rasmlari ilova ma’lumotlaridagi Ruxsatlar sahifasiga kiring."</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"Axborot"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Sozlash"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Effektlar"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"Fon rasmi effektlari"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"Fon rasmlarini chiroyli kompyuter oʻrgangan effektlar bilan boyiting."</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"Kino effektni yoqing"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"Ana xolos!"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"Biz kino effektidan foydalana olmaymiz.\nBoshqa rasmni sinab koʻring."</string>
     <string name="my_photos" msgid="8613021349284084982">"Mening suratlarim"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Sozlamalar…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Oʻchirish"</string>

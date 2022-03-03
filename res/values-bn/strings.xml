@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"ওয়ালপেপার সেট করুন"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"হোম স্ক্রিন"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"লক স্ক্রিন"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"হোম ও লক স্ক্রিন"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"হোম ও লক স্ক্রিন"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"নির্দিষ্ট সময় অন্তর একই ছবি দেখানোর ওয়ালপেপার"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"বর্তমানে বেছে নেওয়া ওয়ালপেপারটি এখানে ডিসপ্লে করার জন্য <xliff:g id="APP_NAME">%1$s</xliff:g>-কে আপনার ডিভাইসের স্টোরেজে অ্যাক্সেস দিতে হবে।"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"বর্তমান ওয়ালপেপারটি এখানে দেখাতে হলে ওয়ালপেপার অ্যাপটিকে আপনার ডিভাইসের স্টোরেজে অ্যাক্সেস দিতে হবে।\n\nএই সেটিংটি পরিবর্তন করতে ওয়ালপেপার অ্যাপের তথ্যের পৃষ্ঠায় \'অনুমতি\' বিভাগে যান।"</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"তথ্য"</string>
     <string name="tab_customize" msgid="2533745409174959960">"কাস্টমাইজ করুন"</string>
     <string name="tab_effects" msgid="3213606157589233901">"এফেক্ট"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"ওয়ালপেপার এফেক্ট"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"সুন্দর মেশিন লার্নড এফেক্ট ব্যবহার করে আপনার ওয়ালপেপার আরও সুন্দর করুন।"</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"সিনেম্যাটিক এফেক্ট চালু করুন"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"ওহো না!"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"আমরা সিনেম্যাটিক এফেক্ট প্রয়োগ করতে পারিনি।\nঅন্য ছবিতে চেষ্টা করে দেখুন।"</string>
     <string name="my_photos" msgid="8613021349284084982">"আমার ফটো"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"সেটিংস…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"মুছে দিন"</string>
