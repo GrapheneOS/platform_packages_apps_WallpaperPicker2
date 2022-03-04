@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"வால்பேப்பரை அமையுங்கள்"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"முகப்புத் திரை"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"பூட்டுத் திரை"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"முகப்புத் திரையும் பூட்டுத் திரையும்"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"முகப்புத் திரைகளும் பூட்டுத் திரைகளும்"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"சுழலும் பட வால்பேப்பர்"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"இந்த வால்பேப்பரை இங்கே காட்ட, <xliff:g id="APP_NAME">%1$s</xliff:g> பயன்பாட்டிற்கு உங்கள் சாதனத்தின் சேமிப்பகத்திற்கான அணுகல் தேவை."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"இந்த வால்பேப்பரை இங்கே காட்ட, வால்பேப்பர்களுக்கு உங்கள் சாதனத்தின் சேமிப்பகத்திற்கான அணுகல் தேவை.\n\nஇந்த அமைப்பை மாற்ற, வால்பேப்பர்களின் ஆப்ஸ் தகவல் பக்கத்தில் உள்ள அனுமதிகள் பகுதிக்குச் செல்லவும்."</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"தகவல்"</string>
     <string name="tab_customize" msgid="2533745409174959960">"பிரத்தியேகமாக்கு"</string>
     <string name="tab_effects" msgid="3213606157589233901">"எஃபெக்ட்டுகள்"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"வால்பேப்பர் எஃபெக்ட்டுகள்"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"அழகான மெஷின் லேர்ன்டு எஃபெக்ட்டுகளைப் பயன்படுத்தி உங்கள் வால்பேப்பரை மேம்படுத்தவும்."</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"சினிமாட்டிக் எஃபெக்ட்டை இயக்குதல்"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"அடடா!"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"சினிமாட்டிக் எஃபெக்ட்டுகளைப் பயன்படுத்த முடியவில்லை.\nவேறொரு புகைப்படத்தில் பயன்படுத்திப் பார்க்கவும்."</string>
     <string name="my_photos" msgid="8613021349284084982">"எனது புகைப்படங்கள்"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"அமைப்புகள்…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"நீக்கு"</string>

@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Divar kağızını aktiv edin"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Əsas ekran"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Ekran kilidi"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Əsas səhifə və kilid ekranı"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Əsas səhifə və kilid ekranları"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Firlanan Şəkilli Divar Kağızları"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Burada cari divar kağızını göstərmək üçün, <xliff:g id="APP_NAME">%1$s</xliff:g> cihaz yaddaşına giriş tələb edir."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Cari divar kağızını burada göstərmək üçün Divarkağızı cihaz yaddaşına giriş tələb edir.\n\nBu ayarı dəyişmək üçün Divarkağızı tətbiqində İcazələr bölməsinə daxil olun."</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"Məlumat"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Fərdiləşdirin"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Effektlər"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"Divar kağızı effektləri"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"Divar kağızınızı gözəl avtomatik effektlərlə təkmilləşdirin."</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"Sinema Effektini aktiv edin"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"Ola bilməz!"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"Sinema effektlərini tətbiq edə bilmədik.\nBaşqa foto ilə cəhd edin."</string>
     <string name="my_photos" msgid="8613021349284084982">"Fotolarım"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Ayarlar…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Silin"</string>

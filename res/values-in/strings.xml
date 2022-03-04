@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Setel wallpaper"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Layar utama"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Layar kunci"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Layar utama dan layar kunci"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Layar utama dan layar kunci"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Memutar Wallpaper Gambar"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Untuk menampilkan wallpaper yang dipilih di sini, <xliff:g id="APP_NAME">%1$s</xliff:g> perlu akses ke penyimpanan perangkat."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Untuk menampilkan wallpaper yang saat ini digunakan di sini, Wallpaper memerlukan akses ke penyimpanan perangkat.\n\nUntuk mengubah setelan ini, buka bagian Izin pada info aplikasi Wallpaper."</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"Info"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Sesuaikan"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Efek"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"Efek wallpaper"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"Tingkatkan wallpaper Anda dengan efek machine learning yang indah."</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"Aktifkan Efek Sinematik"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"Maaf."</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"Kami tidak dapat menerapkan efek sinematik.\nCoba dengan foto lain."</string>
     <string name="my_photos" msgid="8613021349284084982">"Foto Saya"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Setelan…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Hapus"</string>

@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Definir como plano de fundo"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Tela inicial"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Tela de bloqueio"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Tela inicial e de bloqueio"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Tela inicial e de bloqueio"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Plano de fundo de imagens rotativo"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Para exibir o plano de fundo atual aqui, o app <xliff:g id="APP_NAME">%1$s</xliff:g> precisa acessar o armazenamento do dispositivo."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Para exibir o plano de fundo atual aqui, o Planos de fundo precisa acessar o armazenamento do dispositivo.\n\nPara alterar essa configuração, acesse a área \"Permissões\" das informações do app Planos de fundo."</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"Informações"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Personalizar"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Efeitos"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"Efeitos de plano de fundo"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"Aprimore seu plano de fundo com efeitos incríveis baseados em aprendizado de máquina."</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"Ativar efeito cinematográfico"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"Ah, não!"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"Não foi possível aplicar efeitos cinematográficos.\nTente novamente com outra foto."</string>
     <string name="my_photos" msgid="8613021349284084982">"Minhas fotos"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Configurações…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Excluir"</string>
