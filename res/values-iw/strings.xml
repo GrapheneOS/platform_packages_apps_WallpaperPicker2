@@ -98,7 +98,7 @@
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"הממשק מוסתר בתצוגה. לוחצים פעמיים לביטול ההסתרה"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"עם תצוגה מקדימה בממשק המשתמש"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"הממשק מוצג בתצוגה. לוחצים פעמיים לביטול ההסתרה"</string>
-    <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"שינוי הטפט"</string>
+    <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"החלפת הטפט"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"תצוגה מקדימה של הטפט במסך הנעילה"</string>
     <string name="apply_btn" msgid="5764555565943538528">"אישור"</string>
     <string name="accessibility_customize_hidden" msgid="6320568529768181691">"חלונית ההתאמה אישית מוסתרת"</string>
