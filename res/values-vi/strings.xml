@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Đặt làm hình nền trên"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Màn hình chính"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Màn hình khóa"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"Màn hình chính và màn hình khóa"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Màn hình chính và màn hình khoá"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Xoay vòng hình nền"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Để hiển thị hình nền hiện tại ở đây, <xliff:g id="APP_NAME">%1$s</xliff:g> cần quyền truy cập vào bộ nhớ của thiết bị."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Để hiển thị hình nền hiện tại ở đây, ứng dụng Hình nền cần quyền truy cập vào bộ nhớ của thiết bị.\n\nĐể thay đổi cài đặt này, hãy chuyển đến khu vực Quyền của thông tin ứng dụng Hình nền."</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"Thông tin"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Tùy chỉnh"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Hiệu ứng"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"Hiệu ứng cho hình nền"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"Cải thiện hình nền bằng các hiệu ứng máy học tuyệt đẹp."</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"Bật Hiệu ứng điện ảnh"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"Không được rồi!"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"Không áp dụng được hiệu ứng điện ảnh.\nHãy thử với một ảnh khác."</string>
     <string name="my_photos" msgid="8613021349284084982">"Ảnh của tôi"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Cài đặt…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Xóa"</string>

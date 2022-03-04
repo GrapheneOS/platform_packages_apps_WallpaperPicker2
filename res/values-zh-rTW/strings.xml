@@ -35,7 +35,7 @@
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"設定以下畫面的桌布："</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"主畫面"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"螢幕鎖定"</string>
-    <string name="set_wallpaper_both_destination" msgid="233216830256235288">"主畫面和螢幕鎖定畫面"</string>
+    <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"主畫面和螢幕鎖定畫面"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"輪播圖片桌布"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"如要在這裡顯示目前的桌布，「<xliff:g id="APP_NAME">%1$s</xliff:g>」需要存取裝置的儲存空間。"</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"如要在這裡顯示目前的桌布，「桌布」需要存取裝置的儲存空間。\n\n如要變更這項設定，請前往「桌布」應用程式資訊的權限區域。"</string>
@@ -81,11 +81,6 @@
     <string name="tab_info" msgid="818614080690111416">"資訊"</string>
     <string name="tab_customize" msgid="2533745409174959960">"自訂"</string>
     <string name="tab_effects" msgid="3213606157589233901">"特效"</string>
-    <string name="wallpaper_effects_title" msgid="5110174050421199311">"桌布特效"</string>
-    <string name="wallpaper_effects_subtitle" msgid="3361423448179458015">"使用經機器學習技術強化的美麗特效修飾桌布"</string>
-    <string name="cinematic_effects_toogle" msgid="5696400014676763458">"啟用電影特效"</string>
-    <string name="effect_error_dialog_title" msgid="4071975649967210990">"糟糕！"</string>
-    <string name="effect_error_dialog_body" msgid="1975016108816493359">"無法套用電影特效。\n請試試其他相片。"</string>
     <string name="my_photos" msgid="8613021349284084982">"我的相片"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"設定…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"刪除"</string>
