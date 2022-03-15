@@ -19,8 +19,6 @@ import android.content.Intent;
 
 import androidx.annotation.IntDef;
 
-import com.android.wallpaper.module.WallpaperPersister.WallpaperPosition;
-
 /**
  * Interface for logging user events in the wallpaper picker.
  */
@@ -169,7 +167,7 @@ public interface UserEventLogger {
     void logStandalonePreviewImageUriHasReadPermission(boolean isReadPermissionGranted);
 
     /**
-     * Logs whether the user approved the runtime dialog to grant this app READ_EXTERNAL_STORAGE
+     * Logs whether the user approved the runtime dialog to grant this app READ_MEDIA_IMAGES
      * permission in order to open an image URI.
      */
     void logStandalonePreviewStorageDialogApproved(boolean isApproved);
