@@ -15,7 +15,7 @@
  */
 package com.android.wallpaper.model;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.READ_MEDIA_IMAGES;
 
 import android.animation.Animator;
 import android.app.Activity;
@@ -285,7 +285,7 @@ public class WallpaperSectionController implements
 
     private boolean canShowCurrentWallpaper() {
         return isPermissionGranted(mAppContext, PERMISSION_READ_WALLPAPER_INTERNAL)
-                || isPermissionGranted(mAppContext, READ_EXTERNAL_STORAGE);
+                || isPermissionGranted(mAppContext, READ_MEDIA_IMAGES);
     }
 
     private boolean isPermissionGranted(Context context, String permission) {
