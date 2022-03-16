@@ -77,7 +77,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     private String mDownloadableIntentAction;
     private CategoryProvider mCategoryProvider;
     private WallpaperPersister mWallpaperPersister;
-    private static final String READ_PERMISSION = permission.READ_EXTERNAL_STORAGE;
+    private static final String READ_IMAGE_PERMISSION = permission.READ_MEDIA_IMAGES;
 
     public WallpaperPickerDelegate(WallpapersUiContainer container, FragmentActivity activity,
             Injector injector) {
@@ -146,16 +146,16 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     public void requestExternalStoragePermission(PermissionChangedListener listener) {
         mPermissionChangedListeners.add(listener);
         mActivity.requestPermissions(
-                new String[]{READ_PERMISSION},
+                new String[]{READ_IMAGE_PERMISSION},
                 READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE);
     }
 
     /**
-     * Returns whether READ_EXTERNAL_STORAGE has been granted for the application.
+     * Returns whether READ_MEDIA_IMAGES has been granted for the application.
      */
     public boolean isReadExternalStoragePermissionGranted() {
         return mActivity.getPackageManager().checkPermission(
-                permission.READ_EXTERNAL_STORAGE,
+                permission.READ_MEDIA_IMAGES,
                 mActivity.getPackageName()) == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -411,20 +411,20 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
 
     /**
      * Call from the Activity's onRequestPermissionsResult callback to handle permission request
-     * relevant to wallpapers (ie, READ_EXTERNAL_STORAGE)
+     * relevant to wallpapers (ie, READ_MEDIA_IMAGES)
      * @see androidx.fragment.app.FragmentActivity#onRequestPermissionsResult(int, String[], int[])
      */
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
             @NonNull int[] grantResults) {
         if (requestCode == WallpaperPickerDelegate.READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
                 && permissions.length > 0
-                && permissions[0].equals(READ_PERMISSION)
+                && permissions[0].equals(READ_IMAGE_PERMISSION)
                 && grantResults.length > 0) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 for (PermissionChangedListener listener : getPermissionChangedListeners()) {
                     listener.onPermissionsGranted();
                 }
-            } else if (!mActivity.shouldShowRequestPermissionRationale(READ_PERMISSION)) {
+            } else if (!mActivity.shouldShowRequestPermissionRationale(READ_IMAGE_PERMISSION)) {
                 for (PermissionChangedListener listener : getPermissionChangedListeners()) {
                     listener.onPermissionsDenied(true /* dontAskAgain */);
                 }
