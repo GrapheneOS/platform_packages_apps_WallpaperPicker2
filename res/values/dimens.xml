@@ -206,7 +206,7 @@
     <dimen name="section_horizontal_padding">24dp</dimen>
     <dimen name="section_vertical_padding">24dp</dimen>
     <dimen name="section_top_padding">24dp</dimen>
-    <dimen name="section_bottom_padding">24dp</dimen>
+    <dimen name="section_bottom_padding">16dp</dimen>
 
     <!-- For the wallpaper section -->
     <dimen name="wallpaper_preview_margin_top">16dp</dimen>
