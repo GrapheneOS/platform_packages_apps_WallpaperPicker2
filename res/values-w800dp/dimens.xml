@@ -22,8 +22,8 @@
 
     <!--  Default page horizontal margin (127dp) - separated tabs inset horizontal (8dp) -->
     <dimen name="separated_tabs_horizontal_padding">119dp</dimen>
-    <dimen name="wallpaper_picker_entry_margin_vertical">24dp</dimen>
-    <dimen name="section_container_vertical_margin">46dp</dimen>
+    <dimen name="wallpaper_picker_entry_margin_vertical">9dp</dimen>
+    <dimen name="section_container_vertical_margin">22dp</dimen>
 
     <!-- Dimensions for CategorySelectorFragment. -->
     <dimen name="category_grid_edge_space">127dp</dimen>
