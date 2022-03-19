@@ -271,7 +271,7 @@ public class WallpaperSetter {
     private void onWallpaperApplied(WallpaperInfo wallpaper, Activity containerActivity) {
         mUserEventLogger.logWallpaperSet(
                 wallpaper.getCollectionId(containerActivity),
-                wallpaper.getWallpaperId());
+                wallpaper.getWallpaperId(), wallpaper.getEffectNames());
         mPreferences.setPendingWallpaperSetStatus(
                 WallpaperPreferences.WALLPAPER_SET_NOT_PENDING);
         mUserEventLogger.logWallpaperSetResult(

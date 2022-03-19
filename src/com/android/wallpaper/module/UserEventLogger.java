@@ -15,6 +15,11 @@
  */
 package com.android.wallpaper.module;
 
+import static android.stats.style.StyleEnums.EFFECT_APPLIED_OFF;
+import static android.stats.style.StyleEnums.EFFECT_APPLIED_ON_FAILED;
+import static android.stats.style.StyleEnums.EFFECT_APPLIED_ON_SUCCESS;
+import static android.stats.style.StyleEnums.EFFECT_PREFERENCE_UNSPECIFIED;
+
 import android.content.Intent;
 
 import androidx.annotation.IntDef;
@@ -81,7 +86,14 @@ public interface UserEventLogger {
      */
     void logSnapshot();
 
-    void logWallpaperSet(String collectionId, String wallpaperId);
+    /**
+     * Logs the behavior when applying wallpaper.
+     *
+     * @param collectionId wallpaper category.
+     * @param wallpaperId wallpaper id.
+     * @param effects effects set with wallpaper.
+     */
+    void logWallpaperSet(String collectionId, String wallpaperId, String effects);
 
     void logWallpaperSetResult(@WallpaperSetResult int result);
 
@@ -183,6 +195,11 @@ public interface UserEventLogger {
     void logRestored();
 
     /**
+     * Logs the action related to effect.
+     */
+    void logEffectApply(String effect, @EffectStatus int status);
+
+    /**
      * Possible results of a "set wallpaper" operation.
      */
     @IntDef({
@@ -232,5 +249,17 @@ public interface UserEventLogger {
             DAILY_WALLPAPER_METADATA_FAILURE_SERVER_ERROR,
             DAILY_WALLPAPER_METADATA_FAILURE_TIMEOUT})
     @interface DailyWallpaperMetadataFailureReason {
+    }
+
+    /**
+     * Possible actions for cinematic effect.
+     */
+    @IntDef({
+            EFFECT_PREFERENCE_UNSPECIFIED,
+            EFFECT_APPLIED_ON_SUCCESS,
+            EFFECT_APPLIED_ON_FAILED,
+            EFFECT_APPLIED_OFF,
+            })
+    @interface EffectStatus {
     }
 }
