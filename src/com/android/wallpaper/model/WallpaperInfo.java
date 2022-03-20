@@ -32,7 +32,9 @@ import androidx.annotation.StringRes;
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -46,6 +48,8 @@ public abstract class WallpaperInfo implements Parcelable {
     private static final ExecutorService sExecutor = Executors.newCachedThreadPool();
 
     private int mPlaceholderColor = Color.TRANSPARENT;
+
+    private PriorityQueue<String> mEffectNames = new PriorityQueue<>();
 
     public WallpaperInfo() {}
 
@@ -241,6 +245,39 @@ public abstract class WallpaperInfo implements Parcelable {
                 return mPlaceholderColor;
             }
         });
+    }
+
+    /**
+     * Remove the effect name from this wallpaper, only use it for logging.
+     */
+    public void removeEffectName(String effect) {
+        mEffectNames.remove(effect);
+    }
+
+    /**
+     * Add the effect name apply with this wallpaper, only use it for logging.
+     */
+    public void addEffectName(String effect) {
+        mEffectNames.add(effect);
+    }
+
+    /**
+     * Returns the effects apply with this wallpaper.
+     */
+    public String getEffectNames() {
+        if (mEffectNames.isEmpty()) {
+            return null;
+        }
+        String effectNames = "";
+        Iterator value = mEffectNames.iterator();
+        while (value.hasNext()) {
+            if (!effectNames.isEmpty()) {
+                effectNames += ",";
+            }
+            effectNames += value.next();
+        }
+
+        return effectNames;
     }
 
     /**
