@@ -167,7 +167,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         Activity activity = requireActivity();
         mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
                 activity.getWindowManager().getDefaultDisplay());
-        mPreviewContainer = view.findViewById(R.id.live_wallpaper_preview);
+        mPreviewContainer = view.findViewById(R.id.container);
         mTouchForwardingLayout = view.findViewById(R.id.touch_forwarding_layout);
 
         // Update preview header color which covers toolbar and status bar area.
