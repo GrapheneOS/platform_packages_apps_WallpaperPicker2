@@ -158,6 +158,7 @@
     <dimen name="bottom_actions_top_padding">24dp</dimen>
     <dimen name="bottom_actions_bottom_padding">12dp</dimen>
     <dimen name="bottom_actions_horizontal_padding">0dp</dimen>
+    <dimen name="bottom_action_button_wide_width">96dp</dimen>
     <dimen name="bottom_action_button_width">72dp</dimen>
     <dimen name="bottom_action_button_height">48dp</dimen>
     <dimen name="bottom_action_button_padding_horizontal">26dp</dimen>
