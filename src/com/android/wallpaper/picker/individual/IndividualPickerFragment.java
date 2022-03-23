@@ -718,7 +718,7 @@ public class IndividualPickerFragment extends AppbarFragment
         void onBindIndividualHolder(ViewHolder holder, int position) {
             int wallpaperIndex = mCategory.supportsCustomPhotos() ? position - 1 : position;
             WallpaperInfo wallpaper = mWallpapers.get(wallpaperIndex);
-            wallpaper.computePlaceholderColor(holder.itemView.getContext());
+            wallpaper.computeColorInfo(holder.itemView.getContext());
             ((IndividualHolder) holder).bindWallpaper(wallpaper);
             boolean isWallpaperApplied = isWallpaperApplied(wallpaper);
 
