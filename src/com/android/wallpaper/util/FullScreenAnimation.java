@@ -201,15 +201,22 @@ public class FullScreenAnimation {
      * Place UI elements in the correct locations.
      *
      * Takes status bar and navigation bar into account.
+     * @param view view is used to show preview fragment.
      */
-    public void placeViews() {
-        setViewMargins(R.id.screen_preview_layout,
-                (float) getStatusBarHeight() + mView.findViewById(
-                        R.id.preview_header).getPaddingBottom(),
-                getNavigationBarHeight()
-                        + mView.getResources().getDimension(R.dimen.bottom_actions_height)
-                        + mView.getResources().getDimension(R.dimen.separated_tabs_height),
-                false);
+    public void placeViews(View view) {
+        if (mShowInFullScreen) {
+            View container = view.findViewById(R.id.container);
+            container.setPadding(0, 0, 0, 0);
+            setViewMargins(R.id.screen_preview_layout, 0, 0, false);
+        } else {
+            setViewMargins(R.id.screen_preview_layout,
+                    (float) getStatusBarHeight() + mView.findViewById(
+                            R.id.preview_header).getPaddingBottom(),
+                    getNavigationBarHeight()
+                            + mView.getResources().getDimension(R.dimen.bottom_actions_height)
+                            + mView.getResources().getDimension(R.dimen.separated_tabs_height),
+                    false);
+        }
         setViewMargins(R.id.bottom_action_bar_container,
                 0,
                 getNavigationBarHeight(),
