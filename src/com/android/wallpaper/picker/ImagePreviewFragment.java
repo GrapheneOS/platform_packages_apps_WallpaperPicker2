@@ -268,7 +268,12 @@ public class ImagePreviewFragment extends PreviewFragment {
     protected void setupActionBar() {
         mBottomActionBar.bindBottomSheetContentWithAction(
                 new WallpaperInfoContent(getContext()), INFORMATION);
-        mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
+        Activity activity = getActivity();
+        if (activity != null && activity.isInMultiWindowMode()) {
+            mBottomActionBar.showActionsOnly(INFORMATION, APPLY);
+        } else {
+            mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
+        }
         mBottomActionBar.setActionClickListener(APPLY,
                 unused -> onSetWallpaperClicked(null, mWallpaper));
     }

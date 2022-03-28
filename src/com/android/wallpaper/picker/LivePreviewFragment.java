@@ -370,7 +370,12 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
-        mBottomActionBar.showActionsOnly(INFORMATION, DELETE, EDIT, CUSTOMIZE, APPLY);
+        Activity activity = getActivity();
+        if (activity != null && activity.isInMultiWindowMode()) {
+            mBottomActionBar.showActionsOnly(INFORMATION, DELETE, CUSTOMIZE, APPLY);
+        } else {
+            mBottomActionBar.showActionsOnly(INFORMATION, DELETE, EDIT, CUSTOMIZE, APPLY);
+        }
         mBottomActionBar.setActionClickListener(APPLY,
                 unused -> onSetWallpaperClicked(null, mWallpaper));
         mBottomActionBar.bindBottomSheetContentWithAction(
