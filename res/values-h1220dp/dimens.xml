@@ -17,7 +17,7 @@
 <resources>
     <!-- Dimensions for PreviewFragment. -->
     <dimen name="full_preview_page_vertical_bias">0</dimen>
-    <dimen name="full_preview_page_default_padding_top">103dp</dimen>
+    <dimen name="full_preview_page_default_padding_top">22dp</dimen>
 
     <!-- Dimensions for GridFragment. -->
     <dimen name="preview_card_vertical_bias">0</dimen>
