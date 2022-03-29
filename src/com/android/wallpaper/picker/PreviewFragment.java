@@ -219,7 +219,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
                             0);
 
                     mFullScreenAnimation.setWindowInsets(windowInsets);
-                    mFullScreenAnimation.placeViews();
+                    mFullScreenAnimation.placeViews(v);
 
                     // Update preview header's padding top to align status bar height.
                     View previewHeader = v.findViewById(R.id.preview_header);

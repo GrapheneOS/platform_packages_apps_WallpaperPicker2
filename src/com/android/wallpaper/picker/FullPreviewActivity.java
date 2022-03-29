@@ -112,6 +112,9 @@ public class FullPreviewActivity extends BasePreviewActivity implements AppbarFr
     @Override
     protected void onResume() {
         super.onResume();
+        if (isInMultiWindowMode()) {
+            onBackPressed();
+        }
         // Hide the navigation bar
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
