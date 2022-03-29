@@ -48,7 +48,7 @@
         android:layout_marginBottom="@dimen/bottom_actions_plus_separated_tabs">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/live_wallpaper_preview"
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
