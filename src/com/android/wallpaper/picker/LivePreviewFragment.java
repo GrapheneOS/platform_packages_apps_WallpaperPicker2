@@ -167,7 +167,7 @@ public class LivePreviewFragment extends PreviewFragment implements
         Activity activity = requireActivity();
         mScreenSize = ScreenSizeCalculator.getInstance().getScreenSize(
                 activity.getWindowManager().getDefaultDisplay());
-        mPreviewContainer = view.findViewById(R.id.live_wallpaper_preview);
+        mPreviewContainer = view.findViewById(R.id.container);
         mTouchForwardingLayout = view.findViewById(R.id.touch_forwarding_layout);
 
         // Update preview header color which covers toolbar and status bar area.
@@ -370,7 +370,12 @@ public class LivePreviewFragment extends PreviewFragment implements
     @Override
     protected void onBottomActionBarReady(BottomActionBar bottomActionBar) {
         super.onBottomActionBarReady(bottomActionBar);
-        mBottomActionBar.showActionsOnly(INFORMATION, DELETE, EDIT, CUSTOMIZE, APPLY);
+        Activity activity = getActivity();
+        if (activity != null && activity.isInMultiWindowMode()) {
+            mBottomActionBar.showActionsOnly(INFORMATION, DELETE, CUSTOMIZE, APPLY);
+        } else {
+            mBottomActionBar.showActionsOnly(INFORMATION, DELETE, EDIT, CUSTOMIZE, APPLY);
+        }
         mBottomActionBar.setActionClickListener(APPLY,
                 unused -> onSetWallpaperClicked(null, mWallpaper));
         mBottomActionBar.bindBottomSheetContentWithAction(
