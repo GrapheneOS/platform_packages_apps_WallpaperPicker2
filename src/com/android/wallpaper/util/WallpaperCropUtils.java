@@ -381,6 +381,13 @@ public final class WallpaperCropUtils {
             newWidth = rectRealWidth;
             newHeight = rectRealWidth;
         }
-        return Math.min((float) newWidth / cropWidth, (float) newHeight / cropHeight);
+        float screenScale = Math.min((float) newWidth / cropWidth, (float) newHeight / cropHeight);
+
+        // screenScale < 1 means our real crop size is smaller than crop size it should be.
+        // So we do nothing in this case, otherwise it'll cause wallpaper smaller than we expected.
+        if (screenScale < 1) {
+            return 1;
+        }
+        return screenScale;
     }
 }
