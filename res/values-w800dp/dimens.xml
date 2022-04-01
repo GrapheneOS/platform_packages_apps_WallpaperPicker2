@@ -41,11 +41,11 @@
     <dimen name="featured_wallpaper_grid_edge_space">92dp</dimen>
 
     <!-- Dimensions for PreviewFragment. -->
-    <dimen name="full_preview_page_default_padding_top">48dp</dimen>
-    <dimen name="full_preview_page_default_horizontal_padding">127dp</dimen>
+    <dimen name="full_preview_page_default_padding_top">10dp</dimen>
+    <dimen name="full_preview_page_default_horizontal_padding">96dp</dimen>
 
-    <!--  Default page horizontal margin (127dp) - separated tabs inset horizontal (8dp) -->
-    <dimen name="full_preview_page_tabs_horizontal_padding">119dp</dimen>
+    <!--  Default page horizontal margin (96dp) - separated tabs inset horizontal (8dp) -->
+    <dimen name="full_preview_page_tabs_horizontal_padding">88dp</dimen>
 
     <!-- Dimensions for BottomActionBar. -->
     <dimen name="bottom_actions_horizontal_padding">127dp</dimen>
