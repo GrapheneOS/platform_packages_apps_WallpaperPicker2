@@ -62,6 +62,7 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.CurrentWallpaperAssetVN;
 import com.android.wallpaper.model.SetWallpaperViewModel;
+import com.android.wallpaper.model.WallpaperInfo.ColorInfo;
 import com.android.wallpaper.module.BitmapCropper;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
@@ -130,13 +131,13 @@ public class ImagePreviewFragment extends PreviewFragment {
     protected WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     protected ViewGroup mLockPreviewContainer;
     protected LockScreenPreviewer mLockScreenPreviewer;
-    private Future<Integer> mPlaceholderColorFuture;
+    private Future<ColorInfo> mColorFuture;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWallpaperAsset = mWallpaper.getAsset(requireContext().getApplicationContext());
-        mPlaceholderColorFuture = mWallpaper.computePlaceholderColor(requireContext());
+        mColorFuture = mWallpaper.computeColorInfo(requireContext());
         mWallpaperPreferences = mInjector.getPreferences(getContext());
     }
 
@@ -267,7 +268,12 @@ public class ImagePreviewFragment extends PreviewFragment {
     protected void setupActionBar() {
         mBottomActionBar.bindBottomSheetContentWithAction(
                 new WallpaperInfoContent(getContext()), INFORMATION);
-        mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
+        Activity activity = getActivity();
+        if (activity != null && activity.isInMultiWindowMode()) {
+            mBottomActionBar.showActionsOnly(INFORMATION, APPLY);
+        } else {
+            mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
+        }
         mBottomActionBar.setActionClickListener(APPLY,
                 unused -> onSetWallpaperClicked(null, mWallpaper));
     }
@@ -651,9 +657,9 @@ public class ImagePreviewFragment extends PreviewFragment {
                 // Change to background color if colorValue is Color.TRANSPARENT
                 int placeHolderColor = ResourceUtils.getColorAttr(activity,
                         android.R.attr.colorBackground);
-                if (mPlaceholderColorFuture.isDone()) {
+                if (mColorFuture.isDone()) {
                     try {
-                        int colorValue = mWallpaper.computePlaceholderColor(context).get();
+                        int colorValue = mColorFuture.get().getPlaceholderColor();
                         if (colorValue != Color.TRANSPARENT) {
                             placeHolderColor = colorValue;
                         }

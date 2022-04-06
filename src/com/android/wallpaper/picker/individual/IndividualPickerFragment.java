@@ -69,6 +69,7 @@ import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider;
 import com.android.wallpaper.picker.RotationStarter;
 import com.android.wallpaper.picker.StartRotationDialogFragment;
 import com.android.wallpaper.picker.StartRotationErrorDialogFragment;
+import com.android.wallpaper.util.ActivityUtils;
 import com.android.wallpaper.util.DiskBasedLogger;
 import com.android.wallpaper.util.LaunchUtils;
 import com.android.wallpaper.util.SizeCalculator;
@@ -545,9 +546,10 @@ public class IndividualPickerFragment extends AppbarFragment
 
                                 activity.setResult(Activity.RESULT_OK);
                                 activity.finish();
-
-                                // Go back to launcher home.
-                                LaunchUtils.launchHome(appContext);
+                                if (!ActivityUtils.isSUWMode(appContext)) {
+                                    // Go back to launcher home.
+                                    LaunchUtils.launchHome(appContext);
+                                }
                             }
                         } else { // Failed to start rotation.
                             showStartRotationErrorDialog(networkPreference);
@@ -718,7 +720,7 @@ public class IndividualPickerFragment extends AppbarFragment
         void onBindIndividualHolder(ViewHolder holder, int position) {
             int wallpaperIndex = mCategory.supportsCustomPhotos() ? position - 1 : position;
             WallpaperInfo wallpaper = mWallpapers.get(wallpaperIndex);
-            wallpaper.computePlaceholderColor(holder.itemView.getContext());
+            wallpaper.computeColorInfo(holder.itemView.getContext());
             ((IndividualHolder) holder).bindWallpaper(wallpaper);
             boolean isWallpaperApplied = isWallpaperApplied(wallpaper);
 
