@@ -204,6 +204,10 @@ public class FullScreenAnimation {
      * @param view view is used to show preview fragment.
      */
     public void placeViews(View view) {
+        // If is already full screen we do not do anything here.
+        if (mIsFullScreen) {
+            return;
+        }
         if (mShowInFullScreen) {
             View container = view.findViewById(R.id.container);
             container.setPadding(0, 0, 0, 0);
