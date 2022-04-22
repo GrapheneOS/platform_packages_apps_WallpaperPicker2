@@ -396,4 +396,7 @@
 
     <!-- Label for a button which lets user try to navigation to settings. [CHAR LIMIT=25] -->
     <string name="settings_snackbar_enable">Enable</string>
+
+    <!-- Label for a button which lets user try to open their photos. [CHAR LIMIT=40] -->
+    <string name="open_my_photos">Open My Photos</string>
 </resources>
