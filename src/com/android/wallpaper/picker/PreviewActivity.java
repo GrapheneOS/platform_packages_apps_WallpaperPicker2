@@ -37,6 +37,7 @@ import com.android.wallpaper.util.ActivityUtils;
  * wallpaper as the user's current wallpaper.
  */
 public class PreviewActivity extends BasePreviewActivity implements AppbarFragmentHost {
+    public static final int RESULT_MY_PHOTOS = 0;
 
     /**
      * Returns a new Intent with the provided WallpaperInfo instance put as an extra.
@@ -89,8 +90,7 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == EffectsErrorDialogFragment.SHOW_CATEGORY_REQUEST_CODE
-                && resultCode == Activity.RESULT_OK) {
+        if (requestCode == RESULT_MY_PHOTOS && resultCode == Activity.RESULT_OK) {
             Uri imageUri = (data == null) ? null : data.getData();
             if (imageUri != null) {
                 ImageWallpaperInfo imageWallpaper = new ImageWallpaperInfo(imageUri);
