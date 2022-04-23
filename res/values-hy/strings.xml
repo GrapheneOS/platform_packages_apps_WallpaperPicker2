@@ -42,7 +42,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Թույլատրել"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Կենդանի պաստառի ծառայություն փոխվող պաստառների համար"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Օրվա պաստառ"</string>
-    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Հպեք՝ միացնելու համար"</string>
+    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Հպեք միացնելու համար"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Պաստառն ամեն օր ավտոմատ կփոխվի։ Կարգավորումն ավարտելու համար հաջորդ էկրանին հպեք &lt;strong&gt;Տեղադրել պաստառը&lt;/strong&gt; կոճակին:"</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Հետագայում պաստառները ներբեռնել միայն Wi-Fi-ով"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Շարունակել"</string>
