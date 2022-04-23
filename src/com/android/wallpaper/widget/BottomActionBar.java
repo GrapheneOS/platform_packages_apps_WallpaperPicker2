@@ -141,7 +141,7 @@ public class BottomActionBar extends FrameLayout {
             return contentView;
         }
 
-        private void setVisibility(boolean isVisible) {
+        protected void setVisibility(boolean isVisible) {
             mIsVisible = isVisible;
             mContentView.setVisibility(mIsVisible ? VISIBLE : GONE);
         }
