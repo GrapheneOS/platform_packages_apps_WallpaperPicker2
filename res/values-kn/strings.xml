@@ -110,4 +110,6 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"ಮಾಹಿತಿಯನ್ನು ಪ್ರದರ್ಶಿಸಲಾಗಿದೆ"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಫೈಲ್‌ಗಳು ಮತ್ತು ಮಾಧ್ಯಮವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ಸಕ್ರಿಯಗೊಳಿಸಿ"</string>
+    <!-- no translation found for open_my_photos (4107196465713868381) -->
+    <skip />
 </resources>
