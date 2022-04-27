@@ -44,10 +44,12 @@ public class TrampolinePickerActivity extends FragmentActivity {
         final MultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
         if (multiPanesChecker.isMultiPanesEnabled(this)) {
             startActivityForResultSafely(this,
-                    new Intent(this, CustomizationPickerActivity.class), /* requestCode= */ 0);
+                    new Intent(this, CustomizationPickerActivity.class).putExtras(
+                            getIntent().getExtras()), /* requestCode= */ 0);
         } else {
             startActivityForResultSafely(this, new Intent(this,
-                    PassThroughCustomizationPickerActivity.class), /* requestCode= */ 0);
+                    PassThroughCustomizationPickerActivity.class).putExtras(
+                    getIntent().getExtras()), /* requestCode= */ 0);
         }
         finish();
     }
