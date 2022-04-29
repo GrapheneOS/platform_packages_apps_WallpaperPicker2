@@ -110,4 +110,6 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"ინფორმაცია ნაჩვენებია"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"ჩართეთ ფაილები და მედია პარამეტრებიდან."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ჩართვა"</string>
+    <!-- no translation found for open_my_photos (4107196465713868381) -->
+    <skip />
 </resources>

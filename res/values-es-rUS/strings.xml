@@ -110,4 +110,6 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Panel Información visible"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"Habilita los archivos y el contenido multimedia en la configuración."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Habilitar"</string>
+    <!-- no translation found for open_my_photos (4107196465713868381) -->
+    <skip />
 </resources>
