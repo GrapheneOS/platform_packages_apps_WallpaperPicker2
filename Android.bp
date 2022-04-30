@@ -44,6 +44,7 @@ android_library {
         "subsampling-scale-image-view",
         "SystemUISharedLib",
         "volley",
+        "SettingsLibActivityEmbedding",
     ],
 
     resource_dirs: ["res"],
