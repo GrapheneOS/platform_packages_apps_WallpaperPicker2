@@ -110,4 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Renseignements affichés"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"Veuillez activer les fichiers et les contenus multimédia dans les paramètres."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Activer"</string>
+    <string name="open_my_photos" msgid="4107196465713868381">"Ouvrir mes photos"</string>
 </resources>
