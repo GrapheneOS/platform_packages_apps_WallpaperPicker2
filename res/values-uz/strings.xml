@@ -110,4 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Axborot chiqarilgan"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"Fayllar va mediani sozlamalar orqali yoqing."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Yoqish"</string>
+    <string name="open_my_photos" msgid="4107196465713868381">"Suratlarimni ochish"</string>
 </resources>
