@@ -110,4 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"जानकारी देने वाले पैनल को दिखाया गया"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"कृपया सेटिंग में जाकर फ़ाइलों और मीडिया को ऐक्सेस करने की सुविधा चालू करें."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"चालू करें"</string>
+    <string name="open_my_photos" msgid="4107196465713868381">"मेरी फ़ोटो खोलो"</string>
 </resources>
