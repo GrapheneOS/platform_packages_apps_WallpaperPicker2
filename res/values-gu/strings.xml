@@ -110,6 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"માહિતી પૅનલ બતાવવામાં આવી છે"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"કૃપા કરીને સેટિંગમાં ફાઇલો અને મીડિયાનો ઍક્સેસ ચાલુ કરો."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ચાલુ કરો"</string>
-    <!-- no translation found for open_my_photos (4107196465713868381) -->
-    <skip />
+    <string name="open_my_photos" msgid="4107196465713868381">"મારા ફોટા ખોલો"</string>
 </resources>

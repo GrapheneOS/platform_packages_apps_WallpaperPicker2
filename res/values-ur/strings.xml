@@ -110,6 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"معلومات دکھائی گئی ہے"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"براہ کرم ترتیبات میں فائلز اور میڈیا فعال کریں۔"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"فعال کریں"</string>
-    <!-- no translation found for open_my_photos (4107196465713868381) -->
-    <skip />
+    <string name="open_my_photos" msgid="4107196465713868381">"میری تصاویر کھولیں"</string>
 </resources>

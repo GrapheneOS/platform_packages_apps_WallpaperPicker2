@@ -110,6 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"情報パネルを表示しました"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"ファイルとメディアへのアクセス権限を設定で有効にしてください。"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"有効にする"</string>
-    <!-- no translation found for open_my_photos (4107196465713868381) -->
-    <skip />
+    <string name="open_my_photos" msgid="4107196465713868381">"マイフォトを開く"</string>
 </resources>
