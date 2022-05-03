@@ -110,6 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"資料已顯示"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"請在設定中啟用檔案和媒體。"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"啟用"</string>
-    <!-- no translation found for open_my_photos (4107196465713868381) -->
-    <skip />
+    <string name="open_my_photos" msgid="4107196465713868381">"開啟「我的相片」"</string>
 </resources>

@@ -110,6 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Informatie getoond"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"Zet het recht voor bestanden en media aan in de instellingen."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Aanzetten"</string>
-    <!-- no translation found for open_my_photos (4107196465713868381) -->
-    <skip />
+    <string name="open_my_photos" msgid="4107196465713868381">"Mijn foto\'s openen"</string>
 </resources>

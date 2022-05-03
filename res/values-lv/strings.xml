@@ -110,6 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Informācija tiek rādīta"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"Lūdzu, iestatījumos iespējojiet atļauju izmantot failus un multivides saturu."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Iespējot"</string>
-    <!-- no translation found for open_my_photos (4107196465713868381) -->
-    <skip />
+    <string name="open_my_photos" msgid="4107196465713868381">"Atvērt sadaļu “Mani fotoattēli”"</string>
 </resources>

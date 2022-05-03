@@ -110,6 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Panel Info ditampilkan"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"Aktifkan izin file dan media di setelan."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Aktifkan"</string>
-    <!-- no translation found for open_my_photos (4107196465713868381) -->
-    <skip />
+    <string name="open_my_photos" msgid="4107196465713868381">"Buka Foto Saya"</string>
 </resources>

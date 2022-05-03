@@ -110,6 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Tiedot näkyvissä"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"Ota tiedostot ja media käyttöön asetuksista."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Ota käyttöön"</string>
-    <!-- no translation found for open_my_photos (4107196465713868381) -->
-    <skip />
+    <string name="open_my_photos" msgid="4107196465713868381">"Avaa Omat kuvat"</string>
 </resources>
