@@ -110,4 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Bảng điều khiển thông tin đang hiển thị"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"Vui lòng bật quyền truy cập tệp và nội dung nghe nhìn trong phần cài đặt."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Bật"</string>
+    <string name="open_my_photos" msgid="4107196465713868381">"Mở Ảnh của tôi"</string>
 </resources>
