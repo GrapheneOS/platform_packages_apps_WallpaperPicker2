@@ -40,10 +40,10 @@ public class DefaultBitmapCropper implements BitmapCropper {
             boolean isRtl, Callback callback) {
         // Crop rect in pixels of source image.
         Rect scaledCropRect = new Rect(
-                Math.round((float) cropRect.left / scale),
-                Math.round((float) cropRect.top / scale),
-                Math.round((float) cropRect.right / scale),
-                Math.round((float) cropRect.bottom / scale));
+                (int) Math.floor((float) cropRect.left / scale),
+                (int) Math.floor((float) cropRect.top / scale),
+                (int) Math.floor((float) cropRect.right / scale),
+                (int) Math.floor((float) cropRect.bottom / scale));
 
         asset.decodeBitmapRegion(scaledCropRect, cropRect.width(), cropRect.height(), isRtl,
                 new BitmapReceiver() {
