@@ -110,6 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"വിവരങ്ങൾ പാനൽ കാണിച്ചിരിക്കുന്നു"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"ക്രമീകരണത്തിൽ ഫയലുകളും മീഡിയയും പ്രവർത്തനക്ഷമമാക്കുക."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"പ്രവർത്തനക്ഷമമാക്കുക"</string>
-    <!-- no translation found for open_my_photos (4107196465713868381) -->
-    <skip />
+    <string name="open_my_photos" msgid="4107196465713868381">"എന്റെ ഫോട്ടോകൾ തുറക്കുക"</string>
 </resources>
