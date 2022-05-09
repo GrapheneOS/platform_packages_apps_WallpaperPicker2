@@ -380,7 +380,7 @@ public class DefaultCategoryProvider implements CategoryProvider {
                     mAppContext.getString(R.string.my_photos_category_title),
                     mAppContext.getString(R.string.image_wallpaper_collection_id),
                     PRIORITY_MY_PHOTOS,
-                    R.drawable.myphotos_empty_tile_illustration /* overlayIconResId */);
+                    R.drawable.wallpaperpicker_emptystate /* overlayIconResId */);
         }
 
         @Override
