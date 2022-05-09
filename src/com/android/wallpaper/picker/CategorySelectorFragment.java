@@ -353,22 +353,26 @@ public class CategorySelectorFragment extends AppbarFragment {
         private void drawThumbnailAndOverlayIcon() {
             mOverlayIconView.setImageDrawable(mCategory.getOverlayIcon(
                     getActivity().getApplicationContext()));
-
-            // Size the overlay icon according to the category.
-            int overlayIconDimenDp = mCategory.getOverlayIconSizeDp();
-            DisplayMetrics metrics = DisplayMetricsRetriever.getInstance().getDisplayMetrics(
-                    getResources(), getActivity().getWindowManager().getDefaultDisplay());
-            int overlayIconDimenPx = (int) (overlayIconDimenDp * metrics.density);
-            mOverlayIconView.getLayoutParams().width = overlayIconDimenPx;
-            mOverlayIconView.getLayoutParams().height = overlayIconDimenPx;
-
             Asset thumbnail = mCategory.getThumbnail(getActivity().getApplicationContext());
             if (thumbnail != null) {
-                thumbnail.loadDrawable(getActivity(), mImageView, Color.TRANSPARENT);
+                // Size the overlay icon according to the category.
+                int overlayIconDimenDp = mCategory.getOverlayIconSizeDp();
+                DisplayMetrics metrics = DisplayMetricsRetriever.getInstance().getDisplayMetrics(
+                        getResources(), getActivity().getWindowManager().getDefaultDisplay());
+                int overlayIconDimenPx = (int) (overlayIconDimenDp * metrics.density);
+                mOverlayIconView.getLayoutParams().width = overlayIconDimenPx;
+                mOverlayIconView.getLayoutParams().height = overlayIconDimenPx;
+                thumbnail.loadDrawable(getActivity(), mImageView,
+                        ResourceUtils.getColorAttr(
+                                getActivity(),
+                                android.R.attr.colorSecondary
+                        ));
             } else {
                 // TODO(orenb): Replace this workaround for b/62584914 with a proper way of
                 //  unloading the ImageView such that no incorrect image is improperly loaded upon
                 //  rapid scroll.
+                mImageView.setBackgroundColor(
+                        getResources().getColor(R.color.myphoto_background_color));
                 Object nullObj = null;
                 Glide.with(getActivity())
                         .asDrawable()
