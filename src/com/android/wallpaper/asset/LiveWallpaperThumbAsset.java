@@ -77,7 +77,7 @@ public class LiveWallpaperThumbAsset extends Asset {
     public void decodeBitmap(int targetWidth, int targetHeight,
                              BitmapReceiver receiver) {
         sExecutorService.execute(() -> {
-            Drawable thumb = mInfo.loadThumbnail(mContext.getPackageManager());
+            Drawable thumb = getThumbnailDrawable();
 
             // Live wallpaper components may or may not specify a thumbnail drawable.
             if (thumb instanceof BitmapDrawable) {
