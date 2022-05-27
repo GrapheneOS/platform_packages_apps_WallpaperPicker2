@@ -114,9 +114,7 @@ public class ImagePreviewFragment extends PreviewFragment {
     private final AtomicInteger mRecalculateColorCounter = new AtomicInteger(0);
     private final Injector mInjector = InjectorProvider.getInjector();
 
-    private SubsamplingScaleImageView mFullResImageView;
     private SubsamplingScaleImageView mDarkFullResImageView;
-    private Asset mWallpaperAsset;
     private AdaptiveWallpaperInfo mAdaptiveWallpaperInfo;
     private Handler mAdaptiveHandler = new Handler();
     private AdaptiveType mCurrentPreviewAdaptiveType = AdaptiveType.LIGHT;
@@ -129,8 +127,8 @@ public class ImagePreviewFragment extends PreviewFragment {
      * The size of the current screen
      */
     private Point mScreenSize;
-    private Point mRawWallpaperSize; // Native size of wallpaper image.
-    private ImageView mLowResImageView;
+    protected Point mRawWallpaperSize; // Native size of wallpaper image.
+    protected ImageView mLowResImageView;
     protected TouchForwardingLayout mTouchForwardingLayout;
     protected ConstraintLayout mContainer;
     protected SurfaceView mWallpaperSurface;
@@ -142,6 +140,8 @@ public class ImagePreviewFragment extends PreviewFragment {
     protected WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     protected ViewGroup mLockPreviewContainer;
     protected LockScreenPreviewer mLockScreenPreviewer;
+    protected SubsamplingScaleImageView mFullResImageView;
+    protected Asset mWallpaperAsset;
     private Future<ColorInfo> mColorFuture;
     // The runnable task for periodically rotating adaptive wallpaper.
     private Runnable mAdaptiveRunnable = new Runnable() {
