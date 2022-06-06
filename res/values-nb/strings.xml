@@ -23,7 +23,7 @@
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Bakgrunnskategorier"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Angi bakgrunn"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Angir bakgrunn …"</string>
-    <string name="try_again" msgid="8278874823700921234">"Prøv igjen"</string>
+    <string name="try_again" msgid="8278874823700921234">"Prøv på nytt"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Kunne ikke angi bakgrunn."</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Kan ikke laste inn bakgrunnen. Bildet er enten skadet eller utilgjengelig."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Nåværende bakgrunn"</string>
