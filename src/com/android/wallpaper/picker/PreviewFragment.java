@@ -468,10 +468,14 @@ public abstract class PreviewFragment extends AppbarFragment implements
             } catch (NotFoundException e) {
                 Log.e(TAG, "Could not show toast " + e);
             }
-            activity.setResult(Activity.RESULT_OK);
+            setResult(activity);
         }
         activity.finish();
         activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
+    protected void setResult(Activity activity) {
+        activity.setResult(Activity.RESULT_OK);
     }
 
     protected void showSetWallpaperErrorDialog(@Destination int wallpaperDestination) {
