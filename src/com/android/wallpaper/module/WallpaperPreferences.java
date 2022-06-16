@@ -505,6 +505,18 @@ public interface WallpaperPreferences {
             String wallpaperId);
 
     /**
+     * Gets the wallpaper's effects.
+     */
+    String getWallpaperEffects();
+
+    /**
+     * Sets the wallpaper's effects to SharedPreferences.
+     *
+     * @param wallpaperEffects The wallpaper effects.
+     */
+    void setWallpaperEffects(String wallpaperEffects);
+
+    /**
      * The possible wallpaper presentation modes, i.e., either "static" or "rotating".
      */
     @IntDef({
