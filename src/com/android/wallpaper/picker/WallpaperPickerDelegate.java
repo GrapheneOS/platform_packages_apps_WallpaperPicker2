@@ -63,7 +63,6 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     public static final int VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE = 2;
     public static final int READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 3;
     public static final int PREVIEW_LIVE_WALLPAPER_REQUEST_CODE = 4;
-    public static final String IS_LIVE_WALLPAPER = "isLiveWallpaper";
 
     private InlinePreviewIntentFactory mPreviewIntentFactory;
     private InlinePreviewIntentFactory mViewOnlyPreviewIntentFactory;
@@ -469,15 +468,11 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
             case PREVIEW_LIVE_WALLPAPER_REQUEST_CODE:
                 mWallpaperPersister.onLiveWallpaperSet();
                 populateCategories(/* forceRefresh= */ true);
-                return true;
+                // Fall through.
             case VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE:
-                return true;
+                // Fall through.
             case PREVIEW_WALLPAPER_REQUEST_CODE:
                 // User previewed and selected a wallpaper, so finish this activity.
-                if (data != null && data.getBooleanExtra(IS_LIVE_WALLPAPER, false)) {
-                    mWallpaperPersister.onLiveWallpaperSet();
-                    populateCategories(/* forceRefresh= */ true);
-                }
                 return true;
             default:
                 return false;
