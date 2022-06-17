@@ -595,6 +595,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         mWallpaperPreferences.setWallpaperPresentationMode(
                 WallpaperPreferences.PRESENTATION_MODE_STATIC);
         mWallpaperPreferences.clearDailyRotations();
+        mWallpaperPreferences.setWallpaperEffects(mWallpaperInfoInPreview.getEffectNames());
     }
 
     private class SetWallpaperTask extends AsyncTask<Void, Void, Boolean> {
@@ -773,6 +774,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         private void setImageWallpaperMetadata(@Destination int destination, int wallpaperId) {
             if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
                 mWallpaperPreferences.clearHomeWallpaperMetadata();
+                mWallpaperPreferences.setWallpaperEffects(null);
                 setImageWallpaperHomeMetadata(wallpaperId);
 
                 // Reset presentation mode to STATIC if an individual wallpaper is set to the
