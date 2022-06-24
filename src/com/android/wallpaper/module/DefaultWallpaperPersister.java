@@ -45,8 +45,10 @@ import com.android.wallpaper.asset.BitmapUtils;
 import com.android.wallpaper.asset.StreamableAsset;
 import com.android.wallpaper.asset.StreamableAsset.StreamReceiver;
 import com.android.wallpaper.compat.WallpaperManagerCompat;
+import com.android.wallpaper.model.AdaptiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.BitmapCropper.Callback;
+import com.android.wallpaper.util.AdaptiveWallpaperUtils;
 import com.android.wallpaper.util.BitmapTransformer;
 import com.android.wallpaper.util.DisplayUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
@@ -787,6 +789,14 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             if (destination == DEST_LOCK_SCREEN || destination == DEST_BOTH) {
                 mWallpaperPreferences.clearLockWallpaperMetadata();
                 setImageWallpaperLockMetadata(wallpaperId);
+            }
+
+            if (mWallpaper instanceof AdaptiveWallpaperInfo) {
+                mWallpaperPreferences.setAppliedAdaptiveType(
+                        AdaptiveWallpaperUtils.getCurrentAdaptiveType(System.currentTimeMillis(),
+                                null));
+                mWallpaperPreferences.setWallpaperPresentationMode(
+                        WallpaperPreferences.PRESENTATION_MODE_ADAPTIVE);
             }
 
             mWallpaperPreferences.clearDailyRotations();

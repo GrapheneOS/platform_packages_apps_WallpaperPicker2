@@ -47,6 +47,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.model.AdaptiveWallpaperInfo;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.SetWallpaperViewModel;
 import com.android.wallpaper.model.WallpaperInfo;
@@ -323,7 +324,8 @@ public abstract class PreviewFragment extends AppbarFragment implements
             });
             setUpToolbarMenuClickListener(R.id.action_set_wallpaper,
                     view -> mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(),
-                            this, mWallpaper instanceof LiveWallpaperInfo));
+                            this, mWallpaper instanceof LiveWallpaperInfo,
+                            mWallpaper instanceof AdaptiveWallpaperInfo));
         }
 
         mFullScreenAnimation.ensureBottomActionBarIsCorrectlyLocated();
@@ -419,7 +421,8 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
     protected void onSetWallpaperClicked(View button, WallpaperInfo wallpaperInfo) {
         mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
-                wallpaperInfo instanceof LiveWallpaperInfo);
+                wallpaperInfo instanceof LiveWallpaperInfo,
+                wallpaperInfo instanceof AdaptiveWallpaperInfo);
     }
 
     protected void setUpTabs(TabLayout tabs) {
