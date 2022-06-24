@@ -21,27 +21,35 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /** A frame layout that listens to touch events and routes them to another view. */
 public class TouchForwardingLayout extends FrameLayout {
 
-    private View mView;
+    private List<View> mViews;
     private boolean mForwardingEnabled;
 
     public TouchForwardingLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mViews = new ArrayList<>();
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (mView != null && mForwardingEnabled) {
-            mView.dispatchTouchEvent(ev);
+        if (mViews != null && mForwardingEnabled) {
+            mViews.forEach(v -> {
+                if (v != null) {
+                    v.dispatchTouchEvent(ev);
+                }
+            });
         }
         return true;
     }
 
-    /** Set the view that the touch events are routed to */
-    public void setTargetView(View view) {
-        mView = view;
+    /** Add the view that the touch events are routed to */
+    public void addTargetView(View view) {
+        mViews.add(view);
     }
 
     public void setForwardingEnabled(boolean forwardingEnabled) {

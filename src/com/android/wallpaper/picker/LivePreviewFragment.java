@@ -193,7 +193,7 @@ public class LivePreviewFragment extends PreviewFragment implements
                     }
                 });
         mWallpaperSurface = mHomePreviewCard.findViewById(R.id.wallpaper_surface);
-        mTouchForwardingLayout.setTargetView(mHomePreviewCard);
+        mTouchForwardingLayout.addTargetView(mHomePreviewCard);
         mTouchForwardingLayout.setForwardingEnabled(true);
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
 
