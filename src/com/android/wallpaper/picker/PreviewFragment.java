@@ -186,12 +186,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
         mViewModelProvider = new ViewModelProvider(requireActivity());
         mSetWallpaperViewModel = mViewModelProvider.get(SetWallpaperViewModel.class);
-
-        Activity activity = getActivity();
-        List<String> attributions = getAttributions(activity);
-        if (attributions.size() > 0 && attributions.get(0) != null) {
-            activity.setTitle(attributions.get(0));
-        }
     }
 
     @Override
