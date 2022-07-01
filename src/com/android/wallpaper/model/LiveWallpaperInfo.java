@@ -209,7 +209,7 @@ public class LiveWallpaperInfo extends WallpaperInfo {
      */
     public static List<WallpaperInfo> getFromSpecifiedPackage(
             Context context, String packageName, @Nullable List<String> serviceNames,
-            boolean shouldShowTitle) {
+            boolean shouldShowTitle, String collectionId) {
         List<ResolveInfo> resolveInfos;
         if (serviceNames != null) {
             resolveInfos = getAllContainingServiceNames(context, serviceNames);
@@ -242,7 +242,8 @@ public class LiveWallpaperInfo extends WallpaperInfo {
                 continue;
             }
 
-            wallpaperInfos.add(factory.getLiveWallpaperInfo(wallpaperInfo, shouldShowTitle, null));
+            wallpaperInfos.add(
+                    factory.getLiveWallpaperInfo(wallpaperInfo, shouldShowTitle, collectionId));
         }
 
         return wallpaperInfos;
