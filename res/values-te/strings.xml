@@ -77,9 +77,9 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"మధ్య"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"మధ్యన కత్తిరించు"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"విస్తరించు"</string>
-    <string name="preview" msgid="1774602101743861071">"ప్రివ్యూ చూపు"</string>
+    <string name="preview" msgid="1774602101743861071">"ప్రివ్యూ"</string>
     <string name="tab_info" msgid="818614080690111416">"సమాచారం"</string>
-    <string name="tab_customize" msgid="2533745409174959960">"అనుకూలీకరించండి"</string>
+    <string name="tab_customize" msgid="2533745409174959960">"అనుకూలంగా మార్చండి"</string>
     <string name="tab_effects" msgid="3213606157589233901">"ఎఫెక్ట్‌లు"</string>
     <string name="my_photos" msgid="8613021349284084982">"నా ఫోటోలు"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"సెట్టింగ్‌లు…"</string>
@@ -110,4 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"సమాచార ప్యానెల్ చూపబడింది"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"దయచేసి సెట్టింగ్‌లలో ఫైల్‌లు, మీడియాను ఎనేబుల్ చేయండి."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ఎనేబుల్ చేయండి"</string>
+    <string name="open_my_photos" msgid="4107196465713868381">"నా ఫోటోలను తెరవండి"</string>
 </resources>
