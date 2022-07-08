@@ -39,6 +39,8 @@ public class WallpaperPreferenceKeys {
     public static final String KEY_LOCK_WALLPAPER_HASH_CODE = "lock_wallpaper_hash_code";
     public static final String KEY_LOCK_WALLPAPER_COLLECTION_ID = "lock_wallpaper_collection_id";
 
+    public static final String KEY_APPLIED_ADAPTIVE_TYPE = "applied_adaptive_type";
+
     /**
      * Preferences with these keys should not be backed up
      */
