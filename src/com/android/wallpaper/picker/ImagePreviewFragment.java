@@ -74,6 +74,7 @@ import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
+import com.android.wallpaper.util.AdaptiveWallpaperUtils;
 import com.android.wallpaper.util.FullScreenAnimation;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
@@ -637,6 +638,12 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     @Override
     protected void setCurrentWallpaper(@Destination int destination) {
+        Asset asset = mWallpaperAsset;
+        if (mAdaptiveWallpaperInfo != null) {
+            AdaptiveType adaptiveType = AdaptiveWallpaperUtils.getCurrentAdaptiveType(
+                    System.currentTimeMillis(), null);
+            asset = mAdaptiveWallpaperInfo.getAdaptiveAsset(getContext(), adaptiveType);
+        }
         Rect cropRect = calculateCropRect(getContext());
         float screenScale = WallpaperCropUtils.getScaleOfScreenResolution(
                 mFullResImageView.getScale(), cropRect, mWallpaperScreenSize.x,
@@ -646,7 +653,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                 Math.round((float) cropRect.top * screenScale),
                 Math.round((float) cropRect.right * screenScale),
                 Math.round((float) cropRect.bottom * screenScale));
-        mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, mWallpaperAsset,
+        mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, asset,
                 destination, mFullResImageView.getScale() * screenScale, scaledCropRect,
                 mWallpaperColors, SetWallpaperViewModel.getCallback(mViewModelProvider));
     }

@@ -24,6 +24,7 @@ import android.graphics.Color;
 
 import androidx.annotation.Nullable;
 
+import com.android.wallpaper.model.AdaptiveType;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 
@@ -83,6 +84,7 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     private int mLockWallpaperActionIconRes;
     private HashMap<String, String> mWallStoredColor;
     private String mWallpaperEffects;
+    private AdaptiveType mAdaptiveType;
 
     public TestWallpaperPreferences() {
         mWallpaperPresentationMode = WallpaperPreferences.PRESENTATION_MODE_STATIC;
@@ -609,6 +611,21 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     @Override
     public void setWallpaperEffects(String effects) {
         mWallpaperEffects = effects;
+    }
+
+    @Override
+    public AdaptiveType getAppliedAdaptiveType() {
+        return mAdaptiveType;
+    }
+
+    @Override
+    public void setAppliedAdaptiveType(AdaptiveType type) {
+        mAdaptiveType = type;
+    }
+
+    @Override
+    public void clearAdaptiveData() {
+        mAdaptiveType = null;
     }
 
     private int getCurrentDate() {
