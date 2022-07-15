@@ -234,4 +234,8 @@
     <dimen name="wallpaper_effect_failed_button_background_radius">50dp</dimen>
     <dimen name="wallpaper_effect_failed_button_height">36dp</dimen>
     <dimen name="wallpaper_effect_failed_button_horizontal_padding">16dp</dimen>
+    <dimen name="wallpaper_effect_failed_container_height">36dp</dimen>
+    <dimen name="wallpaper_effect_failed_container_margin_top">24dp</dimen>
+    <dimen name="wallpaper_effect_failed_button_size">16sp</dimen>
+
 </resources>
