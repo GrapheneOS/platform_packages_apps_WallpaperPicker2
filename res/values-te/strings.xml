@@ -75,7 +75,7 @@
     <string name="fallback_wallpaper_title" msgid="6154655421012506001">"వాల్‌పేపర్"</string>
     <string name="app_not_found" msgid="4431461707854088231">"యాప్ ఇన్‌స్టాల్ చేయబడలేదు."</string>
     <string name="center_wallpaper_position" msgid="4166894762352288883">"మధ్య"</string>
-    <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"మధ్యన కత్తిరించు"</string>
+    <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"మధ్యన కత్తిరించండి"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"విస్తరించు"</string>
     <string name="preview" msgid="1774602101743861071">"ప్రివ్యూ"</string>
     <string name="tab_info" msgid="818614080690111416">"సమాచారం"</string>
