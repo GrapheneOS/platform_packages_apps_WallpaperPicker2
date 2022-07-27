@@ -66,6 +66,7 @@ import com.android.wallpaper.model.WallpaperInfo.ColorInfo;
 import com.android.wallpaper.module.BitmapCropper;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.module.LargeScreenMultiPanesChecker;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.util.FullScreenAnimation;
@@ -269,7 +270,9 @@ public class ImagePreviewFragment extends PreviewFragment {
         mBottomActionBar.bindBottomSheetContentWithAction(
                 new WallpaperInfoContent(getContext()), INFORMATION);
         Activity activity = getActivity();
-        if (activity != null && activity.isInMultiWindowMode()) {
+        LargeScreenMultiPanesChecker checker = new LargeScreenMultiPanesChecker();
+        if (activity != null
+                && (activity.isInMultiWindowMode() || checker.isMultiPanesEnabled(getContext()))) {
             mBottomActionBar.showActionsOnly(INFORMATION, APPLY);
         } else {
             mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
