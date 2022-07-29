@@ -17,18 +17,27 @@ package com.android.wallpaper.util
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.location.Location
+import android.location.LocationManager
 import android.util.Log
 import com.android.wallpaper.asset.Asset
+import com.android.wallpaper.asset.BitmapUtils
+import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.model.AdaptiveType
 import com.android.wallpaper.model.AdaptiveWallpaperInfo
 import com.android.wallpaper.module.BitmapCropper
+import com.android.wallpaper.module.Injector
 import com.android.wallpaper.module.InjectorProvider
+import com.android.wallpaper.module.WallpaperPersister.DEST_BOTH
+import com.android.wallpaper.module.WallpaperPersister.DEST_HOME_SCREEN
+import com.android.wallpaper.module.WallpaperPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.Calendar
 import java.util.Locale
@@ -44,8 +53,8 @@ object AdaptiveWallpaperUtils {
     /**
      * Gets adaptive wallpaper image filename.
      *
-     * @param type The adaptive type to get filename. It should be light or dark type.
-     * @return The correspond adaptive type adaptive image filename.
+     * @param type the adaptive type to get filename. It should be light or dark type.
+     * @return the correspond adaptive type adaptive image filename.
      */
     @JvmStatic
     fun getAdaptiveWallpaperFilename(type: AdaptiveType): String {
@@ -171,5 +180,98 @@ object AdaptiveWallpaperUtils {
             // TODO(b/197815029): Implement get sunset sunrise by CalendarAstronomer with location
             return AdaptiveType.NONE
         }
+    }
+
+    /**
+     * Rotates the adaptive wallpaper. It rotates by destination gotten from WallpaperPreferences.
+     * Also saves the bitmap hash code to make category check mark correct.
+     *
+     * @return false if rotates failed.
+     */
+    fun rotateNextAdaptiveWallpaper(context: Context, nextAdaptiveType: AdaptiveType): Boolean {
+        val bitmap = getAdaptiveWallpaperImage(context, nextAdaptiveType) ?: return false
+        val bitmapHash = BitmapUtils.generateHashCode(bitmap)
+        val injector: Injector = InjectorProvider.getInjector()
+        val wallpaperStatusChecker = injector.wallpaperStatusChecker
+        val isLockWallpaperSet = wallpaperStatusChecker.isLockWallpaperSet(context)
+        val destination = if (isLockWallpaperSet) DEST_HOME_SCREEN else DEST_BOTH
+        val wallpaperPreferences: WallpaperPreferences = injector.getPreferences(context)
+        val whichWallpaper: Int
+
+        // Saves bitmap hash to make sure the check mark in individual fragment position is correct.
+        when (destination) {
+            DEST_HOME_SCREEN -> {
+                whichWallpaper = WallpaperManagerCompat.FLAG_SYSTEM
+                wallpaperPreferences.homeWallpaperHashCode = bitmapHash
+            }
+            else -> { // DEST_BOTH
+                whichWallpaper = (WallpaperManagerCompat.FLAG_SYSTEM
+                        or WallpaperManagerCompat.FLAG_LOCK)
+                wallpaperPreferences.homeWallpaperHashCode = bitmapHash
+                wallpaperPreferences.lockWallpaperHashCode = bitmapHash
+            }
+        }
+        wallpaperPreferences.appliedAdaptiveType = nextAdaptiveType
+        return InjectorProvider.getInjector().getWallpaperPersister(context)
+            .setBitmapToWallpaperManagerCompat(bitmap, false, whichWallpaper) != 0
+    }
+
+    /**
+     * Gets the next rotate adaptive wallpaper time by AdaptiveType calculated by
+     * CalendarAstronomer with location.
+     */
+    @JvmStatic
+    fun getNextRotateAdaptiveWallpaperTimeByAdaptiveType(
+        location: Location?,
+        nextAdaptiveType: AdaptiveType
+    ): Long {
+        val timeMillis = System.currentTimeMillis()
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = timeMillis
+        calendar[Calendar.MINUTE] = 0
+        calendar[Calendar.SECOND] = 0
+        calendar[Calendar.MILLISECOND] = 0
+        return if (location == null) {
+            if (nextAdaptiveType === AdaptiveType.LIGHT) {
+                calendar[Calendar.HOUR_OF_DAY] = 6
+            } else {
+                calendar[Calendar.HOUR_OF_DAY] = 18
+            }
+            if (timeMillis > calendar.timeInMillis) {
+                calendar[Calendar.DATE] = calendar[Calendar.DATE] + 1
+            }
+            calendar.timeInMillis
+        } else {
+            // TODO(b/197815029): Get next rotate adaptive wallpaper time by CalendarAstronomer
+            //  with location.
+            System.currentTimeMillis()
+        }
+    }
+
+    /**
+     * Gets the device location.
+     */
+    @JvmStatic
+    fun getLocation(context: Context): Location? {
+        return if (PermissionUtils.isAccessCoarseLocationPermissionGranted(context)) {
+            val locationManager = context.getSystemService(LocationManager::class.java)
+            locationManager.lastLocation
+        } else {
+            null
+        }
+    }
+
+    /**
+     * Gets adaptive wallpaper image.
+     */
+    private fun getAdaptiveWallpaperImage(context: Context, adaptiveType: AdaptiveType): Bitmap? {
+        try {
+            return BitmapFactory.decodeStream(
+                context.openFileInput(getAdaptiveWallpaperFilename(adaptiveType))
+            )
+        } catch (e: FileNotFoundException) {
+            Log.e(TAG, "Failed to get adaptive wallpaper image.", e)
+        }
+        return null
     }
 }

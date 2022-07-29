@@ -399,4 +399,8 @@
 
     <!-- Label for a button which lets user try to open their photos. [CHAR LIMIT=40] -->
     <string name="open_my_photos">Open My Photos</string>
+
+    <!-- Label describing a wallpaper whose responsibility is to display a different wallpaper
+         on day and night. [CHAR LIMIT=NONE] -->
+    <string name="channel_day_and_night">Day and night wallpaper</string>
 </resources>

@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.location.Location;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.Log;
@@ -209,6 +210,9 @@ public class WallpaperSetter {
                 wallpaperScale, destination, new SetWallpaperCallback() {
                     @Override
                     public void onSuccess(WallpaperInfo wallpaperInfo) {
+                        if (wallpaperInfo instanceof AdaptiveWallpaperInfo) {
+                            scheduleAdaptiveWallpaperTask(containerActivity);
+                        }
                         onWallpaperApplied(wallpaper, containerActivity);
                         if (callback != null) {
                             callback.onSuccess(wallpaper);
@@ -223,6 +227,16 @@ public class WallpaperSetter {
                         }
                     }
                 });
+    }
+
+    private void scheduleAdaptiveWallpaperTask(Context context) {
+        Location location = AdaptiveWallpaperUtils.getLocation(context);
+        Long nextSwitchTimestamp =
+                AdaptiveWallpaperUtils.getNextRotateAdaptiveWallpaperTimeByAdaptiveType(location,
+                        mPreferences.getAppliedAdaptiveType().getNextType());
+        AdaptiveTaskScheduler.scheduleOneOffTask(context,
+                nextSwitchTimestamp - System.currentTimeMillis(),
+                /* fromBroadcastReceiver= */ false);
     }
 
     private void setCurrentLiveWallpaper(Activity activity, LiveWallpaperInfo wallpaper,
