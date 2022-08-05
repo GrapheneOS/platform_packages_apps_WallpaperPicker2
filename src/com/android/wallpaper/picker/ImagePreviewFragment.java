@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.picker;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS;
 import static android.view.View.IMPORTANT_FOR_ACCESSIBILITY_YES;
 import static android.view.View.MeasureSpec.EXACTLY;
@@ -23,13 +24,16 @@ import static android.view.View.MeasureSpec.makeMeasureSpec;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.EDIT;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMATION;
+import static com.android.wallpaper.widget.BottomActionBar.BottomAction.SETTINGS;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.WallpaperColors;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -37,8 +41,10 @@ import android.graphics.ColorSpace;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -51,9 +57,13 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -77,6 +87,7 @@ import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.util.AdaptiveWallpaperUtils;
 import com.android.wallpaper.util.FullScreenAnimation;
+import com.android.wallpaper.util.PermissionUtils;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
@@ -89,6 +100,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Locale;
@@ -144,6 +156,7 @@ public class ImagePreviewFragment extends PreviewFragment {
     protected LockScreenPreviewer mLockScreenPreviewer;
     protected SubsamplingScaleImageView mFullResImageView;
     protected Asset mWallpaperAsset;
+    private LocationPermissionRequestContent mLocationPermissionRequestContent;
     private Future<ColorInfo> mColorFuture;
     // The runnable task for periodically rotating adaptive wallpaper.
     private Runnable mAdaptiveRunnable = new Runnable() {
@@ -168,6 +181,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         mWallpaperAsset = mWallpaper.getAsset(requireContext().getApplicationContext());
         if (mWallpaper instanceof AdaptiveWallpaperInfo) {
             mAdaptiveWallpaperInfo = (AdaptiveWallpaperInfo) mWallpaper;
+            mLocationPermissionRequestContent = new LocationPermissionRequestContent(getContext());
         }
         mColorFuture = mWallpaper.computeColorInfo(requireContext());
         mWallpaperPreferences = mInjector.getPreferences(getContext());
@@ -311,6 +325,11 @@ public class ImagePreviewFragment extends PreviewFragment {
             mBottomActionBar.showActionsOnly(INFORMATION, APPLY);
         } else {
             mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
+        }
+        if (mAdaptiveWallpaperInfo != null) {
+            mBottomActionBar.showActions(SETTINGS);
+            mBottomActionBar.bindBottomSheetContentWithAction(mLocationPermissionRequestContent,
+                    SETTINGS);
         }
         mBottomActionBar.setActionClickListener(APPLY,
                 unused -> onSetWallpaperClicked(null, mWallpaper));
@@ -849,4 +868,105 @@ public class ImagePreviewFragment extends PreviewFragment {
         mAdaptiveHandler.removeCallbacks(mAdaptiveRunnable);
     }
 
+    private final class LocationPermissionRequestContent extends
+            BottomActionBar.BottomSheetContent<View> {
+
+        private TextView mLocationDisabledSubTitle;
+        private TextView mLocationEnabledSubtitle;
+        private Button mLocationEnabledButton;
+        private Button mLocationDisabledButton;
+        private ActivityResultLauncher<Intent> mSettingsStartForResult;
+        private ActivityResultLauncher<String[]> mLocationPermissionRequest;
+
+        LocationPermissionRequestContent(Context context) {
+            super(context);
+            mSettingsStartForResult = registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result ->
+                            mLocationPermissionRequestContent.onLocationPermissionChanged(
+                                    PermissionUtils.isAccessCoarseLocationPermissionGranted(
+                                            getContext())));
+            mLocationPermissionRequest =
+                    registerForActivityResult(
+                            new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                                Boolean coarseLocationGranted = result.getOrDefault(
+                                        ACCESS_COARSE_LOCATION, /* default= */false);
+                                if (coarseLocationGranted != null && coarseLocationGranted) {
+                                    mLocationPermissionRequestContent.onLocationPermissionChanged(
+                                            /* grant= */ true);
+                                } else {
+                                    if (!getActivity().shouldShowRequestPermissionRationale(
+                                            ACCESS_COARSE_LOCATION)) {
+                                        showPermissionSnackbar();
+                                    }
+                                }
+                            }
+                    );
+        }
+
+        @Override
+        public int getViewId() {
+            return R.layout.location_permission_request_view;
+        }
+
+        @Override
+        public void onViewCreated(View previewPage) {
+            mLocationDisabledSubTitle = previewPage.findViewById(
+                    R.id.location_permission_disabled_subtitle);
+            mLocationEnabledSubtitle = previewPage.findViewById(
+                    R.id.location_permission_enabled_subtitle);
+            mLocationEnabledButton = previewPage.findViewById(R.id.location_permission_enable);
+            mLocationDisabledButton = previewPage.findViewById(R.id.location_permission_disable);
+            onLocationPermissionChanged(
+                    PermissionUtils.isAccessCoarseLocationPermissionGranted(getContext()));
+            mLocationEnabledButton.setOnClickListener(view ->
+                    mLocationPermissionRequest.launch(
+                            new String[]{ACCESS_COARSE_LOCATION}));
+            mLocationDisabledButton.setOnClickListener(view -> startSettings());
+        }
+
+        public void onLocationPermissionChanged(boolean grant) {
+            if (grant) {
+                mLocationEnabledSubtitle.setVisibility(View.VISIBLE);
+                mLocationDisabledButton.setVisibility(View.VISIBLE);
+                mLocationDisabledSubTitle.setVisibility(View.GONE);
+                mLocationEnabledButton.setVisibility(View.GONE);
+            } else {
+                mLocationEnabledSubtitle.setVisibility(View.GONE);
+                mLocationDisabledButton.setVisibility(View.GONE);
+                mLocationDisabledSubTitle.setVisibility(View.VISIBLE);
+                mLocationEnabledButton.setVisibility(View.VISIBLE);
+            }
+        }
+
+        private void showPermissionSnackbar() {
+            Snackbar snackbar = Snackbar.make(getView(),
+                    R.string.request_permission_settings_snackbar_description,
+                    Snackbar.LENGTH_LONG);
+            Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
+            TextView textView = layout.findViewById(R.id.snackbar_text);
+            layout.setBackgroundResource(R.drawable.snackbar_background);
+            TypedArray typedArray = getContext().obtainStyledAttributes(
+                    new int[]{android.R.attr.textColorPrimary,
+                            com.android.internal.R.attr.colorAccentPrimaryVariant});
+            textView.setTextColor(typedArray.getColor(0, Color.TRANSPARENT));
+            snackbar.setActionTextColor(typedArray.getColor(1, Color.TRANSPARENT));
+            typedArray.recycle();
+
+            snackbar.setAction(getContext().getString(R.string.settings_button_label),
+                    view -> startSettings());
+            snackbar.show();
+        }
+
+        private void startSettings() {
+            Activity activity = getActivity();
+            if (activity == null) {
+                return;
+            }
+            Intent appInfoIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts("package", activity.getPackageName(), /* fragment= */ null);
+            appInfoIntent.setData(uri);
+            mSettingsStartForResult.launch(appInfoIntent);
+        }
+    }
 }
