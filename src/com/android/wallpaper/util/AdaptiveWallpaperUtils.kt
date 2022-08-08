@@ -33,6 +33,7 @@ import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.module.WallpaperPersister.DEST_BOTH
 import com.android.wallpaper.module.WallpaperPersister.DEST_HOME_SCREEN
 import com.android.wallpaper.module.WallpaperPreferences
+import com.ibm.icu.impl.CalendarAstronomer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -41,6 +42,7 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.Calendar
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -171,14 +173,28 @@ object AdaptiveWallpaperUtils {
             sunriseTimeMillis = calendar.timeInMillis
             calendar[Calendar.HOUR_OF_DAY] = 18
             sunsetTimeMillis = calendar.timeInMillis
+        } else {
+            val calendarAstronomer = CalendarAstronomer(
+                location.longitude,
+                location.latitude
+            )
+            calendarAstronomer.time = currentTimeMillis
+
+            sunriseTimeMillis = calendarAstronomer.getSunRiseSet(/* rise= */ true)
+            sunsetTimeMillis = calendarAstronomer.getSunRiseSet(/* rise= */ false)
+        }
+        return if (sunsetTimeMillis > sunriseTimeMillis) {
             if (sunsetTimeMillis < currentTimeMillis || sunriseTimeMillis > currentTimeMillis) {
-                return AdaptiveType.DARK
+                AdaptiveType.DARK
             } else {
-                return AdaptiveType.LIGHT
+                AdaptiveType.LIGHT
             }
         } else {
-            // TODO(b/197815029): Implement get sunset sunrise by CalendarAstronomer with location
-            return AdaptiveType.NONE
+            if (sunsetTimeMillis < currentTimeMillis && currentTimeMillis < sunriseTimeMillis) {
+                AdaptiveType.DARK
+            } else {
+                AdaptiveType.LIGHT
+            }
         }
     }
 
@@ -242,10 +258,28 @@ object AdaptiveWallpaperUtils {
             }
             calendar.timeInMillis
         } else {
-            // TODO(b/197815029): Get next rotate adaptive wallpaper time by CalendarAstronomer
-            //  with location.
-            System.currentTimeMillis()
+            val calendarAstronomer = CalendarAstronomer(
+                location.longitude,
+                location.latitude
+            )
+            calendarAstronomer.time = timeMillis
+            var nextRotateTime = getTimeMillisByAdaptiveType(calendarAstronomer, nextAdaptiveType)
+            if (timeMillis > nextRotateTime) {
+                calendarAstronomer.time =
+                    timeMillis + TimeUnit.DAYS.toMillis(/* duration= */ 1)
+                nextRotateTime = getTimeMillisByAdaptiveType(calendarAstronomer, nextAdaptiveType)
+            }
+            nextRotateTime
         }
+    }
+
+    private fun getTimeMillisByAdaptiveType(
+        calendarAstronomer: CalendarAstronomer,
+        adaptiveType: AdaptiveType
+    ) = when (adaptiveType) {
+        AdaptiveType.LIGHT -> calendarAstronomer.getSunRiseSet(/* rise= */ true)
+        AdaptiveType.DARK -> calendarAstronomer.getSunRiseSet(/* rise= */ false)
+        else -> calendarAstronomer.time
     }
 
     /**

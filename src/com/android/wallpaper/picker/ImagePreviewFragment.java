@@ -663,7 +663,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         Asset asset = mWallpaperAsset;
         if (mAdaptiveWallpaperInfo != null) {
             AdaptiveType adaptiveType = AdaptiveWallpaperUtils.getCurrentAdaptiveType(
-                    System.currentTimeMillis(), null);
+                    System.currentTimeMillis(), AdaptiveWallpaperUtils.getLocation(getContext()));
             asset = mAdaptiveWallpaperInfo.getAdaptiveAsset(getContext(), adaptiveType);
         }
         Rect cropRect = calculateCropRect(getContext());
@@ -890,7 +890,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                     registerForActivityResult(
                             new ActivityResultContracts.RequestMultiplePermissions(), result -> {
                                 Boolean coarseLocationGranted = result.getOrDefault(
-                                        ACCESS_COARSE_LOCATION, /* default= */false);
+                                        ACCESS_COARSE_LOCATION, /* default= */ false);
                                 if (coarseLocationGranted != null && coarseLocationGranted) {
                                     mLocationPermissionRequestContent.onLocationPermissionChanged(
                                             /* grant= */ true);
