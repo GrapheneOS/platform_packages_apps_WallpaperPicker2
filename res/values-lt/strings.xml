@@ -111,4 +111,19 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Įgalinkite failus ir mediją nustatymuose."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Įgalinti"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Atidaryti skiltį „Mano nuotraukos“"</string>
+    <string name="channel_day_and_night" msgid="3471913688828228175">"Dienos ir nakties ekrano fonas"</string>
+    <!-- no translation found for bottom_action_bar_settings (5840642445243257179) -->
+    <skip />
+    <!-- no translation found for location_permission_title (5227656662650091926) -->
+    <skip />
+    <!-- no translation found for location_permission_disabled_subtitle (3684878299611314354) -->
+    <skip />
+    <!-- no translation found for location_permission_enabled_subtitle (1567408469692191044) -->
+    <skip />
+    <!-- no translation found for location_permission_enable (951505048063245139) -->
+    <skip />
+    <!-- no translation found for location_permission_disable (4534586210084066675) -->
+    <skip />
+    <!-- no translation found for request_permission_settings_snackbar_description (8014751482538339781) -->
+    <skip />
 </resources>
