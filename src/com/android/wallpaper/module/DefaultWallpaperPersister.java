@@ -797,6 +797,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                                 null));
                 mWallpaperPreferences.setWallpaperPresentationMode(
                         WallpaperPreferences.PRESENTATION_MODE_ADAPTIVE);
+                mWallpaperPreferences.setAppliedAdaptiveWallpaperId(mWallpaper.getWallpaperId());
             }
 
             mWallpaperPreferences.clearDailyRotations();
