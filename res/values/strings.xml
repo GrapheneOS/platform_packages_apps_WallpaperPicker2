@@ -423,6 +423,6 @@
     <!-- Label for a button which lets user disable location permission. [CHAR LIMIT=40] -->
     <string name="location_permission_disable">Disable</string>
 
-    <!-- Description of navigation to settings when request permission. [CHAR LIMIT=40] -->
+    <!-- Description of navigation to settings when request permission. [CHAR LIMIT=60] -->
     <string name="request_permission_settings_snackbar_description">Visit settings page to enable.</string>
 </resources>
