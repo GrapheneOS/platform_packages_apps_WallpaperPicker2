@@ -45,6 +45,7 @@ android_library {
         "SystemUISharedLib",
         "volley",
         "SettingsLibActivityEmbedding",
+        "icu4j_calendar_astronomer",
     ],
 
     resource_dirs: ["res"],
