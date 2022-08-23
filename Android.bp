@@ -109,6 +109,7 @@ java_defaults {
     static_libs: [
         "renderscript_toolkit",
         "wallpaper-common-deps",
+        "monet",
     ],
 
     jni_libs: [
