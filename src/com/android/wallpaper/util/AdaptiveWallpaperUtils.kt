@@ -21,6 +21,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.location.Location
 import android.location.LocationManager
+import android.text.TextUtils
 import android.util.Log
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.asset.BitmapUtils
@@ -212,6 +213,7 @@ object AdaptiveWallpaperUtils {
         val isLockWallpaperSet = wallpaperStatusChecker.isLockWallpaperSet(context)
         val destination = if (isLockWallpaperSet) DEST_HOME_SCREEN else DEST_BOTH
         val wallpaperPreferences: WallpaperPreferences = injector.getPreferences(context)
+        val appliedAdaptiveWallpaperId = wallpaperPreferences.appliedAdaptiveWallpaperId
         val whichWallpaper: Int
 
         // Saves bitmap hash to make sure the check mark in individual fragment position is correct.
@@ -227,6 +229,14 @@ object AdaptiveWallpaperUtils {
                 wallpaperPreferences.lockWallpaperHashCode = bitmapHash
             }
         }
+
+        if (!TextUtils.isEmpty(appliedAdaptiveWallpaperId)) {
+            wallpaperPreferences.changeRecentHomeWallpaperImage(
+                appliedAdaptiveWallpaperId,
+                bitmap
+            )
+        }
+
         wallpaperPreferences.appliedAdaptiveType = nextAdaptiveType
         return InjectorProvider.getInjector().getWallpaperPersister(context)
             .setBitmapToWallpaperManagerCompat(bitmap, false, whichWallpaper) != 0
