@@ -85,6 +85,7 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     private HashMap<String, String> mWallStoredColor;
     private String mWallpaperEffects;
     private AdaptiveType mAdaptiveType;
+    private String mAdaptiveWallpaperId;
 
     public TestWallpaperPreferences() {
         mWallpaperPresentationMode = WallpaperPreferences.PRESENTATION_MODE_STATIC;
@@ -621,6 +622,16 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     @Override
     public void setAppliedAdaptiveType(AdaptiveType type) {
         mAdaptiveType = type;
+    }
+
+    @Override
+    public String getAppliedAdaptiveWallpaperId() {
+        return mAdaptiveWallpaperId;
+    }
+
+    @Override
+    public void setAppliedAdaptiveWallpaperId(String wallpaperId) {
+        mAdaptiveWallpaperId = wallpaperId;
     }
 
     @Override
