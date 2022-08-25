@@ -529,6 +529,18 @@ public interface WallpaperPreferences {
     void setAppliedAdaptiveType(AdaptiveType type);
 
     /**
+     * Gets the applied adaptive wallpaper id saved in SharedPreferences.
+     */
+    String getAppliedAdaptiveWallpaperId();
+
+    /**
+     * Sets the applied adaptive wallpaper id to SharedPreferences.
+     *
+     * @param wallpaperId wallpaper id.
+     */
+    void setAppliedAdaptiveWallpaperId(String wallpaperId);
+
+    /**
      * Clears adaptive-related preferences.
      */
     void clearAdaptiveData();
@@ -596,6 +608,17 @@ public interface WallpaperPreferences {
     default void storeLatestHomeWallpaper(String wallpaperId, List<String> attributions,
             String actionUrl, String collectionId,
             @NonNull Bitmap croppedWallpaperBitmap, WallpaperColors colors) {
+        // Do nothing in the default case.
+    }
+
+    /**
+     * Changes the given static wallpaper image in the recent wallpapers list.
+     *
+     * @param wallpaperId unique identifier for this wallpaper
+     * @param croppedWallpaperBitmap wallpaper bitmap exactly as applied to WallpaperManager
+     */
+    default void changeRecentHomeWallpaperImage(String wallpaperId,
+            @NonNull Bitmap croppedWallpaperBitmap) {
         // Do nothing in the default case.
     }
 }

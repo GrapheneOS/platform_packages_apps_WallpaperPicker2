@@ -40,6 +40,7 @@ public class WallpaperPreferenceKeys {
     public static final String KEY_LOCK_WALLPAPER_COLLECTION_ID = "lock_wallpaper_collection_id";
 
     public static final String KEY_APPLIED_ADAPTIVE_TYPE = "applied_adaptive_type";
+    public static final String KEY_APPLIED_ADAPTIVE_WALLPAPER_ID = "applied_adaptive_wallpaper_id";
 
     /**
      * Preferences with these keys should not be backed up

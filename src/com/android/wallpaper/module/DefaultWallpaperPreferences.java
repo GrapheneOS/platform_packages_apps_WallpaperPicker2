@@ -978,9 +978,22 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
+    public String getAppliedAdaptiveWallpaperId() {
+        return mSharedPrefs.getString(WallpaperPreferenceKeys.KEY_APPLIED_ADAPTIVE_WALLPAPER_ID,
+                "");
+    }
+
+    @Override
+    public void setAppliedAdaptiveWallpaperId(String wallpaperId) {
+        mSharedPrefs.edit().putString(WallpaperPreferenceKeys.KEY_APPLIED_ADAPTIVE_WALLPAPER_ID,
+                wallpaperId).apply();
+    }
+
+    @Override
     public void clearAdaptiveData() {
         mSharedPrefs.edit()
                 .remove(WallpaperPreferenceKeys.KEY_APPLIED_ADAPTIVE_TYPE)
+                .remove(WallpaperPreferenceKeys.KEY_APPLIED_ADAPTIVE_WALLPAPER_ID)
                 .apply();
     }
 
