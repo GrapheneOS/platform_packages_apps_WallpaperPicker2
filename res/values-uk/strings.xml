@@ -112,18 +112,11 @@
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Дозволити"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Відкрити мої фото"</string>
     <string name="channel_day_and_night" msgid="3471913688828228175">"Фоновий малюнок удень і вночі"</string>
-    <!-- no translation found for bottom_action_bar_settings (5840642445243257179) -->
-    <skip />
-    <!-- no translation found for location_permission_title (5227656662650091926) -->
-    <skip />
-    <!-- no translation found for location_permission_disabled_subtitle (3684878299611314354) -->
-    <skip />
-    <!-- no translation found for location_permission_enabled_subtitle (1567408469692191044) -->
-    <skip />
-    <!-- no translation found for location_permission_enable (951505048063245139) -->
-    <skip />
-    <!-- no translation found for location_permission_disable (4534586210084066675) -->
-    <skip />
-    <!-- no translation found for request_permission_settings_snackbar_description (8014751482538339781) -->
-    <skip />
+    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"Налаштування"</string>
+    <string name="location_permission_title" msgid="5227656662650091926">"Доступ до геоданих"</string>
+    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"Цьому фоновому малюнку не надано дозволи на доступ до геоданих."</string>
+    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"Цьому фоновому малюнку надано дозволи на доступ до геоданих."</string>
+    <string name="location_permission_enable" msgid="951505048063245139">"Надати дозвіл"</string>
+    <string name="location_permission_disable" msgid="4534586210084066675">"Скасувати дозвіл"</string>
+    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"Надайте дозвіл на сторінці налаштувань."</string>
 </resources>
