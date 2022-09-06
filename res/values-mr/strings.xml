@@ -112,18 +112,11 @@
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"परवानगी द्या"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"माझे फोटो उघडा"</string>
     <string name="channel_day_and_night" msgid="3471913688828228175">"दिवस आणि रात्रीसाठी वॉलपेपर"</string>
-    <!-- no translation found for bottom_action_bar_settings (5840642445243257179) -->
-    <skip />
-    <!-- no translation found for location_permission_title (5227656662650091926) -->
-    <skip />
-    <!-- no translation found for location_permission_disabled_subtitle (3684878299611314354) -->
-    <skip />
-    <!-- no translation found for location_permission_enabled_subtitle (1567408469692191044) -->
-    <skip />
-    <!-- no translation found for location_permission_enable (951505048063245139) -->
-    <skip />
-    <!-- no translation found for location_permission_disable (4534586210084066675) -->
-    <skip />
-    <!-- no translation found for request_permission_settings_snackbar_description (8014751482538339781) -->
-    <skip />
+    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"सेटिंग्ज"</string>
+    <string name="location_permission_title" msgid="5227656662650091926">"स्थान परवानग्या"</string>
+    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"या वॉलपेपरसाठीच्या स्थान परवानग्या बंद करण्यात आल्या आहेत."</string>
+    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"या वॉलपेपरसाठीच्या स्थान परवानग्या सुरू करण्यात आल्या आहेत."</string>
+    <string name="location_permission_enable" msgid="951505048063245139">"सुरू करा"</string>
+    <string name="location_permission_disable" msgid="4534586210084066675">"बंद करा"</string>
+    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"सुरू करण्यासाठी सेटिंग्ज पेजला भेट द्या."</string>
 </resources>
