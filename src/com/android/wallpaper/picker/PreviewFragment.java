@@ -299,7 +299,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
                     }
             );
             container.findViewById(R.id.set_as_wallpaper_button).setOnClickListener(
-                    unused -> onSetWallpaperClicked(null, mWallpaper));
+                    unused -> onSetWallpaperClicked(null, getCurrentWallpaperInfo()));
         } else {
             container.findViewById(R.id.hide_ui_preview_button).setVisibility(View.GONE);
             container.findViewById(R.id.set_as_wallpaper_button).setVisibility(View.GONE);
@@ -323,6 +323,10 @@ public abstract class PreviewFragment extends AppbarFragment implements
         }
 
         mFullScreenAnimation.ensureBottomActionBarIsCorrectlyLocated();
+    }
+
+    protected WallpaperInfo getCurrentWallpaperInfo() {
+        return mWallpaper;
     }
 
     protected List<String> getAttributions(Context context) {
