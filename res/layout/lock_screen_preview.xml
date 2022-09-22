@@ -47,7 +47,7 @@
             android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:fontFamily="@font/clock"
-            android:textColor="?androidprv:attr/colorAccentPrimary"
+            android:textColor="@color/color_accent_primary"
             android:typeface="monospace"
             android:textSize="@dimen/lock_screen_preview_time_text_size"
             android:lineSpacingMultiplier="0.7"
