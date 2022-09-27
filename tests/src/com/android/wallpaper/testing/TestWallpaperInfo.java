@@ -32,7 +32,7 @@ import java.util.List;
  * Test model object for a wallpaper coming from local drawable resources.
  */
 public class TestWallpaperInfo extends WallpaperInfo {
-    public static final int COLOR_BLACK = 0;
+    public static final int COLOR_DEFAULT = 0xff000000;
     public static final Parcelable.Creator<TestWallpaperInfo> CREATOR =
             new Parcelable.Creator<TestWallpaperInfo>() {
                 @Override

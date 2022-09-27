@@ -23,33 +23,29 @@ package {
 android_test {
     name: "WallpaperPicker2Tests",
 
-    static_libs: [
-        "androidx.annotation_annotation",
-        "androidx.test.core",
-        "androidx.test.runner",
-        "androidx.test.rules",
-        "androidx.test.espresso.contrib",
-        "androidx.test.espresso.intents",
-        "mockito-target-minus-junit4",
-        "androidx.test.espresso.core",
-        "hamcrest-library",
-        "hamcrest",
-        "wallpaper-common-deps",
-    ],
-
-    platform_apis: true,
-
-
-    optimize: {
-        enabled: false,
-    },
-
+    defaults: ["WallpaperPicker2_defaults"],
     srcs: [
         "src/**/*.java",
         "src/**/*.kt",
     ],
+    static_libs: [
+        "androidx.annotation_annotation",
+        "androidx.test.espresso.core",
+        "androidx.test.espresso.contrib",
+        "androidx.test.espresso.intents",
+        "androidx.test.rules",
+        "hamcrest-library",
+        "hamcrest",
+        "mockito-target-minus-junit4",
+        "ub-uiautomator",
+        "junit",
+    ],
+    libs: [
+        "android.test.runner",
+        "android.test.base",
+        "android.test.mock",
+    ],
 
-    manifest: "AndroidManifest.xml",
-
-    instrumentation_for: "WallpaperPicker2",
+    platform_apis: true,
+    test_suites: ["device-tests"],
 }
