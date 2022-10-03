@@ -62,8 +62,8 @@
     <string name="wallpaper_thumbnail" msgid="569931475923605974">"تصویر کوچک کاغذ‌دیواری"</string>
     <string name="explore_home_screen" msgid="8756346794535765482">"کاوش کاغذ‌دیواری صفحه اصلی"</string>
     <string name="explore_lock_screen" msgid="268938342103703665">"کاوش کاغذ‌دیواری صفحه در حالت قفل"</string>
-    <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"بازخوانی کاغذدیواری روزانه در صفحه اصلی"</string>
-    <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"بازخوانی کاغذدیواری روزانه"</string>
+    <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"بازآوری کاغذدیواری روزانه در صفحه اصلی"</string>
+    <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"بازآوری کاغذدیواری روزانه"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"درحال بازآوری کاغذدیواری روزانه…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"کاغذدیواری روزانه بازآوری نشد. لطفاً اتصال شبکه‌تان را بررسی و دوباره امتحان کنید."</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"کاغذدیواری‌های موجود در دستگاه"</string>
