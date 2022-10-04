@@ -106,25 +106,6 @@ public abstract class PreviewFragment extends AppbarFragment implements
     public static final String ARG_FULL_SCREEN = "view_full_screen";
     public static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
 
-    /**
-     * Creates and returns new instance of {@link ImagePreviewFragment} with the provided wallpaper
-     * set as an argument.
-     */
-    public static PreviewFragment newInstance(WallpaperInfo wallpaperInfo, @PreviewMode int mode,
-            boolean viewAsHome, boolean viewFullScreen, boolean testingModeEnabled) {
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_WALLPAPER, wallpaperInfo);
-        args.putInt(ARG_PREVIEW_MODE, mode);
-        args.putBoolean(ARG_VIEW_AS_HOME, viewAsHome);
-        args.putBoolean(ARG_FULL_SCREEN, viewFullScreen);
-        args.putBoolean(ARG_TESTING_MODE_ENABLED, testingModeEnabled);
-
-        PreviewFragment fragment = wallpaperInfo instanceof LiveWallpaperInfo
-                ? new LivePreviewFragment() : new ImagePreviewFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     private static final String TAG_LOAD_WALLPAPER_ERROR_DIALOG_FRAGMENT =
             "load_wallpaper_error_dialog";
     private static final String TAG_SET_WALLPAPER_ERROR_DIALOG_FRAGMENT =
@@ -274,7 +255,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
             return;
         }
         startActivity(FullPreviewActivity.newIntent(getActivity(), wallpaperInfo,
-                /* viewAsHome= */ mLastSelectedTabPositionOptional.orElse(0) == 0),
+                        /* viewAsHome= */ mLastSelectedTabPositionOptional.orElse(0) == 0),
                 ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
     }
 
