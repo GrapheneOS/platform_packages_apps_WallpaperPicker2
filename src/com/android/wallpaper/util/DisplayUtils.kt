@@ -22,8 +22,8 @@ import android.util.Log
 import android.view.Display
 
 /**
- * Utility class to provide methods to find and obtain information about displays via
- * {@link DisplayManager}
+ * Utility class to provide methods to find and obtain information about displays via {@link
+ * DisplayManager}
  */
 class DisplayUtils(context: Context) {
     companion object {
@@ -43,12 +43,10 @@ class DisplayUtils(context: Context) {
         internalDisplays = allDisplays.filter { it.type == Display.TYPE_INTERNAL }
     }
 
-    /**
-     * Returns the {@link Display} to be used to calculate wallpaper size and cropping.
-     */
+    /** Returns the {@link Display} to be used to calculate wallpaper size and cropping. */
     fun getWallpaperDisplay(): Display {
         return internalDisplays.maxWithOrNull { a, b -> getRealSize(a) - getRealSize(b) }
-                ?: internalDisplays[0]
+            ?: internalDisplays[0]
     }
 
     private fun getRealSize(display: Display): Int {
