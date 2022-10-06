@@ -66,6 +66,7 @@ import com.android.wallpaper.model.WallpaperInfo.ColorInfo;
 import com.android.wallpaper.module.BitmapCropper;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.module.LargeScreenMultiPanesChecker;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.util.FullScreenAnimation;
@@ -107,8 +108,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     private final AtomicInteger mRecalculateColorCounter = new AtomicInteger(0);
     private final Injector mInjector = InjectorProvider.getInjector();
 
-    private SubsamplingScaleImageView mFullResImageView;
-    private Asset mWallpaperAsset;
     /**
      * Size of the screen considered for cropping the wallpaper (typically the same as
      * {@link #mScreenSize} but it could be different on multi-display)
@@ -118,8 +117,8 @@ public class ImagePreviewFragment extends PreviewFragment {
      * The size of the current screen
      */
     private Point mScreenSize;
-    private Point mRawWallpaperSize; // Native size of wallpaper image.
-    private ImageView mLowResImageView;
+    protected Point mRawWallpaperSize; // Native size of wallpaper image.
+    protected ImageView mLowResImageView;
     protected TouchForwardingLayout mTouchForwardingLayout;
     protected ConstraintLayout mContainer;
     protected SurfaceView mWallpaperSurface;
@@ -131,6 +130,8 @@ public class ImagePreviewFragment extends PreviewFragment {
     protected WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     protected ViewGroup mLockPreviewContainer;
     protected LockScreenPreviewer mLockScreenPreviewer;
+    protected SubsamplingScaleImageView mFullResImageView;
+    protected Asset mWallpaperAsset;
     private Future<ColorInfo> mColorFuture;
 
     @Override
@@ -269,7 +270,9 @@ public class ImagePreviewFragment extends PreviewFragment {
         mBottomActionBar.bindBottomSheetContentWithAction(
                 new WallpaperInfoContent(getContext()), INFORMATION);
         Activity activity = getActivity();
-        if (activity != null && activity.isInMultiWindowMode()) {
+        LargeScreenMultiPanesChecker checker = new LargeScreenMultiPanesChecker();
+        if (activity != null
+                && (activity.isInMultiWindowMode() || checker.isMultiPanesEnabled(getContext()))) {
             mBottomActionBar.showActionsOnly(INFORMATION, APPLY);
         } else {
             mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
