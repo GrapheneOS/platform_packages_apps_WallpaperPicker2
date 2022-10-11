@@ -20,15 +20,14 @@ import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-/**
- * RecyclerView ItemDecorator that adds a vertical space between grid rows.
- */
+/** RecyclerView ItemDecorator that adds a vertical space between grid rows. */
 class GridRowSpacerDecoration(private val padding: Int) : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State) {
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
         val layoutManager = parent.layoutManager
         if (layoutManager is GridLayoutManager) {
             val position = parent.getChildAdapterPosition(view)
