@@ -44,7 +44,7 @@
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Daglig bakgrunn"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Trykk for å slå på funksjonen"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Bakgrunnen endres automatisk hver dag. For å fullføre konfigureringen, trykk på &lt;strong&gt;Angi bakgrunn&lt;/strong&gt; på den neste skjermen."</string>
-    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Last ned nye bakgrunner bare via Wi-Fi"</string>
+    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Last ned nye bakgrunner bare via Wifi"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Fortsett"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Laster ned den første bakgrunnen …"</string>
     <string name="start_rotation_error_message" msgid="3053799836719618972">"Kunne ikke laste ned den første bakgrunnen. Sjekk nettverksinnstillingene, og prøv igjen."</string>
