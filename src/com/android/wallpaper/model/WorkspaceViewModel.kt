@@ -22,10 +22,8 @@ import androidx.lifecycle.ViewModel
 class WorkspaceViewModel : ViewModel() {
 
     /**
-     * Triggers workspace updates through flipping the value from {@code false} to {@code true},
-     * or from {@code true} to {@code false}.
+     * Triggers workspace updates through flipping the value from {@code false} to {@code true}, or
+     * from {@code true} to {@code false}.
      */
-    val updateWorkspace: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
+    val updateWorkspace: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 }

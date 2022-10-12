@@ -19,21 +19,15 @@ import android.app.WallpaperColors
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-/**
- * ViewModel class to keep track of WallpaperColors for the current wallpaper
- */
+/** ViewModel class to keep track of WallpaperColors for the current wallpaper */
 class WallpaperColorsViewModel : ViewModel() {
 
-    /**
-     * WallpaperColors for the currently set home wallpaper
-     */
+    /** WallpaperColors for the currently set home wallpaper */
     val homeWallpaperColors: MutableLiveData<WallpaperColors> by lazy {
         MutableLiveData<WallpaperColors>()
     }
 
-    /**
-     * WallpaperColors for the currently set lock wallpaper
-     */
+    /** WallpaperColors for the currently set lock wallpaper */
     val lockWallpaperColors: MutableLiveData<WallpaperColors> by lazy {
         MutableLiveData<WallpaperColors>()
     }
