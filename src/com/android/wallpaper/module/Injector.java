@@ -38,42 +38,95 @@ import com.android.wallpaper.util.DisplayUtils;
  * misnomer; this is more aptly a service registry as part of a service locator design pattern.)
  */
 public interface Injector {
+    /**
+     * Get {@link AlarmManagerWrapper}
+     */
     AlarmManagerWrapper getAlarmManagerWrapper(Context context);
 
+    /**
+     * Get {@link BitmapCropper}
+     */
     BitmapCropper getBitmapCropper();
 
+    /**
+     * Get {@link CategoryProvider}
+     */
     CategoryProvider getCategoryProvider(Context context);
 
-    CurrentWallpaperInfoFactory getCurrentWallpaperFactory(Context context);
+    /**
+     * Get {@link CurrentWallpaperInfoFactory}
+     */
+    CurrentWallpaperInfoFactory getCurrentWallpaperInfoFactory(Context context);
 
+    /**
+     * Get {@link CustomizationSections}
+     */
+    CustomizationSections getCustomizationSections();
+
+    /**
+     * Get {@link Intent} for a deep link
+     */
+    Intent getDeepLinkRedirectIntent(Context context, Uri uri);
+
+    /**
+     * Get {@link DisplayUtils}
+     */
+    DisplayUtils getDisplayUtils(Context context);
+
+    /**
+     * Get {@link DisplayUtils}
+     */
+    String getDownloadableIntentAction();
+
+    /**
+     * Get {@link DrawableLayerResolver}
+     */
+    DrawableLayerResolver getDrawableLayerResolver();
+
+    /**
+     * Get {@link EffectsController}
+     */
+    @Nullable
+    EffectsController getEffectsController(Context context, EffectsServiceListener listener);
+
+    /**
+     * Get {@link ExploreIntentChecker}
+     */
     ExploreIntentChecker getExploreIntentChecker(Context context);
 
-    LoggingOptInStatusProvider getLoggingOptInStatusProvider(Context context);
+    /**
+     * Get {@link IndividualPickerFragment}
+     */
+    IndividualPickerFragment getIndividualPickerFragment(String collectionId);
 
+    /**
+     * Get {@link LiveWallpaperInfoFactory}
+     */
+    LiveWallpaperInfoFactory getLiveWallpaperInfoFactory(Context context);
+
+    /**
+     * Get {@link NetworkStatusNotifier}
+     */
     NetworkStatusNotifier getNetworkStatusNotifier(Context context);
 
+    /**
+     * Get {@link PackageStatusNotifier}
+     */
+    PackageStatusNotifier getPackageStatusNotifier(Context context);
+
+    /**
+     * Get {@link PartnerProvider}
+     */
     PartnerProvider getPartnerProvider(Context context);
 
+    /**
+     * Get {@link PerformanceMonitor}
+     */
     PerformanceMonitor getPerformanceMonitor();
 
-    Requester getRequester(Context context);
-
-    SystemFeatureChecker getSystemFeatureChecker();
-
-    UserEventLogger getUserEventLogger(Context context);
-
-    WallpaperManagerCompat getWallpaperManagerCompat(Context context);
-
-    WallpaperStatusChecker getWallpaperStatusChecker();
-
-    WallpaperPersister getWallpaperPersister(Context context);
-
-    WallpaperPreferences getPreferences(Context context);
-
-    WallpaperRefresher getWallpaperRefresher(Context context);
-
-    WallpaperRotationRefresher getWallpaperRotationRefresher();
-
+    /**
+     * Get {@link Fragment} for previewing the wallpaper
+     */
     Fragment getPreviewFragment(
             Context context,
             WallpaperInfo wallpaperInfo,
@@ -82,28 +135,48 @@ public interface Injector {
             boolean viewFullScreen,
             boolean testingModeEnabled);
 
-    PackageStatusNotifier getPackageStatusNotifier(Context context);
-
-    IndividualPickerFragment getIndividualPickerFragment(String collectionId);
-
-    LiveWallpaperInfoFactory getLiveWallpaperInfoFactory(Context context);
-
-    DrawableLayerResolver getDrawableLayerResolver();
-
-    Intent getDeepLinkRedirectIntent(Context context, Uri uri);
-
-    String getDownloadableIntentAction();
-
-    CustomizationSections getCustomizationSections();
+    /**
+     * Get {@link Requester}
+     */
+    Requester getRequester(Context context);
 
     /**
-     * @return the singleton instance of {@link DisplayUtils}
+     * Get {@link SystemFeatureChecker}
      */
-    DisplayUtils getDisplayUtils(Context context);
+    SystemFeatureChecker getSystemFeatureChecker();
 
     /**
-     * @return the singleton instance of {@link EffectsController}
+     * Get {@link UserEventLogger}
      */
-    @Nullable
-    EffectsController createEffectsController(Context context, EffectsServiceListener listener);
+    UserEventLogger getUserEventLogger(Context context);
+
+    /**
+     * Get {@link WallpaperManagerCompat}
+     */
+    WallpaperManagerCompat getWallpaperManagerCompat(Context context);
+
+    /**
+     * Get {@link WallpaperPersister}
+     */
+    WallpaperPersister getWallpaperPersister(Context context);
+
+    /**
+     * Get {@link WallpaperPreferences}
+     */
+    WallpaperPreferences getPreferences(Context context);
+
+    /**
+     * Get {@link WallpaperRefresher}
+     */
+    WallpaperRefresher getWallpaperRefresher(Context context);
+
+    /**
+     * Get {@link WallpaperRotationRefresher}
+     */
+    WallpaperRotationRefresher getWallpaperRotationRefresher();
+
+    /**
+     * Get {@link WallpaperStatusChecker}
+     */
+    WallpaperStatusChecker getWallpaperStatusChecker();
 }
