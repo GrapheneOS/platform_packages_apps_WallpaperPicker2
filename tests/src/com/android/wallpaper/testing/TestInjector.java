@@ -42,7 +42,6 @@ import com.android.wallpaper.module.DrawableLayerResolver;
 import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.LiveWallpaperInfoFactory;
-import com.android.wallpaper.module.LoggingOptInStatusProvider;
 import com.android.wallpaper.module.NetworkStatusNotifier;
 import com.android.wallpaper.module.PackageStatusNotifier;
 import com.android.wallpaper.module.PartnerProvider;
@@ -80,7 +79,6 @@ public class TestInjector implements Injector {
     private SystemFeatureChecker mSystemFeatureChecker;
     private WallpaperRotationRefresher mWallpaperRotationRefresher;
     private PerformanceMonitor mPerformanceMonitor;
-    private LoggingOptInStatusProvider mLoggingOptInStatusProvider;
 
     @Override
     public BitmapCropper getBitmapCropper() {
@@ -160,20 +158,12 @@ public class TestInjector implements Injector {
     }
 
     @Override
-    public CurrentWallpaperInfoFactory getCurrentWallpaperFactory(Context context) {
+    public CurrentWallpaperInfoFactory getCurrentWallpaperInfoFactory(Context context) {
         if (mCurrentWallpaperInfoFactory == null) {
             mCurrentWallpaperInfoFactory =
                     new TestCurrentWallpaperInfoFactory(context.getApplicationContext());
         }
         return mCurrentWallpaperInfoFactory;
-    }
-
-    @Override
-    public LoggingOptInStatusProvider getLoggingOptInStatusProvider(Context context) {
-        if (mLoggingOptInStatusProvider == null) {
-            mLoggingOptInStatusProvider = new TestLoggingOptInStatusProvider();
-        }
-        return mLoggingOptInStatusProvider;
     }
 
     @Override
@@ -291,7 +281,7 @@ public class TestInjector implements Injector {
 
     @Nullable
     @Override
-    public EffectsController createEffectsController(Context context,
+    public EffectsController getEffectsController(Context context,
             EffectsController.EffectsServiceListener listener) {
         return null;
     }
