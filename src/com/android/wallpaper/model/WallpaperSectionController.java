@@ -334,7 +334,7 @@ public class WallpaperSectionController implements
      */
     private void refreshCurrentWallpapers(boolean forceRefresh) {
         CurrentWallpaperInfoFactory factory = InjectorProvider.getInjector()
-                .getCurrentWallpaperFactory(mAppContext);
+                .getCurrentWallpaperInfoFactory(mAppContext);
 
         factory.createCurrentWallpaperInfos(
                 (homeWallpaper, lockWallpaper, presentationMode) -> {
