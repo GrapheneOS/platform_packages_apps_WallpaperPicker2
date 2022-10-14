@@ -334,7 +334,7 @@ public class WallpaperSectionController implements
      */
     private void refreshCurrentWallpapers(boolean forceRefresh) {
         CurrentWallpaperInfoFactory factory = InjectorProvider.getInjector()
-                .getCurrentWallpaperFactory(mAppContext);
+                .getCurrentWallpaperInfoFactory(mAppContext);
 
         factory.createCurrentWallpaperInfos(
                 (homeWallpaper, lockWallpaper, presentationMode) -> {
@@ -548,15 +548,12 @@ public class WallpaperSectionController implements
     @Override
     public void onTransitionOut() {
         if (mHomeWallpaperSurface != null) {
-            mHomeWallpaperSurface.setUseAlpha();
             mHomeWallpaperSurface.setAlpha(0f);
         }
         if (mLockWallpaperSurface != null) {
-            mLockWallpaperSurface.setUseAlpha();
             mLockWallpaperSurface.setAlpha(0f);
         }
         if (mWorkspaceSurface != null) {
-            mWorkspaceSurface.setUseAlpha();
             mWorkspaceSurface.setAlpha(0f);
         }
         if (mLockPreviewContainer != null) {
