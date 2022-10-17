@@ -298,6 +298,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
 
     }
 
+    @SuppressWarnings("MissingSuperCall") // TODO: Fix me
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
             @NonNull int[] grantResults) {
