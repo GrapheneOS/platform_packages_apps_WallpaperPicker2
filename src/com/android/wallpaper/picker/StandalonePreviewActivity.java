@@ -102,6 +102,7 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
         }
     }
 
+    @SuppressWarnings("MissingSuperCall") // TODO: Fix me
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
