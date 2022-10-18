@@ -252,8 +252,9 @@ public class WallpaperSetter {
                         "Live wallpaper cannot be applied on lock screen only");
             }
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(activity);
-            wallpaperManager.setWallpaperComponent(
-                    wallpaper.getWallpaperComponent().getComponent());
+            wallpaperManager.setWallpaperComponentWithFlags(
+                    wallpaper.getWallpaperComponent().getComponent(),
+                    WallpaperPersister.destinationToFlags(destination));
             wallpaperManager.setWallpaperOffsetSteps(0.5f /* xStep */, 0.0f /* yStep */);
             wallpaperManager.setWallpaperOffsets(
                     activity.getWindow().getDecorView().getRootView().getWindowToken(),
@@ -292,8 +293,9 @@ public class WallpaperSetter {
                         "Live wallpaper cannot be applied on lock screen only");
             }
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
-            wallpaperManager.setWallpaperComponent(
-                    wallpaper.getWallpaperComponent().getComponent());
+            wallpaperManager.setWallpaperComponentWithFlags(
+                    wallpaper.getWallpaperComponent().getComponent(),
+                    WallpaperPersister.destinationToFlags(destination));
             if (destination == WallpaperPersister.DEST_BOTH) {
                 wallpaperManager.clear(FLAG_LOCK);
             }
