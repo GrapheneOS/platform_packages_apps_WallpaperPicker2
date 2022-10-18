@@ -21,6 +21,7 @@ import static android.graphics.Matrix.MSKEW_X;
 import static android.graphics.Matrix.MSKEW_Y;
 
 import android.app.WallpaperColors;
+import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -162,9 +163,9 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
             int displayId = mContainerView.getDisplay().getDisplayId();
 
             mService.attach(this, mContainerView.getWindowToken(),
-                    LayoutParams.TYPE_APPLICATION_MEDIA,
-                    true, mContainerView.getWidth(), mContainerView.getHeight(),
-                    new Rect(0, 0, 0, 0), displayId);
+                    LayoutParams.TYPE_APPLICATION_MEDIA, true, mContainerView.getWidth(),
+                    mContainerView.getHeight(), new Rect(0, 0, 0, 0), displayId,
+                    WallpaperManager.FLAG_SYSTEM);
         } catch (RemoteException e) {
             Log.w(TAG, "Failed attaching wallpaper; clearing", e);
         }
