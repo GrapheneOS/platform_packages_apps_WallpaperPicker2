@@ -126,6 +126,7 @@ public interface Injector {
 
     /**
      * Get {@link Fragment} for previewing the wallpaper
+     * TODO b/242908637 Remove this method when migrating to the new wallpaper preview screen
      */
     Fragment getPreviewFragment(
             Context context,
@@ -164,6 +165,11 @@ public interface Injector {
      * Get {@link WallpaperPreferences}
      */
     WallpaperPreferences getPreferences(Context context);
+
+    /**
+     * Get {@link WallpaperPreviewFragmentManager}
+     */
+    WallpaperPreviewFragmentManager getWallpaperPreviewFragmentManager();
 
     /**
      * Get {@link WallpaperRefresher}

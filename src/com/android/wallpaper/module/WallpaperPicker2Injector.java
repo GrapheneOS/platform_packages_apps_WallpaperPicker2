@@ -66,6 +66,7 @@ public class WallpaperPicker2Injector implements Injector {
     private WallpaperManagerCompat mWallpaperManagerCompat;
     private WallpaperPersister mWallpaperPersister;
     private WallpaperPreferences mPrefs;
+    private WallpaperPreviewFragmentManager mWallpaperPreviewFragmentManager;
     private WallpaperRefresher mWallpaperRefresher;
     private WallpaperRotationRefresher mWallpaperRotationRefresher;
     private WallpaperStatusChecker mWallpaperStatusChecker;
@@ -270,6 +271,14 @@ public class WallpaperPicker2Injector implements Injector {
             mPrefs = new DefaultWallpaperPreferences(context.getApplicationContext());
         }
         return mPrefs;
+    }
+
+    @Override
+    public synchronized WallpaperPreviewFragmentManager getWallpaperPreviewFragmentManager() {
+        if (mWallpaperPreviewFragmentManager == null) {
+            mWallpaperPreviewFragmentManager = new DefaultWallpaperPreviewFragmentManager();
+        }
+        return mWallpaperPreviewFragmentManager;
     }
 
     @Override
