@@ -49,6 +49,7 @@ import com.android.wallpaper.module.SystemFeatureChecker;
 import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.module.WallpaperPreferences;
+import com.android.wallpaper.module.WallpaperPreviewFragmentManager;
 import com.android.wallpaper.module.WallpaperRefresher;
 import com.android.wallpaper.module.WallpaperRotationRefresher;
 import com.android.wallpaper.module.WallpaperStatusChecker;
@@ -79,6 +80,7 @@ public class TestInjector implements Injector {
     private SystemFeatureChecker mSystemFeatureChecker;
     private WallpaperRotationRefresher mWallpaperRotationRefresher;
     private PerformanceMonitor mPerformanceMonitor;
+    private WallpaperPreviewFragmentManager mWallpaperPreviewFragmentManager;
 
     @Override
     public BitmapCropper getBitmapCropper() {
@@ -284,5 +286,13 @@ public class TestInjector implements Injector {
     public EffectsController getEffectsController(Context context,
             EffectsController.EffectsServiceListener listener) {
         return null;
+    }
+
+    @Override
+    public WallpaperPreviewFragmentManager getWallpaperPreviewFragmentManager() {
+        if (mWallpaperPreviewFragmentManager == null) {
+            mWallpaperPreviewFragmentManager = new TestWallpaperPreviewFragmentManager();
+        }
+        return mWallpaperPreviewFragmentManager;
     }
 }
