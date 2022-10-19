@@ -15,6 +15,10 @@
  */
 package com.android.wallpaper.module;
 
+import static android.app.WallpaperManager.FLAG_LOCK;
+import static android.app.WallpaperManager.FLAG_SYSTEM;
+import static android.app.WallpaperManager.SetWallpaperFlags;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -193,5 +197,22 @@ public interface WallpaperPersister {
             WALLPAPER_POSITION_CENTER_CROP,
             WALLPAPER_POSITION_STRETCH})
     @interface WallpaperPosition {
+    }
+
+    /**
+     * Converts a {@link Destination} to the corresponding set of {@link SetWallpaperFlags}.
+     */
+    @SetWallpaperFlags
+    static int destinationToFlags(@Destination int destination) {
+        switch (destination) {
+            case DEST_HOME_SCREEN:
+                return FLAG_SYSTEM;
+            case DEST_LOCK_SCREEN:
+                return FLAG_LOCK;
+            case DEST_BOTH:
+                return FLAG_SYSTEM | FLAG_LOCK;
+            default:
+                throw new AssertionError("Unknown @Destination");
+        }
     }
 }
