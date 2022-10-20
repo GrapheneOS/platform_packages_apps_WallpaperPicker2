@@ -27,6 +27,8 @@ public abstract class EffectsController {
     public static final int RESULT_ERROR_TRY_AGAIN_LATER = 2;
     public static final int RESULT_ERROR_CONTINUE = 4;
     public static final int RESULT_ERROR_DISCONNECT_NO_BUTTON = 8;
+    public static final int RESULT_PROBE_SUCCESS = 16;
+    public static final int RESULT_PROBE_ERROR = 32;
     /**
      * Interface of the Effect enum.
      */
