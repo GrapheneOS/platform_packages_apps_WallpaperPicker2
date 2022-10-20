@@ -64,23 +64,30 @@ import com.android.wallpaper.util.DisplayUtils;
  */
 public class TestInjector implements Injector {
 
+    private AlarmManagerWrapper mAlarmManagerWrapper;
     private BitmapCropper mBitmapCropper;
     private CategoryProvider mCategoryProvider;
-    private PartnerProvider mPartnerProvider;
-    private WallpaperPreferences mPrefs;
-    private WallpaperPersister mWallpaperPersister;
-    private WallpaperRefresher mWallpaperRefresher;
-    private Requester mRequester;
-    private WallpaperManagerCompat mWallpaperManagerCompat;
     private CurrentWallpaperInfoFactory mCurrentWallpaperInfoFactory;
-    private NetworkStatusNotifier mNetworkStatusNotifier;
-    private AlarmManagerWrapper mAlarmManagerWrapper;
-    private UserEventLogger mUserEventLogger;
     private ExploreIntentChecker mExploreIntentChecker;
-    private SystemFeatureChecker mSystemFeatureChecker;
-    private WallpaperRotationRefresher mWallpaperRotationRefresher;
+    private NetworkStatusNotifier mNetworkStatusNotifier;
+    private PartnerProvider mPartnerProvider;
     private PerformanceMonitor mPerformanceMonitor;
+    private SystemFeatureChecker mSystemFeatureChecker;
+    private UserEventLogger mUserEventLogger;
+    private WallpaperManagerCompat mWallpaperManagerCompat;
+    private WallpaperPersister mWallpaperPersister;
+    private WallpaperPreferences mPrefs;
     private WallpaperPreviewFragmentManager mWallpaperPreviewFragmentManager;
+    private WallpaperRefresher mWallpaperRefresher;
+    private WallpaperRotationRefresher mWallpaperRotationRefresher;
+
+    @Override
+    public AlarmManagerWrapper getAlarmManagerWrapper(Context unused) {
+        if (mAlarmManagerWrapper == null) {
+            mAlarmManagerWrapper = new TestAlarmManagerWrapper();
+        }
+        return mAlarmManagerWrapper;
+    }
 
     @Override
     public BitmapCropper getBitmapCropper() {
@@ -99,67 +106,6 @@ public class TestInjector implements Injector {
     }
 
     @Override
-    public PartnerProvider getPartnerProvider(Context context) {
-        if (mPartnerProvider == null) {
-            mPartnerProvider = new TestPartnerProvider();
-        }
-        return mPartnerProvider;
-    }
-
-    @Override
-    public WallpaperPreferences getPreferences(Context context) {
-        if (mPrefs == null) {
-            mPrefs = new TestWallpaperPreferences();
-        }
-        return mPrefs;
-    }
-
-    @Override
-    public WallpaperPersister getWallpaperPersister(Context context) {
-        if (mWallpaperPersister == null) {
-            mWallpaperPersister = new TestWallpaperPersister(context.getApplicationContext());
-        }
-        return mWallpaperPersister;
-    }
-
-    @Override
-    public WallpaperRefresher getWallpaperRefresher(Context context) {
-        if (mWallpaperRefresher == null) {
-            mWallpaperRefresher = new TestWallpaperRefresher(context.getApplicationContext());
-        }
-        return mWallpaperRefresher;
-    }
-
-    @Override
-    public Requester getRequester(Context unused) {
-        return null;
-    }
-
-    @Override
-    public WallpaperManagerCompat getWallpaperManagerCompat(Context context) {
-        if (mWallpaperManagerCompat == null) {
-            mWallpaperManagerCompat = new com.android.wallpaper.testing.TestWallpaperManagerCompat(
-                    context.getApplicationContext());
-        }
-        return mWallpaperManagerCompat;
-    }
-
-    @Override
-    public WallpaperStatusChecker getWallpaperStatusChecker() {
-        return new WallpaperStatusChecker() {
-            @Override
-            public boolean isHomeStaticWallpaperSet(Context context) {
-                return true;
-            }
-
-            @Override
-            public boolean isLockWallpaperSet(Context context) {
-                return true;
-            }
-        };
-    }
-
-    @Override
     public CurrentWallpaperInfoFactory getCurrentWallpaperInfoFactory(Context context) {
         if (mCurrentWallpaperInfoFactory == null) {
             mCurrentWallpaperInfoFactory =
@@ -169,27 +115,35 @@ public class TestInjector implements Injector {
     }
 
     @Override
-    public NetworkStatusNotifier getNetworkStatusNotifier(Context context) {
-        if (mNetworkStatusNotifier == null) {
-            mNetworkStatusNotifier = new TestNetworkStatusNotifier();
-        }
-        return mNetworkStatusNotifier;
+    public CustomizationSections getCustomizationSections() {
+        return null;
     }
 
     @Override
-    public AlarmManagerWrapper getAlarmManagerWrapper(Context unused) {
-        if (mAlarmManagerWrapper == null) {
-            mAlarmManagerWrapper = new TestAlarmManagerWrapper();
-        }
-        return mAlarmManagerWrapper;
+    public Intent getDeepLinkRedirectIntent(Context context, Uri uri) {
+        return null;
     }
 
     @Override
-    public UserEventLogger getUserEventLogger(Context unused) {
-        if (mUserEventLogger == null) {
-            mUserEventLogger = new com.android.wallpaper.testing.TestUserEventLogger();
-        }
-        return mUserEventLogger;
+    public DisplayUtils getDisplayUtils(Context context) {
+        return new DisplayUtils(context);
+    }
+
+    @Override
+    public String getDownloadableIntentAction() {
+        return null;
+    }
+
+    @Override
+    public DrawableLayerResolver getDrawableLayerResolver() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public EffectsController getEffectsController(Context context,
+            EffectsController.EffectsServiceListener listener) {
+        return null;
     }
 
     @Override
@@ -201,22 +155,42 @@ public class TestInjector implements Injector {
     }
 
     @Override
-    public SystemFeatureChecker getSystemFeatureChecker() {
-        if (mSystemFeatureChecker == null) {
-            mSystemFeatureChecker = new com.android.wallpaper.testing.TestSystemFeatureChecker();
-        }
-        return mSystemFeatureChecker;
+    public IndividualPickerFragment getIndividualPickerFragment(String collectionId) {
+        return IndividualPickerFragment.newInstance(collectionId);
     }
 
     @Override
-    public WallpaperRotationRefresher getWallpaperRotationRefresher() {
-        if (mWallpaperRotationRefresher == null) {
-            mWallpaperRotationRefresher = (context, listener) -> {
-                // Not implemented
-                listener.onError();
-            };
+    public LiveWallpaperInfoFactory getLiveWallpaperInfoFactory(Context context) {
+        return new DefaultLiveWallpaperInfoFactory();
+    }
+
+    @Override
+    public NetworkStatusNotifier getNetworkStatusNotifier(Context context) {
+        if (mNetworkStatusNotifier == null) {
+            mNetworkStatusNotifier = new TestNetworkStatusNotifier();
         }
-        return mWallpaperRotationRefresher;
+        return mNetworkStatusNotifier;
+    }
+
+    @Override
+    public PackageStatusNotifier getPackageStatusNotifier(Context context) {
+        return null;
+    }
+
+    @Override
+    public PartnerProvider getPartnerProvider(Context context) {
+        if (mPartnerProvider == null) {
+            mPartnerProvider = new TestPartnerProvider();
+        }
+        return mPartnerProvider;
+    }
+
+    @Override
+    public PerformanceMonitor getPerformanceMonitor() {
+        if (mPerformanceMonitor == null) {
+            mPerformanceMonitor = new TestPerformanceMonitor();
+        }
+        return mPerformanceMonitor;
     }
 
     @Override
@@ -234,58 +208,49 @@ public class TestInjector implements Injector {
     }
 
     @Override
-    public PackageStatusNotifier getPackageStatusNotifier(Context context) {
+    public Requester getRequester(Context unused) {
         return null;
     }
 
     @Override
-    public IndividualPickerFragment getIndividualPickerFragment(String collectionId) {
-        return IndividualPickerFragment.newInstance(collectionId);
-    }
-
-    @Override
-    public LiveWallpaperInfoFactory getLiveWallpaperInfoFactory(Context context) {
-        return new DefaultLiveWallpaperInfoFactory();
-    }
-
-    @Override
-    public DrawableLayerResolver getDrawableLayerResolver() {
-        return null;
-    }
-
-    @Override
-    public Intent getDeepLinkRedirectIntent(Context context, Uri uri) {
-        return null;
-    }
-
-    @Override
-    public String getDownloadableIntentAction() {
-        return null;
-    }
-
-    @Override
-    public PerformanceMonitor getPerformanceMonitor() {
-        if (mPerformanceMonitor == null) {
-            mPerformanceMonitor = new TestPerformanceMonitor();
+    public SystemFeatureChecker getSystemFeatureChecker() {
+        if (mSystemFeatureChecker == null) {
+            mSystemFeatureChecker = new com.android.wallpaper.testing.TestSystemFeatureChecker();
         }
-        return mPerformanceMonitor;
+        return mSystemFeatureChecker;
     }
 
     @Override
-    public CustomizationSections getCustomizationSections() {
-        return null;
+    public UserEventLogger getUserEventLogger(Context unused) {
+        if (mUserEventLogger == null) {
+            mUserEventLogger = new com.android.wallpaper.testing.TestUserEventLogger();
+        }
+        return mUserEventLogger;
     }
 
     @Override
-    public DisplayUtils getDisplayUtils(Context context) {
-        return new DisplayUtils(context);
+    public WallpaperManagerCompat getWallpaperManagerCompat(Context context) {
+        if (mWallpaperManagerCompat == null) {
+            mWallpaperManagerCompat = new com.android.wallpaper.testing.TestWallpaperManagerCompat(
+                    context.getApplicationContext());
+        }
+        return mWallpaperManagerCompat;
     }
 
-    @Nullable
     @Override
-    public EffectsController getEffectsController(Context context,
-            EffectsController.EffectsServiceListener listener) {
-        return null;
+    public WallpaperPersister getWallpaperPersister(Context context) {
+        if (mWallpaperPersister == null) {
+            mWallpaperPersister = new TestWallpaperPersister(context.getApplicationContext());
+        }
+        return mWallpaperPersister;
+    }
+
+    @Override
+    public WallpaperPreferences getPreferences(Context context) {
+        if (mPrefs == null) {
+            mPrefs = new TestWallpaperPreferences();
+        }
+        return mPrefs;
     }
 
     @Override
@@ -294,5 +259,39 @@ public class TestInjector implements Injector {
             mWallpaperPreviewFragmentManager = new TestWallpaperPreviewFragmentManager();
         }
         return mWallpaperPreviewFragmentManager;
+    }
+
+    @Override
+    public WallpaperRefresher getWallpaperRefresher(Context context) {
+        if (mWallpaperRefresher == null) {
+            mWallpaperRefresher = new TestWallpaperRefresher(context.getApplicationContext());
+        }
+        return mWallpaperRefresher;
+    }
+
+    @Override
+    public WallpaperRotationRefresher getWallpaperRotationRefresher() {
+        if (mWallpaperRotationRefresher == null) {
+            mWallpaperRotationRefresher = (context, listener) -> {
+                // Not implemented
+                listener.onError();
+            };
+        }
+        return mWallpaperRotationRefresher;
+    }
+
+    @Override
+    public WallpaperStatusChecker getWallpaperStatusChecker() {
+        return new WallpaperStatusChecker() {
+            @Override
+            public boolean isHomeStaticWallpaperSet(Context context) {
+                return true;
+            }
+
+            @Override
+            public boolean isLockWallpaperSet(Context context) {
+                return true;
+            }
+        };
     }
 }
