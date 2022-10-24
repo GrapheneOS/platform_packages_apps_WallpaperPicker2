@@ -47,7 +47,7 @@ abstract class FloatingSheetContent<T : View>(context: Context) {
     abstract fun onViewCreated(view: T)
 
     /** Gets called when the current content view is going to recreate. */
-    fun onRecreateView(oldView: T) {}
+    open fun onRecreateView(oldView: T) {}
 
     fun recreateView(context: Context) {
         // Inform that the view is going to recreate.
