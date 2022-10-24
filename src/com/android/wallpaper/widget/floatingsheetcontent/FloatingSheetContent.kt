@@ -27,6 +27,8 @@ import androidx.annotation.LayoutRes
  * The view would be created in the constructor.
  *
  * @param <T> the floating sheet content type </T>
+ *
+ * TODO: refactoring FloatingSheetContent b/258468645
  */
 abstract class FloatingSheetContent<T : View>(context: Context) {
 
@@ -63,7 +65,7 @@ abstract class FloatingSheetContent<T : View>(context: Context) {
         return contentView
     }
 
-    protected fun setVisibility(isVisible: Boolean) {
+    fun setVisibility(isVisible: Boolean) {
         this.isVisible = isVisible
         contentView.visibility = if (this.isVisible) FrameLayout.VISIBLE else FrameLayout.GONE
     }
