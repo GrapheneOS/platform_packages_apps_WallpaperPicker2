@@ -20,6 +20,7 @@ import static android.view.View.IMPORTANT_FOR_ACCESSIBILITY_YES;
 import static android.view.View.MeasureSpec.EXACTLY;
 import static android.view.View.MeasureSpec.makeMeasureSpec;
 
+import static com.android.wallpaper.util.WallpaperSurfaceCallback.LOW_RES_BITMAP_BLUR_RADIUS;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.EDIT;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMATION;
@@ -37,6 +38,8 @@ import android.graphics.ColorSpace;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -601,6 +604,9 @@ public class ImagePreviewFragment extends PreviewFragment {
                         R.layout.fullscreen_wallpaper_preview, null);
                 mFullResImageView = wallpaperPreviewContainer.findViewById(R.id.full_res_image);
                 mLowResImageView = wallpaperPreviewContainer.findViewById(R.id.low_res_image);
+                mLowResImageView.setRenderEffect(
+                        RenderEffect.createBlurEffect(LOW_RES_BITMAP_BLUR_RADIUS,
+                                LOW_RES_BITMAP_BLUR_RADIUS, Shader.TileMode.CLAMP));
                 mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
                     // Don't continue loading the wallpaper if the Fragment is detached.
                     if (getActivity() == null) {
