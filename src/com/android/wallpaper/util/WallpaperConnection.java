@@ -45,6 +45,9 @@ import android.view.WindowManager.LayoutParams;
 
 import androidx.annotation.Nullable;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
  * Implementation of {@link IWallpaperConnection} that handles communication with a
  * {@link android.service.wallpaper.WallpaperService}
@@ -161,11 +164,22 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
         mService = IWallpaperService.Stub.asInterface(service);
         try {
             int displayId = mContainerView.getDisplay().getDisplayId();
-
-            mService.attach(this, mContainerView.getWindowToken(),
-                    LayoutParams.TYPE_APPLICATION_MEDIA, true, mContainerView.getWidth(),
-                    mContainerView.getHeight(), new Rect(0, 0, 0, 0), displayId,
-                    WallpaperManager.FLAG_SYSTEM);
+            try {
+                Method preUMethod = mService.getClass().getMethod("attach",
+                        IWallpaperConnection.class, IBinder.class, int.class, boolean.class,
+                        int.class, int.class, Rect.class, int.class);
+                preUMethod.invoke(mService, this, mContainerView.getWindowToken(),
+                        LayoutParams.TYPE_APPLICATION_MEDIA, true, mContainerView.getWidth(),
+                        mContainerView.getHeight(), new Rect(0, 0, 0, 0), displayId);
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                Log.d(TAG, "IWallpaperService#attach method without which argument not available, "
+                        + "will use newer version");
+                // Let's try the new attach method that takes "which" argument
+                mService.attach(this, mContainerView.getWindowToken(),
+                        LayoutParams.TYPE_APPLICATION_MEDIA, true, mContainerView.getWidth(),
+                        mContainerView.getHeight(), new Rect(0, 0, 0, 0), displayId,
+                        WallpaperManager.FLAG_SYSTEM);
+            }
         } catch (RemoteException e) {
             Log.w(TAG, "Failed attaching wallpaper; clearing", e);
         }
