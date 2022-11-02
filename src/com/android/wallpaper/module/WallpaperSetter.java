@@ -2,9 +2,6 @@ package com.android.wallpaper.module;
 
 import static android.app.WallpaperManager.FLAG_LOCK;
 
-import static com.android.wallpaper.module.WallpaperPersister.DEST_BOTH;
-import static com.android.wallpaper.module.WallpaperPersister.DEST_HOME_SCREEN;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.WallpaperColors;
@@ -28,7 +25,6 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
-import com.android.wallpaper.model.AdaptiveWallpaperInfo;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.UserEventLogger.WallpaperSetFailureReason;
@@ -36,7 +32,6 @@ import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment.Listener;
-import com.android.wallpaper.util.AdaptiveWallpaperUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.ThrowableAnalyzer;
 import com.android.wallpaper.util.WallpaperCropUtils;
@@ -45,8 +40,6 @@ import com.bumptech.glide.Glide;
 
 import java.io.IOException;
 import java.util.Optional;
-
-import kotlin.Unit;
 
 /**
  * Helper class used to set the current wallpaper. It handles showing the destination request dialog
@@ -173,37 +166,6 @@ public class WallpaperSetter {
             mProgressDialog.show();
         }
 
-        if (wallpaper instanceof AdaptiveWallpaperInfo) {
-            AdaptiveWallpaperUtils.cropAndSaveAdaptiveWallpaper(containerActivity, wallpaperScale,
-                    cropRect, (AdaptiveWallpaperInfo) wallpaper, (success, throwable) -> {
-                        if (success) {
-                            setIndividualWallpaper(containerActivity, wallpaper, wallpaperAsset,
-                                    destination, wallpaperScale, cropRect, callback);
-                        } else {
-                            onWallpaperApplyError(throwable, containerActivity);
-                            if (callback != null) {
-                                callback.onError(throwable);
-                            }
-                        }
-                        return Unit.INSTANCE;
-                    });
-        } else {
-            setIndividualWallpaper(containerActivity, wallpaper, wallpaperAsset, destination,
-                    wallpaperScale, cropRect, callback);
-        }
-    }
-
-    private void setIndividualWallpaper(Activity containerActivity, WallpaperInfo wallpaper,
-            Asset wallpaperAsset, @Destination final int destination, float wallpaperScale,
-            @Nullable Rect cropRect, @Nullable SetWallpaperCallback callback) {
-        if (wallpaperAsset == null) {
-            Throwable throwable = new NullPointerException();
-            onWallpaperApplyError(throwable, containerActivity);
-            if (callback != null) {
-                callback.onError(throwable);
-            }
-            return;
-        }
         mWallpaperPersister.setIndividualWallpaper(
                 wallpaper, wallpaperAsset, cropRect,
                 wallpaperScale, destination, new SetWallpaperCallback() {
@@ -343,13 +305,12 @@ public class WallpaperSetter {
      * (eg, "Home screen", "Lock Screen")
      * @param isLiveWallpaper whether the wallpaper that we want to set is a live wallpaper.
      * @param listener {@link SetWallpaperDialogFragment.Listener} that will receive the response.
-     * @param isAdaptiveWallpaper whether the wallpaper to be set is an adaptive wallpaper.
      * @see Destination
      */
     public void requestDestination(Activity activity, FragmentManager fragmentManager,
-            Listener listener, boolean isLiveWallpaper, boolean isAdaptiveWallpaper) {
+                                   Listener listener, boolean isLiveWallpaper) {
         requestDestination(activity, fragmentManager, R.string.set_wallpaper_dialog_message,
-                listener, isLiveWallpaper, isAdaptiveWallpaper);
+                listener, isLiveWallpaper);
     }
 
     /**
@@ -358,12 +319,10 @@ public class WallpaperSetter {
      * @param isLiveWallpaper whether the wallpaper that we want to set is a live wallpaper.
      * @param listener {@link SetWallpaperDialogFragment.Listener} that will receive the response.
      * @param titleResId title for the dialog
-     * @param isAdaptiveWallpaper whether the wallpaper to be set is an adaptive wallpaper.
      * @see Destination
      */
     public void requestDestination(Activity activity, FragmentManager fragmentManager,
-            @StringRes int titleResId, Listener listener, boolean isLiveWallpaper,
-            boolean isAdaptiveWallpaper) {
+            @StringRes int titleResId, Listener listener, boolean isLiveWallpaper) {
         saveAndLockScreenOrientationIfNeeded(activity);
         Listener listenerWrapper = new Listener() {
             @Override
@@ -383,14 +342,9 @@ public class WallpaperSetter {
                 }
             }
         };
+
         WallpaperStatusChecker wallpaperStatusChecker =
                 InjectorProvider.getInjector().getWallpaperStatusChecker();
-        if (isAdaptiveWallpaper) {
-            boolean isLockWallpaperSet = wallpaperStatusChecker.isLockWallpaperSet(activity);
-            listener.onSet(isLockWallpaperSet ? DEST_HOME_SCREEN : DEST_BOTH);
-            restoreScreenOrientationIfNeeded(activity);
-            return;
-        }
         boolean isLiveWallpaperSet =
                 WallpaperManager.getInstance(activity).getWallpaperInfo() != null;
         // Alternative of ag/15567276
