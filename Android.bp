@@ -107,12 +107,7 @@ java_defaults {
     name: "WallpaperPicker2_defaults",
 
     static_libs: [
-        "renderscript_toolkit",
         "wallpaper-common-deps",
-    ],
-
-    jni_libs: [
-        "librenderscript-toolkit",
     ],
 
     srcs: [
