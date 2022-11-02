@@ -109,6 +109,7 @@ java_defaults {
 
     static_libs: [
         "wallpaper-common-deps",
+        "monet",
     ],
 
     srcs: [
