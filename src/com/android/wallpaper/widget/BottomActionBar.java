@@ -159,8 +159,7 @@ public class BottomActionBar extends FrameLayout {
         DOWNLOAD,
         PROGRESS,
         APPLY,
-        APPLY_TEXT,
-        SETTINGS;
+        APPLY_TEXT;
 
         private final int mShownAccessibilityResId;
         private final int mHiddenAccessibilityResId;
@@ -213,7 +212,6 @@ public class BottomActionBar extends FrameLayout {
         mActionMap.put(BottomAction.PROGRESS, findViewById(R.id.action_progress));
         mActionMap.put(BottomAction.APPLY, findViewById(R.id.action_apply));
         mActionMap.put(BottomAction.APPLY_TEXT, findViewById(R.id.action_apply_text_button));
-        mActionMap.put(BottomAction.SETTINGS, findViewById(R.id.action_settings));
 
         mBottomSheetView = findViewById(R.id.action_bottom_sheet);
         SizeCalculator.adjustBackgroundCornerRadius(mBottomSheetView);
