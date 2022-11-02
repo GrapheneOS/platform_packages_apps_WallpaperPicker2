@@ -159,6 +159,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                         mFullResImageView);
             }
             mCurrentPreviewAdaptiveType = mCurrentPreviewAdaptiveType.getNextType();
+            recalculateColors(false);
             mAdaptiveHandler.removeCallbacks(mAdaptiveRunnable);
             mAdaptiveHandler.postDelayed(mAdaptiveRunnable, ADAPTIVE_ANIMATION_DELAY_TIME);
         }
@@ -489,7 +490,13 @@ public class ImagePreviewFragment extends PreviewFragment {
         }
 
         BitmapCropper bitmapCropper = mInjector.getBitmapCropper();
-        bitmapCropper.cropAndScaleBitmap(mWallpaperAsset, mFullResImageView.getScale(),
+        Asset asset = mWallpaperAsset;
+        SubsamplingScaleImageView subsamplingScaleImageView = mFullResImageView;
+        if (mAdaptiveWallpaperInfo != null && mCurrentPreviewAdaptiveType == AdaptiveType.DARK) {
+            asset = mAdaptiveWallpaperInfo.getAdaptiveAsset(context, AdaptiveType.DARK);
+            subsamplingScaleImageView = mDarkFullResImageView;
+        }
+        bitmapCropper.cropAndScaleBitmap(asset, subsamplingScaleImageView.getScale(),
                 calculateCropRect(context), /* adjustForRtl= */ false,
                 new BitmapCropper.Callback() {
                     @Override
