@@ -44,7 +44,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceControlViewHost;
 import android.view.SurfaceHolder;
@@ -52,9 +51,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -68,8 +64,6 @@ import androidx.fragment.app.FragmentActivity;
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.CurrentWallpaperAssetVN;
-import com.android.wallpaper.model.AdaptiveType;
-import com.android.wallpaper.model.AdaptiveWallpaperInfo;
 import com.android.wallpaper.model.SetWallpaperViewModel;
 import com.android.wallpaper.model.WallpaperInfo.ColorInfo;
 import com.android.wallpaper.module.BitmapCropper;
@@ -109,7 +103,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     private static final String TAG = "ImagePreviewFragment";
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
     private static final Executor sExecutor = Executors.newCachedThreadPool();
-    private static final int ADAPTIVE_ANIMATION_DELAY_TIME = 3000;
 
     private final WallpaperSurfaceCallback mWallpaperSurfaceCallback =
             new WallpaperSurfaceCallback();
@@ -118,10 +111,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     private final AtomicInteger mRecalculateColorCounter = new AtomicInteger(0);
     private final Injector mInjector = InjectorProvider.getInjector();
 
-    private SubsamplingScaleImageView mDarkFullResImageView;
-    private AdaptiveWallpaperInfo mAdaptiveWallpaperInfo;
-    private Handler mAdaptiveHandler = new Handler();
-    private AdaptiveType mCurrentPreviewAdaptiveType = AdaptiveType.LIGHT;
     /**
      * Size of the screen considered for cropping the wallpaper (typically the same as
      * {@link #mScreenSize} but it could be different on multi-display)
@@ -147,31 +136,11 @@ public class ImagePreviewFragment extends PreviewFragment {
     protected SubsamplingScaleImageView mFullResImageView;
     protected Asset mWallpaperAsset;
     private Future<ColorInfo> mColorFuture;
-    // The runnable task for periodically rotating adaptive wallpaper.
-    private Runnable mAdaptiveRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (mCurrentPreviewAdaptiveType == AdaptiveType.LIGHT) {
-                subsamplingScaleImageViewAnimatedChange(getContext(), mFullResImageView,
-                        mDarkFullResImageView);
-            } else {
-                subsamplingScaleImageViewAnimatedChange(getContext(), mDarkFullResImageView,
-                        mFullResImageView);
-            }
-            mCurrentPreviewAdaptiveType = mCurrentPreviewAdaptiveType.getNextType();
-            recalculateColors(false);
-            mAdaptiveHandler.removeCallbacks(mAdaptiveRunnable);
-            mAdaptiveHandler.postDelayed(mAdaptiveRunnable, ADAPTIVE_ANIMATION_DELAY_TIME);
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWallpaperAsset = mWallpaper.getAsset(requireContext().getApplicationContext());
-        if (mWallpaper instanceof AdaptiveWallpaperInfo) {
-            mAdaptiveWallpaperInfo = (AdaptiveWallpaperInfo) mWallpaper;
-        }
         mColorFuture = mWallpaper.computeColorInfo(requireContext());
         mWallpaperPreferences = mInjector.getPreferences(getContext());
     }
@@ -287,21 +256,17 @@ public class ImagePreviewFragment extends PreviewFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopRotateAdaptivePreview();
-        recycleFullResImageView(mFullResImageView);
-        recycleFullResImageView(mDarkFullResImageView);
+
+        if (mFullResImageView != null) {
+            mFullResImageView.recycle();
+        }
+
         if (mLockScreenPreviewer != null) {
             mLockScreenPreviewer.release();
         }
 
         mWallpaperSurfaceCallback.cleanUp();
         mWorkspaceSurfaceCallback.cleanUp();
-    }
-
-    private void recycleFullResImageView(SubsamplingScaleImageView fullResImageView) {
-        if (fullResImageView != null) {
-            fullResImageView.recycle();
-        }
     }
 
     protected void setupActionBar() {
@@ -361,9 +326,6 @@ public class ImagePreviewFragment extends PreviewFragment {
         if (mRawWallpaperSize == null || mFullResImageView == null
                 || mFullResImageView.isImageLoaded()) {
             return;
-        }
-        if (mAdaptiveWallpaperInfo != null) {
-            initDarkFullResView();
         }
         final boolean isWallpaperColorCached = isWallpaperColorInCache(
                 mWallpaper.getStoredWallpaperId(getContext()));
@@ -440,14 +402,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                 });
 
         mFullResImageView.setOnTouchListener((v, ev) -> {
-            // Don't rotate image when user dragging & zooming the image.
-            if (mAdaptiveWallpaperInfo != null) {
-                if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-                    stopRotateAdaptivePreview();
-                } else if (ev.getAction() == MotionEvent.ACTION_UP) {
-                    startRotateAdaptivePreview();
-                }
-            }
             // Consume the touch event for collapsing bottom sheet while it is expanded or
             // dragging (not collapsed).
             if (mBottomActionBar != null && !mBottomActionBar.isBottomSheetCollapsed()) {
@@ -458,30 +412,6 @@ public class ImagePreviewFragment extends PreviewFragment {
         });
     }
 
-    private void initDarkFullResView() {
-        mDarkFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
-        mDarkFullResImageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
-        Point targetPageBitmapSize = new Point(mRawWallpaperSize);
-        mAdaptiveWallpaperInfo.getAdaptiveAsset(getContext(), AdaptiveType.DARK).decodeBitmap(
-                targetPageBitmapSize.x, targetPageBitmapSize.y,
-                pageBitmap -> {
-                    if (getActivity() == null) {
-                        return;
-                    }
-
-                    // The page bitmap may be null if there was a decoding error, so show an
-                    // error dialog.
-                    if (pageBitmap == null) {
-                        showLoadWallpaperErrorDialog();
-                        return;
-                    }
-                    mDarkFullResImageView.setImage(ImageSource.bitmap(pageBitmap));
-                    startRotateAdaptivePreview();
-                }
-        );
-        mTouchForwardingLayout.addTargetView(mDarkFullResImageView);
-    }
-
     private void recalculateColors(boolean cacheColor) {
         Context context = getContext();
         if (context == null) {
@@ -490,13 +420,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         }
 
         BitmapCropper bitmapCropper = mInjector.getBitmapCropper();
-        Asset asset = mWallpaperAsset;
-        SubsamplingScaleImageView subsamplingScaleImageView = mFullResImageView;
-        if (mAdaptiveWallpaperInfo != null && mCurrentPreviewAdaptiveType == AdaptiveType.DARK) {
-            asset = mAdaptiveWallpaperInfo.getAdaptiveAsset(context, AdaptiveType.DARK);
-            subsamplingScaleImageView = mDarkFullResImageView;
-        }
-        bitmapCropper.cropAndScaleBitmap(asset, subsamplingScaleImageView.getScale(),
+        bitmapCropper.cropAndScaleBitmap(mWallpaperAsset, mFullResImageView.getScale(),
                 calculateCropRect(context), /* adjustForRtl= */ false,
                 new BitmapCropper.Callback() {
                     @Override
@@ -610,22 +534,13 @@ public class ImagePreviewFragment extends PreviewFragment {
                 visibleRawWallpaperSize, crop);
         final float minWallpaperZoom = defaultWallpaperZoom;
 
-        setFullResImageViewScaleAndCenter(mFullResImageView, minWallpaperZoom, defaultWallpaperZoom,
-                centerPosition);
-        if (mAdaptiveWallpaperInfo != null) {
-            setFullResImageViewScaleAndCenter(mDarkFullResImageView, minWallpaperZoom,
-                    defaultWallpaperZoom, centerPosition);
-        }
-    }
 
-    private void setFullResImageViewScaleAndCenter(SubsamplingScaleImageView fullResImageView,
-            float minWallpaperZoom, float defaultWallpaperZoom, PointF centerPosition) {
         // Set min wallpaper zoom and max zoom on MosaicView widget.
-        fullResImageView.setMaxScale(Math.max(DEFAULT_WALLPAPER_MAX_ZOOM, defaultWallpaperZoom));
-        fullResImageView.setMinScale(minWallpaperZoom);
+        mFullResImageView.setMaxScale(Math.max(DEFAULT_WALLPAPER_MAX_ZOOM, defaultWallpaperZoom));
+        mFullResImageView.setMinScale(minWallpaperZoom);
 
         // Set center to composite positioning between scaled wallpaper and screen.
-        fullResImageView.setScaleAndCenter(minWallpaperZoom, centerPosition);
+        mFullResImageView.setScaleAndCenter(minWallpaperZoom, centerPosition);
     }
 
     private Rect calculateCropRect(Context context) {
@@ -681,8 +596,9 @@ public class ImagePreviewFragment extends PreviewFragment {
         public void surfaceCreated(SurfaceHolder holder) {
             if (mLastSurface != holder.getSurface()) {
                 mLastSurface = holder.getSurface();
-                recycleFullResImageView(mFullResImageView);
-                recycleFullResImageView(mDarkFullResImageView);
+                if (mFullResImageView != null) {
+                    mFullResImageView.recycle();
+                }
                 Context context = getContext();
                 View wallpaperPreviewContainer = LayoutInflater.from(context).inflate(
                         R.layout.fullscreen_wallpaper_preview, null);
@@ -691,11 +607,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                 mLowResImageView.setRenderEffect(
                         RenderEffect.createBlurEffect(LOW_RES_BITMAP_BLUR_RADIUS,
                                 LOW_RES_BITMAP_BLUR_RADIUS, Shader.TileMode.CLAMP));
-                if (mAdaptiveWallpaperInfo != null) {
-                    mDarkFullResImageView = new SubsamplingScaleImageView(getContext());
-                    mDarkFullResImageView.setAlpha(0);
-                    ((FrameLayout) wallpaperPreviewContainer).addView(mDarkFullResImageView);
-                }
                 mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
                     // Don't continue loading the wallpaper if the Fragment is detached.
                     if (getActivity() == null) {
@@ -776,7 +687,8 @@ public class ImagePreviewFragment extends PreviewFragment {
                         makeMeasureSpec(width, EXACTLY),
                         makeMeasureSpec(height, EXACTLY));
                 wallpaperPreviewContainer.layout(0, 0, width, height);
-                mTouchForwardingLayout.addTargetView(mFullResImageView);
+                mTouchForwardingLayout.setTargetView(mFullResImageView);
+
                 cleanUp();
                 mHost = new SurfaceControlViewHost(context,
                         context.getDisplay(), mWallpaperSurface.getHostToken());
@@ -822,37 +734,4 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         mFullScreenAnimation.setIsHomeSelected(isHomeSelected);
     }
-
-    private void subsamplingScaleImageViewAnimatedChange(Context c,
-            final SubsamplingScaleImageView oldSubsamplingScaleImageView,
-            final SubsamplingScaleImageView newSubsamplingScaleImageView) {
-        final Animation fadeOut = AnimationUtils.loadAnimation(c, android.R.anim.fade_out);
-        final Animation fadeIn = AnimationUtils.loadAnimation(c, android.R.anim.fade_in);
-        fadeOut.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                oldSubsamplingScaleImageView.setAlpha(0f);
-            }
-        });
-        newSubsamplingScaleImageView.setAlpha(1f);
-        newSubsamplingScaleImageView.startAnimation(fadeIn);
-        oldSubsamplingScaleImageView.startAnimation(fadeOut);
-    }
-
-    private void startRotateAdaptivePreview() {
-        mAdaptiveHandler.postDelayed(mAdaptiveRunnable, ADAPTIVE_ANIMATION_DELAY_TIME);
-    }
-
-    private void stopRotateAdaptivePreview() {
-        mAdaptiveHandler.removeCallbacks(mAdaptiveRunnable);
-    }
-
 }
