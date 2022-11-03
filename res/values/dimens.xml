@@ -238,4 +238,26 @@
     <dimen name="wallpaper_effect_failed_container_margin_top">24dp</dimen>
     <dimen name="wallpaper_effect_failed_button_size">16sp</dimen>
 
+    <!-- Clipping of the home screen overlay -->
+    <dimen name="home_screen_overlay_top_clipping">100dp</dimen>
+    <dimen name="home_screen_overlay_bottom_clipping">40dp</dimen>
+
+    <!-- Set wallpaper button -->
+    <dimen name="set_wallpaper_button_horizontal_padding">18dp</dimen>
+    <dimen name="set_wallpaper_button_vertical_padding">10dp</dimen>
+    <dimen name="set_wallpaper_button_corner_radius">20dp</dimen>
+    <dimen name="set_wallpaper_button_margin_end">20dp</dimen>
+    <dimen name="set_wallpaper_button_margin_bottom">24dp</dimen>
+
+    <!-- Wallpaper control button group -->
+    <dimen name="wallpaper_control_button_group_divider_space">12dp</dimen>
+    <dimen name="wallpaper_control_button_group_margin_end">18dp</dimen>
+    <dimen name="wallpaper_control_button_padding">12dp</dimen>
+    <dimen name="wallpaper_control_button_size">48dp</dimen>
+    <dimen name="wallpaper_control_icon_size">24dp</dimen>
+    <item name="wallpaper_control_icon_viewport_size" format="float" type="dimen">24</item>
+
+    <!-- Duo tabs -->
+    <dimen name="duo_tabs_button_corner_radius">12dp</dimen>
+    <dimen name="duo_tabs_divider_space">8dp</dimen>
 </resources>
