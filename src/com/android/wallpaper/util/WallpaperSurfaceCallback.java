@@ -19,6 +19,8 @@ import static android.view.View.MeasureSpec.EXACTLY;
 import static android.view.View.MeasureSpec.makeMeasureSpec;
 
 import android.content.Context;
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
 import android.service.wallpaper.WallpaperService;
 import android.util.Log;
 import android.view.Surface;
@@ -43,6 +45,8 @@ import java.util.concurrent.Future;
  * surface has been created.
  */
 public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
+
+    public static final float LOW_RES_BITMAP_BLUR_RADIUS = 150f;
 
     /**
      * Listener used to be notified when this surface is created
@@ -188,5 +192,21 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
     @Nullable
     public ImageView getHomeImageWallpaper() {
         return mHomeImageWallpaper;
+    }
+
+    /**
+     * @param blur whether to blur the home image wallpaper
+     */
+    public void setHomeImageWallpaperBlur(boolean blur) {
+        if (mHomeImageWallpaper == null) {
+            return;
+        }
+        if (blur) {
+            mHomeImageWallpaper.setRenderEffect(
+                    RenderEffect.createBlurEffect(LOW_RES_BITMAP_BLUR_RADIUS,
+                            LOW_RES_BITMAP_BLUR_RADIUS, Shader.TileMode.CLAMP));
+        } else {
+            mHomeImageWallpaper.setRenderEffect(null);
+        }
     }
 }
