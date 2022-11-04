@@ -15,7 +15,6 @@
 -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/lock_overlay"
     android:layout_width="match_parent"
