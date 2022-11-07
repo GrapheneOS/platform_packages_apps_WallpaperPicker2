@@ -144,24 +144,6 @@
          android:resizeableActivity="false"
          android:theme="@style/WallpaperTheme.Preview">
     </activity>
-
-    <service android:name="com.android.wallpaper.adaptive.AdaptiveJobService"
-        android:exported="true"
-        android:foregroundServiceType="location"
-        android:permission="android.permission.BIND_JOB_SERVICE"/>
-
-    <receiver android:name="com.android.wallpaper.module.AdaptiveBroadcastReceiver"
-        android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
-        </intent-filter>
-        <intent-filter>
-            <action android:name="android.intent.action.TIME_SET"/>
-        </intent-filter>
-        <intent-filter>
-            <action android:name="android.intent.action.BOOT_COMPLETED"/>
-        </intent-filter>
-    </receiver>
   </application>
 
 </manifest>

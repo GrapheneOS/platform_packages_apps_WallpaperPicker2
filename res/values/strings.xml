@@ -399,30 +399,4 @@
 
     <!-- Label for a button which lets user try to open their photos. [CHAR LIMIT=40] -->
     <string name="open_my_photos">Open My Photos</string>
-
-    <!-- Label describing a wallpaper whose responsibility is to display a different wallpaper
-         on day and night. [CHAR LIMIT=NONE] -->
-    <string name="channel_day_and_night">Day and night wallpaper</string>
-
-    <!-- Content description of settings button on the bottom action bar. [CHAR LIMIT=30] -->
-    <string name="bottom_action_bar_settings">Settings</string>
-
-    <!-- Label for the 'location permissions' text of the view pager in wallpaper preview activity.
-             [CHAR_LIMIT=25] -->
-    <string name="location_permission_title">Location permissions</string>
-
-    <!-- Label for the 'location permissions subtitle' text of the view pager in wallpaper preview activity when the permission is disabled. -->
-    <string name="location_permission_disabled_subtitle">Location permissions for this wallpaper have been disabled.</string>
-
-    <!-- Label for the 'location permissions subtitle' text of the view pager in wallpaper preview activity when the permission is enabled. -->
-    <string name="location_permission_enabled_subtitle">Location permissions for this wallpaper have been enabled.</string>
-
-    <!-- Label for a button which lets user enable location permission. [CHAR LIMIT=40] -->
-    <string name="location_permission_enable">Enable</string>
-
-    <!-- Label for a button which lets user disable location permission. [CHAR LIMIT=40] -->
-    <string name="location_permission_disable">Disable</string>
-
-    <!-- Description of navigation to settings when request permission. [CHAR LIMIT=60] -->
-    <string name="request_permission_settings_snackbar_description">Visit settings page to enable.</string>
 </resources>

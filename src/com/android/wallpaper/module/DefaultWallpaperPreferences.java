@@ -27,7 +27,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.android.wallpaper.model.AdaptiveType;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferenceKeys.NoBackupKeys;
 
@@ -956,44 +955,6 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     public void setWallpaperEffects(String effects) {
         mNoBackupPrefs.edit().putString(
                 NoBackupKeys.KEY_WALLPAPER_EFFECTS, effects)
-                .apply();
-    }
-
-    @Override
-    public AdaptiveType getAppliedAdaptiveType() {
-        try {
-            return AdaptiveType.valueOf(
-                    mSharedPrefs.getString(WallpaperPreferenceKeys.KEY_APPLIED_ADAPTIVE_TYPE,
-                            AdaptiveType.NONE.name()));
-        } catch (Exception e) {
-            Log.e(TAG, "Failed to get current adaptive type");
-            return AdaptiveType.NONE;
-        }
-    }
-
-    @Override
-    public void setAppliedAdaptiveType(AdaptiveType type) {
-        mSharedPrefs.edit().putString(WallpaperPreferenceKeys.KEY_APPLIED_ADAPTIVE_TYPE,
-                type.toString()).apply();
-    }
-
-    @Override
-    public String getAppliedAdaptiveWallpaperId() {
-        return mSharedPrefs.getString(WallpaperPreferenceKeys.KEY_APPLIED_ADAPTIVE_WALLPAPER_ID,
-                "");
-    }
-
-    @Override
-    public void setAppliedAdaptiveWallpaperId(String wallpaperId) {
-        mSharedPrefs.edit().putString(WallpaperPreferenceKeys.KEY_APPLIED_ADAPTIVE_WALLPAPER_ID,
-                wallpaperId).apply();
-    }
-
-    @Override
-    public void clearAdaptiveData() {
-        mSharedPrefs.edit()
-                .remove(WallpaperPreferenceKeys.KEY_APPLIED_ADAPTIVE_TYPE)
-                .remove(WallpaperPreferenceKeys.KEY_APPLIED_ADAPTIVE_WALLPAPER_ID)
                 .apply();
     }
 

@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.picker;
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS;
 import static android.view.View.IMPORTANT_FOR_ACCESSIBILITY_YES;
 import static android.view.View.MeasureSpec.EXACTLY;
@@ -25,16 +24,13 @@ import static com.android.wallpaper.util.WallpaperSurfaceCallback.LOW_RES_BITMAP
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.EDIT;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMATION;
-import static com.android.wallpaper.widget.BottomActionBar.BottomAction.SETTINGS;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.WallpaperColors;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -44,13 +40,10 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RenderEffect;
 import android.graphics.Shader;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceControlViewHost;
 import android.view.SurfaceHolder;
@@ -58,15 +51,8 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -78,8 +64,6 @@ import androidx.fragment.app.FragmentActivity;
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.CurrentWallpaperAssetVN;
-import com.android.wallpaper.model.AdaptiveType;
-import com.android.wallpaper.model.AdaptiveWallpaperInfo;
 import com.android.wallpaper.model.SetWallpaperViewModel;
 import com.android.wallpaper.model.WallpaperInfo.ColorInfo;
 import com.android.wallpaper.module.BitmapCropper;
@@ -88,9 +72,7 @@ import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
-import com.android.wallpaper.util.AdaptiveWallpaperUtils;
 import com.android.wallpaper.util.FullScreenAnimation;
-import com.android.wallpaper.util.PermissionUtils;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.SizeCalculator;
@@ -103,7 +85,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Locale;
@@ -122,7 +103,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     private static final String TAG = "ImagePreviewFragment";
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
     private static final Executor sExecutor = Executors.newCachedThreadPool();
-    private static final int ADAPTIVE_ANIMATION_DELAY_TIME = 3000;
 
     private final WallpaperSurfaceCallback mWallpaperSurfaceCallback =
             new WallpaperSurfaceCallback();
@@ -131,10 +111,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     private final AtomicInteger mRecalculateColorCounter = new AtomicInteger(0);
     private final Injector mInjector = InjectorProvider.getInjector();
 
-    private SubsamplingScaleImageView mDarkFullResImageView;
-    private AdaptiveWallpaperInfo mAdaptiveWallpaperInfo;
-    private Handler mAdaptiveHandler = new Handler();
-    private AdaptiveType mCurrentPreviewAdaptiveType = AdaptiveType.LIGHT;
     /**
      * Size of the screen considered for cropping the wallpaper (typically the same as
      * {@link #mScreenSize} but it could be different on multi-display)
@@ -159,33 +135,12 @@ public class ImagePreviewFragment extends PreviewFragment {
     protected LockScreenPreviewer mLockScreenPreviewer;
     protected SubsamplingScaleImageView mFullResImageView;
     protected Asset mWallpaperAsset;
-    private LocationPermissionRequestContent mLocationPermissionRequestContent;
     private Future<ColorInfo> mColorFuture;
-    // The runnable task for periodically rotating adaptive wallpaper.
-    private Runnable mAdaptiveRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (mCurrentPreviewAdaptiveType == AdaptiveType.LIGHT) {
-                subsamplingScaleImageViewAnimatedChange(getContext(), mFullResImageView,
-                        mDarkFullResImageView);
-            } else {
-                subsamplingScaleImageViewAnimatedChange(getContext(), mDarkFullResImageView,
-                        mFullResImageView);
-            }
-            mCurrentPreviewAdaptiveType = mCurrentPreviewAdaptiveType.getNextType();
-            mAdaptiveHandler.removeCallbacks(mAdaptiveRunnable);
-            mAdaptiveHandler.postDelayed(mAdaptiveRunnable, ADAPTIVE_ANIMATION_DELAY_TIME);
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWallpaperAsset = mWallpaper.getAsset(requireContext().getApplicationContext());
-        if (mWallpaper instanceof AdaptiveWallpaperInfo) {
-            mAdaptiveWallpaperInfo = (AdaptiveWallpaperInfo) mWallpaper;
-            mLocationPermissionRequestContent = new LocationPermissionRequestContent(getContext());
-        }
         mColorFuture = mWallpaper.computeColorInfo(requireContext());
         mWallpaperPreferences = mInjector.getPreferences(getContext());
     }
@@ -301,21 +256,17 @@ public class ImagePreviewFragment extends PreviewFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopRotateAdaptivePreview();
-        recycleFullResImageView(mFullResImageView);
-        recycleFullResImageView(mDarkFullResImageView);
+
+        if (mFullResImageView != null) {
+            mFullResImageView.recycle();
+        }
+
         if (mLockScreenPreviewer != null) {
             mLockScreenPreviewer.release();
         }
 
         mWallpaperSurfaceCallback.cleanUp();
         mWorkspaceSurfaceCallback.cleanUp();
-    }
-
-    private void recycleFullResImageView(SubsamplingScaleImageView fullResImageView) {
-        if (fullResImageView != null) {
-            fullResImageView.recycle();
-        }
     }
 
     protected void setupActionBar() {
@@ -328,11 +279,6 @@ public class ImagePreviewFragment extends PreviewFragment {
             mBottomActionBar.showActionsOnly(INFORMATION, APPLY);
         } else {
             mBottomActionBar.showActionsOnly(INFORMATION, EDIT, APPLY);
-        }
-        if (mAdaptiveWallpaperInfo != null) {
-            mBottomActionBar.showActions(SETTINGS);
-            mBottomActionBar.bindBottomSheetContentWithAction(mLocationPermissionRequestContent,
-                    SETTINGS);
         }
         mBottomActionBar.setActionClickListener(APPLY,
                 unused -> onSetWallpaperClicked(null, mWallpaper));
@@ -380,9 +326,6 @@ public class ImagePreviewFragment extends PreviewFragment {
         if (mRawWallpaperSize == null || mFullResImageView == null
                 || mFullResImageView.isImageLoaded()) {
             return;
-        }
-        if (mAdaptiveWallpaperInfo != null) {
-            initDarkFullResView();
         }
         final boolean isWallpaperColorCached = isWallpaperColorInCache(
                 mWallpaper.getStoredWallpaperId(getContext()));
@@ -459,14 +402,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                 });
 
         mFullResImageView.setOnTouchListener((v, ev) -> {
-            // Don't rotate image when user dragging & zooming the image.
-            if (mAdaptiveWallpaperInfo != null) {
-                if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-                    stopRotateAdaptivePreview();
-                } else if (ev.getAction() == MotionEvent.ACTION_UP) {
-                    startRotateAdaptivePreview();
-                }
-            }
             // Consume the touch event for collapsing bottom sheet while it is expanded or
             // dragging (not collapsed).
             if (mBottomActionBar != null && !mBottomActionBar.isBottomSheetCollapsed()) {
@@ -475,30 +410,6 @@ public class ImagePreviewFragment extends PreviewFragment {
             }
             return false;
         });
-    }
-
-    private void initDarkFullResView() {
-        mDarkFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
-        mDarkFullResImageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
-        Point targetPageBitmapSize = new Point(mRawWallpaperSize);
-        mAdaptiveWallpaperInfo.getAdaptiveAsset(getContext(), AdaptiveType.DARK).decodeBitmap(
-                targetPageBitmapSize.x, targetPageBitmapSize.y,
-                pageBitmap -> {
-                    if (getActivity() == null) {
-                        return;
-                    }
-
-                    // The page bitmap may be null if there was a decoding error, so show an
-                    // error dialog.
-                    if (pageBitmap == null) {
-                        showLoadWallpaperErrorDialog();
-                        return;
-                    }
-                    mDarkFullResImageView.setImage(ImageSource.bitmap(pageBitmap));
-                    startRotateAdaptivePreview();
-                }
-        );
-        mTouchForwardingLayout.addTargetView(mDarkFullResImageView);
     }
 
     private void recalculateColors(boolean cacheColor) {
@@ -623,22 +534,13 @@ public class ImagePreviewFragment extends PreviewFragment {
                 visibleRawWallpaperSize, crop);
         final float minWallpaperZoom = defaultWallpaperZoom;
 
-        setFullResImageViewScaleAndCenter(mFullResImageView, minWallpaperZoom, defaultWallpaperZoom,
-                centerPosition);
-        if (mAdaptiveWallpaperInfo != null) {
-            setFullResImageViewScaleAndCenter(mDarkFullResImageView, minWallpaperZoom,
-                    defaultWallpaperZoom, centerPosition);
-        }
-    }
 
-    private void setFullResImageViewScaleAndCenter(SubsamplingScaleImageView fullResImageView,
-            float minWallpaperZoom, float defaultWallpaperZoom, PointF centerPosition) {
         // Set min wallpaper zoom and max zoom on MosaicView widget.
-        fullResImageView.setMaxScale(Math.max(DEFAULT_WALLPAPER_MAX_ZOOM, defaultWallpaperZoom));
-        fullResImageView.setMinScale(minWallpaperZoom);
+        mFullResImageView.setMaxScale(Math.max(DEFAULT_WALLPAPER_MAX_ZOOM, defaultWallpaperZoom));
+        mFullResImageView.setMinScale(minWallpaperZoom);
 
         // Set center to composite positioning between scaled wallpaper and screen.
-        fullResImageView.setScaleAndCenter(minWallpaperZoom, centerPosition);
+        mFullResImageView.setScaleAndCenter(minWallpaperZoom, centerPosition);
     }
 
     private Rect calculateCropRect(Context context) {
@@ -663,12 +565,6 @@ public class ImagePreviewFragment extends PreviewFragment {
 
     @Override
     protected void setCurrentWallpaper(@Destination int destination) {
-        Asset asset = mWallpaperAsset;
-        if (mAdaptiveWallpaperInfo != null) {
-            AdaptiveType adaptiveType = AdaptiveWallpaperUtils.getCurrentAdaptiveType(
-                    System.currentTimeMillis(), AdaptiveWallpaperUtils.getLocation(getContext()));
-            asset = mAdaptiveWallpaperInfo.getAdaptiveAsset(getContext(), adaptiveType);
-        }
         Rect cropRect = calculateCropRect(getContext());
         float screenScale = WallpaperCropUtils.getScaleOfScreenResolution(
                 mFullResImageView.getScale(), cropRect, mWallpaperScreenSize.x,
@@ -678,7 +574,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                 Math.round((float) cropRect.top * screenScale),
                 Math.round((float) cropRect.right * screenScale),
                 Math.round((float) cropRect.bottom * screenScale));
-        mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, asset,
+        mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, mWallpaperAsset,
                 destination, mFullResImageView.getScale() * screenScale, scaledCropRect,
                 mWallpaperColors, SetWallpaperViewModel.getCallback(mViewModelProvider));
     }
@@ -700,8 +596,9 @@ public class ImagePreviewFragment extends PreviewFragment {
         public void surfaceCreated(SurfaceHolder holder) {
             if (mLastSurface != holder.getSurface()) {
                 mLastSurface = holder.getSurface();
-                recycleFullResImageView(mFullResImageView);
-                recycleFullResImageView(mDarkFullResImageView);
+                if (mFullResImageView != null) {
+                    mFullResImageView.recycle();
+                }
                 Context context = getContext();
                 View wallpaperPreviewContainer = LayoutInflater.from(context).inflate(
                         R.layout.fullscreen_wallpaper_preview, null);
@@ -710,11 +607,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                 mLowResImageView.setRenderEffect(
                         RenderEffect.createBlurEffect(LOW_RES_BITMAP_BLUR_RADIUS,
                                 LOW_RES_BITMAP_BLUR_RADIUS, Shader.TileMode.CLAMP));
-                if (mAdaptiveWallpaperInfo != null) {
-                    mDarkFullResImageView = new SubsamplingScaleImageView(getContext());
-                    mDarkFullResImageView.setAlpha(0);
-                    ((FrameLayout) wallpaperPreviewContainer).addView(mDarkFullResImageView);
-                }
                 mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
                     // Don't continue loading the wallpaper if the Fragment is detached.
                     if (getActivity() == null) {
@@ -795,7 +687,8 @@ public class ImagePreviewFragment extends PreviewFragment {
                         makeMeasureSpec(width, EXACTLY),
                         makeMeasureSpec(height, EXACTLY));
                 wallpaperPreviewContainer.layout(0, 0, width, height);
-                mTouchForwardingLayout.addTargetView(mFullResImageView);
+                mTouchForwardingLayout.setTargetView(mFullResImageView);
+
                 cleanUp();
                 mHost = new SurfaceControlViewHost(context,
                         context.getDisplay(), mWallpaperSurface.getHostToken());
@@ -840,139 +733,5 @@ public class ImagePreviewFragment extends PreviewFragment {
         mLockPreviewContainer.setVisibility(isHomeSelected ? View.INVISIBLE : View.VISIBLE);
 
         mFullScreenAnimation.setIsHomeSelected(isHomeSelected);
-    }
-
-    private void subsamplingScaleImageViewAnimatedChange(Context c,
-            final SubsamplingScaleImageView oldSubsamplingScaleImageView,
-            final SubsamplingScaleImageView newSubsamplingScaleImageView) {
-        final Animation fadeOut = AnimationUtils.loadAnimation(c, android.R.anim.fade_out);
-        final Animation fadeIn = AnimationUtils.loadAnimation(c, android.R.anim.fade_in);
-        fadeOut.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                oldSubsamplingScaleImageView.setAlpha(0f);
-            }
-        });
-        newSubsamplingScaleImageView.setAlpha(1f);
-        newSubsamplingScaleImageView.startAnimation(fadeIn);
-        oldSubsamplingScaleImageView.startAnimation(fadeOut);
-    }
-
-    private void startRotateAdaptivePreview() {
-        mAdaptiveHandler.postDelayed(mAdaptiveRunnable, ADAPTIVE_ANIMATION_DELAY_TIME);
-    }
-
-    private void stopRotateAdaptivePreview() {
-        mAdaptiveHandler.removeCallbacks(mAdaptiveRunnable);
-    }
-
-    private final class LocationPermissionRequestContent extends
-            BottomActionBar.BottomSheetContent<View> {
-
-        private TextView mLocationDisabledSubTitle;
-        private TextView mLocationEnabledSubtitle;
-        private Button mLocationEnabledButton;
-        private Button mLocationDisabledButton;
-        private ActivityResultLauncher<Intent> mSettingsStartForResult;
-        private ActivityResultLauncher<String[]> mLocationPermissionRequest;
-
-        LocationPermissionRequestContent(Context context) {
-            super(context);
-            mSettingsStartForResult = registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(),
-                    result ->
-                            mLocationPermissionRequestContent.onLocationPermissionChanged(
-                                    PermissionUtils.isAccessCoarseLocationPermissionGranted(
-                                            getContext())));
-            mLocationPermissionRequest =
-                    registerForActivityResult(
-                            new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-                                Boolean coarseLocationGranted = result.getOrDefault(
-                                        ACCESS_COARSE_LOCATION, /* default= */ false);
-                                if (coarseLocationGranted != null && coarseLocationGranted) {
-                                    mLocationPermissionRequestContent.onLocationPermissionChanged(
-                                            /* grant= */ true);
-                                } else {
-                                    if (!getActivity().shouldShowRequestPermissionRationale(
-                                            ACCESS_COARSE_LOCATION)) {
-                                        showPermissionSnackbar();
-                                    }
-                                }
-                            }
-                    );
-        }
-
-        @Override
-        public int getViewId() {
-            return R.layout.location_permission_request_view;
-        }
-
-        @Override
-        public void onViewCreated(View previewPage) {
-            mLocationDisabledSubTitle = previewPage.findViewById(
-                    R.id.location_permission_disabled_subtitle);
-            mLocationEnabledSubtitle = previewPage.findViewById(
-                    R.id.location_permission_enabled_subtitle);
-            mLocationEnabledButton = previewPage.findViewById(R.id.location_permission_enable);
-            mLocationDisabledButton = previewPage.findViewById(R.id.location_permission_disable);
-            onLocationPermissionChanged(
-                    PermissionUtils.isAccessCoarseLocationPermissionGranted(getContext()));
-            mLocationEnabledButton.setOnClickListener(view ->
-                    mLocationPermissionRequest.launch(
-                            new String[]{ACCESS_COARSE_LOCATION}));
-            mLocationDisabledButton.setOnClickListener(view -> startSettings());
-        }
-
-        public void onLocationPermissionChanged(boolean grant) {
-            if (grant) {
-                mLocationEnabledSubtitle.setVisibility(View.VISIBLE);
-                mLocationDisabledButton.setVisibility(View.VISIBLE);
-                mLocationDisabledSubTitle.setVisibility(View.GONE);
-                mLocationEnabledButton.setVisibility(View.GONE);
-            } else {
-                mLocationEnabledSubtitle.setVisibility(View.GONE);
-                mLocationDisabledButton.setVisibility(View.GONE);
-                mLocationDisabledSubTitle.setVisibility(View.VISIBLE);
-                mLocationEnabledButton.setVisibility(View.VISIBLE);
-            }
-        }
-
-        private void showPermissionSnackbar() {
-            Snackbar snackbar = Snackbar.make(getView(),
-                    R.string.request_permission_settings_snackbar_description,
-                    Snackbar.LENGTH_LONG);
-            Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
-            TextView textView = layout.findViewById(R.id.snackbar_text);
-            layout.setBackgroundResource(R.drawable.snackbar_background);
-            TypedArray typedArray = getContext().obtainStyledAttributes(
-                    new int[]{android.R.attr.textColorPrimary,
-                            com.android.internal.R.attr.colorAccentPrimaryVariant});
-            textView.setTextColor(typedArray.getColor(0, Color.TRANSPARENT));
-            snackbar.setActionTextColor(typedArray.getColor(1, Color.TRANSPARENT));
-            typedArray.recycle();
-
-            snackbar.setAction(getContext().getString(R.string.settings_button_label),
-                    view -> startSettings());
-            snackbar.show();
-        }
-
-        private void startSettings() {
-            Activity activity = getActivity();
-            if (activity == null) {
-                return;
-            }
-            Intent appInfoIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            Uri uri = Uri.fromParts("package", activity.getPackageName(), /* fragment= */ null);
-            appInfoIntent.setData(uri);
-            mSettingsStartForResult.launch(appInfoIntent);
-        }
     }
 }

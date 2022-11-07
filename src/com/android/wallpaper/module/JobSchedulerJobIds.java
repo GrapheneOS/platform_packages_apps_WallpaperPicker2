@@ -27,6 +27,5 @@ public interface JobSchedulerJobIds {
     int JOB_ID_GENERATE_MISSING_HASH_CODES = 2;
     int JOB_ID_SYNC_REMOTE_DATA = 3;
     int JOB_ID_RECEIVE_SYNCED_DATA = 4;
-    int JOB_ID_ADAPTIVE_ONEOFF = 5;
-    // next job ID is 6
+    // next job ID is 5
 }
