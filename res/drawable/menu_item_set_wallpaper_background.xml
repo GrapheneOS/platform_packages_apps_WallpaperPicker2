@@ -14,6 +14,7 @@
      limitations under the License.
 -->
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
     android:color="?android:colorControlHighlight">
     <item>
         <shape
@@ -22,7 +23,7 @@
                 android:width="@dimen/menu_item_set_wallpaper_background_width"
                 android:height="@dimen/menu_item_set_wallpaper_background_height" />
             <corners android:radius="@dimen/menu_item_set_wallpaper_background_radius" />
-            <solid android:color="@color/color_accent_primary" />
+            <solid android:color="?androidprv:attr/colorAccentPrimary" />
         </shape>
     </item>
 </ripple>

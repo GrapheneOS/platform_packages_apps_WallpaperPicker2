@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:androidprv="http://schemas.android.com/apk/prv/res/android">
     <item>
         <shape android:shape="oval">
             <size
                 android:width="@dimen/grid_item_badge_size"
                 android:height="@dimen/grid_item_badge_size" />
-            <solid android:color="@color/color_surface_variant" />
+            <solid android:color="?androidprv:attr/colorSurfaceVariant" />
         </shape>
     </item>
     <item
