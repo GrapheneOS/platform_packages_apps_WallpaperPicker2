@@ -22,7 +22,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.android.wallpaper.picker.TouchForwardingLayout2
+    <com.android.wallpaper.picker.TouchForwardingLayout
         android:id="@+id/touch_forwarding_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
