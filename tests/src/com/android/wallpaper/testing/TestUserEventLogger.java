@@ -52,6 +52,8 @@ public class TestUserEventLogger implements UserEventLogger {
     private String mWallpaperSetEffects;
     private String mWallpaperApplyEffect;
     private int mWallpaperApplyEffectStatus;
+    private long mTimeElapsedMillis;
+    private int mResultCode;
 
     public TestUserEventLogger() {
         mLastDailyRotationHour = -1;
@@ -240,9 +242,11 @@ public class TestUserEventLogger implements UserEventLogger {
     }
 
     @Override
-    public void logEffectApply(String effect, int status) {
+    public void logEffectApply(String effect, int status, long timeElapsedMillis, int resultCode) {
         mWallpaperApplyEffect = effect;
         mWallpaperApplyEffectStatus = status;
+        mTimeElapsedMillis = timeElapsedMillis;
+        mResultCode = resultCode;
     }
 
     public int getNumWallpaperSetEvents() {
