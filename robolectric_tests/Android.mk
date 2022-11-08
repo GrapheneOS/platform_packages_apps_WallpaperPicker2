@@ -24,12 +24,13 @@ LOCAL_LICENSE_CONDITIONS := notice
 LOCAL_SDK_VERSION := current
 LOCAL_SRC_FILES := $(call all-java-files-under, src)
 LOCAL_STATIC_JAVA_LIBRARIES := \
+    androidx.test.core \
     androidx.test.runner \
     androidx.test.rules \
     mockito-robolectric-prebuilt \
     truth-prebuilt
 LOCAL_JAVA_LIBRARIES := \
-    platform-robolectric-3.6.2-prebuilt
+    platform-robolectric-4.8.2-prebuilt
 
 LOCAL_JAVA_RESOURCE_DIRS := config
 
@@ -56,4 +57,4 @@ LOCAL_INSTRUMENT_SOURCE_DIRS := packages/apps/WallpaperPicker2/src \
 
 LOCAL_ROBOTEST_TIMEOUT := 36000
 
-include prebuilts/misc/common/robolectric/3.6.2/run_robotests.mk
+include prebuilts/misc/common/robolectric/4.8.2/run_robotests.mk
