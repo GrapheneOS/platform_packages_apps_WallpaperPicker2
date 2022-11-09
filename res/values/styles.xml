@@ -127,6 +127,9 @@
     <!-- Preview attribution pane styles -->
     <style name="WallpaperPicker.BottomPaneStyle" parent="@android:style/Theme.DeviceDefault.Settings"/>
 
+    <style name="WallpaperPicker.FloatingPaneStyle"
+        parent="@android:style/Theme.DeviceDefault.Settings" />
+
     <!-- Preview customization pane styles -->
     <style name="WallpaperPicker.CustomizationPaneStyle" parent="@android:style/Theme.DeviceDefault.Settings">
         <item name="tabTextAppearance">@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps</item>
