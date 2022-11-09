@@ -197,7 +197,8 @@ public interface UserEventLogger {
     /**
      * Logs the action related to effect.
      */
-    void logEffectApply(String effect, @EffectStatus int status);
+    void logEffectApply(String effect, @EffectStatus int status, long timeElapsedMillis,
+            int resultCode);
 
     /**
      * Possible results of a "set wallpaper" operation.
@@ -258,7 +259,7 @@ public interface UserEventLogger {
             EFFECT_PREFERENCE_UNSPECIFIED,
             EFFECT_APPLIED_ON_SUCCESS,
             EFFECT_APPLIED_ON_FAILED,
-            EFFECT_APPLIED_OFF,
+            EFFECT_APPLIED_OFF
             })
     @interface EffectStatus {
     }
