@@ -15,6 +15,8 @@
  */
 package com.android.wallpaper.config;
 
+import android.os.SystemProperties;
+
 abstract class BaseFlags {
     public static boolean skipDailyWallpaperButtonEnabled = true;
     public static boolean desktopUiEnabled = false;
@@ -22,4 +24,6 @@ abstract class BaseFlags {
     public static boolean stagingBackdropContentEnabled = false;
     public static boolean performanceMonitoringEnabled = true;
     public static boolean enableWallpaperEffect = false;
+    public static boolean isMonochromaticFlagEnabled =
+            SystemProperties.getBoolean("persist.sysui.monochromatic", false);
 }
