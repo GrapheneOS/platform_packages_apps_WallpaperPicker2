@@ -260,4 +260,8 @@
     <!-- Duo tabs -->
     <dimen name="duo_tabs_button_corner_radius">12dp</dimen>
     <dimen name="duo_tabs_divider_space">8dp</dimen>
+
+    <!-- Floating Sheet -->
+    <dimen name="floating_sheet_corner_radius">12dp</dimen>
+    <dimen name="floating_sheet_margin">24dp</dimen>
 </resources>
