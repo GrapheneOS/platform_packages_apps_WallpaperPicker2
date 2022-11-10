@@ -141,7 +141,7 @@ public class LiveWallpaperInfo extends WallpaperInfo {
 
     protected android.app.WallpaperInfo mInfo;
     protected LiveWallpaperThumbAsset mThumbAsset;
-    private boolean mVisibleTitle;
+    protected boolean mVisibleTitle;
     @Nullable private final String mCollectionId;
 
     /**
