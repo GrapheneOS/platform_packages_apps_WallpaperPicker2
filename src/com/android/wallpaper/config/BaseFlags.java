@@ -26,4 +26,5 @@ abstract class BaseFlags {
     public static boolean enableWallpaperEffect = false;
     public static boolean isMonochromaticFlagEnabled =
             SystemProperties.getBoolean("persist.sysui.monochromatic", false);
+    public static boolean enableEffectOnMultiplePanel = false;
 }
