@@ -48,7 +48,6 @@
             android:layout_width="wrap_content"
             android:layout_height="?android:attr/actionBarSize"
             android:layout_marginEnd="@dimen/set_wallpaper_button_margin_end"
-            android:layout_marginBottom="@dimen/set_wallpaper_button_margin_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -68,6 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/wallpaper_control_button_group_margin_end"
+            android:layout_marginTop="@dimen/wallpaper_control_button_group_margin_top"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button_set_wallpaper_container" />
 
