@@ -247,10 +247,10 @@
     <dimen name="set_wallpaper_button_vertical_padding">10dp</dimen>
     <dimen name="set_wallpaper_button_corner_radius">20dp</dimen>
     <dimen name="set_wallpaper_button_margin_end">20dp</dimen>
-    <dimen name="set_wallpaper_button_margin_bottom">24dp</dimen>
 
     <!-- Wallpaper control button group -->
     <dimen name="wallpaper_control_button_group_divider_space">12dp</dimen>
+    <dimen name="wallpaper_control_button_group_margin_top">8dp</dimen>
     <dimen name="wallpaper_control_button_group_margin_end">18dp</dimen>
     <dimen name="wallpaper_control_button_padding">12dp</dimen>
     <dimen name="wallpaper_control_button_size">48dp</dimen>
