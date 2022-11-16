@@ -22,6 +22,56 @@
     android:divider="@drawable/wallpaper_control_button_group_divider"
     android:showDividers="middle">
 
+    <FrameLayout
+        android:id="@+id/download_button_container"
+        android:layout_width="@dimen/wallpaper_control_button_size"
+        android:layout_height="@dimen/wallpaper_control_button_size"
+        android:visibility="gone">
+        <ToggleButton
+            android:id="@+id/download_button"
+            android:layout_width="@dimen/wallpaper_control_button_size"
+            android:layout_height="@dimen/wallpaper_control_button_size"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/bottom_action_bar_download"
+            android:foreground="@drawable/wallpaper_control_button_download"
+            android:textOff=""
+            android:textOn="" />
+
+        <FrameLayout
+            android:id="@+id/action_download_progress"
+            android:layout_width="@dimen/wallpaper_control_button_size"
+            android:layout_height="@dimen/wallpaper_control_button_size"
+            android:background="@drawable/wallpaper_control_button_off_background"
+            android:visibility="gone">
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:indeterminateTint="?android:textColorTertiary"/>
+        </FrameLayout>
+    </FrameLayout>
+
+    <ToggleButton
+        android:id="@+id/delete_button"
+        android:layout_width="@dimen/wallpaper_control_button_size"
+        android:layout_height="@dimen/wallpaper_control_button_size"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/delete_live_wallpaper"
+        android:foreground="@drawable/wallpaper_control_button_delete"
+        android:textOff=""
+        android:textOn=""
+        android:visibility="gone" />
+
+    <ToggleButton
+        android:id="@+id/customize_button"
+        android:layout_width="@dimen/wallpaper_control_button_size"
+        android:layout_height="@dimen/wallpaper_control_button_size"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/tab_customize"
+        android:foreground="@drawable/wallpaper_control_button_customize"
+        android:textOff=""
+        android:textOn=""
+        android:visibility="gone" />
+
     <ToggleButton
         android:id="@+id/effects_button"
         android:layout_width="@dimen/wallpaper_control_button_size"
