@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"ဆက်တင်များတွင် Files နှင့် မီဒီယာကို ဖွင့်ပါ။"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ဖွင့်ရန်"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"ဓာတ်ပုံများဖွင့်ရန်"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"နေ့နှင့် ည နောက်ခံ"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"ဆက်တင်များ"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"တည်နေရာ ခွင့်ပြုချက်များ"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"ဤနောက်ခံအတွက် တည်နေရာခွင့်ပြုချက်များ ပိတ်ထားသည်။"</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"ဤနောက်ခံအတွက် တည်နေရာခွင့်ပြုချက်များ ဖွင့်ထားသည်။"</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"ဖွင့်ရန်"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"ပိတ်ရန်"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"ဖွင့်ရန်ဆက်တင်များစာမျက်နှာထံဝင်ကြည့်ပါ။"</string>
 </resources>

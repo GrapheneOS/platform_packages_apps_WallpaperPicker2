@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"V nastavení povolte soubory a média."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Povolit"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Otevřít Moje fotky"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"Tapeta pro den a noc"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"Nastavení"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"Oprávnění číst polohu"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"Oprávnění pro přístup k poloze pro tuto tapetu byla zakázána."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"Oprávnění pro přístup k poloze pro tuto tapetu byla povolena."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"Povolit"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"Zakázat"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"Oprávnění povolíte na stránce nastavení."</string>
 </resources>

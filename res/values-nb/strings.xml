@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Slå på filer og medier i innstillingene."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Slå på"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Åpne Mine bilder"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"Bakgrunn for dag og natt"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"Innstillinger"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"Posisjonstillatelser"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"Posisjonstillatelser er slått av for denne bakgrunnen."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"Posisjonstillatelser er slått på for denne bakgrunnen."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"Slå på"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"Slå av"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"Gå til innstillingssiden for å slå på."</string>
 </resources>

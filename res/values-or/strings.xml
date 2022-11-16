@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"ଦୟାକରି ସେଟିଂସରେ ଫାଇଲଗୁଡ଼ିକ ଏବଂ ମିଡିଆକୁ ସକ୍ଷମ କରନ୍ତୁ।"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ସକ୍ଷମ କରନ୍ତୁ"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"ମୋ ଫଟୋଗୁଡ଼ିକ ଖୋଲନ୍ତୁ"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"ଦିନ ଓ ରାତି ୱାଲପେପର"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"ସେଟିଂସ"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"ଲୋକେସନ ଅନୁମତିଗୁଡ଼ିକ"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"ଏହି ୱାଲପେପର ପାଇଁ ଲୋକେସନ ଅନୁମତିଗୁଡ଼ିକୁ ଅକ୍ଷମ କରାଯାଇଛି।"</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"ଏହି ୱାଲପେପର ପାଇଁ ଲୋକେସନ ଅନୁମତିଗୁଡ଼ିକୁ ସକ୍ଷମ କରାଯାଇଛି।"</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"ସକ୍ଷମ କରନ୍ତୁ"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"ଅକ୍ଷମ କରନ୍ତୁ"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"ସକ୍ଷମ କରିବାକୁ ସେଟିଂସ ପୃଷ୍ଠାକୁ ଭିଜିଟ କର।"</string>
 </resources>

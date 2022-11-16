@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"請在設定中啟用檔案和媒體。"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"啟用"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"開啟「我的相片」"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"晝夜桌布"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"設定"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"位置權限"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"此桌布的位置權限已停用。"</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"此桌布的位置權限已啟用。"</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"啟用"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"停用"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"前往「設定」頁面即可啟用。"</string>
 </resources>

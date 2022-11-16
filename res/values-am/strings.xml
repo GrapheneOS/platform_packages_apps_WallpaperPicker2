@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"እባክዎ በቅንብሮች ውስጥ ፋይሎችን እና ሚዲያን ያንቁ።"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"አንቃ"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"የእኔ ፎቶዎችን ክፈት"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"የቀን እና የማታ ልጣፍ"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"ቅንብሮች"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"የአካባቢ ፈቃዶች"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"የአካባቢ ፈቃዶች ለዚህ ልጣፍ ተሰናክለዋል።"</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"የአካባቢ ፈቃዶች ለዚህ ልጣፍ ነቅተዋል።"</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"አንቃ"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"አሰናክል"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"ለማንቃት የቅንብሮች ገጽን ይጎብኙ።"</string>
 </resources>

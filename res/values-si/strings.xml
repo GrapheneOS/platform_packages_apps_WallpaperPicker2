@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"කරුණාකර සැකසීම් තුළ ගොනු සහ මාධ්‍ය සබල කරන්න."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"සබල කරන්න"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"මගේ ඡායාරූප විවෘත කරන්න"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"දිවා රෑ බිතුපත"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"සැකසීම්"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"ස්ථාන අවසර"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"මෙම බිතුපත සඳහා ස්ථාන අවසර අබල කර ඇත."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"මෙම බිතුපත සඳහා ස්ථාන අවසර සබල කර ඇත."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"සබල කරන්න"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"අබල කරන්න"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"සබල කිරීමට සැකසීම් පිටුවට පිවිසෙන්න."</string>
 </resources>
