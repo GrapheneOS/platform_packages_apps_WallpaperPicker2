@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Activează Fișiere și media în setări."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Activează"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Deschide Fotografiile mele"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"Imagine de fundal de zi și de noapte"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"Setări"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"Permisiuni pentru locație"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"Permisiunile pentru locație ale acestei imagini de fundal au fost dezactivate."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"Permisiunile pentru locație ale acestei imagini de fundal au fost activate."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"Activează"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"Dezactivează"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"Accesează pagina Setări pentru activare."</string>
 </resources>

@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"ჩართეთ ფაილები და მედია პარამეტრებიდან."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ჩართვა"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"ჩემი ფოტოების გახსნა"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"დღისა და ღამის ფონი"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"პარამეტრები"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"მდებარეობის ნებართვები"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"ამ ფონისთვის მდებარეობის ნებართვები გათიშულია."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"ამ ფონისთვის მდებარეობის ნებართვები ჩართულია."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"ჩართვა"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"გათიშვა"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"ჩასართავად ეწვიეთ პარამეტრების გვერდს."</string>
 </resources>

@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"설정에서 파일 및 미디어를 사용 설정하세요."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"사용"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"내 사진 열기"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"주간 및 야간 배경화면"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"설정"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"위치 정보 액세스 권한"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"이 배경화면에 대한 위치 정보 액세스 권한이 사용 중지되었습니다"</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"이 배경화면에 대한 위치 정보 액세스 권한이 사용 설정되었습니다"</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"사용 설정"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"사용 중지"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"사용 설정하려면 설정 페이지를 방문하세요."</string>
 </resources>

@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Omogućite fajlove i medije u postavkama."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Omogući"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Otvori Moje fotografije"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"Dnevna i noćna pozadinska slika"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"Postavke"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"Odobrenja za lokaciju"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"Odobrenja lokacije za ovu pozadinsku sliku su onemogućene."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"Odobrenja lokacije za ovu pozadinsku sliku su omogućene."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"Omogući"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"Onemogući"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"Da omogućite, posjetite stranicu postavki."</string>
 </resources>

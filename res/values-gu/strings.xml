@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"કૃપા કરીને સેટિંગમાં ફાઇલો અને મીડિયાનો ઍક્સેસ ચાલુ કરો."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ચાલુ કરો"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"મારા ફોટા ખોલો"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"દિવસ અને રાત્રિ માટે જુદા જુદા વૉલપેપર"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"સેટિંગ"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"સ્થાનની પરવાનગીઓ"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"આ વૉલપેપર માટે સ્થાનની પરવાનગીઓ બંધ કરવામાં આવી છે."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"આ વૉલપેપર માટે સ્થાનની પરવાનગીઓ ચાલુ કરવામાં આવી છે."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"ચાલુ કરો"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"બંધ કરો"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"ચાલુ કરવા માટે સેટિંગનું પેજ જુઓ."</string>
 </resources>

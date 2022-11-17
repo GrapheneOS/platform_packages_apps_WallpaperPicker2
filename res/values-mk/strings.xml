@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Овозможете „Датотеки и аудиовизуелни содржини“ во поставки."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Овозможи"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Отвори „Мои фотографии“"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"Тапет за ден и ноќ"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"Поставки"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"Дозволи за локација"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"Дозволите за локација за оваа заднина се оневозможени."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"Дозволите за локација за оваа заднина се овозможени."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"Овозможи"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"Оневозможи"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"Одете на поставки за да овозможите."</string>
 </resources>

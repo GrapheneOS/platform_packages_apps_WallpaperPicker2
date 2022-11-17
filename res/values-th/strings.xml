@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"โปรดเปิดใช้ไฟล์และสื่อในการตั้งค่า"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"เปิดใช้"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"เปิดรูปภาพของฉัน"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"วอลเปเปอร์ตอนกลางวันและกลางคืน"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"การตั้งค่า"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"สิทธิ์เข้าถึงตำแหน่ง"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"ระบบได้ปิดใช้สิทธิ์เข้าถึงตำแหน่งสำหรับวอลเปเปอร์นี้"</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"ระบบได้เปิดใช้สิทธิ์เข้าถึงตำแหน่งสำหรับวอลเปเปอร์นี้"</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"เปิดใช้"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"ปิดใช้"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"ไปที่หน้าการตั้งค่าเพื่อเปิดใช้"</string>
 </resources>

@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"براہ کرم ترتیبات میں فائلز اور میڈیا فعال کریں۔"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"فعال کریں"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"میری تصاویر کھولیں"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"دن اور رات وال پیپر"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"ترتیبات"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"مقام کی اجازتیں"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"اس وال پیپر کے لیے مقام کی اجازتیں غیر فعال کر دی گئی ہیں۔"</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"اس وال پیپر کے لیے مقام کی اجازتیں فعال کر دی گئی ہیں۔"</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"فعال کریں"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"غیر فعال کریں"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"فعال کرنے کے لیے ترتیبات کا صفحہ دیکھیں۔"</string>
 </resources>
