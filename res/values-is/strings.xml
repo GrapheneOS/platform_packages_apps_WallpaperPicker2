@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Virkjaðu skrár og margmiðlunarefni í stillingum."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Virkja"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Opna myndirnar mínar"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"Veggfóður fyrir dag og nótt"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"Stillingar"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"Staðsetningarheimildir"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"Slökkt er á staðsetningarheimildum fyrir þetta veggfóður."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"Kveikt er á staðsetningarheimildum fyrir þetta veggfóður."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"Kveikja"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"Slökkva"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"Farðu í stillingar síðu til að kveikja."</string>
 </resources>

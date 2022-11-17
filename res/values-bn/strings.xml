@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"সেটিংসে ফাইল এবং মিডিয়ার সুবিধা চালু করুন।"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"চালু করুন"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"আমার ফটো বিভাগ খুলুন"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"দিন ও রাতের ওয়ালপেপার"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"সেটিংস"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"লোকেশন সংক্রান্ত অনুমতি"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"এই ওয়ালপেপারের জন্য লোকেশন সংক্রান্ত অনুমতি বন্ধ করা আছে।"</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"এই ওয়ালপেপারের জন্য লোকেশন সংক্রান্ত অনুমতি চালু করা আছে।"</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"চালু করুন"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"বন্ধ করুন"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"চালু করতে সেটিংস পৃষ্ঠায় যান।"</string>
 </resources>

@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"దయచేసి సెట్టింగ్‌లలో ఫైల్‌లు, మీడియాను ఎనేబుల్ చేయండి."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ఎనేబుల్ చేయండి"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"నా ఫోటోలను తెరవండి"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"పగలు, రాత్రి వాల్‌పేపర్"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"సెట్టింగ్‌లు"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"లొకేషన్ అనుమతులు"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"ఈ వాల్‌పేపర్‌కు, లొకేషన్ అనుమతులు డిజేబుల్ చేయబడ్డాయి."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"ఈ వాల్‌పేపర్‌కు, లొకేషన్ అనుమతులు ఎనేబుల్ చేయబడ్డాయి."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"ఎనేబుల్ చేయండి"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"డిజేబుల్ చేయండి"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"ఎనేబుల్ కోసం సెట్టింగ్స్ పేజీని చూడండి."</string>
 </resources>

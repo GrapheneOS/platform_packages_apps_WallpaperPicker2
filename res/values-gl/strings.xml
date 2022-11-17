@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Activa na configuración o uso de ficheiros e contido multimedia."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Activar"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Abrir As miñas fotos"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"Fondo de pantalla para o día e a noite"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"Configuración"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"Permisos de localización"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"Desactiváronse os permisos de localización deste fondo de pantalla."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"Activáronse os permisos de localización deste fondo de pantalla."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"Activar"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"Desactivar"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"Actívaos na páxina de configuración."</string>
 </resources>

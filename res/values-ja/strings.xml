@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"ファイルとメディアへのアクセス権限を設定で有効にしてください。"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"有効にする"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"マイフォトを開く"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"日中と夜間の壁紙"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"設定"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"位置情報の利用許可"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"この壁紙に対する位置情報の利用許可は無効に設定されました。"</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"この壁紙に対する位置情報の利用許可は有効に設定されました。"</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"有効にする"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"無効にする"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"設定ページで有効にできます。"</string>
 </resources>

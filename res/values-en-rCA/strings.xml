@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Please enable files and media in settings."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Enable"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Open My photos"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"Day and night wallpaper"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"Settings"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"Location permissions"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"Location permissions for this wallpaper have been disabled."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"Location permissions for this wallpaper have been enabled."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"Enable"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"Disable"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"Visit settings page to enable."</string>
 </resources>

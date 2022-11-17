@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"请在设置中启用文件和媒体。"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"启用"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"打开“我的照片”"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"在白天和晚上显示不同壁纸"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"设置"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"位置信息权限"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"已为此壁纸停用位置信息权限。"</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"已为此壁纸启用位置信息权限。"</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"启用"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"停用"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"您可访问“设置”页面以启用相应权限。"</string>
 </resources>

@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಫೈಲ್‌ಗಳು ಮತ್ತು ಮಾಧ್ಯಮವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ಸಕ್ರಿಯಗೊಳಿಸಿ"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"ನನ್ನ ಫೋಟೋಗಳನ್ನು ತೆರೆಯಿರಿ"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"ಹಗಲು ಮತ್ತು ರಾತ್ರಿಯ ವಾಲ್‌ಪೇಪರ್"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"ಸೆಟ್ಟಿಂಗ್‌ಗಳು"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"ಸ್ಥಳದ ಅನುಮತಿಗಳು"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"ಈ ವಾಲ್‌ಪೇಪರ್‌ಗಾಗಿ ಸ್ಥಳ ಅನುಮತಿಗಳನ್ನು ಆಫ್ ಮಾಡಲಾಗಿದೆ."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"ಈ ವಾಲ್‌ಪೇಪರ್‌ಗಾಗಿ ಸ್ಥಳ ಅನುಮತಿಗಳನ್ನು ಆನ್ ಮಾಡಲಾಗಿದೆ."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"ಸಕ್ರಿಯಗೊಳಿಸಿ"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಿ"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"ಸಕ್ರಿಯಗೊಳಿಸಲು ಸೆಟ್ಟಿಂಗ್‌ಗಳ ಪುಟಕ್ಕೆ ಭೇಟಿ ನೀಡಿ."</string>
 </resources>

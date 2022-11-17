@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"W ustawieniach włącz dostęp do plików i multimediów."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Włącz"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Otwórz Moje zdjęcia"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"Tapeta na dzień i na noc"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"Ustawienia"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"Dostęp do lokalizacji"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"Dostęp do lokalizacji w przypadku tej tapety został wyłączony."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"Dostęp do lokalizacji w przypadku tej tapety został włączony."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"Włącz"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"Wyłącz"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"Otwórz stronę ustawień, aby go włączyć."</string>
 </resources>

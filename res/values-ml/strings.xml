@@ -111,12 +111,4 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"ക്രമീകരണത്തിൽ ഫയലുകളും മീഡിയയും പ്രവർത്തനക്ഷമമാക്കുക."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"പ്രവർത്തനക്ഷമമാക്കുക"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"എന്റെ ഫോട്ടോകൾ തുറക്കുക"</string>
-    <string name="channel_day_and_night" msgid="3471913688828228175">"രാത്രിക്കും പകലിനുമുള്ള വാൾപേപ്പർ"</string>
-    <string name="bottom_action_bar_settings" msgid="5840642445243257179">"ക്രമീകരണം"</string>
-    <string name="location_permission_title" msgid="5227656662650091926">"ലൊക്കേഷൻ അനുമതികൾ"</string>
-    <string name="location_permission_disabled_subtitle" msgid="3684878299611314354">"ഈ വാൾപേപ്പറിനുള്ള ലൊക്കേഷൻ അനുമതികൾ പ്രവർത്തനരഹിതമാക്കി."</string>
-    <string name="location_permission_enabled_subtitle" msgid="1567408469692191044">"ഈ വാൾപേപ്പറിനുള്ള ലൊക്കേഷൻ അനുമതികൾ പ്രവർത്തനക്ഷമമാക്കി."</string>
-    <string name="location_permission_enable" msgid="951505048063245139">"പ്രവർത്തനക്ഷമമാക്കുക"</string>
-    <string name="location_permission_disable" msgid="4534586210084066675">"പ്രവർത്തനരഹിതമാക്കുക"</string>
-    <string name="request_permission_settings_snackbar_description" msgid="8014751482538339781">"പ്രവർത്തനക്ഷമമാക്കാൻ, ക്രമീകരണം പേജ് സന്ദർശിക്കൂ."</string>
 </resources>
