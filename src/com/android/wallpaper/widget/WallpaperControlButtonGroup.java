@@ -18,7 +18,6 @@ package com.android.wallpaper.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ToggleButton;
@@ -31,28 +30,24 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.android.wallpaper.R;
 
 /**
- * Custom layout for tabs to select in between home screen overlay or lock screen overlay.
+ * Custom layout for a group of wallpaper control buttons.
  */
 public final class WallpaperControlButtonGroup extends FrameLayout {
 
-    public static final int DOWNLOAD = 0;
-    public static final int DELETE = 1;
-    public static final int CUSTOMIZE = 2;
-    public static final int EFFECTS = 3;
-    public static final int INFORMATION = 4;
+    public static final int DELETE = 0;
+    public static final int CUSTOMIZE = 1;
+    public static final int EFFECTS = 2;
+    public static final int INFORMATION = 3;
 
     /**
      * Overlay tab
      */
-    @IntDef({DOWNLOAD, DELETE, CUSTOMIZE, EFFECTS, INFORMATION})
+    @IntDef({DELETE, CUSTOMIZE, EFFECTS, INFORMATION})
     public @interface WallpaperControlType {
     }
 
     final int[] mFloatingSheetControlButtonTypes = { CUSTOMIZE, EFFECTS, INFORMATION };
 
-    View mDownloadButtonContainer;
-    ToggleButton mDownloadButton;
-    View mDownloadActionProgressBar;
     ToggleButton mDeleteButton;
     ToggleButton mCustomizeButton;
     ToggleButton mEffectsButton;
@@ -64,11 +59,6 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
     public WallpaperControlButtonGroup(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.wallpaper_control_button_group, this, true);
-        // Download button
-        mDownloadButtonContainer = findViewById(R.id.download_button_container);
-        mDownloadButton = findViewById(R.id.download_button);
-        mDownloadActionProgressBar = findViewById(R.id.action_download_progress);
-
         mDeleteButton = findViewById(R.id.delete_button);
         mCustomizeButton = findViewById(R.id.customize_button);
         mEffectsButton = findViewById(R.id.effects_button);
@@ -89,8 +79,6 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
 
     private ToggleButton getActionButton(@WallpaperControlType int type) {
         switch (type) {
-            case DOWNLOAD:
-                return mDownloadButton;
             case DELETE:
                 return mDeleteButton;
             case CUSTOMIZE:
@@ -112,22 +100,6 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
     }
 
     /**
-     * Show the progress bar for the download button
-     */
-    public void showDownloadActionProgress() {
-        mDownloadButton.setVisibility(GONE);
-        mDownloadActionProgressBar.setVisibility(VISIBLE);
-    }
-
-    /**
-     * Hide the progress bar for the download button
-     */
-    public void hideDownloadActionProgress() {
-        mDownloadButton.setVisibility(VISIBLE);
-        mDownloadActionProgressBar.setVisibility(GONE);
-    }
-
-    /**
      * Set checked for a button
      */
     public void setChecked(@WallpaperControlType int type, boolean checked) {
@@ -142,13 +114,10 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
         if (context == null) {
             return;
         }
-        mDownloadButton.setForeground(null);
         mDeleteButton.setForeground(null);
         mCustomizeButton.setForeground(null);
         mEffectsButton.setForeground(null);
         mInformationButton.setForeground(null);
-        mDownloadButton.setForeground(AppCompatResources.getDrawable(context,
-                R.drawable.wallpaper_control_button_download));
         mDeleteButton.setForeground(AppCompatResources.getDrawable(context,
                 R.drawable.wallpaper_control_button_delete));
         mCustomizeButton.setForeground(AppCompatResources.getDrawable(context,
