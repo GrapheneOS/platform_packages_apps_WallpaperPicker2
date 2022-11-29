@@ -23,8 +23,8 @@ import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.WallpaperInfoHelper
 
 /** Floating Sheet Content for displaying wallpaper info */
-class WallpaperInfoContent(private var context: Context?, private val wallpaper: WallpaperInfo?) :
-    FloatingSheetContent<WallpaperInfoView>(context!!) {
+class WallpaperInfoContent(private var context: Context, private val wallpaper: WallpaperInfo?) :
+    FloatingSheetContent<WallpaperInfoView>(context) {
 
     private var exploreIntent: Intent? = null
     private var actionLabel: CharSequence? = null
@@ -56,9 +56,6 @@ class WallpaperInfoContent(private var context: Context?, private val wallpaper:
     }
 
     private fun setUpExploreIntentAndLabel(callback: Runnable?) {
-        if (context == null) {
-            return
-        }
         WallpaperInfoHelper.loadExploreIntent(context, wallpaper!!) {
             actionLabel: CharSequence?,
             exploreIntent: Intent? ->
@@ -69,16 +66,13 @@ class WallpaperInfoContent(private var context: Context?, private val wallpaper:
     }
 
     private fun onExploreClicked() {
-        if (context == null) {
-            return
-        }
         val injector = InjectorProvider.getInjector()
         val userEventLogger = injector.getUserEventLogger(context!!.applicationContext)
         userEventLogger.logActionClicked(
             wallpaper!!.getCollectionId(context),
             wallpaper.getActionLabelRes(context)
         )
-        context!!.startActivity(exploreIntent)
+        context.startActivity(exploreIntent)
     }
 
     private fun populateWallpaperInfo(view: WallpaperInfoView?) {
