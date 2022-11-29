@@ -48,6 +48,8 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
     public @interface WallpaperControlType {
     }
 
+    final int[] mFloatingSheetControlButtonTypes = { CUSTOMIZE, EFFECTS, INFORMATION };
+
     View mDownloadButtonContainer;
     ToggleButton mDownloadButton;
     View mDownloadActionProgressBar;
@@ -78,29 +80,27 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
      */
     public void showButton(@WallpaperControlType int type,
             CompoundButton.OnCheckedChangeListener listener) {
+        ToggleButton button = getActionButton(type);
+        if (button != null) {
+            button.setVisibility(VISIBLE);
+            button.setOnCheckedChangeListener(listener);
+        }
+    }
+
+    private ToggleButton getActionButton(@WallpaperControlType int type) {
         switch (type) {
             case DOWNLOAD:
-                mDownloadButtonContainer.setVisibility(VISIBLE);
-                mDownloadButton.setOnCheckedChangeListener(listener);
-                break;
+                return mDownloadButton;
             case DELETE:
-                mDeleteButton.setVisibility(VISIBLE);
-                mDeleteButton.setOnCheckedChangeListener(listener);
-                break;
+                return mDeleteButton;
             case CUSTOMIZE:
-                mCustomizeButton.setVisibility(VISIBLE);
-                mCustomizeButton.setOnCheckedChangeListener(listener);
-                break;
+                return mCustomizeButton;
             case EFFECTS:
-                mEffectsButton.setVisibility(VISIBLE);
-                mEffectsButton.setOnCheckedChangeListener(listener);
-                break;
+                return mEffectsButton;
             case INFORMATION:
-                mInformationButton.setVisibility(VISIBLE);
-                mInformationButton.setOnCheckedChangeListener(listener);
-                break;
+                return mInformationButton;
             default:
-                break;
+                return null;
         }
     }
 
@@ -108,25 +108,7 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
      * Hide a button
      */
     public void hideButton(@WallpaperControlType int type) {
-        switch (type) {
-            case DOWNLOAD:
-                mDownloadButtonContainer.setVisibility(GONE);
-                break;
-            case DELETE:
-                mDeleteButton.setVisibility(GONE);
-                break;
-            case CUSTOMIZE:
-                mCustomizeButton.setVisibility(GONE);
-                break;
-            case EFFECTS:
-                mEffectsButton.setVisibility(GONE);
-                break;
-            case INFORMATION:
-                mInformationButton.setVisibility(GONE);
-                break;
-            default:
-                break;
-        }
+        getActionButton(type).setVisibility(GONE);
     }
 
     /**
@@ -149,26 +131,7 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
      * Set checked for a button
      */
     public void setChecked(@WallpaperControlType int type, boolean checked) {
-        switch (type) {
-            case DOWNLOAD:
-                mDownloadButton.setChecked(checked);
-                break;
-            case DELETE:
-                mDeleteButton.setChecked(checked);
-                break;
-            case CUSTOMIZE:
-                mCustomizeButton.setChecked(checked);
-                break;
-            case EFFECTS:
-                mEffectsButton.setChecked(checked);
-                break;
-            case INFORMATION:
-                mInformationButton.setChecked(checked);
-                break;
-            default:
-                break;
-
-        }
+        getActionButton(type).setChecked(checked);
     }
 
     /**
@@ -194,5 +157,37 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
                 R.drawable.wallpaper_control_button_effect));
         mInformationButton.setForeground(
                 AppCompatResources.getDrawable(context, R.drawable.wallpaper_control_button_info));
+    }
+
+    /**
+     * Ensures only one toggle button with a floating sheet is selected at a time
+     */
+    public void deselectOtherFloatingSheetControlButtons(@WallpaperControlType int selectedType) {
+        for (int type : mFloatingSheetControlButtonTypes) {
+            if (type != selectedType) {
+                getActionButton(type).setChecked(false);
+            }
+        }
+    }
+
+    /**
+     * Returns true if there is a floating sheet button selected, and false if not
+     */
+    public boolean isFloatingSheetControlButtonSelected() {
+        for (int type : mFloatingSheetControlButtonTypes) {
+            if (getActionButton(type).isChecked()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Deselects all floating sheet toggle buttons in the Wallpaper Control Button Group
+     */
+    public void deselectAllFloatingSheetControlButtons() {
+        for (int type : mFloatingSheetControlButtonTypes) {
+            getActionButton(type).setChecked(false);
+        }
     }
 }
