@@ -28,6 +28,13 @@
         android:layout_height="match_parent"
         android:background="@android:color/transparent"/>
 
+    <FrameLayout
+        android:id="@+id/hide_floating_sheet_touch_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:clickable="true"/>
+
     <include layout="@layout/wallpaper_preview" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
