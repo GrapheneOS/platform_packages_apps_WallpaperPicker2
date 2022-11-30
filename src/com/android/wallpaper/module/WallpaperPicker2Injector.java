@@ -159,7 +159,7 @@ public class WallpaperPicker2Injector implements Injector {
     }
 
     @Override
-    public synchronized IndividualPickerFragment getIndividualPickerFragment(String collectionId) {
+    public synchronized Fragment getIndividualPickerFragment(String collectionId) {
         return IndividualPickerFragment.newInstance(collectionId);
     }
 
