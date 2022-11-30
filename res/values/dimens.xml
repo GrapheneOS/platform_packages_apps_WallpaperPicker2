@@ -151,7 +151,7 @@
     <dimen name="full_preview_page_default_padding_top">24dp</dimen>
     <dimen name="full_preview_page_default_padding_bottom">32dp</dimen>
     <dimen name="full_preview_page_default_horizontal_padding">24dp</dimen>
-    <dimen name="full_preview_page_tabs_horizontal_padding">20dp</dimen>
+    <dimen name="full_preview_page_tabs_horizontal_padding">24dp</dimen>
 
     <!-- Dimensions for the bottom bar. -->
     <dimen name="bottom_actions_height">84dp</dimen>
@@ -246,12 +246,12 @@
     <dimen name="set_wallpaper_button_horizontal_padding">18dp</dimen>
     <dimen name="set_wallpaper_button_vertical_padding">10dp</dimen>
     <dimen name="set_wallpaper_button_corner_radius">20dp</dimen>
-    <dimen name="set_wallpaper_button_margin_end">20dp</dimen>
+    <dimen name="set_wallpaper_button_margin_end">16dp</dimen>
 
     <!-- Wallpaper control button group -->
-    <dimen name="wallpaper_control_button_group_divider_space">12dp</dimen>
-    <dimen name="wallpaper_control_button_group_margin_top">8dp</dimen>
-    <dimen name="wallpaper_control_button_group_margin_end">18dp</dimen>
+    <dimen name="wallpaper_control_button_group_divider_space">16dp</dimen>
+    <dimen name="wallpaper_control_button_group_margin_top">16dp</dimen>
+    <dimen name="wallpaper_control_button_group_margin_end">16dp</dimen>
     <dimen name="wallpaper_control_button_padding">12dp</dimen>
     <dimen name="wallpaper_control_button_size">48dp</dimen>
     <dimen name="wallpaper_control_icon_size">24dp</dimen>
