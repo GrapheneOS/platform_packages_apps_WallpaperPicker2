@@ -1,9 +1,9 @@
 package com.android.wallpaper.module;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.android.wallpaper.model.CustomizationSectionController;
@@ -26,7 +26,7 @@ public interface CustomizationSections {
      * <p>Don't keep the section controllers as singleton since they contain views.
      */
     List<CustomizationSectionController<?>> getAllSectionControllers(
-            Activity activity,
+            FragmentActivity activity,
             LifecycleOwner lifecycleOwner,
             WallpaperColorsViewModel wallpaperColorsViewModel,
             WorkspaceViewModel workspaceViewModel,
