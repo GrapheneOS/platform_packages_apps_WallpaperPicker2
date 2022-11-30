@@ -264,4 +264,8 @@
     <!-- Floating Sheet -->
     <dimen name="floating_sheet_corner_radius">12dp</dimen>
     <dimen name="floating_sheet_margin">24dp</dimen>
+
+    <!-- Dimensions for "Wallpaper category headers" -->
+    <dimen name="wallpaper_header_text_size">16sp</dimen>
+    <dimen name="wallpaper_header_line_height">16dp</dimen>
 </resources>

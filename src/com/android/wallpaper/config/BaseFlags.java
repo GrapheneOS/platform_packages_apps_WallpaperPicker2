@@ -27,4 +27,5 @@ abstract class BaseFlags {
     public static boolean isMonochromaticFlagEnabled =
             SystemProperties.getBoolean("persist.sysui.monochromatic", false);
     public static boolean enableEffectOnMultiplePanel = false;
+    public static boolean useWallpaperPreview2 = false;
 }
