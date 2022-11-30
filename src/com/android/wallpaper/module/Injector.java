@@ -97,7 +97,7 @@ public interface Injector {
     /**
      * Get {@link IndividualPickerFragment}
      */
-    IndividualPickerFragment getIndividualPickerFragment(String collectionId);
+    Fragment getIndividualPickerFragment(String collectionId);
 
     /**
      * Get {@link LiveWallpaperInfoFactory}
