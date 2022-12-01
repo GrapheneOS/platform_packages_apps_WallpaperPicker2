@@ -37,12 +37,13 @@ class FloatingSheet(context: Context, attrs: AttributeSet?) : FrameLayout(contex
     companion object {
 
         @Target(AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.TYPE)
-        @IntDef(CUSTOMIZE, INFORMATION)
+        @IntDef(CUSTOMIZE, INFORMATION, EFFECTS)
         @Retention(AnnotationRetention.SOURCE)
         annotation class FloatingSheetContentType
 
         const val CUSTOMIZE = 0
         const val INFORMATION = 1
+        const val EFFECTS = 2
     }
 
     private val floatingSheetView: ViewGroup
