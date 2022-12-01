@@ -126,4 +126,8 @@ public final class DuoTabs extends FrameLayout {
                         ? SystemColors.getColor(c, com.android.internal.R.attr.textColorOnAccent)
                         : SystemColors.getColor(c, android.R.attr.textColorPrimary));
     }
+
+    public @Tab int getSelectedTab() {
+        return mCurrentOverlayTab;
+    }
 }

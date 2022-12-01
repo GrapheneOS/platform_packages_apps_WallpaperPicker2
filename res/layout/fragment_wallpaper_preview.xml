@@ -14,11 +14,9 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -27,6 +25,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"/>
+
+    <FrameLayout
+        android:id="@+id/hide_floating_sheet_touch_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:clickable="true"/>
 
     <include layout="@layout/wallpaper_preview" />
 
@@ -38,38 +43,58 @@
 
         <Toolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="?android:attr/actionBarSize"
-            app:layout_constraintEnd_toStartOf="@+id/button_set_wallpaper_container"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/barrier_start" />
 
-        <FrameLayout
-            android:id="@+id/button_set_wallpaper_container"
+        <Button
+            android:id="@+id/button_set_wallpaper"
             android:layout_width="wrap_content"
-            android:layout_height="?android:attr/actionBarSize"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/set_wallpaper_button_background"
+            android:gravity="center"
+            android:text="@string/set_wallpaper_button_text"
             android:layout_marginEnd="@dimen/set_wallpaper_button_margin_end"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+            android:textColor="?androidprv:attr/textColorOnAccent" />
 
-            <Button
-                android:id="@+id/button_set_wallpaper"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/set_wallpaper_button_background"
-                android:gravity="center"
-                android:text="@string/set_wallpaper_button_text"
-                android:textColor="?androidprv:attr/textColorOnAccent" />
-        </FrameLayout>
+        <com.android.wallpaper.widget.WallpaperDownloadButton
+            android:id="@+id/button_download_wallpaper"
+            android:layout_width="@dimen/wallpaper_control_button_size"
+            android:layout_height="@dimen/wallpaper_control_button_size"
+            android:layout_marginEnd="@dimen/wallpaper_control_button_group_margin_end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+            android:visibility="gone"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="button_set_wallpaper, button_download_wallpaper" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="button_set_wallpaper, button_download_wallpaper" />
 
         <com.android.wallpaper.widget.WallpaperControlButtonGroup
             android:id="@+id/wallpaper_control_button_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/wallpaper_control_button_group_margin_end"
             android:layout_marginTop="@dimen/wallpaper_control_button_group_margin_top"
+            android:layout_marginEnd="@dimen/wallpaper_control_button_group_margin_end"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_set_wallpaper_container" />
+            app:layout_constraintTop_toBottomOf="@+id/barrier_bottom" />
 
         <com.android.wallpaper.widget.DuoTabs
             android:id="@+id/overlay_tabs"
