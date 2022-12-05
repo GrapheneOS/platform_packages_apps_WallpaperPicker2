@@ -110,4 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"חלונית המידע מוצגת"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"עליך להפעיל את ההרשאה \'קבצים ומדיה\' בהגדרות."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"הפעלה"</string>
+    <string name="open_my_photos" msgid="4107196465713868381">"פתיחת \'התמונות שלי\'"</string>
 </resources>

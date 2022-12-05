@@ -110,4 +110,5 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Прикажани информации"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"Овозможете „Датотеки и аудиовизуелни содржини“ во поставки."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Овозможи"</string>
+    <string name="open_my_photos" msgid="4107196465713868381">"Отвори „Мои фотографии“"</string>
 </resources>
