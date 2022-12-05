@@ -37,6 +37,7 @@ import com.android.wallpaper.model.WallpaperColorsViewModel;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
 import com.android.wallpaper.model.WorkspaceViewModel;
 import com.android.wallpaper.module.CustomizationSections;
+import com.android.wallpaper.module.FragmentFactory;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.util.ActivityUtils;
@@ -56,6 +57,11 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     private final List<CustomizationSectionController<?>> mSectionControllers = new ArrayList<>();
     private NestedScrollView mNestedScrollView;
     @Nullable private Bundle mBackStackSavedInstanceState;
+    private final FragmentFactory mFragmentFactory;
+
+    public CustomizationPickerFragment() {
+        mFragmentFactory = InjectorProvider.getInjector().getFragmentFactory();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -174,6 +180,15 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                 .addToBackStack(null)
                 .commit();
         fragmentManager.executePendingTransactions();
+    }
+
+    @Override
+    public void navigateTo(String destinationId) {
+        final Fragment fragment = mFragmentFactory.create(destinationId);
+
+        if (fragment != null) {
+            navigateTo(fragment);
+        }
     }
 
     /** Saves state of the fragment. */
