@@ -35,6 +35,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.Category;
+import com.android.wallpaper.model.CustomizationSectionController.CustomizationSectionNavigationController;
 import com.android.wallpaper.model.PermissionRequester;
 import com.android.wallpaper.model.WallpaperCategory;
 import com.android.wallpaper.model.WallpaperInfo;
@@ -67,6 +68,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         WallpaperPreviewNavigator {
 
     private static final String TAG = "CustomizationPickerActivity";
+    private static final String EXTRA_DESTINATION = "destination";
 
     private WallpaperPickerDelegate mDelegate;
     private UserEventLogger mUserEventLogger;
@@ -120,10 +122,20 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
                     : new CustomizationPickerFragment());
         }
 
-        // Deep link case
-        Intent intent = getIntent();
-        String deepLinkCollectionId = DeepLinkUtils.getCollectionId(intent);
-        if (!TextUtils.isEmpty(deepLinkCollectionId)) {
+        final Intent intent = getIntent();
+        final String navigationDestination = intent.getStringExtra(EXTRA_DESTINATION);
+        final String deepLinkCollectionId = DeepLinkUtils.getCollectionId(intent);
+
+        if (!TextUtils.isEmpty(navigationDestination)) {
+            // Navigation deep link case
+            fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (fragment instanceof CustomizationSectionNavigationController) {
+                final CustomizationSectionNavigationController navController =
+                        (CustomizationSectionNavigationController) fragment;
+                navController.navigateTo(navigationDestination);
+            }
+        } else if (!TextUtils.isEmpty(deepLinkCollectionId)) {
+            // Wallpaper Collection deep link case
             switchFragmentWithBackStack(new CategorySelectorFragment());
             switchFragmentWithBackStack(InjectorProvider.getInjector().getIndividualPickerFragment(
                     deepLinkCollectionId));
