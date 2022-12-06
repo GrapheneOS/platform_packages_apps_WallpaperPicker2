@@ -37,6 +37,7 @@ import com.android.wallpaper.model.WallpaperColorsViewModel;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
 import com.android.wallpaper.model.WorkspaceViewModel;
 import com.android.wallpaper.module.CustomizationSections;
+import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.util.ActivityUtils;
 
@@ -188,16 +189,24 @@ public class CustomizationPickerFragment extends AppbarFragment implements
         mSectionControllers.forEach(CustomizationSectionController::release);
         mSectionControllers.clear();
 
+        final Injector injector = InjectorProvider.getInjector();
+
         WallpaperColorsViewModel wcViewModel = new ViewModelProvider(getActivity())
                 .get(WallpaperColorsViewModel.class);
         WorkspaceViewModel workspaceViewModel = new ViewModelProvider(getActivity())
                 .get(WorkspaceViewModel.class);
 
-        CustomizationSections sections = InjectorProvider.getInjector().getCustomizationSections();
+        CustomizationSections sections = injector.getCustomizationSections(getActivity());
         List<CustomizationSectionController<?>> allSectionControllers =
-                sections.getAllSectionControllers(getActivity(), getViewLifecycleOwner(),
-                        wcViewModel, workspaceViewModel, getPermissionRequester(),
-                        getWallpaperPreviewNavigator(), this, savedInstanceState);
+                sections.getAllSectionControllers(
+                        getActivity(),
+                        getViewLifecycleOwner(),
+                        wcViewModel,
+                        workspaceViewModel,
+                        getPermissionRequester(),
+                        getWallpaperPreviewNavigator(),
+                        this,
+                        savedInstanceState);
 
         mSectionControllers.addAll(getAvailableSections(allSectionControllers));
     }
