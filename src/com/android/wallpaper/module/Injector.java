@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.module;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -62,7 +61,7 @@ public interface Injector {
     /**
      * Get {@link CustomizationSections}
      */
-    CustomizationSections getCustomizationSections(Activity activity);
+    CustomizationSections getCustomizationSections();
 
     /**
      * Get {@link Intent} for a deep link

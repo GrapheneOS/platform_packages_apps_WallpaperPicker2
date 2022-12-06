@@ -21,7 +21,6 @@ import static com.android.wallpaper.picker.PreviewFragment.ARG_TESTING_MODE_ENAB
 import static com.android.wallpaper.picker.PreviewFragment.ARG_VIEW_AS_HOME;
 import static com.android.wallpaper.picker.PreviewFragment.ARG_WALLPAPER;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -107,7 +106,7 @@ public class WallpaperPicker2Injector implements Injector {
     }
 
     @Override
-    public CustomizationSections getCustomizationSections(Activity activity) {
+    public CustomizationSections getCustomizationSections() {
         if (mCustomizationSections == null) {
             mCustomizationSections = new WallpaperPickerSections();
         }
