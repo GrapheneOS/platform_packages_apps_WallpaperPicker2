@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <SurfaceView
+    <com.android.wallpaper.picker.FadeAnimationSurfaceView
         android:id="@+id/workspace_surface"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
