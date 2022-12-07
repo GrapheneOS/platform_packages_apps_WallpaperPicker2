@@ -34,6 +34,9 @@ public interface CustomizationSectionController<T extends SectionView> {
     interface CustomizationSectionNavigationController {
         /** Navigates to the given {@code fragment}. */
         void navigateTo(Fragment fragment);
+
+        /** Navigates to a {@code fragment} that maps to the given destination ID. */
+        void navigateTo(String destinationId);
     }
 
     /** Returns {@code true} if the customization section is available. */
