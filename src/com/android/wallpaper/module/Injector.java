@@ -186,4 +186,11 @@ public interface Injector {
      * Get {@link WallpaperStatusChecker}
      */
     WallpaperStatusChecker getWallpaperStatusChecker();
+
+    /**
+     * Returns a {@link FragmentFactory}.
+     */
+    default FragmentFactory getFragmentFactory() {
+        return null;
+    };
 }
