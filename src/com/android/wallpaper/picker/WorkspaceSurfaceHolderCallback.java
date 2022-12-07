@@ -16,7 +16,6 @@
 package com.android.wallpaper.picker;
 
 import android.app.WallpaperColors;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.RemoteException;
@@ -27,7 +26,6 @@ import android.view.SurfaceView;
 
 import androidx.annotation.Nullable;
 
-import com.android.wallpaper.R;
 import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.SurfaceViewUtils;
 
@@ -60,9 +58,12 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
     private WorkspaceRenderListener mListener;
 
     private boolean mNeedsToCleanUp;
+    @Nullable private final Bundle mExtras;
 
-    public WorkspaceSurfaceHolderCallback(SurfaceView workspaceSurface, Context context) {
-        this(workspaceSurface, context, false);
+    public WorkspaceSurfaceHolderCallback(
+            SurfaceView workspaceSurface,
+            PreviewUtils previewUtils) {
+        this(workspaceSurface, previewUtils, false, null);
     }
 
     /**
@@ -73,12 +74,33 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
      *                                 the surface is created and wallpaper colors are set via
      *                                 {@link #setWallpaperColors(WallpaperColors)}
      */
-    public WorkspaceSurfaceHolderCallback(SurfaceView workspaceSurface, Context context,
+    public WorkspaceSurfaceHolderCallback(
+            SurfaceView workspaceSurface,
+            PreviewUtils previewUtils,
             boolean shouldUseWallpaperColors) {
+        this(
+                workspaceSurface,
+                previewUtils,
+                shouldUseWallpaperColors,
+                null);
+    }
+
+    public WorkspaceSurfaceHolderCallback(
+            SurfaceView workspaceSurface,
+            PreviewUtils previewUtils,
+            @Nullable Bundle extras) {
+        this(workspaceSurface, previewUtils, false, extras);
+    }
+
+    private WorkspaceSurfaceHolderCallback(
+            SurfaceView workspaceSurface,
+            PreviewUtils previewUtils,
+            boolean shouldUseWallpaperColors,
+            @Nullable Bundle extras) {
         mWorkspaceSurface = workspaceSurface;
-        mPreviewUtils = new PreviewUtils(context,
-                context.getString(R.string.grid_control_metadata_name));
+        mPreviewUtils = previewUtils;
         mShouldUseWallpaperColors = shouldUseWallpaperColors;
+        mExtras = extras;
     }
 
     @Override
@@ -96,7 +118,7 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
      *
      * @param colors WallpaperColors extracted from the current wallpaper preview, or {@code null}
      *               if none are available.
-     * @see #WorkspaceSurfaceHolderCallback(SurfaceView, Context, boolean)
+     * @see #WorkspaceSurfaceHolderCallback(SurfaceView, PreviewUtils, boolean)
      */
     public void setWallpaperColors(@Nullable WallpaperColors colors) {
         if (!mShouldUseWallpaperColors) {
@@ -141,6 +163,27 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
     public void surfaceDestroyed(SurfaceHolder holder) {
     }
 
+    /**
+     * Sends a message to the remote renderer.
+     *
+     * @param what An ID for the message (the remote side can pick this up through
+     * {@link Message#what}.
+     * @param bundle The data of the message (the remote side can pick this up through
+     * {@link Message#getData()}.
+     */
+    public void send(final int what, @Nullable Bundle bundle) {
+        if (mCallback != null) {
+            try {
+                final Message message = new Message();
+                message.what = what;
+                message.setData(bundle);
+                mCallback.replyTo.send(message);
+            } catch (RemoteException e) {
+                Log.w(TAG, "Couldn't send message to workspace preview", e);
+            }
+        }
+    }
+
     public void cleanUp() {
         if (mCallback != null) {
             try {
@@ -170,7 +213,7 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
                             + "crash");
             return;
         }
-        Bundle request = SurfaceViewUtils.createSurfaceViewRequest(workspaceSurface);
+        Bundle request = SurfaceViewUtils.createSurfaceViewRequest(workspaceSurface, mExtras);
         if (mWallpaperColors != null) {
             request.putParcelable(KEY_WALLPAPER_COLORS, mWallpaperColors);
         }
