@@ -15,7 +15,6 @@
      limitations under the License.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -61,7 +60,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/toolbar"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-            android:textColor="?androidprv:attr/textColorOnAccent" />
+            android:color="@color/text_color_on_accent" />
 
         <com.android.wallpaper.widget.WallpaperDownloadButton
             android:id="@+id/button_download_wallpaper"
@@ -106,7 +105,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.android.wallpaper.widget.FloatingSheet
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/floating_sheet"
         android:layout_height="match_parent"
         android:layout_width="match_parent" />
