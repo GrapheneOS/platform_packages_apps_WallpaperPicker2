@@ -115,7 +115,7 @@ public final class DuoTabs extends FrameLayout {
                         : R.drawable.duo_tabs_button_background);
         mPrimaryTab.setTextColor(
                 tab == TAB_PRIMARY
-                        ? SystemColors.getColor(c, com.android.internal.R.attr.textColorOnAccent)
+                        ? getResources().getColor(R.color.text_color_on_accent)
                         : SystemColors.getColor(c, android.R.attr.textColorPrimary));
         mSecondaryTab.setBackgroundResource(
                 tab == TAB_SECONDARY
@@ -123,7 +123,7 @@ public final class DuoTabs extends FrameLayout {
                         : R.drawable.duo_tabs_button_background);
         mSecondaryTab.setTextColor(
                 tab == TAB_SECONDARY
-                        ? SystemColors.getColor(c, com.android.internal.R.attr.textColorOnAccent)
+                        ? getResources().getColor(R.color.text_color_on_accent)
                         : SystemColors.getColor(c, android.R.attr.textColorPrimary));
     }
 

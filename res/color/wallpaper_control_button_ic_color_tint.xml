@@ -14,8 +14,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:androidprv="http://schemas.android.com/apk/prv/res/android">
-    <item android:state_checked="true" android:color="?androidprv:attr/textColorOnAccent" />
-    <item android:state_checked="false" android:color="?android:textColorTertiary" />
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true" android:color="@color/text_color_on_accent" />
+    <item android:state_checked="false" android:color="?android:textColorPrimary" />
 </selector>
