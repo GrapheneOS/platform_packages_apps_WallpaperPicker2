@@ -30,15 +30,10 @@ import androidx.annotation.LayoutRes
  *
  * TODO: refactoring FloatingSheetContent b/258468645
  */
-abstract class FloatingSheetContent<T : View>(context: Context) {
+abstract class FloatingSheetContent<T : View>(private val context: Context) {
 
-    var contentView: T
+    lateinit var contentView: T
     private var isVisible = false
-
-    init {
-        contentView = createView(context)
-        setVisibility(true)
-    }
 
     /** Gets the view id to inflate. */
     @get:LayoutRes abstract val viewId: Int
@@ -49,15 +44,20 @@ abstract class FloatingSheetContent<T : View>(context: Context) {
     /** Gets called when the current content view is going to recreate. */
     open fun onRecreateView(oldView: T) {}
 
-    fun recreateView(context: Context) {
+    fun initView() {
+        contentView = createView()
+        setVisibility(true)
+    }
+
+    fun recreateView() {
         // Inform that the view is going to recreate.
         onRecreateView(contentView)
         // Create a new view with the given context.
-        contentView = createView(context)
+        contentView = createView()
         setVisibility(isVisible)
     }
 
-    private fun createView(context: Context): T {
+    private fun createView(): T {
         @Suppress("UNCHECKED_CAST")
         val contentView = LayoutInflater.from(context).inflate(viewId, null) as T
         onViewCreated(contentView)
