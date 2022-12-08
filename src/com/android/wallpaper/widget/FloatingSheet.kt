@@ -55,7 +55,7 @@ class FloatingSheet(context: Context, attrs: AttributeSet?) : FrameLayout(contex
     // The system "short" animation time duration, in milliseconds. This
     // duration is ideal for subtle animations or animations that occur
     // very frequently.
-    private val shortAnimationDuration: Long
+    private val shortAnimTimeMillis: Long
 
     init {
         LayoutInflater.from(context).inflate(R.layout.floating_sheet, this, true)
@@ -65,8 +65,7 @@ class FloatingSheet(context: Context, attrs: AttributeSet?) : FrameLayout(contex
         floatingSheetContainer = requireViewById(R.id.floating_sheet_container)
         floatingSheetBehavior = BottomSheetBehavior.from(floatingSheetContainer)
         floatingSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        shortAnimationDuration =
-            resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+        shortAnimTimeMillis = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
     }
 
     /**
@@ -114,6 +113,7 @@ class FloatingSheet(context: Context, attrs: AttributeSet?) : FrameLayout(contex
     /** Collapses [FloatingSheet]. */
     fun collapse() {
         floatingSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        endContentViewAnimation()
     }
 
     /**
@@ -123,7 +123,7 @@ class FloatingSheet(context: Context, attrs: AttributeSet?) : FrameLayout(contex
      */
     fun updateContentViewWithAnimation(@FloatingSheetContentType type: Int) {
         val transition = AutoTransition()
-        transition.duration = shortAnimationDuration
+        transition.duration = shortAnimTimeMillis
         /**
          * This line records changes you make to its views and applies a transition that animates
          * the changes when the system redraws the user interface
@@ -131,6 +131,10 @@ class FloatingSheet(context: Context, attrs: AttributeSet?) : FrameLayout(contex
         TransitionManager.beginDelayedTransition(floatingSheetContainer, transition)
 
         updateContentView(type)
+    }
+
+    fun endContentViewAnimation() {
+        TransitionManager.endTransitions(floatingSheetContainer)
     }
 
     /**
