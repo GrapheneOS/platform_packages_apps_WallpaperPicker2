@@ -82,6 +82,7 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     private int mLockWallpaperActionLabelRes;
     private int mLockWallpaperActionIconRes;
     private HashMap<String, String> mWallStoredColor;
+    private String mWallpaperEffects;
 
     public TestWallpaperPreferences() {
         mWallpaperPresentationMode = WallpaperPreferences.PRESENTATION_MODE_STATIC;
@@ -598,6 +599,16 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
             setLockWallpaperCollectionId(collectionId);
             setLockWallpaperRemoteId(wallpaperId);
         }
+    }
+
+    @Override
+    public String getWallpaperEffects() {
+        return mWallpaperEffects;
+    }
+
+    @Override
+    public void setWallpaperEffects(String effects) {
+        mWallpaperEffects = effects;
     }
 
     private int getCurrentDate() {

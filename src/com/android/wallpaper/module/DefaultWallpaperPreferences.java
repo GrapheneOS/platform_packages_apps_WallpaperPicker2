@@ -942,6 +942,20 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
             setLockWallpaperCollectionId(collectionId);
             setLockWallpaperRemoteId(wallpaperId);
         }
+        setWallpaperEffects(null);
+    }
+
+    @Override
+    public String getWallpaperEffects() {
+        return mNoBackupPrefs.getString(
+                NoBackupKeys.KEY_WALLPAPER_EFFECTS, null);
+    }
+
+    @Override
+    public void setWallpaperEffects(String effects) {
+        mNoBackupPrefs.edit().putString(
+                NoBackupKeys.KEY_WALLPAPER_EFFECTS, effects)
+                .apply();
     }
 
     private int getCurrentDate() {
