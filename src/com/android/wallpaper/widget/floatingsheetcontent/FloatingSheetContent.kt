@@ -65,7 +65,7 @@ abstract class FloatingSheetContent<T : View>(context: Context) {
         return contentView
     }
 
-    fun setVisibility(isVisible: Boolean) {
+    open fun setVisibility(isVisible: Boolean) {
         this.isVisible = isVisible
         contentView.visibility = if (this.isVisible) FrameLayout.VISIBLE else FrameLayout.GONE
     }
