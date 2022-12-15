@@ -58,6 +58,7 @@ import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.module.WallpaperSetter;
 import com.android.wallpaper.util.FullScreenAnimation;
+import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.BottomActionBar.BottomSheetContent;
@@ -317,7 +318,11 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
     protected WorkspaceSurfaceHolderCallback createWorkspaceSurfaceCallback(
             SurfaceView workspaceSurface) {
-        return new WorkspaceSurfaceHolderCallback(workspaceSurface, getContext());
+        return new WorkspaceSurfaceHolderCallback(
+                workspaceSurface,
+                new PreviewUtils(
+                        getContext(),
+                        getContext().getString(R.string.grid_control_metadata_name)));
     }
 
     @Override

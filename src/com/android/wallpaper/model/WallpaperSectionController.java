@@ -59,6 +59,7 @@ import com.android.wallpaper.picker.CategorySelectorFragment;
 import com.android.wallpaper.picker.MyPhotosStarter;
 import com.android.wallpaper.picker.WallpaperSectionView;
 import com.android.wallpaper.picker.WorkspaceSurfaceHolderCallback;
+import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperSurfaceCallback;
@@ -164,7 +165,9 @@ public class WallpaperSectionController implements
         mWorkspaceSurface = mHomePreviewCard.findViewById(R.id.workspace_surface);
         mHomePreviewProgress = mHomePreviewCard.findViewById(R.id.wallpaper_preview_spinner);
         mWorkspaceSurfaceCallback = new WorkspaceSurfaceHolderCallback(
-                mWorkspaceSurface, mAppContext);
+                mWorkspaceSurface,
+                new PreviewUtils(
+                        mAppContext, mAppContext.getString(R.string.grid_control_metadata_name)));
         mHomeWallpaperSurface = mHomePreviewCard.findViewById(R.id.wallpaper_surface);
 
         Future<ColorInfo> colorFuture = CompletableFuture.completedFuture(

@@ -399,4 +399,10 @@
 
     <!-- Label for a button which lets user try to open their photos. [CHAR LIMIT=40] -->
     <string name="open_my_photos">Open My Photos</string>
+
+    <!--
+    Name of the authority corresponding to a ContentProvider in system UI that can provide remote
+    rendering of a preview of the lock screen.
+    -->
+    <string name="lock_screen_preview_provider_authority" translatable="false">com.android.systemui.keyguard.quickaffordance</string>
 </resources>
