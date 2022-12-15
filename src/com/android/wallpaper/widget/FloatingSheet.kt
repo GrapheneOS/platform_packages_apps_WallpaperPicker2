@@ -79,6 +79,7 @@ class FloatingSheet(context: Context, attrs: AttributeSet?) : FrameLayout(contex
         @FloatingSheetContentType type: Int,
         floatingSheetContent: FloatingSheetContent<*>
     ) {
+        floatingSheetContent.initView()
         contentViewMap[type] = floatingSheetContent
         floatingSheetView.addView(floatingSheetContent.contentView)
     }
@@ -94,7 +95,7 @@ class FloatingSheet(context: Context, attrs: AttributeSet?) : FrameLayout(contex
             contentViewMap.values.forEach(
                 Consumer { floatingSheetContent: FloatingSheetContent<*>? ->
                     floatingSheetContent?.let {
-                        it.recreateView(context)
+                        it.recreateView()
                         floatingSheetView.addView(it.contentView)
                     }
                 }
