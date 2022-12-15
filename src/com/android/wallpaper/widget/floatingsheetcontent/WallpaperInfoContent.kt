@@ -32,11 +32,6 @@ class WallpaperInfoContent(private var context: Context, private val wallpaper: 
     override val viewId: Int
         get() = R.layout.floating_sheet_wallpaper_info_view
 
-    /** Used to initialize class when binding content to floating sheet */
-    init {
-        initializeWallpaperContent()
-    }
-
     /** Gets called when the content view is created or recreated by [FloatingSheetContent] */
     override fun onViewCreated(view: WallpaperInfoView) {
         wallpaperInfoView = view
