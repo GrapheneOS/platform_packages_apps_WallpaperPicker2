@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.IBinder;
@@ -35,8 +36,8 @@ import android.os.RemoteException;
 import android.service.wallpaper.IWallpaperConnection;
 import android.service.wallpaper.IWallpaperEngine;
 import android.service.wallpaper.IWallpaperService;
-import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceControl;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
@@ -73,6 +74,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     private final SurfaceView mSecondContainerView;
     private IWallpaperService mService;
     @Nullable private IWallpaperEngine mEngine;
+    @Nullable private Point mDisplayMetrics;
     private boolean mConnected;
     private boolean mIsVisible;
     private boolean mIsEngineVisible;
@@ -211,12 +213,22 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
                     setEngineVisibility(true);
                 }
 
-                // Some wallpapers don't trigger #onWallpaperColorsChanged from remote. Requesting
-                // wallpaper color here to ensure the #onWallpaperColorsChanged would get called.
                 try {
+                    Point displayMetrics = getDisplayMetrics();
+                    // Reset the live wallpaper preview with the correct screen dimensions. It is
+                    // a known issue that the wallpaper service maybe get the Activity window size
+                    // which may differ from the actual physical device screen size, e.g. when in
+                    // 2-pane mode.
+                    // TODO b/262750854 Fix wallpaper service to get the actual physical device
+                    //      screen size instead of the window size that might be smaller when in
+                    //      2-pane mode.
+                    mEngine.resizePreview(new Rect(0, 0, displayMetrics.x, displayMetrics.y));
+                    // Some wallpapers don't trigger #onWallpaperColorsChanged from remote.
+                    // Requesting wallpaper color here to ensure the #onWallpaperColorsChanged
+                    // would get called.
                     mEngine.requestWallpaperColors();
-                } catch (RemoteException e) {
-                    Log.w(TAG, "Failed requesting wallpaper colors", e);
+                } catch (RemoteException | NullPointerException e) {
+                    Log.w(TAG, "Failed calling WallpaperEngine APIs", e);
                 }
             } else {
                 try {
@@ -253,7 +265,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     }
 
     @Override
-    public void engineShown(IWallpaperEngine engine)  {
+    public void engineShown(IWallpaperEngine engine) {
         mEngineReady = true;
         if (mContainerView != null) {
             mContainerView.post(() -> reparentWallpaperSurface(mContainerView));
@@ -342,7 +354,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
             t.reparent(wallpaperMirrorSC, parentSC);
             t.show(wallpaperMirrorSC);
             t.apply();
-        } catch (RemoteException e) {
+        } catch (RemoteException | NullPointerException e) {
             Log.e(TAG, "Couldn't reparent wallpaper surface", e);
         }
     }
@@ -351,12 +363,28 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
         Matrix m = new Matrix();
         float[] values = new float[9];
         Rect surfacePosition = parentSurface.getHolder().getSurfaceFrame();
-        DisplayMetrics metrics = DisplayMetricsRetriever.getInstance().getDisplayMetrics(
-                mContainerView.getResources(), mContainerView.getDisplay());
-        m.postScale(((float) surfacePosition.width()) / metrics.widthPixels,
-                ((float) surfacePosition.height()) / metrics.heightPixels);
+        Point displayMetrics = getDisplayMetrics();
+        m.postScale(((float) surfacePosition.width()) / displayMetrics.x,
+                ((float) surfacePosition.height()) / displayMetrics.y);
         m.getValues(values);
         return values;
+    }
+
+    /**
+     * Get display metrics. Only call this when the display is attached to the window.
+     */
+    private Point getDisplayMetrics() {
+        if (mDisplayMetrics != null) {
+            return mDisplayMetrics;
+        }
+        ScreenSizeCalculator screenSizeCalculator = ScreenSizeCalculator.getInstance();
+        Display display = mContainerView.getDisplay();
+        if (display == null) {
+            throw new NullPointerException(
+                    "Display is null due to the view not currently attached to a window.");
+        }
+        mDisplayMetrics = screenSizeCalculator.getScreenSize(display);
+        return mDisplayMetrics;
     }
 
     /**
