@@ -22,5 +22,5 @@
         android:right="@dimen/wallpaper_control_button_padding"
         android:top="@dimen/wallpaper_control_button_padding"
         android:bottom="@dimen/wallpaper_control_button_padding"/>
-    <solid android:color="?androidprv:attr/colorAccentPrimary"/>
+    <solid android:color="@color/color_accent_primary" />
 </shape>
