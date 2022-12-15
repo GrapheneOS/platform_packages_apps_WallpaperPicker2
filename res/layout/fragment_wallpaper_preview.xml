@@ -56,11 +56,11 @@
             android:background="@drawable/set_wallpaper_button_background"
             android:gravity="center"
             android:text="@string/set_wallpaper_button_text"
+            android:textColor="@color/text_color_on_accent"
             android:layout_marginEnd="@dimen/set_wallpaper_button_margin_end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/toolbar"
-            app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-            android:color="@color/text_color_on_accent" />
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar" />
 
         <com.android.wallpaper.widget.WallpaperDownloadButton
             android:id="@+id/button_download_wallpaper"

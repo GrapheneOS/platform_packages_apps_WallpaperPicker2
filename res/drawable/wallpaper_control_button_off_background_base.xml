@@ -15,12 +15,11 @@
      limitations under the License.
 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
     android:shape="oval">
     <padding
         android:left="@dimen/wallpaper_control_button_padding"
         android:right="@dimen/wallpaper_control_button_padding"
         android:top="@dimen/wallpaper_control_button_padding"
-        android:bottom="@dimen/wallpaper_control_button_padding"/>
-    <solid android:color="?androidprv:attr/colorSurface"/>
+        android:bottom="@dimen/wallpaper_control_button_padding" />
+    <solid android:color="@color/color_surface" />
 </shape>
