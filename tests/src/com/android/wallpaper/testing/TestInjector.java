@@ -31,6 +31,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.android.wallpaper.compat.WallpaperManagerCompat;
+import com.android.wallpaper.config.BaseFlags;
 import com.android.wallpaper.effects.EffectsController;
 import com.android.wallpaper.model.CategoryProvider;
 import com.android.wallpaper.model.WallpaperInfo;
@@ -81,6 +82,7 @@ public class TestInjector implements Injector {
     private WallpaperPreviewFragmentManager mWallpaperPreviewFragmentManager;
     private WallpaperRefresher mWallpaperRefresher;
     private WallpaperRotationRefresher mWallpaperRotationRefresher;
+    private BaseFlags mFlags;
 
     @Override
     public AlarmManagerWrapper getAlarmManagerWrapper(Context unused) {
@@ -294,5 +296,14 @@ public class TestInjector implements Injector {
                 return true;
             }
         };
+    }
+
+    @Override
+    public BaseFlags getFlags() {
+        if (mFlags == null) {
+            mFlags = new BaseFlags() {};
+        }
+
+        return mFlags;
     }
 }
