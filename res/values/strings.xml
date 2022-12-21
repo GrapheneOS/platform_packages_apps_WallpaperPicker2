@@ -405,4 +405,20 @@
     rendering of a preview of the lock screen.
     -->
     <string name="lock_screen_preview_provider_authority" translatable="false">com.android.systemui.keyguard.quickaffordance</string>
+
+    <!--
+    Label for a navigational tab/button that takes the user to a UI that lets them customize the
+    lock screen.
+
+    [CHAR LIMIT=24].
+    -->
+    <string name="lock_screen_tab">Lock screen</string>
+
+    <!--
+    Label for a navigational tab/button that takes the user to a UI that lets them customize the
+    home screen.
+
+    [CHAR LIMIT=24].
+    -->
+    <string name="home_screen_tab">Home screen</string>
 </resources>
