@@ -30,6 +30,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import com.android.wallpaper.compat.WallpaperManagerCompat;
+import com.android.wallpaper.config.BaseFlags;
 import com.android.wallpaper.effects.EffectsController;
 import com.android.wallpaper.model.CategoryProvider;
 import com.android.wallpaper.model.LiveWallpaperInfo;
@@ -71,6 +72,7 @@ public class WallpaperPicker2Injector implements Injector {
     private WallpaperRefresher mWallpaperRefresher;
     private WallpaperRotationRefresher mWallpaperRotationRefresher;
     private WallpaperStatusChecker mWallpaperStatusChecker;
+    private BaseFlags mFlags;
 
     @Override
     public synchronized AlarmManagerWrapper getAlarmManagerWrapper(Context context) {
@@ -310,5 +312,14 @@ public class WallpaperPicker2Injector implements Injector {
             mWallpaperStatusChecker = new DefaultWallpaperStatusChecker();
         }
         return mWallpaperStatusChecker;
+    }
+
+    @Override
+    public BaseFlags getFlags() {
+        if (mFlags == null) {
+            mFlags = new BaseFlags() {};
+        }
+
+        return mFlags;
     }
 }

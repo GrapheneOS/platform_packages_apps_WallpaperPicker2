@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.android.wallpaper.compat.WallpaperManagerCompat;
+import com.android.wallpaper.config.BaseFlags;
 import com.android.wallpaper.effects.EffectsController;
 import com.android.wallpaper.effects.EffectsController.EffectsServiceListener;
 import com.android.wallpaper.model.CategoryProvider;
@@ -193,4 +194,7 @@ public interface Injector {
     default FragmentFactory getFragmentFactory() {
         return null;
     };
+
+    /** Returns the {@link BaseFlags} */
+    BaseFlags getFlags();
 }
