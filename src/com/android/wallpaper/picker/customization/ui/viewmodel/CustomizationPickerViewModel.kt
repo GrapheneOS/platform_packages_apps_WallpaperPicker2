@@ -15,7 +15,7 @@
  *
  */
 
-package com.android.wallpaper.picker.ui.viewmodel
+package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting
@@ -23,6 +23,8 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
+import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
+import com.android.wallpaper.picker.undo.ui.viewmodel.UndoViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,8 +34,14 @@ import kotlinx.coroutines.flow.map
 class CustomizationPickerViewModel
 @VisibleForTesting
 constructor(
+    undoInteractor: UndoInteractor,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
+    val undo: UndoViewModel =
+        UndoViewModel(
+            interactor = undoInteractor,
+        )
 
     private val _isOnLockScreen = MutableStateFlow(true)
     /** Whether we are on the lock screen. If `false`, we are on the home screen. */
@@ -81,6 +89,7 @@ constructor(
         fun newFactory(
             owner: SavedStateRegistryOwner,
             defaultArgs: Bundle? = null,
+            undoInteractor: UndoInteractor,
         ): AbstractSavedStateViewModelFactory =
             object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
                 @Suppress("UNCHECKED_CAST")
@@ -89,7 +98,11 @@ constructor(
                     modelClass: Class<T>,
                     handle: SavedStateHandle,
                 ): T {
-                    return CustomizationPickerViewModel(handle) as T
+                    return CustomizationPickerViewModel(
+                        undoInteractor = undoInteractor,
+                        savedStateHandle = handle,
+                    )
+                        as T
                 }
             }
 
