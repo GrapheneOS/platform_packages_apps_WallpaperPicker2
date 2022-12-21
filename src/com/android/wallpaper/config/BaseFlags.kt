@@ -28,7 +28,7 @@ abstract class BaseFlags {
     fun isMonochromaticFlagEnabled() =
         SystemProperties.getBoolean("persist.sysui.monochromatic", false)
     open fun isEnableEffectOnMultiplePanel() = false
-    open fun isUseWallpaperPreview2() = false
+    open fun isFullscreenWallpaperPreview() = false
     fun isUseRevampedUi(context: Context): Boolean {
         return runBlocking {
                 KeyguardQuickAffordanceProviderClientImpl(context, Dispatchers.IO).queryFlags()
