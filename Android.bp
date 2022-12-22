@@ -62,7 +62,7 @@ android_library {
 
     visibility: [
         ":__subpackages__",
-        "//packages/apps/ThemePicker",
+        "//packages/apps/ThemePicker:__subpackages__",
         "//vendor:__subpackages__",
     ],
 }
