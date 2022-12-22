@@ -21,6 +21,33 @@ import java.util.List;
 public final class WallpaperPickerSections implements CustomizationSections {
 
     @Override
+    public List<CustomizationSectionController<?>> getSectionControllersForScreen(
+            Screen screen,
+            FragmentActivity activity,
+            LifecycleOwner lifecycleOwner,
+            WallpaperColorsViewModel wallpaperColorsViewModel,
+            WorkspaceViewModel workspaceViewModel,
+            PermissionRequester permissionRequester,
+            WallpaperPreviewNavigator wallpaperPreviewNavigator,
+            CustomizationSectionNavigationController sectionNavigationController,
+            @Nullable Bundle savedInstanceState) {
+        List<CustomizationSectionController<?>> sectionControllers = new ArrayList<>();
+
+        sectionControllers.add(
+                new WallpaperSectionController(
+                    activity,
+                    lifecycleOwner,
+                    permissionRequester,
+                    wallpaperColorsViewModel,
+                    workspaceViewModel,
+                    sectionNavigationController,
+                    wallpaperPreviewNavigator,
+                    savedInstanceState));
+
+        return sectionControllers;
+    }
+
+    @Override
     public List<CustomizationSectionController<?>> getAllSectionControllers(
             FragmentActivity activity,
             LifecycleOwner lifecycleOwner,
