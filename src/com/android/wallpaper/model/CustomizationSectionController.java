@@ -45,16 +45,6 @@ public interface CustomizationSectionController<T extends SectionView> {
     /**
      * Returns a newly created {@link SectionView} for the section.
      *
-     * @param context The {@link Context} to inflate view.
-     * @param isOnLockScreen Whether we are on the lock screen.
-     */
-    default T createView(Context context, boolean isOnLockScreen) {
-        return createView(context);
-    }
-
-    /**
-     * Returns a newly created {@link SectionView} for the section.
-     *
      * @param context the {@link Context} to inflate view
      */
     T createView(Context context);
@@ -67,7 +57,4 @@ public interface CustomizationSectionController<T extends SectionView> {
 
     /** Gets called when the section gets transitioned out. */
     default void onTransitionOut() {}
-
-    /** Notifies when the screen was switched. */
-    default void onScreenSwitched(boolean isOnLockScreen) {}
 }
