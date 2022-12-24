@@ -18,6 +18,30 @@ import java.util.List;
 /** Interface for carry {@link CustomizationSectionController}s. */
 public interface CustomizationSections {
 
+    /** Enumerates all screens supported by {@code getSectionControllersForScreen}. */
+    enum Screen {
+        LOCK_SCREEN,
+        HOME_SCREEN,
+    }
+
+    /**
+     * Gets a new instance of the section controller list for the given {@link Screen}.
+     *
+     * Note that the section views will be displayed by the list ordering.
+     *
+     * <p>Don't keep the section controllers as singleton since they contain views.
+     */
+    List<CustomizationSectionController<?>> getSectionControllersForScreen(
+            Screen screen,
+            FragmentActivity activity,
+            LifecycleOwner lifecycleOwner,
+            WallpaperColorsViewModel wallpaperColorsViewModel,
+            WorkspaceViewModel workspaceViewModel,
+            PermissionRequester permissionRequester,
+            WallpaperPreviewNavigator wallpaperPreviewNavigator,
+            CustomizationSectionNavigationController sectionNavigationController,
+            @Nullable Bundle savedInstanceState);
+
     /**
      * Gets a new instance of the section controller list.
      *
