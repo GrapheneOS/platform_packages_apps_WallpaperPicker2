@@ -15,7 +15,7 @@
  *
  */
 
-package com.android.wallpaper.picker.ui.viewmodel
+package com.android.wallpaper.picker.customization.ui.viewmodel
 
 /** Models UI state for a single tab. */
 data class CustomizationPickerTabViewModel(
