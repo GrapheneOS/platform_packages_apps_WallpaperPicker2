@@ -43,7 +43,11 @@ import com.android.wallpaper.picker.ImagePreviewFragment;
 import com.android.wallpaper.picker.LivePreviewFragment;
 import com.android.wallpaper.picker.PreviewFragment;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
+import com.android.wallpaper.picker.undo.data.repository.UndoRepository;
+import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor;
 import com.android.wallpaper.util.DisplayUtils;
+
+import kotlinx.coroutines.GlobalScope;
 
 /**
  * A concrete, real implementation of the dependency provider.
@@ -73,6 +77,7 @@ public class WallpaperPicker2Injector implements Injector {
     private WallpaperRotationRefresher mWallpaperRotationRefresher;
     private WallpaperStatusChecker mWallpaperStatusChecker;
     private BaseFlags mFlags;
+    private UndoInteractor mUndoInteractor;
 
     @Override
     public synchronized AlarmManagerWrapper getAlarmManagerWrapper(Context context) {
@@ -322,4 +327,22 @@ public class WallpaperPicker2Injector implements Injector {
 
         return mFlags;
     }
+
+    @Override
+    public final UndoInteractor getUndoInteractor(Context context) {
+        if (mUndoInteractor == null) {
+            mUndoInteractor = new UndoInteractor(
+                    GlobalScope.INSTANCE,
+                    new UndoRepository(),
+                    getSnapshotRestorers(context));
+        }
+
+        return mUndoInteractor;
+    }
+
+    /**
+     * When this injector is overridden, this is the minimal value that should be used by restorers
+     * returns in {@link #getSnapshotRestorers(Context)}.
+     */
+    protected static final int MIN_SNAPSHOT_RESTORER_KEY = 0;
 }

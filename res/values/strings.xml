@@ -421,4 +421,27 @@
     [CHAR LIMIT=24].
     -->
     <string name="home_screen_tab">Home screen</string>
+
+    <!--
+    Label for button that lets the user reset the changes they have made.
+
+    [CHAR LIMIT=12].
+    -->
+    <string name="reset">Reset</string>
+
+    <!--
+    Title for dialog confirming with the user that they really wish to reset the customizations they
+    applied to the home and lock screens.
+
+    [CHAR LIMIT=32].
+    -->
+    <string name="reset_confirmation_dialog_title">Are you sure?</string>
+
+    <!--
+    Message for dialog confirming with the user that they really wish to reset the customizations
+    they applied to the home and lock screens.
+
+    [CHAR LIMIT=128].
+    -->
+    <string name="reset_confirmation_dialog_message">This will reset all changes you made.</string>
 </resources>
