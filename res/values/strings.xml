@@ -404,7 +404,7 @@
     Name of the authority corresponding to a ContentProvider in system UI that can provide remote
     rendering of a preview of the lock screen.
     -->
-    <string name="lock_screen_preview_provider_authority" translatable="false">com.android.systemui.keyguard.quickaffordance</string>
+    <string name="lock_screen_preview_provider_authority" translatable="false">com.android.systemui.customization</string>
 
     <!--
     Label for a navigational tab/button that takes the user to a UI that lets them customize the
