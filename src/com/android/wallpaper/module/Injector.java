@@ -33,7 +33,12 @@ import com.android.wallpaper.monitor.PerformanceMonitor;
 import com.android.wallpaper.network.Requester;
 import com.android.wallpaper.picker.PreviewFragment.PreviewMode;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
+import com.android.wallpaper.picker.undo.domain.interactor.SnapshotRestorer;
+import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor;
 import com.android.wallpaper.util.DisplayUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Interface for a provider of "injected dependencies." (NOTE: The term "injector" is somewhat of a
@@ -197,4 +202,13 @@ public interface Injector {
 
     /** Returns the {@link BaseFlags} */
     BaseFlags getFlags();
+
+    /** Provides the {@link UndoInteractor}. */
+    UndoInteractor getUndoInteractor(Context context);
+
+    /** Provides a map of supported {@link SnapshotRestorer} instances. */
+    default Map<Integer, SnapshotRestorer> getSnapshotRestorers(Context context) {
+        // Empty because we don't support undoing in WallpaperPicker2.
+        return new HashMap<>();
+    }
 }

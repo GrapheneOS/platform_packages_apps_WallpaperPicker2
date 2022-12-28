@@ -15,12 +15,13 @@
  *
  */
 
-package com.android.wallpaper.picker.ui.binder
+package com.android.wallpaper.picker.customization.ui.binder
 
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
 import android.widget.FrameLayout
+import androidx.annotation.IdRes
 import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Lifecycle
@@ -31,7 +32,9 @@ import com.android.wallpaper.R
 import com.android.wallpaper.model.CustomizationSectionController
 import com.android.wallpaper.model.WallpaperSectionController
 import com.android.wallpaper.picker.SectionView
-import com.android.wallpaper.picker.ui.viewmodel.CustomizationPickerViewModel
+import com.android.wallpaper.picker.customization.ui.section.ScreenPreviewSectionController
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel
+import com.android.wallpaper.picker.undo.ui.binder.RevertToolbarButtonBinder
 import kotlinx.coroutines.launch
 
 typealias SectionController = CustomizationSectionController<*>
@@ -41,10 +44,17 @@ object CustomizationPickerBinder {
     @JvmStatic
     fun bind(
         view: View,
+        @IdRes toolbarViewId: Int,
         viewModel: CustomizationPickerViewModel,
         lifecycleOwner: LifecycleOwner,
         sectionControllerProvider: (isOnLockScreen: Boolean) -> List<SectionController>,
     ) {
+        RevertToolbarButtonBinder.bind(
+            view = view.requireViewById(toolbarViewId),
+            viewModel = viewModel.undo,
+            lifecycleOwner = lifecycleOwner,
+        )
+
         CustomizationPickerTabsBinder.bind(
             view = view,
             viewModel = viewModel,
@@ -77,9 +87,12 @@ object CustomizationPickerBinder {
                                 it.isAvailable(view.context)
                             }
 
-                        check(newSectionControllers[0] is WallpaperSectionController) {
-                            "The first section must always be the wallpaper preview or the" +
-                                " assumption below must be updated."
+                        check(
+                            newSectionControllers[0] is WallpaperSectionController ||
+                                newSectionControllers[0] is ScreenPreviewSectionController
+                        ) {
+                            "The first section must always be the preview or the assumption below" +
+                                " must be updated."
                         }
 
                         val firstTime = sectionContainer.childCount == 0

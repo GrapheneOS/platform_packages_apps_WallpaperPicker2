@@ -59,7 +59,13 @@ import com.android.wallpaper.monitor.PerformanceMonitor;
 import com.android.wallpaper.network.Requester;
 import com.android.wallpaper.picker.ImagePreviewFragment;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment;
+import com.android.wallpaper.picker.undo.data.repository.UndoRepository;
+import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor;
 import com.android.wallpaper.util.DisplayUtils;
+
+import java.util.HashMap;
+
+import kotlinx.coroutines.GlobalScope;
 
 /**
  * Test implementation of the dependency injector.
@@ -83,6 +89,7 @@ public class TestInjector implements Injector {
     private WallpaperRefresher mWallpaperRefresher;
     private WallpaperRotationRefresher mWallpaperRotationRefresher;
     private BaseFlags mFlags;
+    private UndoInteractor mUndoInteractor;
 
     @Override
     public AlarmManagerWrapper getAlarmManagerWrapper(Context unused) {
@@ -305,5 +312,17 @@ public class TestInjector implements Injector {
         }
 
         return mFlags;
+    }
+
+    @Override
+    public final UndoInteractor getUndoInteractor(Context context) {
+        if (mUndoInteractor == null) {
+            mUndoInteractor = new UndoInteractor(
+                    GlobalScope.INSTANCE,
+                    new UndoRepository(),
+                    new HashMap<>()); // Empty because we don't support undoing in WallpaperPicker2.
+        }
+
+        return mUndoInteractor;
     }
 }

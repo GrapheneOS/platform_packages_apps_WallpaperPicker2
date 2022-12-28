@@ -40,7 +40,8 @@ public interface CustomizationSections {
             PermissionRequester permissionRequester,
             WallpaperPreviewNavigator wallpaperPreviewNavigator,
             CustomizationSectionNavigationController sectionNavigationController,
-            @Nullable Bundle savedInstanceState);
+            @Nullable Bundle savedInstanceState,
+            CurrentWallpaperInfoFactory wallpaperInfoFactory);
 
     /**
      * Gets a new instance of the section controller list.

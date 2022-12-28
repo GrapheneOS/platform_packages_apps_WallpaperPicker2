@@ -52,6 +52,7 @@ import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
 import com.android.wallpaper.picker.CategorySelectorFragment.CategorySelectorFragmentHost;
 import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.IndividualPickerFragmentHost;
+import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor;
 import com.android.wallpaper.util.ActivityUtils;
 import com.android.wallpaper.util.DeepLinkUtils;
 import com.android.wallpaper.util.LaunchUtils;
@@ -78,6 +79,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
 
     private BottomActionBar mBottomActionBar;
     private boolean mIsSafeToCommitFragmentTransaction;
+    @Nullable private UndoInteractor mUndoInteractor;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,6 +109,8 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         // See go/pdr-edge-to-edge-guide.
         WindowCompat.setDecorFitsSystemWindows(getWindow(), isSUWMode(this));
 
+        final boolean isUseRevampedUi = injector.getFlags().isUseRevampedUi(this);
+
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment == null) {
             // App launch specific logic: log the "app launch source" event.
@@ -119,7 +123,12 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
             // Switch to the target fragment.
             switchFragment(isWallpaperOnlyMode(getIntent())
                     ? new WallpaperOnlyFragment()
-                    : new CustomizationPickerFragment());
+                    : CustomizationPickerFragment.newInstance(isUseRevampedUi));
+        }
+
+        if (isUseRevampedUi) {
+            mUndoInteractor = injector.getUndoInteractor(this);
+            mUndoInteractor.startSession();
         }
 
         final Intent intent = getIntent();
