@@ -201,6 +201,11 @@ public interface UserEventLogger {
             int resultCode);
 
     /**
+     * Logs the effect probe result.
+     */
+    void logEffectProbe(String effect, @EffectStatus int status);
+
+    /**
      * Possible results of a "set wallpaper" operation.
      */
     @IntDef({
