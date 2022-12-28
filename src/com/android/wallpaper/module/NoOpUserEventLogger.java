@@ -151,4 +151,9 @@ public class NoOpUserEventLogger implements UserEventLogger {
     public void logEffectApply(String effect, int status, long timeElapsedMillis, int resultCode) {
 
     }
+
+    @Override
+    public void logEffectProbe(String effect, int status) {
+
+    }
 }
