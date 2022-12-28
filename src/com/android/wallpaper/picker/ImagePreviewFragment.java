@@ -515,7 +515,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         Point crop = new Point(cropWidth, cropHeight);
         Rect visibleRawWallpaperRect =
                 WallpaperCropUtils.calculateVisibleRect(mRawWallpaperSize, crop);
-        if (offsetToStart) {
+        if (offsetToStart && mScreenSize.equals(mWallpaperScreenSize)) {
             if (WallpaperCropUtils.isRtl(requireContext())) {
                 visibleRawWallpaperRect.offsetTo(mRawWallpaperSize.x
                                 - visibleRawWallpaperRect.width(), visibleRawWallpaperRect.top);
@@ -639,11 +639,14 @@ public class ImagePreviewFragment extends PreviewFragment {
                 int origWidth = mWallpaperSurface.getWidth();
                 int origHeight = mWallpaperSurface.getHeight();
 
+                int scaledOrigWidth = origWidth;
                 if (!mScreenSize.equals(mWallpaperScreenSize)) {
+                    // Scale the width of the mWallpaperSurface if the current screen is not the
+                    // largest screen (wallpaper screen).
                     float previewToScreenScale = (float) origWidth / mScreenSize.x;
-                    origWidth = (int) (mWallpaperScreenSize.x * previewToScreenScale);
+                    scaledOrigWidth = (int) (mWallpaperScreenSize.x * previewToScreenScale);
                 }
-                int width = (int) (origWidth * scale);
+                int width = (int) (scaledOrigWidth * scale);
                 int height = (int) (origHeight * scale);
                 int left = (origWidth - width) / 2;
                 int top = (origHeight - height) / 2;
