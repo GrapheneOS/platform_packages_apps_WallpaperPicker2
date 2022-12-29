@@ -35,7 +35,8 @@ class DisplayUtils(context: Context) {
     init {
         val appContext = context.applicationContext
         val dm = appContext.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-        val allDisplays: Array<out Display> = dm.displays
+        val allDisplays: Array<out Display> =
+            dm.getDisplays(DisplayManager.DISPLAY_CATEGORY_ALL_INCLUDING_DISABLED)
         if (allDisplays.isEmpty()) {
             Log.e(TAG, "No displays found on context $appContext")
             throw RuntimeException("No displays found!")
