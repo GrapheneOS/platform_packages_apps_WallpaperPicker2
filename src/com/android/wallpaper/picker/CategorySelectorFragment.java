@@ -20,7 +20,6 @@ import static com.android.wallpaper.picker.WallpaperPickerDelegate.PREVIEW_WALLP
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -119,23 +118,19 @@ public class CategorySelectorFragment extends AppbarFragment {
         void cleanUp();
     }
 
-    private final CategoryProvider mCategoryProvider;
-
     private RecyclerView mImageGrid;
     private CategoryAdapter mAdapter;
+    private CategoryProvider mCategoryProvider;
     private ArrayList<Category> mCategories = new ArrayList<>();
     private Point mTileSizePx;
     private boolean mAwaitingCategories;
     private boolean mIsFeaturedCollectionAvailable;
 
-    public CategorySelectorFragment() {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mAdapter = new CategoryAdapter(mCategories);
-        mCategoryProvider = InjectorProvider.getInjector().getCategoryProvider(getContext());
-    }
-
-    public CategorySelectorFragment(Context context) {
-        mAdapter = new CategoryAdapter(mCategories);
-        mCategoryProvider = InjectorProvider.getInjector().getCategoryProvider(context);
+        mCategoryProvider = InjectorProvider.getInjector().getCategoryProvider(requireContext());
     }
 
     @Nullable
