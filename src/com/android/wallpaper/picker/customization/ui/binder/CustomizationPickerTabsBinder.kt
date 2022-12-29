@@ -15,7 +15,7 @@
  *
  */
 
-package com.android.wallpaper.picker.ui.binder
+package com.android.wallpaper.picker.customization.ui.binder
 
 import android.view.View
 import androidx.lifecycle.Lifecycle
@@ -23,7 +23,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
-import com.android.wallpaper.picker.ui.viewmodel.CustomizationPickerViewModel
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel
 import com.android.wallpaper.widget.DuoTabs
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch

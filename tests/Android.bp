@@ -30,6 +30,8 @@ android_library {
     ],
     static_libs: [
         "androidx.annotation_annotation",
+        "kotlinx_coroutines_test",
+        "truth-prebuilt",
     ],
 
     platform_apis: true,
@@ -58,9 +60,8 @@ android_test {
         "mockito-target-minus-junit4",
         "ub-uiautomator",
         "junit",
-	"kotlinx_coroutines_test",
-	"truth-prebuilt",
-
+        "kotlinx_coroutines_test",
+        "truth-prebuilt",
     ],
     libs: [
         "android.test.runner",

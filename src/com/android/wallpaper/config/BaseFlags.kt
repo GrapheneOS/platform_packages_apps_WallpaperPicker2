@@ -17,8 +17,8 @@ package com.android.wallpaper.config
 
 import android.content.Context
 import android.os.SystemProperties
-import com.android.systemui.shared.quickaffordance.data.content.KeyguardQuickAffordanceProviderClientImpl
-import com.android.systemui.shared.quickaffordance.data.content.KeyguardQuickAffordanceProviderContract as Contract
+import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
+import com.android.systemui.shared.customization.data.content.CustomizationProviderContract as Contract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
@@ -30,9 +30,7 @@ abstract class BaseFlags {
     open fun isEnableEffectOnMultiplePanel() = false
     open fun isFullscreenWallpaperPreview() = false
     fun isUseRevampedUi(context: Context): Boolean {
-        return runBlocking {
-                KeyguardQuickAffordanceProviderClientImpl(context, Dispatchers.IO).queryFlags()
-            }
+        return runBlocking { CustomizationProviderClientImpl(context, Dispatchers.IO).queryFlags() }
             .firstOrNull { flag ->
                 flag.name == Contract.FlagsTable.FLAG_NAME_REVAMPED_WALLPAPER_UI
             }

@@ -40,8 +40,8 @@ import com.android.wallpaper.module.CustomizationSections;
 import com.android.wallpaper.module.FragmentFactory;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
-import com.android.wallpaper.picker.ui.binder.CustomizationPickerBinder;
-import com.android.wallpaper.picker.ui.viewmodel.CustomizationPickerViewModel;
+import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder;
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel;
 import com.android.wallpaper.util.ActivityUtils;
 
 import java.util.ArrayList;
@@ -54,6 +54,16 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
     private static final String TAG = "CustomizationPickerFragment";
     private static final String SCROLL_POSITION_Y = "SCROLL_POSITION_Y";
+    private static final String KEY_IS_USE_REVAMPED_UI = "is_use_revamped_ui";
+
+    /** Returns a new instance of {@link CustomizationPickerFragment}. */
+    public static CustomizationPickerFragment newInstance(boolean isUseRevampedUi) {
+        final CustomizationPickerFragment fragment = new CustomizationPickerFragment();
+        final Bundle args = new Bundle();
+        args.putBoolean(KEY_IS_USE_REVAMPED_UI, isUseRevampedUi);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     // Note that the section views will be displayed by the list ordering.
     private final List<CustomizationSectionController<?>> mSectionControllers = new ArrayList<>();
@@ -71,20 +81,39 @@ public class CustomizationPickerFragment extends AppbarFragment implements
             @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.collapsing_toolbar_container_layout,
                 container, /* attachToRoot= */ false);
-        final boolean isUseRevampedUi =
-                InjectorProvider.getInjector().getFlags().isUseRevampedUi(requireContext());
+
+        if (ActivityUtils.isLaunchedFromSettingsRelated(getActivity().getIntent())) {
+            setUpToolbar(view, !ActivityEmbeddingUtils.shouldHideNavigateUpButton(
+                    getActivity(), /* isSecondLayerPage= */ true));
+        } else {
+            setUpToolbar(view, /* upArrow= */ false);
+        }
+
+        final Injector injector = InjectorProvider.getInjector();
+        final Bundle args = getArguments();
+        final boolean isUseRevampedUi;
+        if (args != null && args.containsKey(KEY_IS_USE_REVAMPED_UI)) {
+            isUseRevampedUi = args.getBoolean(KEY_IS_USE_REVAMPED_UI);
+        } else {
+            throw new IllegalStateException(
+                    "Must contain KEY_IS_USE_REVAMPED_UI argument, did you instantiate directly"
+                            + " instead of using the newInstance function?");
+        }
         if (isUseRevampedUi) {
             setContentView(view, R.layout.fragment_tabbed_customization_picker);
             mViewModel = new ViewModelProvider(
                     this,
                     CustomizationPickerViewModel.newFactory(
                             this,
-                            savedInstanceState)
+                            savedInstanceState,
+                            injector.getUndoInteractor(requireContext()))
             ).get(CustomizationPickerViewModel.class);
 
+            setUpToolbarMenu(R.menu.undoable_customization_menu);
             final Bundle finalSavedInstanceState = savedInstanceState;
             CustomizationPickerBinder.bind(
                     view,
+                    getToolbarId(),
                     mViewModel,
                     this,
                     isOnLockScreen -> getSectionControllers(
@@ -94,13 +123,6 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                             finalSavedInstanceState));
         } else {
             setContentView(view, R.layout.fragment_customization_picker);
-        }
-
-        if (ActivityUtils.isLaunchedFromSettingsRelated(getActivity().getIntent())) {
-            setUpToolbar(view, !ActivityEmbeddingUtils.shouldHideNavigateUpButton(
-                    getActivity(), /* isSecondLayerPage= */ true));
-        } else {
-            setUpToolbar(view, /* upArrow= */ false);
         }
 
         if (mBackStackSavedInstanceState != null) {
@@ -276,7 +298,8 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                     getPermissionRequester(),
                     getWallpaperPreviewNavigator(),
                     this,
-                    savedInstanceState);
+                    savedInstanceState,
+                    injector.getCurrentWallpaperInfoFactory(requireContext()));
         }
     }
 
