@@ -17,19 +17,27 @@
 
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
-import android.content.Context
+import android.app.WallpaperColors
 import android.os.Bundle
+import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.util.PreviewUtils
 
 /** Models the UI state for a preview of the home screen or lock screen. */
 class ScreenPreviewViewModel(
-    private val contentProviderAuthorityProvider: () -> String,
-    private val initialExtrasProvider: () -> Bundle?,
+    val previewUtils: PreviewUtils,
+    private val initialExtrasProvider: () -> Bundle? = { null },
+    private val wallpaperInfoProvider: suspend () -> WallpaperInfo?,
+    private val onWallpaperColorChanged: (WallpaperColors?) -> Unit = {},
 ) {
     fun getInitialExtras(): Bundle? {
         return initialExtrasProvider.invoke()
     }
 
-    fun getContentProviderAuthority(context: Context): String {
-        return contentProviderAuthorityProvider.invoke()
+    suspend fun getWallpaperInfo(): WallpaperInfo? {
+        return wallpaperInfoProvider.invoke()
+    }
+
+    fun onWallpaperColorsChanged(colors: WallpaperColors?) {
+        onWallpaperColorChanged.invoke(colors)
     }
 }

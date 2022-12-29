@@ -298,7 +298,8 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                     getPermissionRequester(),
                     getWallpaperPreviewNavigator(),
                     this,
-                    savedInstanceState);
+                    savedInstanceState,
+                    injector.getCurrentWallpaperInfoFactory(requireContext()));
         }
     }
 
