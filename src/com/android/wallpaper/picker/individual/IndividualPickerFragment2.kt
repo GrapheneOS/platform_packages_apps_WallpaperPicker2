@@ -437,7 +437,7 @@ class IndividualPickerFragment2 :
 
     override fun onResume() {
         super.onResume()
-        val preferences = InjectorProvider.getInjector().getPreferences(activity)
+        val preferences = InjectorProvider.getInjector().getPreferences(requireActivity())
         preferences.lastAppActiveTimestamp = Date().time
 
         // Reset Glide memory settings to a "normal" level of usage since it may have been lowered
@@ -607,7 +607,7 @@ class IndividualPickerFragment2 :
     }
 
     private fun getAppliedWallpaperIds(): Set<String> {
-        val prefs = InjectorProvider.getInjector().getPreferences(context)
+        val prefs = InjectorProvider.getInjector().getPreferences(requireContext())
         val wallpaperInfo = wallpaperManager?.wallpaperInfo
         val appliedWallpaperIds: MutableSet<String> = ArraySet()
         val homeWallpaperId =
