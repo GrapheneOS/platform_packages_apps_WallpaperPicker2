@@ -12,6 +12,7 @@ import com.android.wallpaper.model.PermissionRequester;
 import com.android.wallpaper.model.WallpaperColorsViewModel;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
 import com.android.wallpaper.model.WorkspaceViewModel;
+import com.android.wallpaper.util.DisplayUtils;
 
 import java.util.List;
 
@@ -41,7 +42,8 @@ public interface CustomizationSections {
             WallpaperPreviewNavigator wallpaperPreviewNavigator,
             CustomizationSectionNavigationController sectionNavigationController,
             @Nullable Bundle savedInstanceState,
-            CurrentWallpaperInfoFactory wallpaperInfoFactory);
+            CurrentWallpaperInfoFactory wallpaperInfoFactory,
+            DisplayUtils displayUtils);
 
     /**
      * Gets a new instance of the section controller list.
@@ -58,5 +60,6 @@ public interface CustomizationSections {
             PermissionRequester permissionRequester,
             WallpaperPreviewNavigator wallpaperPreviewNavigator,
             CustomizationSectionNavigationController sectionNavigationController,
-            @Nullable Bundle savedInstanceState);
+            @Nullable Bundle savedInstanceState,
+            DisplayUtils displayUtils);
 }
