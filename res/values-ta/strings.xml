@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"அமைப்புகளில் உள்ள ஃபைல்களையும் மீடியாவையும் இயக்கவும்."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"இயக்கு"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"எனது படங்களைத் திற"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"பூட்டுத் திரை"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"முகப்புத் திரை"</string>
+    <string name="reset" msgid="4945445169532850631">"மீட்டமை"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"நிச்சயமாக மீட்டமைக்க வேண்டுமா?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"இது நீங்கள் செய்த அனைத்து மாற்றங்களையும் மீட்டமைக்கும்."</string>
 </resources>

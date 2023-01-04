@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Sila dayakan fail dan media dalam tetapan."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Dayakan"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Buka Foto Saya"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Skrin kunci"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Skrin utama"</string>
+    <string name="reset" msgid="4945445169532850631">"Tetapkan semula"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"Anda pasti?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"Tindakan ini akan menetapkan semula semua perubahan yang telah dibuat."</string>
 </resources>
