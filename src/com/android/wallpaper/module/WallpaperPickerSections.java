@@ -14,6 +14,7 @@ import com.android.wallpaper.model.WallpaperPreviewNavigator;
 import com.android.wallpaper.model.WallpaperSectionController;
 import com.android.wallpaper.model.WorkspaceViewModel;
 import com.android.wallpaper.picker.customization.ui.section.ScreenPreviewSectionController;
+import com.android.wallpaper.util.DisplayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,8 @@ public final class WallpaperPickerSections implements CustomizationSections {
             WallpaperPreviewNavigator wallpaperPreviewNavigator,
             CustomizationSectionNavigationController sectionNavigationController,
             @Nullable Bundle savedInstanceState,
-            CurrentWallpaperInfoFactory wallpaperInfoFactory) {
+            CurrentWallpaperInfoFactory wallpaperInfoFactory,
+            DisplayUtils displayUtils) {
         List<CustomizationSectionController<?>> sectionControllers = new ArrayList<>();
 
         sectionControllers.add(
@@ -41,7 +43,8 @@ public final class WallpaperPickerSections implements CustomizationSections {
                         lifecycleOwner,
                         screen,
                         wallpaperInfoFactory,
-                        wallpaperColorsViewModel));
+                        wallpaperColorsViewModel,
+                        displayUtils));
 
         return sectionControllers;
     }
@@ -55,13 +58,14 @@ public final class WallpaperPickerSections implements CustomizationSections {
             PermissionRequester permissionRequester,
             WallpaperPreviewNavigator wallpaperPreviewNavigator,
             CustomizationSectionNavigationController sectionNavigationController,
-            @Nullable Bundle savedInstanceState) {
+            @Nullable Bundle savedInstanceState,
+            DisplayUtils displayUtils) {
         List<CustomizationSectionController<?>> sectionControllers = new ArrayList<>();
 
         sectionControllers.add(new WallpaperSectionController(
                 activity, lifecycleOwner, permissionRequester, wallpaperColorsViewModel,
                 workspaceViewModel, sectionNavigationController, wallpaperPreviewNavigator,
-                savedInstanceState));
+                savedInstanceState, displayUtils));
 
         return sectionControllers;
     }

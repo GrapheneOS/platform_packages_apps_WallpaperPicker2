@@ -32,6 +32,7 @@ import androidx.lifecycle.lifecycleScope
 import com.android.wallpaper.R
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.asset.BitmapCachingAsset
+import com.android.wallpaper.asset.CurrentWallpaperAssetVN
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.picker.WorkspaceSurfaceHolderCallback
@@ -64,6 +65,7 @@ object ScreenPreviewBinder {
         previewView: CardView,
         viewModel: ScreenPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
+        offsetToStart: Boolean,
     ): Binding {
         val workspaceSurface: SurfaceView = previewView.requireViewById(R.id.workspace_surface)
         val wallpaperSurface: SurfaceView = previewView.requireViewById(R.id.wallpaper_surface)
@@ -108,6 +110,7 @@ object ScreenPreviewBinder {
                                     activity = activity,
                                     wallpaperInfo = wallpaperInfo,
                                     surfaceCallback = wallpaperSurfaceCallback,
+                                    offsetToStart = offsetToStart,
                                 )
                             }
                         wallpaperSurface.holder.addCallback(wallpaperSurfaceCallback)
@@ -155,6 +158,7 @@ object ScreenPreviewBinder {
                                 activity = activity,
                                 wallpaperInfo = wallpaperInfo,
                                 surfaceCallback = wallpaperSurfaceCallback,
+                                offsetToStart = offsetToStart,
                             )
                         }
                     }
@@ -192,19 +196,23 @@ object ScreenPreviewBinder {
         activity: Activity,
         wallpaperInfo: WallpaperInfo?,
         surfaceCallback: WallpaperSurfaceCallback?,
+        offsetToStart: Boolean,
     ) {
         if (wallpaperInfo == null || surfaceCallback == null) {
             return
         }
 
         val imageView = surfaceCallback.homeImageWallpaper
-        val thumbAsset: Asset = BitmapCachingAsset(activity, wallpaperInfo.getThumbAsset(activity))
+        val thumbAsset: Asset = wallpaperInfo.getThumbAsset(activity)
         if (imageView != null && imageView.drawable == null) {
-            thumbAsset.loadPreviewImage(
-                activity,
-                imageView,
-                ResourceUtils.getColorAttr(activity, android.R.attr.colorSecondary)
-            )
+            // Respect offsetToStart only for CurrentWallpaperAssetVN otherwise true.
+            BitmapCachingAsset(activity, thumbAsset)
+                .loadPreviewImage(
+                    activity,
+                    imageView,
+                    ResourceUtils.getColorAttr(activity, android.R.attr.colorSecondary),
+                    /* offsetToStart= */ thumbAsset !is CurrentWallpaperAssetVN || offsetToStart
+                )
         }
     }
 }
