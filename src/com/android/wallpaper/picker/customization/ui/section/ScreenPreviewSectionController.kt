@@ -34,6 +34,7 @@ import com.android.wallpaper.module.CurrentWallpaperInfoFactory
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.customization.ui.binder.ScreenPreviewBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
+import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -49,6 +50,7 @@ class ScreenPreviewSectionController(
     private val initialScreen: CustomizationSections.Screen,
     private val wallpaperInfoFactory: CurrentWallpaperInfoFactory,
     private val colorViewModel: WallpaperColorsViewModel,
+    private val displayUtils: DisplayUtils,
 ) : CustomizationSectionController<ScreenPreviewView> {
 
     private lateinit var lockScreenBinding: ScreenPreviewBinder.Binding
@@ -106,6 +108,7 @@ class ScreenPreviewSectionController(
                         },
                     ),
                 lifecycleOwner = lifecycleOwner,
+                offsetToStart = displayUtils.isOnWallpaperDisplay(activity),
             )
         homeScreenBinding =
             ScreenPreviewBinder.bind(
@@ -142,6 +145,7 @@ class ScreenPreviewSectionController(
                         },
                     ),
                 lifecycleOwner = lifecycleOwner,
+                offsetToStart = displayUtils.isOnWallpaperDisplay(activity),
             )
 
         onScreenSwitched(isOnLockScreen = initialScreen == CustomizationSections.Screen.LOCK_SCREEN)
