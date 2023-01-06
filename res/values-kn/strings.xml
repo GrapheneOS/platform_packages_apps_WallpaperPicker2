@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಫೈಲ್‌ಗಳು ಮತ್ತು ಮಾಧ್ಯಮವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ಸಕ್ರಿಯಗೊಳಿಸಿ"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"ನನ್ನ ಫೋಟೋಗಳನ್ನು ತೆರೆಯಿರಿ"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"ಸ್ಕ್ರೀನ್ ಲಾಕ್ ಮಾಡಿ"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"ಹೋಮ್ ಸ್ಕ್ರೀನ್"</string>
+    <string name="reset" msgid="4945445169532850631">"ರೀಸೆಟ್ ಮಾಡಿ"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"ರೀಸೆಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"ಇದು ನೀವು ಮಾಡಿದ ಎಲ್ಲಾ ಬದಲಾವಣೆಗಳನ್ನು ರೀಸೆಟ್ ಮಾಡುತ್ತದೆ."</string>
 </resources>

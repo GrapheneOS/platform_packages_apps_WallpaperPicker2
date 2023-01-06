@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"ക്രമീകരണത്തിൽ ഫയലുകളും മീഡിയയും പ്രവർത്തനക്ഷമമാക്കുക."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"പ്രവർത്തനക്ഷമമാക്കുക"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"എന്റെ ഫോട്ടോകൾ തുറക്കുക"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"സ്‌ക്രീൻ ലോക്ക് ചെയ്യുക"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"ഹോം സ്‌ക്രീൻ"</string>
+    <string name="reset" msgid="4945445169532850631">"റീസെറ്റ് ചെയ്യൂ"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"ഉറപ്പാണോ?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"നിങ്ങൾ വരുത്തിയ മാറ്റങ്ങളെല്ലാം ഇത് റീസെറ്റ് ചെയ്യും."</string>
 </resources>

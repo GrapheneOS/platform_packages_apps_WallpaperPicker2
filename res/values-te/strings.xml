@@ -45,7 +45,7 @@
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"ఆన్ చేయడానికి నొక్కండి"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"వాల్‌పేపర్ ప్రతి రోజు ఆటోమేటిక్‌గా మారుతుంది. సెటప్‌ను ముగించడానికి, తదుపరి స్క్రీన్‌లో &lt;strong&gt;వాల్ పేపర్‌ను సెట్ చేయి&lt;/strong&gt;ని నొక్కండి."</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"భవిష్యత్తులో వాల్‌పేపర్‌లను Wi-Fiలో ఉన్నప్పుడు మాత్రమే డౌన్‌లోడ్ చేయండి"</string>
-    <string name="start_rotation_dialog_continue" msgid="276678987852274872">"కొనసాగించు"</string>
+    <string name="start_rotation_dialog_continue" msgid="276678987852274872">"కొనసాగించండి"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"మొదటి వాల్‌పేపర్‌ను డౌన్‌లోడ్ చేస్తోంది…"</string>
     <string name="start_rotation_error_message" msgid="3053799836719618972">"మొదటి వాల్‌పేపర్‌ను డౌన్‌లోడ్ చేయలేకపోయింది. దయచేసి మీ నెట్‌వర్క్ సెట్టింగ్‌లను చెక్ చేసి, ఆపై మళ్లీ ప్రయత్నించండి."</string>
     <string name="start_rotation_dialog_body" msgid="7903554799046364916">"వాల్‌పేపర్ ప్రతి రోజు ఆటోమేటిక్‌గా మారుతుంది"</string>
@@ -83,7 +83,7 @@
     <string name="tab_effects" msgid="3213606157589233901">"ఎఫెక్ట్‌లు"</string>
     <string name="my_photos" msgid="8613021349284084982">"నా ఫోటోలు"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"సెట్టింగ్‌లు…"</string>
-    <string name="delete_live_wallpaper" msgid="589212696102662329">"తొలగించు"</string>
+    <string name="delete_live_wallpaper" msgid="589212696102662329">"తొలగించండి"</string>
     <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"మీ ఫోన్ నుండి ఈ వాల్‌పేపర్‌ను తొలగించాలా?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"వెనుకకు"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"ఎడిట్‌"</string>
@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"దయచేసి సెట్టింగ్‌లలో ఫైల్‌లు, మీడియాను ఎనేబుల్ చేయండి."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ఎనేబుల్ చేయండి"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"నా ఫోటోలను తెరవండి"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"లాక్ స్క్రీన్"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"మొదటి స్క్రీన్"</string>
+    <string name="reset" msgid="4945445169532850631">"రీసెట్ చేయి"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"మీరు రీసెట్ చేయాలనుకుంటున్నారా?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"ఇది మీరు చేసిన అన్ని మార్పులను రీసెట్ చేస్తుంది."</string>
 </resources>

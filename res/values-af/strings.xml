@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Aktiveer asseblief lêers en media in instellings."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Aktiveer"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Maak My Foto\'s oop"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Sluitskerm"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Tuisskerm"</string>
+    <string name="reset" msgid="4945445169532850631">"Stel terug"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"Is jy seker?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"Dit sal alle veranderinge wat jy gemaak het, terugstel."</string>
 </resources>

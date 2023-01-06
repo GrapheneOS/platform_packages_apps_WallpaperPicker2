@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Жөндөөлөрдөн файлдарды жана медианы иштетиңиз."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Иштетүү"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Сүрөттөрүмдү ачуу"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Экранды кулпулоо"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Башкы экран"</string>
+    <string name="reset" msgid="4945445169532850631">"Баштапкы абалга келтирүү"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"Чын элеби?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"Ушуну менен бардык өзгөртүүлөр баштапкы абалга келтирилет."</string>
 </resources>
