@@ -111,4 +111,14 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Please enable files and media in settings."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Enable"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Open My photos"</string>
+    <!-- no translation found for lock_screen_tab (6672930765010407652) -->
+    <skip />
+    <!-- no translation found for home_screen_tab (1080445697837877526) -->
+    <skip />
+    <!-- no translation found for reset (4945445169532850631) -->
+    <skip />
+    <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
+    <skip />
+    <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->
+    <skip />
 </resources>

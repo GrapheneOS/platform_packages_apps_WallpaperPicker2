@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"\"Параметрлер\" бөлімінде \"Файлдар және мультимедиа\" рұқсатын қосыңыз."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Қосу"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Фотоларымды көру"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Экранды құлыптау"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Негізгі экран"</string>
+    <string name="reset" msgid="4945445169532850631">"Қайта орнату"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"Сенімдісіз бе?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"Жасалған барлық өзгеріс қайтарылады."</string>
 </resources>

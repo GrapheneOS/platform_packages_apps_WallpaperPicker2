@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Bitte aktiviere „Dateien und Medien“ in den Einstellungen."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Aktivieren"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Meine Fotos öffnen"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Sperrbildschirm"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Startbildschirm"</string>
+    <string name="reset" msgid="4945445169532850631">"Zurücksetzen"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"Bist du sicher?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"Hierdurch werden alle vorgenommenen Änderungen rückgängig gemacht."</string>
 </resources>

@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"请在设置中启用文件和媒体。"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"启用"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"打开“我的照片”"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"锁定屏幕"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"主屏幕"</string>
+    <string name="reset" msgid="4945445169532850631">"重置"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"确定吗？"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"此操作将重置您做出的所有更改。"</string>
 </resources>

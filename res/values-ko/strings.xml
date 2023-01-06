@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"설정에서 파일 및 미디어를 사용 설정하세요."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"사용"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"내 사진 열기"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"잠금 화면"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"홈 화면"</string>
+    <string name="reset" msgid="4945445169532850631">"초기화"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"계속하시겠습니까?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"이렇게 하면 모든 변경사항이 재설정됩니다."</string>
 </resources>

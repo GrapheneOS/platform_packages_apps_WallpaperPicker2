@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"કૃપા કરીને સેટિંગમાં ફાઇલો અને મીડિયાનો ઍક્સેસ ચાલુ કરો."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ચાલુ કરો"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"મારા ફોટા ખોલો"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"લૉક સ્ક્રીન"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"હોમ સ્ક્રીન"</string>
+    <string name="reset" msgid="4945445169532850631">"રીસેટ કરો"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"ખરેખર?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"તમે કરેલા બધા ફેરફારો, આનાથી રીસેટ થશે."</string>
 </resources>

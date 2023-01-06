@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Veuillez activer \"Fichiers et contenus multimédias\" dans les paramètres."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Activer"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Ouvrir mes photos"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Écran de verrouillage"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Écran d\'accueil"</string>
+    <string name="reset" msgid="4945445169532850631">"Réinitialiser"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"Voulez-vous vraiment continuer ?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"Cela réinitialisera toutes les modifications que vous avez effectuées."</string>
 </resources>

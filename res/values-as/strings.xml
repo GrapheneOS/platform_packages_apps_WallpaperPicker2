@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"অনুগ্ৰহ কৰি ছেটিঙত ফাইল আৰু মিডিয়া সক্ষম কৰক।"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"সক্ষম কৰক"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"My Photos খোলক"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"লক স্ক্ৰীন"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"গৃহ স্ক্ৰীন"</string>
+    <string name="reset" msgid="4945445169532850631">"ৰিছেট কৰক"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"আপুনি নিশ্চিতনে?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"এইটোৱে আপুনি কৰা আটাইবোৰ সালসলনি ৰিছেট কৰিব।"</string>
 </resources>

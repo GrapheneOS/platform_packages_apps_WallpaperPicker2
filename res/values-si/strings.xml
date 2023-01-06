@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"කරුණාකර සැකසීම් තුළ ගොනු සහ මාධ්‍ය සබල කරන්න."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"සබල කරන්න"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"මගේ ඡායාරූප විවෘත කරන්න"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"අගුළු තිරය"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"මුල් තිරය"</string>
+    <string name="reset" msgid="4945445169532850631">"යළි සකසන්න"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"ඔබට විශ්වාස ද?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"මෙය ඔබ සිදු කළ සියලු වෙනස්කම් යළි සකසනු ඇත."</string>
 </resources>
