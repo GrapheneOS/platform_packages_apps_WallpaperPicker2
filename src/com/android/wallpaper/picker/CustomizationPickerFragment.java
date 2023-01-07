@@ -287,7 +287,8 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                     getPermissionRequester(),
                     getWallpaperPreviewNavigator(),
                     this,
-                    savedInstanceState);
+                    savedInstanceState,
+                    injector.getDisplayUtils(getActivity()));
         } else {
             return sections.getSectionControllersForScreen(
                     screen,
@@ -299,7 +300,8 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                     getWallpaperPreviewNavigator(),
                     this,
                     savedInstanceState,
-                    injector.getCurrentWallpaperInfoFactory(requireContext()));
+                    injector.getCurrentWallpaperInfoFactory(requireContext()),
+                    injector.getDisplayUtils(getActivity()));
         }
     }
 
