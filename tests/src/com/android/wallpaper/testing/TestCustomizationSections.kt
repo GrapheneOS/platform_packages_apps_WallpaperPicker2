@@ -10,6 +10,7 @@ import com.android.wallpaper.model.WallpaperPreviewNavigator
 import com.android.wallpaper.model.WorkspaceViewModel
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory
 import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.util.DisplayUtils
 
 /** Test implementation of [CustomizationSections] */
 class TestCustomizationSections : CustomizationSections {
@@ -24,7 +25,8 @@ class TestCustomizationSections : CustomizationSections {
         sectionNavigationController:
             CustomizationSectionController.CustomizationSectionNavigationController?,
         savedInstanceState: Bundle?,
-        wallpaperInfoFactory: CurrentWallpaperInfoFactory?
+        wallpaperInfoFactory: CurrentWallpaperInfoFactory?,
+        displayUtils: DisplayUtils?
     ): MutableList<CustomizationSectionController<*>> {
         return arrayListOf()
     }
@@ -38,7 +40,8 @@ class TestCustomizationSections : CustomizationSections {
         wallpaperPreviewNavigator: WallpaperPreviewNavigator?,
         sectionNavigationController:
             CustomizationSectionController.CustomizationSectionNavigationController?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
+        displayUtils: DisplayUtils?
     ): MutableList<CustomizationSectionController<*>> {
         return arrayListOf()
     }

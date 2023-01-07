@@ -288,8 +288,11 @@ public abstract class Asset {
      * @param imageView        ImageView which is the target view of this asset.
      * @param placeholderColor Color of placeholder set to ImageView while waiting for image to
      *                         load.
+     * @param offsetToStart    true to let the preview show from the start of the image, false to
+     *                         center-aligned to the image.
      */
-    public void loadPreviewImage(Activity activity, ImageView imageView, int placeholderColor) {
+    public void loadPreviewImage(Activity activity, ImageView imageView, int placeholderColor,
+            boolean offsetToStart) {
         boolean needsTransition = imageView.getDrawable() == null;
         Drawable placeholderDrawable = new ColorDrawable(placeholderColor);
         if (needsTransition) {
@@ -306,7 +309,9 @@ public abstract class Asset {
             Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(defaultDisplay);
             Rect visibleRawWallpaperRect =
                     WallpaperCropUtils.calculateVisibleRect(dimensions, screenSize);
-            adjustCropRect(activity, dimensions, visibleRawWallpaperRect);
+
+            // TODO(b/264234793): Make offsetToStart general support or for the specific asset.
+            adjustCropRect(activity, dimensions, visibleRawWallpaperRect, offsetToStart);
 
             BitmapCropper bitmapCropper = InjectorProvider.getInjector().getBitmapCropper();
             bitmapCropper.cropAndScaleBitmap(this, /* scale= */ 1f, visibleRawWallpaperRect,
@@ -378,7 +383,8 @@ public abstract class Asset {
         void onDrawableLoaded();
     }
 
-    protected void adjustCropRect(Context context, Point assetDimensions, Rect cropRect) {
+    protected void adjustCropRect(Context context, Point assetDimensions, Rect cropRect,
+            boolean offsetToStart) {
         WallpaperCropUtils.adjustCropRect(context, cropRect, true /* zoomIn */);
     }
 
