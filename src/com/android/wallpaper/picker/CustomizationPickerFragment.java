@@ -289,7 +289,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                     this,
                     savedInstanceState);
         } else {
-            return sections.getSectionControllersForScreen(
+            return sections.getRevampedUISectionControllersForScreen(
                     screen,
                     getActivity(),
                     getViewLifecycleOwner(),
