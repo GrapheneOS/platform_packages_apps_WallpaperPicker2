@@ -51,7 +51,6 @@ class UndoInteractor(
 
     /** Bootstraps the undo system, querying each undo-supporting area for the initial snapshot. */
     fun startSession() {
-        // TODO(b/262924056): take in a saved instance state and reuse it instead.
         repository.clearAllDirty()
         restorerByOwnerId.forEach { (ownerId, restorer) ->
             scope.launch {
