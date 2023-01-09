@@ -12,7 +12,7 @@ import com.android.wallpaper.model.PermissionRequester;
 import com.android.wallpaper.model.WallpaperColorsViewModel;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
 import com.android.wallpaper.model.WorkspaceViewModel;
-import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor;
+import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperQuickSwitchViewModel;
 import com.android.wallpaper.util.DisplayUtils;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public interface CustomizationSections {
             @Nullable Bundle savedInstanceState,
             CurrentWallpaperInfoFactory wallpaperInfoFactory,
             DisplayUtils displayUtils,
-            WallpaperInteractor wallpaperInteractor);
+            WallpaperQuickSwitchViewModel wallpaperQuickSwitchViewModel);
 
     /**
      * Gets a new instance of the section controller list.
