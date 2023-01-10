@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.model.CustomizationSectionController
+import com.android.wallpaper.picker.CategorySelectorFragment
 import com.android.wallpaper.picker.customization.ui.binder.WallpaperQuickSwitchSectionBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperQuickSwitchViewModel
 
@@ -30,6 +31,7 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperQuickSwi
 class WallpaperQuickSwitchSectionController(
     private val viewModel: WallpaperQuickSwitchViewModel,
     private val lifecycleOwner: LifecycleOwner,
+    private val navigator: CustomizationSectionController.CustomizationSectionNavigationController,
 ) : CustomizationSectionController<WallpaperQuickSwitchView> {
 
     override fun isAvailable(context: Context?): Boolean {
@@ -48,6 +50,9 @@ class WallpaperQuickSwitchSectionController(
             view = view,
             viewModel = viewModel,
             lifecycleOwner = lifecycleOwner,
+            onNavigateToFullWallpaperSelector = {
+                navigator.navigateTo(CategorySelectorFragment())
+            },
         )
         return view
     }

@@ -24,8 +24,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
-import com.android.wallpaper.model.CustomizationSectionController.CustomizationSectionNavigationController
-import com.android.wallpaper.picker.CategorySelectorFragment
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -44,7 +42,6 @@ class WallpaperQuickSwitchViewModel
 constructor(
     private val interactor: WallpaperInteractor,
     maxOptions: Int,
-    private val onNavigateToFullWallpaperSelector: () -> Unit,
 ) : ViewModel() {
 
     private val selectedWallpaperId: Flow<String> =
@@ -173,18 +170,12 @@ constructor(
                 replay = 1,
             )
 
-    /** Notifies that the user clicked on a button to open the full wallpaper selector. */
-    fun onNavigateToFullWallpaperSelectorButtonClicked() {
-        onNavigateToFullWallpaperSelector()
-    }
-
     companion object {
         @JvmStatic
         fun newFactory(
             owner: SavedStateRegistryOwner,
             defaultArgs: Bundle? = null,
             interactor: WallpaperInteractor,
-            navigationController: CustomizationSectionNavigationController,
         ): AbstractSavedStateViewModelFactory =
             object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
                 @Suppress("UNCHECKED_CAST")
@@ -196,11 +187,6 @@ constructor(
                     return WallpaperQuickSwitchViewModel(
                         interactor = interactor,
                         maxOptions = MAX_OPTIONS,
-                        onNavigateToFullWallpaperSelector = {
-                            navigationController.navigateTo(
-                                CategorySelectorFragment(),
-                            )
-                        },
                     )
                         as T
                 }

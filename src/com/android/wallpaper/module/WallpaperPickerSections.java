@@ -51,7 +51,8 @@ public final class WallpaperPickerSections implements CustomizationSections {
         sectionControllers.add(
                 new WallpaperQuickSwitchSectionController(
                         wallpaperQuickSwitchViewModel,
-                        lifecycleOwner));
+                        lifecycleOwner,
+                        sectionNavigationController));
 
         return sectionControllers;
     }

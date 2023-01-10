@@ -282,8 +282,8 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                 WallpaperQuickSwitchViewModel.newFactory(
                         this,
                         savedInstanceState,
-                        injector.getWallpaperInteractor(requireContext()),
-                        this)).get(WallpaperQuickSwitchViewModel.class);
+                        injector.getWallpaperInteractor(requireContext())))
+                .get(WallpaperQuickSwitchViewModel.class);
 
         CustomizationSections sections = injector.getCustomizationSections(getActivity());
         if (screen == null) {

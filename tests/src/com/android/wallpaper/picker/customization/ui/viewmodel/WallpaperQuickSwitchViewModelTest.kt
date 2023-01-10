@@ -52,8 +52,6 @@ class WallpaperQuickSwitchViewModelTest {
     private lateinit var testScope: TestScope
     private lateinit var snapshotRestorer: WallpaperSnapshotRestorer
 
-    private var onNavigateToFullWallpaperSelectorInvoked = false
-
     @Before
     fun setUp() {
         client = FakeWallpaperClient()
@@ -71,14 +69,10 @@ class WallpaperQuickSwitchViewModelTest {
                     ),
                 snapshotRestorer = { snapshotRestorer },
             )
-        onNavigateToFullWallpaperSelectorInvoked = false
         underTest =
             WallpaperQuickSwitchViewModel(
                 interactor = interactor,
                 maxOptions = FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.size,
-                onNavigateToFullWallpaperSelector = {
-                    onNavigateToFullWallpaperSelectorInvoked = true
-                },
             )
         snapshotRestorer =
             WallpaperSnapshotRestorer(
@@ -167,14 +161,6 @@ class WallpaperQuickSwitchViewModelTest {
                         selectedIndex = selectedIndex,
                     ),
             )
-        }
-
-    @Test
-    fun onNavigateToFullWallpaperSelectorButtonClicked() =
-        testScope.runTest {
-            underTest.onNavigateToFullWallpaperSelectorButtonClicked()
-
-            assertThat(onNavigateToFullWallpaperSelectorInvoked).isTrue()
         }
 
     private fun expectations(
