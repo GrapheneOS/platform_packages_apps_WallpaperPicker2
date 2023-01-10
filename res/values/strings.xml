@@ -444,4 +444,12 @@
     [CHAR LIMIT=128].
     -->
     <string name="reset_confirmation_dialog_message">This will reset all changes you made.</string>
+
+    <!--
+    Label for button that lets the user navigate to a full-screen experience of selecting
+    wallpapers.
+
+    [CHAR LIMIT=128].
+    -->
+    <string name="more_wallpapers">More wallpapers</string>
 </resources>
