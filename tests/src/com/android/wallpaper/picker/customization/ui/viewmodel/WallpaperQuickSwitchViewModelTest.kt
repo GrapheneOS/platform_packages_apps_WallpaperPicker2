@@ -26,12 +26,16 @@ import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -55,6 +59,7 @@ class WallpaperQuickSwitchViewModelTest {
         client = FakeWallpaperClient()
 
         val testDispatcher = StandardTestDispatcher()
+        Dispatchers.setMain(testDispatcher)
         testScope = TestScope(testDispatcher)
         val interactor =
             WallpaperInteractor(
@@ -74,7 +79,6 @@ class WallpaperQuickSwitchViewModelTest {
                 onNavigateToFullWallpaperSelector = {
                     onNavigateToFullWallpaperSelectorInvoked = true
                 },
-                scope = testScope.backgroundScope,
             )
         snapshotRestorer =
             WallpaperSnapshotRestorer(
@@ -85,6 +89,11 @@ class WallpaperQuickSwitchViewModelTest {
                 // Do nothing.
             }
         }
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     @Test

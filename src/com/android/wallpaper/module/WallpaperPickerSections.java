@@ -13,15 +13,13 @@ import com.android.wallpaper.model.WallpaperColorsViewModel;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
 import com.android.wallpaper.model.WallpaperSectionController;
 import com.android.wallpaper.model.WorkspaceViewModel;
-import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor;
 import com.android.wallpaper.picker.customization.ui.section.ScreenPreviewSectionController;
 import com.android.wallpaper.picker.customization.ui.section.WallpaperQuickSwitchSectionController;
+import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperQuickSwitchViewModel;
 import com.android.wallpaper.util.DisplayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import kotlinx.coroutines.GlobalScope;
 
 /** {@link CustomizationSections} for the wallpaper picker. */
 public final class WallpaperPickerSections implements CustomizationSections {
@@ -39,7 +37,7 @@ public final class WallpaperPickerSections implements CustomizationSections {
             @Nullable Bundle savedInstanceState,
             CurrentWallpaperInfoFactory wallpaperInfoFactory,
             DisplayUtils displayUtils,
-            WallpaperInteractor wallpaperInteractor) {
+            WallpaperQuickSwitchViewModel wallpaperQuickSwitchViewModel) {
         List<CustomizationSectionController<?>> sectionControllers = new ArrayList<>();
 
         sectionControllers.add(
@@ -52,10 +50,8 @@ public final class WallpaperPickerSections implements CustomizationSections {
                         displayUtils));
         sectionControllers.add(
                 new WallpaperQuickSwitchSectionController(
-                        wallpaperInteractor,
-                        lifecycleOwner,
-                        GlobalScope.INSTANCE,
-                        sectionNavigationController));
+                        wallpaperQuickSwitchViewModel,
+                        lifecycleOwner));
 
         return sectionControllers;
     }

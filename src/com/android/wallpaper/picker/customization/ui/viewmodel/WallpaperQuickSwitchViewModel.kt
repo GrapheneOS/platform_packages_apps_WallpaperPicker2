@@ -17,35 +17,45 @@
 
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
+import android.os.Bundle
+import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.savedstate.SavedStateRegistryOwner
+import com.android.wallpaper.model.CustomizationSectionController.CustomizationSectionNavigationController
+import com.android.wallpaper.picker.CategorySelectorFragment
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 /** Models UI state for views that can render wallpaper quick switching. */
 @OptIn(ExperimentalCoroutinesApi::class)
-class WallpaperQuickSwitchViewModel(
+class WallpaperQuickSwitchViewModel
+@VisibleForTesting
+constructor(
     private val interactor: WallpaperInteractor,
     maxOptions: Int,
     private val onNavigateToFullWallpaperSelector: () -> Unit,
-    private val scope: CoroutineScope,
-) {
+) : ViewModel() {
 
     private val selectedWallpaperId: Flow<String> =
         interactor.selectedWallpaperId.shareIn(
-            scope = scope,
+            scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
             replay = 1,
         )
     private val selectingWallpaperId: Flow<String?> =
         interactor.selectingWallpaperId.shareIn(
-            scope = scope,
+            scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
             replay = 1,
         )
@@ -55,13 +65,13 @@ class WallpaperQuickSwitchViewModel(
             .previews(
                 maxResults = maxOptions,
             )
-            .map {
-                // We want to preserve the ordering but we don't want to emit a value to the
-                // downstream unless the content changed. A LinkedHashSet allows us to achieve both
-                // goals.
-                LinkedHashSet(it)
+            .distinctUntilChangedBy { previews ->
+                // Produce a key that's the same if the same set of wallpapers is available, even if
+                // in a different order. This is so that the view can keep from moving the wallpaper
+                // options around when the sort order changes as the user selects different
+                // wallpapers.
+                previews.map { preview -> preview.wallpaperId }.sorted().joinToString(",")
             }
-            .distinctUntilChanged()
             .map { previews ->
                 // True if any option is becoming selected following user click.
                 val isSomethingBecomingSelectedFlow: Flow<Boolean> =
@@ -143,7 +153,7 @@ class WallpaperQuickSwitchViewModel(
                                     if (isSelectable) {
                                         {
                                             // A selectable option can become selected.
-                                            scope.launch {
+                                            viewModelScope.launch {
                                                 interactor.setWallpaper(
                                                     wallpaperId = preview.wallpaperId,
                                                 )
@@ -157,9 +167,46 @@ class WallpaperQuickSwitchViewModel(
                     )
                 }
             }
+            .shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.Lazily,
+                replay = 1,
+            )
 
     /** Notifies that the user clicked on a button to open the full wallpaper selector. */
     fun onNavigateToFullWallpaperSelectorButtonClicked() {
         onNavigateToFullWallpaperSelector()
+    }
+
+    companion object {
+        @JvmStatic
+        fun newFactory(
+            owner: SavedStateRegistryOwner,
+            defaultArgs: Bundle? = null,
+            interactor: WallpaperInteractor,
+            navigationController: CustomizationSectionNavigationController,
+        ): AbstractSavedStateViewModelFactory =
+            object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(
+                    key: String,
+                    modelClass: Class<T>,
+                    handle: SavedStateHandle,
+                ): T {
+                    return WallpaperQuickSwitchViewModel(
+                        interactor = interactor,
+                        maxOptions = MAX_OPTIONS,
+                        onNavigateToFullWallpaperSelector = {
+                            navigationController.navigateTo(
+                                CategorySelectorFragment(),
+                            )
+                        },
+                    )
+                        as T
+                }
+            }
+
+        /** The maximum number of options to show, including the currently-selected one. */
+        private const val MAX_OPTIONS = 5
     }
 }
