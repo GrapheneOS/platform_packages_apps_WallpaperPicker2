@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.WallpaperColors;
 import android.app.WallpaperManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
@@ -39,6 +40,7 @@ import com.android.wallpaper.util.WallpaperCropUtils;
 import com.bumptech.glide.Glide;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Optional;
 
 /**
@@ -200,15 +202,11 @@ public class WallpaperSetter {
                         "Live wallpaper cannot be applied on lock screen only");
             }
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(activity);
-            wallpaperManager.setWallpaperComponent(
-                    wallpaper.getWallpaperComponent().getComponent());
+            setWallpaperComponent(wallpaperManager, wallpaper, destination);
             wallpaperManager.setWallpaperOffsetSteps(0.5f /* xStep */, 0.0f /* yStep */);
             wallpaperManager.setWallpaperOffsets(
                     activity.getWindow().getDecorView().getRootView().getWindowToken(),
                     0.5f /* xOffset */, 0.0f /* yOffset */);
-            if (destination == WallpaperPersister.DEST_BOTH) {
-                wallpaperManager.clear(FLAG_LOCK);
-            }
             mPreferences.storeLatestHomeWallpaper(wallpaper.getWallpaperId(), wallpaper, colors);
             onWallpaperApplied(wallpaper, activity);
             if (callback != null) {
@@ -219,6 +217,24 @@ public class WallpaperSetter {
             if (callback != null) {
                 callback.onError(e);
             }
+        }
+    }
+
+    private void setWallpaperComponent(WallpaperManager wallpaperManager,
+            LiveWallpaperInfo wallpaper, int destination) throws IOException {
+        try {
+            Method m = wallpaperManager.getClass().getMethod("setWallpaperComponentWithFlags",
+                    ComponentName.class, int.class);
+            wallpaperManager.setWallpaperComponentWithFlags(
+                    wallpaper.getWallpaperComponent().getComponent(),
+                    WallpaperPersister.destinationToFlags(destination));
+        } catch (NoSuchMethodException e) {
+            Log.d(TAG, "setWallpaperComponentWithFlags not available, using setWallpaperComponent");
+            wallpaperManager.setWallpaperComponent(
+                    wallpaper.getWallpaperComponent().getComponent());
+        }
+        if (destination == WallpaperPersister.DEST_BOTH) {
+            wallpaperManager.clear(FLAG_LOCK);
         }
     }
 
@@ -240,11 +256,7 @@ public class WallpaperSetter {
                         "Live wallpaper cannot be applied on lock screen only");
             }
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
-            wallpaperManager.setWallpaperComponent(
-                    wallpaper.getWallpaperComponent().getComponent());
-            if (destination == WallpaperPersister.DEST_BOTH) {
-                wallpaperManager.clear(FLAG_LOCK);
-            }
+            setWallpaperComponent(wallpaperManager, wallpaper, destination);
             mPreferences.storeLatestHomeWallpaper(wallpaper.getWallpaperId(), wallpaper,
                     colors != null ? colors :
                             WallpaperColors.fromBitmap(wallpaper.getThumbAsset(context)

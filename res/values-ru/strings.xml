@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Разрешите доступ к файлам и медиаконтенту в настройках."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Разрешить"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Открыть \"Мои фото\""</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Заблокированный экран"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Главный экран"</string>
+    <string name="reset" msgid="4945445169532850631">"Сбросить"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"Вы уверены?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"Все внесенные изменения будут сброшены."</string>
 </resources>

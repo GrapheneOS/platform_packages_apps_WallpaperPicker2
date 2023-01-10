@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"V nastaveniach povoľte súbory a médiá."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Povoliť"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Otvoriť Moje fotky"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Uzamknutá obrazovka"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Plocha"</string>
+    <string name="reset" msgid="4945445169532850631">"Resetovať"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"Naozaj to chcete urobiť?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"Týmto resetujete všetky vykonané zmeny."</string>
 </resources>

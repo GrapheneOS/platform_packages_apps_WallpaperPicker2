@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"يُرجى تفعيل الملفات والوسائط في الإعدادات."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"تفعيل"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"فتح صوري"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"شاشة القفل"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"الشاشة الرئيسية"</string>
+    <string name="reset" msgid="4945445169532850631">"إعادة الضبط"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"هل أنت متأكد؟"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"سيؤدي هذا الإجراء إلى إعادة ضبط كل التغييرات التي أجريتها."</string>
 </resources>

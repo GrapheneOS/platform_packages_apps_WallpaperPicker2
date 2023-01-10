@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Activa Fitxers i contingut multimèdia a la configuració."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Activa"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Obre les meves fotos"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Pantalla de bloqueig"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Pantalla d\'inici"</string>
+    <string name="reset" msgid="4945445169532850631">"Restableix"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"Vols continuar?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"Es restabliran tots els canvis que hagis fet."</string>
 </resources>

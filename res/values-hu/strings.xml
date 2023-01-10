@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Engedélyezze a fájlokat és a médiatartalmakat a beállításokban."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Engedélyezés"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Saját fotóim megnyitása"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Lezárási képernyő"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Kezdőképernyő"</string>
+    <string name="reset" msgid="4945445169532850631">"Alaphelyzet"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"Biztos benne?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"Ez visszaállítja az Ön által végzett összes módosítást."</string>
 </resources>

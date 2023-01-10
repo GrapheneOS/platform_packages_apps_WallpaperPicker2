@@ -399,4 +399,49 @@
 
     <!-- Label for a button which lets user try to open their photos. [CHAR LIMIT=40] -->
     <string name="open_my_photos">Open My Photos</string>
+
+    <!--
+    Name of the authority corresponding to a ContentProvider in system UI that can provide remote
+    rendering of a preview of the lock screen.
+    -->
+    <string name="lock_screen_preview_provider_authority" translatable="false">com.android.systemui.customization</string>
+
+    <!--
+    Label for a navigational tab/button that takes the user to a UI that lets them customize the
+    lock screen.
+
+    [CHAR LIMIT=24].
+    -->
+    <string name="lock_screen_tab">Lock screen</string>
+
+    <!--
+    Label for a navigational tab/button that takes the user to a UI that lets them customize the
+    home screen.
+
+    [CHAR LIMIT=24].
+    -->
+    <string name="home_screen_tab">Home screen</string>
+
+    <!--
+    Label for button that lets the user reset the changes they have made.
+
+    [CHAR LIMIT=12].
+    -->
+    <string name="reset">Reset</string>
+
+    <!--
+    Title for dialog confirming with the user that they really wish to reset the customizations they
+    applied to the home and lock screens.
+
+    [CHAR LIMIT=32].
+    -->
+    <string name="reset_confirmation_dialog_title">Are you sure?</string>
+
+    <!--
+    Message for dialog confirming with the user that they really wish to reset the customizations
+    they applied to the home and lock screens.
+
+    [CHAR LIMIT=128].
+    -->
+    <string name="reset_confirmation_dialog_message">This will reset all changes you made.</string>
 </resources>

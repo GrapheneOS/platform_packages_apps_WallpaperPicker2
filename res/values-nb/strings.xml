@@ -44,7 +44,7 @@
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Daglig bakgrunn"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Trykk for å slå på funksjonen"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Bakgrunnen endres automatisk hver dag. For å fullføre konfigureringen, trykk på &lt;strong&gt;Angi bakgrunn&lt;/strong&gt; på den neste skjermen."</string>
-    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Last ned nye bakgrunner bare via Wi-Fi"</string>
+    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Last ned nye bakgrunner bare via Wifi"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Fortsett"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Laster ned den første bakgrunnen …"</string>
     <string name="start_rotation_error_message" msgid="3053799836719618972">"Kunne ikke laste ned den første bakgrunnen. Sjekk nettverksinnstillingene, og prøv igjen."</string>
@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Slå på filer og medier i innstillingene."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Slå på"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Åpne Mine bilder"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Låseskjerm"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Startskjerm"</string>
+    <string name="reset" msgid="4945445169532850631">"Tilbakestill"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"Er du sikker?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"Dette tilbakestiller alle endringene du har gjort."</string>
 </resources>

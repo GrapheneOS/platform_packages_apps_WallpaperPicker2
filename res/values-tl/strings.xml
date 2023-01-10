@@ -47,7 +47,7 @@
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Mag-download lang ng mga wallpaper sa hinaharap gamit ang Wi-Fi"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Magpatuloy"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Dina-download ang unang wallpaper…"</string>
-    <string name="start_rotation_error_message" msgid="3053799836719618972">"Hindi ma-download ang unang wallpaper. Pakisuri ang mga setting ng iyong network at subukang muli."</string>
+    <string name="start_rotation_error_message" msgid="3053799836719618972">"Hindi ma-download ang unang wallpaper. Pakisuri ang mga setting ng iyong network at subukan ulit."</string>
     <string name="start_rotation_dialog_body" msgid="7903554799046364916">"Awtomatikong magpapalit ang wallpaper araw-araw"</string>
     <string name="settings_button_label" msgid="8724734130079207955">"Mga Setting"</string>
     <string name="explore" msgid="7468719504199497281">"I-explore"</string>
@@ -55,7 +55,7 @@
     <string name="wallpaper_disabled_message" msgid="7309484130562148185">"Naka-disable sa device na ito ang pagtatakda ng wallpaper"</string>
     <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"Na-disable ng administrator ng iyong device ang pagtatakda ng wallpaper"</string>
     <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"Matagumpay na naitakda ang wallpaper"</string>
-    <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"Kailangan mo ng koneksyon sa Internet para tingnan ang mga wallpaper. Kumonekta at subukang muli."</string>
+    <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"Kailangan mo ng koneksyon sa Internet para tingnan ang mga wallpaper. Kumonekta at subukan ulit."</string>
     <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"Thumbnail ng kasalukuyang nakatakdang wallpaper ng home screen"</string>
     <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"Thumbnail ng kasalukuyang nakatakdang wallpaper ng lock screen"</string>
     <string name="currently_set_wallpaper_thumbnail" msgid="8651887838745545107">"Thumbnail ng kasalukuyang nakatakdang wallpaper"</string>
@@ -65,7 +65,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"I-refresh ang pang-araw-araw na wallpaper ng home screen"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"I-refresh ang pang-araw-araw na wallpaper"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"Nire-refresh ang pang-araw-araw na wallpaper…"</string>
-    <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"Hindi na-refresh ang pang-araw-araw na wallpaper. Pakitingnan ang iyong koneksyon sa network at subukang muli."</string>
+    <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"Hindi na-refresh ang pang-araw-araw na wallpaper. Pakitingnan ang iyong koneksyon sa network at subukan ulit."</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"Mga nasa device na wallpaper"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"Nasa device"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Wallpaper ng Android"</string>
@@ -111,4 +111,9 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Paki-enable ang mga file at media sa mga setting."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"I-enable"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Buksan ang Mga Larawan Ko"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"I-lock ang screen"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Home screen"</string>
+    <string name="reset" msgid="4945445169532850631">"I-reset"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"Sigurado ka ba?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"Ire-reset nito ang lahat ng pagbabagong ginawa mo."</string>
 </resources>
