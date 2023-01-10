@@ -1,0 +1,165 @@
+/*
+ * Copyright (C) 2023 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package com.android.wallpaper.picker.customization.ui.viewmodel
+
+import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
+
+/** Models UI state for views that can render wallpaper quick switching. */
+@OptIn(ExperimentalCoroutinesApi::class)
+class WallpaperQuickSwitchViewModel(
+    private val interactor: WallpaperInteractor,
+    maxOptions: Int,
+    private val onNavigateToFullWallpaperSelector: () -> Unit,
+    private val scope: CoroutineScope,
+) {
+
+    private val selectedWallpaperId: Flow<String> =
+        interactor.selectedWallpaperId.shareIn(
+            scope = scope,
+            started = SharingStarted.WhileSubscribed(),
+            replay = 1,
+        )
+    private val selectingWallpaperId: Flow<String?> =
+        interactor.selectingWallpaperId.shareIn(
+            scope = scope,
+            started = SharingStarted.WhileSubscribed(),
+            replay = 1,
+        )
+
+    val options: Flow<List<WallpaperQuickSwitchOptionViewModel>> =
+        interactor
+            .previews(
+                maxResults = maxOptions,
+            )
+            .map {
+                // We want to preserve the ordering but we don't want to emit a value to the
+                // downstream unless the content changed. A LinkedHashSet allows us to achieve both
+                // goals.
+                LinkedHashSet(it)
+            }
+            .distinctUntilChanged()
+            .map { previews ->
+                // True if any option is becoming selected following user click.
+                val isSomethingBecomingSelectedFlow: Flow<Boolean> =
+                    selectingWallpaperId.distinctUntilChanged().map { it != null }
+
+                previews.map { preview ->
+                    // True if this option is currently selected.
+                    val isSelectedFlow: Flow<Boolean> =
+                        selectedWallpaperId.distinctUntilChanged().map { it == preview.wallpaperId }
+                    // True if this option is becoming the selected one following user click.
+                    val isBecomingSelectedFlow: Flow<Boolean> =
+                        selectingWallpaperId.distinctUntilChanged().map {
+                            it == preview.wallpaperId
+                        }
+
+                    WallpaperQuickSwitchOptionViewModel(
+                        wallpaperId = preview.wallpaperId,
+                        placeholderColor = preview.placeholderColor,
+                        thumbnail = {
+                            interactor.loadThumbnail(
+                                wallpaperId = preview.wallpaperId,
+                            )
+                        },
+                        isLarge =
+                            combine(
+                                isSelectedFlow,
+                                isBecomingSelectedFlow,
+                                isSomethingBecomingSelectedFlow,
+                            ) { isSelected, isBecomingSelected, isSomethingBecomingSelected ->
+                                // The large option is the one that's currently selected or the one
+                                // that
+                                // is becoming the selected one following user click.
+                                (isSelected && !isSomethingBecomingSelected) || isBecomingSelected
+                            },
+                        // We show the progress indicator if the option is in the process of
+                        // becoming the selected one following user click.
+                        isProgressIndicatorVisible = isBecomingSelectedFlow,
+                        isSelectionBorderVisible =
+                            combine(
+                                isSelectedFlow,
+                                isBecomingSelectedFlow,
+                                isSomethingBecomingSelectedFlow,
+                            ) { isSelected, isBeingSelected, isSomethingBecomingSelected ->
+                                // The selection border is shown for the option that is the one
+                                // that's
+                                // currently selected or the one that is becoming the selected one
+                                // following user click.
+                                (isSelected && !isSomethingBecomingSelected) || isBeingSelected
+                            },
+                        isSelectionIconVisible =
+                            combine(
+                                isSelectedFlow,
+                                isSomethingBecomingSelectedFlow,
+                            ) { isSelected, isSomethingBecomingSelected ->
+                                // The selection icon is shown for the option that is currently
+                                // selected
+                                // but only if nothing else is becoming selected. If anything is
+                                // being
+                                // selected following user click, the selection icon is not shown on
+                                // any
+                                // option.
+                                isSelected && !isSomethingBecomingSelected
+                            },
+                        onSelected =
+                            combine(
+                                    isSelectedFlow,
+                                    isBecomingSelectedFlow,
+                                    isSomethingBecomingSelectedFlow,
+                                ) { isSelected, isBeingSelected, isSomethingBecomingSelected ->
+                                    // An option is selectable if it is not itself becoming selected
+                                    // following user click or if nothing else is becoming selected
+                                    // but this
+                                    // option is not the selected one.
+                                    (isSomethingBecomingSelected && !isBeingSelected) ||
+                                        (!isSomethingBecomingSelected && !isSelected)
+                                }
+                                .distinctUntilChanged()
+                                .map { isSelectable ->
+                                    if (isSelectable) {
+                                        {
+                                            // A selectable option can become selected.
+                                            scope.launch {
+                                                interactor.setWallpaper(
+                                                    wallpaperId = preview.wallpaperId,
+                                                )
+                                            }
+                                        }
+                                    } else {
+                                        // A non-selectable option cannot become selected.
+                                        null
+                                    }
+                                }
+                    )
+                }
+            }
+
+    /** Notifies that the user clicked on a button to open the full wallpaper selector. */
+    fun onNavigateToFullWallpaperSelectorButtonClicked() {
+        onNavigateToFullWallpaperSelector()
+    }
+}
