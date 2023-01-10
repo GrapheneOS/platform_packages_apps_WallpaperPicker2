@@ -17,5 +17,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <size
         android:height="0dp"
-        android:width="@dimen/duo_tabs_divider_space" />
+        android:width="@dimen/spacing_8dp" />
 </shape>
