@@ -42,6 +42,7 @@ import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder;
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel;
+import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperQuickSwitchViewModel;
 import com.android.wallpaper.util.ActivityUtils;
 
 import java.util.ArrayList;
@@ -276,6 +277,13 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                 .get(WallpaperColorsViewModel.class);
         WorkspaceViewModel workspaceViewModel = new ViewModelProvider(getActivity())
                 .get(WorkspaceViewModel.class);
+        WallpaperQuickSwitchViewModel wallpaperQuickSwitchViewModel = new ViewModelProvider(
+                getActivity(),
+                WallpaperQuickSwitchViewModel.newFactory(
+                        this,
+                        savedInstanceState,
+                        injector.getWallpaperInteractor(requireContext()),
+                        this)).get(WallpaperQuickSwitchViewModel.class);
 
         CustomizationSections sections = injector.getCustomizationSections(getActivity());
         if (screen == null) {
@@ -302,7 +310,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                     savedInstanceState,
                     injector.getCurrentWallpaperInfoFactory(requireContext()),
                     injector.getDisplayUtils(getActivity()),
-                    injector.getWallpaperInteractor(requireContext()));
+                    wallpaperQuickSwitchViewModel);
         }
     }
 

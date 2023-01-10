@@ -23,32 +23,14 @@ import android.view.LayoutInflater
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.model.CustomizationSectionController
-import com.android.wallpaper.model.CustomizationSectionController.CustomizationSectionNavigationController
-import com.android.wallpaper.picker.CategorySelectorFragment
-import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.ui.binder.WallpaperQuickSwitchSectionBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperQuickSwitchViewModel
-import kotlinx.coroutines.CoroutineScope
 
 /** Controls a section that lets the user switch wallpapers quickly. */
 class WallpaperQuickSwitchSectionController(
-    interactor: WallpaperInteractor,
+    private val viewModel: WallpaperQuickSwitchViewModel,
     private val lifecycleOwner: LifecycleOwner,
-    scope: CoroutineScope,
-    private val navigationController: CustomizationSectionNavigationController,
 ) : CustomizationSectionController<WallpaperQuickSwitchView> {
-
-    private val viewModel =
-        WallpaperQuickSwitchViewModel(
-            interactor = interactor,
-            maxOptions = MAX_OPTIONS,
-            onNavigateToFullWallpaperSelector = {
-                navigationController.navigateTo(
-                    CategorySelectorFragment(),
-                )
-            },
-            scope = scope,
-        )
 
     override fun isAvailable(context: Context?): Boolean {
         return true
@@ -68,10 +50,5 @@ class WallpaperQuickSwitchSectionController(
             lifecycleOwner = lifecycleOwner,
         )
         return view
-    }
-
-    companion object {
-        /** The maximum number of options to show, including the currently-selected one. */
-        private const val MAX_OPTIONS = 5
     }
 }
