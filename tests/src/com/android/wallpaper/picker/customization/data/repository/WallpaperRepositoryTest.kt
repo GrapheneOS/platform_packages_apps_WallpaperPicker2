@@ -19,9 +19,11 @@ package com.android.wallpaper.picker.customization.data.repository
 
 import androidx.test.filters.SmallTest
 import com.android.wallpaper.picker.customization.data.content.FakeWallpaperClient
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -57,26 +59,63 @@ class WallpaperRepositoryTest {
     @Test
     fun setWallpaper() =
         testScope.runTest {
-            val recentWallpapers = collectLastValue(underTest.recentWallpapers(limit = 5))
-            val selectedWallpaperId = collectLastValue(underTest.selectedWallpaperId)
-            val selectingWallpaperId = collectLastValue(underTest.selectingWallpaperId)
-            assertThat(recentWallpapers()).isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS)
-            assertThat(selectedWallpaperId())
+            val recentHomeWallpapers =
+                collectLastValue(
+                    underTest.recentWallpapers(destination = WallpaperDestination.HOME, limit = 5)
+                )
+            val recentLockWallpapers =
+                collectLastValue(
+                    underTest.recentWallpapers(destination = WallpaperDestination.LOCK, limit = 5)
+                )
+            val selectedHomeWallpaperId =
+                collectLastValue(underTest.selectedWallpaperId(WallpaperDestination.HOME))
+            val selectedLockWallpaperId =
+                collectLastValue(underTest.selectedWallpaperId(WallpaperDestination.LOCK))
+            val selectingHomeWallpaperId =
+                collectLastValue(
+                    underTest.selectingWallpaperId.map { it[WallpaperDestination.HOME] }
+                )
+            val selectingLockWallpaperId =
+                collectLastValue(
+                    underTest.selectingWallpaperId.map { it[WallpaperDestination.LOCK] }
+                )
+            assertThat(recentHomeWallpapers())
+                .isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS)
+            assertThat(recentLockWallpapers())
+                .isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS)
+            assertThat(selectedHomeWallpaperId())
                 .isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.first().wallpaperId)
-            assertThat(selectingWallpaperId()).isNull()
+            assertThat(selectedLockWallpaperId())
+                .isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.first().wallpaperId)
+            assertThat(selectingHomeWallpaperId()).isNull()
+            assertThat(selectingLockWallpaperId()).isNull()
 
             // Pause the client so we can examine the interim state.
             client.pause()
-            underTest.setWallpaper(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[1].wallpaperId)
-            assertThat(recentWallpapers()).isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS)
-            assertThat(selectedWallpaperId())
+            underTest.setWallpaper(
+                WallpaperDestination.HOME,
+                FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[1].wallpaperId,
+            )
+            underTest.setWallpaper(
+                WallpaperDestination.LOCK,
+                FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[2].wallpaperId,
+            )
+            assertThat(recentHomeWallpapers())
+                .isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS)
+            assertThat(recentLockWallpapers())
+                .isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS)
+            assertThat(selectedHomeWallpaperId())
                 .isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.first().wallpaperId)
-            assertThat(selectingWallpaperId())
+            assertThat(selectedLockWallpaperId())
+                .isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.first().wallpaperId)
+            assertThat(selectingHomeWallpaperId())
                 .isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[1].wallpaperId)
+            assertThat(selectingLockWallpaperId())
+                .isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[2].wallpaperId)
 
             // Unpause the client so we can examine the final state.
             client.unpause()
-            assertThat(recentWallpapers())
+            assertThat(recentHomeWallpapers())
                 .isEqualTo(
                     listOf(
                         FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[1],
@@ -84,8 +123,19 @@ class WallpaperRepositoryTest {
                         FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[2],
                     )
                 )
-            assertThat(selectedWallpaperId())
+            assertThat(recentLockWallpapers())
+                .isEqualTo(
+                    listOf(
+                        FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[2],
+                        FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[0],
+                        FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[1],
+                    )
+                )
+            assertThat(selectedHomeWallpaperId())
                 .isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[1].wallpaperId)
-            assertThat(selectingWallpaperId()).isNull()
+            assertThat(selectedLockWallpaperId())
+                .isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[2].wallpaperId)
+            assertThat(selectingHomeWallpaperId()).isNull()
+            assertThat(selectingLockWallpaperId()).isNull()
         }
 }

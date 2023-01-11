@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.customization.domain.interactor
 
 import android.graphics.Bitmap
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import javax.inject.Provider
 import kotlinx.coroutines.flow.Flow
@@ -30,13 +31,22 @@ class WallpaperInteractor(
     private val repository: WallpaperRepository,
     private val snapshotRestorer: Provider<WallpaperSnapshotRestorer>,
 ) {
-    /** The ID of the currently-selected wallpaper. */
-    val selectedWallpaperId: StateFlow<String> = repository.selectedWallpaperId
+    /** Returns the ID of the currently-selected wallpaper. */
+    fun selectedWallpaperId(
+        destination: WallpaperDestination,
+    ): StateFlow<String> {
+        return repository.selectedWallpaperId(destination = destination)
+    }
+
     /**
-     * The ID of the wallpaper that is in the process of becoming the selected wallpaper or `null`
-     * if no such transaction is currently taking place.
+     * Returns the ID of the wallpaper that is in the process of becoming the selected wallpaper or
+     * `null` if no such transaction is currently taking place.
      */
-    val selectingWallpaperId: StateFlow<String?> = repository.selectingWallpaperId
+    fun selectingWallpaperId(
+        destination: WallpaperDestination,
+    ): Flow<String?> {
+        return repository.selectingWallpaperId.map { it[destination] }
+    }
 
     /**
      * Lists the [maxResults] most recent wallpapers.
@@ -44,10 +54,12 @@ class WallpaperInteractor(
      * The first one is the most recent (current) wallpaper.
      */
     fun previews(
+        destination: WallpaperDestination,
         maxResults: Int,
     ): Flow<List<WallpaperModel>> {
         return repository
             .recentWallpapers(
+                destination = destination,
                 limit = maxResults,
             )
             .map { previews ->
@@ -61,12 +73,19 @@ class WallpaperInteractor(
 
     /** Sets the wallpaper to the one with the given ID. */
     suspend fun setWallpaper(
+        destination: WallpaperDestination,
         wallpaperId: String,
     ) {
         repository.setWallpaper(
+            destination = destination,
             wallpaperId = wallpaperId,
         )
-        snapshotRestorer.get().storeSnapshot(wallpaperId)
+        snapshotRestorer
+            .get()
+            .storeSnapshot(
+                destination = destination,
+                selectedWallpaperId = wallpaperId,
+            )
     }
 
     /** Returns a thumbnail for the wallpaper with the given ID. */

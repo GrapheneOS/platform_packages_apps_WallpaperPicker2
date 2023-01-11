@@ -18,6 +18,7 @@
 package com.android.wallpaper.picker.customization.data.content
 
 import android.graphics.Bitmap
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import kotlin.math.min
 import kotlinx.coroutines.flow.Flow
@@ -26,12 +27,23 @@ import kotlinx.coroutines.flow.map
 
 class FakeWallpaperClient : WallpaperClient {
 
-    private val _recentWallpapers = MutableStateFlow(INITIAL_RECENT_WALLPAPERS)
+    private val _recentWallpapers =
+        MutableStateFlow(
+            buildMap {
+                WallpaperDestination.values()
+                    .filter { it != WallpaperDestination.BOTH }
+                    .forEach { screen -> put(screen, INITIAL_RECENT_WALLPAPERS) }
+            }
+        )
     private var isPaused = false
-    private var deferred: (suspend () -> Unit)? = null
+    private var deferred = mutableListOf<(suspend () -> Unit)>()
 
-    fun setRecentWallpapers(recentWallpapers: List<WallpaperModel>) {
-        _recentWallpapers.value = recentWallpapers
+    fun setRecentWallpapers(
+        destination: WallpaperDestination,
+        recentWallpapers: List<WallpaperModel>,
+    ) {
+        _recentWallpapers.value =
+            _recentWallpapers.value.toMutableMap().apply { this[destination] = recentWallpapers }
     }
 
     fun pause() {
@@ -40,14 +52,17 @@ class FakeWallpaperClient : WallpaperClient {
 
     suspend fun unpause() {
         isPaused = false
-        deferred?.invoke()
-        deferred = null
+        deferred.forEach { it.invoke() }
+        deferred.clear()
     }
 
     override fun recentWallpapers(
+        destination: WallpaperDestination,
         limit: Int,
     ): Flow<List<WallpaperModel>> {
-        return _recentWallpapers.map { wallpapers ->
+        return _recentWallpapers.map { wallpapersByScreen ->
+            val wallpapers =
+                wallpapersByScreen[destination] ?: error("No wallpapers for screen $destination")
             if (wallpapers.size > limit) {
                 wallpapers.subList(0, min(limit, wallpapers.size))
             } else {
@@ -56,16 +71,29 @@ class FakeWallpaperClient : WallpaperClient {
         }
     }
 
-    override suspend fun getCurrentWallpaper(): WallpaperModel {
-        return _recentWallpapers.value[0]
+    override suspend fun getCurrentWallpaper(
+        destination: WallpaperDestination,
+    ): WallpaperModel {
+        return _recentWallpapers.value[destination]?.get(0)
+            ?: error("No wallpapers for screen $destination")
     }
 
-    override suspend fun setWallpaper(wallpaperId: String, onDone: () -> Unit) {
+    override suspend fun setWallpaper(
+        destination: WallpaperDestination,
+        wallpaperId: String,
+        onDone: () -> Unit
+    ) {
         if (isPaused) {
-            deferred = { setWallpaper(wallpaperId, onDone) }
+            deferred.add { setWallpaper(destination, wallpaperId, onDone) }
         } else {
             _recentWallpapers.value =
-                _recentWallpapers.value.sortedBy { it.wallpaperId != wallpaperId }
+                _recentWallpapers.value.toMutableMap().apply {
+                    this[destination] =
+                        _recentWallpapers.value[destination]?.sortedBy {
+                            it.wallpaperId != wallpaperId
+                        }
+                            ?: error("No wallpapers for screen $destination")
+                }
             onDone.invoke()
         }
     }
