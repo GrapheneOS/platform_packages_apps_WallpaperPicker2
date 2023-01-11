@@ -261,7 +261,6 @@
 
     <!-- Duo tabs -->
     <dimen name="duo_tabs_button_corner_radius">12dp</dimen>
-    <dimen name="duo_tabs_divider_space">8dp</dimen>
 
     <!-- Floating Sheet -->
     <dimen name="floating_sheet_corner_radius">12dp</dimen>
@@ -276,4 +275,12 @@
     display.
     -->
     <dimen name="screen_preview_height">380dp</dimen>
+
+    <!-- Height of options in the wallpaper quick switch widget. -->
+    <dimen name="wallpaper_quick_switch_selected_option_height">98dp</dimen>
+
+    <!-- Maximumn width non-selected options in the wallpaper quick switch widget. -->
+    <dimen name="wallpaper_quick_switch_max_option_width">@dimen/wallpaper_quick_switch_selected_option_height</dimen>
+
+    <dimen name="spacing_8dp">8dp</dimen>
 </resources>
