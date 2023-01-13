@@ -435,7 +435,7 @@
 
     [CHAR LIMIT=32].
     -->
-    <string name="reset_confirmation_dialog_title">Are you sure?</string>
+    <string name="reset_confirmation_dialog_title">Reset changes?</string>
 
     <!--
     Message for dialog confirming with the user that they really wish to reset the customizations
@@ -443,7 +443,7 @@
 
     [CHAR LIMIT=128].
     -->
-    <string name="reset_confirmation_dialog_message">This will reset all changes you made.</string>
+    <string name="reset_confirmation_dialog_message">Your changes won\'t be saved</string>
 
     <!--
     Label for button that lets the user navigate to a full-screen experience of selecting
