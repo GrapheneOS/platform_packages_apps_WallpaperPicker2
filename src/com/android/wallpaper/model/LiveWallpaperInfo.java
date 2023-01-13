@@ -446,4 +446,14 @@ public class LiveWallpaperInfo extends WallpaperInfo {
     public String getWallpaperId() {
         return mInfo.getServiceName();
     }
+
+    /**
+     * Returns true if this wallpaper is currently applied.
+     */
+    public boolean isApplied(android.app.WallpaperInfo currentWallpaper) {
+        return getWallpaperComponent() != null
+                && currentWallpaper != null
+                && TextUtils.equals(getWallpaperComponent().getServiceName(),
+                currentWallpaper.getServiceName());
+    }
 }
