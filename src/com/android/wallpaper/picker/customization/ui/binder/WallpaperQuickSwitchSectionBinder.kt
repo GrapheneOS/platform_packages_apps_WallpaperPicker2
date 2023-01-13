@@ -36,9 +36,10 @@ object WallpaperQuickSwitchSectionBinder {
         view: View,
         viewModel: WallpaperQuickSwitchViewModel,
         lifecycleOwner: LifecycleOwner,
+        onNavigateToFullWallpaperSelector: () -> Unit,
     ) {
         view.requireViewById<View>(R.id.more_wallpapers).setOnClickListener {
-            viewModel.onNavigateToFullWallpaperSelectorButtonClicked()
+            onNavigateToFullWallpaperSelector()
         }
 
         val optionContainer: ViewGroup = view.requireViewById(R.id.options)
