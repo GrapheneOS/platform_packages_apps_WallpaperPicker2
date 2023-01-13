@@ -56,12 +56,16 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     private static final String TAG = "CustomizationPickerFragment";
     private static final String SCROLL_POSITION_Y = "SCROLL_POSITION_Y";
     private static final String KEY_IS_USE_REVAMPED_UI = "is_use_revamped_ui";
+    private static final String KEY_START_FROM_LOCK_SCREEN = "start_from_lock_screen";
 
     /** Returns a new instance of {@link CustomizationPickerFragment}. */
-    public static CustomizationPickerFragment newInstance(boolean isUseRevampedUi) {
+    public static CustomizationPickerFragment newInstance(
+            boolean isUseRevampedUi,
+            boolean startFromLockScreen) {
         final CustomizationPickerFragment fragment = new CustomizationPickerFragment();
         final Bundle args = new Bundle();
         args.putBoolean(KEY_IS_USE_REVAMPED_UI, isUseRevampedUi);
+        args.putBoolean(KEY_START_FROM_LOCK_SCREEN, startFromLockScreen);
         fragment.setArguments(args);
         return fragment;
     }
@@ -109,6 +113,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                             savedInstanceState,
                             injector.getUndoInteractor(requireContext()))
             ).get(CustomizationPickerViewModel.class);
+            mViewModel.setOnLockScreen(args.getBoolean(KEY_START_FROM_LOCK_SCREEN));
 
             setUpToolbarMenu(R.menu.undoable_customization_menu);
             final Bundle finalSavedInstanceState = savedInstanceState;
