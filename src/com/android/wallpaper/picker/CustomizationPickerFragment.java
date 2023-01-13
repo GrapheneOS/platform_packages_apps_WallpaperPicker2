@@ -298,7 +298,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                     savedInstanceState,
                     injector.getDisplayUtils(getActivity()));
         } else {
-            return sections.getSectionControllersForScreen(
+            return sections.getRevampedUISectionControllersForScreen(
                     screen,
                     getActivity(),
                     getViewLifecycleOwner(),
