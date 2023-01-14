@@ -15,7 +15,7 @@ import com.android.wallpaper.util.DisplayUtils
 
 /** Test implementation of [CustomizationSections] */
 class TestCustomizationSections : CustomizationSections {
-    override fun getSectionControllersForScreen(
+    override fun getRevampedUISectionControllersForScreen(
         screen: CustomizationSections.Screen?,
         activity: FragmentActivity?,
         lifecycleOwner: LifecycleOwner?,

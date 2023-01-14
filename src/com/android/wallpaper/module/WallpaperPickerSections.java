@@ -25,7 +25,7 @@ import java.util.List;
 public final class WallpaperPickerSections implements CustomizationSections {
 
     @Override
-    public List<CustomizationSectionController<?>> getSectionControllersForScreen(
+    public List<CustomizationSectionController<?>> getRevampedUISectionControllersForScreen(
             Screen screen,
             FragmentActivity activity,
             LifecycleOwner lifecycleOwner,
@@ -51,7 +51,8 @@ public final class WallpaperPickerSections implements CustomizationSections {
         sectionControllers.add(
                 new WallpaperQuickSwitchSectionController(
                         wallpaperQuickSwitchViewModel,
-                        lifecycleOwner));
+                        lifecycleOwner,
+                        sectionNavigationController));
 
         return sectionControllers;
     }
