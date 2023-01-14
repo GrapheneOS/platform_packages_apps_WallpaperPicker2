@@ -18,6 +18,7 @@
 package com.android.wallpaper.testing
 
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotRestorer
+import com.android.wallpaper.picker.undo.domain.interactor.SnapshotStore
 import com.android.wallpaper.picker.undo.shared.model.RestorableSnapshot
 
 val FAKE_RESTORERS =
@@ -39,18 +40,18 @@ fun snapshot(ownerId: Int, version: Int): RestorableSnapshot {
 class FakeSnapshotRestorer(
     private val ownerId: Int,
 ) : SnapshotRestorer {
-    private lateinit var updater: (RestorableSnapshot) -> Unit
+    private lateinit var store: SnapshotStore
     var restored: RestorableSnapshot? = null
         private set
 
     fun update(version: Int) {
-        updater(snapshot(ownerId, version))
+        store.store(snapshot(ownerId, version))
     }
 
     override suspend fun setUpSnapshotRestorer(
-        updater: (RestorableSnapshot) -> Unit,
+        store: SnapshotStore,
     ): RestorableSnapshot {
-        this.updater = updater
+        this.store = store
         return snapshot(
             ownerId = ownerId,
             version = 0,
