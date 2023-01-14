@@ -25,6 +25,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import java.io.IOException
 import kotlinx.coroutines.channels.awaitClose
@@ -37,11 +38,12 @@ class WallpaperClientImpl(
 ) : WallpaperClient {
 
     override fun recentWallpapers(
+        destination: WallpaperDestination,
         limit: Int,
     ): Flow<List<WallpaperModel>> {
         return callbackFlow {
             suspend fun queryAndSend(limit: Int) {
-                send(queryRecentWallpapers(limit = limit))
+                send(queryRecentWallpapers(destination = destination, limit = limit))
             }
 
             val contentObserver =
@@ -62,13 +64,20 @@ class WallpaperClientImpl(
         }
     }
 
-    override suspend fun getCurrentWallpaper(): WallpaperModel {
-        return queryRecentWallpapers(limit = 1).first()
+    override suspend fun getCurrentWallpaper(
+        destination: WallpaperDestination,
+    ): WallpaperModel {
+        return queryRecentWallpapers(destination = destination, limit = 1).first()
     }
 
-    override suspend fun setWallpaper(wallpaperId: String, onDone: () -> Unit) {
+    override suspend fun setWallpaper(
+        destination: WallpaperDestination,
+        wallpaperId: String,
+        onDone: () -> Unit
+    ) {
         val updateValues = ContentValues()
         updateValues.put(KEY_ID, wallpaperId)
+        updateValues.put(KEY_SCREEN, destination.asString())
         val updatedRowCount = context.contentResolver.update(SET_WALLPAPER_URI, updateValues, null)
         if (updatedRowCount == 0) {
             Log.e(TAG, "Error setting wallpaper: $wallpaperId")
@@ -77,11 +86,12 @@ class WallpaperClientImpl(
     }
 
     private suspend fun queryRecentWallpapers(
+        destination: WallpaperDestination,
         limit: Int,
     ): List<WallpaperModel> {
         context.contentResolver
             .query(
-                LIST_RECENTS_URI,
+                LIST_RECENTS_URI.buildUpon().appendPath(destination.asString()).build(),
                 arrayOf(
                     KEY_ID,
                     KEY_PLACEHOLDER_COLOR,
@@ -137,6 +147,14 @@ class WallpaperClientImpl(
         return null
     }
 
+    private fun WallpaperDestination.asString(): String {
+        return when (this) {
+            WallpaperDestination.BOTH -> SCREEN_ALL
+            WallpaperDestination.HOME -> SCREEN_HOME
+            WallpaperDestination.LOCK -> SCREEN_LOCK
+        }
+    }
+
     companion object {
         private const val TAG = "WallpaperClientImpl"
         private const val AUTHORITY = "com.google.android.apps.wallpaper.recents"
@@ -162,6 +180,11 @@ class WallpaperClientImpl(
 
         /** Key for a parameter used to pass the wallpaper ID to/from the content provider. */
         private const val KEY_ID = "id"
+        /** Key for a parameter used to pass the screen to/from the content provider. */
+        private const val KEY_SCREEN = "screen"
+        private const val SCREEN_ALL = "all_screens"
+        private const val SCREEN_HOME = "home_screen"
+        private const val SCREEN_LOCK = "lock_screen"
         /**
          * Key for a parameter used to get the placeholder color for a wallpaper from the content
          * provider.

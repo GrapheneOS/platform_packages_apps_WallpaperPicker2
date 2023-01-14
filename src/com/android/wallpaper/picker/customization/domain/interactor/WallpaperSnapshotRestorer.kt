@@ -17,7 +17,9 @@
 
 package com.android.wallpaper.picker.customization.domain.interactor
 
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotRestorer
+import com.android.wallpaper.picker.undo.domain.interactor.SnapshotStore
 import com.android.wallpaper.picker.undo.shared.model.RestorableSnapshot
 
 /** Stores and restores undo snapshots for wallpaper state. */
@@ -25,37 +27,75 @@ class WallpaperSnapshotRestorer(
     private val interactor: WallpaperInteractor,
 ) : SnapshotRestorer {
 
-    private lateinit var updater: (RestorableSnapshot) -> Unit
+    private lateinit var store: SnapshotStore
 
     fun storeSnapshot(
+        destination: WallpaperDestination,
         selectedWallpaperId: String,
     ) {
-        updater(snapshot(selectedWallpaperId))
+        val previousSnapshot = store.retrieve()
+        val nextSnapshot =
+            previousSnapshot.copy { args ->
+                args[destination.toSnapshotKey()] = selectedWallpaperId
+            }
+        store.store(nextSnapshot)
     }
 
     override suspend fun setUpSnapshotRestorer(
-        updater: (RestorableSnapshot) -> Unit,
+        store: SnapshotStore,
     ): RestorableSnapshot {
-        this.updater = updater
-        return snapshot(interactor.selectedWallpaperId.value)
+        this.store = store
+        val snapshot =
+            RestorableSnapshot(
+                args =
+                    buildMap {
+                        put(
+                            SELECTED_HOME_SCREEN_WALLPAPER_ID,
+                            interactor
+                                .selectedWallpaperId(destination = WallpaperDestination.HOME)
+                                .value,
+                        )
+                        put(
+                            SELECTED_LOCK_SCREEN_WALLPAPER_ID,
+                            interactor
+                                .selectedWallpaperId(destination = WallpaperDestination.LOCK)
+                                .value,
+                        )
+                    }
+            )
+        return snapshot
     }
 
     override suspend fun restoreToSnapshot(
         snapshot: RestorableSnapshot,
     ) {
-        val wallpaperId = snapshot.args[SELECTED_WALLPAPER_ID]
-        if (!wallpaperId.isNullOrEmpty()) {
-            interactor.setWallpaper(wallpaperId = wallpaperId)
+        val homeWallpaperId = snapshot.args[SELECTED_HOME_SCREEN_WALLPAPER_ID]
+        if (!homeWallpaperId.isNullOrEmpty()) {
+            interactor.setWallpaper(
+                destination = WallpaperDestination.HOME,
+                wallpaperId = homeWallpaperId
+            )
+        }
+
+        val lockWallpaperId = snapshot.args[SELECTED_LOCK_SCREEN_WALLPAPER_ID]
+        if (!lockWallpaperId.isNullOrEmpty()) {
+            interactor.setWallpaper(
+                destination = WallpaperDestination.LOCK,
+                wallpaperId = lockWallpaperId
+            )
         }
     }
 
-    private fun snapshot(selectedWallpaperId: String): RestorableSnapshot {
-        return RestorableSnapshot(
-            args = buildMap { put(SELECTED_WALLPAPER_ID, selectedWallpaperId) }
-        )
+    private fun WallpaperDestination.toSnapshotKey(): String {
+        return when (this) {
+            WallpaperDestination.HOME -> SELECTED_HOME_SCREEN_WALLPAPER_ID
+            WallpaperDestination.LOCK -> SELECTED_LOCK_SCREEN_WALLPAPER_ID
+            else -> error("Unsupported screen type \"$this\"!")
+        }
     }
 
     companion object {
-        private const val SELECTED_WALLPAPER_ID = "selected_wallpaper_id"
+        private const val SELECTED_HOME_SCREEN_WALLPAPER_ID = "selected_home_screen_wallpaper_id"
+        private const val SELECTED_LOCK_SCREEN_WALLPAPER_ID = "selected_lock_screen_wallpaper_id"
     }
 }
