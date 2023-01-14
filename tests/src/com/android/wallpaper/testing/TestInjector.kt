@@ -15,11 +15,11 @@
  */
 package com.android.wallpaper.testing
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.config.BaseFlags
@@ -108,7 +108,7 @@ open class TestInjector : Injector {
             }
     }
 
-    override fun getCustomizationSections(activity: Activity): CustomizationSections {
+    override fun getCustomizationSections(activity: ComponentActivity): CustomizationSections {
         return customizationSections
             ?: TestCustomizationSections().also { customizationSections = it }
     }

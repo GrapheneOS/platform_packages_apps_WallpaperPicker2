@@ -15,10 +15,10 @@
  */
 package com.android.wallpaper.module
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.config.BaseFlags
@@ -48,7 +48,7 @@ interface Injector {
 
     fun getCurrentWallpaperInfoFactory(context: Context): CurrentWallpaperInfoFactory
 
-    fun getCustomizationSections(activity: Activity): CustomizationSections
+    fun getCustomizationSections(activity: ComponentActivity): CustomizationSections
 
     fun getDeepLinkRedirectIntent(context: Context, uri: Uri): Intent
 
