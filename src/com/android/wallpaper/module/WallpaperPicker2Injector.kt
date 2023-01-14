@@ -15,11 +15,11 @@
  */
 package com.android.wallpaper.module
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.config.BaseFlags
@@ -42,6 +42,8 @@ import com.android.wallpaper.picker.customization.domain.interactor.WallpaperSna
 import com.android.wallpaper.picker.individual.IndividualPickerFragment
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
+import com.android.wallpaper.settings.data.repository.SecureSettingsRepository
+import com.android.wallpaper.settings.data.repository.SecureSettingsRepositoryImpl
 import com.android.wallpaper.util.DisplayUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -74,6 +76,7 @@ open class WallpaperPicker2Injector : Injector {
     private var undoInteractor: UndoInteractor? = null
     private var wallpaperInteractor: WallpaperInteractor? = null
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
+    private var secureSettingsRepository: SecureSettingsRepository? = null
 
     @Synchronized
     override fun getAlarmManagerWrapper(context: Context): AlarmManagerWrapper {
@@ -101,8 +104,7 @@ open class WallpaperPicker2Injector : Injector {
             }
     }
 
-    override fun getCustomizationSections(activity: Activity): CustomizationSections {
-
+    override fun getCustomizationSections(activity: ComponentActivity): CustomizationSections {
         return customizationSections
             ?: WallpaperPickerSections().also { customizationSections = it }
     }
@@ -302,6 +304,15 @@ open class WallpaperPicker2Injector : Injector {
                     interactor = getWallpaperInteractor(context),
                 )
                 .also { wallpaperSnapshotRestorer = it }
+    }
+
+    protected fun getSecureSettingsRepository(context: Context): SecureSettingsRepository {
+        return secureSettingsRepository
+            ?: SecureSettingsRepositoryImpl(
+                    contentResolver = context.contentResolver,
+                    backgroundDispatcher = Dispatchers.IO,
+                )
+                .also { secureSettingsRepository = it }
     }
 
     companion object {
