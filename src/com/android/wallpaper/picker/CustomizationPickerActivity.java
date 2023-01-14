@@ -129,7 +129,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
                             isUseRevampedUi, startFromLockScreen));
         }
 
-        if (isUseRevampedUi && savedInstanceState == null) {
+        if (savedInstanceState == null) {
             // We only want to start a new undo session if this activity is brand-new. A non-new
             // activity will have a non-null savedInstanceState.
             mUndoInteractor = injector.getUndoInteractor(this);
