@@ -84,6 +84,10 @@ constructor(
         _isOnLockScreen.value = savedStateHandle[KEY_SAVED_STATE_IS_ON_LOCK_SCREEN] ?: true
     }
 
+    fun setOnLockScreen(onLockScreen: Boolean) {
+        _isOnLockScreen.value = onLockScreen
+    }
+
     companion object {
         @JvmStatic
         fun newFactory(
