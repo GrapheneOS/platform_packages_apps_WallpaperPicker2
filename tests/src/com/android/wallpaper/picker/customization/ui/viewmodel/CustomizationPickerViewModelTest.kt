@@ -76,6 +76,20 @@ class CustomizationPickerViewModelTest {
         }
 
     @Test
+    fun `setting initial tab to the home screen`() =
+        testScope.runTest {
+            underTest.setOnLockScreen(onLockScreen = false)
+
+            val homeScreenTab = collectLastValue(underTest.homeScreenTab)
+            val lockScreenTab = collectLastValue(underTest.lockScreenTab)
+            val isOnLockScreen = collectLastValue(underTest.isOnLockScreen)
+
+            assertThat(homeScreenTab()?.isSelected).isTrue()
+            assertThat(lockScreenTab()?.isSelected).isFalse()
+            assertThat(isOnLockScreen()).isFalse()
+        }
+
+    @Test
     fun `switching to the home screen`() =
         testScope.runTest {
             val homeScreenTab = collectLastValue(underTest.homeScreenTab)
