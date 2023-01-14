@@ -18,6 +18,7 @@
 package com.android.wallpaper.picker.customization.data.content
 
 import android.graphics.Bitmap
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import kotlinx.coroutines.flow.Flow
 
@@ -26,19 +27,27 @@ interface WallpaperClient {
 
     /** Lists the most recent wallpapers. The first one is the most recent (current) wallpaper. */
     fun recentWallpapers(
+        destination: WallpaperDestination,
         limit: Int,
     ): Flow<List<WallpaperModel>>
 
     /** Returns the selected wallpaper. */
-    suspend fun getCurrentWallpaper(): WallpaperModel
+    suspend fun getCurrentWallpaper(
+        destination: WallpaperDestination,
+    ): WallpaperModel
 
     /**
      * Asynchronously sets the wallpaper to the one with the given ID.
      *
+     * @param destination The screen to set the wallpaper on.
      * @param wallpaperId The ID of the wallpaper to set.
      * @param onDone A callback to invoke when setting is done.
      */
-    suspend fun setWallpaper(wallpaperId: String, onDone: () -> Unit)
+    suspend fun setWallpaper(
+        destination: WallpaperDestination,
+        wallpaperId: String,
+        onDone: () -> Unit
+    )
 
     /** Returns a thumbnail for the wallpaper with the given ID. */
     suspend fun loadThumbnail(wallpaperId: String): Bitmap?
