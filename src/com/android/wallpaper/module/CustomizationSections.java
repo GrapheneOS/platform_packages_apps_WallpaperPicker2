@@ -27,13 +27,15 @@ public interface CustomizationSections {
     }
 
     /**
+     * Currently protected under BaseFlags.isUseRevampedUi() flag.
+     *
      * Gets a new instance of the section controller list for the given {@link Screen}.
      *
      * Note that the section views will be displayed by the list ordering.
      *
      * <p>Don't keep the section controllers as singleton since they contain views.
      */
-    List<CustomizationSectionController<?>> getSectionControllersForScreen(
+    List<CustomizationSectionController<?>> getRevampedUISectionControllersForScreen(
             Screen screen,
             FragmentActivity activity,
             LifecycleOwner lifecycleOwner,
