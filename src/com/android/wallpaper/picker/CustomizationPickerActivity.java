@@ -109,7 +109,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         // See go/pdr-edge-to-edge-guide.
         WindowCompat.setDecorFitsSystemWindows(getWindow(), isSUWMode(this));
 
-        final boolean isUseRevampedUi = injector.getFlags().isUseRevampedUi(this);
+        final boolean isUseRevampedUi = injector.getFlags().isRevampedUiEnabled(this);
         final boolean startFromLockScreen = getIntent() == null
                 || !ActivityUtils.isLaunchedFromLauncher(getIntent());
 
