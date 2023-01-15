@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.customization.data.repository
 
 import android.graphics.Bitmap
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -35,33 +36,44 @@ import kotlinx.coroutines.withContext
 
 /** Encapsulates access to wallpaper-related data. */
 class WallpaperRepository(
-    scope: CoroutineScope,
+    private val scope: CoroutineScope,
     private val client: WallpaperClient,
     private val backgroundDispatcher: CoroutineDispatcher,
 ) {
     /** The ID of the currently-selected wallpaper. */
-    val selectedWallpaperId: StateFlow<String> =
-        client
-            .recentWallpapers(limit = 1)
+    fun selectedWallpaperId(
+        destination: WallpaperDestination,
+    ): StateFlow<String> {
+        return client
+            .recentWallpapers(destination = destination, limit = 1)
             .map { previews -> previews.first().wallpaperId }
             .stateIn(
                 scope = scope,
                 started = SharingStarted.WhileSubscribed(),
-                initialValue = runBlocking { client.getCurrentWallpaper().wallpaperId },
+                initialValue =
+                    runBlocking {
+                        client.getCurrentWallpaper(destination = destination).wallpaperId
+                    },
             )
+    }
 
-    private val _selectingWallpaperId = MutableStateFlow<String?>(null)
+    private val _selectingWallpaperId =
+        MutableStateFlow<Map<WallpaperDestination, String?>>(emptyMap())
     /**
      * The ID of the wallpaper that is in the process of becoming the selected wallpaper or `null`
      * if no such transaction is currently taking place.
      */
-    val selectingWallpaperId: StateFlow<String?> = _selectingWallpaperId.asStateFlow()
+    val selectingWallpaperId: StateFlow<Map<WallpaperDestination, String?>> =
+        _selectingWallpaperId.asStateFlow()
 
     /** Lists the most recent wallpapers. The first one is the most recent (current) wallpaper. */
     fun recentWallpapers(
+        destination: WallpaperDestination,
         limit: Int,
     ): Flow<List<WallpaperModel>> {
-        return client.recentWallpapers(limit = limit).flowOn(backgroundDispatcher)
+        return client
+            .recentWallpapers(destination = destination, limit = limit)
+            .flowOn(backgroundDispatcher)
     }
 
     /** Returns a thumbnail for the wallpaper with the given ID. */
@@ -71,14 +83,18 @@ class WallpaperRepository(
 
     /** Sets the wallpaper to the one with the given ID. */
     suspend fun setWallpaper(
+        destination: WallpaperDestination,
         wallpaperId: String,
     ) {
-        _selectingWallpaperId.value = wallpaperId
+        _selectingWallpaperId.value =
+            _selectingWallpaperId.value.toMutableMap().apply { this[destination] = wallpaperId }
         withContext(backgroundDispatcher) {
             client.setWallpaper(
+                destination = destination,
                 wallpaperId = wallpaperId,
             ) {
-                _selectingWallpaperId.value = null
+                _selectingWallpaperId.value =
+                    _selectingWallpaperId.value.toMutableMap().apply { this[destination] = null }
             }
         }
     }
