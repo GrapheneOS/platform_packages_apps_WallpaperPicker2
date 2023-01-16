@@ -24,12 +24,12 @@ import kotlinx.coroutines.runBlocking
 
 abstract class BaseFlags {
     open fun isStagingBackdropContentEnabled() = false
-    open fun isEnableWallpaperEffect() = false
+    open fun isWallpaperEffectEnabled() = false
+    open fun isEffectOnMultiplePanelEnabled() = false
     fun isMonochromaticFlagEnabled() =
         SystemProperties.getBoolean("persist.sysui.monochromatic", false)
-    open fun isEnableEffectOnMultiplePanel() = false
-    open fun isFullscreenWallpaperPreview() = false
-    fun isUseRevampedUi(context: Context): Boolean {
+    open fun isFullscreenWallpaperPreviewEnabled() = false
+    fun isRevampedUiEnabled(context: Context): Boolean {
         return runBlocking { CustomizationProviderClientImpl(context, Dispatchers.IO).queryFlags() }
             .firstOrNull { flag ->
                 flag.name == Contract.FlagsTable.FLAG_NAME_REVAMPED_WALLPAPER_UI
