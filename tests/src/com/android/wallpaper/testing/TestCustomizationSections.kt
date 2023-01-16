@@ -43,7 +43,7 @@ class TestCustomizationSections : CustomizationSections {
         sectionNavigationController:
             CustomizationSectionController.CustomizationSectionNavigationController?,
         savedInstanceState: Bundle?,
-        displayUtils: DisplayUtils?
+        displayUtils: DisplayUtils?,
     ): MutableList<CustomizationSectionController<*>> {
         return arrayListOf()
     }
