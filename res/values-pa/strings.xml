@@ -114,6 +114,9 @@
     <string name="lock_screen_tab" msgid="6672930765010407652">"ਲਾਕ ਸਕ੍ਰੀਨ"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"ਹੋਮ ਸਕ੍ਰੀਨ"</string>
     <string name="reset" msgid="4945445169532850631">"ਰੀਸੈੱਟ ਕਰੋ"</string>
-    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"ਪੱਕਾ?"</string>
-    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"ਇਸ ਨਾਲ ਤੁਹਾਡੇ ਵੱਲੋਂ ਕੀਤੀਆਂ ਸਾਰੀਆਂ ਤਬਦੀਲੀਆਂ ਰੀਸੈੱਟ ਹੋ ਜਾਣਗੀਆਂ।"</string>
+    <!-- no translation found for reset_confirmation_dialog_title (3391905685838213712) -->
+    <skip />
+    <!-- no translation found for reset_confirmation_dialog_message (888669268626289603) -->
+    <skip />
+    <string name="more_wallpapers" msgid="8116268433411881705">"ਹੋਰ ਵਾਲਪੇਪਰ"</string>
 </resources>
