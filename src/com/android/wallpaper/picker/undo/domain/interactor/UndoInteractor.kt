@@ -18,6 +18,7 @@
 package com.android.wallpaper.picker.undo.domain.interactor
 
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
+import com.android.wallpaper.picker.undo.shared.model.RestorableSnapshot
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -55,13 +56,25 @@ class UndoInteractor(
         restorerByOwnerId.forEach { (ownerId, restorer) ->
             scope.launch {
                 val initialSnapshot =
-                    restorer.setUpSnapshotRestorer { subsequentSnapshot ->
-                        val initialSnapshot = repository.getSnapshot(ownerId)
-                        repository.putDirty(
-                            ownerId = ownerId,
-                            isDirty = initialSnapshot != subsequentSnapshot
-                        )
-                    }
+                    restorer.setUpSnapshotRestorer(
+                        object : SnapshotStore {
+                            override fun retrieve(): RestorableSnapshot {
+                                return repository.getSnapshot(ownerId)
+                                    ?: error(
+                                        "No snapshot for this owner ID! Did you call this before" +
+                                            " storing a snapshot?"
+                                    )
+                            }
+
+                            override fun store(snapshot: RestorableSnapshot) {
+                                val initialSnapshot = repository.getSnapshot(ownerId)
+                                repository.putDirty(
+                                    ownerId = ownerId,
+                                    isDirty = initialSnapshot != snapshot
+                                )
+                            }
+                        }
+                    )
 
                 repository.putSnapshot(
                     ownerId = ownerId,

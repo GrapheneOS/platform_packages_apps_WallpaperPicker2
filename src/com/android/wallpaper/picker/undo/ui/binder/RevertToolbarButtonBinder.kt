@@ -48,6 +48,7 @@ object RevertToolbarButtonBinder {
             dialog =
                 AlertDialog.Builder(view.context, R.style.LightDialogTheme)
                     .setTitle(R.string.reset_confirmation_dialog_title)
+                    .setIcon(R.drawable.ic_device_reset)
                     .setMessage(R.string.reset_confirmation_dialog_message)
                     .setPositiveButton(R.string.reset) { _, _ -> viewModel.onConfirmed() }
                     .setNegativeButton(R.string.cancel, null)
