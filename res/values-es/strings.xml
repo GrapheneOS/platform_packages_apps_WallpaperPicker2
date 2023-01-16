@@ -114,6 +114,10 @@
     <string name="lock_screen_tab" msgid="6672930765010407652">"Pantalla de bloqueo"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"Pantalla de inicio"</string>
     <string name="reset" msgid="4945445169532850631">"Restablecer"</string>
-    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"¿Seguro que quieres hacerlo?"</string>
-    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"Se restablecerán todos los cambios que has hecho."</string>
+    <!-- no translation found for reset_confirmation_dialog_title (3391905685838213712) -->
+    <skip />
+    <!-- no translation found for reset_confirmation_dialog_message (888669268626289603) -->
+    <skip />
+    <!-- no translation found for more_wallpapers (8116268433411881705) -->
+    <skip />
 </resources>
