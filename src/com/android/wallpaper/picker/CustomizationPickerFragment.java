@@ -113,7 +113,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                             savedInstanceState,
                             injector.getUndoInteractor(requireContext()))
             ).get(CustomizationPickerViewModel.class);
-            mViewModel.setOnLockScreen(args.getBoolean(KEY_START_FROM_LOCK_SCREEN));
+            mViewModel.setInitialScreen(args.getBoolean(KEY_START_FROM_LOCK_SCREEN));
 
             setUpToolbarMenu(R.menu.undoable_customization_menu);
             final Bundle finalSavedInstanceState = savedInstanceState;
