@@ -114,6 +114,9 @@
     <string name="lock_screen_tab" msgid="6672930765010407652">"လော့ခ်မျက်နှာပြင်"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"ပင်မစာမျက်နှာ"</string>
     <string name="reset" msgid="4945445169532850631">"ပြင်ဆင်ရန်"</string>
-    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"သေချာပါသလား။"</string>
-    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"၎င်းက သင့်အပြောင်းအလဲအားလုံးကို ပြင်ဆင်သတ်မှတ်မည်။"</string>
+    <!-- no translation found for reset_confirmation_dialog_title (3391905685838213712) -->
+    <skip />
+    <!-- no translation found for reset_confirmation_dialog_message (888669268626289603) -->
+    <skip />
+    <string name="more_wallpapers" msgid="8116268433411881705">"နောက်ထပ် နောက်ခံပုံများ"</string>
 </resources>
