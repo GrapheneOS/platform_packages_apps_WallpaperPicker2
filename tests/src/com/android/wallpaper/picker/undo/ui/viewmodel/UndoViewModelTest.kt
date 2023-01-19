@@ -93,7 +93,7 @@ class UndoViewModelTest {
             assertThat(dialog()).isNotNull()
 
             // Confirm the revert.
-            dialog()?.onConfirmed?.invoke()
+            dialog()?.buttons?.last()?.onClicked?.invoke()
             assertThat(isRevertButtonVisible()).isFalse()
         }
 }

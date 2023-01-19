@@ -218,4 +218,22 @@
         <item name="android:textSize">36sp</item>
         <item name="android:textColor">@color/settingslib_text_color_primary_device_default</item>
     </style>
+
+    <style name="DialogButton">
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault.Small</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:paddingVertical">8dp</item>
+        <item name="android:paddingHorizontal">16dp</item>
+    </style>
+
+    <style name="DialogButton.Primary">
+        <item name="android:textColor">@color/text_color_on_accent</item>
+        <item name="android:background">@drawable/primary_dialog_button_background</item>
+    </style>
+
+    <style name="DialogButton.Secondary">
+        <item name="android:textColor">@color/text_color_primary</item>
+        <item name="android:background">@drawable/secondary_dialog_button_background</item>
+    </style>
 </resources>
