@@ -283,4 +283,5 @@
     <dimen name="wallpaper_quick_switch_max_option_width">@dimen/wallpaper_quick_switch_selected_option_height</dimen>
 
     <dimen name="spacing_8dp">8dp</dimen>
+    <dimen name="spacing_10dp">10dp</dimen>
 </resources>
