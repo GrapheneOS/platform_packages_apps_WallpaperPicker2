@@ -17,7 +17,6 @@
 
 package com.android.wallpaper.picker.undo.ui.binder
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.widget.Toolbar
 import androidx.lifecycle.Lifecycle
@@ -25,7 +24,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
-import com.android.wallpaper.picker.undo.ui.viewmodel.UndoDialogViewModel
+import com.android.wallpaper.picker.common.dialog.ui.viewbinder.DialogViewBinder
+import com.android.wallpaper.picker.common.dialog.ui.viewmodel.DialogViewModel
 import com.android.wallpaper.picker.undo.ui.viewmodel.UndoViewModel
 import kotlinx.coroutines.launch
 
@@ -44,19 +44,12 @@ object RevertToolbarButtonBinder {
 
         var dialog: Dialog? = null
 
-        fun showDialog(viewModel: UndoDialogViewModel) {
+        fun showDialog(viewModel: DialogViewModel) {
             dialog =
-                AlertDialog.Builder(view.context, R.style.LightDialogTheme)
-                    .setTitle(R.string.reset_confirmation_dialog_title)
-                    .setIcon(R.drawable.ic_device_reset)
-                    .setMessage(R.string.reset_confirmation_dialog_message)
-                    .setPositiveButton(R.string.reset) { _, _ -> viewModel.onConfirmed() }
-                    .setNegativeButton(R.string.cancel, null)
-                    .setOnDismissListener {
-                        dialog = null
-                        viewModel.onDismissed()
-                    }
-                    .create()
+                DialogViewBinder.show(
+                    context = view.context,
+                    viewModel = viewModel,
+                )
             dialog?.show()
         }
 
