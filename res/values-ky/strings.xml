@@ -49,7 +49,7 @@
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Биринчи тушкагаз жүктөлүп алынууда…"</string>
     <string name="start_rotation_error_message" msgid="3053799836719618972">"Биринчи тушкагаз жүктөлүп алынбай жатат. Тармак жөндөөлөрүңүздү текшерип, кайталап көрүңүз."</string>
     <string name="start_rotation_dialog_body" msgid="7903554799046364916">"Тушкагаз күн сайын автоматтык түрдө алмашып турат"</string>
-    <string name="settings_button_label" msgid="8724734130079207955">"Жөндөөлөр"</string>
+    <string name="settings_button_label" msgid="8724734130079207955">"Параметрлер"</string>
     <string name="explore" msgid="7468719504199497281">"Изилдөө"</string>
     <string name="next_wallpaper" msgid="3911873152952596232">"Кийинки тушкагаз"</string>
     <string name="wallpaper_disabled_message" msgid="7309484130562148185">"Бул түзмөктө тушкагазды жөндөө өчүрүлгөн"</string>
@@ -82,7 +82,7 @@
     <string name="tab_customize" msgid="2533745409174959960">"Ыңгайлаштыруу"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Кубулуштар"</string>
     <string name="my_photos" msgid="8613021349284084982">"Сүрөттөрүм"</string>
-    <string name="configure_wallpaper" msgid="849882179182976621">"Жөндөөлөр…"</string>
+    <string name="configure_wallpaper" msgid="849882179182976621">"Параметрлер…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Жок кылуу"</string>
     <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Бул тушкагаз телефонуңуздан өчүрүлсүнбү?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Артка"</string>
@@ -114,6 +114,10 @@
     <string name="lock_screen_tab" msgid="6672930765010407652">"Экранды кулпулоо"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"Башкы экран"</string>
     <string name="reset" msgid="4945445169532850631">"Баштапкы абалга келтирүү"</string>
-    <string name="reset_confirmation_dialog_title" msgid="3006691785800178536">"Чын элеби?"</string>
-    <string name="reset_confirmation_dialog_message" msgid="4304013650135221616">"Ушуну менен бардык өзгөртүүлөр баштапкы абалга келтирилет."</string>
+    <!-- no translation found for reset_confirmation_dialog_title (3391905685838213712) -->
+    <skip />
+    <!-- no translation found for reset_confirmation_dialog_message (888669268626289603) -->
+    <skip />
+    <!-- no translation found for more_wallpapers (8116268433411881705) -->
+    <skip />
 </resources>
