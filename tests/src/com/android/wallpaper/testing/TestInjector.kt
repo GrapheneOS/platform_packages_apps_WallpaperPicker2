@@ -141,7 +141,10 @@ open class TestInjector : Injector {
         return exploreIntentChecker ?: TestExploreIntentChecker().also { exploreIntentChecker = it }
     }
 
-    override fun getIndividualPickerFragment(collectionId: String): IndividualPickerFragment {
+    override fun getIndividualPickerFragment(
+        context: Context,
+        collectionId: String
+    ): IndividualPickerFragment {
         return IndividualPickerFragment.newInstance(collectionId)
     }
 

@@ -145,8 +145,7 @@ open class WallpaperPicker2Injector : Injector {
             }
     }
 
-    @Synchronized
-    override fun getIndividualPickerFragment(collectionId: String): Fragment {
+    override fun getIndividualPickerFragment(context: Context, collectionId: String): Fragment {
         return IndividualPickerFragment.newInstance(collectionId)
     }
 
