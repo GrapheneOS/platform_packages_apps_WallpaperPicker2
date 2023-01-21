@@ -62,7 +62,7 @@ interface Injector {
 
     fun getExploreIntentChecker(context: Context): ExploreIntentChecker
 
-    fun getIndividualPickerFragment(collectionId: String): Fragment
+    fun getIndividualPickerFragment(context: Context, collectionId: String): Fragment
 
     fun getLiveWallpaperInfoFactory(context: Context): LiveWallpaperInfoFactory
 

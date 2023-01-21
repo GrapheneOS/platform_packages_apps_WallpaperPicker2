@@ -109,7 +109,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         // See go/pdr-edge-to-edge-guide.
         WindowCompat.setDecorFitsSystemWindows(getWindow(), isSUWMode(this));
 
-        final boolean isUseRevampedUi = injector.getFlags().isRevampedUiEnabled(this);
+        final boolean isUseRevampedUi = injector.getFlags().isUseRevampedUiEnabled(this);
         final boolean startFromLockScreen = getIntent() == null
                 || !ActivityUtils.isLaunchedFromLauncher(getIntent());
 
@@ -152,7 +152,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
             // Wallpaper Collection deep link case
             switchFragmentWithBackStack(new CategorySelectorFragment());
             switchFragmentWithBackStack(InjectorProvider.getInjector().getIndividualPickerFragment(
-                    deepLinkCollectionId));
+                    this, deepLinkCollectionId));
             intent.setData(null);
         }
         mDelegate.prefetchCategories();
@@ -259,7 +259,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
             return;
         }
         switchFragmentWithBackStack(InjectorProvider.getInjector().getIndividualPickerFragment(
-                category.getCollectionId()));
+                this, category.getCollectionId()));
     }
 
     @Override

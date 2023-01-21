@@ -30,8 +30,14 @@ abstract class BaseFlags {
     open fun isEffectOnMultiplePanelEnabled() = false
     fun isMonochromaticFlagEnabled() =
         SystemProperties.getBoolean("persist.sysui.monochromatic", false)
-    open fun isFullscreenWallpaperPreviewEnabled() = false
-    fun isRevampedUiEnabled(context: Context): Boolean {
+    open fun isFullscreenWallpaperPreviewEnabled(context: Context): Boolean {
+        return runBlocking { getCustomizationProviderClient(context).queryFlags() }
+            .firstOrNull { flag ->
+                flag.name == Contract.FlagsTable.FLAG_NAME_WALLPAPER_FULLSCREEN_PREVIEW
+            }
+            ?.value == true
+    }
+    fun isUseRevampedUiEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag ->
                 flag.name == Contract.FlagsTable.FLAG_NAME_REVAMPED_WALLPAPER_UI
