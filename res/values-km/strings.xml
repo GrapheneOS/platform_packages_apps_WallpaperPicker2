@@ -114,10 +114,7 @@
     <string name="lock_screen_tab" msgid="6672930765010407652">"អេក្រង់ចាក់សោ"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"អេក្រង់ដើម"</string>
     <string name="reset" msgid="4945445169532850631">"កំណត់​ឡើងវិញ"</string>
-    <!-- no translation found for reset_confirmation_dialog_title (3391905685838213712) -->
-    <skip />
-    <!-- no translation found for reset_confirmation_dialog_message (888669268626289603) -->
-    <skip />
-    <!-- no translation found for more_wallpapers (8116268433411881705) -->
-    <skip />
+    <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"កំណត់​ការផ្លាស់ប្ដូរ​ឡើង​វិញឬ?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"ការផ្លាស់ប្ដូររបស់អ្នកនឹងមិនត្រូវបានរក្សាទុកទេ"</string>
+    <string name="more_wallpapers" msgid="8116268433411881705">"ផ្ទាំងរូបភាព​ច្រើនទៀត"</string>
 </resources>
