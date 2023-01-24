@@ -18,8 +18,8 @@ package com.android.wallpaper.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -54,10 +54,10 @@ public final class DuoTabs extends FrameLayout {
         void onTabSelected(@Tab int tab);
     }
 
-    OnTabSelectedListener mOnTabSelectedListener;
-    Button mPrimaryTab;
-    Button mSecondaryTab;
-    @Tab int mCurrentOverlayTab;
+    private OnTabSelectedListener mOnTabSelectedListener;
+    private final TextView mPrimaryTab;
+    private final TextView mSecondaryTab;
+    @Tab private int mCurrentOverlayTab;
 
     /**
      * Constructor
