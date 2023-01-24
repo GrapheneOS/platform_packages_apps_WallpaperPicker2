@@ -114,10 +114,7 @@
     <string name="lock_screen_tab" msgid="6672930765010407652">"Užrakinimo ekranas"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"Pagrindinis ekranas"</string>
     <string name="reset" msgid="4945445169532850631">"Nust. iš n."</string>
-    <!-- no translation found for reset_confirmation_dialog_title (3391905685838213712) -->
-    <skip />
-    <!-- no translation found for reset_confirmation_dialog_message (888669268626289603) -->
-    <skip />
-    <!-- no translation found for more_wallpapers (8116268433411881705) -->
-    <skip />
+    <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Nustatyti pakeitimus iš naujo?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Pakeitimai nebus išsaugoti"</string>
+    <string name="more_wallpapers" msgid="8116268433411881705">"Daugiau darbalaukio fonų"</string>
 </resources>

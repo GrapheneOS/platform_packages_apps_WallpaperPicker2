@@ -47,7 +47,7 @@
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Келечекте тушкагаздар Wi-Fi аркылуу гана жүктөлүп алынсын"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Улантуу"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Биринчи тушкагаз жүктөлүп алынууда…"</string>
-    <string name="start_rotation_error_message" msgid="3053799836719618972">"Биринчи тушкагаз жүктөлүп алынбай жатат. Тармак жөндөөлөрүңүздү текшерип, кайталап көрүңүз."</string>
+    <string name="start_rotation_error_message" msgid="3053799836719618972">"Биринчи тушкагаз жүктөлүп алынбай жатат. Тармак параметрлериңизди текшерип, кайталап көрүңүз."</string>
     <string name="start_rotation_dialog_body" msgid="7903554799046364916">"Тушкагаз күн сайын автоматтык түрдө алмашып турат"</string>
     <string name="settings_button_label" msgid="8724734130079207955">"Параметрлер"</string>
     <string name="explore" msgid="7468719504199497281">"Изилдөө"</string>
@@ -114,10 +114,7 @@
     <string name="lock_screen_tab" msgid="6672930765010407652">"Экранды кулпулоо"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"Башкы экран"</string>
     <string name="reset" msgid="4945445169532850631">"Баштапкы абалга келтирүү"</string>
-    <!-- no translation found for reset_confirmation_dialog_title (3391905685838213712) -->
-    <skip />
-    <!-- no translation found for reset_confirmation_dialog_message (888669268626289603) -->
-    <skip />
-    <!-- no translation found for more_wallpapers (8116268433411881705) -->
-    <skip />
+    <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Өзгөртүүлөр жоюлсунбу?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Өзгөртүүлөрүңүз сакталбайт"</string>
+    <string name="more_wallpapers" msgid="8116268433411881705">"Дагы башка тушкагаздар"</string>
 </resources>
