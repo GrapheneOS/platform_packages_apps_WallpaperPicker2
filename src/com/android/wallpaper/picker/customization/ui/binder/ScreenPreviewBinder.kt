@@ -23,6 +23,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceView
+import android.view.View
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -59,6 +60,13 @@ object ScreenPreviewBinder {
         )
     }
 
+    /**
+     * Binds the view to the given [viewModel].
+     *
+     * Note that if [dimWallpaper] is `true`, the wallpaper will be dimmed (to help highlight
+     * something that is changing on top of the wallpaper, for example, the lock screen shortcuts or
+     * the clock).
+     */
     @JvmStatic
     fun bind(
         activity: Activity,
@@ -66,9 +74,16 @@ object ScreenPreviewBinder {
         viewModel: ScreenPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
         offsetToStart: Boolean,
+        dimWallpaper: Boolean = false,
     ): Binding {
         val workspaceSurface: SurfaceView = previewView.requireViewById(R.id.workspace_surface)
         val wallpaperSurface: SurfaceView = previewView.requireViewById(R.id.wallpaper_surface)
+        wallpaperSurface.setZOrderOnTop(false)
+
+        if (dimWallpaper) {
+            previewView.requireViewById<View>(R.id.wallpaper_dimming_scrim).isVisible = true
+            workspaceSurface.setZOrderOnTop(true)
+        }
 
         previewView.radius =
             previewView.resources.getDimension(R.dimen.wallpaper_picker_entry_card_corner_radius)
@@ -87,7 +102,6 @@ object ScreenPreviewBinder {
                         viewModel.getInitialExtras(),
                     )
                 workspaceSurface.holder.addCallback(previewSurfaceCallback)
-                workspaceSurface.setZOrderMediaOverlay(true)
 
                 wallpaperSurfaceCallback =
                     WallpaperSurfaceCallback(
@@ -112,7 +126,6 @@ object ScreenPreviewBinder {
                         )
                     }
                 wallpaperSurface.holder.addCallback(wallpaperSurfaceCallback)
-                wallpaperSurface.setZOrderMediaOverlay(true)
             }
 
             // Here when destroyed.
