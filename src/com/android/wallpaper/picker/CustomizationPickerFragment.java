@@ -55,7 +55,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
     private static final String TAG = "CustomizationPickerFragment";
     private static final String SCROLL_POSITION_Y = "SCROLL_POSITION_Y";
-    private static final String KEY_IS_USE_REVAMPED_UI = "is_use_revamped_ui";
+    protected static final String KEY_IS_USE_REVAMPED_UI = "is_use_revamped_ui";
     private static final String KEY_START_FROM_LOCK_SCREEN = "start_from_lock_screen";
 
     /** Returns a new instance of {@link CustomizationPickerFragment}. */
