@@ -124,7 +124,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
 
             // Switch to the target fragment.
             switchFragment(isWallpaperOnlyMode(getIntent())
-                    ? new WallpaperOnlyFragment()
+                    ? WallpaperOnlyFragment.newInstance(isUseRevampedUi)
                     : CustomizationPickerFragment.newInstance(
                             isUseRevampedUi, startFromLockScreen));
         }
