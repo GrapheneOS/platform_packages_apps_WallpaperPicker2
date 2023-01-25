@@ -48,10 +48,10 @@
             android:gravity="center"
             android:drawablePadding="12dp"
             android:drawableStart="@drawable/ic_nav_wallpaper"
-            android:drawableTint="@color/color_accent_primary"
+            android:drawableTint="@color/text_color_primary"
             android:text="@string/more_wallpapers"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-            android:textColor="@color/color_accent_primary"
+            android:textColor="@color/text_color_primary"
             tools:ignore="UseCompatTextViewDrawableXml" />
 
     </LinearLayout>
