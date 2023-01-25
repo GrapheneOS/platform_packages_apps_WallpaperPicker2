@@ -22,7 +22,7 @@
     android:orientation="horizontal"
     android:showDividers="middle">
 
-    <Button
+    <TextView
         android:id="@+id/tab_primary"
         android:layout_width="match_parent"
         android:layout_height="@dimen/separated_tabs_height"
@@ -30,7 +30,7 @@
         android:background="@drawable/duo_tabs_button_background"
         android:gravity="center" />
 
-    <Button
+    <TextView
         android:id="@+id/tab_secondary"
         android:layout_width="match_parent"
         android:layout_height="@dimen/separated_tabs_height"
