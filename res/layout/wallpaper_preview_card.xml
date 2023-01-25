@@ -31,6 +31,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- A 30% opacity black scrim that can be shown to "dim" the wallpaper. -->
+    <View
+        android:id="@+id/wallpaper_dimming_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#4d000000"
+        android:visibility="invisible"
+        android:importantForAccessibility="noHideDescendants" />
+
     <SurfaceView
         android:id="@+id/workspace_surface"
         android:layout_width="match_parent"
