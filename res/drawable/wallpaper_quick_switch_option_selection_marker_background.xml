@@ -16,23 +16,22 @@
   -->
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Inner border -->
+    <item>
+        <shape android:shape="rectangle">
+            <stroke
+                android:color="@color/color_surface"
+                android:width="8dp" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+
+    <!-- Outer border -->
     <item>
         <shape android:shape="rectangle">
             <stroke
                 android:color="@color/text_color_primary"
-                android:width="2dp" />
-            <corners android:radius="12dp" />
-        </shape>
-    </item>
-    <item
-        android:start="2dp"
-        android:top="2dp"
-        android:end="2dp"
-        android:bottom="2dp"
-        >
-        <shape android:shape="rectangle">
-            <stroke
-                android:color="@color/text_color_on_accent"
                 android:width="2dp" />
             <corners android:radius="12dp" />
         </shape>
