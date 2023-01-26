@@ -35,20 +35,22 @@ import com.android.wallpaper.R;
 public final class WallpaperControlButtonGroup extends FrameLayout {
 
     public static final int DELETE = 0;
-    public static final int CUSTOMIZE = 1;
-    public static final int EFFECTS = 2;
-    public static final int INFORMATION = 3;
+    public static final int EDIT = 1;
+    public static final int CUSTOMIZE = 2;
+    public static final int EFFECTS = 3;
+    public static final int INFORMATION = 4;
 
     /**
      * Overlay tab
      */
-    @IntDef({DELETE, CUSTOMIZE, EFFECTS, INFORMATION})
+    @IntDef({DELETE, EDIT, CUSTOMIZE, EFFECTS, INFORMATION})
     public @interface WallpaperControlType {
     }
 
     final int[] mFloatingSheetControlButtonTypes = { CUSTOMIZE, EFFECTS, INFORMATION };
 
     ToggleButton mDeleteButton;
+    ToggleButton mEditButton;
     ToggleButton mCustomizeButton;
     ToggleButton mEffectsButton;
     ToggleButton mInformationButton;
@@ -60,6 +62,7 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.wallpaper_control_button_group, this, true);
         mDeleteButton = findViewById(R.id.delete_button);
+        mEditButton = findViewById(R.id.edit_button);
         mCustomizeButton = findViewById(R.id.customize_button);
         mEffectsButton = findViewById(R.id.effects_button);
         mInformationButton = findViewById(R.id.information_button);
@@ -81,6 +84,8 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
         switch (type) {
             case DELETE:
                 return mDeleteButton;
+            case EDIT:
+                return mEditButton;
             case CUSTOMIZE:
                 return mCustomizeButton;
             case EFFECTS:
@@ -115,11 +120,14 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
             return;
         }
         mDeleteButton.setForeground(null);
+        mEditButton.setForeground(null);
         mCustomizeButton.setForeground(null);
         mEffectsButton.setForeground(null);
         mInformationButton.setForeground(null);
         mDeleteButton.setForeground(AppCompatResources.getDrawable(context,
                 R.drawable.wallpaper_control_button_delete));
+        mEditButton.setForeground(
+                AppCompatResources.getDrawable(context, R.drawable.wallpaper_control_button_edit));
         mCustomizeButton.setForeground(AppCompatResources.getDrawable(context,
                 R.drawable.wallpaper_control_button_customize));
         mEffectsButton.setForeground(AppCompatResources.getDrawable(context,

@@ -33,6 +33,17 @@
         android:visibility="gone" />
 
     <ToggleButton
+        android:id="@+id/edit_button"
+        android:layout_width="@dimen/wallpaper_control_button_size"
+        android:layout_height="@dimen/wallpaper_control_button_size"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/edit_live_wallpaper"
+        android:foreground="@drawable/wallpaper_control_button_edit"
+        android:textOff=""
+        android:textOn=""
+        android:visibility="gone" />
+
+    <ToggleButton
         android:id="@+id/customize_button"
         android:layout_width="@dimen/wallpaper_control_button_size"
         android:layout_height="@dimen/wallpaper_control_button_size"
