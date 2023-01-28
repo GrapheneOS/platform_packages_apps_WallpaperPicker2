@@ -207,7 +207,8 @@ public class WallpaperSetter {
             wallpaperManager.setWallpaperOffsets(
                     activity.getWindow().getDecorView().getRootView().getWindowToken(),
                     0.5f /* xOffset */, 0.0f /* yOffset */);
-            mPreferences.storeLatestHomeWallpaper(wallpaper.getWallpaperId(), wallpaper, colors);
+            mPreferences.storeLatestWallpaper(WallpaperPersister.destinationToFlags(destination),
+                    wallpaper.getWallpaperId(), wallpaper, colors);
             onWallpaperApplied(wallpaper, activity);
             if (callback != null) {
                 callback.onSuccess(wallpaper);
@@ -257,8 +258,9 @@ public class WallpaperSetter {
             }
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
             setWallpaperComponent(wallpaperManager, wallpaper, destination);
-            mPreferences.storeLatestHomeWallpaper(wallpaper.getWallpaperId(), wallpaper,
-                    colors != null ? colors :
+            mPreferences.storeLatestWallpaper(WallpaperPersister.destinationToFlags(destination),
+                    wallpaper.getWallpaperId(),
+                    wallpaper, colors != null ? colors :
                             WallpaperColors.fromBitmap(wallpaper.getThumbAsset(context)
                                     .getLowResBitmap(context)));
             // Not call onWallpaperApplied() as no UI is presented.

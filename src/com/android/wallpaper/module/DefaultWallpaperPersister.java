@@ -15,6 +15,9 @@
  */
 package com.android.wallpaper.module;
 
+import static android.app.WallpaperManager.FLAG_LOCK;
+import static android.app.WallpaperManager.FLAG_SYSTEM;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.WallpaperColors;
@@ -467,9 +470,9 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         int wallpaperId = setBitmapToWallpaperManagerCompat(wallpaperBitmap,
                 /* allowBackup */ false, whichWallpaper);
         if (wallpaperId > 0) {
-            mWallpaperPreferences.storeLatestHomeWallpaper(String.valueOf(wallpaperId),
-                    attributions, actionUrl, collectionId, wallpaperBitmap,
-                    WallpaperColors.fromBitmap(wallpaperBitmap));
+            mWallpaperPreferences.storeLatestWallpaper(whichWallpaper,
+                    String.valueOf(wallpaperId), attributions, actionUrl, collectionId,
+                    wallpaperBitmap, WallpaperColors.fromBitmap(wallpaperBitmap));
         }
         return wallpaperId;
     }
@@ -820,7 +823,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setHomeWallpaperCollectionId(
                     mWallpaper.getCollectionId(mAppContext));
             mWallpaperPreferences.setHomeWallpaperRemoteId(mWallpaper.getWallpaperId());
-            mWallpaperPreferences.storeLatestHomeWallpaper(
+            mWallpaperPreferences.storeLatestWallpaper(FLAG_SYSTEM,
                     TextUtils.isEmpty(mWallpaper.getWallpaperId()) ? String.valueOf(bitmapHash)
                             : mWallpaper.getWallpaperId(),
                     mWallpaper, mBitmap, colors);
@@ -843,42 +846,46 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             // because WallpaperManager-generated IDs are specific to a physical device and
             // cannot be  used to identify a wallpaper image on another device after restore is
             // complete.
-            saveLockWallpaperHashCode();
+            Bitmap lockBitmap = getLockWallpaperBitmap();
+            if (lockBitmap != null) {
+                saveLockWallpaperHashCode(lockBitmap);
+                mWallpaperPreferences.storeLatestWallpaper(FLAG_LOCK,
+                        TextUtils.isEmpty(mWallpaper.getWallpaperId())
+                                ? String.valueOf(mWallpaperPreferences.getLockWallpaperHashCode())
+                                : mWallpaper.getWallpaperId(),
+                        mWallpaper, lockBitmap, WallpaperColors.fromBitmap(lockBitmap));
+            }
         }
 
-        private void saveLockWallpaperHashCode() {
-            Bitmap lockBitmap = null;
-
+        private Bitmap getLockWallpaperBitmap() {
             ParcelFileDescriptor parcelFd = mWallpaperManagerCompat.getWallpaperFile(
                     WallpaperManagerCompat.FLAG_LOCK);
 
             if (parcelFd == null) {
-                return;
+                return null;
             }
 
-            InputStream fileStream = null;
-            try {
-                fileStream = new FileInputStream(parcelFd.getFileDescriptor());
-                lockBitmap = BitmapFactory.decodeStream(fileStream);
-                parcelFd.close();
+            try (InputStream fileStream = new FileInputStream(parcelFd.getFileDescriptor())) {
+                return BitmapFactory.decodeStream(fileStream);
             } catch (IOException e) {
-                Log.e(TAG, "IO exception when closing the file descriptor.");
+                Log.e(TAG, "IO exception when closing the file stream.", e);
+                return null;
             } finally {
-                if (fileStream != null) {
-                    try {
-                        fileStream.close();
-                    } catch (IOException e) {
-                        Log.e(TAG,
-                                "IO exception when closing the input stream for the lock screen "
-                                        + "WP.");
-                    }
+                try {
+                    parcelFd.close();
+                } catch (IOException e) {
+                    Log.e(TAG, "IO exception when closing the file descriptor.", e);
                 }
             }
+        }
 
+        private long saveLockWallpaperHashCode(Bitmap lockBitmap) {
             if (lockBitmap != null) {
                 long bitmapHash = BitmapUtils.generateHashCode(lockBitmap);
                 mWallpaperPreferences.setLockWallpaperHashCode(bitmapHash);
+                return bitmapHash;
             }
+            return 0;
         }
     }
 }
