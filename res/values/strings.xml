@@ -313,7 +313,7 @@
     <string name="delete_live_wallpaper">Delete</string>
 
     <!-- Confirmation dialog. Shown after user selects to delete one wallpaper. [CHAR LIMIT=NONE] -->
-    <string name="delete_wallpaper_confirmation">Delete this wallpaper from your phone?</string>
+    <string name="delete_wallpaper_confirmation">Delete this wallpaper from your device?</string>
 
     <!-- Content description of back button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_back">Back</string>
