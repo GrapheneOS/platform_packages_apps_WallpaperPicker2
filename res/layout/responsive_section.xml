@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2022 The Android Open Source Project
+  ~ Copyright (C) 2023 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,23 +15,11 @@
   ~
   -->
 
-<LinearLayout
+<com.android.wallpaper.picker.customization.ui.section.ResponsiveLayoutSectionView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.android.wallpaper.widget.DuoTabs
-        android:id="@+id/duo_tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/tab_container_horizontal_padding"
-        android:paddingVertical="16dp" />
-
-    <include
-        layout="@layout/fragment_customization_picker"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-</LinearLayout>
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/tab_container_horizontal_padding"
+    android:orientation="vertical"
+    android:divider="@drawable/vertical_divider_24dp"
+    android:showDividers="middle" />
