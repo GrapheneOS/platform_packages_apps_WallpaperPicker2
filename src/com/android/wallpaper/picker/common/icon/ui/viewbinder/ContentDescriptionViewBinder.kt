@@ -15,19 +15,20 @@
  *
  */
 
-package com.android.wallpaper.picker.common.text.ui.viewbinder
+package com.android.wallpaper.picker.common.icon.ui.viewbinder
 
-import android.widget.TextView
+import android.widget.ImageView
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 
-object TextViewBinder {
+object ContentDescriptionViewBinder {
     fun bind(
-        view: TextView,
+        view: ImageView,
         viewModel: Text,
     ) {
-        when (viewModel) {
-            is Text.Resource -> view.setText(viewModel.res)
-            is Text.Loaded -> view.text = viewModel.text
-        }
+        view.contentDescription =
+            when (viewModel) {
+                is Text.Resource -> view.context.getString(viewModel.res)
+                is Text.Loaded -> viewModel.text
+            }
     }
 }
