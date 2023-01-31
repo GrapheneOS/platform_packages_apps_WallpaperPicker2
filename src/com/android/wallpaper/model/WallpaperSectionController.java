@@ -434,7 +434,7 @@ public class WallpaperSectionController implements
                 mWallpaperColorsViewModel.getHomeWallpaperColors().getValue())) {
             return;
         }
-        mWallpaperColorsViewModel.getHomeWallpaperColors().setValue(wallpaperColors);
+        mWallpaperColorsViewModel.setHomeWallpaperColors(wallpaperColors);
     }
 
     private void onLockWallpaperColorsChanged(WallpaperColors wallpaperColors) {
@@ -442,7 +442,7 @@ public class WallpaperSectionController implements
                 mWallpaperColorsViewModel.getLockWallpaperColors().getValue())) {
             return;
         }
-        mWallpaperColorsViewModel.getLockWallpaperColors().setValue(wallpaperColors);
+        mWallpaperColorsViewModel.setLockWallpaperColors(wallpaperColors);
         if (mLockScreenPreviewer != null) {
             mLockScreenPreviewer.setColor(wallpaperColors);
         }
