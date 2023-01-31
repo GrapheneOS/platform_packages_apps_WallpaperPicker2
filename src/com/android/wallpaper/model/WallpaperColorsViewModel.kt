@@ -16,19 +16,53 @@
 package com.android.wallpaper.model
 
 import android.app.WallpaperColors
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
-/** ViewModel class to keep track of WallpaperColors for the current wallpaper */
+/**
+ * ViewModel class to keep track of WallpaperColors for the current wallpaper
+ *
+ * TODO (b/262924623): Move into ColorPickerRepositoryImpl
+ */
 class WallpaperColorsViewModel : ViewModel() {
 
-    /** WallpaperColors for the currently set home wallpaper */
-    val homeWallpaperColors: MutableLiveData<WallpaperColors> by lazy {
+    /**
+     * WallpaperColors exposed as live data to allow Java integration
+     *
+     * TODO (b/262924584): Remove after ColorSectionController2 & ColorCustomizationManager refactor
+     */
+    private val _homeWallpaperColorsLiveData: MutableLiveData<WallpaperColors> by lazy {
         MutableLiveData<WallpaperColors>()
     }
-
-    /** WallpaperColors for the currently set lock wallpaper */
-    val lockWallpaperColors: MutableLiveData<WallpaperColors> by lazy {
+    val homeWallpaperColorsLiveData: LiveData<WallpaperColors> = _homeWallpaperColorsLiveData
+    private val _lockWallpaperColorsLiveData: MutableLiveData<WallpaperColors> by lazy {
         MutableLiveData<WallpaperColors>()
+    }
+    val lockWallpaperColorsLiveData: LiveData<WallpaperColors> = _lockWallpaperColorsLiveData
+
+    private val _homeWallpaperColors = MutableStateFlow<WallpaperColors?>(null)
+    /** WallpaperColors for the currently set home wallpaper */
+    val homeWallpaperColors: StateFlow<WallpaperColors?> = _homeWallpaperColors.asStateFlow()
+
+    private val _lockWallpaperColors = MutableStateFlow<WallpaperColors?>(null)
+    /** WallpaperColors for the currently set lock wallpaper */
+    val lockWallpaperColors: StateFlow<WallpaperColors?> = _lockWallpaperColors.asStateFlow()
+
+    fun setHomeWallpaperColors(colors: WallpaperColors?) {
+        _homeWallpaperColors.value = colors
+        if (colors != _homeWallpaperColorsLiveData.value) {
+            _homeWallpaperColorsLiveData.value = colors
+        }
+    }
+
+    fun setLockWallpaperColors(colors: WallpaperColors?) {
+        _lockWallpaperColors.value = colors
+        if (colors != _lockWallpaperColorsLiveData.value) {
+            _lockWallpaperColorsLiveData.value = colors
+        }
     }
 }
