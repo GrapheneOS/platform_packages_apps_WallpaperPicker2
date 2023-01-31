@@ -56,7 +56,7 @@ class ScreenPreviewSectionController(
     private lateinit var lockScreenBinding: ScreenPreviewBinder.Binding
     private lateinit var homeScreenBinding: ScreenPreviewBinder.Binding
 
-    override fun isAvailable(context: Context?): Boolean {
+    override fun isAvailable(context: Context): Boolean {
         // Assumption is that, if this section controller is included, we are using the revamped UI
         // so it should always be shown.
         return true

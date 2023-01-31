@@ -125,8 +125,14 @@ object CustomizationPickerBinder {
                         // Let's add the new controllers and views.
                         newSectionControllers.forEachIndexed { index, controller ->
                             if (firstTime || index > 0) {
-                                val addedView = controller.createView(view.context, isOnLockScreen)
-                                addedView.tag = controller
+                                val addedView =
+                                    controller.createView(
+                                        view.context,
+                                        CustomizationSectionController.ViewCreationParams(
+                                            isOnLockScreen = isOnLockScreen,
+                                        )
+                                    )
+                                addedView?.tag = controller
                                 sectionContainer.addView(addedView)
                             }
                         }
