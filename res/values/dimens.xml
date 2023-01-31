@@ -239,7 +239,7 @@
     <dimen name="wallpaper_effect_failed_button_size">16sp</dimen>
 
     <!-- Clipping of the home screen overlay -->
-    <dimen name="home_screen_overlay_top_clipping">100dp</dimen>
+    <dimen name="home_screen_overlay_top_clipping">90dp</dimen>
     <dimen name="home_screen_overlay_bottom_clipping">40dp</dimen>
 
     <!-- Set wallpaper button -->
