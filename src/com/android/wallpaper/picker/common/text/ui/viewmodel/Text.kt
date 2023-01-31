@@ -17,14 +17,35 @@
 
 package com.android.wallpaper.picker.common.text.ui.viewmodel
 
+import android.content.Context
 import androidx.annotation.StringRes
 
 sealed class Text {
     data class Resource(
-        @StringRes val resource: Int,
+        @StringRes val res: Int,
     ) : Text()
 
     data class Loaded(
         val text: String,
     ) : Text()
+
+    fun asString(context: Context): String {
+        return when (this) {
+            is Resource -> context.getString(res)
+            is Loaded -> text
+        }
+    }
+
+    companion object {
+        /**
+         * Returns `true` if the given [Text] instances evaluate to the values; `false` otherwise.
+         */
+        fun evaluationEquals(
+            context: Context,
+            first: Text?,
+            second: Text?,
+        ): Boolean {
+            return first?.asString(context) == second?.asString(context)
+        }
+    }
 }

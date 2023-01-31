@@ -34,7 +34,7 @@ object IconViewBinder {
         view.contentDescription =
             when (viewModel.contentDescription) {
                 is Text.Resource ->
-                    view.context.getString((viewModel.contentDescription as Text.Resource).resource)
+                    view.context.getString((viewModel.contentDescription as Text.Resource).res)
                 is Text.Loaded -> (viewModel.contentDescription as Text.Loaded).text
                 null -> null
             }
