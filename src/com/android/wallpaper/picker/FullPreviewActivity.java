@@ -19,14 +19,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Slide;
-import android.view.View;
 import android.view.Window;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.android.wallpaper.R;
-import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
@@ -99,26 +97,11 @@ public class FullPreviewActivity extends BasePreviewActivity implements AppbarFr
         return !ActivityUtils.isSUWMode(getBaseContext());
     }
 
-    /**
-     * Implementation that provides an intent to start a PreviewActivity.
-     */
-    public static class PreviewActivityIntentFactory implements InlinePreviewIntentFactory {
-        @Override
-        public Intent newIntent(Context context, WallpaperInfo wallpaper) {
-            return FullPreviewActivity.newIntent(context, wallpaper);
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
         if (isInMultiWindowMode()) {
             onBackPressed();
         }
-        // Hide the navigation bar
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
     }
 }
