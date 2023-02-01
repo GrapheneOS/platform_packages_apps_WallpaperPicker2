@@ -39,6 +39,7 @@ class LargeScreenMultiPanesChecker : MultiPanesChecker {
 
     override fun getMultiPanesIntent(intent: Intent): Intent {
         return Intent(ACTION_SETTINGS_EMBED_DEEP_LINK_ACTIVITY).apply {
+            intent.extras?.let { putExtras(it) }
             putExtra(EXTRA_SETTINGS_EMBEDDED_DEEP_LINK_HIGHLIGHT_MENU_KEY, VALUE_HIGHLIGHT_MENU)
             putExtra(
                 EXTRA_SETTINGS_EMBEDDED_DEEP_LINK_INTENT_URI,
