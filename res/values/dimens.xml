@@ -239,7 +239,7 @@
     <dimen name="wallpaper_effect_failed_button_size">16sp</dimen>
 
     <!-- Clipping of the home screen overlay -->
-    <dimen name="home_screen_overlay_top_clipping">100dp</dimen>
+    <dimen name="home_screen_overlay_top_clipping">90dp</dimen>
     <dimen name="home_screen_overlay_bottom_clipping">40dp</dimen>
 
     <!-- Set wallpaper button -->
@@ -284,4 +284,7 @@
 
     <dimen name="spacing_8dp">8dp</dimen>
     <dimen name="spacing_10dp">10dp</dimen>
+
+    <!-- Horizontal padding around the "duo tabs" at the top of the screen. -->
+    <dimen name="tab_container_horizontal_padding">24dp</dimen>
 </resources>
