@@ -36,12 +36,12 @@ class WallpaperQuickSwitchSectionController(
     private val navigator: CustomizationSectionController.CustomizationSectionNavigationController,
 ) : CustomizationSectionController<WallpaperQuickSwitchView> {
 
-    override fun isAvailable(context: Context?): Boolean {
+    override fun isAvailable(context: Context): Boolean {
         return true
     }
 
     @SuppressLint("InflateParams") // We don't care that the parent is null.
-    override fun createView(context: Context?): WallpaperQuickSwitchView {
+    override fun createView(context: Context): WallpaperQuickSwitchView {
         val view =
             LayoutInflater.from(context)
                 .inflate(
