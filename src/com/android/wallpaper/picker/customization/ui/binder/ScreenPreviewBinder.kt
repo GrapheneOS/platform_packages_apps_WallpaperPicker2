@@ -102,6 +102,9 @@ object ScreenPreviewBinder {
                         viewModel.getInitialExtras(),
                     )
                 workspaceSurface.holder.addCallback(previewSurfaceCallback)
+                if (!dimWallpaper) {
+                    workspaceSurface.setZOrderMediaOverlay(true)
+                }
 
                 wallpaperSurfaceCallback =
                     WallpaperSurfaceCallback(
@@ -126,6 +129,9 @@ object ScreenPreviewBinder {
                         )
                     }
                 wallpaperSurface.holder.addCallback(wallpaperSurfaceCallback)
+                if (!dimWallpaper) {
+                    wallpaperSurface.setZOrderMediaOverlay(true)
+                }
             }
 
             // Here when destroyed.

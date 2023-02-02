@@ -19,12 +19,10 @@ package com.android.wallpaper.picker.customization.ui.section
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.WallpaperColors
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.android.wallpaper.R
 import com.android.wallpaper.model.CustomizationSectionController
@@ -56,7 +54,7 @@ class ScreenPreviewSectionController(
     private lateinit var lockScreenBinding: ScreenPreviewBinder.Binding
     private lateinit var homeScreenBinding: ScreenPreviewBinder.Binding
 
-    override fun isAvailable(context: Context?): Boolean {
+    override fun isAvailable(context: Context): Boolean {
         // Assumption is that, if this section controller is included, we are using the revamped UI
         // so it should always be shown.
         return true
@@ -95,7 +93,7 @@ class ScreenPreviewSectionController(
                                         loadInitialColors(
                                             context = context,
                                             wallpaper = wallpaper,
-                                            liveData = colorViewModel.lockWallpaperColors,
+                                            screen = CustomizationSections.Screen.LOCK_SCREEN,
                                         )
                                         continuation.resume(wallpaper, null)
                                     },
@@ -104,7 +102,7 @@ class ScreenPreviewSectionController(
                             }
                         },
                         onWallpaperColorChanged = { colors ->
-                            colorViewModel.lockWallpaperColors.value = colors
+                            colorViewModel.setLockWallpaperColors(colors)
                         },
                     ),
                 lifecycleOwner = lifecycleOwner,
@@ -132,7 +130,7 @@ class ScreenPreviewSectionController(
                                         loadInitialColors(
                                             context = context,
                                             wallpaper = wallpaper,
-                                            liveData = colorViewModel.homeWallpaperColors,
+                                            screen = CustomizationSections.Screen.HOME_SCREEN
                                         )
                                         continuation.resume(wallpaper, null)
                                     },
@@ -141,7 +139,7 @@ class ScreenPreviewSectionController(
                             }
                         },
                         onWallpaperColorChanged = { colors ->
-                            colorViewModel.lockWallpaperColors.value = colors
+                            colorViewModel.setHomeWallpaperColors(colors)
                         },
                     ),
                 lifecycleOwner = lifecycleOwner,
@@ -166,11 +164,19 @@ class ScreenPreviewSectionController(
     private fun loadInitialColors(
         context: Context,
         wallpaper: WallpaperInfo?,
-        liveData: MutableLiveData<WallpaperColors>,
+        screen: CustomizationSections.Screen,
     ) {
         lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val colors = wallpaper?.computeColorInfo(context)?.get()?.wallpaperColors
-            withContext(Dispatchers.Main) { liveData.value = colors }
+            withContext(Dispatchers.Main) {
+                if (colors != null) {
+                    if (screen == CustomizationSections.Screen.LOCK_SCREEN) {
+                        colorViewModel.setLockWallpaperColors(colors)
+                    } else {
+                        colorViewModel.setHomeWallpaperColors(colors)
+                    }
+                }
+            }
         }
     }
 }
