@@ -16,7 +16,6 @@
 package com.android.wallpaper.config
 
 import android.content.Context
-import android.os.SystemProperties
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
 import com.android.systemui.shared.customization.data.content.CustomizationProviderContract as Contract
@@ -28,8 +27,6 @@ abstract class BaseFlags {
     open fun isStagingBackdropContentEnabled() = false
     open fun isWallpaperEffectEnabled() = false
     open fun isEffectOnMultiplePanelEnabled() = false
-    fun isMonochromaticFlagEnabled() =
-        SystemProperties.getBoolean("persist.sysui.monochromatic", false)
     open fun isFullscreenWallpaperPreviewEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag ->
@@ -49,6 +46,11 @@ abstract class BaseFlags {
             .firstOrNull { flag ->
                 flag.name == Contract.FlagsTable.FLAG_NAME_CUSTOM_CLOCKS_ENABLED
             }
+            ?.value == true
+    }
+    fun isMonochromaticThemeEnabled(context: Context): Boolean {
+        return runBlocking { getCustomizationProviderClient(context).queryFlags() }
+            .firstOrNull { flag -> flag.name == Contract.FlagsTable.FLAG_NAME_MONOCHROMATIC_THEME }
             ?.value == true
     }
     private fun getCustomizationProviderClient(context: Context): CustomizationProviderClient {
