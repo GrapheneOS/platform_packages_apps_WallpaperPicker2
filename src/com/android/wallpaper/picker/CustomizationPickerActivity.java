@@ -138,6 +138,12 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
 
         final Intent intent = getIntent();
         final String navigationDestination = intent.getStringExtra(EXTRA_DESTINATION);
+        // Consume the destination and commit the intent back so the OS doesn't revert to the same
+        // destination when we change color or wallpaper (which causes the activity to be
+        // recreated).
+        intent.removeExtra(EXTRA_DESTINATION);
+        setIntent(intent);
+
         final String deepLinkCollectionId = DeepLinkUtils.getCollectionId(intent);
 
         if (!TextUtils.isEmpty(navigationDestination)) {
