@@ -30,9 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
 import com.android.wallpaper.model.CustomizationSectionController
-import com.android.wallpaper.model.WallpaperSectionController
 import com.android.wallpaper.picker.SectionView
-import com.android.wallpaper.picker.customization.ui.section.ScreenPreviewSectionController
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel
 import com.android.wallpaper.picker.undo.ui.binder.RevertToolbarButtonBinder
 import kotlinx.coroutines.launch
@@ -87,12 +85,10 @@ object CustomizationPickerBinder {
                                 it.isAvailable(view.context)
                             }
 
-                        check(
-                            newSectionControllers[0] is WallpaperSectionController ||
-                                newSectionControllers[0] is ScreenPreviewSectionController
-                        ) {
-                            "The first section must always be the preview or the assumption below" +
-                                " must be updated."
+                        check(newSectionControllers[0].shouldRetainInstanceWhenSwitchingTabs()) {
+                            "We are not recreating the first section when the users switching" +
+                                " between the home screen and lock screen tab. The first" +
+                                " section should always retain."
                         }
 
                         val firstTime = sectionContainer.childCount == 0

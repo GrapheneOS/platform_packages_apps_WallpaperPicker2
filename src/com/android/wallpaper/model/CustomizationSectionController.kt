@@ -45,6 +45,15 @@ interface CustomizationSectionController<T : SectionView> {
         val isConnectedHorizontallyToOtherSections: Boolean = false,
     )
 
+    /**
+     * It means that the creation of the controller can be expensive and we should avoid recreation
+     * in conditions like the user switching between the home and lock screen.
+     */
+    @JvmDefault
+    fun shouldRetainInstanceWhenSwitchingTabs(): Boolean {
+        return false
+    }
+
     /** Returns `true` if the customization section is available. */
     fun isAvailable(context: Context): Boolean
 
