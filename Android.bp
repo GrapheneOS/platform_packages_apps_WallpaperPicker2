@@ -29,6 +29,7 @@ android_library {
         "androidx.cardview_cardview",
         "androidx-constraintlayout_constraintlayout",
         "androidx.exifinterface_exifinterface",
+	"androidx.lifecycle_lifecycle-livedata-ktx",
         "androidx.lifecycle_lifecycle-runtime-ktx",
         "androidx.recyclerview_recyclerview",
         "androidx.slice_slice-view",
