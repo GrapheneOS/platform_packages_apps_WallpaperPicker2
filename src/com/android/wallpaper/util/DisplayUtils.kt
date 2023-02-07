@@ -45,6 +45,10 @@ class DisplayUtils(context: Context) {
         internalDisplays = allDisplays.filter { it.type == Display.TYPE_INTERNAL }
     }
 
+    fun hasMultiInternalDisplays(): Boolean {
+        return internalDisplays.size > 1
+    }
+
     /** Returns the {@link Display} to be used to calculate wallpaper size and cropping. */
     fun getWallpaperDisplay(): Display {
         return internalDisplays.maxWithOrNull { a, b -> getRealSize(a) - getRealSize(b) }
