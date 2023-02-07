@@ -156,6 +156,11 @@ public class WallpaperSectionController implements
     }
 
     @Override
+    public boolean shouldRetainInstanceWhenSwitchingTabs() {
+        return true;
+    }
+
+    @Override
     public boolean isAvailable(Context context) {
         return true;
     }
