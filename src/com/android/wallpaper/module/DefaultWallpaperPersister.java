@@ -451,7 +451,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         int offsetY = Math.max(0, -(screenSize.y / 2 - scaledCenter.y));
 
         Rect cropRect = WallpaperCropUtils.calculateCropRect(mAppContext, minWallpaperZoom,
-                wallpaperSize, defaultCropSurfaceSize, screenSize, offsetX, offsetY);
+                wallpaperSize, defaultCropSurfaceSize, screenSize, offsetX,
+                offsetY, /* cropExtraWidth= */ true);
 
         Rect scaledCropRect = new Rect(
                 (int) Math.floor((float) cropRect.left / minWallpaperZoom),
