@@ -42,7 +42,7 @@ import kotlinx.coroutines.withContext
 
 /** Controls the screen preview section. */
 @OptIn(ExperimentalCoroutinesApi::class)
-class ScreenPreviewSectionController(
+open class ScreenPreviewSectionController(
     private val activity: Activity,
     private val lifecycleOwner: LifecycleOwner,
     private val initialScreen: CustomizationSections.Screen,
@@ -53,6 +53,10 @@ class ScreenPreviewSectionController(
 
     private lateinit var lockScreenBinding: ScreenPreviewBinder.Binding
     private lateinit var homeScreenBinding: ScreenPreviewBinder.Binding
+
+    override fun shouldRetainInstanceWhenSwitchingTabs(): Boolean {
+        return true
+    }
 
     override fun isAvailable(context: Context): Boolean {
         // Assumption is that, if this section controller is included, we are using the revamped UI
