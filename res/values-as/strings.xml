@@ -84,7 +84,7 @@
     <string name="my_photos" msgid="8613021349284084982">"মোৰ ফট’"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"ছেটিংসমূহ…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"মচক"</string>
-    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"এই ৱালপেপাৰখন আপোনাৰ ফ’নটোৰ পৰা মচিবনে?"</string>
+    <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"আপোনাৰ ডিভাইচটোৰ পৰা এই ৱালপেপাৰখন মচিবনে?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"উভতি যাওক"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"সম্পাদনা কৰক"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"ডাউনল’ড কৰক"</string>
