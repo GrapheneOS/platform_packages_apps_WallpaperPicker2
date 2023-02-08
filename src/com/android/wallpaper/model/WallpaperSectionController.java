@@ -46,6 +46,7 @@ import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.OnLifecycleEvent;
 
 import com.android.wallpaper.R;
@@ -104,7 +105,7 @@ public class WallpaperSectionController implements
     private final LifecycleOwner mLifecycleOwner;
     private final PermissionRequester mPermissionRequester;
     private final WallpaperColorsViewModel mWallpaperColorsViewModel;
-    private final WorkspaceViewModel mWorkspaceViewModel;
+    @Nullable private final LiveData<Boolean> mOnThemingChanged;
     private final CustomizationSectionNavigationController mSectionNavigationController;
     private final WallpaperPreviewNavigator mWallpaperPreviewNavigator;
     private final Bundle mSavedInstanceState;
@@ -112,7 +113,7 @@ public class WallpaperSectionController implements
 
     public WallpaperSectionController(Activity activity, LifecycleOwner lifecycleOwner,
             PermissionRequester permissionRequester, WallpaperColorsViewModel colorsViewModel,
-            WorkspaceViewModel workspaceViewModel,
+            @Nullable LiveData<Boolean> onThemingChanged,
             CustomizationSectionNavigationController sectionNavigationController,
             WallpaperPreviewNavigator wallpaperPreviewNavigator,
             Bundle savedInstanceState,
@@ -122,7 +123,7 @@ public class WallpaperSectionController implements
         mPermissionRequester = permissionRequester;
         mAppContext = mActivity.getApplicationContext();
         mWallpaperColorsViewModel = colorsViewModel;
-        mWorkspaceViewModel = workspaceViewModel;
+        mOnThemingChanged = onThemingChanged;
         mSectionNavigationController = sectionNavigationController;
         mWallpaperPreviewNavigator = wallpaperPreviewNavigator;
         mSavedInstanceState = savedInstanceState;
@@ -223,10 +224,12 @@ public class WallpaperSectionController implements
         wallpaperSectionView.findViewById(R.id.wallpaper_picker_entry).setOnClickListener(
                 v -> mSectionNavigationController.navigateTo(new CategorySelectorFragment()));
 
-        mWorkspaceViewModel.getUpdateWorkspace().observe(mLifecycleOwner, update ->
-                updateWorkspacePreview(mWorkspaceSurface, mWorkspaceSurfaceCallback,
-                        mWallpaperColorsViewModel.getHomeWallpaperColors().getValue())
-        );
+        if (mOnThemingChanged != null) {
+            mOnThemingChanged.observe(mLifecycleOwner, update ->
+                    updateWorkspacePreview(mWorkspaceSurface, mWorkspaceSurfaceCallback,
+                            mWallpaperColorsViewModel.getHomeWallpaperColors().getValue())
+            );
+        }
 
         return wallpaperSectionView;
     }
