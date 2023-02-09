@@ -35,7 +35,6 @@ import com.android.wallpaper.model.CustomizationSectionController.CustomizationS
 import com.android.wallpaper.model.PermissionRequester;
 import com.android.wallpaper.model.WallpaperColorsViewModel;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
-import com.android.wallpaper.model.WorkspaceViewModel;
 import com.android.wallpaper.module.CustomizationSections;
 import com.android.wallpaper.module.FragmentFactory;
 import com.android.wallpaper.module.Injector;
@@ -280,8 +279,6 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
         WallpaperColorsViewModel wcViewModel = new ViewModelProvider(getActivity())
                 .get(WallpaperColorsViewModel.class);
-        WorkspaceViewModel workspaceViewModel = new ViewModelProvider(getActivity())
-                .get(WorkspaceViewModel.class);
         WallpaperQuickSwitchViewModel wallpaperQuickSwitchViewModel = new ViewModelProvider(
                 getActivity(),
                 WallpaperQuickSwitchViewModel.newFactory(
@@ -296,7 +293,6 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                     getActivity(),
                     getViewLifecycleOwner(),
                     wcViewModel,
-                    workspaceViewModel,
                     getPermissionRequester(),
                     getWallpaperPreviewNavigator(),
                     this,
@@ -308,7 +304,6 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                     getActivity(),
                     getViewLifecycleOwner(),
                     wcViewModel,
-                    workspaceViewModel,
                     getPermissionRequester(),
                     getWallpaperPreviewNavigator(),
                     this,
