@@ -115,9 +115,13 @@ object WallpaperQuickSwitchSectionBinder {
         // One option is always large, the rest are small.
         val numberOfSmallOptions = optionCount - 1
         val smallOptionWidth =
-            (remainingSpaceForSmallOptions / numberOfSmallOptions).coerceAtMost(
-                parent.dimensionResource(R.dimen.wallpaper_quick_switch_max_option_width)
-            )
+            if (numberOfSmallOptions != 0) {
+                (remainingSpaceForSmallOptions / numberOfSmallOptions).coerceAtMost(
+                    parent.dimensionResource(R.dimen.wallpaper_quick_switch_max_option_width)
+                )
+            } else {
+                0
+            }
 
         return Pair(largeOptionWidth, smallOptionWidth)
     }
