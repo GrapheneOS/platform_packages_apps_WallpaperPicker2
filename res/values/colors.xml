@@ -51,6 +51,7 @@
     <color name="color_surface">@color/settingslib_colorSurface</color>
     <color name="color_surface_variant">@color/settingslib_colorSurfaceVariant</color>
     <color name="text_color_primary">@color/settingslib_text_color_primary</color>
+    <color name="text_color_primary_inverse">@android:color/system_neutral1_900</color>
     <color name="text_color_secondary">@color/settingslib_text_color_secondary</color>
     <color name="text_color_secondary_inverse">@color/settingslib_text_color_secondary_device_default</color>
 </resources>
