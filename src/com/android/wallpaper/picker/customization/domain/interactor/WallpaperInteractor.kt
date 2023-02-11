@@ -21,7 +21,6 @@ import android.graphics.Bitmap
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
-import javax.inject.Provider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -29,7 +28,6 @@ import kotlinx.coroutines.flow.map
 /** Handles business logic for wallpaper-related use-cases. */
 class WallpaperInteractor(
     private val repository: WallpaperRepository,
-    private val snapshotRestorer: Provider<WallpaperSnapshotRestorer>,
 ) {
     /** Returns the ID of the currently-selected wallpaper. */
     fun selectedWallpaperId(
@@ -80,12 +78,6 @@ class WallpaperInteractor(
             destination = destination,
             wallpaperId = wallpaperId,
         )
-        snapshotRestorer
-            .get()
-            .storeSnapshot(
-                destination = destination,
-                selectedWallpaperId = wallpaperId,
-            )
     }
 
     /** Returns a thumbnail for the wallpaper with the given ID. */
