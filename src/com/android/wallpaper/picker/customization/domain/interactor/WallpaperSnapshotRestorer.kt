@@ -21,49 +21,25 @@ import com.android.wallpaper.picker.customization.shared.model.WallpaperDestinat
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotRestorer
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotStore
 import com.android.wallpaper.picker.undo.shared.model.RestorableSnapshot
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.launch
 
 /** Stores and restores undo snapshots for wallpaper state. */
 class WallpaperSnapshotRestorer(
+    private val scope: CoroutineScope,
     private val interactor: WallpaperInteractor,
 ) : SnapshotRestorer {
 
     private lateinit var store: SnapshotStore
 
-    fun storeSnapshot(
-        destination: WallpaperDestination,
-        selectedWallpaperId: String,
-    ) {
-        val previousSnapshot = store.retrieve()
-        val nextSnapshot =
-            previousSnapshot.copy { args ->
-                args[destination.toSnapshotKey()] = selectedWallpaperId
-            }
-        store.store(nextSnapshot)
-    }
-
     override suspend fun setUpSnapshotRestorer(
         store: SnapshotStore,
     ): RestorableSnapshot {
         this.store = store
-        val snapshot =
-            RestorableSnapshot(
-                args =
-                    buildMap {
-                        put(
-                            SELECTED_HOME_SCREEN_WALLPAPER_ID,
-                            interactor
-                                .selectedWallpaperId(destination = WallpaperDestination.HOME)
-                                .value,
-                        )
-                        put(
-                            SELECTED_LOCK_SCREEN_WALLPAPER_ID,
-                            interactor
-                                .selectedWallpaperId(destination = WallpaperDestination.LOCK)
-                                .value,
-                        )
-                    }
-            )
-        return snapshot
+        startObserving()
+        return snapshot()
     }
 
     override suspend fun restoreToSnapshot(
@@ -86,12 +62,46 @@ class WallpaperSnapshotRestorer(
         }
     }
 
-    private fun WallpaperDestination.toSnapshotKey(): String {
-        return when (this) {
-            WallpaperDestination.HOME -> SELECTED_HOME_SCREEN_WALLPAPER_ID
-            WallpaperDestination.LOCK -> SELECTED_LOCK_SCREEN_WALLPAPER_ID
-            else -> error("Unsupported screen type \"$this\"!")
+    private fun startObserving() {
+        scope.launch {
+            combine(
+                    interactor.selectedWallpaperId(destination = WallpaperDestination.HOME),
+                    interactor.selectedWallpaperId(destination = WallpaperDestination.LOCK),
+                    ::Pair,
+                )
+                .drop(1) // We skip the first value because it's the same as the initial.
+                .collect { (homeWallpaperId, lockWallpaperId) ->
+                    store.store(
+                        snapshot(
+                            homeWallpaperId,
+                            lockWallpaperId,
+                        )
+                    )
+                }
         }
+    }
+
+    private fun snapshot(
+        homeWallpaperId: String = querySelectedWallpaperId(destination = WallpaperDestination.HOME),
+        lockWallpaperId: String = querySelectedWallpaperId(destination = WallpaperDestination.LOCK),
+    ): RestorableSnapshot {
+        return RestorableSnapshot(
+            args =
+                buildMap {
+                    put(
+                        SELECTED_HOME_SCREEN_WALLPAPER_ID,
+                        homeWallpaperId,
+                    )
+                    put(
+                        SELECTED_LOCK_SCREEN_WALLPAPER_ID,
+                        lockWallpaperId,
+                    )
+                }
+        )
+    }
+
+    private fun querySelectedWallpaperId(destination: WallpaperDestination): String {
+        return interactor.selectedWallpaperId(destination = destination).value
     }
 
     companion object {
