@@ -31,7 +31,10 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
 
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -47,6 +50,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.UserEventLogger;
@@ -55,9 +59,11 @@ import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.testing.TestAsset;
 import com.android.wallpaper.testing.TestExploreIntentChecker;
 import com.android.wallpaper.testing.TestInjector;
+import com.android.wallpaper.testing.TestLiveWallpaperInfo;
+import com.android.wallpaper.testing.TestStaticWallpaperInfo;
 import com.android.wallpaper.testing.TestUserEventLogger;
-import com.android.wallpaper.testing.TestWallpaperInfo;
 import com.android.wallpaper.testing.TestWallpaperPersister;
+import com.android.wallpaper.testing.TestWallpaperStatusChecker;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.WallpaperCropUtils;
 
@@ -83,11 +89,14 @@ public class PreviewActivityTest {
     private static final float FLOAT_ERROR_MARGIN = 0.001f;
     private static final String ACTION_URL = "http://google.com";
 
-    private TestWallpaperInfo mMockWallpaper;
+    private TestStaticWallpaperInfo mTestStaticWallpaper;
+    private TestLiveWallpaperInfo mTestLiveWallpaper;
     private Injector mInjector;
     private TestWallpaperPersister mWallpaperPersister;
     private TestUserEventLogger mEventLogger;
     private TestExploreIntentChecker mExploreIntentChecker;
+    private TestWallpaperStatusChecker mWallpaperStatusChecker;
+    private WallpaperManager mWallpaperManager;
 
     @Rule
     public ActivityTestRule<PreviewActivity> mActivityRule =
@@ -101,21 +110,30 @@ public class PreviewActivityTest {
 
         Intents.init();
 
-        mMockWallpaper = new TestWallpaperInfo(TestWallpaperInfo.COLOR_DEFAULT);
         List<String> attributions = new ArrayList<>();
         attributions.add("Title");
         attributions.add("Subtitle 1");
         attributions.add("Subtitle 2");
-        mMockWallpaper.setAttributions(attributions);
-        mMockWallpaper.setCollectionId("collection");
-        mMockWallpaper.setWallpaperId("wallpaper");
-        mMockWallpaper.setActionUrl(ACTION_URL);
+        mTestStaticWallpaper = new TestStaticWallpaperInfo(TestStaticWallpaperInfo.COLOR_DEFAULT);
+        mTestStaticWallpaper.setAttributions(attributions);
+        mTestStaticWallpaper.setCollectionId("collectionStatic");
+        mTestStaticWallpaper.setWallpaperId("wallpaperStatic");
+        mTestStaticWallpaper.setActionUrl(ACTION_URL);
+
+        mTestLiveWallpaper = new TestLiveWallpaperInfo(TestStaticWallpaperInfo.COLOR_DEFAULT);
+        mTestLiveWallpaper.setAttributions(attributions);
+        mTestLiveWallpaper.setCollectionId("collectionLive");
+        mTestLiveWallpaper.setWallpaperId("wallpaperLive");
+        mTestLiveWallpaper.setActionUrl(ACTION_URL);
 
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         mWallpaperPersister = (TestWallpaperPersister) mInjector.getWallpaperPersister(context);
         mEventLogger = (TestUserEventLogger) mInjector.getUserEventLogger(context);
         mExploreIntentChecker = (TestExploreIntentChecker)
                 mInjector.getExploreIntentChecker(context);
+        mWallpaperStatusChecker = (TestWallpaperStatusChecker)
+                mInjector.getWallpaperStatusChecker();
+        mWallpaperManager = WallpaperManager.getInstance(context);
     }
 
     @After
@@ -124,9 +142,9 @@ public class PreviewActivityTest {
         mActivityRule.finishActivity();
     }
 
-    private void launchActivityIntentWithMockWallpaper() {
+    private void launchActivityIntentWithWallpaper(WallpaperInfo wallpaperInfo) {
         Intent intent = PreviewActivity.newIntent(
-                InstrumentationRegistry.getInstrumentation().getTargetContext(), mMockWallpaper);
+                InstrumentationRegistry.getInstrumentation().getTargetContext(), wallpaperInfo);
         intent.putExtra(BasePreviewActivity.EXTRA_TESTING_MODE_ENABLED, true);
 
         mActivityRule.launchActivity(intent);
@@ -164,13 +182,13 @@ public class PreviewActivityTest {
 
     @Test
     public void testRendersWallpaperDrawableFromIntent() {
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         assertTrue(getFullResImageView(mActivityRule.getActivity()).hasImage());
     }
 
     @Test
     public void testClickSetWallpaper_Success_HomeScreen() {
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         assertNull(mWallpaperPersister.getCurrentHomeWallpaper());
 
         onView(withId(R.id.action_apply)).perform(click());
@@ -183,7 +201,7 @@ public class PreviewActivityTest {
         finishSettingWallpaperThenDo(() -> {
             // Mock system wallpaper bitmap should be equal to the mock WallpaperInfo's bitmap.
             Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-            Bitmap srcBitmap = ((TestAsset) mMockWallpaper.getAsset(context)).getBitmap();
+            Bitmap srcBitmap = ((TestAsset) mTestStaticWallpaper.getAsset(context)).getBitmap();
             assertTrue(srcBitmap.sameAs(mWallpaperPersister.getCurrentHomeWallpaper()));
 
             // The wallpaper should have been set on the home screen.
@@ -199,7 +217,7 @@ public class PreviewActivityTest {
 
     @Test
     public void testClickSetWallpaper_Success_LockScreen() {
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         assertNull(mWallpaperPersister.getCurrentLockWallpaper());
 
         onView(withId(R.id.action_apply)).perform(click());
@@ -212,7 +230,7 @@ public class PreviewActivityTest {
         finishSettingWallpaperThenDo(() -> {
             // Mock system wallpaper bitmap should be equal to the mock WallpaperInfo's bitmap.
             Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-            Bitmap srcBitmap = ((TestAsset) mMockWallpaper.getAsset(context)).getBitmap();
+            Bitmap srcBitmap = ((TestAsset) mTestStaticWallpaper.getAsset(context)).getBitmap();
             assertTrue(srcBitmap.sameAs(mWallpaperPersister.getCurrentLockWallpaper()));
 
             // The wallpaper should have been set on the lock screen.
@@ -228,7 +246,7 @@ public class PreviewActivityTest {
 
     @Test
     public void testClickSetWallpaper_Success_BothHomeAndLockScreen() {
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         assertNull(mWallpaperPersister.getCurrentHomeWallpaper());
         assertNull(mWallpaperPersister.getCurrentLockWallpaper());
 
@@ -243,7 +261,7 @@ public class PreviewActivityTest {
         finishSettingWallpaperThenDo(() -> {
             // Mock system wallpaper bitmap should be equal to the mock WallpaperInfo's bitmap.
             Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-            Bitmap srcBitmap = ((TestAsset) mMockWallpaper.getAsset(context)).getBitmap();
+            Bitmap srcBitmap = ((TestAsset) mTestStaticWallpaper.getAsset(context)).getBitmap();
             assertTrue(srcBitmap.sameAs(mWallpaperPersister.getCurrentHomeWallpaper()));
             assertTrue(srcBitmap.sameAs(mWallpaperPersister.getCurrentLockWallpaper()));
 
@@ -259,7 +277,7 @@ public class PreviewActivityTest {
 
     @Test
     public void testClickSetWallpaper_Fails_HomeScreen_ShowsErrorDialog() {
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         assertNull(mWallpaperPersister.getCurrentHomeWallpaper());
 
         mWallpaperPersister.setFailNextCall(true);
@@ -285,7 +303,7 @@ public class PreviewActivityTest {
             finishSettingWallpaperThenDo(() -> {
                 assertNotNull(mWallpaperPersister.getCurrentHomeWallpaper());
                 Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-                Bitmap srcBitmap = ((TestAsset) mMockWallpaper.getAsset(context)).getBitmap();
+                Bitmap srcBitmap = ((TestAsset) mTestStaticWallpaper.getAsset(context)).getBitmap();
                 assertTrue(srcBitmap.sameAs(mWallpaperPersister.getCurrentHomeWallpaper()));
 
                 // The wallpaper should have been set on the home screen.
@@ -297,7 +315,7 @@ public class PreviewActivityTest {
 
     @Test
     public void testClickSetWallpaper_Fails_LockScreen_ShowsErrorDialog() {
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         assertNull(mWallpaperPersister.getCurrentLockWallpaper());
 
         mWallpaperPersister.setFailNextCall(true);
@@ -327,7 +345,7 @@ public class PreviewActivityTest {
                 Bitmap newBitmap = mWallpaperPersister.getCurrentLockWallpaper();
                 assertNotNull(newBitmap);
                 Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-                Bitmap srcBitmap = ((TestAsset) mMockWallpaper.getAsset(context)).getBitmap();
+                Bitmap srcBitmap = ((TestAsset) mTestStaticWallpaper.getAsset(context)).getBitmap();
                 assertTrue(srcBitmap.sameAs(newBitmap));
 
                 // The wallpaper should have been set on the lock screen.
@@ -339,7 +357,7 @@ public class PreviewActivityTest {
 
     @Test
     public void testClickSetWallpaper_Fails_BothHomeAndLock_ShowsErrorDialog() {
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         assertNull(mWallpaperPersister.getCurrentHomeWallpaper());
         assertNull(mWallpaperPersister.getCurrentLockWallpaper());
 
@@ -368,7 +386,7 @@ public class PreviewActivityTest {
                 assertNotNull(mWallpaperPersister.getCurrentHomeWallpaper());
                 assertNotNull(mWallpaperPersister.getCurrentLockWallpaper());
                 Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-                Bitmap srcBitmap = ((TestAsset) mMockWallpaper.getAsset(context)).getBitmap();
+                Bitmap srcBitmap = ((TestAsset) mTestStaticWallpaper.getAsset(context)).getBitmap();
                 assertTrue(srcBitmap.sameAs(mWallpaperPersister.getCurrentHomeWallpaper()));
                 assertTrue(srcBitmap.sameAs(mWallpaperPersister.getCurrentLockWallpaper()));
 
@@ -382,7 +400,7 @@ public class PreviewActivityTest {
     @Test
     @Ignore("b/248538709")
     public void testClickSetWallpaper_CropsAndScalesWallpaper() {
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         // Scale should not have a meaningful value before clicking "set wallpaper".
         assertTrue(mWallpaperPersister.getScale() < 0);
 
@@ -410,7 +428,7 @@ public class PreviewActivityTest {
 
     @Test
     public void testClickSetWallpaper_FailsCroppingAndScalingWallpaper_ShowsErrorDialog() {
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         mWallpaperPersister.setFailNextCall(true);
         onView(withId(R.id.action_apply)).perform(click());
         // Destination dialog is shown; click "Home screen".
@@ -427,9 +445,35 @@ public class PreviewActivityTest {
      */
     @Test
     public void testClickSetWallpaper_ShowsDestinationDialog() {
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         onView(withId(R.id.action_apply)).perform(click());
         onView(withText(R.string.set_wallpaper_dialog_message)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testDestinationOptions_singleEngine_setLive_doesNotShowLockOption() {
+        assumeFalse(mWallpaperManager.isLockscreenLiveWallpaperEnabled());
+        launchActivityIntentWithWallpaper(mTestLiveWallpaper);
+        mWallpaperStatusChecker.setHomeStaticWallpaperSet(true);
+        mWallpaperStatusChecker.setLockWallpaperSet(false);
+
+        onView(withId(R.id.action_apply)).perform(click());
+
+        onView(withText(R.string.set_wallpaper_lock_screen_destination)).inRoot(isDialog())
+                .check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void testDestinationOptions_multiEngine_setLive_showsLockOption() {
+        assumeTrue(mWallpaperManager.isLockscreenLiveWallpaperEnabled());
+        launchActivityIntentWithWallpaper(mTestLiveWallpaper);
+        mWallpaperStatusChecker.setHomeStaticWallpaperSet(true);
+        mWallpaperStatusChecker.setLockWallpaperSet(false);
+
+        onView(withId(R.id.action_apply)).perform(click());
+
+        onView(withText(R.string.set_wallpaper_lock_screen_destination)).inRoot(isDialog())
+                .check(matches(isDisplayed()));
     }
 
     @Test
@@ -439,7 +483,7 @@ public class PreviewActivityTest {
         int expectedWallpaperScrollX;
         int expectedWallpaperScrollY;
 
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         PreviewActivity activity = mActivityRule.getActivity();
         SubsamplingScaleImageView fullResImageView = getFullResImageView(activity);
 
@@ -447,7 +491,7 @@ public class PreviewActivityTest {
                 activity.getResources(), activity.getWindowManager().getDefaultDisplay());
         Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(
                 activity.getWindowManager().getDefaultDisplay());
-        TestAsset asset = (TestAsset) mMockWallpaper.getAsset(activity);
+        TestAsset asset = (TestAsset) mTestStaticWallpaper.getAsset(activity);
         Point wallpaperSize = new Point(asset.getBitmap().getWidth(),
                 asset.getBitmap().getHeight());
 
@@ -479,7 +523,7 @@ public class PreviewActivityTest {
 
     @Test
     public void testShowSetWallpaperDialog_TemporarilyLocksScreenOrientation() {
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         PreviewActivity activity = mActivityRule.getActivity();
         assertNotEquals(ActivityInfo.SCREEN_ORIENTATION_LOCKED, activity.getRequestedOrientation());
 
@@ -496,7 +540,7 @@ public class PreviewActivityTest {
 
     @Test
     public void testSetWallpaper_TemporarilyLocksScreenOrientation() {
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         PreviewActivity activity = mActivityRule.getActivity();
         assertNotEquals(ActivityInfo.SCREEN_ORIENTATION_LOCKED, activity.getRequestedOrientation());
 
@@ -515,7 +559,7 @@ public class PreviewActivityTest {
 
     @Test
     public void testShowsWallpaperAttribution() {
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         PreviewActivity activity = mActivityRule.getActivity();
 
         TextView titleView = activity.findViewById(R.id.wallpaper_info_title);
@@ -535,8 +579,8 @@ public class PreviewActivityTest {
     @Test
     public void testLoadWallpaper_Failed_ShowsErrorDialog() {
         // Simulate a corrupted asset that fails to perform decoding operations.
-        mMockWallpaper.corruptAssets();
-        launchActivityIntentWithMockWallpaper();
+        mTestStaticWallpaper.corruptAssets();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
 
         onView(withText(R.string.load_wallpaper_error_message)).inRoot(isDialog()).check(
                 matches(isDisplayed()));
@@ -554,7 +598,7 @@ public class PreviewActivityTest {
     public void testNoActionViewHandler_ExploreButtonNotVisible() {
         mExploreIntentChecker.setViewHandlerExists(false);
 
-        launchActivityIntentWithMockWallpaper();
+        launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         onView(withId(R.id.wallpaper_info_explore_button)).check(
                 matches(not(isDisplayed())));
     }
