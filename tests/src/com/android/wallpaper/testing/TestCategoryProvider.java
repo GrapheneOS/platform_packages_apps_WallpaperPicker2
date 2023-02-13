@@ -39,7 +39,7 @@ public class TestCategoryProvider implements CategoryProvider {
                 0 /* priority */);
 
         ArrayList<WallpaperInfo> wallpapers = new ArrayList<>();
-        WallpaperInfo wallpaperInfo = new com.android.wallpaper.testing.TestWallpaperInfo(0);
+        WallpaperInfo wallpaperInfo = new TestStaticWallpaperInfo(0);
         wallpapers.add(wallpaperInfo);
         Category category2 = new com.android.wallpaper.testing.TestWallpaperCategory(
                 "Test category", "init_collection", wallpapers,

@@ -197,11 +197,13 @@ public class WallpaperSetter {
             // wallpaper and restore after setting the wallpaper finishes.
             saveAndLockScreenOrientationIfNeeded(activity);
 
-            if (destination == WallpaperPersister.DEST_LOCK_SCREEN) {
-                throw new IllegalArgumentException(
-                        "Live wallpaper cannot be applied on lock screen only");
-            }
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(activity);
+            if (destination == WallpaperPersister.DEST_LOCK_SCREEN
+                    && !wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
+                throw new IllegalArgumentException(
+                    "Live wallpaper cannot be applied on lock screen only");
+            }
+
             setWallpaperComponent(wallpaperManager, wallpaper, destination);
             wallpaperManager.setWallpaperOffsetSteps(0.5f /* xStep */, 0.0f /* yStep */);
             wallpaperManager.setWallpaperOffsets(
@@ -234,7 +236,8 @@ public class WallpaperSetter {
             wallpaperManager.setWallpaperComponent(
                     wallpaper.getWallpaperComponent().getComponent());
         }
-        if (destination == WallpaperPersister.DEST_BOTH) {
+        if (!wallpaperManager.isLockscreenLiveWallpaperEnabled()
+                && destination == WallpaperPersister.DEST_BOTH) {
             wallpaperManager.clear(FLAG_LOCK);
         }
     }
@@ -355,6 +358,15 @@ public class WallpaperSetter {
             }
         };
 
+        WallpaperManager wallpaperManager = WallpaperManager.getInstance(activity);
+        SetWallpaperDialogFragment setWallpaperDialog = new SetWallpaperDialogFragment();
+        setWallpaperDialog.setTitleResId(titleResId);
+        setWallpaperDialog.setListener(listenerWrapper);
+        if (wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
+            setWallpaperDialog.show(fragmentManager, TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
+            return;
+        }
+
         WallpaperStatusChecker wallpaperStatusChecker =
                 InjectorProvider.getInjector().getWallpaperStatusChecker();
         boolean isLiveWallpaperSet =
@@ -363,9 +375,6 @@ public class WallpaperSetter {
         boolean isBuiltIn = !isLiveWallpaperSet
                 && !wallpaperStatusChecker.isHomeStaticWallpaperSet(activity);
 
-        SetWallpaperDialogFragment setWallpaperDialog = new SetWallpaperDialogFragment();
-        setWallpaperDialog.setTitleResId(titleResId);
-        setWallpaperDialog.setListener(listenerWrapper);
         if ((isLiveWallpaperSet || isBuiltIn)
                 && !wallpaperStatusChecker.isLockWallpaperSet(activity)) {
             if (isLiveWallpaper) {
