@@ -272,7 +272,6 @@ open class TestInjector : Injector {
                             client = WallpaperClientImpl(context = context),
                             backgroundDispatcher = Dispatchers.IO,
                         ),
-                    snapshotRestorer = { getWallpaperSnapshotRestorer(context) },
                 )
                 .also { wallpaperInteractor = it }
     }
@@ -280,6 +279,7 @@ open class TestInjector : Injector {
     override fun getWallpaperSnapshotRestorer(context: Context): WallpaperSnapshotRestorer {
         return wallpaperSnapshotRestorer
             ?: WallpaperSnapshotRestorer(
+                    scope = GlobalScope,
                     interactor = getWallpaperInteractor(context),
                 )
                 .also { wallpaperSnapshotRestorer = it }
