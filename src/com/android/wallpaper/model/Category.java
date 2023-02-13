@@ -154,6 +154,13 @@ public abstract class Category {
         return false;
     }
 
+    /**
+     * Returns whether this category supports content that can be added or removed dynamically.
+     */
+    public boolean supportsWallpaperSetUpdates() {
+        return false;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Category)) return false;
