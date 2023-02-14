@@ -39,11 +39,9 @@ class FakeWallpaperClient : WallpaperClient {
     private var deferred = mutableListOf<(suspend () -> Unit)>()
 
     fun setRecentWallpapers(
-        destination: WallpaperDestination,
-        recentWallpapers: List<WallpaperModel>,
+        recentWallpapersByDestination: Map<WallpaperDestination, List<WallpaperModel>>,
     ) {
-        _recentWallpapers.value =
-            _recentWallpapers.value.toMutableMap().apply { this[destination] = recentWallpapers }
+        _recentWallpapers.value = recentWallpapersByDestination
     }
 
     fun pause() {
