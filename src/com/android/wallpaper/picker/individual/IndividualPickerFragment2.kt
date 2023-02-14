@@ -466,7 +466,7 @@ class IndividualPickerFragment2 :
     }
 
     override fun onPause() {
-        shouldReloadWallpapers = category.supportsWallpaperSetUpdates()
+        shouldReloadWallpapers = category?.supportsWallpaperSetUpdates() ?: false
         super.onPause()
     }
 
