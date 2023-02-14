@@ -80,7 +80,6 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
     private BottomActionBar mBottomActionBar;
     private boolean mIsSafeToCommitFragmentTransaction;
     @Nullable private UndoInteractor mUndoInteractor;
-    private boolean mIsUseRevampedUi;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,7 +109,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         // See go/pdr-edge-to-edge-guide.
         WindowCompat.setDecorFitsSystemWindows(getWindow(), isSUWMode(this));
 
-        mIsUseRevampedUi = injector.getFlags().isUseRevampedUiEnabled(this);
+        final boolean isUseRevampedUi = injector.getFlags().isUseRevampedUiEnabled(this);
         final boolean startFromLockScreen = getIntent() == null
                 || !ActivityUtils.isLaunchedFromLauncher(getIntent());
 
@@ -125,9 +124,9 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
 
             // Switch to the target fragment.
             switchFragment(isWallpaperOnlyMode(getIntent())
-                    ? WallpaperOnlyFragment.newInstance(mIsUseRevampedUi)
+                    ? WallpaperOnlyFragment.newInstance(isUseRevampedUi)
                     : CustomizationPickerFragment.newInstance(
-                            mIsUseRevampedUi, startFromLockScreen));
+                            isUseRevampedUi, startFromLockScreen));
         }
 
         if (savedInstanceState == null) {
@@ -344,15 +343,6 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         if (mDelegate.handleActivityResult(requestCode, resultCode, data)) {
             if (isSUWMode(this)) {
                 finishActivityForSUW();
-            } else if (mIsUseRevampedUi) {
-                // We don't finish in the revamped UI to let the user have a chance to reset the
-                // change they made, should they want to. We do, however, remove all the fragments
-                // from our back stack to reveal the root fragment, revealing the main screen of the
-                // app.
-                final FragmentManager fragmentManager = getSupportFragmentManager();
-                while (fragmentManager.getBackStackEntryCount() > 0) {
-                    fragmentManager.popBackStackImmediate();
-                }
             } else {
                 finishActivityWithResultOk();
             }
