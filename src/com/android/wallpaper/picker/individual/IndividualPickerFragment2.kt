@@ -110,17 +110,18 @@ class IndividualPickerFragment2 :
 
     private lateinit var imageGrid: RecyclerView
     private var adapter: IndividualAdapter? = null
-    private lateinit var category: WallpaperCategory
+    private var category: WallpaperCategory? = null
     private var wallpaperRotationInitializer: WallpaperRotationInitializer? = null
     private lateinit var items: MutableList<PickerItem>
     private var packageStatusNotifier: PackageStatusNotifier? = null
-
     private var isWallpapersReceived = false
-    private var appStatusListener: PackageStatusNotifier.Listener? = null
 
+    private var appStatusListener: PackageStatusNotifier.Listener? = null
     private var progressDialog: ProgressDialog? = null
+
     private var testingMode = false
     private var loading: ContentLoadingProgressBar? = null
+    private var shouldReloadWallpapers = false
     private lateinit var categoryProvider: CategoryProvider
 
     /**
@@ -178,14 +179,14 @@ class IndividualPickerFragment2 :
                         return
                     }
                     category = fetchedCategory as WallpaperCategory
-                    onCategoryLoaded()
+                    category?.let { onCategoryLoaded(it) }
                 }
             },
             false
         )
     }
 
-    fun onCategoryLoaded() {
+    fun onCategoryLoaded(category: Category) {
         val fragmentHost = getIndividualPickerFragmentHost()
         if (fragmentHost.isHostToolbarShown) {
             fragmentHost.setToolbarTitle(category.title)
@@ -219,7 +220,7 @@ class IndividualPickerFragment2 :
         isWallpapersReceived = false
         updateLoading()
         val context = requireContext()
-        category.fetchWallpapers(
+        category?.fetchWallpapers(
             context.applicationContext,
             { fetchedWallpapers ->
                 isWallpapersReceived = true
@@ -298,7 +299,7 @@ class IndividualPickerFragment2 :
             if (isRotationEnabled()) {
                 setUpToolbarMenu(R.menu.individual_picker_menu)
             }
-            setTitle(category.title)
+            setTitle(category?.title)
         }
         imageGrid = view.findViewById<View>(R.id.wallpaper_grid) as RecyclerView
         loading = view.findViewById(R.id.loading_indicator)
@@ -333,7 +334,7 @@ class IndividualPickerFragment2 :
             return
         }
         // Skip if category hasn't loaded yet
-        if (!this::category.isInitialized) {
+        if (category == null) {
             return
         }
         if (context == null) {
@@ -370,7 +371,7 @@ class IndividualPickerFragment2 :
             } else {
                 SizeCalculator.getIndividualTileSize(activity!!)
             }
-        setUpImageGrid(tileSizePx)
+        setUpImageGrid(tileSizePx, checkNotNull(category))
         imageGrid.setAccessibilityDelegateCompat(
             WallpaperPickerRecyclerViewAccessibilityDelegate(
                 imageGrid,
@@ -413,7 +414,7 @@ class IndividualPickerFragment2 :
      * Create the adapter and assign it to mImageGrid. Both mImageGrid and mCategory are guaranteed
      * to not be null when this method is called.
      */
-    private fun setUpImageGrid(tileSizePx: Point) {
+    private fun setUpImageGrid(tileSizePx: Point, category: Category) {
         adapter =
             IndividualAdapter(
                 items,
@@ -457,8 +458,16 @@ class IndividualPickerFragment2 :
                 parentFragmentManager,
                 TAG_START_ROTATION_ERROR_DIALOG
             )
+            if (isWallpapersReceived && shouldReloadWallpapers) {
+                fetchWallpapers(true)
+            }
         }
         stagedStartRotationErrorDialogFragment = null
+    }
+
+    override fun onPause() {
+        shouldReloadWallpapers = category?.supportsWallpaperSetUpdates() ?: false
+        super.onPause()
     }
 
     override fun onDestroyView() {
@@ -498,7 +507,7 @@ class IndividualPickerFragment2 :
 
     override fun startRotation(@NetworkPreference networkPreference: Int) {
         if (!isRotationEnabled()) {
-            Log.e(TAG, "Rotation is not enabled for this category " + category.title)
+            Log.e(TAG, "Rotation is not enabled for this category " + category?.title)
             return
         }
 
