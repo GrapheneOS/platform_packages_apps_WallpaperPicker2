@@ -31,18 +31,18 @@ import java.util.List;
 /**
  * Test model object for a wallpaper coming from local drawable resources.
  */
-public class TestWallpaperInfo extends WallpaperInfo {
+public class TestStaticWallpaperInfo extends WallpaperInfo {
     public static final int COLOR_DEFAULT = 0xff000000;
-    public static final Parcelable.Creator<TestWallpaperInfo> CREATOR =
-            new Parcelable.Creator<TestWallpaperInfo>() {
+    public static final Parcelable.Creator<TestStaticWallpaperInfo> CREATOR =
+            new Parcelable.Creator<TestStaticWallpaperInfo>() {
                 @Override
-                public TestWallpaperInfo createFromParcel(Parcel in) {
-                    return new TestWallpaperInfo(in);
+                public TestStaticWallpaperInfo createFromParcel(Parcel in) {
+                    return new TestStaticWallpaperInfo(in);
                 }
 
                 @Override
-                public TestWallpaperInfo[] newArray(int size) {
-                    return new TestWallpaperInfo[size];
+                public TestStaticWallpaperInfo[] newArray(int size) {
+                    return new TestStaticWallpaperInfo[size];
                 }
             };
     private int mPixelColor;
@@ -58,12 +58,12 @@ public class TestWallpaperInfo extends WallpaperInfo {
     private int mBackupPermission;
 
     /** Constructs a test WallpaperInfo object representing a 1x1 wallpaper of the given color. */
-    public TestWallpaperInfo(int pixelColor) {
+    public TestStaticWallpaperInfo(int pixelColor) {
         this(pixelColor, "test-wallpaper");
     }
 
     /** Constructs a test WallpaperInfo object representing a 1x1 wallpaper of the given color. */
-    public TestWallpaperInfo(int pixelColor, String id) {
+    public TestStaticWallpaperInfo(int pixelColor, String id) {
         mPixelColor = pixelColor;
         mAttributions = Arrays.asList("Test wallpaper");
         mWallpaperComponent = null;
@@ -72,7 +72,7 @@ public class TestWallpaperInfo extends WallpaperInfo {
         mWallpaperId = id;
     }
 
-    private TestWallpaperInfo(Parcel in) {
+    private TestStaticWallpaperInfo(Parcel in) {
         super(in);
         mPixelColor = in.readInt();
         mAttributions = in.createStringArrayList();
@@ -185,10 +185,9 @@ public class TestWallpaperInfo extends WallpaperInfo {
 
     /**
      * Simulates that the {@link Asset} instances returned by calls to #getAsset and #getThumbAsset
-     * on
-     * this object are "corrupt" and will fail to perform decode operations such as #decodeBitmap,
-     * #decodeBitmapRegion, #decodeRawDimensions, etc (these methods will call their callbacks with
-     * null instead of meaningful objects).
+     * on this object are "corrupt" and will fail to perform decode operations such as
+     * #decodeBitmap, #decodeBitmapRegion, #decodeRawDimensions, etc (these methods will call their
+     * callbacks with null instead of meaningful objects).
      */
     public void corruptAssets() {
         mIsAssetCorrupt = true;
@@ -217,8 +216,8 @@ public class TestWallpaperInfo extends WallpaperInfo {
         if (object == this) {
             return true;
         }
-        if (object instanceof TestWallpaperInfo) {
-            return mPixelColor == ((TestWallpaperInfo) object).mPixelColor;
+        if (object instanceof TestStaticWallpaperInfo) {
+            return mPixelColor == ((TestStaticWallpaperInfo) object).mPixelColor;
         }
         return false;
     }

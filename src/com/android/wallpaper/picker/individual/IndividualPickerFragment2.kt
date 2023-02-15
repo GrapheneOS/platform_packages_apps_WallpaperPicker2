@@ -114,13 +114,14 @@ class IndividualPickerFragment2 :
     private var wallpaperRotationInitializer: WallpaperRotationInitializer? = null
     private lateinit var items: MutableList<PickerItem>
     private var packageStatusNotifier: PackageStatusNotifier? = null
-
     private var isWallpapersReceived = false
-    private var appStatusListener: PackageStatusNotifier.Listener? = null
 
+    private var appStatusListener: PackageStatusNotifier.Listener? = null
     private var progressDialog: ProgressDialog? = null
+
     private var testingMode = false
     private var loading: ContentLoadingProgressBar? = null
+    private var shouldReloadWallpapers = false
     private lateinit var categoryProvider: CategoryProvider
 
     /**
@@ -457,8 +458,16 @@ class IndividualPickerFragment2 :
                 parentFragmentManager,
                 TAG_START_ROTATION_ERROR_DIALOG
             )
+            if (isWallpapersReceived && shouldReloadWallpapers) {
+                fetchWallpapers(true)
+            }
         }
         stagedStartRotationErrorDialogFragment = null
+    }
+
+    override fun onPause() {
+        shouldReloadWallpapers = category?.supportsWallpaperSetUpdates() ?: false
+        super.onPause()
     }
 
     override fun onDestroyView() {
