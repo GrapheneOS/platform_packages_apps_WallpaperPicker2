@@ -67,7 +67,7 @@ class SecureSettingsRepositoryImpl(
                     }
 
                 contentResolver.registerContentObserver(
-                    Settings.Secure.getUriFor(Settings.Secure.LOCK_SCREEN_SHOW_NOTIFICATIONS),
+                    Settings.Secure.getUriFor(name),
                     /* notifyForDescendants= */ false,
                     observer,
                 )
