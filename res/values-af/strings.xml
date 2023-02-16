@@ -116,6 +116,5 @@
     <string name="reset" msgid="4945445169532850631">"Stel terug"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Stel veranderinge terug?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Jou veranderinge sal nie gestoor word nie"</string>
-    <!-- no translation found for more_wallpapers (7585665124282737376) -->
-    <skip />
+    <string name="more_wallpapers" msgid="7585665124282737376">"Nog muurpapiere"</string>
 </resources>
