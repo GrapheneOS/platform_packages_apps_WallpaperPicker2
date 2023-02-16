@@ -312,6 +312,9 @@
     <!-- List item for deleting the current wallpaper [CHAR LIMIT=30] -->
     <string name="delete_live_wallpaper">Delete</string>
 
+    <!-- List item for editing the current wallpaper [CHAR LIMIT=NONE] -->
+    <string name="edit_live_wallpaper">Edit</string>
+
     <!-- Confirmation dialog. Shown after user selects to delete one wallpaper. [CHAR LIMIT=NONE] -->
     <string name="delete_wallpaper_confirmation">Delete this wallpaper from your device?</string>
 
