@@ -287,4 +287,7 @@
 
     <!-- Horizontal padding around the "duo tabs" at the top of the screen. -->
     <dimen name="tab_container_horizontal_padding">24dp</dimen>
+
+    <!-- Size for option items. -->
+    <dimen name="option_item_size">74dp</dimen>
 </resources>
