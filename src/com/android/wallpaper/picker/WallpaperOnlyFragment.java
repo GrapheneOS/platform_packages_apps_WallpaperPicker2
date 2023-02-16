@@ -42,11 +42,11 @@ public class WallpaperOnlyFragment extends CustomizationPickerFragment {
     }
 
     @Override
-    protected List<CustomizationSectionController<?>> getAvailableSections(
+    protected List<CustomizationSectionController<?>> filterAvailableSections(
             List<CustomizationSectionController<?>> controllers) {
         List<CustomizationSectionController<?>> wallpaperOnlySections = controllers.stream()
                 .filter(controller -> controller instanceof WallpaperSectionController)
                 .collect(Collectors.toList());
-        return super.getAvailableSections(wallpaperOnlySections);
+        return super.filterAvailableSections(wallpaperOnlySections);
     }
 }
