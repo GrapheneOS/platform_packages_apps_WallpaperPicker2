@@ -23,7 +23,6 @@ import androidx.fragment.app.Fragment
 import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.EffectsController
-import com.android.wallpaper.effects.EffectsController.EffectsServiceListener
 import com.android.wallpaper.model.CategoryProvider
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.monitor.PerformanceMonitor
@@ -58,7 +57,7 @@ interface Injector {
 
     fun getDrawableLayerResolver(): DrawableLayerResolver
 
-    fun getEffectsController(context: Context, listener: EffectsServiceListener): EffectsController?
+    fun getEffectsController(context: Context): EffectsController?
 
     fun getExploreIntentChecker(context: Context): ExploreIntentChecker
 
