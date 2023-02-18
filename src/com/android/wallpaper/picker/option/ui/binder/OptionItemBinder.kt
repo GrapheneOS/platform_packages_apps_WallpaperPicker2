@@ -25,6 +25,7 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.PathInterpolator
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -64,6 +65,7 @@ object OptionItemBinder {
      * @param viewModel The view-model.
      * @param lifecycleOwner The [LifecycleOwner].
      * @param animationSpec The specification for the animation.
+     * @param foregroundTintSpec The specification of how to tint the foreground icons.
      * @return A [DisposableHandle] that must be invoked when the view is recycled.
      */
     fun bind(
@@ -71,6 +73,7 @@ object OptionItemBinder {
         viewModel: OptionItemViewModel,
         lifecycleOwner: LifecycleOwner,
         animationSpec: AnimationSpec = AnimationSpec(),
+        foregroundTintSpec: TintSpec? = null,
     ): DisposableHandle {
         val borderView: View = view.requireViewById(R.id.selection_border)
         val backgroundView: View = view.requireViewById(R.id.background)
@@ -132,6 +135,18 @@ object OptionItemBinder {
                                 viewModel.isSelected
                             }
                             .collect { isSelected ->
+                                if (foregroundTintSpec != null) {
+                                    if (isSelected) {
+                                        foregroundView.setColorFilter(
+                                            foregroundTintSpec.selectedColor
+                                        )
+                                    } else {
+                                        foregroundView.setColorFilter(
+                                            foregroundTintSpec.unselectedColor
+                                        )
+                                    }
+                                }
+
                                 animatedSelection(
                                     animationSpec = animationSpec,
                                     borderView = borderView,
@@ -271,6 +286,11 @@ object OptionItemBinder {
         val disabledAlpha: Float = 0.3f,
         /** Duration of the animation, in milliseconds. */
         val durationMs: Long = 333L,
+    )
+
+    data class TintSpec(
+        @ColorInt val selectedColor: Int,
+        @ColorInt val unselectedColor: Int,
     )
 
     private fun View.scale(scale: Float) {
