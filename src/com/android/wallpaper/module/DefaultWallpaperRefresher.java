@@ -29,6 +29,7 @@ import android.util.Log;
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.BitmapUtils;
 import com.android.wallpaper.compat.WallpaperManagerCompat;
+import com.android.wallpaper.model.LiveWallpaperMetadata;
 import com.android.wallpaper.model.WallpaperMetadata;
 
 import java.io.FileInputStream;
@@ -103,10 +104,7 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
             boolean isLockScreenWallpaperCurrentlySet = mWallpaperStatusChecker.isLockWallpaperSet(
                     mAppContext);
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
-                    || !isLockScreenWallpaperCurrentlySet) {
-
-                // Return only home metadata if pre-N device or lock screen wallpaper is not explicitly set.
+            if (mWallpaperManager.getWallpaperInfo() == null) {
                 wallpaperMetadatas.add(new WallpaperMetadata(
                         mWallpaperPreferences.getHomeWallpaperAttributions(),
                         mWallpaperPreferences.getHomeWallpaperActionUrl(),
@@ -114,7 +112,16 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                         mWallpaperPreferences.getHomeWallpaperActionIconRes(),
                         mWallpaperPreferences.getHomeWallpaperCollectionId(),
                         mWallpaperPreferences.getHomeWallpaperBackingFileName(),
-                        mWallpaperManager.getWallpaperInfo()));
+                        null));
+            } else {
+                wallpaperMetadatas.add(
+                        new LiveWallpaperMetadata(mWallpaperManager.getWallpaperInfo()));
+            }
+
+            // Return only home metadata if pre-N device or lock screen wallpaper is not explicitly
+            // set.
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
+                    || !isLockScreenWallpaperCurrentlySet) {
                 return wallpaperMetadatas;
             }
 
@@ -123,23 +130,19 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                 setFallbackLockScreenWallpaperMetadata();
             }
 
-            wallpaperMetadatas.add(new WallpaperMetadata(
-                    mWallpaperPreferences.getHomeWallpaperAttributions(),
-                    mWallpaperPreferences.getHomeWallpaperActionUrl(),
-                    mWallpaperPreferences.getHomeWallpaperActionLabelRes(),
-                    mWallpaperPreferences.getHomeWallpaperActionIconRes(),
-                    mWallpaperPreferences.getHomeWallpaperCollectionId(),
-                    mWallpaperPreferences.getHomeWallpaperBackingFileName(),
-                    mWallpaperManager.getWallpaperInfo()));
-
-            wallpaperMetadatas.add(new WallpaperMetadata(
-                    mWallpaperPreferences.getLockWallpaperAttributions(),
-                    mWallpaperPreferences.getLockWallpaperActionUrl(),
-                    mWallpaperPreferences.getLockWallpaperActionLabelRes(),
-                    mWallpaperPreferences.getLockWallpaperActionIconRes(),
-                    mWallpaperPreferences.getLockWallpaperCollectionId(),
-                    mWallpaperPreferences.getLockWallpaperBackingFileName(),
-                    null /* wallpaperComponent */));
+            if (mWallpaperManager.getWallpaperInfo(WallpaperManager.FLAG_LOCK) == null) {
+                wallpaperMetadatas.add(new WallpaperMetadata(
+                        mWallpaperPreferences.getLockWallpaperAttributions(),
+                        mWallpaperPreferences.getLockWallpaperActionUrl(),
+                        mWallpaperPreferences.getLockWallpaperActionLabelRes(),
+                        mWallpaperPreferences.getLockWallpaperActionIconRes(),
+                        mWallpaperPreferences.getLockWallpaperCollectionId(),
+                        mWallpaperPreferences.getLockWallpaperBackingFileName(),
+                        null));
+            } else {
+                wallpaperMetadatas.add(new LiveWallpaperMetadata(
+                        mWallpaperManager.getWallpaperInfo(WallpaperManager.FLAG_LOCK)));
+            }
 
             return wallpaperMetadatas;
         }
