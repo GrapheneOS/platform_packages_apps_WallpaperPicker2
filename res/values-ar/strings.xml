@@ -84,6 +84,8 @@
     <string name="my_photos" msgid="8613021349284084982">"صوري"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"الإعدادات…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"حذف"</string>
+    <!-- no translation found for edit_live_wallpaper (3132060073690558045) -->
+    <skip />
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"هل تريد حذف هذه الخلفية من جهازك؟"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"رجوع"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"تعديل"</string>
@@ -116,6 +118,5 @@
     <string name="reset" msgid="4945445169532850631">"إعادة الضبط"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"هل تريد إعادة ضبط التغييرات؟"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"لن يتم حفظ تغييراتك."</string>
-    <!-- no translation found for more_wallpapers (7585665124282737376) -->
-    <skip />
+    <string name="more_wallpapers" msgid="7585665124282737376">"المزيد من الخلفيات"</string>
 </resources>
