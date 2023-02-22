@@ -26,31 +26,22 @@ import android.view.Display
  * Utility class to provide methods to find and obtain information about displays via {@link
  * DisplayManager}
  */
-class DisplayUtils(context: Context) {
+class DisplayUtils(private val context: Context) {
     companion object {
         private const val TAG = "DisplayUtils"
     }
 
-    private val internalDisplays: List<Display>
-
-    init {
-        val appContext = context.applicationContext
-        val dm = appContext.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-        val allDisplays: Array<out Display> =
-            dm.getDisplays(DisplayManager.DISPLAY_CATEGORY_ALL_INCLUDING_DISABLED)
-        if (allDisplays.isEmpty()) {
-            Log.e(TAG, "No displays found on context $appContext")
-            throw RuntimeException("No displays found!")
-        }
-        internalDisplays = allDisplays.filter { it.type == Display.TYPE_INTERNAL }
+    private val displayManager: DisplayManager by lazy {
+        context.applicationContext.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
     }
 
     fun hasMultiInternalDisplays(): Boolean {
-        return internalDisplays.size > 1
+        return getInternalDisplays().size > 1
     }
 
     /** Returns the {@link Display} to be used to calculate wallpaper size and cropping. */
     fun getWallpaperDisplay(): Display {
+        val internalDisplays = getInternalDisplays()
         return internalDisplays.maxWithOrNull { a, b -> getRealSize(a) - getRealSize(b) }
             ?: internalDisplays[0]
     }
@@ -62,12 +53,22 @@ class DisplayUtils(context: Context) {
      * display device the only display is both the wallpaper display and the current display.
      */
     fun isOnWallpaperDisplay(activity: Activity): Boolean {
-        return activity.display.displayId == getWallpaperDisplay().displayId
+        return activity.display.uniqueId == getWallpaperDisplay().uniqueId
     }
 
     private fun getRealSize(display: Display): Int {
         val p = Point()
         display.getRealSize(p)
         return p.x * p.y
+    }
+
+    private fun getInternalDisplays(): List<Display> {
+        val allDisplays: Array<out Display> =
+            displayManager.getDisplays(DisplayManager.DISPLAY_CATEGORY_ALL_INCLUDING_DISABLED)
+        if (allDisplays.isEmpty()) {
+            Log.e(TAG, "No displays found on context ${context.applicationContext}")
+            throw RuntimeException("No displays found!")
+        }
+        return allDisplays.filter { it.type == Display.TYPE_INTERNAL }
     }
 }
