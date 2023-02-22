@@ -34,6 +34,13 @@
 
     <include layout="@layout/wallpaper_preview" />
 
+    <View
+        android:id="@+id/preview_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/wallpaper_preview_scrim_color"
+        android:importantForAccessibility="noHideDescendants" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -54,6 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:background="@drawable/set_wallpaper_button_background"
+            android:elevation="@dimen/wallpaper_preview_buttons_elevation"
             android:gravity="center"
             android:text="@string/set_wallpaper_button_text"
             android:textColor="@color/text_color_on_accent"
@@ -67,6 +75,7 @@
             android:layout_width="@dimen/wallpaper_control_button_size"
             android:layout_height="@dimen/wallpaper_control_button_size"
             android:layout_marginEnd="@dimen/wallpaper_control_button_group_margin_end"
+            android:elevation="@dimen/wallpaper_preview_buttons_elevation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/toolbar"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar"
