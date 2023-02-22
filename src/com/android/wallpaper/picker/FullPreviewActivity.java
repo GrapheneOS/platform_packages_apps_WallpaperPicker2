@@ -17,6 +17,7 @@ package com.android.wallpaper.picker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.view.Window;
@@ -29,6 +30,7 @@ import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
 import com.android.wallpaper.util.ActivityUtils;
+import com.android.wallpaper.util.DisplayUtils;
 
 /**
  * Activity that displays a full preview of a specific wallpaper and provides the ability to set the
@@ -100,6 +102,10 @@ public class FullPreviewActivity extends BasePreviewActivity implements AppbarFr
     @Override
     protected void onResume() {
         super.onResume();
+        DisplayUtils displayUtils = InjectorProvider.getInjector().getDisplayUtils(this);
+        int orientation = displayUtils.isOnWallpaperDisplay(this)
+                ? ActivityInfo.SCREEN_ORIENTATION_USER : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        setRequestedOrientation(orientation);
         if (isInMultiWindowMode()) {
             onBackPressed();
         }

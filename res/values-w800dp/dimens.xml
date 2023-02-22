@@ -62,5 +62,5 @@
 
     <!-- Clipping of the home screen overlay -->
     <dimen name="home_screen_overlay_top_clipping">0dp</dimen>
-    <dimen name="home_screen_overlay_bottom_clipping">110dp</dimen>
+    <dimen name="home_screen_overlay_bottom_clipping">80dp</dimen>
 </resources>
