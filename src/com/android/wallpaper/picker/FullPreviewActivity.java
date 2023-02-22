@@ -43,7 +43,7 @@ public class FullPreviewActivity extends BasePreviewActivity implements AppbarFr
      */
     public static Intent newIntent(Context packageContext, WallpaperInfo wallpaperInfo) {
         Intent intent = new Intent(packageContext, FullPreviewActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra(EXTRA_WALLPAPER_INFO, wallpaperInfo);
         return intent;
     }
