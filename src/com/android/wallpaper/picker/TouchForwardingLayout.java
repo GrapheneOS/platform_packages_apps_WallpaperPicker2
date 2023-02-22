@@ -17,6 +17,7 @@ package com.android.wallpaper.picker;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -26,13 +27,22 @@ public class TouchForwardingLayout extends FrameLayout {
 
     private View mView;
     private boolean mForwardingEnabled;
+    private GestureDetector mGestureDetector;
 
     public TouchForwardingLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mGestureDetector = new GestureDetector(context,
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onSingleTapConfirmed(MotionEvent e) {
+                        return performClick();
+                    }
+                });
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        mGestureDetector.onTouchEvent(ev);
         if (mView != null && mForwardingEnabled) {
             mView.dispatchTouchEvent(ev);
         }
