@@ -38,6 +38,7 @@ class OptionItemAdapter(
     @LayoutRes private val layoutResourceId: Int,
     private val lifecycleOwner: LifecycleOwner,
     private val backgroundDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val foregroundTintSpec: OptionItemBinder.TintSpec? = null,
 ) : RecyclerView.Adapter<OptionItemAdapter.ViewHolder>() {
 
     private val items = mutableListOf<OptionItemViewModel>()
@@ -113,6 +114,7 @@ class OptionItemAdapter(
                 view = holder.itemView,
                 viewModel = item,
                 lifecycleOwner = lifecycleOwner,
+                foregroundTintSpec = foregroundTintSpec,
             )
     }
 }
