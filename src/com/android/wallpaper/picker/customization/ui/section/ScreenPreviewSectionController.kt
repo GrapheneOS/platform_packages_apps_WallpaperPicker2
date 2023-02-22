@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.cardview.widget.CardView
+import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.android.systemui.shared.clocks.shared.model.ClockPreviewConstants
@@ -34,6 +35,7 @@ import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.CategorySelectorFragment
+import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.ui.binder.ScreenPreviewBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
@@ -54,6 +56,7 @@ open class ScreenPreviewSectionController(
     private val colorViewModel: WallpaperColorsViewModel,
     private val displayUtils: DisplayUtils,
     private val navigator: CustomizationSectionController.CustomizationSectionNavigationController,
+    private val wallpaperInteractor: WallpaperInteractor,
 ) : CustomizationSectionController<ScreenPreviewView> {
 
     private lateinit var lockScreenBinding: ScreenPreviewBinder.Binding
@@ -129,9 +132,17 @@ open class ScreenPreviewSectionController(
                                 )
                             }
                         },
+                        wallpaperInteractor = wallpaperInteractor,
                     ),
                 lifecycleOwner = lifecycleOwner,
                 offsetToStart = displayUtils.isOnWallpaperDisplay(activity),
+                screen = CustomizationSections.Screen.LOCK_SCREEN,
+                onPreviewDirty = {
+                    // only the visible binding should recreate the activity so it's not done twice
+                    if (lockScreenView.isVisible) {
+                        activity.recreate()
+                    }
+                },
             )
         homeScreenBinding =
             ScreenPreviewBinder.bind(
@@ -166,9 +177,17 @@ open class ScreenPreviewSectionController(
                         onWallpaperColorChanged = { colors ->
                             colorViewModel.setHomeWallpaperColors(colors)
                         },
+                        wallpaperInteractor = wallpaperInteractor,
                     ),
                 lifecycleOwner = lifecycleOwner,
                 offsetToStart = displayUtils.isOnWallpaperDisplay(activity),
+                screen = CustomizationSections.Screen.HOME_SCREEN,
+                onPreviewDirty = {
+                    // only the visible binding should recreate the activity so it's not done twice
+                    if (homeScreenView.isVisible) {
+                        activity.recreate()
+                    }
+                },
             )
 
         onScreenSwitched(isOnLockScreen = initialScreen == CustomizationSections.Screen.LOCK_SCREEN)

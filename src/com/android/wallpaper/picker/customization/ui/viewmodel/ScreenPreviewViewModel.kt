@@ -20,7 +20,11 @@ package com.android.wallpaper.picker.customization.ui.viewmodel
 import android.app.WallpaperColors
 import android.os.Bundle
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
+import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import com.android.wallpaper.util.PreviewUtils
+import kotlinx.coroutines.flow.Flow
 
 /** Models the UI state for a preview of the home screen or lock screen. */
 class ScreenPreviewViewModel(
@@ -28,7 +32,19 @@ class ScreenPreviewViewModel(
     private val initialExtrasProvider: () -> Bundle? = { null },
     private val wallpaperInfoProvider: suspend () -> WallpaperInfo?,
     private val onWallpaperColorChanged: (WallpaperColors?) -> Unit = {},
+    // TODO (b/270193793): add below field to all usages, remove default value & make non-nullable
+    private val wallpaperInteractor: WallpaperInteractor? = null,
 ) {
+    /** Returns whether wallpaper picker should handle reload */
+    fun shouldHandleReload(): Boolean {
+        return wallpaperInteractor?.let { it.shouldHandleReload() } ?: true
+    }
+
+    /** Returns a flow that is updated whenever the wallpaper has been updated */
+    fun wallpaperUpdateEvents(screen: CustomizationSections.Screen): Flow<WallpaperModel>? {
+        return wallpaperInteractor?.wallpaperUpdateEvents(screen)
+    }
+
     fun getInitialExtras(): Bundle? {
         return initialExtrasProvider.invoke()
     }
