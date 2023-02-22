@@ -84,6 +84,7 @@
     <string name="my_photos" msgid="8613021349284084982">"Nire argazkiak"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Ezarpenak…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Ezabatu"</string>
+    <string name="edit_live_wallpaper" msgid="3132060073690558045">"Editatu"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Horma-papera ezabatu nahi duzu gailutik?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Atzera"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Editatu"</string>

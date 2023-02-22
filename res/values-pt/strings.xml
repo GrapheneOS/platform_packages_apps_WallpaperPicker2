@@ -84,6 +84,7 @@
     <string name="my_photos" msgid="8613021349284084982">"Minhas fotos"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Configurações…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Excluir"</string>
+    <string name="edit_live_wallpaper" msgid="3132060073690558045">"Editar"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Excluir esse plano de fundo do dispositivo?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Voltar"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Editar"</string>

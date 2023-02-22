@@ -84,6 +84,7 @@
     <string name="my_photos" msgid="8613021349284084982">"Fotoğraflarım"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Ayarlar…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Sil"</string>
+    <string name="edit_live_wallpaper" msgid="3132060073690558045">"Düzenle"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Bu duvar kağıdı cihazınızdan silinsin mi?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Geri"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Düzenle"</string>
@@ -116,6 +117,5 @@
     <string name="reset" msgid="4945445169532850631">"Sıfırla"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Değişiklikler sıfırlansın mı?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Değişiklikleriniz kaydedilmeyecek"</string>
-    <!-- no translation found for more_wallpapers (7585665124282737376) -->
-    <skip />
+    <string name="more_wallpapers" msgid="7585665124282737376">"Diğer Duvar Kağıtları"</string>
 </resources>
