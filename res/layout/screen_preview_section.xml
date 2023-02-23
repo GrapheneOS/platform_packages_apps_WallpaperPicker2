@@ -47,8 +47,14 @@
         <ViewStub
             android:id="@+id/clock_carousel_view_stub"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
+        <ViewStub
+            android:id="@+id/single_clock_view_stub"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
     </FrameLayout>
 
 </com.android.wallpaper.picker.customization.ui.section.ScreenPreviewView>
