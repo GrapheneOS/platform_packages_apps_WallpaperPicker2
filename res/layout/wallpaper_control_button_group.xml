@@ -70,6 +70,17 @@
         android:visibility="gone" />
 
     <ToggleButton
+        android:id="@+id/share_button"
+        android:layout_width="@dimen/wallpaper_control_button_size"
+        android:layout_height="@dimen/wallpaper_control_button_size"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/tab_share"
+        android:foreground="@drawable/wallpaper_control_button_share"
+        android:textOff=""
+        android:textOn=""
+        android:visibility="gone" />
+
+    <ToggleButton
         android:id="@+id/information_button"
         android:layout_width="@dimen/wallpaper_control_button_size"
         android:layout_height="@dimen/wallpaper_control_button_size"

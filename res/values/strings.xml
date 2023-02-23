@@ -303,6 +303,10 @@
          [CHAR_LIMIT=25] -->
     <string name="tab_effects">Effects</string>
 
+    <!-- Label for the 'Share' tab of view pager in wallpaper preview activity.
+     [CHAR_LIMIT=25] -->
+    <string name="tab_share">Share</string>
+
     <!-- Generic label for the my photos action [CHAR_LIMIT=20] -->
     <string name="my_photos">My Photos</string>
 
