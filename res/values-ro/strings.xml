@@ -84,6 +84,7 @@
     <string name="my_photos" msgid="8613021349284084982">"Fotografiile mele"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Setări…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Șterge"</string>
+    <string name="edit_live_wallpaper" msgid="3132060073690558045">"Editează"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Ștergi imaginea de fundal de pe dispozitiv?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Înapoi"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Editează"</string>
