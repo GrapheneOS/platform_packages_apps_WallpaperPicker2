@@ -84,6 +84,7 @@
     <string name="my_photos" msgid="8613021349284084982">"ମୋ ଫଟୋଗୁଡ଼ିକ"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"ସେଟିଂସ୍..."</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"ଡିଲିଟ୍ କରନ୍ତୁ"</string>
+    <string name="edit_live_wallpaper" msgid="3132060073690558045">"ଏଡିଟ କରନ୍ତୁ"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"ଆପଣଙ୍କ ଡିଭାଇସରୁ ଏହି ୱାଲପେପରକୁ ଡିଲିଟ କରିବେ?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"ପଛକୁ ଫେରନ୍ତୁ"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"ଏଡିଟ କରନ୍ତୁ"</string>

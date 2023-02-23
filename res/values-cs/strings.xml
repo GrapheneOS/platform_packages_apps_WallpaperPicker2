@@ -84,6 +84,7 @@
     <string name="my_photos" msgid="8613021349284084982">"Moje fotky"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Nastavení…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Smazat"</string>
+    <string name="edit_live_wallpaper" msgid="3132060073690558045">"Upravit"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Smazat tuto tapetu ze zařízení?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Zpět"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Upravit"</string>
@@ -116,6 +117,5 @@
     <string name="reset" msgid="4945445169532850631">"Resetovat"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Resetovat změny?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Změny nebudou uloženy"</string>
-    <!-- no translation found for more_wallpapers (7585665124282737376) -->
-    <skip />
+    <string name="more_wallpapers" msgid="7585665124282737376">"Další tapety"</string>
 </resources>
