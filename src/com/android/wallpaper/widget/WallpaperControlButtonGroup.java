@@ -39,20 +39,22 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
     public static final int CUSTOMIZE = 2;
     public static final int EFFECTS = 3;
     public static final int INFORMATION = 4;
+    public static final int SHARE = 5;
 
     /**
      * Overlay tab
      */
-    @IntDef({DELETE, EDIT, CUSTOMIZE, EFFECTS, INFORMATION})
+    @IntDef({DELETE, EDIT, CUSTOMIZE, EFFECTS, SHARE, INFORMATION})
     public @interface WallpaperControlType {
     }
 
-    final int[] mFloatingSheetControlButtonTypes = { CUSTOMIZE, EFFECTS, INFORMATION };
+    final int[] mFloatingSheetControlButtonTypes = { CUSTOMIZE, EFFECTS, SHARE, INFORMATION };
 
     ToggleButton mDeleteButton;
     ToggleButton mEditButton;
     ToggleButton mCustomizeButton;
     ToggleButton mEffectsButton;
+    ToggleButton mShareButton;
     ToggleButton mInformationButton;
 
     /**
@@ -65,6 +67,7 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
         mEditButton = findViewById(R.id.edit_button);
         mCustomizeButton = findViewById(R.id.customize_button);
         mEffectsButton = findViewById(R.id.effects_button);
+        mShareButton = findViewById(R.id.share_button);
         mInformationButton = findViewById(R.id.information_button);
     }
 
@@ -90,6 +93,8 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
                 return mCustomizeButton;
             case EFFECTS:
                 return mEffectsButton;
+            case SHARE:
+                return mShareButton;
             case INFORMATION:
                 return mInformationButton;
             default:
@@ -123,6 +128,7 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
         mEditButton.setForeground(null);
         mCustomizeButton.setForeground(null);
         mEffectsButton.setForeground(null);
+        mShareButton.setForeground(null);
         mInformationButton.setForeground(null);
         mDeleteButton.setForeground(AppCompatResources.getDrawable(context,
                 R.drawable.wallpaper_control_button_delete));
@@ -132,6 +138,8 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
                 R.drawable.wallpaper_control_button_customize));
         mEffectsButton.setForeground(AppCompatResources.getDrawable(context,
                 R.drawable.wallpaper_control_button_effect));
+        mShareButton.setForeground(AppCompatResources.getDrawable(context,
+                R.drawable.wallpaper_control_button_share));
         mInformationButton.setForeground(
                 AppCompatResources.getDrawable(context, R.drawable.wallpaper_control_button_info));
     }
