@@ -22,6 +22,11 @@ import android.os.Bundle;
  * Utility class to provide methods to generate effects for the wallpaper.
  */
 public abstract class EffectsController {
+    public static final int ERROR_ORIGINAL_DESTROY_CONTROLLER = -16;
+    public static final int ERROR_ORIGINAL_FINISH_ONGOING_SERVICE = -8;
+    public static final int ERROR_ORIGINAL_SERVICE_DISCONNECT = -4;
+    public static final int ERROR_ORIGINAL_TIME_OUT = -2;
+
     public static final int RESULT_ORIGINAL_UNKNOWN = -1;
     public static final int RESULT_SUCCESS = 0;
     public static final int RESULT_ERROR_TRY_ANOTHER_PHOTO = 1;
