@@ -33,7 +33,6 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.model.CustomizationSectionController;
 import com.android.wallpaper.model.CustomizationSectionController.CustomizationSectionNavigationController;
 import com.android.wallpaper.model.PermissionRequester;
-import com.android.wallpaper.model.WallpaperColorsViewModel;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
 import com.android.wallpaper.module.CustomizationSections;
 import com.android.wallpaper.module.FragmentFactory;
@@ -277,8 +276,6 @@ public class CustomizationPickerFragment extends AppbarFragment implements
             @Nullable Bundle savedInstanceState) {
         final Injector injector = InjectorProvider.getInjector();
 
-        WallpaperColorsViewModel wcViewModel = new ViewModelProvider(getActivity())
-                .get(WallpaperColorsViewModel.class);
         WallpaperQuickSwitchViewModel wallpaperQuickSwitchViewModel = new ViewModelProvider(
                 getActivity(),
                 WallpaperQuickSwitchViewModel.newFactory(
@@ -292,7 +289,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
             return sections.getAllSectionControllers(
                     getActivity(),
                     getViewLifecycleOwner(),
-                    wcViewModel,
+                    injector.getWallpaperColorsViewModel(),
                     getPermissionRequester(),
                     getWallpaperPreviewNavigator(),
                     this,
@@ -303,7 +300,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                     screen,
                     getActivity(),
                     getViewLifecycleOwner(),
-                    wcViewModel,
+                    injector.getWallpaperColorsViewModel(),
                     getPermissionRequester(),
                     getWallpaperPreviewNavigator(),
                     this,
