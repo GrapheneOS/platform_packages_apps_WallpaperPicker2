@@ -24,6 +24,7 @@ import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.CategoryProvider
+import com.android.wallpaper.model.WallpaperColorsViewModel
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
@@ -119,4 +120,6 @@ interface Injector {
     fun getWallpaperInteractor(context: Context): WallpaperInteractor
 
     fun getWallpaperSnapshotRestorer(context: Context): WallpaperSnapshotRestorer
+
+    fun getWallpaperColorsViewModel(): WallpaperColorsViewModel
 }
