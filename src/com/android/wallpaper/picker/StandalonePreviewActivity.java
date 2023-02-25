@@ -24,7 +24,6 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -136,14 +135,6 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
     public boolean isUpArrowSupported() {
         // Show up arrow for multi-pane.
         return getIntent().getBooleanExtra(KEY_UP_ARROW, false);
-    }
-
-    @Override
-    protected void enableFullScreen() {
-        super.enableFullScreen();
-        getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
 
     /**
