@@ -18,7 +18,6 @@ package com.android.wallpaper.model
 import android.app.WallpaperColors
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,9 +25,9 @@ import kotlinx.coroutines.flow.asStateFlow
 /**
  * ViewModel class to keep track of WallpaperColors for the current wallpaper
  *
- * TODO (b/262924623): Move into ColorPickerRepositoryImpl
+ * TODO (b/269451870): Rename to WallpaperColorsRepository
  */
-class WallpaperColorsViewModel : ViewModel() {
+class WallpaperColorsViewModel {
 
     /**
      * WallpaperColors exposed as live data to allow Java integration
