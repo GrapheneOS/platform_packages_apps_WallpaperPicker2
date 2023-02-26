@@ -25,6 +25,7 @@ import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.CategoryProvider
+import com.android.wallpaper.model.WallpaperColorsViewModel
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.AlarmManagerWrapper
 import com.android.wallpaper.module.BitmapCropper
@@ -88,6 +89,7 @@ open class TestInjector : Injector {
     private var undoInteractor: UndoInteractor? = null
     private var wallpaperInteractor: WallpaperInteractor? = null
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
+    private var wallpaperColorsViewModel: WallpaperColorsViewModel? = null
 
     override fun getAlarmManagerWrapper(context: Context): AlarmManagerWrapper {
         return alarmManagerWrapper ?: TestAlarmManagerWrapper().also { alarmManagerWrapper = it }
@@ -275,5 +277,10 @@ open class TestInjector : Injector {
                     interactor = getWallpaperInteractor(context),
                 )
                 .also { wallpaperSnapshotRestorer = it }
+    }
+
+    override fun getWallpaperColorsViewModel(): WallpaperColorsViewModel {
+        return wallpaperColorsViewModel
+            ?: WallpaperColorsViewModel().also { wallpaperColorsViewModel = it }
     }
 }
