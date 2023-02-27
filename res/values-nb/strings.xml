@@ -23,7 +23,7 @@
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Bakgrunnskategorier"</string>
     <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Angi bakgrunn"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Angir bakgrunn …"</string>
-    <string name="try_again" msgid="8278874823700921234">"Prøv igjen"</string>
+    <string name="try_again" msgid="8278874823700921234">"Prøv på nytt"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Kunne ikke angi bakgrunn."</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Kan ikke laste inn bakgrunnen. Bildet er enten skadet eller utilgjengelig."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Nåværende bakgrunn"</string>
@@ -44,7 +44,7 @@
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Daglig bakgrunn"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Trykk for å slå på funksjonen"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Bakgrunnen endres automatisk hver dag. For å fullføre konfigureringen, trykk på &lt;strong&gt;Angi bakgrunn&lt;/strong&gt; på den neste skjermen."</string>
-    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Last ned nye bakgrunner bare via Wi-Fi"</string>
+    <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Last ned nye bakgrunner bare via Wifi"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Fortsett"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Laster ned den første bakgrunnen …"</string>
     <string name="start_rotation_error_message" msgid="3053799836719618972">"Kunne ikke laste ned den første bakgrunnen. Sjekk nettverksinnstillingene, og prøv igjen."</string>
@@ -84,7 +84,8 @@
     <string name="my_photos" msgid="8613021349284084982">"Mine bilder"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Innstillinger"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Slett"</string>
-    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Vil du slette denne bakgrunnen fra telefonen din?"</string>
+    <!-- no translation found for delete_wallpaper_confirmation (33790318361863778) -->
+    <skip />
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Tilbake"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Endre"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Last ned"</string>
@@ -110,4 +111,12 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Informasjon vises"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"Slå på filer og medier i innstillingene."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Slå på"</string>
+    <string name="open_my_photos" msgid="4107196465713868381">"Åpne Mine bilder"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Låseskjerm"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Startskjerm"</string>
+    <string name="reset" msgid="4945445169532850631">"Tilbakestill"</string>
+    <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
+    <skip />
+    <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->
+    <skip />
 </resources>

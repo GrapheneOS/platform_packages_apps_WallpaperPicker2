@@ -84,7 +84,8 @@
     <string name="my_photos" msgid="8613021349284084982">"ကျွန်ုပ်၏ဓာတ်ပုံများ"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"ဆက်တင်များ…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"ဖျက်ရန်"</string>
-    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"ဤနောက်ခံပုံကို သင့်ပင်မစာမျက်နှာမှ ဖျက်ပစ်မလား။"</string>
+    <!-- no translation found for delete_wallpaper_confirmation (33790318361863778) -->
+    <skip />
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"နောက်သို့"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"ပြင်ဆင်ရန်"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"ဒေါင်းလုဒ်လုပ်ရန်"</string>
@@ -110,4 +111,12 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"ပြထားသော အချက်အလက်"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"ဆက်တင်များတွင် Files နှင့် မီဒီယာကို ဖွင့်ပါ။"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ဖွင့်ရန်"</string>
+    <string name="open_my_photos" msgid="4107196465713868381">"ဓာတ်ပုံများဖွင့်ရန်"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"လော့ခ်မျက်နှာပြင်"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"ပင်မစာမျက်နှာ"</string>
+    <string name="reset" msgid="4945445169532850631">"ပြင်ဆင်ရန်"</string>
+    <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
+    <skip />
+    <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->
+    <skip />
 </resources>
