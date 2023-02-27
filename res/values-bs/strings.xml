@@ -84,7 +84,8 @@
     <string name="my_photos" msgid="8613021349284084982">"Moje fotografije"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Postavke…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Izbriši"</string>
-    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Izbrisati ovu pozadinsku sliku s telefona?"</string>
+    <!-- no translation found for delete_wallpaper_confirmation (33790318361863778) -->
+    <skip />
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Nazad"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Uredi"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Preuzmi"</string>

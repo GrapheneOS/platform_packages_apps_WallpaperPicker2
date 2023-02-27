@@ -40,7 +40,7 @@
     <string name="permission_needed_explanation" msgid="139166837541426823">"Para mostrar el fondo de pantalla actual aquí, <xliff:g id="APP_NAME">%1$s</xliff:g> necesita acceso al almacenamiento de tu dispositivo."</string>
     <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Para mostrar el fondo de pantalla actual aquí, Fondos de pantalla necesita acceso al almacenamiento de tu dispositivo.\n\nPara cambiar esta configuración, ve al área de Permisos en la información de la app de Fondos de pantalla."</string>
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Permitir acceso"</string>
-    <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Fondo de pantalla animado para fondos rotatorios"</string>
+    <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Fondo animado para fondos rotatorios"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Fondo de pantalla diario"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Presiona para activar"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"El fondo de pantalla cambiará automáticamente todos los días. Para finalizar la configuración, presiona &lt;strong&gt;Definir como fondo de pantalla&lt;/strong&gt; en la siguiente pantalla."</string>
@@ -84,7 +84,8 @@
     <string name="my_photos" msgid="8613021349284084982">"Mis fotos"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Configuración…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Borrar"</string>
-    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"¿Quieres borrar este fondo de pantalla del teléfono?"</string>
+    <!-- no translation found for delete_wallpaper_confirmation (33790318361863778) -->
+    <skip />
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Atrás"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Editar"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Descargar"</string>
