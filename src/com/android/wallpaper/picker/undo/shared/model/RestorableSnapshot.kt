@@ -37,7 +37,8 @@ data class RestorableSnapshot(
      * ```
      *
      * @param block A function that receives the original [args] from the current
-     * [RestorableSnapshot] and can edit them for inclusion into the returned [RestorableSnapshot].
+     *   [RestorableSnapshot] and can edit them for inclusion into the returned
+     *   [RestorableSnapshot].
      */
     fun copy(
         block: (MutableMap<String, String>) -> Unit,

@@ -28,14 +28,17 @@ import kotlinx.coroutines.launch
  *
  * ## Usage
  * 1. Instantiate, injecting the supported [SnapshotRestorer] into it, one for each feature that
+ *
  * ```
  *    should support undo functionality.
  * ```
  * 2. Call [startSession] which will bootstrap all passed-in [SnapshotRestorer] instances and
+ *
  * ```
  *    hydrate our model with the latest snapshots from each one.
  * ```
  * 3. Observe [isUndoable] to know whether the UI for triggering an "undo" action should be made
+ *
  * ```
  *    visible to the user.
  * ```
