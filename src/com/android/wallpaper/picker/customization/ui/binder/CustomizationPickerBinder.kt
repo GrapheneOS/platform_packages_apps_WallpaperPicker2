@@ -48,11 +48,11 @@ object CustomizationPickerBinder {
      * @param toolbarViewId The view ID of the toolbar view.
      * @param viewModel The view-model to observe UI state from and report user input to.
      * @param lifecycleOwner An owner of the lifecycle, so we can stop doing work when the lifecycle
-     * cleans up.
+     *   cleans up.
      * @param sectionControllerProvider A function that can provide the list of [SectionController]
-     * instances to show, based on the given passed-in value of "isOnLockScreen".
+     *   instances to show, based on the given passed-in value of "isOnLockScreen".
      * @return A [DisposableHandle] to use to dispose of the binding before another binding is about
-     * to be created by a subsequent call to this function.
+     *   to be created by a subsequent call to this function.
      */
     @JvmStatic
     fun bind(

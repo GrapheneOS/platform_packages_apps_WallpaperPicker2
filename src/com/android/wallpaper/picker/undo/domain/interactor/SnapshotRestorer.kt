@@ -26,8 +26,8 @@ interface SnapshotRestorer {
      * Sets up the restorer.
      *
      * @param store An object the can be used when a new snapshot should be stored; use this in
-     * response to state changes that you wish could be restored when the user asks to reset the
-     * changes.
+     *   response to state changes that you wish could be restored when the user asks to reset the
+     *   changes.
      * @return A snapshot of the initial state as it was at the moment that this method was invoked.
      */
     suspend fun setUpSnapshotRestorer(store: SnapshotStore): RestorableSnapshot
