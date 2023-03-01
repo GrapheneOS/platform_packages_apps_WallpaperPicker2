@@ -49,7 +49,7 @@ object OptionItemBinder {
      * - [R.id.foreground] is the foreground drawable ([ImageView]).
      * - [R.id.background] is the view in the background ([View]).
      * - [R.id.selection_border] is a view rendering a border. It must have the same exact size as
-     * [R.id.background] ([View]) and must be placed below it on the z-axis (you read that right).
+     *   [R.id.background] ([View]) and must be placed below it on the z-axis (you read that right).
      *
      * The animation logic in this binder takes care of scaling up the border at the right time to
      * help it peek out around the background. In order to allow for this, you may need to disable
@@ -183,14 +183,18 @@ object OptionItemBinder {
      * the latter obscures the former at rest.
      *
      * @param borderView A view for the selection border that should be shown when the view is
+     *
      * ```
      *     selected.
      * @param contentView
      * ```
+     *
      * The view containing the opaque part of the view.
+     *
      * @param isSelected Whether the view is selected or not.
      * @param animationSpec The specification for the animation.
      * @param animate Whether to animate; if `false`, will jump directly to the final state without
+     *
      * ```
      *     animating.
      * ```
