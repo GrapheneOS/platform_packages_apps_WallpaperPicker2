@@ -73,9 +73,10 @@ public class WallpaperPreferenceKeys {
                 "num_days_daily_rotation_failed";
         String KEY_NUM_DAYS_DAILY_ROTATION_NOT_ATTEMPTED =
                 "num_days_daily_rotation_not_attempted";
-        String KEY_HOME_WALLPAPER_PACKAGE_NAME = "home_wallpaper_package_name";
         String KEY_HOME_WALLPAPER_SERVICE_NAME = "home_wallpaper_service_name";
+        String KEY_LOCK_WALLPAPER_SERVICE_NAME = "lock_wallpaper_service_name";
         String KEY_PREVIEW_WALLPAPER_COLOR_ID = "preview_wallpaper_color_id";
-        String KEY_WALLPAPER_EFFECTS = "wallpaper_effects";
+        String KEY_HOME_WALLPAPER_EFFECTS = "home_wallpaper_effects";
+        String KEY_LOCK_WALLPAPER_EFFECTS = "lock_wallpaper_effects";
     }
 }
