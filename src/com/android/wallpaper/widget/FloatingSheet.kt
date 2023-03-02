@@ -154,8 +154,8 @@ class FloatingSheet(context: Context, attrs: AttributeSet?) : FrameLayout(contex
      * Adds Floating Sheet Callback to connected [BottomSheetBehavior].
      *
      * @param callback the callback for floating sheet state changes, has to be in the type of
-     * [BottomSheetBehavior.BottomSheetCallback] since the floating sheet behavior is currently
-     * based on [BottomSheetBehavior]
+     *   [BottomSheetBehavior.BottomSheetCallback] since the floating sheet behavior is currently
+     *   based on [BottomSheetBehavior]
      */
     fun addFloatingSheetCallback(callback: BottomSheetCallback?) {
         floatingSheetBehavior.addBottomSheetCallback(callback!!)
