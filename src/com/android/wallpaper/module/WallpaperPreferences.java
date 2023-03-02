@@ -141,16 +141,6 @@ public interface WallpaperPreferences {
     void setHomeWallpaperHashCode(long hashCode);
 
     /**
-     * Gets the home wallpaper's package name, which is present for live wallpapers.
-     */
-    String getHomeWallpaperPackageName();
-
-    /**
-     * Sets the home wallpaper's package name, which is present for live wallpapers.
-     */
-    void setHomeWallpaperPackageName(String packageName);
-
-    /**
      * Gets the home wallpaper's service name, which is present for live wallpapers.
      */
     String getHomeWallpaperServiceName();
@@ -183,6 +173,18 @@ public interface WallpaperPreferences {
      * collection.
      */
     void setHomeWallpaperRemoteId(String wallpaperRemoteId);
+
+    /**
+     * Gets the home wallpaper's effects.
+     */
+    String getHomeWallpaperEffects();
+
+    /**
+     * Sets the home wallpaper's effects to SharedPreferences.
+     *
+     * @param wallpaperEffects The wallpaper effects.
+     */
+    void setHomeWallpaperEffects(String wallpaperEffects);
 
     /**
      * Returns the lock wallpaper's action URL or null if there is none.
@@ -263,6 +265,16 @@ public interface WallpaperPreferences {
     void setLockWallpaperHashCode(long hashCode);
 
     /**
+     * Gets the lock wallpaper's service name, which is present for live wallpapers.
+     */
+    String getLockWallpaperServiceName();
+
+    /**
+     * Sets the lock wallpaper's service name, which is present for live wallpapers.
+     */
+    void setLockWallpaperServiceName(String serviceName);
+
+    /**
      * Gets the lock wallpaper's ID, which is provided by WallpaperManager for static wallpapers.
      */
     @TargetApi(Build.VERSION_CODES.N)
@@ -285,6 +297,18 @@ public interface WallpaperPreferences {
      * wallpaper collection.
      */
     void setLockWallpaperRemoteId(String wallpaperRemoteId);
+
+    /**
+     * Gets the lock wallpaper's effects.
+     */
+    String getLockWallpaperEffects();
+
+    /**
+     * Sets the lock wallpaper's effects to SharedPreferences.
+     *
+     * @param wallpaperEffects The wallpaper effects.
+     */
+    void setLockWallpaperEffects(String wallpaperEffects);
 
     /**
      * Persists the timestamp of a daily wallpaper rotation that just occurred.
@@ -504,18 +528,6 @@ public interface WallpaperPreferences {
      */
     void updateDailyWallpaperSet(@Destination int destination, String collectionId,
             String wallpaperId);
-
-    /**
-     * Gets the wallpaper's effects.
-     */
-    String getWallpaperEffects();
-
-    /**
-     * Sets the wallpaper's effects to SharedPreferences.
-     *
-     * @param wallpaperEffects The wallpaper effects.
-     */
-    void setWallpaperEffects(String wallpaperEffects);
 
     /**
      * The possible wallpaper presentation modes, i.e., either "static" or "rotating".
