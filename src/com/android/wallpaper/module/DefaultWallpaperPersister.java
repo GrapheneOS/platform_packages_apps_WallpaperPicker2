@@ -545,8 +545,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         // WallpaperInfo which was last previewed, then do nothing and nullify last previewed
         // wallpaper.
         if (currentWallpaperComponent == null || previewedWallpaperComponent == null
-                || !currentWallpaperComponent.getPackageName()
-                .equals(previewedWallpaperComponent.getPackageName())) {
+                || !currentWallpaperComponent.getServiceName()
+                .equals(previewedWallpaperComponent.getServiceName())) {
             mWallpaperInfoInPreview = null;
             return;
         }
@@ -590,8 +590,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         // WallpaperRefresher will pick up on that and update the preferences later.
         mWallpaperPreferences
                 .setHomeWallpaperAttributions(mWallpaperInfoInPreview.getAttributions(mAppContext));
-        mWallpaperPreferences.setHomeWallpaperPackageName(
-                previewedWallpaperComponent.getPackageName());
         mWallpaperPreferences.setHomeWallpaperServiceName(
                 previewedWallpaperComponent.getServiceName());
         mWallpaperPreferences.setHomeWallpaperCollectionId(
@@ -599,7 +597,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         mWallpaperPreferences.setWallpaperPresentationMode(
                 WallpaperPreferences.PRESENTATION_MODE_STATIC);
         mWallpaperPreferences.clearDailyRotations();
-        mWallpaperPreferences.setWallpaperEffects(mWallpaperInfoInPreview.getEffectNames());
+        mWallpaperPreferences.setHomeWallpaperEffects(mWallpaperInfoInPreview.getEffectNames());
     }
 
     private class SetWallpaperTask extends AsyncTask<Void, Void, Boolean> {
@@ -778,7 +776,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         private void setImageWallpaperMetadata(@Destination int destination, int wallpaperId) {
             if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
                 mWallpaperPreferences.clearHomeWallpaperMetadata();
-                mWallpaperPreferences.setWallpaperEffects(null);
+                mWallpaperPreferences.setHomeWallpaperEffects(null);
                 setImageWallpaperHomeMetadata(wallpaperId);
 
                 // Reset presentation mode to STATIC if an individual wallpaper is set to the
