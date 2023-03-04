@@ -52,7 +52,6 @@ import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
 import com.android.wallpaper.picker.CategorySelectorFragment.CategorySelectorFragmentHost;
 import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.IndividualPickerFragmentHost;
-import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor;
 import com.android.wallpaper.util.ActivityUtils;
 import com.android.wallpaper.util.DeepLinkUtils;
 import com.android.wallpaper.util.LaunchUtils;
@@ -79,7 +78,6 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
 
     private BottomActionBar mBottomActionBar;
     private boolean mIsSafeToCommitFragmentTransaction;
-    @Nullable private UndoInteractor mUndoInteractor;
     private boolean mIsUseRevampedUi;
 
     @Override
@@ -133,8 +131,9 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         if (savedInstanceState == null) {
             // We only want to start a new undo session if this activity is brand-new. A non-new
             // activity will have a non-null savedInstanceState.
-            mUndoInteractor = injector.getUndoInteractor(this);
-            mUndoInteractor.startSession();
+            if (mIsUseRevampedUi) {
+                injector.getUndoInteractor(this).startSession();
+            }
         }
 
         final Intent intent = getIntent();
