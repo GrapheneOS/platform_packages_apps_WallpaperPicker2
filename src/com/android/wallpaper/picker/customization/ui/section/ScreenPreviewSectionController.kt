@@ -135,7 +135,7 @@ open class ScreenPreviewSectionController(
                         wallpaperInteractor = wallpaperInteractor,
                     ),
                 lifecycleOwner = lifecycleOwner,
-                offsetToStart = displayUtils.isOnWallpaperDisplay(activity),
+                offsetToStart = displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(activity),
                 screen = CustomizationSections.Screen.LOCK_SCREEN,
                 onPreviewDirty = {
                     // only the visible binding should recreate the activity so it's not done twice
@@ -180,7 +180,7 @@ open class ScreenPreviewSectionController(
                         wallpaperInteractor = wallpaperInteractor,
                     ),
                 lifecycleOwner = lifecycleOwner,
-                offsetToStart = displayUtils.isOnWallpaperDisplay(activity),
+                offsetToStart = displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(activity),
                 screen = CustomizationSections.Screen.HOME_SCREEN,
                 onPreviewDirty = {
                     // only the visible binding should recreate the activity so it's not done twice
