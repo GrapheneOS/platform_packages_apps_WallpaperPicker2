@@ -167,14 +167,26 @@ public interface WallpaperPersister {
      * Saves attributions to WallpaperPreferences for the last previewed wallpaper if it has an
      * {@link android.app.WallpaperInfo} component matching the one currently set to the
      * {@link android.app.WallpaperManager}.
+     *
+     * @param destination Live wallpaper destination (home/lock/both)
      */
-    void onLiveWallpaperSet();
+    void onLiveWallpaperSet(@Destination int destination);
+
+    /**
+     * Updates lie wallpaper metadata by persisting them to SharedPreferences.
+     *
+     * @param wallpaperInfo Wallpaper model for the live wallpaper
+     * @param effects Comma-separate list of effect (see {@link WallpaperInfo#getEffectNames})
+     * @param destination Live wallpaper destination (home/lock/both)
+     */
+    void setLiveWallpaperMetadata(WallpaperInfo wallpaperInfo, String effects,
+            @Destination int destination);
 
     /**
      * Interface for tracking success or failure of set wallpaper operations.
      */
     interface SetWallpaperCallback {
-        void onSuccess(WallpaperInfo wallpaperInfo);
+        void onSuccess(WallpaperInfo wallpaperInfo, @Destination int destination);
 
         void onError(@Nullable Throwable throwable);
     }
@@ -213,6 +225,22 @@ public interface WallpaperPersister {
                 return FLAG_SYSTEM | FLAG_LOCK;
             default:
                 throw new AssertionError("Unknown @Destination");
+        }
+    }
+
+    /**
+     * Converts a set of {@link SetWallpaperFlags} to the corresponding {@link Destination}.
+     */
+    @Destination
+    static int flagsToDestination(@SetWallpaperFlags int flags) {
+        if (flags == (FLAG_SYSTEM | FLAG_LOCK)) {
+            return DEST_BOTH;
+        } else if (flags == FLAG_SYSTEM) {
+            return DEST_HOME_SCREEN;
+        } else if (flags == FLAG_LOCK) {
+            return DEST_LOCK_SCREEN;
+        } else {
+            throw new AssertionError("Unknown @SetWallpaperFlags value");
         }
     }
 }

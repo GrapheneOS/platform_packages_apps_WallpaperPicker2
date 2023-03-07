@@ -172,10 +172,11 @@ public class WallpaperSetter {
                 wallpaper, wallpaperAsset, cropRect,
                 wallpaperScale, destination, new SetWallpaperCallback() {
                     @Override
-                    public void onSuccess(WallpaperInfo wallpaperInfo) {
+                    public void onSuccess(WallpaperInfo wallpaperInfo,
+                            @Destination int destination) {
                         onWallpaperApplied(wallpaper, containerActivity);
                         if (callback != null) {
-                            callback.onSuccess(wallpaper);
+                            callback.onSuccess(wallpaper, destination);
                         }
                     }
 
@@ -213,8 +214,9 @@ public class WallpaperSetter {
                     wallpaper.getWallpaperId(), wallpaper, colors);
             onWallpaperApplied(wallpaper, activity);
             if (callback != null) {
-                callback.onSuccess(wallpaper);
+                callback.onSuccess(wallpaper, destination);
             }
+            mWallpaperPersister.onLiveWallpaperSet(destination);
         } catch (RuntimeException | IOException e) {
             onWallpaperApplyError(e, activity);
             if (callback != null) {
@@ -268,8 +270,9 @@ public class WallpaperSetter {
                                     .getLowResBitmap(context)));
             // Not call onWallpaperApplied() as no UI is presented.
             if (callback != null) {
-                callback.onSuccess(wallpaper);
+                callback.onSuccess(wallpaper, destination);
             }
+            mWallpaperPersister.onLiveWallpaperSet(destination);
         } catch (RuntimeException | IOException e) {
             // Not call onWallpaperApplyError() as no UI is presented.
             if (callback != null) {
