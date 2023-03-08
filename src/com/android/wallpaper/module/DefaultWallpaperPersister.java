@@ -536,7 +536,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     }
 
     @Override
-    public void onLiveWallpaperSet() {
+    public void onLiveWallpaperSet(@Destination int destination) {
         android.app.WallpaperInfo currentWallpaperComponent = mWallpaperManager.getWallpaperInfo();
         android.app.WallpaperInfo previewedWallpaperComponent = mWallpaperInfoInPreview != null
                 ? mWallpaperInfoInPreview.getWallpaperComponent() : null;
@@ -551,7 +551,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             return;
         }
 
-        setLiveWallpaperMetadata();
+        setLiveWallpaperMetadata(mWallpaperInfoInPreview, mWallpaperInfoInPreview.getEffectNames(),
+                destination);
     }
 
     /**
@@ -576,28 +577,29 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         return isLockWallpaperSet;
     }
 
-    /**
-     * Sets the live wallpaper's metadata on SharedPreferences.
-     */
-    private void setLiveWallpaperMetadata() {
-        android.app.WallpaperInfo previewedWallpaperComponent =
-                mWallpaperInfoInPreview.getWallpaperComponent();
+    @Override
+    public void setLiveWallpaperMetadata(WallpaperInfo wallpaperInfo, String effects,
+            @Destination int destination) {
+        android.app.WallpaperInfo component = wallpaperInfo.getWallpaperComponent();
 
-        mWallpaperPreferences.clearHomeWallpaperMetadata();
-        // NOTE: We explicitly do not also clear the lock wallpaper metadata. Since the user may
-        // have set the live wallpaper on the home screen only, we leave the lock wallpaper metadata
-        // intact. If the user has set the live wallpaper for both home and lock screens, then the
-        // WallpaperRefresher will pick up on that and update the preferences later.
-        mWallpaperPreferences
-                .setHomeWallpaperAttributions(mWallpaperInfoInPreview.getAttributions(mAppContext));
-        mWallpaperPreferences.setHomeWallpaperServiceName(
-                previewedWallpaperComponent.getServiceName());
-        mWallpaperPreferences.setHomeWallpaperCollectionId(
-                mWallpaperInfoInPreview.getCollectionId(mAppContext));
-        mWallpaperPreferences.setWallpaperPresentationMode(
-                WallpaperPreferences.PRESENTATION_MODE_STATIC);
-        mWallpaperPreferences.clearDailyRotations();
-        mWallpaperPreferences.setHomeWallpaperEffects(mWallpaperInfoInPreview.getEffectNames());
+        if (destination == WallpaperPersister.DEST_HOME_SCREEN
+                || destination == WallpaperPersister.DEST_BOTH) {
+            mWallpaperPreferences.clearHomeWallpaperMetadata();
+            mWallpaperPreferences.setHomeWallpaperServiceName(component.getServiceName());
+            mWallpaperPreferences.setHomeWallpaperEffects(effects);
+
+            // Since rotation affects home screen only, disable it when setting home live wp
+            mWallpaperPreferences.setWallpaperPresentationMode(
+                    WallpaperPreferences.PRESENTATION_MODE_STATIC);
+            mWallpaperPreferences.clearDailyRotations();
+        }
+
+        if (destination == WallpaperPersister.DEST_LOCK_SCREEN
+                || destination == WallpaperPersister.DEST_BOTH) {
+            mWallpaperPreferences.clearLockWallpaperMetadata();
+            mWallpaperPreferences.setLockWallpaperServiceName(component.getServiceName());
+            mWallpaperPreferences.setLockWallpaperEffects(effects);
+        }
     }
 
     private class SetWallpaperTask extends AsyncTask<Void, Void, Boolean> {
@@ -727,7 +729,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             }
 
             if (isSuccess) {
-                mCallback.onSuccess(mWallpaper);
+                mCallback.onSuccess(mWallpaper, mDestination);
                 mWallpaperChangedNotifier.notifyWallpaperChanged();
             } else {
                 mCallback.onError(null /* throwable */);
