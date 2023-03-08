@@ -47,6 +47,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
+import com.android.wallpaper.effects.EffectsController;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.CategoryProvider;
 import com.android.wallpaper.model.LiveWallpaperInfo;
@@ -299,6 +300,11 @@ public class CategorySelectorFragment extends AppbarFragment {
             eventLogger.logCategorySelected(mCategory.getCollectionId());
 
             if (mCategory.supportsCustomPhotos()) {
+                EffectsController effectsController =
+                        InjectorProvider.getInjector().getEffectsController(getContext());
+                if (!effectsController.isEffectTriggered()) {
+                    effectsController.triggerEffect(getContext());
+                }
                 getCategorySelectorFragmentHost().requestCustomPhotoPicker(
                         new MyPhotosStarter.PermissionChangedListener() {
                             @Override
