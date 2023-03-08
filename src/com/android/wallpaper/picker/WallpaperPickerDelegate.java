@@ -467,7 +467,6 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
                         PREVIEW_WALLPAPER_REQUEST_CODE);
                 return false;
             case PREVIEW_LIVE_WALLPAPER_REQUEST_CODE:
-                mWallpaperPersister.onLiveWallpaperSet();
                 populateCategories(/* forceRefresh= */ true);
                 return true;
             case VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE:
@@ -475,7 +474,6 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
             case PREVIEW_WALLPAPER_REQUEST_CODE:
                 // User previewed and selected a wallpaper, so finish this activity.
                 if (data != null && data.getBooleanExtra(IS_LIVE_WALLPAPER, false)) {
-                    mWallpaperPersister.onLiveWallpaperSet();
                     populateCategories(/* forceRefresh= */ true);
                 }
                 return true;
