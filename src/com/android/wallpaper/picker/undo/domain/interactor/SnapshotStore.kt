@@ -22,4 +22,13 @@ import com.android.wallpaper.picker.undo.shared.model.RestorableSnapshot
 interface SnapshotStore {
     fun retrieve(): RestorableSnapshot
     fun store(snapshot: RestorableSnapshot)
+
+    /** A "no op" implementation of [SnapshotStore] that's safe to call. */
+    object NOOP : SnapshotStore {
+        override fun retrieve(): RestorableSnapshot {
+            return RestorableSnapshot(emptyMap())
+        }
+
+        override fun store(snapshot: RestorableSnapshot) = Unit
+    }
 }
