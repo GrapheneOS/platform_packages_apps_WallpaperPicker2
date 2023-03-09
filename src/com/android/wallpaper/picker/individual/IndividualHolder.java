@@ -70,7 +70,9 @@ abstract class IndividualHolder extends ViewHolder {
             mTitleView.setVisibility(View.VISIBLE);
             mTileLayout.setContentDescription(title);
         } else if (firstAttribution != null) {
-            mTileLayout.setContentDescription(firstAttribution);
+            String contentDescription = wallpaper.getContentDescription(mActivity);
+            mTileLayout.setContentDescription(
+                    contentDescription != null ? contentDescription : firstAttribution);
         }
 
         Drawable overlayIcon = wallpaper.getOverlayIcon(mActivity);

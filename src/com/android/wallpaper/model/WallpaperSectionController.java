@@ -91,7 +91,8 @@ public class WallpaperSectionController implements
     private CardView mLockscreenPreviewCard;
     private ViewGroup mLockPreviewContainer;
     private ContentLoadingProgressBar mLockscreenPreviewProgress;
-    private WallpaperConnection mWallpaperConnection;
+    private WallpaperConnection mHomeWallpaperConnection;
+    private WallpaperConnection mLockWallpaperConnection;
 
     // The wallpaper information which is currently shown on the home preview.
     private WallpaperInfo mHomePreviewWallpaperInfo;
@@ -134,26 +135,20 @@ public class WallpaperSectionController implements
     @MainThread
     public void onResume() {
         refreshCurrentWallpapers(/* forceRefresh= */ mSavedInstanceState == null);
-        if (mWallpaperConnection != null) {
-            mWallpaperConnection.setVisibility(true);
-        }
+        updateLivePreviewVisibility(true);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     @MainThread
     public void onPause() {
-        if (mWallpaperConnection != null) {
-            mWallpaperConnection.setVisibility(false);
-        }
+        updateLivePreviewVisibility(false);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     @MainThread
     public void onStop() {
-        if (mWallpaperConnection != null) {
-            mWallpaperConnection.disconnect();
-            mWallpaperConnection = null;
-        }
+        disconnectHomeLiveWallpaper();
+        disconnectLockLiveWallpaper();
     }
 
     @Override
@@ -232,6 +227,29 @@ public class WallpaperSectionController implements
         }
 
         return wallpaperSectionView;
+    }
+
+    private void updateLivePreviewVisibility(boolean visible) {
+        if (mHomeWallpaperConnection != null) {
+            mHomeWallpaperConnection.setVisibility(visible);
+        }
+        if (mLockWallpaperConnection != null) {
+            mLockWallpaperConnection.setVisibility(visible);
+        }
+    }
+
+    private void disconnectHomeLiveWallpaper() {
+        if (mHomeWallpaperConnection != null) {
+            mHomeWallpaperConnection.disconnect();
+            mHomeWallpaperConnection = null;
+        }
+    }
+
+    private void disconnectLockLiveWallpaper() {
+        if (mLockWallpaperConnection != null) {
+            mLockWallpaperConnection.disconnect();
+            mLockWallpaperConnection = null;
+        }
     }
 
     private void updateWorkspacePreview(SurfaceView workspaceSurface,
@@ -407,13 +425,22 @@ public class WallpaperSectionController implements
         maybeLoadThumbnail(wallpaperInfo, surfaceCallback,
                 mDisplayUtils.isOnWallpaperDisplay(mActivity));
 
-        if (isHomeWallpaper) {
-            if (mWallpaperConnection != null) {
-                mWallpaperConnection.disconnect();
-                mWallpaperConnection = null;
+        WallpaperManager wallpaperManager = WallpaperManager.getInstance(mActivity);
+        if (wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
+            if (isHomeWallpaper) {
+                disconnectHomeLiveWallpaper();
+            } else {
+                disconnectLockLiveWallpaper();
             }
             if (wallpaperInfo instanceof LiveWallpaperInfo) {
-                setUpLiveWallpaperPreview(wallpaperInfo);
+                setUpLiveWallpaperPreview(wallpaperInfo, isHomeWallpaper);
+            }
+        } else {
+            if (isHomeWallpaper) {
+                disconnectHomeLiveWallpaper();
+                if (wallpaperInfo instanceof LiveWallpaperInfo) {
+                    setUpLiveWallpaperPreviewLegacy(wallpaperInfo);
+                }
             }
         }
 
@@ -459,14 +486,63 @@ public class WallpaperSectionController implements
         }
     }
 
-    private void setUpLiveWallpaperPreview(WallpaperInfo homeWallpaper) {
+    private void setUpLiveWallpaperPreview(WallpaperInfo wallpaper, boolean isHomeWallpaper) {
+        if (!isActivityAlive() || !WallpaperConnection.isPreviewAvailable()) {
+            return;
+        }
+
+        final boolean isHomeBoth = (mHomePreviewWallpaperInfo == mLockPreviewWallpaperInfo);
+        if (isHomeBoth && !isHomeWallpaper) {
+            // If home and lock are the same the preview is handled by mirroring the home preview,
+            // so the lock preview is a no-op.
+            return;
+        }
+
+        final SurfaceView mainSurface =
+                isHomeWallpaper ? mHomeWallpaperSurface : mLockWallpaperSurface;
+        final SurfaceView mirrorSurface = isHomeBoth ? mLockWallpaperSurface : null;
+        final WallpaperConnection connection = new WallpaperConnection(
+                getWallpaperIntent(wallpaper.getWallpaperComponent()), mActivity,
+                new WallpaperConnection.WallpaperConnectionListener() {
+                    @Override
+                    public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
+                        if (isHomeWallpaper) {
+                            onHomeWallpaperColorsChanged(colors);
+                            if (isHomeBoth && mLockScreenPreviewer != null) {
+                                mLockScreenPreviewer.setColor(colors);
+                                onLockWallpaperColorsChanged(colors);
+                            }
+                        } else {
+                            onLockWallpaperColorsChanged(colors);
+                        }
+                    }
+                },
+                mainSurface, mirrorSurface);
+
+        connection.setVisibility(true);
+        if (isHomeWallpaper) {
+            mHomeWallpaperConnection = connection;
+        } else {
+            mLockWallpaperConnection = connection;
+        }
+        mainSurface.post(() -> {
+            if (mHomeWallpaperConnection != null && !mHomeWallpaperConnection.connect()) {
+                mHomeWallpaperConnection = null;
+            }
+            if (mLockWallpaperConnection != null && !mLockWallpaperConnection.connect()) {
+                mLockWallpaperConnection = null;
+            }
+        });
+    }
+
+    private void setUpLiveWallpaperPreviewLegacy(WallpaperInfo homeWallpaper) {
         if (!isActivityAlive()) {
             return;
         }
 
         if (WallpaperConnection.isPreviewAvailable()) {
             final boolean isLockLive = mLockPreviewWallpaperInfo instanceof LiveWallpaperInfo;
-            mWallpaperConnection = new WallpaperConnection(
+            mHomeWallpaperConnection = new WallpaperConnection(
                     getWallpaperIntent(homeWallpaper.getWallpaperComponent()), mActivity,
                     new WallpaperConnection.WallpaperConnectionListener() {
                         @Override
@@ -481,10 +557,10 @@ public class WallpaperSectionController implements
                     },
                     mHomeWallpaperSurface, isLockLive ? mLockWallpaperSurface : null);
 
-            mWallpaperConnection.setVisibility(true);
+            mHomeWallpaperConnection.setVisibility(true);
             mHomeWallpaperSurface.post(() -> {
-                if (mWallpaperConnection != null && !mWallpaperConnection.connect()) {
-                    mWallpaperConnection = null;
+                if (mHomeWallpaperConnection != null && !mHomeWallpaperConnection.connect()) {
+                    mHomeWallpaperConnection = null;
                 }
             });
         }
