@@ -32,7 +32,7 @@ class WallpaperSnapshotRestorer(
     private val interactor: WallpaperInteractor,
 ) : SnapshotRestorer {
 
-    private lateinit var store: SnapshotStore
+    private var store: SnapshotStore = SnapshotStore.NOOP
 
     override suspend fun setUpSnapshotRestorer(
         store: SnapshotStore,
