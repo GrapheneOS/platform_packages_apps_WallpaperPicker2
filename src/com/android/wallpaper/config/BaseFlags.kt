@@ -26,7 +26,6 @@ abstract class BaseFlags {
     var customizationProviderClient: CustomizationProviderClient? = null
     open fun isStagingBackdropContentEnabled() = false
     open fun isWallpaperEffectEnabled() = false
-    open fun isEffectOnMultiplePanelEnabled() = false
     open fun isFullscreenWallpaperPreviewEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag ->
