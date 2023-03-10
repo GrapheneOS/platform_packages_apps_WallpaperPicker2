@@ -139,7 +139,8 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                 setFallbackLockScreenWallpaperMetadata();
             }
 
-            if (mWallpaperManager.getWallpaperInfo(FLAG_LOCK) == null) {
+            if (mWallpaperManager.getWallpaperInfo(FLAG_LOCK) == null
+                    || !mWallpaperManager.isLockscreenLiveWallpaperEnabled()) {
                 wallpaperMetadatas.add(new WallpaperMetadata(
                         mWallpaperPreferences.getLockWallpaperAttributions(),
                         mWallpaperPreferences.getLockWallpaperActionUrl(),
