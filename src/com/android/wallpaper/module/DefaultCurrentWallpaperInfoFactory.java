@@ -88,8 +88,8 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                     WallpaperInfo lockWallpaper = null;
 
                     if (lockWallpaperMetadata != null) {
-                        if (lockWallpaperMetadata instanceof LiveWallpaperMetadata
-                                && mWallpaperManager.isLockscreenLiveWallpaperEnabled()) {
+
+                        if (lockWallpaperMetadata instanceof LiveWallpaperMetadata) {
                             lockWallpaper = mLiveWallpaperInfoFactory.getLiveWallpaperInfo(
                                     lockWallpaperMetadata.getWallpaperComponent());
                         } else {
