@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.util
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Point
 import android.hardware.display.DisplayManager
@@ -22,8 +23,8 @@ import android.util.Log
 import android.view.Display
 
 /**
- * Utility class to provide methods to find and obtain information about displays via
- * {@link DisplayManager}
+ * Utility class to provide methods to find and obtain information about displays via {@link
+ * DisplayManager}
  */
 class DisplayUtils(context: Context) {
     companion object {
@@ -35,7 +36,8 @@ class DisplayUtils(context: Context) {
     init {
         val appContext = context.applicationContext
         val dm = appContext.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-        val allDisplays: Array<out Display> = dm.displays
+        val allDisplays: Array<out Display> =
+            dm.getDisplays(DisplayManager.DISPLAY_CATEGORY_ALL_INCLUDING_DISABLED)
         if (allDisplays.isEmpty()) {
             Log.e(TAG, "No displays found on context $appContext")
             throw RuntimeException("No displays found!")
@@ -43,12 +45,20 @@ class DisplayUtils(context: Context) {
         internalDisplays = allDisplays.filter { it.type == Display.TYPE_INTERNAL }
     }
 
-    /**
-     * Returns the {@link Display} to be used to calculate wallpaper size and cropping.
-     */
+    /** Returns the {@link Display} to be used to calculate wallpaper size and cropping. */
     fun getWallpaperDisplay(): Display {
         return internalDisplays.maxWithOrNull { a, b -> getRealSize(a) - getRealSize(b) }
-                ?: internalDisplays[0]
+            ?: internalDisplays[0]
+    }
+
+    /**
+     * Returns `true` if the current display is the wallpaper display on a multi-display device.
+     *
+     * On a multi-display device the wallpaper display is the largest display while on a single
+     * display device the only display is both the wallpaper display and the current display.
+     */
+    fun isOnWallpaperDisplay(activity: Activity): Boolean {
+        return activity.display.displayId == getWallpaperDisplay().displayId
     }
 
     private fun getRealSize(display: Display): Int {

@@ -20,6 +20,7 @@ import static android.view.View.IMPORTANT_FOR_ACCESSIBILITY_YES;
 import static android.view.View.MeasureSpec.EXACTLY;
 import static android.view.View.MeasureSpec.makeMeasureSpec;
 
+import static com.android.wallpaper.util.WallpaperSurfaceCallback.LOW_RES_BITMAP_BLUR_RADIUS;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.EDIT;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.INFORMATION;
@@ -37,6 +38,8 @@ import android.graphics.ColorSpace;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -69,6 +72,7 @@ import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
+import com.android.wallpaper.util.DisplayUtils;
 import com.android.wallpaper.util.FullScreenAnimation;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
@@ -133,6 +137,7 @@ public class ImagePreviewFragment extends PreviewFragment {
     protected SubsamplingScaleImageView mFullResImageView;
     protected Asset mWallpaperAsset;
     private Future<ColorInfo> mColorFuture;
+    private DisplayUtils mDisplayUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -153,12 +158,13 @@ public class ImagePreviewFragment extends PreviewFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         Activity activity = requireActivity();
+        mDisplayUtils = mInjector.getDisplayUtils(activity);
         ScreenSizeCalculator screenSizeCalculator = ScreenSizeCalculator.getInstance();
         mScreenSize = screenSizeCalculator.getScreenSize(
                 activity.getWindowManager().getDefaultDisplay());
         // "Wallpaper screen" size will be the size of the largest screen available
         mWallpaperScreenSize = screenSizeCalculator.getScreenSize(
-                mInjector.getDisplayUtils(activity).getWallpaperDisplay());
+                mDisplayUtils.getWallpaperDisplay());
 
         mContainer = view.findViewById(R.id.container);
         mTouchForwardingLayout = mContainer.findViewById(R.id.touch_forwarding_layout);
@@ -512,7 +518,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         Point crop = new Point(cropWidth, cropHeight);
         Rect visibleRawWallpaperRect =
                 WallpaperCropUtils.calculateVisibleRect(mRawWallpaperSize, crop);
-        if (offsetToStart) {
+        if (offsetToStart && mDisplayUtils.isOnWallpaperDisplay(requireActivity())) {
             if (WallpaperCropUtils.isRtl(requireContext())) {
                 visibleRawWallpaperRect.offsetTo(mRawWallpaperSize.x
                                 - visibleRawWallpaperRect.width(), visibleRawWallpaperRect.top);
@@ -601,6 +607,9 @@ public class ImagePreviewFragment extends PreviewFragment {
                         R.layout.fullscreen_wallpaper_preview, null);
                 mFullResImageView = wallpaperPreviewContainer.findViewById(R.id.full_res_image);
                 mLowResImageView = wallpaperPreviewContainer.findViewById(R.id.low_res_image);
+                mLowResImageView.setRenderEffect(
+                        RenderEffect.createBlurEffect(LOW_RES_BITMAP_BLUR_RADIUS,
+                                LOW_RES_BITMAP_BLUR_RADIUS, Shader.TileMode.CLAMP));
                 mWallpaperAsset.decodeRawDimensions(getActivity(), dimensions -> {
                     // Don't continue loading the wallpaper if the Fragment is detached.
                     if (getActivity() == null) {
@@ -633,11 +642,14 @@ public class ImagePreviewFragment extends PreviewFragment {
                 int origWidth = mWallpaperSurface.getWidth();
                 int origHeight = mWallpaperSurface.getHeight();
 
-                if (!mScreenSize.equals(mWallpaperScreenSize)) {
+                int scaledOrigWidth = origWidth;
+                if (!mDisplayUtils.isOnWallpaperDisplay(requireActivity())) {
+                    // Scale the width of the mWallpaperSurface if the current screen is not the
+                    // largest screen (wallpaper screen).
                     float previewToScreenScale = (float) origWidth / mScreenSize.x;
-                    origWidth = (int) (mWallpaperScreenSize.x * previewToScreenScale);
+                    scaledOrigWidth = (int) (mWallpaperScreenSize.x * previewToScreenScale);
                 }
-                int width = (int) (origWidth * scale);
+                int width = (int) (scaledOrigWidth * scale);
                 int height = (int) (origHeight * scale);
                 int left = (origWidth - width) / 2;
                 int top = (origHeight - height) / 2;

@@ -34,10 +34,23 @@ public interface CustomizationSectionController<T extends SectionView> {
     interface CustomizationSectionNavigationController {
         /** Navigates to the given {@code fragment}. */
         void navigateTo(Fragment fragment);
+
+        /** Navigates to a {@code fragment} that maps to the given destination ID. */
+        void navigateTo(String destinationId);
     }
 
     /** Returns {@code true} if the customization section is available. */
     boolean isAvailable(@Nullable Context context);
+
+    /**
+     * Returns a newly created {@link SectionView} for the section.
+     *
+     * @param context The {@link Context} to inflate view.
+     * @param isOnLockScreen Whether we are on the lock screen.
+     */
+    default T createView(Context context, boolean isOnLockScreen) {
+        return createView(context);
+    }
 
     /**
      * Returns a newly created {@link SectionView} for the section.
@@ -54,4 +67,7 @@ public interface CustomizationSectionController<T extends SectionView> {
 
     /** Gets called when the section gets transitioned out. */
     default void onTransitionOut() {}
+
+    /** Notifies when the screen was switched. */
+    default void onScreenSwitched(boolean isOnLockScreen) {}
 }

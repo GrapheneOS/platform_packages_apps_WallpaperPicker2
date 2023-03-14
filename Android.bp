@@ -43,6 +43,7 @@ android_library {
         "SettingsLibCollapsingToolbarBaseActivity",
         "subsampling-scale-image-view",
         "SystemUISharedLib",
+        "SystemUICustomizationLib",
         "volley",
         "SettingsLibActivityEmbedding",
     ],
@@ -61,7 +62,7 @@ android_library {
 
     visibility: [
         ":__subpackages__",
-        "//packages/apps/ThemePicker",
+        "//packages/apps/ThemePicker:__subpackages__",
         "//vendor:__subpackages__",
     ],
 }
@@ -107,12 +108,8 @@ java_defaults {
     name: "WallpaperPicker2_defaults",
 
     static_libs: [
-        "renderscript_toolkit",
         "wallpaper-common-deps",
-    ],
-
-    jni_libs: [
-        "librenderscript-toolkit",
+        "monet",
     ],
 
     srcs: [

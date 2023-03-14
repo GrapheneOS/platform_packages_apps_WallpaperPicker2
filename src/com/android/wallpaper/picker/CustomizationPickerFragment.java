@@ -37,7 +37,11 @@ import com.android.wallpaper.model.WallpaperColorsViewModel;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
 import com.android.wallpaper.model.WorkspaceViewModel;
 import com.android.wallpaper.module.CustomizationSections;
+import com.android.wallpaper.module.FragmentFactory;
+import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder;
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel;
 import com.android.wallpaper.util.ActivityUtils;
 
 import java.util.ArrayList;
@@ -50,18 +54,34 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
     private static final String TAG = "CustomizationPickerFragment";
     private static final String SCROLL_POSITION_Y = "SCROLL_POSITION_Y";
+    private static final String KEY_IS_USE_REVAMPED_UI = "is_use_revamped_ui";
+
+    /** Returns a new instance of {@link CustomizationPickerFragment}. */
+    public static CustomizationPickerFragment newInstance(boolean isUseRevampedUi) {
+        final CustomizationPickerFragment fragment = new CustomizationPickerFragment();
+        final Bundle args = new Bundle();
+        args.putBoolean(KEY_IS_USE_REVAMPED_UI, isUseRevampedUi);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     // Note that the section views will be displayed by the list ordering.
     private final List<CustomizationSectionController<?>> mSectionControllers = new ArrayList<>();
     private NestedScrollView mNestedScrollView;
     @Nullable private Bundle mBackStackSavedInstanceState;
+    private final FragmentFactory mFragmentFactory;
+    @Nullable private CustomizationPickerViewModel mViewModel;
+
+    public CustomizationPickerFragment() {
+        mFragmentFactory = InjectorProvider.getInjector().getFragmentFactory();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.collapsing_toolbar_container_layout,
                 container, /* attachToRoot= */ false);
-        setContentView(view, R.layout.fragment_customization_picker);
+
         if (ActivityUtils.isLaunchedFromSettingsRelated(getActivity().getIntent())) {
             setUpToolbar(view, !ActivityEmbeddingUtils.shouldHideNavigateUpButton(
                     getActivity(), /* isSecondLayerPage= */ true));
@@ -69,39 +89,78 @@ public class CustomizationPickerFragment extends AppbarFragment implements
             setUpToolbar(view, /* upArrow= */ false);
         }
 
-        ViewGroup sectionContainer = view.findViewById(R.id.section_container);
-        sectionContainer.setOnApplyWindowInsetsListener((v, windowInsets) -> {
-            v.setPadding(
-                    v.getPaddingLeft(),
-                    v.getPaddingTop(),
-                    v.getPaddingRight(),
-                    windowInsets.getSystemWindowInsetBottom());
-            return windowInsets.consumeSystemWindowInsets();
-        });
-        mNestedScrollView = view.findViewById(R.id.scroll_container);
+        final Injector injector = InjectorProvider.getInjector();
+        final Bundle args = getArguments();
+        final boolean isUseRevampedUi;
+        if (args != null && args.containsKey(KEY_IS_USE_REVAMPED_UI)) {
+            isUseRevampedUi = args.getBoolean(KEY_IS_USE_REVAMPED_UI);
+        } else {
+            throw new IllegalStateException(
+                    "Must contain KEY_IS_USE_REVAMPED_UI argument, did you instantiate directly"
+                            + " instead of using the newInstance function?");
+        }
+        if (isUseRevampedUi) {
+            setContentView(view, R.layout.fragment_tabbed_customization_picker);
+            mViewModel = new ViewModelProvider(
+                    this,
+                    CustomizationPickerViewModel.newFactory(
+                            this,
+                            savedInstanceState,
+                            injector.getUndoInteractor(requireContext()))
+            ).get(CustomizationPickerViewModel.class);
+
+            setUpToolbarMenu(R.menu.undoable_customization_menu);
+            final Bundle finalSavedInstanceState = savedInstanceState;
+            CustomizationPickerBinder.bind(
+                    view,
+                    getToolbarId(),
+                    mViewModel,
+                    this,
+                    isOnLockScreen -> getSectionControllers(
+                            isOnLockScreen
+                                    ? CustomizationSections.Screen.LOCK_SCREEN
+                                    : CustomizationSections.Screen.HOME_SCREEN,
+                            finalSavedInstanceState));
+        } else {
+            setContentView(view, R.layout.fragment_customization_picker);
+        }
 
         if (mBackStackSavedInstanceState != null) {
             savedInstanceState = mBackStackSavedInstanceState;
             mBackStackSavedInstanceState = null;
         }
 
-        initSections(savedInstanceState);
-        mSectionControllers.forEach(controller ->
-                mNestedScrollView.post(() -> {
-                            final Context context = getContext();
-                            if (context == null) {
-                                Log.w(TAG, "Adding section views with null context");
-                                return;
+        mNestedScrollView = view.findViewById(R.id.scroll_container);
+
+        if (!isUseRevampedUi) {
+            ViewGroup sectionContainer = view.findViewById(R.id.section_container);
+            sectionContainer.setOnApplyWindowInsetsListener((v, windowInsets) -> {
+                v.setPadding(
+                        v.getPaddingLeft(),
+                        v.getPaddingTop(),
+                        v.getPaddingRight(),
+                        windowInsets.getSystemWindowInsetBottom());
+                return windowInsets.consumeSystemWindowInsets();
+            });
+
+            initSections(savedInstanceState);
+            mSectionControllers.forEach(controller ->
+                    mNestedScrollView.post(() -> {
+                                final Context context = getContext();
+                                if (context == null) {
+                                    Log.w(TAG, "Adding section views with null context");
+                                    return;
+                                }
+                                sectionContainer.addView(controller.createView(context));
                             }
-                            sectionContainer.addView(controller.createView(context));
-                        }
-                )
-        );
-        final Bundle savedInstanceStateRef = savedInstanceState;
-        // Post it to the end of adding views to ensure restoring view state the last task.
-        mNestedScrollView.post(() ->
-                restoreViewState(savedInstanceStateRef)
-        );
+                    )
+            );
+
+            final Bundle savedInstanceStateRef = savedInstanceState;
+            // Post it to the end of adding views to ensure restoring view state the last task.
+            view.post(() -> restoreViewState(savedInstanceStateRef));
+        }
+
         return view;
     }
 
@@ -175,6 +234,15 @@ public class CustomizationPickerFragment extends AppbarFragment implements
         fragmentManager.executePendingTransactions();
     }
 
+    @Override
+    public void navigateTo(String destinationId) {
+        final Fragment fragment = mFragmentFactory.create(destinationId);
+
+        if (fragment != null) {
+            navigateTo(fragment);
+        }
+    }
+
     /** Saves state of the fragment. */
     private void onSaveInstanceStateInternal(Bundle savedInstanceState) {
         if (mNestedScrollView != null) {
@@ -188,18 +256,53 @@ public class CustomizationPickerFragment extends AppbarFragment implements
         mSectionControllers.forEach(CustomizationSectionController::release);
         mSectionControllers.clear();
 
+        mSectionControllers.addAll(
+                getAvailableSections(getAvailableSectionControllers(savedInstanceState)));
+    }
+
+    private List<CustomizationSectionController<?>> getAvailableSectionControllers(
+            @Nullable Bundle savedInstanceState) {
+        return getSectionControllers(
+                null,
+                savedInstanceState);
+    }
+
+    private List<CustomizationSectionController<?>> getSectionControllers(
+            @Nullable CustomizationSections.Screen screen,
+            @Nullable Bundle savedInstanceState) {
+        final Injector injector = InjectorProvider.getInjector();
+
         WallpaperColorsViewModel wcViewModel = new ViewModelProvider(getActivity())
                 .get(WallpaperColorsViewModel.class);
         WorkspaceViewModel workspaceViewModel = new ViewModelProvider(getActivity())
                 .get(WorkspaceViewModel.class);
 
-        CustomizationSections sections = InjectorProvider.getInjector().getCustomizationSections();
-        List<CustomizationSectionController<?>> allSectionControllers =
-                sections.getAllSectionControllers(getActivity(), getViewLifecycleOwner(),
-                        wcViewModel, workspaceViewModel, getPermissionRequester(),
-                        getWallpaperPreviewNavigator(), this, savedInstanceState);
-
-        mSectionControllers.addAll(getAvailableSections(allSectionControllers));
+        CustomizationSections sections = injector.getCustomizationSections(getActivity());
+        if (screen == null) {
+            return sections.getAllSectionControllers(
+                    getActivity(),
+                    getViewLifecycleOwner(),
+                    wcViewModel,
+                    workspaceViewModel,
+                    getPermissionRequester(),
+                    getWallpaperPreviewNavigator(),
+                    this,
+                    savedInstanceState,
+                    injector.getDisplayUtils(getActivity()));
+        } else {
+            return sections.getSectionControllersForScreen(
+                    screen,
+                    getActivity(),
+                    getViewLifecycleOwner(),
+                    wcViewModel,
+                    workspaceViewModel,
+                    getPermissionRequester(),
+                    getWallpaperPreviewNavigator(),
+                    this,
+                    savedInstanceState,
+                    injector.getCurrentWallpaperInfoFactory(requireContext()),
+                    injector.getDisplayUtils(getActivity()));
+        }
     }
 
     protected List<CustomizationSectionController<?>> getAvailableSections(
