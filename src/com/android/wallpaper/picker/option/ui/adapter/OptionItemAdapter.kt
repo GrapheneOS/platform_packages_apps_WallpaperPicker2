@@ -25,6 +25,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.android.wallpaper.R
 import com.android.wallpaper.picker.option.ui.binder.OptionItemBinder
 import com.android.wallpaper.picker.option.ui.viewmodel.OptionItemViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -34,16 +35,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /** Adapts between option items and their views. */
-class OptionItemAdapter(
+class OptionItemAdapter<T>(
     @LayoutRes private val layoutResourceId: Int,
     private val lifecycleOwner: LifecycleOwner,
     private val backgroundDispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val foregroundTintSpec: OptionItemBinder.TintSpec? = null,
+    private val bindIcon: (View, T) -> Unit,
 ) : RecyclerView.Adapter<OptionItemAdapter.ViewHolder>() {
 
-    private val items = mutableListOf<OptionItemViewModel>()
+    private val items = mutableListOf<OptionItemViewModel<T>>()
 
-    fun setItems(items: List<OptionItemViewModel>) {
+    fun setItems(items: List<OptionItemViewModel<T>>) {
         lifecycleOwner.lifecycleScope.launch {
             val oldItems = this@OptionItemAdapter.items
             val newItems = items
@@ -64,7 +66,7 @@ class OptionItemAdapter(
                                 newItemPosition: Int
                             ): Boolean {
                                 val oldItem = oldItems[oldItemPosition]
-                                val newItem = oldItems[newItemPosition]
+                                val newItem = newItems[newItemPosition]
                                 return oldItem.key == newItem.key
                             }
 
@@ -73,7 +75,7 @@ class OptionItemAdapter(
                                 newItemPosition: Int
                             ): Boolean {
                                 val oldItem = oldItems[oldItemPosition]
-                                val newItem = oldItems[newItemPosition]
+                                val newItem = newItems[newItemPosition]
                                 return oldItem == newItem
                             }
                         },
@@ -109,6 +111,9 @@ class OptionItemAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.disposableHandle?.dispose()
         val item = items[position]
+        item.payload?.let {
+            bindIcon(holder.itemView.requireViewById(R.id.foreground), item.payload)
+        }
         holder.disposableHandle =
             OptionItemBinder.bind(
                 view = holder.itemView,
