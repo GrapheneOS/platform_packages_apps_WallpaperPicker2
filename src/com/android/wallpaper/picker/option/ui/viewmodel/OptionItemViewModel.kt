@@ -17,20 +17,21 @@
 
 package com.android.wallpaper.picker.option.ui.viewmodel
 
-import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import kotlinx.coroutines.flow.Flow
 
 /** Models UI state for an item in a list of selectable options. */
-data class OptionItemViewModel(
+data class OptionItemViewModel<Payload>(
     /**
      * A stable key that uniquely identifies this option amongst all other options in the same list
      * of options.
      */
     val key: Flow<String>,
 
-    /** An icon to show. */
-    val icon: Icon,
+    /**
+     * The view model representing additional details needed for binding the icon of an option item
+     */
+    val payload: Payload? = null,
 
     /**
      * A text to show to the user (or attach as content description on the icon, if there's no
