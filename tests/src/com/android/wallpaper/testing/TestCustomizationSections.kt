@@ -9,6 +9,7 @@ import com.android.wallpaper.model.WallpaperColorsViewModel
 import com.android.wallpaper.model.WallpaperPreviewNavigator
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory
 import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperQuickSwitchViewModel
 import com.android.wallpaper.util.DisplayUtils
 
@@ -27,6 +28,7 @@ class TestCustomizationSections : CustomizationSections {
         wallpaperInfoFactory: CurrentWallpaperInfoFactory?,
         displayUtils: DisplayUtils?,
         wallpaperQuickSwitchViewModel: WallpaperQuickSwitchViewModel,
+        wallpaperInteractor: WallpaperInteractor,
     ): MutableList<CustomizationSectionController<*>> {
         return arrayListOf()
     }
