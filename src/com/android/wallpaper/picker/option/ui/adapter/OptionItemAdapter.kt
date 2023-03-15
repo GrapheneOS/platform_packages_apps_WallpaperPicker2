@@ -67,7 +67,7 @@ class OptionItemAdapter<T>(
                             ): Boolean {
                                 val oldItem = oldItems[oldItemPosition]
                                 val newItem = newItems[newItemPosition]
-                                return oldItem.key == newItem.key
+                                return oldItem.key.value == newItem.key.value
                             }
 
                             override fun areContentsTheSame(
