@@ -81,8 +81,7 @@
     <string name="tab_info" msgid="818614080690111416">"ຂໍ້ມູນ"</string>
     <string name="tab_customize" msgid="2533745409174959960">"ປັບແຕ່ງ"</string>
     <string name="tab_effects" msgid="3213606157589233901">"ເອັບເຟັກ"</string>
-    <!-- no translation found for tab_share (6676269624804601227) -->
-    <skip />
+    <string name="tab_share" msgid="6676269624804601227">"ແບ່ງປັນ"</string>
     <string name="my_photos" msgid="8613021349284084982">"​ຮູບ​ພາບ​ຂອງ​ຂ້ອຍ"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"ການຕັ້ງຄ່າ…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"ລຶບອອກ"</string>
