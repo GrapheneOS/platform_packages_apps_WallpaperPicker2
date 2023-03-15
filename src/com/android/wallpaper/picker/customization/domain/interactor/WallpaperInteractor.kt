@@ -18,6 +18,7 @@
 package com.android.wallpaper.picker.customization.domain.interactor
 
 import android.graphics.Bitmap
+import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -28,7 +29,23 @@ import kotlinx.coroutines.flow.map
 /** Handles business logic for wallpaper-related use-cases. */
 class WallpaperInteractor(
     private val repository: WallpaperRepository,
+    /** Returns whether wallpaper picker should handle reload */
+    val shouldHandleReload: () -> Boolean = { true },
 ) {
+    /** Returns a flow that is updated whenever the wallpaper has been updated */
+    fun wallpaperUpdateEvents(screen: CustomizationSections.Screen): Flow<WallpaperModel> {
+        return when (screen) {
+            CustomizationSections.Screen.LOCK_SCREEN ->
+                previews(WallpaperDestination.LOCK, 1).map { recentWallpapers ->
+                    recentWallpapers[0]
+                }
+            CustomizationSections.Screen.HOME_SCREEN ->
+                previews(WallpaperDestination.HOME, 1).map { recentWallpapers ->
+                    recentWallpapers[0]
+                }
+        }
+    }
+
     /** Returns the ID of the currently-selected wallpaper. */
     fun selectedWallpaperId(
         destination: WallpaperDestination,

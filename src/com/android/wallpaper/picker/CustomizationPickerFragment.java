@@ -307,7 +307,8 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                     savedInstanceState,
                     injector.getCurrentWallpaperInfoFactory(requireContext()),
                     injector.getDisplayUtils(getActivity()),
-                    wallpaperQuickSwitchViewModel);
+                    wallpaperQuickSwitchViewModel,
+                    injector.getWallpaperInteractor(requireContext()));
         }
     }
 
