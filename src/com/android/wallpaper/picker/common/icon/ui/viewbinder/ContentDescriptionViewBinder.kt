@@ -17,12 +17,12 @@
 
 package com.android.wallpaper.picker.common.icon.ui.viewbinder
 
-import android.widget.ImageView
+import android.view.View
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 
 object ContentDescriptionViewBinder {
     fun bind(
-        view: ImageView,
+        view: View,
         viewModel: Text,
     ) {
         view.contentDescription =
