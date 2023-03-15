@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.option.ui.viewmodel
 
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 /** Models UI state for an item in a list of selectable options. */
 data class OptionItemViewModel<Payload>(
@@ -26,7 +27,7 @@ data class OptionItemViewModel<Payload>(
      * A stable key that uniquely identifies this option amongst all other options in the same list
      * of options.
      */
-    val key: Flow<String>,
+    val key: StateFlow<String>,
 
     /**
      * The view model representing additional details needed for binding the icon of an option item
@@ -40,7 +41,7 @@ data class OptionItemViewModel<Payload>(
     val text: Text,
 
     /** Whether this option is selected. */
-    val isSelected: Flow<Boolean>,
+    val isSelected: StateFlow<Boolean>,
 
     /** Whether this option is enabled. */
     val isEnabled: Boolean = true,
@@ -50,4 +51,15 @@ data class OptionItemViewModel<Payload>(
 
     /** Notifies that the option has been long-clicked by the user. */
     val onLongClicked: (() -> Unit)? = null,
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        val otherItem = other as? OptionItemViewModel<*> ?: return false
+        // skipping comparison of onClicked because it is correlated with
+        // changes on isSelected
+        return this.payload == otherItem.payload &&
+            this.text == otherItem.text &&
+            this.isSelected.value == otherItem.isSelected.value &&
+            this.isEnabled == otherItem.isEnabled &&
+            this.onLongClicked == otherItem.onLongClicked
+    }
+}
