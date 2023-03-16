@@ -37,6 +37,7 @@ import com.android.wallpaper.asset.BitmapCachingAsset
 import com.android.wallpaper.asset.CurrentWallpaperAssetVN
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.WorkspaceSurfaceHolderCallback
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
 import com.android.wallpaper.util.ResourceUtils
@@ -77,6 +78,9 @@ object ScreenPreviewBinder {
         lifecycleOwner: LifecycleOwner,
         offsetToStart: Boolean,
         dimWallpaper: Boolean = false,
+        // TODO (b/270193793): add below fields to all usages of this class & remove default values
+        screen: CustomizationSections.Screen = CustomizationSections.Screen.LOCK_SCREEN,
+        onPreviewDirty: () -> Unit = {},
     ): Binding {
         val workspaceSurface: SurfaceView = previewView.requireViewById(R.id.workspace_surface)
         val wallpaperSurface: SurfaceView = previewView.requireViewById(R.id.wallpaper_surface)
@@ -147,7 +151,20 @@ object ScreenPreviewBinder {
 
                 launch {
                     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        // Do nothing.
+                        var initialWallpaperUpdate = true
+                        viewModel.wallpaperUpdateEvents(screen)?.collect {
+                            // Do not update screen preview on initial update,since the initial
+                            // update results from starting or resuming the activity.
+                            //
+                            // In addition, update screen preview only if system color is a preset
+                            // color. Otherwise, setting wallpaper will cause a change in wallpaper
+                            // color and trigger a reset from system ui
+                            if (initialWallpaperUpdate) {
+                                initialWallpaperUpdate = false
+                            } else if (viewModel.shouldHandleReload()) {
+                                onPreviewDirty()
+                            }
+                        }
                     }
 
                     // Here when stopped.
