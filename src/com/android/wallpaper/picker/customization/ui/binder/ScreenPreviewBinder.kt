@@ -27,6 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -102,6 +103,19 @@ object ScreenPreviewBinder {
         val job =
             lifecycleOwner.lifecycleScope.launch {
                 launch {
+                    val lifecycleObserver =
+                        object : DefaultLifecycleObserver {
+                            override fun onStop(owner: LifecycleOwner) {
+                                super.onStop(owner)
+                                wallpaperConnection?.disconnect()
+                            }
+
+                            override fun onPause(owner: LifecycleOwner) {
+                                super.onPause(owner)
+                                wallpaperConnection?.setVisibility(false)
+                            }
+                        }
+
                     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                         previewSurfaceCallback =
                             WorkspaceSurfaceHolderCallback(
@@ -140,9 +154,12 @@ object ScreenPreviewBinder {
                         if (!dimWallpaper) {
                             wallpaperSurface.setZOrderMediaOverlay(true)
                         }
+
+                        lifecycleOwner.lifecycle.addObserver(lifecycleObserver)
                     }
 
                     // Here when destroyed.
+                    lifecycleOwner.lifecycle.removeObserver(lifecycleObserver)
                     workspaceSurface.holder.removeCallback(previewSurfaceCallback)
                     previewSurfaceCallback?.cleanUp()
                     wallpaperSurface.holder.removeCallback(wallpaperSurfaceCallback)
@@ -166,9 +183,6 @@ object ScreenPreviewBinder {
                             }
                         }
                     }
-
-                    // Here when stopped.
-                    wallpaperConnection?.disconnect()
                 }
 
                 launch {
@@ -212,9 +226,6 @@ object ScreenPreviewBinder {
                             )
                         }
                     }
-
-                    // Here when paused.
-                    wallpaperConnection?.setVisibility(false)
                 }
             }
 
