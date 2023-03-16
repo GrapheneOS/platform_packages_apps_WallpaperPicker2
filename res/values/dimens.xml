@@ -184,6 +184,7 @@
 
     <!-- Dimensions for the separated tabs. -->
     <dimen name="separated_tabs_height">56dp</dimen>
+    <dimen name="separated_tabs_height_short">36dp</dimen>
     <dimen name="separated_tabs_corner_radius">12dp</dimen>
     <dimen name="separated_tabs_inset_horizontal">4dp</dimen>
     <!--  Default page horizontal margin (24dp) - separated tabs inset horizontal (4dp) -->
