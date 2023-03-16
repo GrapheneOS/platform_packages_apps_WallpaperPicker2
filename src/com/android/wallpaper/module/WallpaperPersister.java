@@ -139,7 +139,9 @@ public interface WallpaperPersister {
             int actionLabelRes,
             int actionIconRes,
             String collectionId,
-            int wallpaperId);
+            int wallpaperId,
+            @Destination int destination
+        );
 
     /**
      * @return the flag indicating which wallpaper to set when we're trying to set a wallpaper with

@@ -25,6 +25,7 @@ import com.android.wallpaper.picker.customization.shared.model.WallpaperDestinat
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotStore
 import com.android.wallpaper.picker.undo.shared.model.RestorableSnapshot
+import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -74,6 +75,7 @@ class WallpaperSnapshotRestorerTest {
                             WallpaperRepository(
                                 scope = testScope.backgroundScope,
                                 client = wallpaperClient,
+                                wallpaperPreferences = TestWallpaperPreferences(),
                                 backgroundDispatcher = testDispatcher,
                             ),
                     )
@@ -83,13 +85,19 @@ class WallpaperSnapshotRestorerTest {
     @Test
     fun restore() =
         testScope.runTest {
+            // We expect three snapshots, and test that they are correct:
+            // 0: Starting state. This differs from the return value of `setUpSnapshotRestorer`
+            //    because the initial value of WallpaperRepository#selectedWallpaperId differs from
+            //    the value returned by the map
+            // 1: Home wallpaper set
+            // 2: Lock wallpaper also set
             wallpaperClient.setRecentWallpapers(
                 buildMap {
                     put(WallpaperDestination.HOME, INITIAL_HOME_WALLPAPERS)
                     put(WallpaperDestination.LOCK, INITIAL_LOCK_WALLPAPERS)
                 }
             )
-            val initialSnapshot = underTest.setUpSnapshotRestorer(store)
+            underTest.setUpSnapshotRestorer(store)
             runCurrent()
             wallpaperClient.setWallpaper(
                 destination = WallpaperDestination.HOME,
@@ -97,28 +105,28 @@ class WallpaperSnapshotRestorerTest {
                 onDone = {},
             )
             runCurrent()
-            assertThat(storedSnapshots).hasSize(1)
+            assertThat(storedSnapshots).hasSize(2)
             wallpaperClient.setWallpaper(
                 destination = WallpaperDestination.LOCK,
                 wallpaperId = INITIAL_LOCK_WALLPAPERS[4].wallpaperId,
                 onDone = {},
             )
             runCurrent()
-            assertThat(storedSnapshots).hasSize(2)
+            assertThat(storedSnapshots).hasSize(3)
 
-            underTest.restoreToSnapshot(storedSnapshots[0])
+            underTest.restoreToSnapshot(storedSnapshots[1])
             assertThat(wallpaperClient.getCurrentWallpaper(destination = WallpaperDestination.HOME))
                 .isEqualTo(INITIAL_HOME_WALLPAPERS[1])
             assertThat(wallpaperClient.getCurrentWallpaper(destination = WallpaperDestination.LOCK))
                 .isEqualTo(INITIAL_LOCK_WALLPAPERS[0])
 
-            underTest.restoreToSnapshot(initialSnapshot)
+            underTest.restoreToSnapshot(storedSnapshots[0])
             assertThat(wallpaperClient.getCurrentWallpaper(destination = WallpaperDestination.HOME))
                 .isEqualTo(INITIAL_HOME_WALLPAPERS[0])
             assertThat(wallpaperClient.getCurrentWallpaper(destination = WallpaperDestination.LOCK))
                 .isEqualTo(INITIAL_LOCK_WALLPAPERS[0])
 
-            underTest.restoreToSnapshot(storedSnapshots[1])
+            underTest.restoreToSnapshot(storedSnapshots[2])
             assertThat(wallpaperClient.getCurrentWallpaper(destination = WallpaperDestination.HOME))
                 .isEqualTo(INITIAL_HOME_WALLPAPERS[1])
             assertThat(wallpaperClient.getCurrentWallpaper(destination = WallpaperDestination.LOCK))

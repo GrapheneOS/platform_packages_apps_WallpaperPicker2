@@ -51,9 +51,11 @@ public class WallpaperPreferenceKeys {
         String KEY_HOME_WALLPAPER_BASE_IMAGE_URL =
                 "home_wallpaper_base_image_url";
         String KEY_HOME_WALLPAPER_MANAGER_ID = "home_wallpaper_id";
+        String KEY_HOME_WALLPAPER_RECENTS_KEY = "home_wallpaper_recents_key";
         String KEY_HOME_WALLPAPER_REMOTE_ID = "home_wallpaper_remote_id";
         String KEY_HOME_WALLPAPER_BACKING_FILE = "home_wallpaper_backing_file";
         String KEY_LOCK_WALLPAPER_MANAGER_ID = "lock_wallpaper_id";
+        String KEY_LOCK_WALLPAPER_RECENTS_KEY = "lock_wallpaper_recents_key";
         String KEY_LOCK_WALLPAPER_REMOTE_ID = "lock_wallpaper_remote_id";
         String KEY_LOCK_WALLPAPER_BACKING_FILE = "lock_wallpaper_backing_file";
         String KEY_DAILY_ROTATION_TIMESTAMPS = "daily_rotation_timestamps";

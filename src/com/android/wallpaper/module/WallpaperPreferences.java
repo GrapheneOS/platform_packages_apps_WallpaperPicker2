@@ -20,6 +20,7 @@ import android.app.WallpaperColors;
 import android.app.WallpaperManager.SetWallpaperFlags;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.text.TextUtils;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -175,6 +176,17 @@ public interface WallpaperPreferences {
     void setHomeWallpaperRemoteId(String wallpaperRemoteId);
 
     /**
+     * Gets the home wallpaper's identifier used to index into the list of recent wallpapers.
+     */
+    @Nullable
+    String getHomeWallpaperRecentsKey();
+
+    /**
+     * Sets the home wallpaper's identifier used to index into the list of recent wallpapers.
+     */
+    void setHomeWallpaperRecentsKey(String recentsKey);
+
+    /**
      * Gets the home wallpaper's effects.
      */
     String getHomeWallpaperEffects();
@@ -297,6 +309,17 @@ public interface WallpaperPreferences {
      * wallpaper collection.
      */
     void setLockWallpaperRemoteId(String wallpaperRemoteId);
+
+    /**
+     * Gets lock home wallpaper's identifier used to index into the list of recent wallpapers.
+     */
+    @Nullable
+    String getLockWallpaperRecentsKey();
+
+    /**
+     * Sets lock home wallpaper's identifier used to index into the list of recent wallpapers.
+     */
+    void setLockWallpaperRecentsKey(String recentsKey);
 
     /**
      * Gets the lock wallpaper's effects.
@@ -598,5 +621,25 @@ public interface WallpaperPreferences {
             String actionUrl, String collectionId,
             @NonNull Bitmap croppedWallpaperBitmap, WallpaperColors colors) {
         // Do nothing in the default case.
+    }
+
+    /**
+     * Generates a default key to look up a wallpaper in the list of recent wallpapers.
+     *
+     * <p>This key can be used as a fallback when {@link #getHomeWallpaperRecentsKey()} or
+     * {@link #getLockWallpaperRecentsKey()} return null.
+     * @param remoteId wallpaper's remote id
+     * @param hashCode wallpaper's hash code
+     * @return the recents key
+     */
+    @Nullable
+    static String generateRecentsKey(@Nullable String remoteId, long hashCode) {
+        if (!TextUtils.isEmpty(remoteId)) {
+            return remoteId;
+        } else if (hashCode > 0) {
+            return String.valueOf(hashCode);
+        } else {
+            return null;
+        }
     }
 }
