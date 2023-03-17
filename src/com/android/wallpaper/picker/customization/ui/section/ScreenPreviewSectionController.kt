@@ -32,9 +32,9 @@ import com.android.wallpaper.R
 import com.android.wallpaper.model.CustomizationSectionController
 import com.android.wallpaper.model.WallpaperColorsViewModel
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.model.WallpaperPreviewNavigator
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory
 import com.android.wallpaper.module.CustomizationSections
-import com.android.wallpaper.picker.CategorySelectorFragment
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.ui.binder.ScreenPreviewBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
@@ -55,9 +55,11 @@ open class ScreenPreviewSectionController(
     private val wallpaperInfoFactory: CurrentWallpaperInfoFactory,
     private val colorViewModel: WallpaperColorsViewModel,
     private val displayUtils: DisplayUtils,
-    private val navigator: CustomizationSectionController.CustomizationSectionNavigationController,
+    private val wallpaperPreviewNavigator: WallpaperPreviewNavigator,
     private val wallpaperInteractor: WallpaperInteractor,
 ) : CustomizationSectionController<ScreenPreviewView> {
+
+    private var isOnLockScreen: Boolean = initialScreen == CustomizationSections.Screen.LOCK_SCREEN
 
     private lateinit var lockScreenBinding: ScreenPreviewBinder.Binding
     private lateinit var homeScreenBinding: ScreenPreviewBinder.Binding
@@ -84,7 +86,26 @@ open class ScreenPreviewSectionController(
                     /* parent= */ null,
                 ) as ScreenPreviewView
         val onClickListener =
-            View.OnClickListener { navigator.navigateTo(CategorySelectorFragment()) }
+            View.OnClickListener {
+                lifecycleOwner.lifecycleScope.launch {
+                    val wallpaperInfo = suspendCancellableCoroutine { continuation ->
+                        wallpaperInfoFactory.createCurrentWallpaperInfos(
+                            { homeWallpaper, lockWallpaper, _ ->
+                                continuation.resume(
+                                    if (isOnLockScreen) {
+                                        lockWallpaper
+                                    } else {
+                                        homeWallpaper
+                                    },
+                                    null
+                                )
+                            },
+                            /* forceRefresh= */ true,
+                        )
+                    }
+                    wallpaperPreviewNavigator.showViewOnlyPreview(wallpaperInfo, false)
+                }
+            }
         view.setOnClickListener(onClickListener)
         val lockScreenView: CardView = view.requireViewById(R.id.lock_preview)
         val homeScreenView: CardView = view.requireViewById(R.id.home_preview)
@@ -196,6 +217,7 @@ open class ScreenPreviewSectionController(
     }
 
     override fun onScreenSwitched(isOnLockScreen: Boolean) {
+        this.isOnLockScreen = isOnLockScreen
         if (isOnLockScreen) {
             lockScreenBinding.show()
             homeScreenBinding.hide()
