@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2022 The Android Open Source Project
+     Copyright (C) 2023 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
         android:id="@+id/tab_primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/separated_tabs_height"
+        android:minHeight="@dimen/separated_tabs_height_short"
         android:layout_weight="1"
         android:background="@drawable/duo_tabs_button_background"
         android:gravity="center" />
@@ -34,7 +34,7 @@
         android:id="@+id/tab_secondary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/separated_tabs_height"
+        android:minHeight="@dimen/separated_tabs_height_short"
         android:layout_weight="1"
         android:background="@drawable/duo_tabs_button_background"
         android:gravity="center" />

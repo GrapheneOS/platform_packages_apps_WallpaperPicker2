@@ -15,8 +15,8 @@
   ~
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -25,8 +25,9 @@
         android:id="@+id/duo_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/tab_container_horizontal_padding"
-        android:paddingVertical="16dp" />
+        app:should_use_short_tabs="true"
+        android:layout_marginHorizontal="@dimen/tab_container_horizontal_padding"
+        android:layout_marginVertical="16dp" />
 
     <include
         layout="@layout/fragment_customization_picker"
