@@ -140,7 +140,18 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
         mNestedScrollView = view.findViewById(R.id.scroll_container);
 
-        if (!shouldUseRevampedUi) {
+        if (shouldUseRevampedUi) {
+            mNestedScrollView.setOnScrollChangeListener(
+                    (NestedScrollView.OnScrollChangeListener) (scrollView, scrollX, scrollY,
+                            oldScrollX, oldScrollY) -> {
+                        if (scrollY == 0) {
+                            setToolbarColor(android.R.color.transparent);
+                        } else {
+                            setToolbarColor(R.color.toolbar_color);
+                        }
+                    }
+            );
+        } else {
             ViewGroup sectionContainer = view.findViewById(R.id.section_container);
             sectionContainer.setOnApplyWindowInsetsListener((v, windowInsets) -> {
                 v.setPadding(
@@ -200,7 +211,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
     @Override
     protected int getToolbarColorId() {
-        return shouldUseRevampedUi() ? R.color.toolbar_color : android.R.color.transparent;
+        return android.R.color.transparent;
     }
 
     @Override
