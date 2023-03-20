@@ -24,6 +24,7 @@ import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.flow.Flow
@@ -88,4 +89,14 @@ open class ScreenPreviewViewModel(
     fun onWallpaperColorsChanged(colors: WallpaperColors?) {
         onWallpaperColorChanged.invoke(colors)
     }
+
+    val isLoading: Flow<Boolean> =
+        wallpaperInteractor.isLoading(
+            destination =
+                if (screen == Screen.LOCK_SCREEN) {
+                    WallpaperDestination.LOCK
+                } else {
+                    WallpaperDestination.HOME
+                },
+        )
 }
