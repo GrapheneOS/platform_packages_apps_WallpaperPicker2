@@ -88,22 +88,9 @@ open class ScreenPreviewSectionController(
         val onClickListener =
             View.OnClickListener {
                 lifecycleOwner.lifecycleScope.launch {
-                    val wallpaperInfo = suspendCancellableCoroutine { continuation ->
-                        wallpaperInfoFactory.createCurrentWallpaperInfos(
-                            { homeWallpaper, lockWallpaper, _ ->
-                                continuation.resume(
-                                    if (isOnLockScreen) {
-                                        lockWallpaper
-                                    } else {
-                                        homeWallpaper
-                                    },
-                                    null
-                                )
-                            },
-                            /* forceRefresh= */ true,
-                        )
+                    getWallpaperInfo()?.let { wallpaperInfo ->
+                        wallpaperPreviewNavigator.showViewOnlyPreview(wallpaperInfo, false)
                     }
-                    wallpaperPreviewNavigator.showViewOnlyPreview(wallpaperInfo, false)
                 }
             }
         view.setOnClickListener(onClickListener)
@@ -243,6 +230,24 @@ open class ScreenPreviewSectionController(
                     }
                 }
             }
+        }
+    }
+
+    private suspend fun getWallpaperInfo(): WallpaperInfo? {
+        return suspendCancellableCoroutine { continuation ->
+            wallpaperInfoFactory.createCurrentWallpaperInfos(
+                { homeWallpaper, lockWallpaper, _ ->
+                    continuation.resume(
+                        if (isOnLockScreen) {
+                            lockWallpaper
+                        } else {
+                            homeWallpaper
+                        },
+                        null
+                    )
+                },
+                /* forceRefresh= */ true,
+            )
         }
     }
 }
