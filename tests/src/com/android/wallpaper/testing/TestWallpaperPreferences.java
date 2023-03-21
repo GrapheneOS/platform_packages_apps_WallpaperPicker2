@@ -56,6 +56,7 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     private String mHomeBaseImageUrl;
     private String mHomeCollectionId;
     private String mHomeWallpaperRemoteId;
+    private String mHomeWallpaperRecentsKey;
 
     private List<String> mLockScreenAttributions;
     private long mLockScreenBitmapHashCode;
@@ -63,6 +64,7 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     private String mLockActionUrl;
     private String mLockCollectionId;
     private String mLockWallpaperRemoteId;
+    private String mLockWallpaperRecentsKey;
 
     private List<Long> mDailyRotations;
     private long mDailyWallpaperEnabledTimestamp;
@@ -237,6 +239,16 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
+    public String getHomeWallpaperRecentsKey() {
+        return mHomeWallpaperRecentsKey;
+    }
+
+    @Override
+    public void setHomeWallpaperRecentsKey(String recentsKey) {
+        mHomeWallpaperRecentsKey = recentsKey;
+    }
+
+    @Override
     public String getHomeWallpaperEffects() {
         return mHomeWallpaperEffects;
     }
@@ -342,6 +354,16 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     public void setLockWallpaperRemoteId(String wallpaperRemoteId) {
         mLockWallpaperRemoteId = wallpaperRemoteId;
         setFirstWallpaperApplyDateIfNeeded();
+    }
+
+    @Override
+    public String getLockWallpaperRecentsKey() {
+        return mLockWallpaperRecentsKey;
+    }
+
+    @Override
+    public void setLockWallpaperRecentsKey(String recentsKey) {
+        mLockWallpaperRecentsKey = recentsKey;
     }
 
     @Override

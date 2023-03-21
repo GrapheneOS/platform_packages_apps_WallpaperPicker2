@@ -31,11 +31,6 @@ interface WallpaperClient {
         limit: Int,
     ): Flow<List<WallpaperModel>>
 
-    /** Returns the selected wallpaper. */
-    suspend fun getCurrentWallpaper(
-        destination: WallpaperDestination,
-    ): WallpaperModel
-
     /**
      * Asynchronously sets the wallpaper to the one with the given ID.
      *

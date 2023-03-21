@@ -22,6 +22,7 @@ import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.customization.data.content.FakeWallpaperClient
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
+import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -55,6 +56,7 @@ class WallpaperInteractorTest {
                     WallpaperRepository(
                         scope = testScope.backgroundScope,
                         client = client,
+                        wallpaperPreferences = TestWallpaperPreferences(),
                         backgroundDispatcher = testDispatcher,
                     ),
             )

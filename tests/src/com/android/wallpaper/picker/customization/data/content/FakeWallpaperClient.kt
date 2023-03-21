@@ -69,7 +69,7 @@ class FakeWallpaperClient : WallpaperClient {
         }
     }
 
-    override suspend fun getCurrentWallpaper(
+    fun getCurrentWallpaper(
         destination: WallpaperDestination,
     ): WallpaperModel {
         return _recentWallpapers.value[destination]?.get(0)
