@@ -55,5 +55,5 @@
     <color name="text_color_secondary">@color/settingslib_text_color_secondary</color>
     <color name="text_color_secondary_inverse">@color/settingslib_text_color_secondary_device_default</color>
 
-    <color name="wallpaper_preview_scrim_color">#66000000</color>
+    <color name="wallpaper_preview_scrim_color">#99000000</color>
 </resources>
