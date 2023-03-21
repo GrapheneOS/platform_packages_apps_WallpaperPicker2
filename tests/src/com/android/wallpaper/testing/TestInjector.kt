@@ -272,6 +272,7 @@ open class TestInjector : Injector {
                         WallpaperRepository(
                             scope = GlobalScope,
                             client = WallpaperClientImpl(context = context),
+                            wallpaperPreferences = getPreferences(context = context),
                             backgroundDispatcher = Dispatchers.IO,
                         ),
                 )
