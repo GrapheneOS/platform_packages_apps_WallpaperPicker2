@@ -64,12 +64,6 @@ class WallpaperClientImpl(
         }
     }
 
-    override suspend fun getCurrentWallpaper(
-        destination: WallpaperDestination,
-    ): WallpaperModel {
-        return queryRecentWallpapers(destination = destination, limit = 1).first()
-    }
-
     override suspend fun setWallpaper(
         destination: WallpaperDestination,
         wallpaperId: String,
