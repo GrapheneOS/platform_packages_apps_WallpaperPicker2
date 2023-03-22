@@ -237,7 +237,8 @@ public class TestWallpaperPersister implements WallpaperPersister {
 
     @Override
     public boolean saveStaticWallpaperMetadata(List<String> attributions, String actionUrl,
-            int actionLabelRes, int actionIconRes, String collectionId, int wallpaperId) {
+            int actionLabelRes, int actionIconRes, String collectionId, int wallpaperId,
+            @Destination int destination) {
         return false;
     }
 
