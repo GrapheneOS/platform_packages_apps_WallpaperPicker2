@@ -70,6 +70,21 @@
             app:layout_constraintTop_toTopOf="@+id/toolbar"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar" />
 
+        <View
+            android:id="@+id/exit_full_preview_button"
+            android:layout_width="@dimen/wallpaper_control_button_size"
+            android:layout_height="@dimen/wallpaper_control_button_size"
+            android:layout_gravity="center_vertical"
+            android:foreground="@drawable/exit_full_preview_cross"
+            android:elevation="@dimen/wallpaper_preview_buttons_elevation"
+            android:gravity="center"
+            android:layout_marginEnd="@dimen/set_wallpaper_button_margin_end"
+            android:visibility="gone"
+            android:clickable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar" />
+
         <com.android.wallpaper.widget.WallpaperDownloadButton
             android:id="@+id/button_download_wallpaper"
             android:layout_width="@dimen/wallpaper_control_button_size"
