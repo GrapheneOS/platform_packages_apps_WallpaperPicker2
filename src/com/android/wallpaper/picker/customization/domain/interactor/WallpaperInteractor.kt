@@ -33,15 +33,15 @@ class WallpaperInteractor(
     val shouldHandleReload: () -> Boolean = { true },
 ) {
     /** Returns a flow that is updated whenever the wallpaper has been updated */
-    fun wallpaperUpdateEvents(screen: CustomizationSections.Screen): Flow<WallpaperModel> {
+    fun wallpaperUpdateEvents(screen: CustomizationSections.Screen): Flow<WallpaperModel?> {
         return when (screen) {
             CustomizationSections.Screen.LOCK_SCREEN ->
                 previews(WallpaperDestination.LOCK, 1).map { recentWallpapers ->
-                    recentWallpapers[0]
+                    if (recentWallpapers.isEmpty()) null else recentWallpapers[0]
                 }
             CustomizationSections.Screen.HOME_SCREEN ->
                 previews(WallpaperDestination.HOME, 1).map { recentWallpapers ->
-                    recentWallpapers[0]
+                    if (recentWallpapers.isEmpty()) null else recentWallpapers[0]
                 }
         }
     }
