@@ -290,7 +290,7 @@
       third_party_app_wallpapers
     </string>
 
-    <!-- Label for a checkbox which lets user preview the displayed image as wallpaper. [CHAR LIMIT=30] -->
+    <!-- Title for the toolbar when displaying a wallpaper preview. [CHAR LIMIT=30] -->
     <string name="preview">Preview</string>
 
     <!-- Label for the 'Info' tab of view pager in wallpaper preview activity. [CHAR_LIMIT=25] -->
