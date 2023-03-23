@@ -81,8 +81,7 @@
     <string name="tab_info" msgid="818614080690111416">"വിവരം"</string>
     <string name="tab_customize" msgid="2533745409174959960">"ഇഷ്‌ടാനുസൃതമാക്കുക"</string>
     <string name="tab_effects" msgid="3213606157589233901">"ഇഫക്റ്റുകൾ"</string>
-    <!-- no translation found for tab_share (6676269624804601227) -->
-    <skip />
+    <string name="tab_share" msgid="6676269624804601227">"പങ്കിടുക"</string>
     <string name="my_photos" msgid="8613021349284084982">"എന്റെ ഫോട്ടോകൾ"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"ക്രമീകരണം…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"ഇല്ലാതാക്കുക"</string>

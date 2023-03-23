@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"فئات الخلفيات"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"ضبط كصورة خلفية"</string>
+    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"الضبط كخلفية"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"جارٍ تعيين الخلفية…"</string>
     <string name="try_again" msgid="8278874823700921234">"إعادة المحاولة"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"يتعذّر تعيين الخلفية."</string>
@@ -54,7 +54,7 @@
     <string name="next_wallpaper" msgid="3911873152952596232">"الخلفية التالية"</string>
     <string name="wallpaper_disabled_message" msgid="7309484130562148185">"تم إيقاف إمكانية تعيين خلفية على هذا الجهاز."</string>
     <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"أوقف مشرف الجهاز إمكانية تعيين خلفية."</string>
-    <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"تم ضبط الخلفية بنجاح."</string>
+    <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"تم تطبيق الخلفية بنجاح"</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"يلزمك الاتصال بالإنترنت للاطّلاع على الخلفيات. يُرجى الاتصال وإعادة المحاولة."</string>
     <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"صورة مصغَّرة لخلفية الشاشة الرئيسية المعيَّنة حاليًا"</string>
     <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"صورة مصغَّرة لخلفية شاشة القفل المعيَّنة حاليًا"</string>
@@ -81,8 +81,7 @@
     <string name="tab_info" msgid="818614080690111416">"معلومات"</string>
     <string name="tab_customize" msgid="2533745409174959960">"تخصيص"</string>
     <string name="tab_effects" msgid="3213606157589233901">"التأثيرات"</string>
-    <!-- no translation found for tab_share (6676269624804601227) -->
-    <skip />
+    <string name="tab_share" msgid="6676269624804601227">"مشاركة"</string>
     <string name="my_photos" msgid="8613021349284084982">"صوري"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"الإعدادات…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"حذف"</string>
