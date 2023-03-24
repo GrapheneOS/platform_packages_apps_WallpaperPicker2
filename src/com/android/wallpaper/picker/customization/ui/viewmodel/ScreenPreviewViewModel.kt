@@ -41,7 +41,7 @@ class ScreenPreviewViewModel(
     }
 
     /** Returns a flow that is updated whenever the wallpaper has been updated */
-    fun wallpaperUpdateEvents(screen: CustomizationSections.Screen): Flow<WallpaperModel>? {
+    fun wallpaperUpdateEvents(screen: CustomizationSections.Screen): Flow<WallpaperModel?>? {
         return wallpaperInteractor?.wallpaperUpdateEvents(screen)
     }
 
