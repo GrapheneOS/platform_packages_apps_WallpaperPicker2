@@ -260,7 +260,9 @@ public class WallpaperSectionController implements
         parent.removeView(workspaceSurface);
         if (callback != null) {
             callback.resetLastSurface();
+            callback.setHideBottomRow(false);
             callback.setWallpaperColors(colors);
+            callback.maybeRenderPreview();
         }
         parent.addView(workspaceSurface, viewIndex);
     }
