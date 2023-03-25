@@ -184,7 +184,7 @@ public class WallpaperSectionController implements
                 mHomeWallpaperSurface, colorFuture, () -> {
             if (mHomePreviewWallpaperInfo != null) {
                 maybeLoadThumbnail(mHomePreviewWallpaperInfo, mHomeWallpaperSurfaceCallback,
-                        mDisplayUtils.isOnWallpaperDisplay(mActivity));
+                        mDisplayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(mActivity));
             }
         });
 
@@ -199,7 +199,7 @@ public class WallpaperSectionController implements
                 mLockscreenPreviewCard, mLockWallpaperSurface, colorFuture, () -> {
             if (mLockPreviewWallpaperInfo != null) {
                 maybeLoadThumbnail(mLockPreviewWallpaperInfo, mLockWallpaperSurfaceCallback,
-                        mDisplayUtils.isOnWallpaperDisplay(mActivity));
+                        mDisplayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(mActivity));
             }
         });
         mLockPreviewContainer = mLockscreenPreviewCard.findViewById(
@@ -260,7 +260,9 @@ public class WallpaperSectionController implements
         parent.removeView(workspaceSurface);
         if (callback != null) {
             callback.resetLastSurface();
+            callback.setHideBottomRow(false);
             callback.setWallpaperColors(colors);
+            callback.maybeRenderPreview();
         }
         parent.addView(workspaceSurface, viewIndex);
     }
@@ -423,7 +425,7 @@ public class WallpaperSectionController implements
         // Load thumb regardless of live wallpaper to make sure we have a placeholder while
         // the live wallpaper initializes in that case.
         maybeLoadThumbnail(wallpaperInfo, surfaceCallback,
-                mDisplayUtils.isOnWallpaperDisplay(mActivity));
+                mDisplayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(mActivity));
 
         WallpaperManager wallpaperManager = WallpaperManager.getInstance(mActivity);
         if (wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
