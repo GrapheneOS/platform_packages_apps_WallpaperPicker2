@@ -126,6 +126,17 @@
             android:paddingHorizontal="@dimen/full_preview_page_tabs_horizontal_padding"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/action_progress"
+            android:layout_width="@dimen/effect_generating_progress_bar_size"
+            android:layout_height="@dimen/effect_generating_progress_bar_size"
+            android:indeterminateTint="?android:attr/textColorSecondary"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.android.wallpaper.widget.FloatingSheet

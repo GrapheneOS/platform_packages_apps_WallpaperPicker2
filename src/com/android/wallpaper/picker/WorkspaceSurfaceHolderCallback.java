@@ -46,12 +46,15 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
 
     private static final String TAG = "WsSurfaceHolderCallback";
     private static final String KEY_WALLPAPER_COLORS = "wallpaper_colors";
+    public static final int MESSAGE_ID_UPDATE_PREVIEW = 1337;
+    public static final String KEY_HIDE_BOTTOM_ROW = "hide_bottom_row";
     private final SurfaceView mWorkspaceSurface;
     private final PreviewUtils mPreviewUtils;
     private final boolean mShouldUseWallpaperColors;
     private final AtomicBoolean mRequestPending = new AtomicBoolean(false);
 
     private WallpaperColors mWallpaperColors;
+    private boolean mHideBottomRow;
     private boolean mIsWallpaperColorsReady;
     private Surface mLastSurface;
     private Message mCallback;
@@ -126,27 +129,45 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
         }
         mWallpaperColors = colors;
         mIsWallpaperColorsReady = true;
-        maybeRenderPreview();
+    }
+
+    /**
+     * Set the current flag if we should hide the workspace bottom row.
+     */
+    public void setHideBottomRow(boolean hideBottomRow) {
+        mHideBottomRow = hideBottomRow;
+    }
+
+    /**
+     * Hides the components in the bottom row.
+     *
+     * @param hide True to hide and false to show.
+     */
+    public void hideBottomRow(boolean hide) {
+        Bundle data = new Bundle();
+        data.putBoolean(KEY_HIDE_BOTTOM_ROW, hide);
+        send(MESSAGE_ID_UPDATE_PREVIEW, data);
     }
 
     public void setListener(WorkspaceRenderListener listener) {
         mListener = listener;
     }
 
-    private void maybeRenderPreview() {
+    /**
+     * Render the preview with the current selected {@link #mWallpaperColors} and
+     * {@link #mHideBottomRow}.
+     */
+    public void maybeRenderPreview() {
         if ((mShouldUseWallpaperColors && !mIsWallpaperColorsReady) || mLastSurface == null) {
             return;
         }
-
         mRequestPending.set(true);
         requestPreview(mWorkspaceSurface, (result) -> {
             mRequestPending.set(false);
             if (result != null && mLastSurface != null) {
                 mWorkspaceSurface.setChildSurfacePackage(
                         SurfaceViewUtils.getSurfacePackage(result));
-
                 mCallback = SurfaceViewUtils.getCallback(result);
-
                 if (mNeedsToCleanUp) {
                     cleanUp();
                 } else if (mListener != null) {
@@ -216,6 +237,7 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
         Bundle request = SurfaceViewUtils.createSurfaceViewRequest(workspaceSurface, mExtras);
         if (mWallpaperColors != null) {
             request.putParcelable(KEY_WALLPAPER_COLORS, mWallpaperColors);
+            request.putBoolean(KEY_HIDE_BOTTOM_ROW, mHideBottomRow);
         }
         mPreviewUtils.renderPreview(request, callback);
     }
