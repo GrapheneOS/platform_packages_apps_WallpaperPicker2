@@ -26,6 +26,7 @@ import android.view.animation.PathInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -79,7 +80,7 @@ object OptionItemBinder {
         val foregroundView: View = view.requireViewById(R.id.foreground)
         val textView: TextView? = view.findViewById(R.id.text)
 
-        if (textView != null) {
+        if (textView != null && viewModel.isTextUserVisible) {
             TextViewBinder.bind(
                 view = textView,
                 viewModel = viewModel.text,
@@ -92,6 +93,8 @@ object OptionItemBinder {
                 viewModel = viewModel.text,
             )
         }
+        textView?.isVisible = viewModel.isTextUserVisible
+
         view.alpha =
             if (viewModel.isEnabled) {
                 animationSpec.enabledAlpha
