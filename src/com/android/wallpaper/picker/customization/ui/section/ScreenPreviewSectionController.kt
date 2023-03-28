@@ -89,7 +89,10 @@ open class ScreenPreviewSectionController(
             View.OnClickListener {
                 lifecycleOwner.lifecycleScope.launch {
                     getWallpaperInfo()?.let { wallpaperInfo ->
-                        wallpaperPreviewNavigator.showViewOnlyPreview(wallpaperInfo, false)
+                        wallpaperPreviewNavigator.showViewOnlyPreview(
+                            wallpaperInfo,
+                            !isOnLockScreen
+                        )
                     }
                 }
             }
@@ -239,7 +242,7 @@ open class ScreenPreviewSectionController(
                 { homeWallpaper, lockWallpaper, _ ->
                     continuation.resume(
                         if (isOnLockScreen) {
-                            lockWallpaper
+                            lockWallpaper ?: homeWallpaper
                         } else {
                             homeWallpaper
                         },
