@@ -40,6 +40,9 @@ data class OptionItemViewModel<Payload>(
      */
     val text: Text,
 
+    /** Hides text and places the provided text in the content description instead */
+    val isTextUserVisible: Boolean = true,
+
     /** Whether this option is selected. */
     val isSelected: StateFlow<Boolean>,
 
