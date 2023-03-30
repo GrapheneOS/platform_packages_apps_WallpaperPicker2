@@ -23,7 +23,7 @@
     android:orientation="vertical"
     android:background="@drawable/bottom_connected_section_background"
     android:paddingTop="16dp"
-    android:paddingBottom="10dp"
+    android:paddingBottom="16dp"
     android:paddingHorizontal="24dp">
     <!--
     See ResponsiveLayoutSectionController to see whether and how the background is replaced in code.
@@ -42,8 +42,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:minHeight="48dp"
+        android:layout_marginTop="16dp"
+        android:minHeight="24dp"
         android:gravity="center"
         android:drawablePadding="12dp"
         android:drawableStart="@drawable/ic_nav_wallpaper"
