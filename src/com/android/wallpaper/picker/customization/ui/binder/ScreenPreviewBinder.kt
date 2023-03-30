@@ -232,14 +232,10 @@ object ScreenPreviewBinder {
         return object : Binding {
             override fun show() {
                 previewView.isVisible = true
-                wallpaperSurface.isVisible = true
-                workspaceSurface.isVisible = true
             }
 
             override fun hide() {
                 previewView.isVisible = false
-                wallpaperSurface.isVisible = false
-                workspaceSurface.isVisible = false
             }
 
             override fun sendMessage(id: Int, args: Bundle) {
