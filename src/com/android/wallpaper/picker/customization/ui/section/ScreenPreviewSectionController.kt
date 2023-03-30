@@ -96,7 +96,9 @@ open class ScreenPreviewSectionController(
                     }
                 }
             }
-        view.setOnClickListener(onClickListener)
+        view
+            .requireViewById<ScreenPreviewClickView>(R.id.screen_preview_click_view)
+            .setOnClickListener(onClickListener)
         val lockScreenView: CardView = view.requireViewById(R.id.lock_preview)
         val homeScreenView: CardView = view.requireViewById(R.id.home_preview)
 
