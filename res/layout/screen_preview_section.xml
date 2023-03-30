@@ -18,18 +18,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="16dp">
-
-    <FrameLayout
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/screen_preview_section_vertical_space">
+    <com.android.wallpaper.picker.customization.ui.section.ScreenPreviewClickView
+        android:id="@+id/screen_preview_click_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/screen_preview_section_vertical_space">
         <com.android.wallpaper.picker.DisplayAspectRatioFrameLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/screen_preview_height">
 
-            <include
-                android:id="@+id/lock_preview"
+            <include android:id="@+id/lock_preview"
                 layout="@layout/wallpaper_preview_card"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -55,6 +55,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center" />
-    </FrameLayout>
+    </com.android.wallpaper.picker.customization.ui.section.ScreenPreviewClickView>
 
+    <ViewStub
+        android:id="@+id/clock_color_and_size_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 </com.android.wallpaper.picker.customization.ui.section.ScreenPreviewView>
+
