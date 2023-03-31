@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Categorías de fondos de pantalla"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Establecer fondo de pantalla"</string>
+    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Fixar fondo de pantalla"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Establecendo fondo de pantalla…"</string>
     <string name="try_again" msgid="8278874823700921234">"Tentar de novo"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Non se puido establecer o fondo de pantalla."</string>
@@ -77,12 +77,11 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Centro"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Recortar no centro"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Estirar"</string>
-    <string name="preview" msgid="1774602101743861071">"Mostrar vista previa"</string>
+    <string name="preview" msgid="1774602101743861071">"Vista previa"</string>
     <string name="tab_info" msgid="818614080690111416">"Información"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Personalizar"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Efectos"</string>
-    <!-- no translation found for tab_share (6676269624804601227) -->
-    <skip />
+    <string name="tab_share" msgid="6676269624804601227">"Compartir"</string>
     <string name="my_photos" msgid="8613021349284084982">"As miñas fotos"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Configuración…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Eliminar"</string>

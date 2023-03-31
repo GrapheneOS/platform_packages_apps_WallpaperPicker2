@@ -54,7 +54,7 @@
     <string name="next_wallpaper" msgid="3911873152952596232">"Imagem de fundo seguinte"</string>
     <string name="wallpaper_disabled_message" msgid="7309484130562148185">"A definição de uma imagem de fundo está desativada neste dispositivo."</string>
     <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"A definição da imagem de fundo foi desativada pelo administrador do dispositivo."</string>
-    <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"Imagem de fundo definida com êxito."</string>
+    <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"Imagem de fundo definida com êxito"</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"Precisa de uma ligação à Internet para ver imagens de fundo. Estabeleça ligação e tente novamente."</string>
     <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"Miniatura da imagem de fundo do ecrã principal definida atualmente"</string>
     <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"Miniatura da imagem de fundo do ecrã de bloqueio definida atualmente"</string>
@@ -81,8 +81,7 @@
     <string name="tab_info" msgid="818614080690111416">"Informações"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Personalizar"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Efeitos"</string>
-    <!-- no translation found for tab_share (6676269624804601227) -->
-    <skip />
+    <string name="tab_share" msgid="6676269624804601227">"Partilhe"</string>
     <string name="my_photos" msgid="8613021349284084982">"As minhas fotos"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Definições…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Eliminar"</string>
