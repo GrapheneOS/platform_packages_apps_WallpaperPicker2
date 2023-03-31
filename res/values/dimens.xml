@@ -280,7 +280,7 @@
     <dimen name="screen_preview_height">380dp</dimen>
 
     <!-- Height of options in the wallpaper quick switch widget. -->
-    <dimen name="wallpaper_quick_switch_selected_option_height">98dp</dimen>
+    <dimen name="wallpaper_quick_switch_selected_option_height">86dp</dimen>
 
     <!-- Maximumn width non-selected options in the wallpaper quick switch widget. -->
     <dimen name="wallpaper_quick_switch_max_option_width">@dimen/wallpaper_quick_switch_selected_option_height</dimen>
@@ -293,4 +293,7 @@
 
     <!-- Size for option items. -->
     <dimen name="option_item_size">74dp</dimen>
+
+    <!-- Screen preview section -->
+    <dimen name="screen_preview_section_vertical_space">8dp</dimen>
 </resources>
