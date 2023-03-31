@@ -134,7 +134,7 @@ public class WallpaperSectionController implements
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     @MainThread
     public void onResume() {
-        refreshCurrentWallpapers(/* forceRefresh= */ mSavedInstanceState == null);
+        refreshCurrentWallpapers(/* forceRefresh= */ true);
         updateLivePreviewVisibility(true);
     }
 
