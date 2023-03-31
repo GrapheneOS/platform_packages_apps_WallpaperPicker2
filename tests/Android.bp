@@ -58,7 +58,6 @@ android_test {
         "hamcrest-library",
         "hamcrest",
         "mockito-target-minus-junit4",
-        "ub-uiautomator",
         "junit",
         "kotlinx_coroutines_test",
         "truth-prebuilt",
