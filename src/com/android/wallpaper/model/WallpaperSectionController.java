@@ -64,6 +64,7 @@ import com.android.wallpaper.picker.WorkspaceSurfaceHolderCallback;
 import com.android.wallpaper.util.DisplayUtils;
 import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.ResourceUtils;
+import com.android.wallpaper.util.VideoWallpaperUtils;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperSurfaceCallback;
 import com.android.wallpaper.widget.LockScreenPreviewer;
@@ -71,7 +72,9 @@ import com.android.wallpaper.widget.LockScreenPreviewer;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
-/** The class to control the wallpaper section view. */
+/**
+ * The class to control the wallpaper section view.
+ */
 public class WallpaperSectionController implements
         CustomizationSectionController<WallpaperSectionView>,
         LifecycleObserver {
@@ -86,10 +89,12 @@ public class WallpaperSectionController implements
     private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     private SurfaceView mHomeWallpaperSurface;
     private WallpaperSurfaceCallback mHomeWallpaperSurfaceCallback;
+    private View mHomeFadeInScrim;
     private SurfaceView mLockWallpaperSurface;
     private WallpaperSurfaceCallback mLockWallpaperSurfaceCallback;
     private CardView mLockscreenPreviewCard;
     private ViewGroup mLockPreviewContainer;
+    private View mLockFadeInScrim;
     private ContentLoadingProgressBar mLockscreenPreviewProgress;
     private WallpaperConnection mHomeWallpaperConnection;
     private WallpaperConnection mLockWallpaperConnection;
@@ -106,7 +111,8 @@ public class WallpaperSectionController implements
     private final LifecycleOwner mLifecycleOwner;
     private final PermissionRequester mPermissionRequester;
     private final WallpaperColorsViewModel mWallpaperColorsViewModel;
-    @Nullable private final LiveData<Boolean> mOnThemingChanged;
+    @Nullable
+    private final LiveData<Boolean> mOnThemingChanged;
     private final CustomizationSectionNavigationController mSectionNavigationController;
     private final WallpaperPreviewNavigator mWallpaperPreviewNavigator;
     private final Bundle mSavedInstanceState;
@@ -134,7 +140,7 @@ public class WallpaperSectionController implements
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     @MainThread
     public void onResume() {
-        refreshCurrentWallpapers(/* forceRefresh= */ mSavedInstanceState == null);
+        refreshCurrentWallpapers(/* forceRefresh= */ true);
         updateLivePreviewVisibility(true);
     }
 
@@ -175,6 +181,7 @@ public class WallpaperSectionController implements
                 new PreviewUtils(
                         mAppContext, mAppContext.getString(R.string.grid_control_metadata_name)));
         mHomeWallpaperSurface = mHomePreviewCard.findViewById(R.id.wallpaper_surface);
+        mHomeFadeInScrim = mHomePreviewCard.findViewById(R.id.wallpaper_fadein_scrim);
 
         Future<ColorInfo> colorFuture = CompletableFuture.completedFuture(
                 new ColorInfo(/* wallpaperColors= */ null,
@@ -195,6 +202,7 @@ public class WallpaperSectionController implements
                 R.id.wallpaper_preview_spinner);
         mLockscreenPreviewCard.findViewById(R.id.workspace_surface).setVisibility(View.GONE);
         mLockWallpaperSurface = mLockscreenPreviewCard.findViewById(R.id.wallpaper_surface);
+        mLockFadeInScrim = mLockscreenPreviewCard.findViewById(R.id.wallpaper_fadein_scrim);
         mLockWallpaperSurfaceCallback = new WallpaperSurfaceCallback(mActivity,
                 mLockscreenPreviewCard, mLockWallpaperSurface, colorFuture, () -> {
             if (mLockPreviewWallpaperInfo != null) {
@@ -405,6 +413,18 @@ public class WallpaperSectionController implements
 
                     }
                     onLockWallpaperColorsChanged(lockColors);
+
+                    // If we need to do the scrim fade, show the scrim first.
+                    if (VideoWallpaperUtils.needsFadeIn(mHomePreviewWallpaperInfo)) {
+                        mHomeFadeInScrim.animate().cancel();
+                        mHomeFadeInScrim.setAlpha(1f);
+                        mHomeFadeInScrim.setVisibility(View.VISIBLE);
+                    }
+                    if (VideoWallpaperUtils.needsFadeIn(mLockPreviewWallpaperInfo)) {
+                        mLockFadeInScrim.animate().cancel();
+                        mLockFadeInScrim.setAlpha(1f);
+                        mLockFadeInScrim.setVisibility(View.VISIBLE);
+                    }
                 }, forceRefresh);
     }
 
@@ -556,6 +576,22 @@ public class WallpaperSectionController implements
                             }
                             onHomeWallpaperColorsChanged(colors);
                         }
+
+                        @Override
+                        public void onEngineShown() {
+                            if (VideoWallpaperUtils.needsFadeIn(homeWallpaper)) {
+                                mHomeFadeInScrim.animate().alpha(0.0f)
+                                        .setDuration(VideoWallpaperUtils.TRANSITION_MILLIS)
+                                        .withEndAction(() -> mHomeFadeInScrim.setVisibility(
+                                                View.INVISIBLE));
+                                if (isLockLive) {
+                                    mLockFadeInScrim.animate().alpha(0.0f)
+                                            .setDuration(VideoWallpaperUtils.TRANSITION_MILLIS)
+                                            .withEndAction(() -> mLockFadeInScrim.setVisibility(
+                                                    View.INVISIBLE));
+                                }
+                            }
+                        }
                     },
                     mHomeWallpaperSurface, isLockLive ? mLockWallpaperSurface : null);
 
@@ -589,6 +625,7 @@ public class WallpaperSectionController implements
         return !mActivity.isDestroyed() && !mActivity.isFinishing();
     }
 
+    // TODO(b/276439056) Remove these animations as they have no effect
     private void fadeWallpaperPreview(boolean isFadeIn, int duration) {
         setupFade(mHomePreviewCard, mHomePreviewProgress, duration, isFadeIn);
         setupFade(mLockscreenPreviewCard, mLockscreenPreviewProgress, duration, isFadeIn);
