@@ -60,4 +60,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone" />
+
+    <View
+        android:id="@+id/wallpaper_fadein_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_surface"
+        android:forceHasOverlappingRendering="false"
+        android:importantForAccessibility="no"
+        android:visibility="invisible" />
+
 </androidx.cardview.widget.CardView>
