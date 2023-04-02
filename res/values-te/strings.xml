@@ -37,8 +37,8 @@
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"లాక్ స్క్రీన్"</string>
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"మొదటి ట్యాబ్, లాక్ స్క్రీన్"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"చిత్ర వాల్‌పేపర్‌ను వంతుల వారీగా మార్చడం"</string>
-    <string name="permission_needed_explanation" msgid="139166837541426823">"ప్రస్తుత వాల్‌పేపర్‌ని ఇక్కడ ప్రదర్శించడానికి, <xliff:g id="APP_NAME">%1$s</xliff:g>కి మీ పరికర నిల్వ యొక్క యాక్సెస్ అవసరమవుతుంది."</string>
-    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"ఇక్కడ ప్రస్తుత వాల్‌పేపర్‌ను ప్రదర్శించడానికి, వాల్‌పేపర్‌‌లకు మీ పరికర నిల్వ యాక్సెస్ అవసరం.\n\nఈ సెట్టింగ్‌ను మార్చడానికి, వాల్‌పేపర్‌ల యాప్ సమాచారం యొక్క అనుమతుల ప్రాంతానికి వెళ్లండి."</string>
+    <string name="permission_needed_explanation" msgid="139166837541426823">"ప్రస్తుత వాల్‌పేపర్‌ని ఇక్కడ ప్రదర్శించడానికి, <xliff:g id="APP_NAME">%1$s</xliff:g>కి మీ పరికర స్టోరేజ్‌ యొక్క యాక్సెస్ అవసరమవుతుంది."</string>
+    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"ఇక్కడ ప్రస్తుత వాల్‌పేపర్‌ను ప్రదర్శించడానికి, వాల్‌పేపర్‌‌లకు మీ పరికర స్టోరేజ్‌ యాక్సెస్ అవసరం.\n\nఈ సెట్టింగ్‌ను మార్చడానికి, వాల్‌పేపర్‌ల యాప్ సమాచారం యొక్క అనుమతుల ప్రాంతానికి వెళ్లండి."</string>
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"యాక్సెస్‌ని ఇవ్వండి"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"వాల్‌పేపర్‌లను వంతుల వారీగా మార్చడం లైవ్ వాల్‌పేపర్ సేవ"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"రోజువారీ వాల్‌పేపర్"</string>
