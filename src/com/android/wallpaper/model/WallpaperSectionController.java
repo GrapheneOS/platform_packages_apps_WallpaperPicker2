@@ -26,6 +26,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.RenderEffect;
+import android.graphics.Shader.TileMode;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -89,12 +91,12 @@ public class WallpaperSectionController implements
     private WorkspaceSurfaceHolderCallback mWorkspaceSurfaceCallback;
     private SurfaceView mHomeWallpaperSurface;
     private WallpaperSurfaceCallback mHomeWallpaperSurfaceCallback;
-    private View mHomeFadeInScrim;
+    private ImageView mHomeFadeInScrim;
     private SurfaceView mLockWallpaperSurface;
     private WallpaperSurfaceCallback mLockWallpaperSurfaceCallback;
     private CardView mLockscreenPreviewCard;
     private ViewGroup mLockPreviewContainer;
-    private View mLockFadeInScrim;
+    private ImageView mLockFadeInScrim;
     private ContentLoadingProgressBar mLockscreenPreviewProgress;
     private WallpaperConnection mHomeWallpaperConnection;
     private WallpaperConnection mLockWallpaperConnection;
@@ -191,7 +193,7 @@ public class WallpaperSectionController implements
                 mHomeWallpaperSurface, colorFuture, () -> {
             if (mHomePreviewWallpaperInfo != null) {
                 maybeLoadThumbnail(mHomePreviewWallpaperInfo, mHomeWallpaperSurfaceCallback,
-                        mDisplayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(mActivity));
+                        mDisplayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(mActivity), true);
             }
         });
 
@@ -207,7 +209,7 @@ public class WallpaperSectionController implements
                 mLockscreenPreviewCard, mLockWallpaperSurface, colorFuture, () -> {
             if (mLockPreviewWallpaperInfo != null) {
                 maybeLoadThumbnail(mLockPreviewWallpaperInfo, mLockWallpaperSurfaceCallback,
-                        mDisplayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(mActivity));
+                        mDisplayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(mActivity), false);
             }
         });
         mLockPreviewContainer = mLockscreenPreviewCard.findViewById(
@@ -445,7 +447,7 @@ public class WallpaperSectionController implements
         // Load thumb regardless of live wallpaper to make sure we have a placeholder while
         // the live wallpaper initializes in that case.
         maybeLoadThumbnail(wallpaperInfo, surfaceCallback,
-                mDisplayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(mActivity));
+                mDisplayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(mActivity), isHomeWallpaper);
 
         WallpaperManager wallpaperManager = WallpaperManager.getInstance(mActivity);
         if (wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
@@ -475,13 +477,19 @@ public class WallpaperSectionController implements
 
     @NonNull
     private Asset maybeLoadThumbnail(WallpaperInfo wallpaperInfo,
-            WallpaperSurfaceCallback surfaceCallback, boolean offsetToStart) {
-        ImageView imageView = surfaceCallback.getHomeImageWallpaper();
+            WallpaperSurfaceCallback surfaceCallback, boolean offsetToStart, boolean isHome) {
+        ImageView liveThumbnailView = isHome ? mHomeFadeInScrim : mLockFadeInScrim;
+        ImageView imageView = VideoWallpaperUtils.needsFadeIn(wallpaperInfo) ? liveThumbnailView
+                : surfaceCallback.getHomeImageWallpaper();
         Asset thumbAsset = wallpaperInfo.getThumbAsset(mAppContext);
         // Respect offsetToStart only for CurrentWallpaperAssetVN otherwise true.
         offsetToStart = !(thumbAsset instanceof CurrentWallpaperAssetVN) || offsetToStart;
         thumbAsset = new BitmapCachingAsset(mAppContext, thumbAsset);
         if (imageView != null && imageView.getDrawable() == null) {
+            if (VideoWallpaperUtils.needsFadeIn(wallpaperInfo)) {
+                imageView.setRenderEffect(
+                        RenderEffect.createBlurEffect(50f, 50f, TileMode.CLAMP));
+            }
             thumbAsset.loadPreviewImage(mActivity, imageView,
                     ResourceUtils.getColorAttr(mActivity, android.R.attr.colorSecondary),
                     offsetToStart);

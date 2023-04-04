@@ -29,7 +29,7 @@ public class VideoWallpaperUtils {
     /**
      * Transition time for fade-in animation.
      */
-    public static final int TRANSITION_MILLIS = 175;
+    public static final int TRANSITION_MILLIS = 250;
 
     /**
      * Returns true if the is a video wallpaper that requires the fade-in workaround.
