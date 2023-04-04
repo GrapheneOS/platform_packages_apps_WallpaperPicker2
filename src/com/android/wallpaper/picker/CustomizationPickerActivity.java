@@ -126,6 +126,9 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
                     ? WallpaperOnlyFragment.newInstance(mIsUseRevampedUi)
                     : CustomizationPickerFragment.newInstance(
                             mIsUseRevampedUi, startFromLockScreen));
+
+            // Cache the categories, but only if we're not restoring state (b/276767415).
+            mDelegate.prefetchCategories();
         }
 
         if (savedInstanceState == null) {
@@ -161,7 +164,6 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
                     this, deepLinkCollectionId));
             intent.setData(null);
         }
-        mDelegate.prefetchCategories();
     }
 
     @Override
