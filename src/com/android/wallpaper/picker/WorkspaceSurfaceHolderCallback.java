@@ -138,17 +138,6 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
         mHideBottomRow = hideBottomRow;
     }
 
-    /**
-     * Hides the components in the bottom row.
-     *
-     * @param hide True to hide and false to show.
-     */
-    public void hideBottomRow(boolean hide) {
-        Bundle data = new Bundle();
-        data.putBoolean(KEY_HIDE_BOTTOM_ROW, hide);
-        send(MESSAGE_ID_UPDATE_PREVIEW, data);
-    }
-
     public void setListener(WorkspaceRenderListener listener) {
         mListener = listener;
     }
