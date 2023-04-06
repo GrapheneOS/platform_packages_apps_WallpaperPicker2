@@ -43,6 +43,7 @@ import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
@@ -72,6 +73,8 @@ import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDele
 import com.bumptech.glide.Glide
 import com.bumptech.glide.MemoryCategory
 import java.util.Date
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 /** Displays the Main UI for picking an individual wallpaper image. */
 class IndividualPickerFragment2 :
@@ -123,6 +126,7 @@ class IndividualPickerFragment2 :
     private var loading: ContentLoadingProgressBar? = null
     private var shouldReloadWallpapers = false
     private lateinit var categoryProvider: CategoryProvider
+    private var appliedWallpaperIds: Set<String> = setOf()
 
     /**
      * Staged error dialog fragments that were unable to be shown when the activity didn't allow
@@ -216,7 +220,7 @@ class IndividualPickerFragment2 :
                 isWallpapersReceived = true
                 updateLoading()
                 val byGroup = fetchedWallpapers.groupBy { it.getGroupName(context) }
-                val appliedWallpaperIds = getAppliedWallpaperIds()
+                appliedWallpaperIds = getAppliedWallpaperIds()
                 byGroup.forEach { (groupName, wallpapers) ->
                     if (!TextUtils.isEmpty(groupName)) {
                         items.add(
@@ -230,7 +234,7 @@ class IndividualPickerFragment2 :
                     val currentWallpaper = WallpaperManager.getInstance(context).wallpaperInfo
                     items.addAll(
                         wallpapers.map {
-                            var isApplied =
+                            val isApplied =
                                 if (it is LiveWallpaperInfo) {
                                     it.isApplied(currentWallpaper)
                                 } else {
@@ -449,6 +453,14 @@ class IndividualPickerFragment2 :
         imageGrid.layoutManager = gridLayoutManager
     }
 
+    private suspend fun fetchWallpapersIfNeeded() {
+        coroutineScope {
+            if (isWallpapersReceived && (shouldReloadWallpapers || isAppliedWallpaperChanged())) {
+                fetchWallpapers(true)
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         val preferences = InjectorProvider.getInjector().getPreferences(requireActivity())
@@ -466,9 +478,7 @@ class IndividualPickerFragment2 :
                 parentFragmentManager,
                 TAG_START_ROTATION_ERROR_DIALOG
             )
-            if (isWallpapersReceived && shouldReloadWallpapers) {
-                fetchWallpapers(true)
-            }
+            lifecycleScope.launch { fetchWallpapersIfNeeded() }
         }
         stagedStartRotationErrorDialogFragment = null
     }
@@ -648,6 +658,17 @@ class IndividualPickerFragment2 :
             appliedWallpaperIds.add(lockWallpaperId)
         }
         return appliedWallpaperIds
+    }
+
+    // TODO(b/277180178): Extract the check to another class for unit testing
+    private fun isAppliedWallpaperChanged(): Boolean {
+        // Reload wallpapers if the current wallpapers have changed
+        getAppliedWallpaperIds().let {
+            if (appliedWallpaperIds.isEmpty() || appliedWallpaperIds != it) {
+                return true
+            }
+        }
+        return false
     }
 
     sealed class PickerItem(val title: CharSequence = "") {
