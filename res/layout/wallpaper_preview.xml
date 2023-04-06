@@ -35,8 +35,8 @@
         android:layout_height="match_parent"
         android:importantForAccessibility="noHideDescendants" />
 
-    <FrameLayout
-        android:id="@+id/lock_screen_preview_container"
+    <com.android.wallpaper.picker.FadeAnimationSurfaceView
+        android:id="@+id/lock_screen_overlay_surface"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:importantForAccessibility="noHideDescendants" />
