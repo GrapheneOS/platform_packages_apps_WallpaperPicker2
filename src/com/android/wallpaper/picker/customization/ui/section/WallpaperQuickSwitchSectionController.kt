@@ -61,8 +61,4 @@ class WallpaperQuickSwitchSectionController(
         )
         return view
     }
-
-    override fun onScreenSwitched(isOnLockScreen: Boolean) {
-        viewModel.setOnLockScreen(isLockScreenSelected = isOnLockScreen)
-    }
 }
