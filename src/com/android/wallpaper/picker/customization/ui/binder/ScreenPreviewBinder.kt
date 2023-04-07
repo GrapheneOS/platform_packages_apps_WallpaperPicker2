@@ -55,8 +55,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoroutinesApi::class)
 object ScreenPreviewBinder {
     interface Binding {
-        fun show()
-        fun hide()
         fun sendMessage(
             id: Int,
             args: Bundle = Bundle.EMPTY,
@@ -230,14 +228,6 @@ object ScreenPreviewBinder {
             }
 
         return object : Binding {
-            override fun show() {
-                previewView.isVisible = true
-            }
-
-            override fun hide() {
-                previewView.isVisible = false
-            }
-
             override fun sendMessage(id: Int, args: Bundle) {
                 previewSurfaceCallback?.send(id, args)
             }

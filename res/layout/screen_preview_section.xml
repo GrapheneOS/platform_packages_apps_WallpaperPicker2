@@ -29,14 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/screen_preview_height">
 
-            <include android:id="@+id/lock_preview"
-                layout="@layout/wallpaper_preview_card"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center" />
-
-            <include
-                android:id="@+id/home_preview"
+            <include android:id="@+id/preview"
                 layout="@layout/wallpaper_preview_card"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
