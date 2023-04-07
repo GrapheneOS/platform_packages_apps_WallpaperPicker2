@@ -73,7 +73,8 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
     // Note that the section views will be displayed by the list ordering.
     private final List<CustomizationSectionController<?>> mSectionControllers = new ArrayList<>();
-    private NestedScrollView mNestedScrollView;
+    private NestedScrollView mHomeScrollContainer;
+    private NestedScrollView mLockScrollContainer;
     @Nullable
     private Bundle mBackStackSavedInstanceState;
     private final FragmentFactory mFragmentFactory;
@@ -138,10 +139,21 @@ public class CustomizationPickerFragment extends AppbarFragment implements
             mBackStackSavedInstanceState = null;
         }
 
-        mNestedScrollView = view.findViewById(R.id.scroll_container);
+        mHomeScrollContainer = view.findViewById(R.id.home_scroll_container);
+        mLockScrollContainer = view.findViewById(R.id.lock_scroll_container);
 
         if (shouldUseRevampedUi) {
-            mNestedScrollView.setOnScrollChangeListener(
+            mHomeScrollContainer.setOnScrollChangeListener(
+                    (NestedScrollView.OnScrollChangeListener) (scrollView, scrollX, scrollY,
+                            oldScrollX, oldScrollY) -> {
+                        if (scrollY == 0) {
+                            setToolbarColor(android.R.color.transparent);
+                        } else {
+                            setToolbarColor(R.color.toolbar_color);
+                        }
+                    }
+            );
+            mLockScrollContainer.setOnScrollChangeListener(
                     (NestedScrollView.OnScrollChangeListener) (scrollView, scrollX, scrollY,
                             oldScrollX, oldScrollY) -> {
                         if (scrollY == 0) {
@@ -152,7 +164,8 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                     }
             );
         } else {
-            ViewGroup sectionContainer = view.findViewById(R.id.section_container);
+            mHomeScrollContainer.setVisibility(View.VISIBLE);
+            ViewGroup sectionContainer = view.findViewById(R.id.home_section_container);
             sectionContainer.setOnApplyWindowInsetsListener((v, windowInsets) -> {
                 v.setPadding(
                         v.getPaddingLeft(),
@@ -164,7 +177,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
             initSections(savedInstanceState);
             mSectionControllers.forEach(controller ->
-                    mNestedScrollView.post(() -> {
+                    mHomeScrollContainer.post(() -> {
                                 final Context context = getContext();
                                 if (context == null) {
                                     Log.w(TAG, "Adding section views with null context");
@@ -193,8 +206,8 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
     private void restoreViewState(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            mNestedScrollView.post(() ->
-                    mNestedScrollView.setScrollY(savedInstanceState.getInt(SCROLL_POSITION_Y)));
+            mHomeScrollContainer.post(() ->
+                    mHomeScrollContainer.setScrollY(savedInstanceState.getInt(SCROLL_POSITION_Y)));
         }
     }
 
@@ -264,8 +277,8 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
     /** Saves state of the fragment. */
     private void onSaveInstanceStateInternal(Bundle savedInstanceState) {
-        if (mNestedScrollView != null) {
-            savedInstanceState.putInt(SCROLL_POSITION_Y, mNestedScrollView.getScrollY());
+        if (mHomeScrollContainer != null) {
+            savedInstanceState.putInt(SCROLL_POSITION_Y, mHomeScrollContainer.getScrollY());
         }
         mSectionControllers.forEach(c -> c.onSaveInstanceState(savedInstanceState));
     }
