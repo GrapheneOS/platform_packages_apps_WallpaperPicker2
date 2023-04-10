@@ -83,7 +83,4 @@ interface CustomizationSectionController<T : SectionView> {
 
     /** Gets called when the section gets transitioned out. */
     @JvmDefault fun onTransitionOut() = Unit
-
-    /** Notifies when the screen was switched. */
-    @JvmDefault fun onScreenSwitched(isOnLockScreen: Boolean) = Unit
 }
