@@ -52,8 +52,8 @@
 
     <ViewStub
         android:id="@+id/clock_color_and_size_button"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:layout_gravity="center" />
 </com.android.wallpaper.picker.customization.ui.section.ScreenPreviewView>
 

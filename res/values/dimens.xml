@@ -208,8 +208,8 @@
     <dimen name="section_container_vertical_margin">24dp</dimen>
     <dimen name="wallpaper_section_horizontal_padding">24dp</dimen>
     <dimen name="section_horizontal_padding">24dp</dimen>
-    <dimen name="section_vertical_padding">24dp</dimen>
-    <dimen name="section_top_padding">24dp</dimen>
+    <dimen name="option_section_vertical_padding">4dp</dimen>
+    <dimen name="section_padding">24dp</dimen>
     <dimen name="section_bottom_padding">16dp</dimen>
 
     <!-- For the wallpaper section -->
@@ -220,6 +220,7 @@
     <dimen name="wallpaper_picker_entry_horizontal_padding">16dp</dimen>
     <dimen name="wallpaper_picker_entry_margin_vertical">16dp</dimen>
     <dimen name="wallpaper_picker_entry_card_corner_radius">12dp</dimen>
+    <dimen name="wallpaper_picker_options_section_margin">12dp</dimen>
     <dimen name="wallpaper_preview_buttons_elevation">8dp</dimen>
 
     <!-- For the full screen preview activity's hide UI menu item -->
@@ -289,11 +290,19 @@
     <dimen name="spacing_10dp">10dp</dimen>
 
     <!-- Horizontal padding around the "duo tabs" at the top of the screen. -->
-    <dimen name="tab_container_horizontal_padding">24dp</dimen>
+    <dimen name="tab_container_horizontal_padding">16dp</dimen>
+
+    <!-- Top margin for the "duo tabs" tab buttons -->
+    <dimen name="tab_container_top_margin">8dp</dimen>
+
+    <!-- Bottom margin for the "duo tabs" tab buttons -->
+    <dimen name="tab_container_bottom_margin">12dp</dimen>
+
 
     <!-- Size for option items. -->
     <dimen name="option_item_size">74dp</dimen>
 
     <!-- Screen preview section -->
-    <dimen name="screen_preview_section_vertical_space">8dp</dimen>
+    <dimen name="screen_preview_section_vertical_space">12dp</dimen>
+
 </resources>
