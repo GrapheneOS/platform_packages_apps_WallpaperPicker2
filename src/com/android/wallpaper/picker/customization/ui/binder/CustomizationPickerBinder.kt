@@ -26,6 +26,7 @@ import androidx.annotation.IdRes
 import androidx.core.view.children
 import androidx.core.view.isInvisible
 import androidx.core.view.updateLayoutParams
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -76,8 +77,8 @@ object CustomizationPickerBinder {
             lifecycleOwner = lifecycleOwner,
         )
 
-        val lockScrollContainer = view.findViewById<ViewGroup>(R.id.lock_scroll_container)
-        val homeScrollContainer = view.findViewById<ViewGroup>(R.id.home_scroll_container)
+        val lockScrollContainer = view.findViewById<NestedScrollView>(R.id.lock_scroll_container)
+        val homeScrollContainer = view.findViewById<NestedScrollView>(R.id.home_scroll_container)
 
         val lockSectionContainer = view.findViewById<ViewGroup>(R.id.lock_section_container)
         lockSectionContainer.setOnApplyWindowInsetsListener { v: View, windowInsets: WindowInsets ->
@@ -131,6 +132,11 @@ object CustomizationPickerBinder {
                                     sectionControllerProvider
                                 )
                             }
+
+                            // Offset the scroll position of both tabs
+                            lockScrollContainer.scrollTo(0, 0)
+                            homeScrollContainer.scrollTo(0, 0)
+
                             lockScrollContainer.isInvisible = !isOnLockScreen
                             homeScrollContainer.isInvisible = isOnLockScreen
                         }
