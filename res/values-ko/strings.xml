@@ -118,5 +118,6 @@
     <string name="reset" msgid="4945445169532850631">"초기화"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"변경사항을 재설정하시겠습니까?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"변경사항이 저장되지 않습니다."</string>
-    <string name="more_wallpapers" msgid="7585665124282737376">"배경화면 더보기"</string>
+    <!-- no translation found for more_wallpapers (8116268433411881705) -->
+    <skip />
 </resources>

@@ -118,5 +118,6 @@
     <string name="reset" msgid="4945445169532850631">"Баштапкы абалга келтирүү"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Өзгөртүүлөр жоюлсунбу?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Өзгөртүүлөрүңүз сакталбайт"</string>
-    <string name="more_wallpapers" msgid="7585665124282737376">"Дагы башка тушкагаздар"</string>
+    <!-- no translation found for more_wallpapers (8116268433411881705) -->
+    <skip />
 </resources>
