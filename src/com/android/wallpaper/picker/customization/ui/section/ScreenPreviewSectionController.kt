@@ -61,7 +61,7 @@ open class ScreenPreviewSectionController(
 
     private val isOnLockScreen: Boolean = screen == CustomizationSections.Screen.LOCK_SCREEN
 
-    private lateinit var previewViewBinding: ScreenPreviewBinder.Binding
+    protected lateinit var previewViewBinding: ScreenPreviewBinder.Binding
 
     /** Override to hide the lock screen clock preview. */
     open val hideLockScreenClockPreview = false
