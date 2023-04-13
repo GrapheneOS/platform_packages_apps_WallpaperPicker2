@@ -56,6 +56,13 @@
         screen [CHAR LIMIT=100] -->
     <string name="wallpaper_destination_both">Home &amp; Lock screen</string>
 
+    <!-- Label indicating the title for block that allows user to select a on-device
+         wallpaper in the WallpaperPicker screen [CHAR LIMIT=100] -->
+    <string name="choose_a_wallpaper_section_title">Choose a Wallpaper</string>
+
+    <!-- Label indicating the title for Creative Wallpapers block in the WallpaperPicker screen [CHAR LIMIT=100] -->
+    <string name="creative_wallpaper_title">Create a Wallpaper</string>
+
     <!-- Label referring to the home screen of the device, i.e. shown behind the launcher.
          [CHAR LIMIT=30] -->
     <string name="home_screen_message">Home screen</string>

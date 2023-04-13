@@ -46,6 +46,13 @@ public abstract class Category {
     }
 
     /**
+     * Returns whether user created wallpapers are supported or not.
+     */
+    public boolean supportsUserCreatedWallpapers() {
+        return false;
+    }
+
+    /**
      * Shows the UI for picking wallpapers within this category.
      *
      * @param srcActivity
