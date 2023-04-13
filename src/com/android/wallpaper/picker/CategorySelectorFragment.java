@@ -299,7 +299,7 @@ public class CategorySelectorFragment extends AppbarFragment {
             if (mIsCreativeWallpaperEnabled) {
                 int indexCreativeCategory = mCreativeCategories.indexOf(category);
                 if (indexCreativeCategory >= 0) {
-                    mCategories.remove(indexCreativeCategory);
+                    mCreativeCategories.remove(indexCreativeCategory);
                     mCreativeCategories.add(indexCreativeCategory, category);
                 }
                 mGroupedCategoryAdapter
