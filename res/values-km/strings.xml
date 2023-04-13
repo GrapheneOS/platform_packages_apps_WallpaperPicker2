@@ -118,5 +118,6 @@
     <string name="reset" msgid="4945445169532850631">"កំណត់​ឡើងវិញ"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"កំណត់​ការផ្លាស់ប្ដូរ​ឡើង​វិញឬ?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"ការផ្លាស់ប្ដូររបស់អ្នកនឹងមិនត្រូវបានរក្សាទុកទេ"</string>
-    <string name="more_wallpapers" msgid="7585665124282737376">"ផ្ទាំងរូបភាព​ច្រើនទៀត"</string>
+    <!-- no translation found for more_wallpapers (8116268433411881705) -->
+    <skip />
 </resources>

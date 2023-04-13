@@ -118,5 +118,6 @@
     <string name="reset" msgid="4945445169532850631">"重置"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"要重置更改吗？"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"您所做的更改将不会保存"</string>
-    <string name="more_wallpapers" msgid="7585665124282737376">"更多壁纸"</string>
+    <!-- no translation found for more_wallpapers (8116268433411881705) -->
+    <skip />
 </resources>
