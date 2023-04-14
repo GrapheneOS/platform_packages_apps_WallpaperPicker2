@@ -118,5 +118,6 @@
     <string name="reset" msgid="4945445169532850631">"Rivendos"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Të rivendosen ndryshimet?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Ndryshimet e tua nuk do të ruhen"</string>
-    <string name="more_wallpapers" msgid="7585665124282737376">"Më shumë imazhe të sfondit"</string>
+    <!-- no translation found for more_wallpapers (8116268433411881705) -->
+    <skip />
 </resources>
