@@ -118,5 +118,6 @@
     <string name="reset" msgid="4945445169532850631">"ৰিছেট কৰক"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"সালসলনিসমূহ ৰিছেট কৰিবনে?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"আপোনাৰ সম্পাদনাবোৰ ছেভ কৰা নহ’ব"</string>
-    <string name="more_wallpapers" msgid="7585665124282737376">"অধিক ৱালপেপাৰ"</string>
+    <!-- no translation found for more_wallpapers (8116268433411881705) -->
+    <skip />
 </resources>
