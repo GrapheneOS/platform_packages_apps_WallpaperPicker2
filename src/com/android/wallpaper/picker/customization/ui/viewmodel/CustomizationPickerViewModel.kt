@@ -22,7 +22,11 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
+import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import com.android.wallpaper.picker.undo.ui.viewmodel.UndoViewModel
 import kotlinx.coroutines.flow.Flow
@@ -35,6 +39,7 @@ class CustomizationPickerViewModel
 @VisibleForTesting
 constructor(
     undoInteractor: UndoInteractor,
+    wallpaperInteractor: WallpaperInteractor,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -42,6 +47,28 @@ constructor(
         UndoViewModel(
             interactor = undoInteractor,
         )
+
+    private val homeWallpaperQuickSwitchViewModel: WallpaperQuickSwitchViewModel =
+        WallpaperQuickSwitchViewModel(
+            interactor = wallpaperInteractor,
+            destination = WallpaperDestination.HOME,
+            coroutineScope = viewModelScope,
+        )
+
+    private val lockWallpaperQuickSwitchViewModel: WallpaperQuickSwitchViewModel =
+        WallpaperQuickSwitchViewModel(
+            interactor = wallpaperInteractor,
+            destination = WallpaperDestination.LOCK,
+            coroutineScope = viewModelScope,
+        )
+
+    fun getWallpaperQuickSwitchViewModel(
+        screen: CustomizationSections.Screen
+    ): WallpaperQuickSwitchViewModel {
+        return if (screen == CustomizationSections.Screen.LOCK_SCREEN)
+            lockWallpaperQuickSwitchViewModel
+        else homeWallpaperQuickSwitchViewModel
+    }
 
     private val _isOnLockScreen = MutableStateFlow(true)
     /** Whether we are on the lock screen. If `false`, we are on the home screen. */
@@ -105,6 +132,7 @@ constructor(
             owner: SavedStateRegistryOwner,
             defaultArgs: Bundle? = null,
             undoInteractor: UndoInteractor,
+            wallpaperInteractor: WallpaperInteractor,
         ): AbstractSavedStateViewModelFactory =
             object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
                 @Suppress("UNCHECKED_CAST")
@@ -115,6 +143,7 @@ constructor(
                 ): T {
                     return CustomizationPickerViewModel(
                         undoInteractor = undoInteractor,
+                        wallpaperInteractor = wallpaperInteractor,
                         savedStateHandle = handle,
                     )
                         as T
