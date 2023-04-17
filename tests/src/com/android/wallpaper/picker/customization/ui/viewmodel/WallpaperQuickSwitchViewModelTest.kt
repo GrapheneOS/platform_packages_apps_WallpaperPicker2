@@ -71,6 +71,8 @@ class WallpaperQuickSwitchViewModelTest {
         underTest =
             WallpaperQuickSwitchViewModel(
                 interactor = interactor,
+                destination = WallpaperDestination.HOME,
+                coroutineScope = testScope.backgroundScope,
                 maxOptions = FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.size,
             )
     }
@@ -149,51 +151,6 @@ class WallpaperQuickSwitchViewModelTest {
                 expected =
                     expectations(
                         selectedIndex = selectedIndex,
-                    ),
-            )
-        }
-
-    @Test
-    fun `switches between screens`() =
-        testScope.runTest {
-            val options = collectLastValue(underTest.options)
-
-            // We begin on the home screen by default.
-            // Select option at index 2 on the home screen.
-            val selectedIndex = 2
-            val optionToSelect = checkNotNull(options()?.get(selectedIndex))
-            val onSelected = collectLastValue(optionToSelect.onSelected)
-            onSelected()?.invoke()
-            runCurrent()
-            assertOptions(
-                observed = options(),
-                expected =
-                    expectations(
-                        selectedIndex = selectedIndex,
-                    ),
-            )
-
-            // Switch to the lock screen, it should still have the original option selected.
-            underTest.setOnLockScreen(isLockScreenSelected = true)
-            runCurrent()
-            assertOptions(
-                observed = options(),
-                expected = expectations(),
-            )
-
-            // Switch back to the home screen, it should still have option at index 2 selected.
-            underTest.setOnLockScreen(isLockScreenSelected = false)
-            runCurrent()
-            assertOptions(
-                observed = options(),
-                expected =
-                    expectations(
-                        models =
-                            listOf(
-                                FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[2],
-                                FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[0],
-                                FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[1],
-                            ),
                     ),
             )
         }
