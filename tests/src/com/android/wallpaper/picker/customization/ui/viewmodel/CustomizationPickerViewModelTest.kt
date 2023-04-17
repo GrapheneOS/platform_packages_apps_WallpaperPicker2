@@ -19,9 +19,13 @@ package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.filters.SmallTest
+import com.android.wallpaper.picker.customization.data.content.FakeWallpaperClient
+import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
+import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import com.android.wallpaper.testing.FAKE_RESTORERS
+import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,6 +47,7 @@ class CustomizationPickerViewModelTest {
     private lateinit var savedStateHandle: SavedStateHandle
     private lateinit var testScope: TestScope
     private lateinit var undoInteractor: UndoInteractor
+    private lateinit var wallpaperInteractor: WallpaperInteractor
 
     @Before
     fun setUp() {
@@ -55,10 +60,21 @@ class CustomizationPickerViewModelTest {
                 repository = UndoRepository(),
                 restorerByOwnerId = FAKE_RESTORERS,
             )
+        wallpaperInteractor =
+            WallpaperInteractor(
+                repository =
+                    WallpaperRepository(
+                        scope = testScope.backgroundScope,
+                        client = FakeWallpaperClient(),
+                        wallpaperPreferences = TestWallpaperPreferences(),
+                        backgroundDispatcher = testDispatcher,
+                    ),
+            )
 
         underTest =
             CustomizationPickerViewModel(
                 undoInteractor = undoInteractor,
+                wallpaperInteractor = wallpaperInteractor,
                 savedStateHandle = savedStateHandle,
             )
     }
@@ -100,6 +116,7 @@ class CustomizationPickerViewModelTest {
             val newUnderTest =
                 CustomizationPickerViewModel(
                     undoInteractor = undoInteractor,
+                    wallpaperInteractor = wallpaperInteractor,
                     savedStateHandle = savedStateHandle,
                 )
             val newIsOnLockScreen = collectLastValue(newUnderTest.isOnLockScreen)
@@ -150,6 +167,7 @@ class CustomizationPickerViewModelTest {
             val newUnderTest =
                 CustomizationPickerViewModel(
                     undoInteractor = undoInteractor,
+                    wallpaperInteractor = wallpaperInteractor,
                     savedStateHandle = savedStateHandle,
                 )
             val newHomeScreenTab = collectLastValue(newUnderTest.homeScreenTab)
