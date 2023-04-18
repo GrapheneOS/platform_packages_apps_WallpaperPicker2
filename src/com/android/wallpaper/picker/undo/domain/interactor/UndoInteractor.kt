@@ -18,6 +18,7 @@
 package com.android.wallpaper.picker.undo.domain.interactor
 
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
+import com.android.wallpaper.picker.undo.shared.model.RestorableSnapshot
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -27,14 +28,17 @@ import kotlinx.coroutines.launch
  *
  * ## Usage
  * 1. Instantiate, injecting the supported [SnapshotRestorer] into it, one for each feature that
+ *
  * ```
  *    should support undo functionality.
  * ```
  * 2. Call [startSession] which will bootstrap all passed-in [SnapshotRestorer] instances and
+ *
  * ```
  *    hydrate our model with the latest snapshots from each one.
  * ```
  * 3. Observe [isUndoable] to know whether the UI for triggering an "undo" action should be made
+ *
  * ```
  *    visible to the user.
  * ```
@@ -51,18 +55,29 @@ class UndoInteractor(
 
     /** Bootstraps the undo system, querying each undo-supporting area for the initial snapshot. */
     fun startSession() {
-        // TODO(b/262924056): take in a saved instance state and reuse it instead.
         repository.clearAllDirty()
         restorerByOwnerId.forEach { (ownerId, restorer) ->
             scope.launch {
                 val initialSnapshot =
-                    restorer.setUpSnapshotRestorer { subsequentSnapshot ->
-                        val initialSnapshot = repository.getSnapshot(ownerId)
-                        repository.putDirty(
-                            ownerId = ownerId,
-                            isDirty = initialSnapshot != subsequentSnapshot
-                        )
-                    }
+                    restorer.setUpSnapshotRestorer(
+                        object : SnapshotStore {
+                            override fun retrieve(): RestorableSnapshot {
+                                return repository.getSnapshot(ownerId)
+                                    ?: error(
+                                        "No snapshot for this owner ID! Did you call this before" +
+                                            " storing a snapshot?"
+                                    )
+                            }
+
+                            override fun store(snapshot: RestorableSnapshot) {
+                                val initialSnapshot = repository.getSnapshot(ownerId)
+                                repository.putDirty(
+                                    ownerId = ownerId,
+                                    isDirty = initialSnapshot != snapshot
+                                )
+                            }
+                        }
+                    )
 
                 repository.putSnapshot(
                     ownerId = ownerId,

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,18 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
-package com.android.wallpaper.model
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+package com.android.wallpaper.picker.common.text.ui.viewbinder
 
-/** ViewModel class to keep track of workspace updates. */
-class WorkspaceViewModel : ViewModel() {
+import android.widget.TextView
+import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 
-    /**
-     * Triggers workspace updates through flipping the value from {@code false} to {@code true}, or
-     * from {@code true} to {@code false}.
-     */
-    val updateWorkspace: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+object TextViewBinder {
+    fun bind(
+        view: TextView,
+        viewModel: Text,
+    ) {
+        when (viewModel) {
+            is Text.Resource -> view.setText(viewModel.res)
+            is Text.Loaded -> view.text = viewModel.text
+        }
+    }
 }

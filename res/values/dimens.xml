@@ -67,6 +67,7 @@
 
     <!-- Dimensions for wallpaper tiles in individual picker when in desktop mode. -->
     <dimen name="tile_desktop_progress_bar_size">40dp</dimen>
+    <dimen name="effect_generating_progress_bar_size">48dp</dimen>
 
     <!-- Dimensions for "daily refresh" rotation tile in individual picker when in desktop mode. -->
     <dimen name="rotation_tile_desktop_label_padding">16dp</dimen>
@@ -218,6 +219,7 @@
     <dimen name="wallpaper_picker_entry_horizontal_padding">16dp</dimen>
     <dimen name="wallpaper_picker_entry_margin_vertical">16dp</dimen>
     <dimen name="wallpaper_picker_entry_card_corner_radius">12dp</dimen>
+    <dimen name="wallpaper_preview_buttons_elevation">8dp</dimen>
 
     <!-- For the full screen preview activity's hide UI menu item -->
     <dimen name="menu_item_hide_ui_background_width">46dp</dimen>
@@ -239,7 +241,7 @@
     <dimen name="wallpaper_effect_failed_button_size">16sp</dimen>
 
     <!-- Clipping of the home screen overlay -->
-    <dimen name="home_screen_overlay_top_clipping">100dp</dimen>
+    <dimen name="home_screen_overlay_top_clipping">90dp</dimen>
     <dimen name="home_screen_overlay_bottom_clipping">40dp</dimen>
 
     <!-- Set wallpaper button -->
@@ -261,7 +263,6 @@
 
     <!-- Duo tabs -->
     <dimen name="duo_tabs_button_corner_radius">12dp</dimen>
-    <dimen name="duo_tabs_divider_space">8dp</dimen>
 
     <!-- Floating Sheet -->
     <dimen name="floating_sheet_corner_radius">12dp</dimen>
@@ -276,4 +277,19 @@
     display.
     -->
     <dimen name="screen_preview_height">380dp</dimen>
+
+    <!-- Height of options in the wallpaper quick switch widget. -->
+    <dimen name="wallpaper_quick_switch_selected_option_height">98dp</dimen>
+
+    <!-- Maximumn width non-selected options in the wallpaper quick switch widget. -->
+    <dimen name="wallpaper_quick_switch_max_option_width">@dimen/wallpaper_quick_switch_selected_option_height</dimen>
+
+    <dimen name="spacing_8dp">8dp</dimen>
+    <dimen name="spacing_10dp">10dp</dimen>
+
+    <!-- Horizontal padding around the "duo tabs" at the top of the screen. -->
+    <dimen name="tab_container_horizontal_padding">24dp</dimen>
+
+    <!-- Size for option items. -->
+    <dimen name="option_item_size">74dp</dimen>
 </resources>

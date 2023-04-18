@@ -84,8 +84,7 @@
     <string name="my_photos" msgid="8613021349284084982">"Moje slike"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Podešavanja…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Izbriši"</string>
-    <!-- no translation found for delete_wallpaper_confirmation (33790318361863778) -->
-    <skip />
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Želite da izbrišete ovu pozadinu sa telefona?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Nazad"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Izmeni"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Preuzmi"</string>
@@ -111,12 +110,4 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Informacije su prikazane"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"Omogućite fajlove i medije u podešavanjima."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Omogući"</string>
-    <string name="open_my_photos" msgid="4107196465713868381">"Otvori Moje slike"</string>
-    <string name="lock_screen_tab" msgid="6672930765010407652">"Zaključani ekran"</string>
-    <string name="home_screen_tab" msgid="1080445697837877526">"Početni ekran"</string>
-    <string name="reset" msgid="4945445169532850631">"Resetuj"</string>
-    <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
-    <skip />
-    <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->
-    <skip />
 </resources>

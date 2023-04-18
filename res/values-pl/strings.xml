@@ -84,8 +84,7 @@
     <string name="my_photos" msgid="8613021349284084982">"Moje zdjęcia"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Ustawienia…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Usuń"</string>
-    <!-- no translation found for delete_wallpaper_confirmation (33790318361863778) -->
-    <skip />
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Usunąć tę tapetę z telefonu?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Wstecz"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Edytuj"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Pobierz"</string>
@@ -111,12 +110,4 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Panel informacyjny jest widoczny"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"W ustawieniach włącz dostęp do plików i multimediów."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Włącz"</string>
-    <string name="open_my_photos" msgid="4107196465713868381">"Otwórz Moje zdjęcia"</string>
-    <string name="lock_screen_tab" msgid="6672930765010407652">"Ekran blokady"</string>
-    <string name="home_screen_tab" msgid="1080445697837877526">"Ekran główny"</string>
-    <string name="reset" msgid="4945445169532850631">"Resetuj"</string>
-    <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
-    <skip />
-    <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->
-    <skip />
 </resources>

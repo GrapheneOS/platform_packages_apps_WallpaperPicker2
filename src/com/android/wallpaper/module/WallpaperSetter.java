@@ -172,10 +172,11 @@ public class WallpaperSetter {
                 wallpaper, wallpaperAsset, cropRect,
                 wallpaperScale, destination, new SetWallpaperCallback() {
                     @Override
-                    public void onSuccess(WallpaperInfo wallpaperInfo) {
+                    public void onSuccess(WallpaperInfo wallpaperInfo,
+                            @Destination int destination) {
                         onWallpaperApplied(wallpaper, containerActivity);
                         if (callback != null) {
-                            callback.onSuccess(wallpaper);
+                            callback.onSuccess(wallpaper, destination);
                         }
                     }
 
@@ -197,21 +198,25 @@ public class WallpaperSetter {
             // wallpaper and restore after setting the wallpaper finishes.
             saveAndLockScreenOrientationIfNeeded(activity);
 
-            if (destination == WallpaperPersister.DEST_LOCK_SCREEN) {
-                throw new IllegalArgumentException(
-                        "Live wallpaper cannot be applied on lock screen only");
-            }
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(activity);
+            if (destination == WallpaperPersister.DEST_LOCK_SCREEN
+                    && !wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
+                throw new IllegalArgumentException(
+                    "Live wallpaper cannot be applied on lock screen only");
+            }
+
             setWallpaperComponent(wallpaperManager, wallpaper, destination);
             wallpaperManager.setWallpaperOffsetSteps(0.5f /* xStep */, 0.0f /* yStep */);
             wallpaperManager.setWallpaperOffsets(
                     activity.getWindow().getDecorView().getRootView().getWindowToken(),
                     0.5f /* xOffset */, 0.0f /* yOffset */);
-            mPreferences.storeLatestHomeWallpaper(wallpaper.getWallpaperId(), wallpaper, colors);
+            mPreferences.storeLatestWallpaper(WallpaperPersister.destinationToFlags(destination),
+                    wallpaper.getWallpaperId(), wallpaper, colors);
             onWallpaperApplied(wallpaper, activity);
             if (callback != null) {
-                callback.onSuccess(wallpaper);
+                callback.onSuccess(wallpaper, destination);
             }
+            mWallpaperPersister.onLiveWallpaperSet(destination);
         } catch (RuntimeException | IOException e) {
             onWallpaperApplyError(e, activity);
             if (callback != null) {
@@ -233,7 +238,8 @@ public class WallpaperSetter {
             wallpaperManager.setWallpaperComponent(
                     wallpaper.getWallpaperComponent().getComponent());
         }
-        if (destination == WallpaperPersister.DEST_BOTH) {
+        if (!wallpaperManager.isLockscreenLiveWallpaperEnabled()
+                && destination == WallpaperPersister.DEST_BOTH) {
             wallpaperManager.clear(FLAG_LOCK);
         }
     }
@@ -257,14 +263,16 @@ public class WallpaperSetter {
             }
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
             setWallpaperComponent(wallpaperManager, wallpaper, destination);
-            mPreferences.storeLatestHomeWallpaper(wallpaper.getWallpaperId(), wallpaper,
-                    colors != null ? colors :
+            mPreferences.storeLatestWallpaper(WallpaperPersister.destinationToFlags(destination),
+                    wallpaper.getWallpaperId(),
+                    wallpaper, colors != null ? colors :
                             WallpaperColors.fromBitmap(wallpaper.getThumbAsset(context)
                                     .getLowResBitmap(context)));
             // Not call onWallpaperApplied() as no UI is presented.
             if (callback != null) {
-                callback.onSuccess(wallpaper);
+                callback.onSuccess(wallpaper, destination);
             }
+            mWallpaperPersister.onLiveWallpaperSet(destination);
         } catch (RuntimeException | IOException e) {
             // Not call onWallpaperApplyError() as no UI is presented.
             if (callback != null) {
@@ -353,6 +361,15 @@ public class WallpaperSetter {
             }
         };
 
+        WallpaperManager wallpaperManager = WallpaperManager.getInstance(activity);
+        SetWallpaperDialogFragment setWallpaperDialog = new SetWallpaperDialogFragment();
+        setWallpaperDialog.setTitleResId(titleResId);
+        setWallpaperDialog.setListener(listenerWrapper);
+        if (wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
+            setWallpaperDialog.show(fragmentManager, TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
+            return;
+        }
+
         WallpaperStatusChecker wallpaperStatusChecker =
                 InjectorProvider.getInjector().getWallpaperStatusChecker();
         boolean isLiveWallpaperSet =
@@ -361,9 +378,6 @@ public class WallpaperSetter {
         boolean isBuiltIn = !isLiveWallpaperSet
                 && !wallpaperStatusChecker.isHomeStaticWallpaperSet(activity);
 
-        SetWallpaperDialogFragment setWallpaperDialog = new SetWallpaperDialogFragment();
-        setWallpaperDialog.setTitleResId(titleResId);
-        setWallpaperDialog.setListener(listenerWrapper);
         if ((isLiveWallpaperSet || isBuiltIn)
                 && !wallpaperStatusChecker.isLockWallpaperSet(activity)) {
             if (isLiveWallpaper) {

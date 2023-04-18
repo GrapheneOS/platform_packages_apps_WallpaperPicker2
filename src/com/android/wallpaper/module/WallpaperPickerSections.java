@@ -12,8 +12,10 @@ import com.android.wallpaper.model.PermissionRequester;
 import com.android.wallpaper.model.WallpaperColorsViewModel;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
 import com.android.wallpaper.model.WallpaperSectionController;
-import com.android.wallpaper.model.WorkspaceViewModel;
+import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor;
 import com.android.wallpaper.picker.customization.ui.section.ScreenPreviewSectionController;
+import com.android.wallpaper.picker.customization.ui.section.WallpaperQuickSwitchSectionController;
+import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperQuickSwitchViewModel;
 import com.android.wallpaper.util.DisplayUtils;
 
 import java.util.ArrayList;
@@ -23,18 +25,19 @@ import java.util.List;
 public final class WallpaperPickerSections implements CustomizationSections {
 
     @Override
-    public List<CustomizationSectionController<?>> getSectionControllersForScreen(
+    public List<CustomizationSectionController<?>> getRevampedUISectionControllersForScreen(
             Screen screen,
             FragmentActivity activity,
             LifecycleOwner lifecycleOwner,
             WallpaperColorsViewModel wallpaperColorsViewModel,
-            WorkspaceViewModel workspaceViewModel,
             PermissionRequester permissionRequester,
             WallpaperPreviewNavigator wallpaperPreviewNavigator,
             CustomizationSectionNavigationController sectionNavigationController,
             @Nullable Bundle savedInstanceState,
             CurrentWallpaperInfoFactory wallpaperInfoFactory,
-            DisplayUtils displayUtils) {
+            DisplayUtils displayUtils,
+            WallpaperQuickSwitchViewModel wallpaperQuickSwitchViewModel,
+            WallpaperInteractor wallpaperInteractor) {
         List<CustomizationSectionController<?>> sectionControllers = new ArrayList<>();
 
         sectionControllers.add(
@@ -44,7 +47,15 @@ public final class WallpaperPickerSections implements CustomizationSections {
                         screen,
                         wallpaperInfoFactory,
                         wallpaperColorsViewModel,
-                        displayUtils));
+                        displayUtils,
+                        sectionNavigationController,
+                        wallpaperInteractor));
+        sectionControllers.add(
+                new WallpaperQuickSwitchSectionController(
+                        screen,
+                        wallpaperQuickSwitchViewModel,
+                        lifecycleOwner,
+                        sectionNavigationController));
 
         return sectionControllers;
     }
@@ -54,7 +65,6 @@ public final class WallpaperPickerSections implements CustomizationSections {
             FragmentActivity activity,
             LifecycleOwner lifecycleOwner,
             WallpaperColorsViewModel wallpaperColorsViewModel,
-            WorkspaceViewModel workspaceViewModel,
             PermissionRequester permissionRequester,
             WallpaperPreviewNavigator wallpaperPreviewNavigator,
             CustomizationSectionNavigationController sectionNavigationController,
@@ -62,10 +72,17 @@ public final class WallpaperPickerSections implements CustomizationSections {
             DisplayUtils displayUtils) {
         List<CustomizationSectionController<?>> sectionControllers = new ArrayList<>();
 
-        sectionControllers.add(new WallpaperSectionController(
-                activity, lifecycleOwner, permissionRequester, wallpaperColorsViewModel,
-                workspaceViewModel, sectionNavigationController, wallpaperPreviewNavigator,
-                savedInstanceState, displayUtils));
+        sectionControllers.add(
+                new WallpaperSectionController(
+                        activity,
+                        lifecycleOwner,
+                        permissionRequester,
+                        wallpaperColorsViewModel,
+                        null,
+                        sectionNavigationController,
+                        wallpaperPreviewNavigator,
+                        savedInstanceState,
+                        displayUtils));
 
         return sectionControllers;
     }

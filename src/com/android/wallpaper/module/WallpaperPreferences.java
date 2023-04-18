@@ -17,6 +17,7 @@ package com.android.wallpaper.module;
 
 import android.annotation.TargetApi;
 import android.app.WallpaperColors;
+import android.app.WallpaperManager.SetWallpaperFlags;
 import android.graphics.Bitmap;
 import android.os.Build;
 
@@ -140,16 +141,6 @@ public interface WallpaperPreferences {
     void setHomeWallpaperHashCode(long hashCode);
 
     /**
-     * Gets the home wallpaper's package name, which is present for live wallpapers.
-     */
-    String getHomeWallpaperPackageName();
-
-    /**
-     * Sets the home wallpaper's package name, which is present for live wallpapers.
-     */
-    void setHomeWallpaperPackageName(String packageName);
-
-    /**
      * Gets the home wallpaper's service name, which is present for live wallpapers.
      */
     String getHomeWallpaperServiceName();
@@ -182,6 +173,18 @@ public interface WallpaperPreferences {
      * collection.
      */
     void setHomeWallpaperRemoteId(String wallpaperRemoteId);
+
+    /**
+     * Gets the home wallpaper's effects.
+     */
+    String getHomeWallpaperEffects();
+
+    /**
+     * Sets the home wallpaper's effects to SharedPreferences.
+     *
+     * @param wallpaperEffects The wallpaper effects.
+     */
+    void setHomeWallpaperEffects(String wallpaperEffects);
 
     /**
      * Returns the lock wallpaper's action URL or null if there is none.
@@ -262,6 +265,16 @@ public interface WallpaperPreferences {
     void setLockWallpaperHashCode(long hashCode);
 
     /**
+     * Gets the lock wallpaper's service name, which is present for live wallpapers.
+     */
+    String getLockWallpaperServiceName();
+
+    /**
+     * Sets the lock wallpaper's service name, which is present for live wallpapers.
+     */
+    void setLockWallpaperServiceName(String serviceName);
+
+    /**
      * Gets the lock wallpaper's ID, which is provided by WallpaperManager for static wallpapers.
      */
     @TargetApi(Build.VERSION_CODES.N)
@@ -284,6 +297,18 @@ public interface WallpaperPreferences {
      * wallpaper collection.
      */
     void setLockWallpaperRemoteId(String wallpaperRemoteId);
+
+    /**
+     * Gets the lock wallpaper's effects.
+     */
+    String getLockWallpaperEffects();
+
+    /**
+     * Sets the lock wallpaper's effects to SharedPreferences.
+     *
+     * @param wallpaperEffects The wallpaper effects.
+     */
+    void setLockWallpaperEffects(String wallpaperEffects);
 
     /**
      * Persists the timestamp of a daily wallpaper rotation that just occurred.
@@ -505,18 +530,6 @@ public interface WallpaperPreferences {
             String wallpaperId);
 
     /**
-     * Gets the wallpaper's effects.
-     */
-    String getWallpaperEffects();
-
-    /**
-     * Sets the wallpaper's effects to SharedPreferences.
-     *
-     * @param wallpaperEffects The wallpaper effects.
-     */
-    void setWallpaperEffects(String wallpaperEffects);
-
-    /**
      * The possible wallpaper presentation modes, i.e., either "static" or "rotating".
      */
     @IntDef({
@@ -545,29 +558,33 @@ public interface WallpaperPreferences {
 
     /**
      * Stores the given live wallpaper in the recent wallpapers list
+     * @param which flag indicating the wallpaper destination
      * @param wallpaperId unique identifier for this wallpaper
      * @param wallpaper {@link LiveWallpaperInfo} for the applied wallpaper
      * @param colors WallpaperColors to be used as placeholder for quickswitching
      */
-    default void storeLatestHomeWallpaper(String wallpaperId,
+    default void storeLatestWallpaper(@SetWallpaperFlags int which, String wallpaperId,
             @NonNull LiveWallpaperInfo wallpaper, WallpaperColors colors) {
         // Do nothing in the default case.
     }
 
     /**
      * Stores the given static wallpaper data in the recent wallpapers list.
+     * @param which flag indicating the wallpaper destination
      * @param wallpaperId unique identifier for this wallpaper
      * @param wallpaper {@link WallpaperInfo} for the applied wallpaper
      * @param croppedWallpaperBitmap wallpaper bitmap exactly as applied to WallaperManager
      * @param colors WallpaperColors to be used as placeholder for quickswitching
      */
-    default void storeLatestHomeWallpaper(String wallpaperId, @NonNull WallpaperInfo wallpaper,
+    default void storeLatestWallpaper(@SetWallpaperFlags int which, String wallpaperId,
+            @NonNull WallpaperInfo wallpaper,
             @NonNull Bitmap croppedWallpaperBitmap, WallpaperColors colors) {
         // Do nothing in the default case.
     }
 
     /**
      * Stores the given static wallpaper data in the recent wallpapers list.
+     * @param which flag indicating the wallpaper destination
      * @param wallpaperId unique identifier for this wallpaper
      * @param attributions List of attribution items.
      * @param actionUrl The action or "explore" URL for the wallpaper.
@@ -575,7 +592,9 @@ public interface WallpaperPreferences {
      * @param croppedWallpaperBitmap wallpaper bitmap exactly as applied to WallaperManager
      * @param colors {@link WallpaperColors} to be used as placeholder for quickswitching
      */
-    default void storeLatestHomeWallpaper(String wallpaperId, List<String> attributions,
+    default void storeLatestWallpaper(
+            @SetWallpaperFlags int which,
+            String wallpaperId, List<String> attributions,
             String actionUrl, String collectionId,
             @NonNull Bitmap croppedWallpaperBitmap, WallpaperColors colors) {
         // Do nothing in the default case.

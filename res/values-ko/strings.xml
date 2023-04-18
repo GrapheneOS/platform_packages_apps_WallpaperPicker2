@@ -84,8 +84,7 @@
     <string name="my_photos" msgid="8613021349284084982">"내 사진"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"설정…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"삭제"</string>
-    <!-- no translation found for delete_wallpaper_confirmation (33790318361863778) -->
-    <skip />
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"휴대전화에서 이 배경화면을 삭제하시겠습니까?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"뒤로"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"수정"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"다운로드"</string>
@@ -111,12 +110,4 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"정보 표시"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"설정에서 파일 및 미디어를 사용 설정하세요."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"사용"</string>
-    <string name="open_my_photos" msgid="4107196465713868381">"내 사진 열기"</string>
-    <string name="lock_screen_tab" msgid="6672930765010407652">"잠금 화면"</string>
-    <string name="home_screen_tab" msgid="1080445697837877526">"홈 화면"</string>
-    <string name="reset" msgid="4945445169532850631">"초기화"</string>
-    <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
-    <skip />
-    <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->
-    <skip />
 </resources>

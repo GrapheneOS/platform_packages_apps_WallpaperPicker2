@@ -84,8 +84,7 @@
     <string name="my_photos" msgid="8613021349284084982">"मेरी फ़ोटो"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"सेटिंग…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"मिटाएं"</string>
-    <!-- no translation found for delete_wallpaper_confirmation (33790318361863778) -->
-    <skip />
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"क्या आप अपने फ़ोन से यह वॉलपेपर मिटाना चाहते हैं?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"वापस जाएं"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"बदलाव करें"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"डाउनलोड करें"</string>
@@ -111,12 +110,4 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"जानकारी देने वाले पैनल को दिखाया गया"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"कृपया सेटिंग में जाकर फ़ाइलों और मीडिया को ऐक्सेस करने की सुविधा चालू करें."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"चालू करें"</string>
-    <string name="open_my_photos" msgid="4107196465713868381">"मेरी फ़ोटो खोलो"</string>
-    <string name="lock_screen_tab" msgid="6672930765010407652">"लॉक स्क्रीन"</string>
-    <string name="home_screen_tab" msgid="1080445697837877526">"होम स्क्रीन"</string>
-    <string name="reset" msgid="4945445169532850631">"रीसेट करें"</string>
-    <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
-    <skip />
-    <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->
-    <skip />
 </resources>

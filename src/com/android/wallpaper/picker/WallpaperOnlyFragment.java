@@ -15,6 +15,8 @@
  */
 package com.android.wallpaper.picker;
 
+import android.os.Bundle;
+
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.CustomizationSectionController;
 import com.android.wallpaper.model.WallpaperSectionController;
@@ -25,17 +27,26 @@ import java.util.stream.Collectors;
 /** The Fragment UI for wallpaper only section. */
 public class WallpaperOnlyFragment extends CustomizationPickerFragment {
 
+    /** Returns a new instance of {@link WallpaperOnlyFragment}. */
+    public static WallpaperOnlyFragment newInstance(boolean isUseRevampedUi) {
+        final WallpaperOnlyFragment fragment = new WallpaperOnlyFragment();
+        final Bundle args = new Bundle();
+        args.putBoolean(KEY_IS_USE_REVAMPED_UI, isUseRevampedUi);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public CharSequence getDefaultTitle() {
         return getString(R.string.wallpaper_app_name);
     }
 
     @Override
-    protected List<CustomizationSectionController<?>> getAvailableSections(
+    protected List<CustomizationSectionController<?>> filterAvailableSections(
             List<CustomizationSectionController<?>> controllers) {
         List<CustomizationSectionController<?>> wallpaperOnlySections = controllers.stream()
                 .filter(controller -> controller instanceof WallpaperSectionController)
                 .collect(Collectors.toList());
-        return super.getAvailableSections(wallpaperOnlySections);
+        return super.filterAvailableSections(wallpaperOnlySections);
     }
 }

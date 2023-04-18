@@ -25,7 +25,7 @@
         android:id="@+id/duo_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="24dp"
+        android:paddingHorizontal="@dimen/tab_container_horizontal_padding"
         android:paddingVertical="16dp" />
 
     <include

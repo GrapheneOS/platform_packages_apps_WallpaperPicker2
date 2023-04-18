@@ -15,6 +15,9 @@
  */
 package com.android.wallpaper.module;
 
+import static android.app.WallpaperManager.FLAG_LOCK;
+import static android.app.WallpaperManager.FLAG_SYSTEM;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.WallpaperColors;
@@ -448,7 +451,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         int offsetY = Math.max(0, -(screenSize.y / 2 - scaledCenter.y));
 
         Rect cropRect = WallpaperCropUtils.calculateCropRect(mAppContext, minWallpaperZoom,
-                wallpaperSize, defaultCropSurfaceSize, screenSize, offsetX, offsetY);
+                wallpaperSize, defaultCropSurfaceSize, screenSize, offsetX,
+                offsetY, /* cropExtraWidth= */ true);
 
         Rect scaledCropRect = new Rect(
                 (int) Math.floor((float) cropRect.left / minWallpaperZoom),
@@ -467,9 +471,9 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         int wallpaperId = setBitmapToWallpaperManagerCompat(wallpaperBitmap,
                 /* allowBackup */ false, whichWallpaper);
         if (wallpaperId > 0) {
-            mWallpaperPreferences.storeLatestHomeWallpaper(String.valueOf(wallpaperId),
-                    attributions, actionUrl, collectionId, wallpaperBitmap,
-                    WallpaperColors.fromBitmap(wallpaperBitmap));
+            mWallpaperPreferences.storeLatestWallpaper(whichWallpaper,
+                    String.valueOf(wallpaperId), attributions, actionUrl, collectionId,
+                    wallpaperBitmap, WallpaperColors.fromBitmap(wallpaperBitmap));
         }
         return wallpaperId;
     }
@@ -532,7 +536,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     }
 
     @Override
-    public void onLiveWallpaperSet() {
+    public void onLiveWallpaperSet(@Destination int destination) {
         android.app.WallpaperInfo currentWallpaperComponent = mWallpaperManager.getWallpaperInfo();
         android.app.WallpaperInfo previewedWallpaperComponent = mWallpaperInfoInPreview != null
                 ? mWallpaperInfoInPreview.getWallpaperComponent() : null;
@@ -541,13 +545,14 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         // WallpaperInfo which was last previewed, then do nothing and nullify last previewed
         // wallpaper.
         if (currentWallpaperComponent == null || previewedWallpaperComponent == null
-                || !currentWallpaperComponent.getPackageName()
-                .equals(previewedWallpaperComponent.getPackageName())) {
+                || !currentWallpaperComponent.getServiceName()
+                .equals(previewedWallpaperComponent.getServiceName())) {
             mWallpaperInfoInPreview = null;
             return;
         }
 
-        setLiveWallpaperMetadata();
+        setLiveWallpaperMetadata(mWallpaperInfoInPreview, mWallpaperInfoInPreview.getEffectNames(),
+                destination);
     }
 
     /**
@@ -572,30 +577,29 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         return isLockWallpaperSet;
     }
 
-    /**
-     * Sets the live wallpaper's metadata on SharedPreferences.
-     */
-    private void setLiveWallpaperMetadata() {
-        android.app.WallpaperInfo previewedWallpaperComponent =
-                mWallpaperInfoInPreview.getWallpaperComponent();
+    @Override
+    public void setLiveWallpaperMetadata(WallpaperInfo wallpaperInfo, String effects,
+            @Destination int destination) {
+        android.app.WallpaperInfo component = wallpaperInfo.getWallpaperComponent();
 
-        mWallpaperPreferences.clearHomeWallpaperMetadata();
-        // NOTE: We explicitly do not also clear the lock wallpaper metadata. Since the user may
-        // have set the live wallpaper on the home screen only, we leave the lock wallpaper metadata
-        // intact. If the user has set the live wallpaper for both home and lock screens, then the
-        // WallpaperRefresher will pick up on that and update the preferences later.
-        mWallpaperPreferences
-                .setHomeWallpaperAttributions(mWallpaperInfoInPreview.getAttributions(mAppContext));
-        mWallpaperPreferences.setHomeWallpaperPackageName(
-                previewedWallpaperComponent.getPackageName());
-        mWallpaperPreferences.setHomeWallpaperServiceName(
-                previewedWallpaperComponent.getServiceName());
-        mWallpaperPreferences.setHomeWallpaperCollectionId(
-                mWallpaperInfoInPreview.getCollectionId(mAppContext));
-        mWallpaperPreferences.setWallpaperPresentationMode(
-                WallpaperPreferences.PRESENTATION_MODE_STATIC);
-        mWallpaperPreferences.clearDailyRotations();
-        mWallpaperPreferences.setWallpaperEffects(mWallpaperInfoInPreview.getEffectNames());
+        if (destination == WallpaperPersister.DEST_HOME_SCREEN
+                || destination == WallpaperPersister.DEST_BOTH) {
+            mWallpaperPreferences.clearHomeWallpaperMetadata();
+            mWallpaperPreferences.setHomeWallpaperServiceName(component.getServiceName());
+            mWallpaperPreferences.setHomeWallpaperEffects(effects);
+
+            // Since rotation affects home screen only, disable it when setting home live wp
+            mWallpaperPreferences.setWallpaperPresentationMode(
+                    WallpaperPreferences.PRESENTATION_MODE_STATIC);
+            mWallpaperPreferences.clearDailyRotations();
+        }
+
+        if (destination == WallpaperPersister.DEST_LOCK_SCREEN
+                || destination == WallpaperPersister.DEST_BOTH) {
+            mWallpaperPreferences.clearLockWallpaperMetadata();
+            mWallpaperPreferences.setLockWallpaperServiceName(component.getServiceName());
+            mWallpaperPreferences.setLockWallpaperEffects(effects);
+        }
     }
 
     private class SetWallpaperTask extends AsyncTask<Void, Void, Boolean> {
@@ -725,7 +729,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             }
 
             if (isSuccess) {
-                mCallback.onSuccess(mWallpaper);
+                mCallback.onSuccess(mWallpaper, mDestination);
                 mWallpaperChangedNotifier.notifyWallpaperChanged();
             } else {
                 mCallback.onError(null /* throwable */);
@@ -774,7 +778,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         private void setImageWallpaperMetadata(@Destination int destination, int wallpaperId) {
             if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
                 mWallpaperPreferences.clearHomeWallpaperMetadata();
-                mWallpaperPreferences.setWallpaperEffects(null);
+                mWallpaperPreferences.setHomeWallpaperEffects(null);
                 setImageWallpaperHomeMetadata(wallpaperId);
 
                 // Reset presentation mode to STATIC if an individual wallpaper is set to the
@@ -820,7 +824,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setHomeWallpaperCollectionId(
                     mWallpaper.getCollectionId(mAppContext));
             mWallpaperPreferences.setHomeWallpaperRemoteId(mWallpaper.getWallpaperId());
-            mWallpaperPreferences.storeLatestHomeWallpaper(
+            mWallpaperPreferences.storeLatestWallpaper(FLAG_SYSTEM,
                     TextUtils.isEmpty(mWallpaper.getWallpaperId()) ? String.valueOf(bitmapHash)
                             : mWallpaper.getWallpaperId(),
                     mWallpaper, mBitmap, colors);
@@ -843,42 +847,46 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             // because WallpaperManager-generated IDs are specific to a physical device and
             // cannot be  used to identify a wallpaper image on another device after restore is
             // complete.
-            saveLockWallpaperHashCode();
+            Bitmap lockBitmap = getLockWallpaperBitmap();
+            if (lockBitmap != null) {
+                saveLockWallpaperHashCode(lockBitmap);
+                mWallpaperPreferences.storeLatestWallpaper(FLAG_LOCK,
+                        TextUtils.isEmpty(mWallpaper.getWallpaperId())
+                                ? String.valueOf(mWallpaperPreferences.getLockWallpaperHashCode())
+                                : mWallpaper.getWallpaperId(),
+                        mWallpaper, lockBitmap, WallpaperColors.fromBitmap(lockBitmap));
+            }
         }
 
-        private void saveLockWallpaperHashCode() {
-            Bitmap lockBitmap = null;
-
+        private Bitmap getLockWallpaperBitmap() {
             ParcelFileDescriptor parcelFd = mWallpaperManagerCompat.getWallpaperFile(
                     WallpaperManagerCompat.FLAG_LOCK);
 
             if (parcelFd == null) {
-                return;
+                return null;
             }
 
-            InputStream fileStream = null;
-            try {
-                fileStream = new FileInputStream(parcelFd.getFileDescriptor());
-                lockBitmap = BitmapFactory.decodeStream(fileStream);
-                parcelFd.close();
+            try (InputStream fileStream = new FileInputStream(parcelFd.getFileDescriptor())) {
+                return BitmapFactory.decodeStream(fileStream);
             } catch (IOException e) {
-                Log.e(TAG, "IO exception when closing the file descriptor.");
+                Log.e(TAG, "IO exception when closing the file stream.", e);
+                return null;
             } finally {
-                if (fileStream != null) {
-                    try {
-                        fileStream.close();
-                    } catch (IOException e) {
-                        Log.e(TAG,
-                                "IO exception when closing the input stream for the lock screen "
-                                        + "WP.");
-                    }
+                try {
+                    parcelFd.close();
+                } catch (IOException e) {
+                    Log.e(TAG, "IO exception when closing the file descriptor.", e);
                 }
             }
+        }
 
+        private long saveLockWallpaperHashCode(Bitmap lockBitmap) {
             if (lockBitmap != null) {
                 long bitmapHash = BitmapUtils.generateHashCode(lockBitmap);
                 mWallpaperPreferences.setLockWallpaperHashCode(bitmapHash);
+                return bitmapHash;
             }
+            return 0;
         }
     }
 }

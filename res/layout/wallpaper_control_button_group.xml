@@ -27,7 +27,20 @@
         android:layout_height="@dimen/wallpaper_control_button_size"
         android:background="@android:color/transparent"
         android:contentDescription="@string/delete_live_wallpaper"
+        android:elevation="@dimen/wallpaper_preview_buttons_elevation"
         android:foreground="@drawable/wallpaper_control_button_delete"
+        android:textOff=""
+        android:textOn=""
+        android:visibility="gone" />
+
+    <ToggleButton
+        android:id="@+id/edit_button"
+        android:layout_width="@dimen/wallpaper_control_button_size"
+        android:layout_height="@dimen/wallpaper_control_button_size"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/edit_live_wallpaper"
+        android:elevation="@dimen/wallpaper_preview_buttons_elevation"
+        android:foreground="@drawable/wallpaper_control_button_edit"
         android:textOff=""
         android:textOn=""
         android:visibility="gone" />
@@ -38,6 +51,7 @@
         android:layout_height="@dimen/wallpaper_control_button_size"
         android:background="@android:color/transparent"
         android:contentDescription="@string/tab_customize"
+        android:elevation="@dimen/wallpaper_preview_buttons_elevation"
         android:foreground="@drawable/wallpaper_control_button_customize"
         android:textOff=""
         android:textOn=""
@@ -49,7 +63,19 @@
         android:layout_height="@dimen/wallpaper_control_button_size"
         android:background="@android:color/transparent"
         android:contentDescription="@string/tab_effects"
+        android:elevation="@dimen/wallpaper_preview_buttons_elevation"
         android:foreground="@drawable/wallpaper_control_button_effect"
+        android:textOff=""
+        android:textOn=""
+        android:visibility="gone" />
+
+    <ToggleButton
+        android:id="@+id/share_button"
+        android:layout_width="@dimen/wallpaper_control_button_size"
+        android:layout_height="@dimen/wallpaper_control_button_size"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/tab_share"
+        android:foreground="@drawable/wallpaper_control_button_share"
         android:textOff=""
         android:textOn=""
         android:visibility="gone" />
@@ -60,6 +86,7 @@
         android:layout_height="@dimen/wallpaper_control_button_size"
         android:background="@android:color/transparent"
         android:contentDescription="@string/tab_info"
+        android:elevation="@dimen/wallpaper_preview_buttons_elevation"
         android:foreground="@drawable/wallpaper_control_button_info"
         android:textOff=""
         android:textOn=""

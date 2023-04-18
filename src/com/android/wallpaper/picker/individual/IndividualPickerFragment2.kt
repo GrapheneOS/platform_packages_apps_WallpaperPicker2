@@ -43,12 +43,14 @@ import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
 import com.android.wallpaper.model.Category
 import com.android.wallpaper.model.CategoryProvider
 import com.android.wallpaper.model.CategoryReceiver
+import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperCategory
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.model.WallpaperRotationInitializer
@@ -71,6 +73,8 @@ import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDele
 import com.bumptech.glide.Glide
 import com.bumptech.glide.MemoryCategory
 import java.util.Date
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 /** Displays the Main UI for picking an individual wallpaper image. */
 class IndividualPickerFragment2 :
@@ -109,18 +113,20 @@ class IndividualPickerFragment2 :
 
     private lateinit var imageGrid: RecyclerView
     private var adapter: IndividualAdapter? = null
-    private lateinit var category: WallpaperCategory
+    private var category: WallpaperCategory? = null
     private var wallpaperRotationInitializer: WallpaperRotationInitializer? = null
     private lateinit var items: MutableList<PickerItem>
     private var packageStatusNotifier: PackageStatusNotifier? = null
-
     private var isWallpapersReceived = false
-    private var appStatusListener: PackageStatusNotifier.Listener? = null
 
+    private var appStatusListener: PackageStatusNotifier.Listener? = null
     private var progressDialog: ProgressDialog? = null
+
     private var testingMode = false
     private var loading: ContentLoadingProgressBar? = null
+    private var shouldReloadWallpapers = false
     private lateinit var categoryProvider: CategoryProvider
+    private var appliedWallpaperIds: Set<String> = setOf()
 
     /**
      * Staged error dialog fragments that were unable to be shown when the activity didn't allow
@@ -177,14 +183,14 @@ class IndividualPickerFragment2 :
                         return
                     }
                     category = fetchedCategory as WallpaperCategory
-                    onCategoryLoaded()
+                    category?.let { onCategoryLoaded(it) }
                 }
             },
             false
         )
     }
 
-    fun onCategoryLoaded() {
+    fun onCategoryLoaded(category: Category) {
         val fragmentHost = getIndividualPickerFragmentHost()
         if (fragmentHost.isHostToolbarShown) {
             fragmentHost.setToolbarTitle(category.title)
@@ -195,22 +201,12 @@ class IndividualPickerFragment2 :
         if (mToolbar != null && isRotationEnabled()) {
             setUpToolbarMenu(R.menu.individual_picker_menu)
         }
-        fetchWallpapers(false)
+        var shouldForceReload = false
         if (category.supportsThirdParty()) {
-            appStatusListener =
-                PackageStatusNotifier.Listener { pkgName: String?, status: Int ->
-                    if (
-                        status != PackageStatusNotifier.PackageStatus.REMOVED ||
-                            category.containsThirdParty(pkgName)
-                    ) {
-                        fetchWallpapers(true)
-                    }
-                }
-            packageStatusNotifier?.addListener(
-                appStatusListener,
-                WallpaperService.SERVICE_INTERFACE
-            )
+            shouldForceReload = true
         }
+        fetchWallpapers(shouldForceReload)
+        registerPackageListener(category)
     }
 
     private fun fetchWallpapers(forceReload: Boolean) {
@@ -218,13 +214,13 @@ class IndividualPickerFragment2 :
         isWallpapersReceived = false
         updateLoading()
         val context = requireContext()
-        category.fetchWallpapers(
+        category?.fetchWallpapers(
             context.applicationContext,
             { fetchedWallpapers ->
                 isWallpapersReceived = true
                 updateLoading()
                 val byGroup = fetchedWallpapers.groupBy { it.getGroupName(context) }
-                val appliedWallpaperIds = getAppliedWallpaperIds()
+                appliedWallpaperIds = getAppliedWallpaperIds()
                 byGroup.forEach { (groupName, wallpapers) ->
                     if (!TextUtils.isEmpty(groupName)) {
                         items.add(
@@ -235,12 +231,16 @@ class IndividualPickerFragment2 :
                             }
                         )
                     }
+                    val currentWallpaper = WallpaperManager.getInstance(context).wallpaperInfo
                     items.addAll(
                         wallpapers.map {
-                            PickerItem.WallpaperItem(
-                                it,
-                                appliedWallpaperIds.contains(it.wallpaperId)
-                            )
+                            val isApplied =
+                                if (it is LiveWallpaperInfo) {
+                                    it.isApplied(currentWallpaper)
+                                } else {
+                                    appliedWallpaperIds.contains(it.wallpaperId)
+                                }
+                            PickerItem.WallpaperItem(it, isApplied)
                         }
                     )
                 }
@@ -258,6 +258,24 @@ class IndividualPickerFragment2 :
             },
             forceReload
         )
+    }
+
+    private fun registerPackageListener(category: Category) {
+        if (category.supportsThirdParty()) {
+            appStatusListener =
+                PackageStatusNotifier.Listener { pkgName: String?, status: Int ->
+                    if (
+                        status != PackageStatusNotifier.PackageStatus.REMOVED ||
+                            category.containsThirdParty(pkgName)
+                    ) {
+                        fetchWallpapers(true)
+                    }
+                }
+            packageStatusNotifier?.addListener(
+                appStatusListener,
+                WallpaperService.SERVICE_INTERFACE
+            )
+        }
     }
 
     private fun updateLoading() {
@@ -293,7 +311,7 @@ class IndividualPickerFragment2 :
             if (isRotationEnabled()) {
                 setUpToolbarMenu(R.menu.individual_picker_menu)
             }
-            setTitle(category.title)
+            setTitle(category?.title)
         }
         imageGrid = view.findViewById<View>(R.id.wallpaper_grid) as RecyclerView
         loading = view.findViewById(R.id.loading_indicator)
@@ -328,7 +346,7 @@ class IndividualPickerFragment2 :
             return
         }
         // Skip if category hasn't loaded yet
-        if (!this::category.isInitialized) {
+        if (category == null) {
             return
         }
         if (context == null) {
@@ -365,7 +383,7 @@ class IndividualPickerFragment2 :
             } else {
                 SizeCalculator.getIndividualTileSize(activity!!)
             }
-        setUpImageGrid(tileSizePx)
+        setUpImageGrid(tileSizePx, checkNotNull(category))
         imageGrid.setAccessibilityDelegateCompat(
             WallpaperPickerRecyclerViewAccessibilityDelegate(
                 imageGrid,
@@ -408,7 +426,7 @@ class IndividualPickerFragment2 :
      * Create the adapter and assign it to mImageGrid. Both mImageGrid and mCategory are guaranteed
      * to not be null when this method is called.
      */
-    private fun setUpImageGrid(tileSizePx: Point) {
+    private fun setUpImageGrid(tileSizePx: Point, category: Category) {
         adapter =
             IndividualAdapter(
                 items,
@@ -435,6 +453,14 @@ class IndividualPickerFragment2 :
         imageGrid.layoutManager = gridLayoutManager
     }
 
+    private suspend fun fetchWallpapersIfNeeded() {
+        coroutineScope {
+            if (isWallpapersReceived && (shouldReloadWallpapers || isAppliedWallpaperChanged())) {
+                fetchWallpapers(true)
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         val preferences = InjectorProvider.getInjector().getPreferences(requireActivity())
@@ -452,8 +478,14 @@ class IndividualPickerFragment2 :
                 parentFragmentManager,
                 TAG_START_ROTATION_ERROR_DIALOG
             )
+            lifecycleScope.launch { fetchWallpapersIfNeeded() }
         }
         stagedStartRotationErrorDialogFragment = null
+    }
+
+    override fun onPause() {
+        shouldReloadWallpapers = category?.supportsWallpaperSetUpdates() ?: false
+        super.onPause()
     }
 
     override fun onDestroyView() {
@@ -493,7 +525,7 @@ class IndividualPickerFragment2 :
 
     override fun startRotation(@NetworkPreference networkPreference: Int) {
         if (!isRotationEnabled()) {
-            Log.e(TAG, "Rotation is not enabled for this category " + category.title)
+            Log.e(TAG, "Rotation is not enabled for this category " + category?.title)
             return
         }
 
@@ -626,6 +658,17 @@ class IndividualPickerFragment2 :
             appliedWallpaperIds.add(lockWallpaperId)
         }
         return appliedWallpaperIds
+    }
+
+    // TODO(b/277180178): Extract the check to another class for unit testing
+    private fun isAppliedWallpaperChanged(): Boolean {
+        // Reload wallpapers if the current wallpapers have changed
+        getAppliedWallpaperIds().let {
+            if (appliedWallpaperIds.isEmpty() || appliedWallpaperIds != it) {
+                return true
+            }
+        }
+        return false
     }
 
     sealed class PickerItem(val title: CharSequence = "") {

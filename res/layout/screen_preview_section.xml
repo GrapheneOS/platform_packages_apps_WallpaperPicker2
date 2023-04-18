@@ -20,24 +20,41 @@
     android:layout_height="wrap_content"
     android:paddingBottom="16dp">
 
-    <com.android.wallpaper.picker.DisplayAspectRatioFrameLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/screen_preview_height">
+        android:layout_height="wrap_content">
 
-        <include
-            android:id="@+id/lock_preview"
-            layout="@layout/wallpaper_preview_card"
+        <com.android.wallpaper.picker.DisplayAspectRatioFrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/screen_preview_height">
+
+            <include
+                android:id="@+id/lock_preview"
+                layout="@layout/wallpaper_preview_card"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center" />
+
+            <include
+                android:id="@+id/home_preview"
+                layout="@layout/wallpaper_preview_card"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center" />
+
+        </com.android.wallpaper.picker.DisplayAspectRatioFrameLayout>
+
+        <ViewStub
+            android:id="@+id/clock_carousel_view_stub"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center" />
 
-        <include
-            android:id="@+id/home_preview"
-            layout="@layout/wallpaper_preview_card"
+        <ViewStub
+            android:id="@+id/single_clock_view_stub"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center" />
-
-    </com.android.wallpaper.picker.DisplayAspectRatioFrameLayout>
+    </FrameLayout>
 
 </com.android.wallpaper.picker.customization.ui.section.ScreenPreviewView>

@@ -15,17 +15,17 @@
  */
 package com.android.wallpaper.testing
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.EffectsController
-import com.android.wallpaper.effects.EffectsController.EffectsServiceListener
 import com.android.wallpaper.model.CategoryProvider
+import com.android.wallpaper.model.WallpaperColorsViewModel
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.AlarmManagerWrapper
 import com.android.wallpaper.module.BitmapCropper
@@ -51,10 +51,15 @@ import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.ImagePreviewFragment
 import com.android.wallpaper.picker.PreviewFragment
+import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl
+import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
+import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
+import com.android.wallpaper.picker.customization.domain.interactor.WallpaperSnapshotRestorer
 import com.android.wallpaper.picker.individual.IndividualPickerFragment
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import com.android.wallpaper.util.DisplayUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 
 /** Test implementation of [Injector] */
@@ -79,8 +84,12 @@ open class TestInjector : Injector {
     private var wallpaperPreviewFragmentManager: WallpaperPreviewFragmentManager? = null
     private var wallpaperRefresher: WallpaperRefresher? = null
     private var wallpaperRotationRefresher: WallpaperRotationRefresher? = null
+    private var wallpaperStatusChecker: WallpaperStatusChecker? = null
     private var flags: BaseFlags? = null
     private var undoInteractor: UndoInteractor? = null
+    private var wallpaperInteractor: WallpaperInteractor? = null
+    private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
+    private var wallpaperColorsViewModel: WallpaperColorsViewModel? = null
 
     override fun getAlarmManagerWrapper(context: Context): AlarmManagerWrapper {
         return alarmManagerWrapper ?: TestAlarmManagerWrapper().also { alarmManagerWrapper = it }
@@ -101,7 +110,7 @@ open class TestInjector : Injector {
             }
     }
 
-    override fun getCustomizationSections(activity: Activity): CustomizationSections {
+    override fun getCustomizationSections(activity: ComponentActivity): CustomizationSections {
         return customizationSections
             ?: TestCustomizationSections().also { customizationSections = it }
     }
@@ -125,7 +134,6 @@ open class TestInjector : Injector {
 
     override fun getEffectsController(
         context: Context,
-        listener: EffectsServiceListener
     ): EffectsController? {
         return null
     }
@@ -134,7 +142,10 @@ open class TestInjector : Injector {
         return exploreIntentChecker ?: TestExploreIntentChecker().also { exploreIntentChecker = it }
     }
 
-    override fun getIndividualPickerFragment(collectionId: String): IndividualPickerFragment {
+    override fun getIndividualPickerFragment(
+        context: Context,
+        collectionId: String
+    ): IndividualPickerFragment {
         return IndividualPickerFragment.newInstance(collectionId)
     }
 
@@ -229,19 +240,20 @@ open class TestInjector : Injector {
     }
 
     override fun getWallpaperStatusChecker(): WallpaperStatusChecker {
-        return object : WallpaperStatusChecker {
-            override fun isHomeStaticWallpaperSet(context: Context): Boolean {
-                return true
-            }
-
-            override fun isLockWallpaperSet(context: Context): Boolean {
-                return true
-            }
-        }
+        return wallpaperStatusChecker
+            ?: TestWallpaperStatusChecker().also { wallpaperStatusChecker = it }
     }
 
     override fun getFlags(): BaseFlags {
-        return flags ?: object : BaseFlags() {}.also { flags = it }
+        return flags
+            ?: object : BaseFlags() {
+                    override fun isFullscreenWallpaperPreviewEnabled(context: Context): Boolean {
+                        // This is already true by default in all environments, only keeping the
+                        // flag for now in case we need to roll back
+                        return true
+                    }
+                }
+                .also { flags = it }
     }
 
     override fun getUndoInteractor(context: Context): UndoInteractor {
@@ -251,5 +263,32 @@ open class TestInjector : Injector {
                 UndoRepository(),
                 HashMap()
             ) // Empty because we don't support undoing in WallpaperPicker2..also{}
+    }
+
+    override fun getWallpaperInteractor(context: Context): WallpaperInteractor {
+        return wallpaperInteractor
+            ?: WallpaperInteractor(
+                    repository =
+                        WallpaperRepository(
+                            scope = GlobalScope,
+                            client = WallpaperClientImpl(context = context),
+                            backgroundDispatcher = Dispatchers.IO,
+                        ),
+                )
+                .also { wallpaperInteractor = it }
+    }
+
+    override fun getWallpaperSnapshotRestorer(context: Context): WallpaperSnapshotRestorer {
+        return wallpaperSnapshotRestorer
+            ?: WallpaperSnapshotRestorer(
+                    scope = GlobalScope,
+                    interactor = getWallpaperInteractor(context),
+                )
+                .also { wallpaperSnapshotRestorer = it }
+    }
+
+    override fun getWallpaperColorsViewModel(): WallpaperColorsViewModel {
+        return wallpaperColorsViewModel
+            ?: WallpaperColorsViewModel().also { wallpaperColorsViewModel = it }
     }
 }

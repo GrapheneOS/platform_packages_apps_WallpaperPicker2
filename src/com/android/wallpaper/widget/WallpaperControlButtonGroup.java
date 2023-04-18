@@ -35,22 +35,26 @@ import com.android.wallpaper.R;
 public final class WallpaperControlButtonGroup extends FrameLayout {
 
     public static final int DELETE = 0;
-    public static final int CUSTOMIZE = 1;
-    public static final int EFFECTS = 2;
-    public static final int INFORMATION = 3;
+    public static final int EDIT = 1;
+    public static final int CUSTOMIZE = 2;
+    public static final int EFFECTS = 3;
+    public static final int INFORMATION = 4;
+    public static final int SHARE = 5;
 
     /**
      * Overlay tab
      */
-    @IntDef({DELETE, CUSTOMIZE, EFFECTS, INFORMATION})
+    @IntDef({DELETE, EDIT, CUSTOMIZE, EFFECTS, SHARE, INFORMATION})
     public @interface WallpaperControlType {
     }
 
-    final int[] mFloatingSheetControlButtonTypes = { CUSTOMIZE, EFFECTS, INFORMATION };
+    final int[] mFloatingSheetControlButtonTypes = { CUSTOMIZE, EFFECTS, SHARE, INFORMATION };
 
     ToggleButton mDeleteButton;
+    ToggleButton mEditButton;
     ToggleButton mCustomizeButton;
     ToggleButton mEffectsButton;
+    ToggleButton mShareButton;
     ToggleButton mInformationButton;
 
     /**
@@ -60,8 +64,10 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.wallpaper_control_button_group, this, true);
         mDeleteButton = findViewById(R.id.delete_button);
+        mEditButton = findViewById(R.id.edit_button);
         mCustomizeButton = findViewById(R.id.customize_button);
         mEffectsButton = findViewById(R.id.effects_button);
+        mShareButton = findViewById(R.id.share_button);
         mInformationButton = findViewById(R.id.information_button);
     }
 
@@ -81,10 +87,14 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
         switch (type) {
             case DELETE:
                 return mDeleteButton;
+            case EDIT:
+                return mEditButton;
             case CUSTOMIZE:
                 return mCustomizeButton;
             case EFFECTS:
                 return mEffectsButton;
+            case SHARE:
+                return mShareButton;
             case INFORMATION:
                 return mInformationButton;
             default:
@@ -115,15 +125,21 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
             return;
         }
         mDeleteButton.setForeground(null);
+        mEditButton.setForeground(null);
         mCustomizeButton.setForeground(null);
         mEffectsButton.setForeground(null);
+        mShareButton.setForeground(null);
         mInformationButton.setForeground(null);
         mDeleteButton.setForeground(AppCompatResources.getDrawable(context,
                 R.drawable.wallpaper_control_button_delete));
+        mEditButton.setForeground(
+                AppCompatResources.getDrawable(context, R.drawable.wallpaper_control_button_edit));
         mCustomizeButton.setForeground(AppCompatResources.getDrawable(context,
                 R.drawable.wallpaper_control_button_customize));
         mEffectsButton.setForeground(AppCompatResources.getDrawable(context,
                 R.drawable.wallpaper_control_button_effect));
+        mShareButton.setForeground(AppCompatResources.getDrawable(context,
+                R.drawable.wallpaper_control_button_share));
         mInformationButton.setForeground(
                 AppCompatResources.getDrawable(context, R.drawable.wallpaper_control_button_info));
     }

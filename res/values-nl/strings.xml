@@ -84,8 +84,7 @@
     <string name="my_photos" msgid="8613021349284084982">"Mijn foto\'s"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Instellingen…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Verwijderen"</string>
-    <!-- no translation found for delete_wallpaper_confirmation (33790318361863778) -->
-    <skip />
+    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Wil je deze achtergrond verwijderen van je telefoon?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Terug"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Bewerken"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Downloaden"</string>
@@ -111,12 +110,4 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Informatie getoond"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"Zet het recht voor bestanden en media aan in de instellingen."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Aanzetten"</string>
-    <string name="open_my_photos" msgid="4107196465713868381">"Mijn foto\'s openen"</string>
-    <string name="lock_screen_tab" msgid="6672930765010407652">"Vergrendelscherm"</string>
-    <string name="home_screen_tab" msgid="1080445697837877526">"Startscherm"</string>
-    <string name="reset" msgid="4945445169532850631">"Resetten"</string>
-    <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
-    <skip />
-    <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->
-    <skip />
 </resources>
