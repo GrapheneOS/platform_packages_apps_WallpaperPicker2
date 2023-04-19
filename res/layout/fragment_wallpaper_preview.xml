@@ -51,6 +51,7 @@
             android:id="@+id/toolbar"
             android:layout_width="0dp"
             android:layout_height="?android:attr/actionBarSize"
+            android:textColor="@color/preview_toolbar_text_light"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/barrier_start" />
