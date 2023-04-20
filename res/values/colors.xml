@@ -43,7 +43,6 @@
     <color name="myphoto_background_color">@color/white</color>
     <color name="myphoto_background_cloud">@color/google_grey200</color>
     <color name="preview_toolbar_text_light">@android:color/system_neutral1_50</color>
-    <color name="preview_toolbar_text_dark">@android:color/system_neutral1_900</color>
 
     <color name="color_accent_primary">@android:color/system_accent1_100</color>
     <color name="color_accent_primary_variant">@android:color/system_accent1_600</color>

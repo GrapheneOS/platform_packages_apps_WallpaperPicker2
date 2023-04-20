@@ -29,6 +29,8 @@
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Atual"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Plano de fundo diário"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"Tela inicial e de bloqueio"</string>
+    <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"Escolha um plano de fundo"</string>
+    <string name="creative_wallpaper_title" msgid="8459226435723103934">"Crie um plano de fundo"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Tela inicial"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Tela de bloqueio"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Tela inicial e de bloqueio"</string>
@@ -118,6 +120,5 @@
     <string name="reset" msgid="4945445169532850631">"Redefinir"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Redefinir mudanças?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"As mudanças não vão ser salvas"</string>
-    <!-- no translation found for more_wallpapers (8116268433411881705) -->
-    <skip />
+    <string name="more_wallpapers" msgid="8116268433411881705">"Mais planos de fundo"</string>
 </resources>
