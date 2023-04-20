@@ -226,8 +226,8 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
         Bundle request = SurfaceViewUtils.createSurfaceViewRequest(workspaceSurface, mExtras);
         if (mWallpaperColors != null) {
             request.putParcelable(KEY_WALLPAPER_COLORS, mWallpaperColors);
-            request.putBoolean(KEY_HIDE_BOTTOM_ROW, mHideBottomRow);
         }
+        request.putBoolean(KEY_HIDE_BOTTOM_ROW, mHideBottomRow);
         mPreviewUtils.renderPreview(request, callback);
     }
 }
