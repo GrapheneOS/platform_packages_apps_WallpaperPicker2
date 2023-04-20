@@ -29,6 +29,10 @@
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Currently set"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Daily wallpaper"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"Home &amp; Lock screen"</string>
+    <!-- no translation found for choose_a_wallpaper_section_title (1009823506890453891) -->
+    <skip />
+    <!-- no translation found for creative_wallpaper_title (8459226435723103934) -->
+    <skip />
     <string name="home_screen_message" msgid="106444102822522813">"Home screen"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Lock screen"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Home &amp; Lock"</string>

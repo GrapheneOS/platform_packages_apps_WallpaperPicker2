@@ -29,6 +29,8 @@
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"現在の設定"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"日替り壁紙"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"ホーム画面とロック画面"</string>
+    <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"壁紙の選択"</string>
+    <string name="creative_wallpaper_title" msgid="8459226435723103934">"壁紙の作成"</string>
     <string name="home_screen_message" msgid="106444102822522813">"ホーム画面"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"ロック画面"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"ホーム画面とロック画面"</string>
@@ -118,6 +120,5 @@
     <string name="reset" msgid="4945445169532850631">"リセット"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"変更をリセットしますか？"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"変更内容は保存されません"</string>
-    <!-- no translation found for more_wallpapers (8116268433411881705) -->
-    <skip />
+    <string name="more_wallpapers" msgid="8116268433411881705">"その他の壁紙"</string>
 </resources>

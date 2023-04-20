@@ -29,6 +29,10 @@
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"सध्या सेट केलेला"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"दैनिक वॉलपेपर"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"होम आणि लॉक स्‍क्रीन"</string>
+    <!-- no translation found for choose_a_wallpaper_section_title (1009823506890453891) -->
+    <skip />
+    <!-- no translation found for creative_wallpaper_title (8459226435723103934) -->
+    <skip />
     <string name="home_screen_message" msgid="106444102822522813">"होम स्क्रीन"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"लॉक स्क्रीन"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"होम आणि लॉक"</string>
@@ -118,6 +122,5 @@
     <string name="reset" msgid="4945445169532850631">"रीसेट करा"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"बदल रीसेट करायचे आहेत का?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"तुमचे बदल सेव्ह केले जाणार नाहीत"</string>
-    <!-- no translation found for more_wallpapers (8116268433411881705) -->
-    <skip />
+    <string name="more_wallpapers" msgid="8116268433411881705">"अधिक वॉलपेपर"</string>
 </resources>
