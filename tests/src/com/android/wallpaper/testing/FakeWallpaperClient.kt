@@ -15,9 +15,10 @@
  *
  */
 
-package com.android.wallpaper.picker.customization.data.content
+package com.android.wallpaper.testing
 
 import android.graphics.Bitmap
+import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import kotlin.math.min
