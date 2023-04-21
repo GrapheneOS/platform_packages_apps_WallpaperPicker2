@@ -19,12 +19,12 @@ package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.filters.SmallTest
-import com.android.wallpaper.picker.customization.data.content.FakeWallpaperClient
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import com.android.wallpaper.testing.FAKE_RESTORERS
+import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
