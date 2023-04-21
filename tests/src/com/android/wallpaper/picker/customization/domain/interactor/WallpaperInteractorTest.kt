@@ -19,10 +19,10 @@ package com.android.wallpaper.picker.customization.domain.interactor
 
 import androidx.test.filters.SmallTest
 import com.android.wallpaper.module.CustomizationSections
-import com.android.wallpaper.picker.customization.data.content.FakeWallpaperClient
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
+import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
