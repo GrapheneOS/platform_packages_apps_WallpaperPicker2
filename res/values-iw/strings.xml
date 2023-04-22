@@ -81,10 +81,12 @@
     <string name="tab_info" msgid="818614080690111416">"מידע"</string>
     <string name="tab_customize" msgid="2533745409174959960">"התאמה אישית"</string>
     <string name="tab_effects" msgid="3213606157589233901">"אפקטים"</string>
+    <string name="tab_share" msgid="6676269624804601227">"שיתוף"</string>
     <string name="my_photos" msgid="8613021349284084982">"התמונות שלי"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"הגדרות…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"מחיקה"</string>
-    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"למחוק את הטפט הזה מהטלפון?"</string>
+    <string name="edit_live_wallpaper" msgid="3132060073690558045">"עריכה"</string>
+    <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"למחוק את הטפט הזה מהמכשיר?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"חזרה"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"עריכה"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"הורדה"</string>
@@ -110,4 +112,11 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"חלונית המידע מוצגת"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"עליך להפעיל את ההרשאה \'קבצים ומדיה\' בהגדרות."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"הפעלה"</string>
+    <string name="open_my_photos" msgid="4107196465713868381">"פתיחת \'התמונות שלי\'"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"מסך נעילה"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"מסך הבית"</string>
+    <string name="reset" msgid="4945445169532850631">"איפוס"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"לאפס את השינויים?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"השינויים שביצעת לא יישמרו"</string>
+    <string name="more_wallpapers" msgid="7585665124282737376">"טפטים נוספים"</string>
 </resources>

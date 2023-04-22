@@ -81,10 +81,12 @@
     <string name="tab_info" msgid="818614080690111416">"Informācija"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Pielāgošana"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Efekti"</string>
+    <string name="tab_share" msgid="6676269624804601227">"Kopīgot"</string>
     <string name="my_photos" msgid="8613021349284084982">"Mani fotoattēli"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Iestatījumi…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Dzēst"</string>
-    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Vai dzēst šo fona tapeti no tālruņa?"</string>
+    <string name="edit_live_wallpaper" msgid="3132060073690558045">"Rediģēt"</string>
+    <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Vai dzēst šo fona tapeti no jūsu ierīces?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Atpakaļ"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Rediģēt"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Lejupielādēt"</string>
@@ -110,4 +112,11 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Informācija tiek rādīta"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"Lūdzu, iestatījumos iespējojiet atļauju izmantot failus un multivides saturu."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Iespējot"</string>
+    <string name="open_my_photos" msgid="4107196465713868381">"Atvērt sadaļu “Mani fotoattēli”"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Bloķēšanas ekrāns"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Sākuma ekrāns"</string>
+    <string name="reset" msgid="4945445169532850631">"Atiestatīt"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Vai atiestatīt izmaiņas?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Jūsu veiktās izmaiņas netiks saglabātas."</string>
+    <string name="more_wallpapers" msgid="7585665124282737376">"Citas tapetes"</string>
 </resources>

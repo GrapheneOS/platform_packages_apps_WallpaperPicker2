@@ -81,10 +81,12 @@
     <string name="tab_info" msgid="818614080690111416">"Информации"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Приспособување"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Ефекти"</string>
+    <string name="tab_share" msgid="6676269624804601227">"Сподели"</string>
     <string name="my_photos" msgid="8613021349284084982">"Мои фотографии"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Поставки…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Избриши"</string>
-    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Да се избрише тапетов од телефонот?"</string>
+    <string name="edit_live_wallpaper" msgid="3132060073690558045">"Изменете"</string>
+    <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Да се избрише овој тапет од уредот?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Назад"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Измени"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Преземи"</string>
@@ -97,7 +99,7 @@
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Преглед на тапет"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Збирката не постои"</string>
     <string name="cancel" msgid="4970902691067201584">"Откажи"</string>
-    <string name="hide_ui_preview_text" msgid="6766076482511252295">"Сокриј го прегледот на UI"</string>
+    <string name="hide_ui_preview_text" msgid="6766076482511252295">"Скриј го прегледот на UI"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"UI е скриен во прегледот. Допрете двапати за да се прикаже"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"Прикажи го прегледот на UI"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"UI е прикажан во прегледот. Допрете двапати за да се скрие"</string>
@@ -110,4 +112,11 @@
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Прикажани информации"</string>
     <string name="settings_snackbar_description" msgid="890168814524778486">"Овозможете „Датотеки и аудиовизуелни содржини“ во поставки."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Овозможи"</string>
+    <string name="open_my_photos" msgid="4107196465713868381">"Отвори „Мои фотографии“"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Заклучување екран"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Почетен екран"</string>
+    <string name="reset" msgid="4945445169532850631">"Ресетирај"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Да се ресетираат промените?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Промените нема да се зачуваат"</string>
+    <string name="more_wallpapers" msgid="7585665124282737376">"Повеќе тапети"</string>
 </resources>
