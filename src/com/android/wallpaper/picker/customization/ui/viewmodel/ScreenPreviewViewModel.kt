@@ -32,17 +32,17 @@ class ScreenPreviewViewModel(
     private val initialExtrasProvider: () -> Bundle? = { null },
     private val wallpaperInfoProvider: suspend () -> WallpaperInfo?,
     private val onWallpaperColorChanged: (WallpaperColors?) -> Unit = {},
-    // TODO (b/270193793): add below field to all usages, remove default value & make non-nullable
-    private val wallpaperInteractor: WallpaperInteractor? = null,
+    private val wallpaperInteractor: WallpaperInteractor,
+    private val screen: CustomizationSections.Screen,
 ) {
     /** Returns whether wallpaper picker should handle reload */
     fun shouldHandleReload(): Boolean {
-        return wallpaperInteractor?.let { it.shouldHandleReload() } ?: true
+        return wallpaperInteractor.shouldHandleReload()
     }
 
     /** Returns a flow that is updated whenever the wallpaper has been updated */
-    fun wallpaperUpdateEvents(screen: CustomizationSections.Screen): Flow<WallpaperModel?>? {
-        return wallpaperInteractor?.wallpaperUpdateEvents(screen)
+    fun wallpaperUpdateEvents(): Flow<WallpaperModel?>? {
+        return wallpaperInteractor.wallpaperUpdateEvents(screen)
     }
 
     fun getInitialExtras(): Bundle? {
