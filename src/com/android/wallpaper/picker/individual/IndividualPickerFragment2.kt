@@ -228,7 +228,8 @@ class IndividualPickerFragment2 :
                 val byGroup = fetchedWallpapers.groupBy { it.getGroupName(context) }.toMutableMap()
                 val appliedWallpaperIds = getAppliedWallpaperIds()
                 val firstEntry = byGroup.keys.firstOrNull()
-                val currentWallpaper = WallpaperManager.getInstance(context).wallpaperInfo
+                val currentWallpaper: android.app.WallpaperInfo? =
+                    WallpaperManager.getInstance(context).wallpaperInfo
 
                 // Handle first group (templates/items that allow to create a new wallpaper)
                 if (mIsCreativeWallpaperEnabled && firstEntry != null && supportsUserCreated) {
@@ -299,7 +300,7 @@ class IndividualPickerFragment2 :
      */
     private fun addWallpaperItems(
         wallpapers: List<WallpaperInfo>,
-        currentWallpaper: android.app.WallpaperInfo,
+        currentWallpaper: android.app.WallpaperInfo?,
         appliedWallpaperIds: Set<String>
     ) {
         items.addAll(
