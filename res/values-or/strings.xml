@@ -29,10 +29,8 @@
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"ଏହିକ୍ଷଣି ସେଟ୍ ହୋଇଛି"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"ଦୈନିକ ୱାଲପେପର୍"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"ହୋମ ଓ ଲକ ସ୍କ୍ରିନ"</string>
-    <!-- no translation found for choose_a_wallpaper_section_title (1009823506890453891) -->
-    <skip />
-    <!-- no translation found for creative_wallpaper_title (8459226435723103934) -->
-    <skip />
+    <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"ଏକ ୱାଲପେପର ବାଛନ୍ତୁ"</string>
+    <string name="creative_wallpaper_title" msgid="8459226435723103934">"ଏକ ୱାଲପେପର ତିଆରି କରନ୍ତୁ"</string>
     <string name="home_screen_message" msgid="106444102822522813">"ହୋମ ସ୍କ୍ରିନ"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"ଲକ୍‌ ସ୍କ୍ରୀନ୍‌"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"ହୋମ ଓ ଲକ"</string>
