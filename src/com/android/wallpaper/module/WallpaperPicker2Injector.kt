@@ -45,10 +45,11 @@ import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import com.android.wallpaper.settings.data.repository.SecureSettingsRepository
 import com.android.wallpaper.settings.data.repository.SecureSettingsRepositoryImpl
 import com.android.wallpaper.util.DisplayUtils
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 
-open class WallpaperPicker2Injector() : Injector {
+open class WallpaperPicker2Injector : Injector {
+    private var appScope: CoroutineScope? = null
     private var alarmManagerWrapper: AlarmManagerWrapper? = null
     private var bitmapCropper: BitmapCropper? = null
     private var categoryProvider: CategoryProvider? = null
@@ -78,6 +79,10 @@ open class WallpaperPicker2Injector() : Injector {
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
     private var secureSettingsRepository: SecureSettingsRepository? = null
     private var wallpaperColorsViewModel: WallpaperColorsViewModel? = null
+
+    override fun getApplicationCoroutineScope(): CoroutineScope {
+        return appScope ?: CoroutineScope(Dispatchers.Main).also { appScope = it }
+    }
 
     @Synchronized
     override fun getAlarmManagerWrapper(context: Context): AlarmManagerWrapper {
@@ -278,9 +283,12 @@ open class WallpaperPicker2Injector() : Injector {
 
     override fun getUndoInteractor(context: Context): UndoInteractor {
         return undoInteractor
-            ?: UndoInteractor(GlobalScope, UndoRepository(), getSnapshotRestorers(context)).also {
-                undoInteractor = it
-            }
+            ?: UndoInteractor(
+                    getApplicationCoroutineScope(),
+                    UndoRepository(),
+                    getSnapshotRestorers(context),
+                )
+                .also { undoInteractor = it }
     }
 
     override fun getWallpaperInteractor(context: Context): WallpaperInteractor {
@@ -288,7 +296,7 @@ open class WallpaperPicker2Injector() : Injector {
             ?: WallpaperInteractor(
                     repository =
                         WallpaperRepository(
-                            scope = GlobalScope,
+                            scope = getApplicationCoroutineScope(),
                             client = WallpaperClientImpl(context = context),
                             wallpaperPreferences = getPreferences(context = context),
                             backgroundDispatcher = Dispatchers.IO,
@@ -300,7 +308,7 @@ open class WallpaperPicker2Injector() : Injector {
     override fun getWallpaperSnapshotRestorer(context: Context): WallpaperSnapshotRestorer {
         return wallpaperSnapshotRestorer
             ?: WallpaperSnapshotRestorer(
-                    scope = GlobalScope,
+                    scope = getApplicationCoroutineScope(),
                     interactor = getWallpaperInteractor(context),
                 )
                 .also { wallpaperSnapshotRestorer = it }
