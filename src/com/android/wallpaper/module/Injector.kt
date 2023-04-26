@@ -34,12 +34,20 @@ import com.android.wallpaper.picker.customization.domain.interactor.WallpaperSna
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotRestorer
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import com.android.wallpaper.util.DisplayUtils
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * Interface for a provider of "injected dependencies." (NOTE: The term "injector" is somewhat of a
  * misnomer; this is more aptly a service registry as part of a service locator design pattern.)
  */
 interface Injector {
+    /**
+     * Returns a [CoroutineScope] that's bound to the lifecycle of the application.
+     *
+     * It starts immediately and is never paused, stopped, or destroyed.
+     */
+    fun getApplicationCoroutineScope(): CoroutineScope
+
     fun getAlarmManagerWrapper(context: Context): AlarmManagerWrapper
 
     fun getBitmapCropper(): BitmapCropper
