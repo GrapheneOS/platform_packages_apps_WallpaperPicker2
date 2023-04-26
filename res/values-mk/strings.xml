@@ -29,10 +29,8 @@
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Моментално"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Дневен тапет"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"Почетен и заклучен екран"</string>
-    <!-- no translation found for choose_a_wallpaper_section_title (1009823506890453891) -->
-    <skip />
-    <!-- no translation found for creative_wallpaper_title (8459226435723103934) -->
-    <skip />
+    <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"Изберете тапет"</string>
+    <string name="creative_wallpaper_title" msgid="8459226435723103934">"Создајте тапет"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Почетен екран"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Заклучен екран"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Почетен и заклучен екран"</string>
@@ -103,7 +101,7 @@
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Преглед на тапет"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Збирката не постои"</string>
     <string name="cancel" msgid="4970902691067201584">"Откажи"</string>
-    <string name="hide_ui_preview_text" msgid="6766076482511252295">"Сокриј го прегледот на UI"</string>
+    <string name="hide_ui_preview_text" msgid="6766076482511252295">"Скриј го прегледот на UI"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"UI е скриен во прегледот. Допрете двапати за да се прикаже"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"Прикажи го прегледот на UI"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"UI е прикажан во прегледот. Допрете двапати за да се скрие"</string>
