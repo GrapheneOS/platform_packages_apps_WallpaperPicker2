@@ -90,9 +90,7 @@ public class LiveWallpaperThumbAsset extends Asset {
 
             // Live wallpaper components may or may not specify a thumbnail drawable.
             if (thumb instanceof BitmapDrawable) {
-                decodeBitmapCompleted(receiver,
-                        Bitmap.createScaledBitmap(((BitmapDrawable) thumb).getBitmap(), targetWidth,
-                                targetHeight, true));
+                decodeBitmapCompleted(receiver, ((BitmapDrawable) thumb).getBitmap());
                 return;
             } else if (thumb != null) {
                 Bitmap bitmap;
