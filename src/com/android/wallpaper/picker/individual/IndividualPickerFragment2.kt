@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.picker.individual
 
+import CreativeCategoryHolder
 import android.app.Activity
 import android.app.ProgressDialog
 import android.app.WallpaperManager
@@ -127,6 +128,7 @@ class IndividualPickerFragment2 :
     private var shouldReloadWallpapers = false
     private lateinit var categoryProvider: CategoryProvider
     private var appliedWallpaperIds: Set<String> = setOf()
+    private var mIsCreativeWallpaperEnabled = false
 
     /**
      * Staged error dialog fragments that were unable to be shown when the activity didn't allow
@@ -140,6 +142,7 @@ class IndividualPickerFragment2 :
         super.onCreate(savedInstanceState)
         val injector = InjectorProvider.getInjector()
         val appContext = requireContext().applicationContext
+        mIsCreativeWallpaperEnabled = injector.getFlags().isAIWallpaperEnabled(appContext)
         wallpaperManager = WallpaperManager.getInstance(appContext)
         packageStatusNotifier = injector.getPackageStatusNotifier(appContext)
         items = ArrayList()
@@ -214,49 +217,99 @@ class IndividualPickerFragment2 :
         isWallpapersReceived = false
         updateLoading()
         val context = requireContext()
+        val userCreatedWallpapers = mutableListOf<WallpaperInfo>()
+
         category?.fetchWallpapers(
             context.applicationContext,
             { fetchedWallpapers ->
                 isWallpapersReceived = true
                 updateLoading()
-                val byGroup = fetchedWallpapers.groupBy { it.getGroupName(context) }
-                appliedWallpaperIds = getAppliedWallpaperIds()
-                byGroup.forEach { (groupName, wallpapers) ->
-                    if (!TextUtils.isEmpty(groupName)) {
-                        items.add(
-                            if (items.isEmpty()) {
-                                PickerItem.FirstHeaderItem(groupName)
-                            } else {
-                                PickerItem.HeaderItem(groupName)
-                            }
-                        )
+                val supportsUserCreated = category?.supportsUserCreatedWallpapers() == true
+                val byGroup = fetchedWallpapers.groupBy { it.getGroupName(context) }.toMutableMap()
+                val appliedWallpaperIds = getAppliedWallpaperIds()
+                val firstEntry = byGroup.keys.firstOrNull()
+                val currentWallpaper: android.app.WallpaperInfo? =
+                    WallpaperManager.getInstance(context).wallpaperInfo
+
+                // Handle first group (templates/items that allow to create a new wallpaper)
+                if (mIsCreativeWallpaperEnabled && firstEntry != null && supportsUserCreated) {
+                    val wallpapers = byGroup.getValue(firstEntry)
+
+                    if (wallpapers.size > 1 && !TextUtils.isEmpty(firstEntry)) {
+                        addItemHeader(firstEntry, items.isEmpty())
+                        addTemplates(wallpapers, userCreatedWallpapers)
+                        byGroup.remove(firstEntry)
                     }
-                    val currentWallpaper = WallpaperManager.getInstance(context).wallpaperInfo
-                    items.addAll(
-                        wallpapers.map {
-                            val isApplied =
-                                if (it is LiveWallpaperInfo) {
-                                    it.isApplied(currentWallpaper)
-                                } else {
-                                    appliedWallpaperIds.contains(it.wallpaperId)
-                                }
-                            PickerItem.WallpaperItem(it, isApplied)
+                }
+
+                // Handle other groups
+                if (byGroup.isNotEmpty()) {
+                    byGroup.forEach { (groupName, wallpapers) ->
+                        if (!TextUtils.isEmpty(groupName)) {
+                            addItemHeader(groupName, items.isEmpty())
                         }
-                    )
+                        addWallpaperItems(wallpapers, currentWallpaper, appliedWallpaperIds)
+                    }
                 }
                 maybeSetUpImageGrid()
-
-                // Wallpapers may load after the adapter is initialized, in which case we have
-                // to explicitly notify that the data set has changed.
                 adapter?.notifyDataSetChanged()
+
+                // Finish activity if no wallpapers are found (on phone)
                 if (fetchedWallpapers.isEmpty()) {
-                    // If there are no more wallpapers and we're on phone, just finish the
-                    // Activity.
-                    val activity: Activity? = activity
                     activity?.finish()
                 }
             },
             forceReload
+        )
+    }
+
+    // Add item header based on whether it's the first one or not
+    private fun addItemHeader(groupName: String, isFirst: Boolean) {
+        items.add(
+            if (isFirst) {
+                PickerItem.FirstHeaderItem(groupName)
+            } else {
+                PickerItem.HeaderItem(groupName)
+            }
+        )
+    }
+
+    /**
+     * This function iterates through a set of templates, which represent items that users can
+     * select to create new wallpapers. For each template, it creates a PickerItem of type
+     * CreativeCollection.
+     */
+    private fun addTemplates(
+        wallpapers: List<WallpaperInfo>,
+        userCreatedWallpapers: MutableList<WallpaperInfo>
+    ) {
+        wallpapers.map {
+            if (category?.supportsUserCreatedWallpapers() == true) {
+                userCreatedWallpapers.add(it)
+            }
+        }
+
+        if (userCreatedWallpapers.isNotEmpty()) {
+            items.add(PickerItem.CreativeCollection(userCreatedWallpapers))
+        }
+    }
+
+    /**
+     * This function iterates through a set of wallpaper items, and creates a PickerItem of type
+     * WallpaperItem
+     */
+    private fun addWallpaperItems(
+        wallpapers: List<WallpaperInfo>,
+        currentWallpaper: android.app.WallpaperInfo?,
+        appliedWallpaperIds: Set<String>
+    ) {
+        items.addAll(
+            wallpapers.map {
+                val isApplied =
+                    if (it is LiveWallpaperInfo) it.isApplied(currentWallpaper)
+                    else appliedWallpaperIds.contains(it.wallpaperId)
+                PickerItem.WallpaperItem(it, isApplied)
+            }
         )
     }
 
@@ -379,9 +432,9 @@ class IndividualPickerFragment2 :
         )
         val tileSizePx =
             if (isFewerColumnLayout()) {
-                SizeCalculator.getFeaturedIndividualTileSize(activity!!)
+                SizeCalculator.getFeaturedIndividualTileSize(requireActivity())
             } else {
-                SizeCalculator.getIndividualTileSize(activity!!)
+                SizeCalculator.getIndividualTileSize(requireActivity())
             }
         setUpImageGrid(tileSizePx, checkNotNull(category))
         imageGrid.setAccessibilityDelegateCompat(
@@ -394,7 +447,8 @@ class IndividualPickerFragment2 :
     }
 
     private fun isFewerColumnLayout(): Boolean =
-        items.count { it is PickerItem.WallpaperItem } <= MAX_CAPACITY_IN_FEWER_COLUMN_LAYOUT
+        (!mIsCreativeWallpaperEnabled || category?.supportsUserCreatedWallpapers() == false) &&
+            items.count { it is PickerItem.WallpaperItem } <= MAX_CAPACITY_IN_FEWER_COLUMN_LAYOUT
 
     private fun getGridItemPaddingHorizontal(): Int {
         return if (isFewerColumnLayout()) {
@@ -442,6 +496,7 @@ class IndividualPickerFragment2 :
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     return when (items[position]) {
+                        is PickerItem.CreativeCollection,
                         is PickerItem.FirstHeaderItem,
                         is PickerItem.HeaderItem -> {
                             gridLayoutManager.spanCount
@@ -545,7 +600,7 @@ class IndividualPickerFragment2 :
             progressDialog.show()
             this.progressDialog = progressDialog
         }
-        val appContext = activity!!.applicationContext
+        val appContext = requireActivity().applicationContext
         wallpaperRotationInitializer?.setFirstWallpaperInRotation(
             appContext,
             networkPreference,
@@ -678,6 +733,8 @@ class IndividualPickerFragment2 :
         class HeaderItem(title: CharSequence) : PickerItem(title)
 
         class FirstHeaderItem(title: CharSequence) : PickerItem(title)
+
+        class CreativeCollection(val templates: List<WallpaperInfo>) : PickerItem()
     }
 
     /** RecyclerView Adapter subclass for the wallpaper tiles in the RecyclerView. */
@@ -694,12 +751,14 @@ class IndividualPickerFragment2 :
             const val ITEM_VIEW_TYPE_MY_PHOTOS = 3
             const val ITEM_VIEW_TYPE_HEADER = 4
             const val ITEM_VIEW_TYPE_HEADER_TOP = 5
+            const val ITEM_VIEW_TYPE_CREATIVE = 6
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return when (viewType) {
                 ITEM_VIEW_TYPE_INDIVIDUAL_WALLPAPER -> createIndividualHolder(parent)
                 ITEM_VIEW_TYPE_MY_PHOTOS -> createMyPhotosHolder(parent)
+                ITEM_VIEW_TYPE_CREATIVE -> creativeCategoryHolder(parent)
                 ITEM_VIEW_TYPE_HEADER -> createTitleHolder(parent, /* removePaddingTop= */ false)
                 ITEM_VIEW_TYPE_HEADER_TOP -> createTitleHolder(parent, /* removePaddingTop= */ true)
                 else -> {
@@ -721,12 +780,14 @@ class IndividualPickerFragment2 :
                     is PickerItem.WallpaperItem -> ITEM_VIEW_TYPE_INDIVIDUAL_WALLPAPER
                     is PickerItem.HeaderItem -> ITEM_VIEW_TYPE_HEADER
                     is PickerItem.FirstHeaderItem -> ITEM_VIEW_TYPE_HEADER_TOP
+                    is PickerItem.CreativeCollection -> ITEM_VIEW_TYPE_CREATIVE
                 }
             }
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             when (val viewType = getItemViewType(position)) {
+                ITEM_VIEW_TYPE_CREATIVE -> bindCreativeCategoryHolder(holder, position)
                 ITEM_VIEW_TYPE_INDIVIDUAL_WALLPAPER -> bindIndividualHolder(holder, position)
                 ITEM_VIEW_TYPE_MY_PHOTOS -> (holder as MyPhotosViewHolder?)!!.bind()
                 ITEM_VIEW_TYPE_HEADER,
@@ -754,6 +815,16 @@ class IndividualPickerFragment2 :
             return PreviewIndividualHolder(activity, tileSizePx.y, view)
         }
 
+        private fun creativeCategoryHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+            val layoutInflater = LayoutInflater.from(activity)
+            val view: View =
+                layoutInflater.inflate(R.layout.creative_category_holder, parent, false)
+            return CreativeCategoryHolder(
+                activity,
+                view,
+            )
+        }
+
         private fun createMyPhotosHolder(parent: ViewGroup): RecyclerView.ViewHolder {
             val layoutInflater = LayoutInflater.from(activity)
             val view: View = layoutInflater.inflate(R.layout.grid_item_my_photos, parent, false)
@@ -762,6 +833,15 @@ class IndividualPickerFragment2 :
                 (activity as MyPhotosStarterProvider).myPhotosStarter,
                 tileSizePx.y,
                 view
+            )
+        }
+
+        private fun bindCreativeCategoryHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            val wallpaperIndex = if (category.supportsCustomPhotos()) position - 1 else position
+            val item = items[wallpaperIndex] as PickerItem.CreativeCollection
+            (holder as CreativeCategoryHolder).bind(
+                item.templates,
+                SizeCalculator.getFeaturedIndividualTileSize(activity).y
             )
         }
 

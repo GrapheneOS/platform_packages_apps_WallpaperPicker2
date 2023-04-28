@@ -41,7 +41,8 @@ abstract class IndividualHolder extends ViewHolder {
     protected TextView mTitleView;
     protected WallpaperInfo mWallpaper;
 
-    public IndividualHolder(Activity hostActivity, int tileHeightPx, View itemView) {
+    IndividualHolder(Activity hostActivity, int tileHeightPx, int tileWidthPx,
+             View itemView) {
         super(itemView);
 
         mActivity = hostActivity;
@@ -50,6 +51,7 @@ abstract class IndividualHolder extends ViewHolder {
         mOverlayIconView = (ImageView) itemView.findViewById(R.id.overlay_icon);
         mTitleView = (TextView) itemView.findViewById(R.id.title);
         mWallpaperContainer = itemView.findViewById(R.id.wallpaper_container);
+        mTileLayout.getLayoutParams().width = tileWidthPx;
 
         mWallpaperContainer.getLayoutParams().height = tileHeightPx;
     }
