@@ -29,6 +29,8 @@
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Manje isethiwe"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Isithombe sangemuva sansuku zonke"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"Ikhaya nesikrini sokukhiya"</string>
+    <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"Khetha Isithombe Sangemuva"</string>
+    <string name="creative_wallpaper_title" msgid="8459226435723103934">"Sungula Isithombe Sangemuva"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Isikrini sasekhaya"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Khiya isikrini"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Ikhaya nokukhiya"</string>
@@ -118,5 +120,5 @@
     <string name="reset" msgid="4945445169532850631">"Setha kabusha"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Setha kabusha izinguquko"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Izinguquko zakho ngeke zilondolozwe"</string>
-    <string name="more_wallpapers" msgid="7585665124282737376">"Izithombe Zangemuva Ezengeziwe"</string>
+    <string name="more_wallpapers" msgid="8116268433411881705">"Izithombe zangemuva ezengeziwe"</string>
 </resources>

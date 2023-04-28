@@ -19,12 +19,12 @@ package com.android.wallpaper.picker.customization.domain.interactor
 
 import android.util.Log
 import androidx.test.filters.SmallTest
-import com.android.wallpaper.picker.customization.data.content.FakeWallpaperClient
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotStore
 import com.android.wallpaper.picker.undo.shared.model.RestorableSnapshot
+import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi

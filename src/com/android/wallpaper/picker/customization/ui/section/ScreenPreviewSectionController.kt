@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.cardview.widget.CardView
-import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.android.systemui.shared.clocks.shared.model.ClockPreviewConstants
@@ -61,7 +60,7 @@ open class ScreenPreviewSectionController(
 
     private val isOnLockScreen: Boolean = screen == CustomizationSections.Screen.LOCK_SCREEN
 
-    private lateinit var previewViewBinding: ScreenPreviewBinder.Binding
+    protected lateinit var previewViewBinding: ScreenPreviewBinder.Binding
 
     /** Override to hide the lock screen clock preview. */
     open val hideLockScreenClockPreview = false
@@ -154,17 +153,11 @@ open class ScreenPreviewSectionController(
                         },
                         initialExtrasProvider = { getInitialExtras(isOnLockScreen) },
                         wallpaperInteractor = wallpaperInteractor,
+                        screen = screen,
                     ),
                 lifecycleOwner = lifecycleOwner,
                 offsetToStart = displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(activity),
-                screen = screen,
-                onPreviewDirty = {
-                    // only the visible view should recreate the activity so it's not done twice
-                    // TODO we can probably remove this since the previews are now separated
-                    if (previewView.isVisible) {
-                        activity.recreate()
-                    }
-                },
+                onPreviewDirty = { activity.recreate() },
             )
         return view
     }
