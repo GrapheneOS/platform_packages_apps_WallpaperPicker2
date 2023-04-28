@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/creative_wallpaper_title"
-        android:textStyle="bold"
+        android:textAppearance="@style/CategorySectionTitleTextAppearance"
         android:layout_gravity="bottom" />
 
     <LinearLayout
