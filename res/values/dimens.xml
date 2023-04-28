@@ -44,6 +44,7 @@
     <dimen name="grid_item_individual_padding_bottom">8dp</dimen>
     <dimen name="grid_item_individual_label_padding_top">6dp</dimen>
     <dimen name="grid_item_individual_label_padding_bottom">4dp</dimen>
+    <dimen name="grid_item_individual_label_padding_horizontal">12dp</dimen>
     <dimen name="wallpaper_grid_edge_space">20dp</dimen>
     <dimen name="wallpaper_grid_padding_top">32dp</dimen>
 
@@ -187,6 +188,10 @@
     <dimen name="option_title_font_text_size">14sp</dimen>
     <dimen name="option_title_line_height">20dp</dimen>
 
+    <dimen name="grid_label_font_text_size">14sp</dimen>
+    <dimen name="grid_label_line_height">20dp</dimen>
+
+
     <!-- Dimensions for the separated tabs. -->
     <dimen name="separated_tabs_height">56dp</dimen>
     <dimen name="separated_tabs_height_short">36dp</dimen>
@@ -309,4 +314,6 @@
     <!-- Screen preview section -->
     <dimen name="screen_preview_section_vertical_space">12dp</dimen>
 
+    <!-- Dimensions for labeled grid item image -->
+    <dimen name="labeled_grid_item_image_card_elevation">0dp</dimen>
 </resources>

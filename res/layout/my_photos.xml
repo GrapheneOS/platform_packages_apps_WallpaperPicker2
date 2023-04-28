@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/choose_a_wallpaper_section_title"
-        android:textStyle="bold"
+        android:textAppearance="@style/CategorySectionTitleTextAppearance"
         android:layout_gravity="bottom" />
 
     <include android:id="@+id/tile"
