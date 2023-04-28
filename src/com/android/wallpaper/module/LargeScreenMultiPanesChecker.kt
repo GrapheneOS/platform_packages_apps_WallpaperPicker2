@@ -20,6 +20,7 @@ import android.content.Intent
 import android.content.Intent.ACTION_SET_WALLPAPER
 import android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
 import android.provider.Settings.*
+import com.android.wallpaper.util.DisplayUtils
 
 /** Utility class to check the support of multi panes integration (trampoline) */
 class LargeScreenMultiPanesChecker : MultiPanesChecker {
@@ -33,8 +34,8 @@ class LargeScreenMultiPanesChecker : MultiPanesChecker {
         val intent =
             getMultiPanesIntent(Intent(ACTION_SET_WALLPAPER).setPackage(context.packageName))
 
-        val resolveInfo = pm.resolveActivity(intent, MATCH_DEFAULT_ONLY)?.activityInfo?.enabled
-        return resolveInfo != null
+        val resolveInfo = pm.resolveActivity(intent, MATCH_DEFAULT_ONLY)?.activityInfo
+        return resolveInfo != null && DisplayUtils(context).isLargeScreenDevice()
     }
 
     override fun getMultiPanesIntent(intent: Intent): Intent {

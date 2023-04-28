@@ -21,8 +21,11 @@ import android.graphics.Point
 import android.hardware.display.DisplayManager
 import android.util.Log
 import android.view.Display
+import android.view.DisplayInfo
 import android.view.Surface.ROTATION_270
 import android.view.Surface.ROTATION_90
+import com.android.systemui.shared.recents.utilities.Utilities
+import kotlin.math.min
 
 /**
  * Utility class to provide methods to find and obtain information about displays via {@link
@@ -32,6 +35,7 @@ class DisplayUtils(private val context: Context) {
     companion object {
         private const val TAG = "DisplayUtils"
         private val ROTATION_HORIZONTAL_HINGE = setOf(ROTATION_90, ROTATION_270)
+        private const val TABLET_MIN_DPS = 600f // See Sysui's Utilities.TABLET_MIN_DPS
     }
 
     private val displayManager: DisplayManager by lazy {
@@ -43,7 +47,7 @@ class DisplayUtils(private val context: Context) {
     }
 
     /**
-     * Returns the internal {@link Display} with tthe largest area to be used to calculate wallpaper
+     * Returns the internal {@link Display} with the largest area to be used to calculate wallpaper
      * size and cropping.
      */
     fun getWallpaperDisplay(): Display {
@@ -79,6 +83,21 @@ class DisplayUtils(private val context: Context) {
     }
 
     /**
+     * Returns true if this device's screen (or largest screen in case of multiple screen devices)
+     * is considered a "Large screen"
+     */
+    fun isLargeScreenDevice(): Boolean {
+        // We need to use MaxDisplay's dimensions because if we're in embedded mode, our window
+        // will only be the size of the embedded Activity.
+        val maxDisplaysDimension = getRealSize(getWallpaperDisplay())
+        val smallestWidth = min(maxDisplaysDimension.x, maxDisplaysDimension.y)
+        return Utilities.dpiFromPx(
+            smallestWidth.toFloat(),
+            context.resources.configuration.densityDpi
+        ) >= TABLET_MIN_DPS
+    }
+
+    /**
      * Returns `true` if the current display is the wallpaper display on a multi-display device.
      *
      * On a multi-display device the wallpaper display is the largest display while on a single
@@ -89,15 +108,15 @@ class DisplayUtils(private val context: Context) {
     }
 
     private fun getRealArea(display: Display): Int {
-        val p = Point()
-        display.getRealSize(p)
-        return p.x * p.y
+        val displayInfo = DisplayInfo()
+        display.getDisplayInfo(displayInfo)
+        return displayInfo.logicalHeight * displayInfo.logicalWidth
     }
 
     private fun getRealSize(display: Display): Point {
-        val p = Point()
-        display.getRealSize(p)
-        return p
+        val displayInfo = DisplayInfo()
+        display.getDisplayInfo(displayInfo)
+        return Point(displayInfo.logicalWidth, displayInfo.logicalHeight)
     }
 
     private fun getInternalDisplays(): List<Display> {
