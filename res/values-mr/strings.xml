@@ -116,7 +116,7 @@
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"परवानगी द्या"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"माझे फोटो उघडा"</string>
     <string name="lock_screen_tab" msgid="6672930765010407652">"लॉक स्क्रीन"</string>
-    <string name="home_screen_tab" msgid="1080445697837877526">"मुख्य स्क्रीन"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"होम स्क्रीन"</string>
     <string name="reset" msgid="4945445169532850631">"रीसेट करा"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"बदल रीसेट करायचे आहेत का?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"तुमचे बदल सेव्ह केले जाणार नाहीत"</string>
