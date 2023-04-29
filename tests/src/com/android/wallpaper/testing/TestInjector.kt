@@ -59,11 +59,12 @@ import com.android.wallpaper.picker.individual.IndividualPickerFragment
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import com.android.wallpaper.util.DisplayUtils
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 
 /** Test implementation of [Injector] */
 open class TestInjector : Injector {
+    private var appScope: CoroutineScope? = null
     private var alarmManagerWrapper: AlarmManagerWrapper? = null
     private var bitmapCropper: BitmapCropper? = null
     private var categoryProvider: CategoryProvider? = null
@@ -90,6 +91,10 @@ open class TestInjector : Injector {
     private var wallpaperInteractor: WallpaperInteractor? = null
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
     private var wallpaperColorsViewModel: WallpaperColorsViewModel? = null
+
+    override fun getApplicationCoroutineScope(): CoroutineScope {
+        return appScope ?: CoroutineScope(Dispatchers.Main).also { appScope = it }
+    }
 
     override fun getAlarmManagerWrapper(context: Context): AlarmManagerWrapper {
         return alarmManagerWrapper ?: TestAlarmManagerWrapper().also { alarmManagerWrapper = it }
@@ -259,7 +264,7 @@ open class TestInjector : Injector {
     override fun getUndoInteractor(context: Context): UndoInteractor {
         return undoInteractor
             ?: UndoInteractor(
-                GlobalScope,
+                getApplicationCoroutineScope(),
                 UndoRepository(),
                 HashMap()
             ) // Empty because we don't support undoing in WallpaperPicker2..also{}
@@ -270,7 +275,7 @@ open class TestInjector : Injector {
             ?: WallpaperInteractor(
                     repository =
                         WallpaperRepository(
-                            scope = GlobalScope,
+                            scope = getApplicationCoroutineScope(),
                             client = WallpaperClientImpl(context = context),
                             wallpaperPreferences = getPreferences(context = context),
                             backgroundDispatcher = Dispatchers.IO,
@@ -282,7 +287,7 @@ open class TestInjector : Injector {
     override fun getWallpaperSnapshotRestorer(context: Context): WallpaperSnapshotRestorer {
         return wallpaperSnapshotRestorer
             ?: WallpaperSnapshotRestorer(
-                    scope = GlobalScope,
+                    scope = getApplicationCoroutineScope(),
                     interactor = getWallpaperInteractor(context),
                 )
                 .also { wallpaperSnapshotRestorer = it }

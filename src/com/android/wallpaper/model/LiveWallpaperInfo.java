@@ -329,6 +329,10 @@ public class LiveWallpaperInfo extends WallpaperInfo {
                 | ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)) != 0;
     }
 
+    public void setVisibleTitle(boolean visibleTitle) {
+        mVisibleTitle = visibleTitle;
+    }
+
     @Override
     public String getTitle(Context context) {
         if (mVisibleTitle) {
