@@ -124,6 +124,30 @@ class WallpaperQuickSwitchViewModelTest {
         }
 
     @Test
+    fun `recentOptions_lastUpdatedChange_updatesOptions`() =
+        testScope.runTest {
+            val options = collectLastValue(underTest.options)
+
+            val models =
+                FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.mapIndexed { idx, wp ->
+                    WallpaperModel(
+                        wp.wallpaperId,
+                        wp.placeholderColor,
+                        if (idx == 0) 100 else wp.lastUpdated
+                    )
+                }
+            client.setRecentWallpapers(buildMap { put(WallpaperDestination.HOME, models) })
+
+            assertOptions(
+                observed = options(),
+                expected =
+                    expectations(
+                        models = models,
+                    ),
+            )
+        }
+
+    @Test
     fun `switches to third option`() =
         testScope.runTest {
             val options = collectLastValue(underTest.options)
