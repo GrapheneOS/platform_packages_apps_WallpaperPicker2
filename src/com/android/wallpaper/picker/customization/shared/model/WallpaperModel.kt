@@ -21,4 +21,5 @@ package com.android.wallpaper.picker.customization.shared.model
 data class WallpaperModel(
     val wallpaperId: String,
     val placeholderColor: Int,
+    val lastUpdated: Long = -1,
 )

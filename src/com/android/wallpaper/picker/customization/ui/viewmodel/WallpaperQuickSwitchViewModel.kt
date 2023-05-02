@@ -68,7 +68,10 @@ constructor(
                 // even if in a different order. This is so that the view can keep from
                 // moving the wallpaper options around when the sort order changes as the
                 // user selects different wallpapers.
-                previews.map { preview -> preview.wallpaperId }.sorted().joinToString(",")
+                previews
+                    .map { preview -> preview.wallpaperId + preview.lastUpdated }
+                    .sorted()
+                    .joinToString(",")
             }
             .map { previews ->
                 // True if any option is becoming selected following user click.
