@@ -115,7 +115,7 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"कृपया सेटिङहरूमा गई फाइल र मिडिया प्रयोग गर्न दिनुहोस्।"</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"अन गर्नुहोस्"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"\"मेरा फोटोहरू\" खोल्नुहोस्"</string>
-    <string name="lock_screen_tab" msgid="6672930765010407652">"स्क्रिन लक गर्नुहोस्"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"लक स्क्रिन"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"होम स्क्रिन"</string>
     <string name="reset" msgid="4945445169532850631">"रिसेट गर्नुहोस्"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"परिवर्तनहरू रिसेट गर्ने हो?"</string>
