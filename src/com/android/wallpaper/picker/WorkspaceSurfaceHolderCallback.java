@@ -48,6 +48,8 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
     private static final String KEY_WALLPAPER_COLORS = "wallpaper_colors";
     public static final int MESSAGE_ID_UPDATE_PREVIEW = 1337;
     public static final String KEY_HIDE_BOTTOM_ROW = "hide_bottom_row";
+    public static final int MESSAGE_ID_COLOR_OVERRIDE = 1234;
+    public static final String KEY_COLOR_OVERRIDE = "color_override"; // ColorInt Encoded as string
     private final SurfaceView mWorkspaceSurface;
     private final PreviewUtils mPreviewUtils;
     private final boolean mShouldUseWallpaperColors;
@@ -58,6 +60,7 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
     private boolean mIsWallpaperColorsReady;
     private Surface mLastSurface;
     private Message mCallback;
+    private Message mDelayedMessage;
     private WorkspaceRenderListener mListener;
 
     private boolean mNeedsToCleanUp;
@@ -157,6 +160,14 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
                 mWorkspaceSurface.setChildSurfacePackage(
                         SurfaceViewUtils.getSurfacePackage(result));
                 mCallback = SurfaceViewUtils.getCallback(result);
+                if (mCallback != null && mDelayedMessage != null) {
+                    try {
+                        mCallback.replyTo.send(mDelayedMessage);
+                    } catch (RemoteException e) {
+                        Log.w(TAG, "Couldn't send message to workspace preview", e);
+                    }
+                    mDelayedMessage = null;
+                }
                 if (mNeedsToCleanUp) {
                     cleanUp();
                 } else if (mListener != null) {
@@ -182,15 +193,17 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
      * {@link Message#getData()}.
      */
     public void send(final int what, @Nullable Bundle bundle) {
+        final Message message = new Message();
+        message.what = what;
+        message.setData(bundle);
         if (mCallback != null) {
             try {
-                final Message message = new Message();
-                message.what = what;
-                message.setData(bundle);
                 mCallback.replyTo.send(message);
             } catch (RemoteException e) {
                 Log.w(TAG, "Couldn't send message to workspace preview", e);
             }
+        } else {
+            mDelayedMessage = message;
         }
     }
 
