@@ -32,11 +32,11 @@
     <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"Velg en bakgrunn"</string>
     <string name="creative_wallpaper_title" msgid="8459226435723103934">"Opprett en bakgrunn"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Startskjerm"</string>
-    <string name="lock_screen_message" msgid="1534506081955058013">"Låseskjermen"</string>
+    <string name="lock_screen_message" msgid="1534506081955058013">"Låseskjerm"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Startskjermen og låseskjermen"</string>
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Angi bakgrunn på"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Startskjerm"</string>
-    <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Låseskjermen"</string>
+    <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Låseskjerm"</string>
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Startskjermen og låseskjermen"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Bakgrunn med skiftende bilder"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"For å vise gjeldende bakgrunn her må <xliff:g id="APP_NAME">%1$s</xliff:g> ha tilgang til lagring på enheten din."</string>
