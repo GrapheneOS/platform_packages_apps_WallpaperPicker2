@@ -48,6 +48,7 @@ class WallpaperRepository(
         return client
             .recentWallpapers(destination = destination, limit = 1)
             .map { previews -> currentWallpaperKey(destination, previews) }
+            .flowOn(backgroundDispatcher)
             .stateIn(
                 scope = scope,
                 started = SharingStarted.WhileSubscribed(),
