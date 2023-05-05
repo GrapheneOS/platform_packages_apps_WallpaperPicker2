@@ -24,6 +24,7 @@ import android.database.ContentObserver
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Looper
 import android.util.Log
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -42,6 +43,10 @@ class WallpaperClientImpl(
         limit: Int,
     ): Flow<List<WallpaperModel>> {
         return callbackFlow {
+            // TODO(b/280891780) Remove this check
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                throw IllegalStateException("Do not call method recentWallpapers() on main thread")
+            }
             suspend fun queryAndSend(limit: Int) {
                 send(queryRecentWallpapers(destination = destination, limit = limit))
             }
