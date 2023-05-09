@@ -137,6 +137,9 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
             mHomeImageWallpaper.setImageDrawable(null);
         }
         mPackageStatusNotifier.removeListener(mAppStatusListener);
+        if (mWallpaperSurface.getSurfaceControl() != null) {
+            mWallpaperSurface.getSurfaceControl().release();
+        }
     }
 
     private void releaseHost() {
