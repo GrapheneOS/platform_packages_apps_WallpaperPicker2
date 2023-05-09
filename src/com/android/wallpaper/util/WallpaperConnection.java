@@ -31,6 +31,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.service.wallpaper.IWallpaperConnection;
@@ -48,6 +49,8 @@ import androidx.annotation.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of {@link IWallpaperConnection} that handles communication with a
@@ -67,11 +70,13 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     }
 
     private static final String TAG = "WallpaperConnection";
+    private static final Looper sMainLooper = Looper.getMainLooper();
     private final Context mContext;
     private final Intent mIntent;
     private final WallpaperConnectionListener mListener;
     private final SurfaceView mContainerView;
     private final SurfaceView mSecondContainerView;
+    private final List<SurfaceControl> mMirrorSurfaceControls = new ArrayList<>();
     private IWallpaperService mService;
     @Nullable private IWallpaperEngine mEngine;
     @Nullable private Point mDisplayMetrics;
@@ -141,6 +146,10 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
             if (mEngine != null) {
                 try {
                     mEngine.destroy();
+                    for (SurfaceControl control : mMirrorSurfaceControls) {
+                        control.release();
+                    }
+                    mMirrorSurfaceControls.clear();
                 } catch (RemoteException e) {
                     // Ignore
                 }
@@ -292,8 +301,10 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
      * Sets the engine's visibility.
      */
     public void setVisibility(boolean visible) {
-        mIsVisible = visible;
-        setEngineVisibility(visible);
+        synchronized (this) {
+            mIsVisible = visible;
+            setEngineVisibility(visible);
+        }
     }
 
     private void setEngineVisibility(boolean visible) {
@@ -308,9 +319,11 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     }
 
     private void reparentWallpaperSurface(SurfaceView parentSurface) {
-        if (mEngine == null) {
-            Log.i(TAG, "Engine is null, was the service disconnected?");
-            return;
+        synchronized (this) {
+            if (mEngine == null) {
+                Log.i(TAG, "Engine is null, was the service disconnected?");
+                return;
+            }
         }
         if (parentSurface.getSurfaceControl() != null) {
             mirrorAndReparent(parentSurface);
@@ -337,23 +350,31 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     }
 
     private void mirrorAndReparent(SurfaceView parentSurface) {
-        if (mEngine == null) {
-            Log.i(TAG, "Engine is null, was the service disconnected?");
-            return;
+        IWallpaperEngine engine;
+        synchronized (this) {
+            if (mEngine == null) {
+                Log.i(TAG, "Engine is null, was the service disconnected?");
+                return;
+            }
+            engine = mEngine;
         }
         try {
             SurfaceControl parentSC = parentSurface.getSurfaceControl();
-            SurfaceControl wallpaperMirrorSC = mEngine.mirrorSurfaceControl();
+            SurfaceControl wallpaperMirrorSC = engine.mirrorSurfaceControl();
             if (wallpaperMirrorSC == null) {
                 return;
             }
             float[] values = getScale(parentSurface);
-            SurfaceControl.Transaction t = new SurfaceControl.Transaction();
-            t.setMatrix(wallpaperMirrorSC, values[MSCALE_X], values[MSKEW_Y],
-                    values[MSKEW_X], values[MSCALE_Y]);
-            t.reparent(wallpaperMirrorSC, parentSC);
-            t.show(wallpaperMirrorSC);
-            t.apply();
+            try (SurfaceControl.Transaction t = new SurfaceControl.Transaction()) {
+                t.setMatrix(wallpaperMirrorSC, values[MSCALE_X], values[MSKEW_Y],
+                        values[MSKEW_X], values[MSCALE_Y]);
+                t.reparent(wallpaperMirrorSC, parentSC);
+                t.show(wallpaperMirrorSC);
+                t.apply();
+            }
+            synchronized (this) {
+                mMirrorSurfaceControls.add(wallpaperMirrorSC);
+            }
         } catch (RemoteException | NullPointerException e) {
             Log.e(TAG, "Couldn't reparent wallpaper surface", e);
         }
