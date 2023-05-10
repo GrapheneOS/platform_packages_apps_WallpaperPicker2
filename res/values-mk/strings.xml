@@ -34,7 +34,7 @@
     <string name="home_screen_message" msgid="106444102822522813">"Почетен екран"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Заклучен екран"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Почетен и заклучен екран"</string>
-    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Постави тапет"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Постави тапет на"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Почетен екран"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Заклучен екран"</string>
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Почетен и заклучен екран"</string>
