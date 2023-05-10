@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Պաստառների կատեգորիաներ"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Օգտագործել որպես պաստառ"</string>
+    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Պաստառ դնել"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Պաստառը տեղադրվում է…"</string>
     <string name="try_again" msgid="8278874823700921234">"Նորից փորձել"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Չհաջողվեց տեղադրել պաստառը:"</string>
@@ -34,7 +34,7 @@
     <string name="home_screen_message" msgid="106444102822522813">"Հիմնական էկրան"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Կողպէկրան"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Հիմնական էկրան և կողպէկրան"</string>
-    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Դնել պաստառ՝"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Որտեղ օգտագործել որպես պաստառ"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Հիմնական էկրան"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Կողպէկրան"</string>
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Հիմնական էկրան և կողպէկրան"</string>
