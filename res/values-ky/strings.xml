@@ -112,7 +112,7 @@
     <string name="accessibility_customize_shown" msgid="590964727831547651">"Ыңгайлаштыруу тактасы көрсөтүлдү"</string>
     <string name="accessibility_info_hidden" msgid="2288603712350168107">"Маалымат жашырылды"</string>
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Маалымат көрсөтүлдү"</string>
-    <string name="settings_snackbar_description" msgid="890168814524778486">"Жөндөөлөрдөн файлдарды жана медианы иштетиңиз."</string>
+    <string name="settings_snackbar_description" msgid="890168814524778486">"Параметрлерден файлдарды жана медианы иштетиңиз."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Иштетүү"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Сүрөттөрүмдү ачуу"</string>
     <string name="lock_screen_tab" msgid="6672930765010407652">"Экранды кулпулоо"</string>

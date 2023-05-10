@@ -34,7 +34,7 @@
     <string name="home_screen_message" msgid="106444102822522813">"หน้าจอหลัก"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"หน้าจอล็อก"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"หน้าแรกและหน้าจอล็อก"</string>
-    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"ตั้งเปิดวอลเปเปอร์"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"ตั้งวอลเปเปอร์ใน"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"หน้าจอหลัก"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"หน้าจอล็อก"</string>
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"หน้าจอหลักและหน้าจอล็อก"</string>
