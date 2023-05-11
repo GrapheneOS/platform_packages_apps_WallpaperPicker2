@@ -25,17 +25,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/screen_preview_section_vertical_space">
-        <com.android.wallpaper.picker.DisplayAspectRatioFrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/screen_preview_height">
+        <com.android.wallpaper.picker.FixedWidthDisplayRatioFrameLayout
+            android:layout_width="@dimen/screen_preview_width"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
             <include android:id="@+id/preview"
                 layout="@layout/wallpaper_preview_card"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center" />
-
-        </com.android.wallpaper.picker.DisplayAspectRatioFrameLayout>
+        </com.android.wallpaper.picker.FixedWidthDisplayRatioFrameLayout>
 
         <ViewStub
             android:id="@+id/clock_carousel_view_stub"
