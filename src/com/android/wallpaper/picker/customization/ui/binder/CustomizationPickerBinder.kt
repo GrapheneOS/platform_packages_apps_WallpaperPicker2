@@ -112,27 +112,27 @@ object CustomizationPickerBinder {
             topMargin = 0
         }
 
+        // create and add sections to both the lock and home screen tabs ahead of time, since
+        // the lock and home screen preview sections are both needed to load initial wallpaper
+        // colors for the correct functioning of the color picker
+        createAndAddSections(
+            view.context,
+            homeSectionContainer,
+            isOnLockScreen = false,
+            sectionControllerProvider
+        )
+        createAndAddSections(
+            view.context,
+            lockSectionContainer,
+            isOnLockScreen = true,
+            sectionControllerProvider
+        )
+
         val job =
             lifecycleOwner.lifecycleScope.launch {
                 lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     launch {
                         viewModel.isOnLockScreen.collect { isOnLockScreen ->
-                            if (isOnLockScreen && lockSectionContainer.childCount == 0) {
-                                createAndAddSections(
-                                    view.context,
-                                    lockSectionContainer,
-                                    isOnLockScreen = true,
-                                    sectionControllerProvider
-                                )
-                            } else if (!isOnLockScreen && homeSectionContainer.childCount == 0) {
-                                createAndAddSections(
-                                    view.context,
-                                    homeSectionContainer,
-                                    isOnLockScreen = false,
-                                    sectionControllerProvider
-                                )
-                            }
-
                             // Offset the scroll position of both tabs
                             lockScrollContainer.scrollTo(0, 0)
                             homeScrollContainer.scrollTo(0, 0)
