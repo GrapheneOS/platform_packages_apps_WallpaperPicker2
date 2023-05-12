@@ -366,6 +366,9 @@
     <!-- Error message of the wallpaper's collection doesn't exist. [CHAR_LIMIT=NONE] -->
     <string name="collection_not_exist_msg">The collection doesn\'t exist</string>
 
+    <!-- Error message advising user to exit our of split screen in order to see preview. [CHAR_LIMIT=NONE] -->
+    <string name="wallpaper_exit_split_screen">Please exit split screen mode and try again</string>
+
     <!-- Label for a cancel button of a dialog. [CHAR LIMIT=30] -->
     <string name="cancel">Cancel</string>
 
