@@ -121,6 +121,29 @@ public abstract class StreamableAsset extends Asset {
     }
 
     @Override
+    public void decodeBitmap(BitmapReceiver receiver) {
+        sExecutorService.execute(() -> {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Config.HARDWARE;
+            InputStream inputStream = openInputStream();
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
+            closeInputStream(inputStream,
+                    "Error closing the input stream used to decode the full bitmap");
+
+            // Rotate output bitmap if necessary because of EXIF orientation tag.
+            int exifOrientation = getExifOrientation();
+            int matrixRotation = getDegreesRotationForExifOrientation(exifOrientation);
+            if (matrixRotation > 0) {
+                Matrix rotateMatrix = new Matrix();
+                rotateMatrix.setRotate(matrixRotation);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(),
+                        rotateMatrix, false);
+            }
+            decodeBitmapCompleted(receiver, bitmap);
+        });
+    }
+
+    @Override
     public void decodeRawDimensions(Activity unused, DimensionsReceiver receiver) {
         sExecutorService.execute(() -> {
             Point result = calculateRawDimensions();
