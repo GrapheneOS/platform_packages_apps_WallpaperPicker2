@@ -21,6 +21,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.view.Window;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -110,6 +111,12 @@ public class FullPreviewActivity extends BasePreviewActivity implements AppbarFr
                 ? ActivityInfo.SCREEN_ORIENTATION_USER : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         setRequestedOrientation(orientation);
         if (isInMultiWindowMode()) {
+            Toast.makeText(
+                            this,
+                            R.string.wallpaper_exit_split_screen,
+                            Toast.LENGTH_SHORT
+                    )
+                    .show();
             onBackPressed();
         }
     }
