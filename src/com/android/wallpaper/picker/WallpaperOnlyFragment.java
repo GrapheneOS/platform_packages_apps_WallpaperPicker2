@@ -20,6 +20,8 @@ import android.os.Bundle;
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.CustomizationSectionController;
 import com.android.wallpaper.model.WallpaperSectionController;
+import com.android.wallpaper.picker.customization.ui.section.ConnectedSectionController;
+import com.android.wallpaper.picker.customization.ui.section.ScreenPreviewSectionController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +47,9 @@ public class WallpaperOnlyFragment extends CustomizationPickerFragment {
     protected List<CustomizationSectionController<?>> filterAvailableSections(
             List<CustomizationSectionController<?>> controllers) {
         List<CustomizationSectionController<?>> wallpaperOnlySections = controllers.stream()
-                .filter(controller -> controller instanceof WallpaperSectionController)
+                .filter(controller -> controller instanceof WallpaperSectionController
+                        || controller instanceof ScreenPreviewSectionController
+                        || controller instanceof ConnectedSectionController)
                 .collect(Collectors.toList());
         return super.filterAvailableSections(wallpaperOnlySections);
     }
