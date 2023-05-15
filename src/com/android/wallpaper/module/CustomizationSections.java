@@ -47,7 +47,8 @@ public interface CustomizationSections {
             CurrentWallpaperInfoFactory wallpaperInfoFactory,
             DisplayUtils displayUtils,
             CustomizationPickerViewModel customizationPickerViewModel,
-            WallpaperInteractor wallpaperInteractor);
+            WallpaperInteractor wallpaperInteractor,
+            boolean isTwoPaneAndSmallWidth);
 
     /**
      * Gets a new instance of the section controller list.
