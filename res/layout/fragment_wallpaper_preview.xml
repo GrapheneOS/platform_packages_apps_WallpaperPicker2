@@ -59,6 +59,7 @@
             android:id="@+id/button_set_wallpaper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="@dimen/set_wallpaper_button_min_height"
             android:layout_gravity="center_vertical"
             android:background="@drawable/set_wallpaper_button_background"
             android:elevation="@dimen/wallpaper_preview_buttons_elevation"
