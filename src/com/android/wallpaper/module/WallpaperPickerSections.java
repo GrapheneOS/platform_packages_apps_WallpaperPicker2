@@ -37,7 +37,8 @@ public final class WallpaperPickerSections implements CustomizationSections {
             CurrentWallpaperInfoFactory wallpaperInfoFactory,
             DisplayUtils displayUtils,
             CustomizationPickerViewModel customizationPickerViewModel,
-            WallpaperInteractor wallpaperInteractor) {
+            WallpaperInteractor wallpaperInteractor,
+            boolean isTwoPaneAndSmallWidth) {
         List<CustomizationSectionController<?>> sectionControllers = new ArrayList<>();
 
         sectionControllers.add(
@@ -49,7 +50,8 @@ public final class WallpaperPickerSections implements CustomizationSections {
                         wallpaperColorsViewModel,
                         displayUtils,
                         wallpaperPreviewNavigator,
-                        wallpaperInteractor));
+                        wallpaperInteractor,
+                        isTwoPaneAndSmallWidth));
         sectionControllers.add(
                 new WallpaperQuickSwitchSectionController(
                         screen,
