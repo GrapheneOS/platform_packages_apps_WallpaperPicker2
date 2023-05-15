@@ -29,6 +29,7 @@ class TestCustomizationSections : CustomizationSections {
         displayUtils: DisplayUtils?,
         customizationPickerViewModel: CustomizationPickerViewModel,
         wallpaperInteractor: WallpaperInteractor,
+        isTwoPaneAndSmallWidth: Boolean,
     ): MutableList<CustomizationSectionController<*>> {
         return arrayListOf()
     }
