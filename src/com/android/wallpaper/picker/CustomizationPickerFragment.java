@@ -18,7 +18,6 @@ package com.android.wallpaper.picker;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +59,6 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     private static final String SCROLL_POSITION_Y = "SCROLL_POSITION_Y";
     protected static final String KEY_IS_USE_REVAMPED_UI = "is_use_revamped_ui";
     private static final String KEY_START_FROM_LOCK_SCREEN = "start_from_lock_screen";
-    private static final int TWO_PANE_SMALL_WIDTH_THRESHOLD_DP = 500;
     private DisposableHandle mBinding;
 
     /** Returns a new instance of {@link CustomizationPickerFragment}. */
@@ -375,10 +373,10 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     //                     standalone app. Remove this flag when the bug is fixed.
     private boolean getIsTwoPaneAndSmallWidth(Activity activity) {
         LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
-        float ratio = (getResources().getDisplayMetrics().densityDpi
-                / (float) DisplayMetrics.DENSITY_DEFAULT);
-        float activityWidth = activity.getDisplay().getWidth() / ratio;
+        int activityWidth = activity.getDisplay().getWidth();
+        int widthThreshold = getResources()
+                .getDimensionPixelSize(R.dimen.two_pane_small_width_threshold);
         return multiPanesChecker.isMultiPanesEnabled(requireContext())
-                && activityWidth <= TWO_PANE_SMALL_WIDTH_THRESHOLD_DP;
+                && activityWidth <= widthThreshold;
     }
 }
