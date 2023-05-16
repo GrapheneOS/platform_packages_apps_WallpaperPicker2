@@ -260,6 +260,7 @@
     <dimen name="set_wallpaper_button_vertical_padding">10dp</dimen>
     <dimen name="set_wallpaper_button_corner_radius">20dp</dimen>
     <dimen name="set_wallpaper_button_margin_end">16dp</dimen>
+    <dimen name="set_wallpaper_button_min_height">48dp</dimen>
 
     <!-- Wallpaper control button group -->
     <dimen name="wallpaper_control_button_group_divider_space">16dp</dimen>
@@ -294,6 +295,7 @@
     display.
     -->
     <dimen name="screen_preview_width">176dp</dimen>
+    <dimen name="screen_preview_width_for_2_pane_small_width">267dp</dimen>
 
     <!-- Height of options in the wallpaper quick switch widget. -->
     <dimen name="wallpaper_quick_switch_selected_option_height">86dp</dimen>
