@@ -216,7 +216,7 @@ public class DefaultCategoryProvider implements CategoryProvider {
      * the receiver.
      */
     protected static class FetchCategoriesTask extends AsyncTask<Void, Category, Void> {
-        private CategoryReceiver mReceiver;
+        protected final CategoryReceiver mReceiver;
         private PartnerProvider mPartnerProvider;
         protected final Context mAppContext;
 
