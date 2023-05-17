@@ -100,6 +100,8 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"ຮູບພື້ນຫຼັງ"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"ຕົວຢ່າງຮູບພື້ນຫຼັງ"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"ບໍ່ມິຄໍເລັກຊັນ"</string>
+    <!-- no translation found for wallpaper_exit_split_screen (1928870664619591636) -->
+    <skip />
     <string name="cancel" msgid="4970902691067201584">"ຍົກເລີກ"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"ເຊື່ອງຕົວຢ່າງສ່ວນຕິດຕໍ່ຜູ້ໃຊ້"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"ເຊື່ອງສ່ວນຕິດຕໍ່ຜູ້ໃຊ້ໃນຕົວຢ່າງແລ້ວ. ແຕະສອງເທື່ອເພື່ອເຊົາເຊື່ອງ"</string>
