@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
      Copyright (C) 2023 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,21 +20,37 @@
     android:orientation="horizontal"
     android:showDividers="middle">
 
-    <TextView
-        android:id="@+id/tab_primary"
+    <LinearLayout
+        android:id="@+id/tab_primary_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/separated_tabs_height_short"
-        android:layout_weight="1"
-        android:background="@drawable/duo_tabs_button_background"
-        android:gravity="center" />
+        android:paddingTop="@dimen/tab_container_top_margin"
+        android:paddingBottom="@dimen/tab_container_bottom_margin"
+        android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/tab_secondary"
+        <TextView
+            android:id="@+id/tab_primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/separated_tabs_height_short"
+            android:background="@drawable/duo_tabs_button_background"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tab_secondary_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/separated_tabs_height_short"
-        android:layout_weight="1"
-        android:background="@drawable/duo_tabs_button_background"
-        android:gravity="center" />
+        android:paddingTop="@dimen/tab_container_top_margin"
+        android:paddingBottom="@dimen/tab_container_bottom_margin"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tab_secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/separated_tabs_height_short"
+            android:background="@drawable/duo_tabs_button_background"
+            android:gravity="center" />
+    </LinearLayout>
 </LinearLayout>
