@@ -20,7 +20,7 @@
     android:orientation="horizontal"
     android:showDividers="middle">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/tab_primary_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,9 +35,9 @@
             android:minHeight="@dimen/separated_tabs_height_short"
             android:background="@drawable/duo_tabs_button_background"
             android:gravity="center" />
-    </LinearLayout>
+    </FrameLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/tab_secondary_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,5 +52,5 @@
             android:minHeight="@dimen/separated_tabs_height_short"
             android:background="@drawable/duo_tabs_button_background"
             android:gravity="center" />
-    </LinearLayout>
+    </FrameLayout>
 </LinearLayout>
