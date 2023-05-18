@@ -26,9 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:should_use_short_tabs="true"
-        android:layout_marginHorizontal="@dimen/tab_container_horizontal_padding"
-        android:layout_marginTop="@dimen/tab_container_top_margin"
-        android:layout_marginBottom="@dimen/tab_container_bottom_margin" />
+        android:layout_marginHorizontal="@dimen/tab_container_horizontal_padding"/>
 
     <include
         layout="@layout/fragment_customization_picker"
