@@ -20,7 +20,6 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.IntDef;
@@ -58,9 +57,9 @@ public final class DuoTabs extends FrameLayout {
 
     private OnTabSelectedListener mOnTabSelectedListener;
     private final TextView mPrimaryTab;
-    private final LinearLayout mPrimaryTabContainer;
+    private final FrameLayout mPrimaryTabContainer;
     private final TextView mSecondaryTab;
-    private final LinearLayout mSecondaryTabContainer;
+    private final FrameLayout mSecondaryTabContainer;
 
     @Tab private int mCurrentOverlayTab;
 
