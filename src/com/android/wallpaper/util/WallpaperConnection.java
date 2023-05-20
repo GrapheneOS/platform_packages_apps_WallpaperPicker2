@@ -123,7 +123,8 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
                 return true;
             }
             if (!mContext.bindService(mIntent, this,
-                    Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT)) {
+                    Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT
+                            | Context.BIND_ALLOW_ACTIVITY_STARTS)) {
                 return false;
             }
 
