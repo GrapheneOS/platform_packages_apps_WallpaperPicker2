@@ -153,12 +153,8 @@ object ScreenPreviewBinder {
                         lifecycleOwner.lifecycle.addObserver(lifecycleObserver)
                     }
 
-                    // Here when destroyed.
                     lifecycleOwner.lifecycle.removeObserver(lifecycleObserver)
                     workspaceSurface.holder.removeCallback(previewSurfaceCallback)
-                    previewSurfaceCallback?.cleanUp()
-                    wallpaperSurface.holder.removeCallback(wallpaperSurfaceCallback)
-                    wallpaperSurfaceCallback?.cleanUp()
                 }
 
                 launch {
@@ -204,6 +200,14 @@ object ScreenPreviewBinder {
                                 offsetToStart = offsetToStart,
                             )
                         }
+                    }
+                }
+
+                launch {
+                    lifecycleOwner.repeatOnLifecycle(Lifecycle.State.DESTROYED) {
+                        previewSurfaceCallback?.cleanUp()
+                        wallpaperSurface.holder.removeCallback(wallpaperSurfaceCallback)
+                        wallpaperSurfaceCallback?.cleanUp()
                     }
                 }
             }
