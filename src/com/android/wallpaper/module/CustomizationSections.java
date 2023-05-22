@@ -1,5 +1,6 @@
 package com.android.wallpaper.module;
 
+import android.app.WallpaperManager;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -48,6 +49,7 @@ public interface CustomizationSections {
             DisplayUtils displayUtils,
             CustomizationPickerViewModel customizationPickerViewModel,
             WallpaperInteractor wallpaperInteractor,
+            WallpaperManager wallpaperManager,
             boolean isTwoPaneAndSmallWidth);
 
     /**
