@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.customization.ui.section
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.WallpaperManager
 import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
@@ -59,6 +60,7 @@ open class ScreenPreviewSectionController(
     private val displayUtils: DisplayUtils,
     private val wallpaperPreviewNavigator: WallpaperPreviewNavigator,
     private val wallpaperInteractor: WallpaperInteractor,
+    private val wallpaperManager: WallpaperManager,
     private val isTwoPaneAndSmallWidth: Boolean,
 ) : CustomizationSectionController<ScreenPreviewView> {
 
@@ -154,7 +156,6 @@ open class ScreenPreviewSectionController(
                                             }
                                         loadInitialColors(
                                             context = context,
-                                            wallpaper = wallpaper,
                                             screen = screen,
                                         )
                                         continuation.resume(wallpaper, null)
@@ -183,11 +184,17 @@ open class ScreenPreviewSectionController(
 
     private fun loadInitialColors(
         context: Context,
-        wallpaper: WallpaperInfo?,
         screen: CustomizationSections.Screen,
     ) {
         lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            val colors = wallpaper?.computeColorInfo(context)?.get()?.wallpaperColors
+            val colors =
+                wallpaperManager.getWallpaperColors(
+                    if (screen == CustomizationSections.Screen.LOCK_SCREEN) {
+                        WallpaperManager.FLAG_LOCK
+                    } else {
+                        WallpaperManager.FLAG_SYSTEM
+                    }
+                )
             withContext(Dispatchers.Main) {
                 if (colors != null) {
                     if (screen == CustomizationSections.Screen.LOCK_SCREEN) {
