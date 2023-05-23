@@ -16,6 +16,7 @@
 package com.android.wallpaper.picker;
 
 import android.app.Activity;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -330,6 +331,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                     injector.getDisplayUtils(activity),
                     mViewModel,
                     injector.getWallpaperInteractor(requireContext()),
+                    WallpaperManager.getInstance(requireContext()),
                     isTwoPaneAndSmallWidth);
         }
     }
