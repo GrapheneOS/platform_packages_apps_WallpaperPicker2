@@ -100,8 +100,7 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"Háttérkép"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Háttérkép előnézete"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Nincs ilyen gyűjtemény"</string>
-    <!-- no translation found for wallpaper_exit_split_screen (1928870664619591636) -->
-    <skip />
+    <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"Lépjen ki az osztott képernyős módból, és próbálja újra"</string>
     <string name="cancel" msgid="4970902691067201584">"Mégse"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"UI előnézetének elrejtése"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"UI: rejtve előnézetben. Felfedés: dupla koppintás."</string>
