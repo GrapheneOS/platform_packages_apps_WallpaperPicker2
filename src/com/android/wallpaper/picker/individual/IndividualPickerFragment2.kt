@@ -222,6 +222,10 @@ class IndividualPickerFragment2 :
         category?.fetchWallpapers(
             context.applicationContext,
             { fetchedWallpapers ->
+                if (getContext() == null) {
+                    Log.w(TAG, "Null context!!")
+                    return@fetchWallpapers
+                }
                 isWallpapersReceived = true
                 updateLoading()
                 val supportsUserCreated = category?.supportsUserCreatedWallpapers() == true
