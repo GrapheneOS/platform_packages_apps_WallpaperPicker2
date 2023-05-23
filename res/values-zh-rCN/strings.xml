@@ -100,8 +100,7 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"壁纸"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"壁纸预览"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"该集合不存在"</string>
-    <!-- no translation found for wallpaper_exit_split_screen (1928870664619591636) -->
-    <skip />
+    <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"请退出分屏模式并重试"</string>
     <string name="cancel" msgid="4970902691067201584">"取消"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"隐藏界面预览"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"界面在预览中处于隐藏状态。点按两次即可取消隐藏"</string>
