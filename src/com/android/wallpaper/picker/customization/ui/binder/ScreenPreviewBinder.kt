@@ -20,6 +20,7 @@ package com.android.wallpaper.picker.customization.ui.binder
 import android.app.Activity
 import android.app.WallpaperColors
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceView
@@ -44,6 +45,7 @@ import com.android.wallpaper.util.ResourceUtils
 import com.android.wallpaper.util.WallpaperConnection
 import com.android.wallpaper.util.WallpaperSurfaceCallback
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
@@ -80,6 +82,11 @@ object ScreenPreviewBinder {
     ): Binding {
         val workspaceSurface: SurfaceView = previewView.requireViewById(R.id.workspace_surface)
         val wallpaperSurface: SurfaceView = previewView.requireViewById(R.id.wallpaper_surface)
+        val thumbnailRequested = AtomicBoolean(false)
+        val surfaceViewsReady = {
+            wallpaperSurface.setBackgroundColor(Color.TRANSPARENT)
+            workspaceSurface.visibility = View.VISIBLE
+        }
         wallpaperSurface.setZOrderOnTop(false)
 
         if (dimWallpaper) {
@@ -143,6 +150,8 @@ object ScreenPreviewBinder {
                                     wallpaperInfo = wallpaperInfo,
                                     surfaceCallback = wallpaperSurfaceCallback,
                                     offsetToStart = offsetToStart,
+                                    onSurfaceViewsReady = surfaceViewsReady,
+                                    thumbnailRequested = thumbnailRequested
                                 )
                             }
                         wallpaperSurface.holder.addCallback(wallpaperSurfaceCallback)
@@ -154,7 +163,6 @@ object ScreenPreviewBinder {
                     }
 
                     lifecycleOwner.lifecycle.removeObserver(lifecycleObserver)
-                    workspaceSurface.holder.removeCallback(previewSurfaceCallback)
                 }
 
                 launch {
@@ -181,6 +189,14 @@ object ScreenPreviewBinder {
                     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                         lifecycleOwner.lifecycleScope.launch {
                             wallpaperInfo = viewModel.getWallpaperInfo()
+                            maybeLoadThumbnail(
+                                activity = activity,
+                                wallpaperInfo = wallpaperInfo,
+                                surfaceCallback = wallpaperSurfaceCallback,
+                                offsetToStart = offsetToStart,
+                                onSurfaceViewsReady = surfaceViewsReady,
+                                thumbnailRequested = thumbnailRequested
+                            )
                             (wallpaperInfo as? LiveWallpaperInfo)?.let { liveWallpaperInfo ->
                                 val connection =
                                     wallpaperConnection
@@ -188,24 +204,20 @@ object ScreenPreviewBinder {
                                                 liveWallpaperInfo,
                                                 previewView,
                                                 viewModel,
-                                                wallpaperSurface
+                                                wallpaperSurface,
+                                                surfaceViewsReady
                                             )
                                             .also { wallpaperConnection = it }
                                 connection.connect()
                                 connection.setVisibility(true)
                             }
-                            maybeLoadThumbnail(
-                                activity = activity,
-                                wallpaperInfo = wallpaperInfo,
-                                surfaceCallback = wallpaperSurfaceCallback,
-                                offsetToStart = offsetToStart,
-                            )
                         }
                     }
                 }
 
                 launch {
                     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.DESTROYED) {
+                        workspaceSurface.holder.removeCallback(previewSurfaceCallback)
                         previewSurfaceCallback?.cleanUp()
                         wallpaperSurface.holder.removeCallback(wallpaperSurfaceCallback)
                         wallpaperSurfaceCallback?.cleanUp()
@@ -232,7 +244,8 @@ object ScreenPreviewBinder {
         liveWallpaperInfo: LiveWallpaperInfo,
         previewView: CardView,
         viewModel: ScreenPreviewViewModel,
-        wallpaperSurface: SurfaceView
+        wallpaperSurface: SurfaceView,
+        onSurfaceViewsReady: () -> Unit
     ) =
         WallpaperConnection(
             Intent(WallpaperService.SERVICE_INTERFACE).apply {
@@ -245,6 +258,10 @@ object ScreenPreviewBinder {
             object : WallpaperConnection.WallpaperConnectionListener {
                 override fun onWallpaperColorsChanged(colors: WallpaperColors?, displayId: Int) {
                     viewModel.onWallpaperColorsChanged(colors)
+                }
+
+                override fun onEngineShown() {
+                    onSurfaceViewsReady()
                 }
             },
             wallpaperSurface,
@@ -266,6 +283,8 @@ object ScreenPreviewBinder {
         wallpaperInfo: WallpaperInfo?,
         surfaceCallback: WallpaperSurfaceCallback?,
         offsetToStart: Boolean,
+        onSurfaceViewsReady: () -> Unit,
+        thumbnailRequested: AtomicBoolean
     ) {
         if (wallpaperInfo == null || surfaceCallback == null) {
             return
@@ -274,6 +293,9 @@ object ScreenPreviewBinder {
         val imageView = surfaceCallback.homeImageWallpaper
         val thumbAsset: Asset = wallpaperInfo.getThumbAsset(activity)
         if (imageView != null && imageView.drawable == null) {
+            if (!thumbnailRequested.compareAndSet(false, true)) {
+                return
+            }
             // Respect offsetToStart only for CurrentWallpaperAssetVN otherwise true.
             BitmapCachingAsset(activity, thumbAsset)
                 .loadPreviewImage(
@@ -282,6 +304,26 @@ object ScreenPreviewBinder {
                     ResourceUtils.getColorAttr(activity, android.R.attr.colorSecondary),
                     /* offsetToStart= */ thumbAsset !is CurrentWallpaperAssetVN || offsetToStart
                 )
+            if (wallpaperInfo !is LiveWallpaperInfo) {
+                imageView.addOnLayoutChangeListener(
+                    object : View.OnLayoutChangeListener {
+                        override fun onLayoutChange(
+                            v: View?,
+                            left: Int,
+                            top: Int,
+                            right: Int,
+                            bottom: Int,
+                            oldLeft: Int,
+                            oldTop: Int,
+                            oldRight: Int,
+                            oldBottom: Int
+                        ) {
+                            v?.removeOnLayoutChangeListener(this)
+                            onSurfaceViewsReady()
+                        }
+                    }
+                )
+            }
         }
     }
 }
