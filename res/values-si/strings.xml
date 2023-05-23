@@ -100,8 +100,7 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"වෝල්පේපරය"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"වෝල්පේපර පෙරදසුන"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"එකතුව නොපවතී"</string>
-    <!-- no translation found for wallpaper_exit_split_screen (1928870664619591636) -->
-    <skip />
+    <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"බෙදුම් තිර ප්‍රකාරයෙන් පිට වී නැවත උත්සාහ කරන්න"</string>
     <string name="cancel" msgid="4970902691067201584">"අවලංගු කරන්න"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"UI පෙරදසුන සඟවන්න"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"UI පෙරදසුන තුළ සඟවා ඇත. නොසැඟවීමට දෙවරක් තට්ටු කරන්න"</string>
