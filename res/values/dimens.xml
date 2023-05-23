@@ -316,7 +316,6 @@
     <!-- Bottom margin for the "duo tabs" tab buttons -->
     <dimen name="tab_container_bottom_margin">12dp</dimen>
 
-
     <!-- Size for option items. -->
     <dimen name="option_item_size">74dp</dimen>
 
