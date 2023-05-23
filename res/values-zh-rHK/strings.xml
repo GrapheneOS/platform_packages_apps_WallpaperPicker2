@@ -100,8 +100,7 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"桌布"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"預覽桌布"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"桌布集不存在"</string>
-    <!-- no translation found for wallpaper_exit_split_screen (1928870664619591636) -->
-    <skip />
+    <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"請退出分割螢幕模式，然後再試一次"</string>
     <string name="cancel" msgid="4970902691067201584">"取消"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"隱藏使用者介面預覽"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"預覽入面隱藏咗使用者介面。㩒兩下就可以取消隱藏"</string>
