@@ -100,8 +100,7 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"Zaslonsko ozadje"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Predogled zaslonskih ozadij"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Zbirka ne obstaja"</string>
-    <!-- no translation found for wallpaper_exit_split_screen (1928870664619591636) -->
-    <skip />
+    <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"Zapustite način razdeljenega zaslona in poskusite znova"</string>
     <string name="cancel" msgid="4970902691067201584">"Prekliči"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"Skrij predogled upor. vmesnika"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"Upor. vm. je skrit. Dvakrat se dot. za razkritje."</string>
