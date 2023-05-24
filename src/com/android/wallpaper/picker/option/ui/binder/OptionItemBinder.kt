@@ -152,6 +152,7 @@ object OptionItemBinder {
                                     isSelected = isSelected,
                                     animate = lastSelected != null && lastSelected != isSelected,
                                 )
+                                view.isSelected = isSelected
                                 lastSelected = isSelected
                             }
                     }
