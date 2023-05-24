@@ -100,8 +100,7 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"Wallpaper"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Pratinjau wallpaper"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Koleksi tidak ada"</string>
-    <!-- no translation found for wallpaper_exit_split_screen (1928870664619591636) -->
-    <skip />
+    <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"Keluar dari mode layar terpisah, lalu coba lagi"</string>
     <string name="cancel" msgid="4970902691067201584">"Batal"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"Sembunyikan Pratinjau UI"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"UI disembunyikan di pratinjau. Ketuk dua kali untuk menampilkan"</string>

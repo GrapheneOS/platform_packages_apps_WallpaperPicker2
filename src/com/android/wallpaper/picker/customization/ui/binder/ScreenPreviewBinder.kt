@@ -153,12 +153,8 @@ object ScreenPreviewBinder {
                         lifecycleOwner.lifecycle.addObserver(lifecycleObserver)
                     }
 
-                    // Here when destroyed.
                     lifecycleOwner.lifecycle.removeObserver(lifecycleObserver)
                     workspaceSurface.holder.removeCallback(previewSurfaceCallback)
-                    previewSurfaceCallback?.cleanUp()
-                    wallpaperSurface.holder.removeCallback(wallpaperSurfaceCallback)
-                    wallpaperSurfaceCallback?.cleanUp()
                 }
 
                 launch {
@@ -171,6 +167,7 @@ object ScreenPreviewBinder {
                             // In addition, update screen preview only if system color is a preset
                             // color. Otherwise, setting wallpaper will cause a change in wallpaper
                             // color and trigger a reset from system ui
+                            viewModel.getWallpaperInfo(true)
                             if (initialWallpaperUpdate) {
                                 initialWallpaperUpdate = false
                             } else if (viewModel.shouldHandleReload()) {
@@ -204,6 +201,14 @@ object ScreenPreviewBinder {
                                 offsetToStart = offsetToStart,
                             )
                         }
+                    }
+                }
+
+                launch {
+                    lifecycleOwner.repeatOnLifecycle(Lifecycle.State.DESTROYED) {
+                        previewSurfaceCallback?.cleanUp()
+                        wallpaperSurface.holder.removeCallback(wallpaperSurfaceCallback)
+                        wallpaperSurfaceCallback?.cleanUp()
                     }
                 }
             }

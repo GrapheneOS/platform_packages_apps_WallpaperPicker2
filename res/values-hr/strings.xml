@@ -28,12 +28,12 @@
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Učitavanje pozadine nije uspjelo. Slika je oštećena ili nije dostupna."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Trenutačno postavljeno"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Dnevna pozadina"</string>
-    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Početni i zaključan zaslon"</string>
+    <string name="wallpaper_destination_both" msgid="1124197176741944063">"Početni i zaključani zaslon"</string>
     <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"Odaberite pozadinu"</string>
     <string name="creative_wallpaper_title" msgid="8459226435723103934">"Izradite pozadinu"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Početni zaslon"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Zaključan zaslon"</string>
-    <string name="home_and_lock_short_label" msgid="2937922943541927983">"Početni i zaključan zaslon"</string>
+    <string name="home_and_lock_short_label" msgid="2937922943541927983">"Početni i zaključani zaslon"</string>
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Postavljanje pozadine"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Početni zaslon"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Zaključan zaslon"</string>
@@ -59,7 +59,7 @@
     <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"Pozadina je uspješno postavljena"</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"Da biste vidjeli pozadine, potrebna vam je internetska veza. Povežite se i pokušajte ponovo."</string>
     <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"Minijatura pozadine trenutačno postavljene za početni zaslon"</string>
-    <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"Minijatura pozadine trenutačno postavljene za zaključan zaslon"</string>
+    <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"Minijatura pozadine trenutačno postavljene za zaključani zaslon"</string>
     <string name="currently_set_wallpaper_thumbnail" msgid="8651887838745545107">"Minijatura trenutačno postavljene pozadine"</string>
     <string name="wallpaper_thumbnail" msgid="569931475923605974">"Minijatura pozadine"</string>
     <string name="explore_home_screen" msgid="8756346794535765482">"Istražite pozadinu početnog zaslona"</string>
@@ -100,8 +100,7 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"Pozadina"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Pregled pozadine"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Zbirka ne postoji"</string>
-    <!-- no translation found for wallpaper_exit_split_screen (1928870664619591636) -->
-    <skip />
+    <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"Izađite iz načina podijeljenog zaslona i pokušajte ponovno"</string>
     <string name="cancel" msgid="4970902691067201584">"Odustani"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"Sakrij pregled koris. sučelja"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"Kor. sučelje skriveno je u pregledu. Dvaput dodirnite za otkrivanje"</string>

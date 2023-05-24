@@ -144,7 +144,7 @@ open class ScreenPreviewSectionController(
                                         ),
                                 )
                             },
-                        wallpaperInfoProvider = {
+                        wallpaperInfoProvider = { forceReload ->
                             suspendCancellableCoroutine { continuation ->
                                 wallpaperInfoFactory.createCurrentWallpaperInfos(
                                     { homeWallpaper, lockWallpaper, _ ->
@@ -160,7 +160,7 @@ open class ScreenPreviewSectionController(
                                         )
                                         continuation.resume(wallpaper, null)
                                     },
-                                    /* forceRefresh= */ true,
+                                    forceReload,
                                 )
                             }
                         },
