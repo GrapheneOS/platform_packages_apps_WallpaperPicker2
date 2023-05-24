@@ -325,4 +325,7 @@
 
     <!-- Dimensions for labeled grid item image -->
     <dimen name="labeled_grid_item_image_card_elevation">0dp</dimen>
+
+    <!-- Dimension for additional touch padding above and below shortcuts error dialog -->
+    <dimen name="shortcut_error_dialog_button_touch_padding">6dp</dimen>
 </resources>
