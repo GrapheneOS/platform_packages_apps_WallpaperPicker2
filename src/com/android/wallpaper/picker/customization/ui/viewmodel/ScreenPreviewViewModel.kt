@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.Flow
 class ScreenPreviewViewModel(
     val previewUtils: PreviewUtils,
     private val initialExtrasProvider: () -> Bundle? = { null },
-    private val wallpaperInfoProvider: suspend () -> WallpaperInfo?,
+    private val wallpaperInfoProvider: suspend (forceReload: Boolean) -> WallpaperInfo?,
     private val onWallpaperColorChanged: (WallpaperColors?) -> Unit = {},
     private val wallpaperInteractor: WallpaperInteractor,
     private val screen: CustomizationSections.Screen,
@@ -49,8 +49,14 @@ class ScreenPreviewViewModel(
         return initialExtrasProvider.invoke()
     }
 
-    suspend fun getWallpaperInfo(): WallpaperInfo? {
-        return wallpaperInfoProvider.invoke()
+    /**
+     * Returns the current wallpaper's WallpaperInfo
+     *
+     * @param forceReload if true, any cached values will be ignored and current wallpaper info will
+     *   be reloaded
+     */
+    suspend fun getWallpaperInfo(forceReload: Boolean = false): WallpaperInfo? {
+        return wallpaperInfoProvider.invoke(forceReload)
     }
 
     fun onWallpaperColorsChanged(colors: WallpaperColors?) {
