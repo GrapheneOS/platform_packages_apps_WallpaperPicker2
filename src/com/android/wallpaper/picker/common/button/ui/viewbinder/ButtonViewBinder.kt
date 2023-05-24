@@ -17,8 +17,10 @@
 
 package com.android.wallpaper.picker.common.button.ui.viewbinder
 
+import android.graphics.Rect
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
+import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -46,6 +48,9 @@ object ButtonViewBinder {
                     parent,
                     false,
                 )
+
+        addTouchPadding(view)
+
         val text: TextView = view.requireViewById(R.id.text)
         view.setOnClickListener { viewModel.onClicked?.invoke() }
 
@@ -55,5 +60,23 @@ object ButtonViewBinder {
         )
 
         return view
+    }
+
+    /**
+     * Adds touch padding to the top and bottom of the view for accessibility.
+     */
+    private fun addTouchPadding(view: View) {
+        view.post {
+            val touchPadding =
+                view
+                    .resources
+                    .getDimensionPixelSize(R.dimen.shortcut_error_dialog_button_touch_padding)
+            val touchRect = Rect().apply {
+                view.getHitRect(this)
+                top -= touchPadding
+                bottom += touchPadding
+            }
+            view.touchDelegate = TouchDelegate(touchRect, view)
+        }
     }
 }
