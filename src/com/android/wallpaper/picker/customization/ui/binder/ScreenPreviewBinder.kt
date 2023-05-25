@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceView
 import android.view.View
+import android.view.View.OnAttachStateChangeListener
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
@@ -195,8 +196,27 @@ object ScreenPreviewBinder {
                                                 wallpaperSurface
                                             )
                                             .also { wallpaperConnection = it }
-                                connection.connect()
-                                connection.setVisibility(true)
+                                if (!previewView.isAttachedToWindow) {
+                                    // Sometimes the service gets connected before the view
+                                    // is valid.
+                                    // TODO(b/284233455): investigate why and remove this workaround
+                                    previewView.addOnAttachStateChangeListener(
+                                        object : OnAttachStateChangeListener {
+                                            override fun onViewAttachedToWindow(v: View?) {
+                                                connection.connect()
+                                                connection.setVisibility(true)
+                                                previewView.removeOnAttachStateChangeListener(this)
+                                            }
+
+                                            override fun onViewDetachedFromWindow(v: View?) {
+                                                // Do nothing
+                                            }
+                                        }
+                                    )
+                                } else {
+                                    connection.connect()
+                                    connection.setVisibility(true)
+                                }
                             }
                             maybeLoadThumbnail(
                                 activity = activity,
