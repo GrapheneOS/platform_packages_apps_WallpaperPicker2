@@ -33,7 +33,7 @@ class ScreenPreviewViewModel(
     private val wallpaperInfoProvider: suspend (forceReload: Boolean) -> WallpaperInfo?,
     private val onWallpaperColorChanged: (WallpaperColors?) -> Unit = {},
     private val wallpaperInteractor: WallpaperInteractor,
-    private val screen: CustomizationSections.Screen,
+    val screen: CustomizationSections.Screen,
 ) {
     /** Returns whether wallpaper picker should handle reload */
     fun shouldHandleReload(): Boolean {
