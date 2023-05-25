@@ -139,6 +139,14 @@ object CustomizationPickerBinder {
 
                             lockScrollContainer.isInvisible = !isOnLockScreen
                             homeScrollContainer.isInvisible = isOnLockScreen
+
+                            view.announceForAccessibility(
+                                if (isOnLockScreen) {
+                                    view.context.getString(R.string.lock_screen_tab)
+                                } else {
+                                    view.context.getString(R.string.home_screen_tab)
+                                }
+                            )
                         }
                     }
                 }
