@@ -1,5 +1,6 @@
 package com.android.wallpaper.testing
 
+import android.app.WallpaperManager
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
@@ -29,6 +30,7 @@ class TestCustomizationSections : CustomizationSections {
         displayUtils: DisplayUtils?,
         customizationPickerViewModel: CustomizationPickerViewModel,
         wallpaperInteractor: WallpaperInteractor,
+        wallpaperManager: WallpaperManager,
         isTwoPaneAndSmallWidth: Boolean,
     ): MutableList<CustomizationSectionController<*>> {
         return arrayListOf()
