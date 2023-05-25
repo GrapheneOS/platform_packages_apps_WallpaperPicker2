@@ -460,4 +460,17 @@ public class LiveWallpaperInfo extends WallpaperInfo {
                 && TextUtils.equals(getWallpaperComponent().getServiceName(),
                 currentWallpaper.getServiceName());
     }
+
+    /**
+     * Saves a wallpaper of type LiveWallpaperInfo at a particular destination.
+     * The default implementation simply returns the current wallpaper, but this can be overridden
+     * as per requirement.
+     *
+     * @param context context of the calling activity
+     * @param destination destination of the wallpaper being saved
+     * @return saved LiveWallpaperInfo object
+     */
+    public LiveWallpaperInfo saveWallpaper(Context context, int destination) {
+        return this;
+    }
 }
