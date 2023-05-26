@@ -344,7 +344,9 @@ public abstract class Asset {
 
                         @Override
                         public void onError(@Nullable Throwable e) {
-                            loadDrawable(activity, imageView, placeholderColor);
+                            if (!activity.isDestroyed()) {
+                                loadDrawable(activity, imageView, placeholderColor);
+                            }
                         }
                     });
         });
