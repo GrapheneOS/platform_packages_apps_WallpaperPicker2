@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.module
 
+import android.app.WallpaperManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -301,7 +302,12 @@ open class WallpaperPicker2Injector : Injector {
                     repository =
                         WallpaperRepository(
                             scope = getApplicationCoroutineScope(),
-                            client = WallpaperClientImpl(context = context),
+                            client =
+                                WallpaperClientImpl(
+                                    context = context,
+                                    infoFactory = getCurrentWallpaperInfoFactory(context),
+                                    wallpaperManager = WallpaperManager.getInstance(context)
+                                ),
                             wallpaperPreferences = getPreferences(context = context),
                             backgroundDispatcher = Dispatchers.IO,
                         ),
