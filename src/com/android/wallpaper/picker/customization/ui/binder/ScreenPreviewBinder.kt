@@ -19,11 +19,13 @@ package com.android.wallpaper.picker.customization.ui.binder
 
 import android.app.Activity
 import android.app.WallpaperColors
+import android.app.WallpaperManager
 import android.content.Intent
 import android.os.Bundle
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceView
 import android.view.View
+import android.view.View.OnAttachStateChangeListener
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
@@ -38,6 +40,7 @@ import com.android.wallpaper.asset.BitmapCachingAsset
 import com.android.wallpaper.asset.CurrentWallpaperAssetVN
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.WorkspaceSurfaceHolderCallback
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
 import com.android.wallpaper.util.ResourceUtils
@@ -81,6 +84,7 @@ object ScreenPreviewBinder {
         val workspaceSurface: SurfaceView = previewView.requireViewById(R.id.workspace_surface)
         val wallpaperSurface: SurfaceView = previewView.requireViewById(R.id.wallpaper_surface)
         wallpaperSurface.setZOrderOnTop(false)
+        val wallpaperManager = WallpaperManager.getInstance(activity)
 
         if (dimWallpaper) {
             previewView.requireViewById<View>(R.id.wallpaper_dimming_scrim).isVisible = true
@@ -160,7 +164,7 @@ object ScreenPreviewBinder {
                 launch {
                     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                         var initialWallpaperUpdate = true
-                        viewModel.wallpaperUpdateEvents()?.collect {
+                        viewModel.wallpaperUpdateEvents()?.collect { wallpaperModel ->
                             // Do not update screen preview on initial update,since the initial
                             // update results from starting or resuming the activity.
                             //
@@ -171,6 +175,20 @@ object ScreenPreviewBinder {
                             if (initialWallpaperUpdate) {
                                 initialWallpaperUpdate = false
                             } else if (viewModel.shouldHandleReload()) {
+                                onPreviewDirty()
+                            } else if (
+                                viewModel.screen == CustomizationSections.Screen.LOCK_SCREEN &&
+                                    wallpaperManager.getWallpaperInfo(
+                                        WallpaperManager.FLAG_SYSTEM
+                                    ) != null &&
+                                    wallpaperModel?.wallpaperId ==
+                                        wallpaperManager
+                                            .getWallpaperInfo(WallpaperManager.FLAG_SYSTEM)
+                                            .serviceName
+                            ) {
+                                // Setting the lock screen to the same live wp as the home screen
+                                // doesn't trigger a UI update, so fix that here for now.
+                                // TODO(b/281730113) Remove this once better solution is ready.
                                 onPreviewDirty()
                             }
                         }
@@ -191,8 +209,27 @@ object ScreenPreviewBinder {
                                                 wallpaperSurface
                                             )
                                             .also { wallpaperConnection = it }
-                                connection.connect()
-                                connection.setVisibility(true)
+                                if (!previewView.isAttachedToWindow) {
+                                    // Sometimes the service gets connected before the view
+                                    // is valid.
+                                    // TODO(b/284233455): investigate why and remove this workaround
+                                    previewView.addOnAttachStateChangeListener(
+                                        object : OnAttachStateChangeListener {
+                                            override fun onViewAttachedToWindow(v: View?) {
+                                                connection.connect()
+                                                connection.setVisibility(true)
+                                                previewView.removeOnAttachStateChangeListener(this)
+                                            }
+
+                                            override fun onViewDetachedFromWindow(v: View?) {
+                                                // Do nothing
+                                            }
+                                        }
+                                    )
+                                } else {
+                                    connection.connect()
+                                    connection.setVisibility(true)
+                                }
                             }
                             maybeLoadThumbnail(
                                 activity = activity,
