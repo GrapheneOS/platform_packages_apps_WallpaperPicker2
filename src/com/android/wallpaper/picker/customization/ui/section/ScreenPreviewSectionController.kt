@@ -66,8 +66,6 @@ open class ScreenPreviewSectionController(
 
     private val isOnLockScreen: Boolean = screen == CustomizationSections.Screen.LOCK_SCREEN
 
-    protected lateinit var previewViewBinding: ScreenPreviewBinder.Binding
-
     /** Override to hide the lock screen clock preview. */
     open val hideLockScreenClockPreview = false
 
@@ -120,65 +118,64 @@ open class ScreenPreviewSectionController(
             .setOnClickListener(onClickListener)
         val previewView: CardView = view.requireViewById(R.id.preview)
 
-        previewViewBinding =
-            ScreenPreviewBinder.bind(
-                activity = activity,
-                previewView = previewView,
-                viewModel =
-                    ScreenPreviewViewModel(
-                        previewUtils =
-                            if (isOnLockScreen) {
-                                PreviewUtils(
-                                    context = context,
-                                    authority =
-                                        context.getString(
-                                            R.string.lock_screen_preview_provider_authority,
-                                        ),
-                                )
-                            } else {
-                                PreviewUtils(
-                                    context = context,
-                                    authorityMetadataKey =
-                                        context.getString(
-                                            R.string.grid_control_metadata_name,
-                                        ),
-                                )
-                            },
-                        wallpaperInfoProvider = { forceReload ->
-                            suspendCancellableCoroutine { continuation ->
-                                wallpaperInfoFactory.createCurrentWallpaperInfos(
-                                    { homeWallpaper, lockWallpaper, _ ->
-                                        val wallpaper =
-                                            if (isOnLockScreen) {
-                                                lockWallpaper ?: homeWallpaper
-                                            } else {
-                                                homeWallpaper ?: lockWallpaper
-                                            }
-                                        loadInitialColors(
-                                            context = context,
-                                            screen = screen,
-                                        )
-                                        continuation.resume(wallpaper, null)
-                                    },
-                                    forceReload,
-                                )
-                            }
+        ScreenPreviewBinder.bind(
+            activity = activity,
+            previewView = previewView,
+            viewModel =
+                ScreenPreviewViewModel(
+                    previewUtils =
+                        if (isOnLockScreen) {
+                            PreviewUtils(
+                                context = context,
+                                authority =
+                                    context.getString(
+                                        R.string.lock_screen_preview_provider_authority,
+                                    ),
+                            )
+                        } else {
+                            PreviewUtils(
+                                context = context,
+                                authorityMetadataKey =
+                                    context.getString(
+                                        R.string.grid_control_metadata_name,
+                                    ),
+                            )
                         },
-                        onWallpaperColorChanged = { colors ->
-                            if (isOnLockScreen) {
-                                colorViewModel.setLockWallpaperColors(colors)
-                            } else {
-                                colorViewModel.setHomeWallpaperColors(colors)
-                            }
-                        },
-                        initialExtrasProvider = { getInitialExtras(isOnLockScreen) },
-                        wallpaperInteractor = wallpaperInteractor,
-                        screen = screen,
-                    ),
-                lifecycleOwner = lifecycleOwner,
-                offsetToStart = displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(activity),
-                onPreviewDirty = { activity.recreate() },
-            )
+                    wallpaperInfoProvider = { forceReload ->
+                        suspendCancellableCoroutine { continuation ->
+                            wallpaperInfoFactory.createCurrentWallpaperInfos(
+                                { homeWallpaper, lockWallpaper, _ ->
+                                    val wallpaper =
+                                        if (isOnLockScreen) {
+                                            lockWallpaper ?: homeWallpaper
+                                        } else {
+                                            homeWallpaper ?: lockWallpaper
+                                        }
+                                    loadInitialColors(
+                                        context = context,
+                                        screen = screen,
+                                    )
+                                    continuation.resume(wallpaper, null)
+                                },
+                                forceReload,
+                            )
+                        }
+                    },
+                    onWallpaperColorChanged = { colors ->
+                        if (isOnLockScreen) {
+                            colorViewModel.setLockWallpaperColors(colors)
+                        } else {
+                            colorViewModel.setHomeWallpaperColors(colors)
+                        }
+                    },
+                    initialExtrasProvider = { getInitialExtras(isOnLockScreen) },
+                    wallpaperInteractor = wallpaperInteractor,
+                    screen = screen,
+                ),
+            lifecycleOwner = lifecycleOwner,
+            offsetToStart = displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(activity),
+            onPreviewDirty = { activity.recreate() },
+        )
         return view
     }
 
