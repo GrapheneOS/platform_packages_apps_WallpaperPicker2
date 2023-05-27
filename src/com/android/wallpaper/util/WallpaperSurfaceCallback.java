@@ -176,8 +176,10 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
                 Log.e(TAG, "Couldn't get placeholder from ColorInfo.");
             }
         }
-        mHomeImageWallpaper.setBackgroundColor((placeholder != null) ? placeholder
-                : ResourceUtils.getColorAttr(mContext, android.R.attr.colorSecondary));
+        int bkgColor = (placeholder != null) ? placeholder
+                : ResourceUtils.getColorAttr(mContext, android.R.attr.colorSecondary);
+        mHomeImageWallpaper.setBackgroundColor(bkgColor);
+        mWallpaperSurface.setBackgroundColor(bkgColor);
         mHomeImageWallpaper.measure(makeMeasureSpec(mContainerView.getWidth(), EXACTLY),
                 makeMeasureSpec(mContainerView.getHeight(), EXACTLY));
         mHomeImageWallpaper.layout(0, 0, mContainerView.getWidth(),
