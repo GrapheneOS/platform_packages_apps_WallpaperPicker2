@@ -32,11 +32,11 @@
     <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"Odaberite pozadinu"</string>
     <string name="creative_wallpaper_title" msgid="8459226435723103934">"Izradite pozadinu"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Početni zaslon"</string>
-    <string name="lock_screen_message" msgid="1534506081955058013">"Zaključan zaslon"</string>
+    <string name="lock_screen_message" msgid="1534506081955058013">"Zaključani zaslon"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Početni i zaključani zaslon"</string>
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Postavljanje pozadine"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Početni zaslon"</string>
-    <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Zaključan zaslon"</string>
+    <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Zaključani zaslon"</string>
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Početni i zaključani zaslon"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Pozadina s izmjenom slika"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Da bi se ovdje prikazala trenutačna pozadina, <xliff:g id="APP_NAME">%1$s</xliff:g> treba pristup pohrani vašeg uređaja."</string>
@@ -116,7 +116,7 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"U postavkama omogućite datoteke i medije."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Omogući"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Otvori Moje fotografije"</string>
-    <string name="lock_screen_tab" msgid="6672930765010407652">"Zaključan zaslon"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Zaključani zaslon"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"Početni zaslon"</string>
     <string name="reset" msgid="4945445169532850631">"Poništi"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Poništiti promjene?"</string>
