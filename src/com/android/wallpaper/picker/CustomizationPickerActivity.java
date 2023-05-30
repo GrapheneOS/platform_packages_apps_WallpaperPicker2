@@ -155,7 +155,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
             if (fragment instanceof CustomizationSectionNavigationController) {
                 final CustomizationSectionNavigationController navController =
                         (CustomizationSectionNavigationController) fragment;
-                navController.navigateTo(navigationDestination);
+                navController.standaloneNavigateTo(navigationDestination);
             }
         } else if (!TextUtils.isEmpty(deepLinkCollectionId)) {
             // Wallpaper Collection deep link case
