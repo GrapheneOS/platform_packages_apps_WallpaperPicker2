@@ -279,6 +279,18 @@ public class CustomizationPickerFragment extends AppbarFragment implements
         }
     }
 
+    @Override
+    public void standaloneNavigateTo(String destinationId) {
+        final Fragment fragment = mFragmentFactory.create(destinationId);
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
+        fragmentManager.executePendingTransactions();
+    }
+
     /** Saves state of the fragment. */
     private void onSaveInstanceStateInternal(Bundle savedInstanceState) {
         if (mHomeScrollContainer != null) {
