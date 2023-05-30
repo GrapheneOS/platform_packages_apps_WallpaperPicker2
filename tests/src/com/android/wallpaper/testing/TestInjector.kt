@@ -21,6 +21,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.EffectsController
@@ -261,7 +262,10 @@ open class TestInjector : Injector {
                 .also { flags = it }
     }
 
-    override fun getUndoInteractor(context: Context): UndoInteractor {
+    override fun getUndoInteractor(
+        context: Context,
+        lifecycleOwner: LifecycleOwner
+    ): UndoInteractor {
         return undoInteractor
             ?: UndoInteractor(
                 getApplicationCoroutineScope(),
