@@ -135,7 +135,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
             // We only want to start a new undo session if this activity is brand-new. A non-new
             // activity will have a non-null savedInstanceState.
             if (mIsUseRevampedUi) {
-                injector.getUndoInteractor(this).startSession();
+                injector.getUndoInteractor(this, this).startSession();
             }
         }
 
@@ -155,7 +155,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
             if (fragment instanceof CustomizationSectionNavigationController) {
                 final CustomizationSectionNavigationController navController =
                         (CustomizationSectionNavigationController) fragment;
-                navController.navigateTo(navigationDestination);
+                navController.standaloneNavigateTo(navigationDestination);
             }
         } else if (!TextUtils.isEmpty(deepLinkCollectionId)) {
             // Wallpaper Collection deep link case
