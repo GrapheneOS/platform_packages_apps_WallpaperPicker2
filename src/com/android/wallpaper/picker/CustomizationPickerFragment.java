@@ -111,7 +111,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                     CustomizationPickerViewModel.newFactory(
                             this,
                             savedInstanceState,
-                            injector.getUndoInteractor(requireContext()),
+                            injector.getUndoInteractor(requireContext(), requireActivity()),
                             injector.getWallpaperInteractor(requireContext()))
             ).get(CustomizationPickerViewModel.class);
             final Bundle arguments = getArguments();
