@@ -20,6 +20,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.EffectsController
@@ -118,9 +119,12 @@ interface Injector {
 
     fun getFlags(): BaseFlags
 
-    fun getUndoInteractor(context: Context): UndoInteractor
+    fun getUndoInteractor(context: Context, lifecycleOwner: LifecycleOwner): UndoInteractor
 
-    fun getSnapshotRestorers(context: Context): Map<Int, SnapshotRestorer> {
+    fun getSnapshotRestorers(
+        context: Context,
+        lifecycleOwner: LifecycleOwner
+    ): Map<Int, SnapshotRestorer> {
         // Empty because we don't support undoing in WallpaperPicker2.
         return HashMap()
     }
