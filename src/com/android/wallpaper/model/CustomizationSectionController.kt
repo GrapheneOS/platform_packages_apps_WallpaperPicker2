@@ -33,6 +33,9 @@ interface CustomizationSectionController<T : SectionView> {
 
         /** Navigates to a `fragment` that maps to the given destination ID. */
         fun navigateTo(destinationId: String?)
+
+        /** Navigates like [navigateTo] but without adding picker to back stack. */
+        fun standaloneNavigateTo(destinationId: String?)
     }
 
     data class ViewCreationParams(
