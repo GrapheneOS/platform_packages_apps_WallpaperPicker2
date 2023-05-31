@@ -16,6 +16,7 @@
 package com.android.wallpaper.widget;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -63,6 +64,14 @@ public final class DuoTabs extends FrameLayout {
 
     @Tab private int mCurrentOverlayTab;
 
+    private int mSelectedTabColor;
+
+    private int mNonSelectedTabColor;
+
+    private int mSelectedTabTextColor;
+
+    private int mNonSelectedTabTextColor;
+
     /**
      * Constructor
      */
@@ -70,6 +79,16 @@ public final class DuoTabs extends FrameLayout {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DuoTabs, 0, 0);
         boolean shouldUseShortTabs = a.getBoolean(R.styleable.DuoTabs_should_use_short_tabs, false);
+
+        mSelectedTabColor = a.getColor(R.styleable.DuoTabs_selected_tab_color,
+                getResources().getColor(R.color.color_accent_primary));
+        mNonSelectedTabColor = a.getColor(R.styleable.DuoTabs_non_selected_tab_color,
+                getResources().getColor(R.color.color_surface));
+        mSelectedTabTextColor = a.getColor(R.styleable.DuoTabs_selected_tab_text_color,
+                getResources().getColor(R.color.text_color_on_accent));
+        mNonSelectedTabTextColor = a.getColor(R.styleable.DuoTabs_non_selected_tab_text_color,
+                SystemColors.getColor(getContext(), android.R.attr.textColorPrimary));
+
         a.recycle();
         LayoutInflater.from(context).inflate(
                 shouldUseShortTabs ? R.layout.duo_tabs_short : R.layout.duo_tabs,
@@ -132,18 +151,26 @@ public final class DuoTabs extends FrameLayout {
                 tab == TAB_PRIMARY
                         ? R.drawable.duo_tabs_button_indicator_background
                         : R.drawable.duo_tabs_button_background);
+        mPrimaryTab.setBackgroundTintList(
+                tab == TAB_PRIMARY
+                        ? ColorStateList.valueOf(mSelectedTabColor)
+                        : ColorStateList.valueOf(mNonSelectedTabColor));
         mPrimaryTab.setTextColor(
                 tab == TAB_PRIMARY
-                        ? getResources().getColor(R.color.text_color_on_accent)
-                        : SystemColors.getColor(c, android.R.attr.textColorPrimary));
+                        ? mSelectedTabTextColor
+                        : mNonSelectedTabTextColor);
         mSecondaryTab.setBackgroundResource(
                 tab == TAB_SECONDARY
                         ? R.drawable.duo_tabs_button_indicator_background
                         : R.drawable.duo_tabs_button_background);
+        mSecondaryTab.setBackgroundTintList(
+                tab == TAB_SECONDARY
+                        ? ColorStateList.valueOf(mSelectedTabColor)
+                        : ColorStateList.valueOf(mNonSelectedTabColor));
         mSecondaryTab.setTextColor(
                 tab == TAB_SECONDARY
-                        ? getResources().getColor(R.color.text_color_on_accent)
-                        : SystemColors.getColor(c, android.R.attr.textColorPrimary));
+                        ? mSelectedTabTextColor
+                        : mNonSelectedTabTextColor);
     }
 
     public @Tab int getSelectedTab() {

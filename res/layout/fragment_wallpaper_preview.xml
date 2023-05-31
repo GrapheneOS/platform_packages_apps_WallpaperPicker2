@@ -23,7 +23,8 @@
         android:id="@+id/touch_forwarding_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/preview_screen_description"/>
 
     <FrameLayout
         android:id="@+id/hide_floating_sheet_touch_layout"
@@ -55,21 +56,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/barrier_start" />
 
-        <Button
+
+        <FrameLayout
             android:id="@+id/button_set_wallpaper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/set_wallpaper_button_min_height"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/set_wallpaper_button_background"
             android:elevation="@dimen/wallpaper_preview_buttons_elevation"
+            android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:text="@string/set_wallpaper_button_text"
-            android:textColor="@color/text_color_on_accent"
+            android:clickable="true"
             android:layout_marginEnd="@dimen/set_wallpaper_button_margin_end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/toolbar"
-            app:layout_constraintBottom_toBottomOf="@+id/toolbar" />
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/set_wallpaper_button_background"
+                android:text="@string/set_wallpaper_button_text"
+                android:textColor="@color/text_color_on_accent"/>
+        </FrameLayout>
 
         <View
             android:id="@+id/exit_full_preview_button"
