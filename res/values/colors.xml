@@ -55,4 +55,11 @@
     <color name="text_color_secondary_inverse">@color/settingslib_text_color_secondary_device_default</color>
 
     <color name="wallpaper_preview_scrim_color">#99000000</color>
+
+    <!-- Material 3 colors -->
+    <color name="system_primary">@android:color/system_primary_light</color>
+    <color name="system_secondary">@android:color/system_secondary_light</color>
+    <color name="system_on_primary">@android:color/system_on_primary_light</color>
+    <color name="system_on_surface">@android:color/system_on_surface_light</color>
+    <color name="system_on_surface_variant">@android:color/system_on_surface_variant_light</color>
 </resources>
