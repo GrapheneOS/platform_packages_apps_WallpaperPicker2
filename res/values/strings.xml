@@ -366,6 +366,12 @@
     <!-- Content description of wallpaper preview card. [CHAR_LIMIT=40]-->
     <string name="wallpaper_preview_card_content_description">Wallpaper preview</string>
 
+    <!-- Content description of lock screen wallpaper preview card. [CHAR_LIMIT=NONE]-->
+    <string name="lock_wallpaper_preview_card_content_description">Lock screen wallpaper preview</string>
+
+    <!-- Content description of home screen wallpaper preview card. [CHAR_LIMIT=NONE]-->
+    <string name="home_wallpaper_preview_card_content_description">Home screen wallpaper preview</string>
+
     <!-- Error message of the wallpaper's collection doesn't exist. [CHAR_LIMIT=NONE] -->
     <string name="collection_not_exist_msg">The collection doesn\'t exist</string>
 
