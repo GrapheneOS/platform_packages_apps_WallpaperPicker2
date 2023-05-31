@@ -23,7 +23,8 @@
         android:id="@+id/touch_forwarding_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/preview_screen_description"/>
 
     <FrameLayout
         android:id="@+id/hide_floating_sheet_touch_layout"
