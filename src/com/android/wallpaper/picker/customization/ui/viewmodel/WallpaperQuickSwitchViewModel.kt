@@ -20,7 +20,6 @@ package com.android.wallpaper.picker.customization.ui.viewmodel
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -31,13 +30,12 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 /** Models UI state for views that can render wallpaper quick switching. */
-@OptIn(ExperimentalCoroutinesApi::class)
 class WallpaperQuickSwitchViewModel
 constructor(
     private val interactor: WallpaperInteractor,
     private val destination: WallpaperDestination,
     private val coroutineScope: CoroutineScope,
-    maxOptions: Int = MAX_OPTIONS,
+    maxOptions: Int = interactor.maxOptions,
 ) {
 
     private val selectedWallpaperId: Flow<String> =
@@ -172,9 +170,4 @@ constructor(
                 started = SharingStarted.Lazily,
                 replay = 1,
             )
-
-    companion object {
-        /** The maximum number of options to show, including the currently-selected one. */
-        private const val MAX_OPTIONS = 5
-    }
 }
