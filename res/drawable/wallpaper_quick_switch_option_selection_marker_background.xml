@@ -31,7 +31,7 @@
     <item>
         <shape android:shape="rectangle">
             <stroke
-                android:color="@color/text_color_primary"
+                android:color="@color/system_secondary"
                 android:width="2dp" />
             <corners android:radius="12dp" />
         </shape>

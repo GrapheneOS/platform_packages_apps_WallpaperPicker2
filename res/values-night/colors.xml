@@ -19,4 +19,11 @@
     <color name="myphoto_background_color">@color/black</color>
     <color name="myphoto_background_cloud">@color/google_grey800</color>
     <color name="color_accent_primary_variant">@android:color/system_accent1_300</color>
+
+    <!-- Material 3 colors -->
+    <color name="system_primary">@android:color/system_primary_dark</color>
+    <color name="system_secondary">@android:color/system_secondary_dark</color>
+    <color name="system_on_primary">@android:color/system_on_primary_dark</color>
+    <color name="system_on_surface">@android:color/system_on_surface_dark</color>
+    <color name="system_on_surface_variant">@android:color/system_on_surface_variant_dark</color>
 </resources>
