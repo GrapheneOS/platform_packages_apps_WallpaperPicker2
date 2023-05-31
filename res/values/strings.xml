@@ -234,6 +234,9 @@
          [CHAR LIMIT=none] -->
     <string name="refresh_daily_wallpaper_content_description">Refresh daily wallpaper</string>
 
+    <!-- Content description for the wallpaper preview screen. [CHAR LIMIT=none] -->
+    <string name="preview_screen_description">Wallpaper preview screen</string>
+
     <!-- Message shown to user in a progress dialog when the app is in the process of refreshing the
          daily wallpaper. [CHAR LIMIT=none] -->
     <string name="refreshing_daily_wallpaper_dialog_message">
