@@ -36,6 +36,7 @@ object WallpaperQuickSwitchSectionBinder {
         view: View,
         viewModel: WallpaperQuickSwitchViewModel,
         lifecycleOwner: LifecycleOwner,
+        isThumbnailFadeAnimationEnabled: Boolean,
         onNavigateToFullWallpaperSelector: () -> Unit,
     ) {
         view.requireViewById<View>(R.id.more_wallpapers).setOnClickListener {
@@ -53,6 +54,7 @@ object WallpaperQuickSwitchSectionBinder {
                             parent = optionContainer,
                             viewModel = viewModel,
                             lifecycleOwner = lifecycleOwner,
+                            isThumbnailFadeAnimationEnabled = isThumbnailFadeAnimationEnabled,
                         )
                     }
                 }
@@ -65,6 +67,7 @@ object WallpaperQuickSwitchSectionBinder {
         parent: ViewGroup,
         viewModel: WallpaperQuickSwitchViewModel,
         lifecycleOwner: LifecycleOwner,
+        isThumbnailFadeAnimationEnabled: Boolean,
     ) {
         viewModel.options.collect { options ->
             // Remove all views from a previous update.
@@ -86,6 +89,7 @@ object WallpaperQuickSwitchSectionBinder {
                     lifecycleOwner = lifecycleOwner,
                     smallOptionWidthPx = smallOptionWidth,
                     largeOptionWidthPx = largeOptionWidth,
+                    isThumbnailFadeAnimationEnabled = isThumbnailFadeAnimationEnabled,
                 )
             }
         }
