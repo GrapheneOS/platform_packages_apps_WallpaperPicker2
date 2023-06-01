@@ -17,6 +17,8 @@
 
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
+import com.android.wallpaper.R
+import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import kotlinx.coroutines.CoroutineScope
@@ -170,4 +172,20 @@ constructor(
                 started = SharingStarted.Lazily,
                 replay = 1,
             )
+
+    /** Whether recent wallpapers are available */
+    val areRecentsAvailable: Boolean = interactor.areRecentsAvailable
+
+    /** Text to show to prompt the user to browse more wallpapers */
+    val actionText: Text =
+        if (areRecentsAvailable) {
+            Text.Resource(R.string.more_wallpapers)
+        } else {
+            Text.Resource(R.string.wallpaper_picker_entry_title)
+        }
+
+    companion object {
+        /** The maximum number of options to show, including the currently-selected one. */
+        private const val MAX_OPTIONS = 5
+    }
 }
