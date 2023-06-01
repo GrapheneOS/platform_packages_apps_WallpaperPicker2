@@ -390,6 +390,18 @@
     <!-- Label for a button which lets user show certain parts of the fullscreen preview UI. [CHAR LIMIT=30] -->
     <string name="show_ui_preview_text">Show UI Preview</string>
 
+    <!-- Content description for Talkback to announce with UI preview is hidden. [CHAR LIMIT=NONE] -->
+    <string name="hide_preview_controls_content_description">Preview controls are displayed. Double tap to hide</string>
+
+    <!-- Label for a button which lets user hide certain parts of the fullscreen preview UI. [CHAR LIMIT=NONE] -->
+    <string name="hide_preview_controls_action">Hide preview controls</string>
+
+    <!-- Content description for Talkback to announce with UI preview is hidden. [CHAR LIMIT=NONE] -->
+    <string name="show_preview_controls_content_description">Preview controls are hidden. Double tap to show</string>
+
+    <!-- Label for a button which lets user show certain parts of the fullscreen preview UI. [CHAR LIMIT=NONE] -->
+    <string name="show_preview_controls_action">Show preview controls</string>
+
     <!-- Content description for Talkback to announce with UI preview is hidden. [CHAR LIMIT=50] -->
     <string name="hint_show_ui_preview">UI is displayed in preview. Double tap to hide</string>
 
