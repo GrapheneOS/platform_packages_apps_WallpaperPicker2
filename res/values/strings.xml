@@ -366,6 +366,12 @@
     <!-- Content description of wallpaper preview card. [CHAR_LIMIT=40]-->
     <string name="wallpaper_preview_card_content_description">Wallpaper preview</string>
 
+    <!-- Content description of lock screen wallpaper preview card. [CHAR_LIMIT=NONE]-->
+    <string name="lock_wallpaper_preview_card_content_description">Lock screen wallpaper preview</string>
+
+    <!-- Content description of home screen wallpaper preview card. [CHAR_LIMIT=NONE]-->
+    <string name="home_wallpaper_preview_card_content_description">Home screen wallpaper preview</string>
+
     <!-- Error message of the wallpaper's collection doesn't exist. [CHAR_LIMIT=NONE] -->
     <string name="collection_not_exist_msg">The collection doesn\'t exist</string>
 
@@ -383,6 +389,18 @@
 
     <!-- Label for a button which lets user show certain parts of the fullscreen preview UI. [CHAR LIMIT=30] -->
     <string name="show_ui_preview_text">Show UI Preview</string>
+
+    <!-- Content description for Talkback to announce with UI preview is hidden. [CHAR LIMIT=NONE] -->
+    <string name="hide_preview_controls_content_description">Preview controls are displayed. Double tap to hide</string>
+
+    <!-- Label for a button which lets user hide certain parts of the fullscreen preview UI. [CHAR LIMIT=NONE] -->
+    <string name="hide_preview_controls_action">Hide preview controls</string>
+
+    <!-- Content description for Talkback to announce with UI preview is hidden. [CHAR LIMIT=NONE] -->
+    <string name="show_preview_controls_content_description">Preview controls are hidden. Double tap to show</string>
+
+    <!-- Label for a button which lets user show certain parts of the fullscreen preview UI. [CHAR LIMIT=NONE] -->
+    <string name="show_preview_controls_action">Show preview controls</string>
 
     <!-- Content description for Talkback to announce with UI preview is hidden. [CHAR LIMIT=50] -->
     <string name="hint_show_ui_preview">UI is displayed in preview. Double tap to hide</string>
