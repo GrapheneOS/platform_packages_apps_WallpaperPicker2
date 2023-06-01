@@ -79,8 +79,9 @@
                 android:textColor="@color/text_color_on_accent"/>
         </FrameLayout>
 
-        <View
+        <Button
             android:id="@+id/exit_full_preview_button"
+            android:contentDescription="@string/show_preview_controls_action"
             android:layout_width="@dimen/wallpaper_control_button_size"
             android:layout_height="@dimen/wallpaper_control_button_size"
             android:layout_gravity="center_vertical"
