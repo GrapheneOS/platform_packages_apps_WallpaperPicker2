@@ -393,7 +393,7 @@ public class CategorySelectorFragment extends AppbarFragment {
             if (mCategory.supportsCustomPhotos()) {
                 EffectsController effectsController =
                         InjectorProvider.getInjector().getEffectsController(getContext());
-                if (!effectsController.isEffectTriggered()) {
+                if (effectsController != null && !effectsController.isEffectTriggered()) {
                     effectsController.triggerEffect(getContext());
                 }
                 getCategorySelectorFragmentHost().requestCustomPhotoPicker(
