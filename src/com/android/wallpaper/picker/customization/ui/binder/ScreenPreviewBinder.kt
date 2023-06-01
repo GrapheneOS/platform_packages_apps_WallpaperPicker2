@@ -86,6 +86,8 @@ object ScreenPreviewBinder {
         val workspaceSurface: SurfaceView = previewView.requireViewById(R.id.workspace_surface)
         val wallpaperSurface: SurfaceView = previewView.requireViewById(R.id.wallpaper_surface)
         val thumbnailRequested = AtomicBoolean(false)
+        previewView.contentDescription =
+            activity.resources.getString(viewModel.previewContentDescription)
         val surfaceViewsReady = {
             wallpaperSurface.setBackgroundColor(Color.TRANSPARENT)
             workspaceSurface.visibility = View.VISIBLE

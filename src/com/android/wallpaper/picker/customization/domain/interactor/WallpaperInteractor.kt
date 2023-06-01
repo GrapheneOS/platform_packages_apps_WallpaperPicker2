@@ -32,6 +32,8 @@ class WallpaperInteractor(
     /** Returns whether wallpaper picker should handle reload */
     val shouldHandleReload: () -> Boolean = { true },
 ) {
+    val maxOptions = repository.maxOptions
+
     /** Returns a flow that is updated whenever the wallpaper has been updated */
     fun wallpaperUpdateEvents(screen: CustomizationSections.Screen): Flow<WallpaperModel?> {
         return when (screen) {
