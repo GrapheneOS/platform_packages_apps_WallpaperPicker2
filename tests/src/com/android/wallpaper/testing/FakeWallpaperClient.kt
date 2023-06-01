@@ -101,6 +101,10 @@ class FakeWallpaperClient : WallpaperClient {
         return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
     }
 
+    override fun areRecentsAvailable(): Boolean {
+        return true
+    }
+
     companion object {
         val INITIAL_RECENT_WALLPAPERS =
             listOf(
