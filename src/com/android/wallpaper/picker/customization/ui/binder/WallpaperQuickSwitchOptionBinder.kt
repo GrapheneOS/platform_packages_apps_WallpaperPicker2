@@ -45,6 +45,7 @@ object WallpaperQuickSwitchOptionBinder {
         lifecycleOwner: LifecycleOwner,
         smallOptionWidthPx: Int,
         largeOptionWidthPx: Int,
+        isThumbnailFadeAnimationEnabled: Boolean,
     ) {
         val selectionBorder: View = view.requireViewById(R.id.selection_border)
         val selectionIcon: View = view.requireViewById(R.id.selection_icon)
@@ -82,13 +83,30 @@ object WallpaperQuickSwitchOptionBinder {
                 }
 
                 launch {
+                    // We want to skip animating the first update so it doesn't "blink" when the
+                    // activity is recreated.
+                    var isFirstValue = true
                     viewModel.isSelectionBorderVisible.collect {
-                        selectionBorder.animatedVisibility(isVisible = it)
+                        if (!isFirstValue) {
+                            selectionBorder.animatedVisibility(isVisible = it)
+                        } else {
+                            selectionBorder.isVisible = it
+                        }
+                        isFirstValue = false
                     }
                 }
 
                 launch {
+                    // We want to skip animating the first update so it doesn't "blink" when the
+                    // activity is recreated.
+                    var isFirstValue = true
                     viewModel.isSelectionIconVisible.collect {
+                        if (!isFirstValue) {
+                            selectionIcon.animatedVisibility(isVisible = it)
+                        } else {
+                            selectionIcon.isVisible = it
+                        }
+                        isFirstValue = false
                         selectionIcon.animatedVisibility(isVisible = it)
                     }
                 }
@@ -105,9 +123,15 @@ object WallpaperQuickSwitchOptionBinder {
                         thumbnailView.tag = thumbnail
                         if (thumbnail != null) {
                             thumbnailView.setImageBitmap(thumbnail)
-                            thumbnailView.fadeIn()
-                        } else {
+                            if (isThumbnailFadeAnimationEnabled) {
+                                thumbnailView.fadeIn()
+                            } else {
+                                thumbnailView.isVisible = true
+                            }
+                        } else if (isThumbnailFadeAnimationEnabled) {
                             thumbnailView.fadeOut()
+                        } else {
+                            thumbnailView.isVisible = false
                         }
                     }
                 }
