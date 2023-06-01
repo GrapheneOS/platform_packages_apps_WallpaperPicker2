@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import android.app.WallpaperColors
 import android.os.Bundle
+import com.android.wallpaper.R
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
@@ -35,6 +36,15 @@ class ScreenPreviewViewModel(
     private val wallpaperInteractor: WallpaperInteractor,
     val screen: CustomizationSections.Screen,
 ) {
+
+    val previewContentDescription: Int =
+        when (screen) {
+            CustomizationSections.Screen.HOME_SCREEN ->
+                R.string.home_wallpaper_preview_card_content_description
+            CustomizationSections.Screen.LOCK_SCREEN ->
+                R.string.lock_wallpaper_preview_card_content_description
+        }
+
     /** Returns whether wallpaper picker should handle reload */
     fun shouldHandleReload(): Boolean {
         return wallpaperInteractor.shouldHandleReload()
