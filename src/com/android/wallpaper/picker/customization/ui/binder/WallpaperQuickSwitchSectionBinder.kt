@@ -20,6 +20,7 @@ package com.android.wallpaper.picker.customization.ui.binder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.DimenRes
 import androidx.core.view.doOnLayout
 import androidx.lifecycle.Lifecycle
@@ -27,7 +28,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
+import com.android.wallpaper.picker.common.text.ui.viewbinder.TextViewBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperQuickSwitchViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /** Binds between the view and view-model for the wallpaper quick switch section. */
@@ -39,23 +42,31 @@ object WallpaperQuickSwitchSectionBinder {
         isThumbnailFadeAnimationEnabled: Boolean,
         onNavigateToFullWallpaperSelector: () -> Unit,
     ) {
-        view.requireViewById<View>(R.id.more_wallpapers).setOnClickListener {
-            onNavigateToFullWallpaperSelector()
-        }
+        val moreWallpapers: TextView = view.requireViewById(R.id.more_wallpapers)
+        moreWallpapers.setOnClickListener { onNavigateToFullWallpaperSelector() }
+
+        TextViewBinder.bind(moreWallpapers, viewModel.actionText)
 
         val optionContainer: ViewGroup = view.requireViewById(R.id.options)
-        // We have to wait for the container to be laid out before we can bind it because we need
-        // its size to calculate the sizes of the option items.
-        optionContainer.doOnLayout {
-            lifecycleOwner.lifecycleScope.launch {
-                lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    launch {
-                        bindOptions(
-                            parent = optionContainer,
-                            viewModel = viewModel,
-                            lifecycleOwner = lifecycleOwner,
-                            isThumbnailFadeAnimationEnabled = isThumbnailFadeAnimationEnabled,
-                        )
+
+        if (!viewModel.areRecentsAvailable) {
+            optionContainer.visibility = View.GONE
+        } else {
+            optionContainer.visibility = View.VISIBLE
+            // We have to wait for the container to be laid out before we can bind it because we
+            // need
+            // its size to calculate the sizes of the option items.
+            optionContainer.doOnLayout {
+                lifecycleOwner.lifecycleScope.launch {
+                    lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        launch {
+                            bindOptions(
+                                parent = optionContainer,
+                                viewModel = viewModel,
+                                lifecycleOwner = lifecycleOwner,
+                                isThumbnailFadeAnimationEnabled = isThumbnailFadeAnimationEnabled,
+                            )
+                        }
                     }
                 }
             }
