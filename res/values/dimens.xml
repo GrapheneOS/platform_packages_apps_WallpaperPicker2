@@ -316,7 +316,6 @@
     <!-- Bottom margin for the "duo tabs" tab buttons -->
     <dimen name="tab_container_bottom_margin">12dp</dimen>
 
-
     <!-- Size for option items. -->
     <dimen name="option_item_size">74dp</dimen>
 
@@ -328,4 +327,9 @@
 
     <!-- Dimension for additional touch padding above and below shortcuts error dialog -->
     <dimen name="shortcut_error_dialog_button_touch_padding">6dp</dimen>
+
+    <!-- minimum dimensions for height and width for a11y-compliant touch targets -->
+    <dimen name="touch_target_min_height">48dp</dimen>
+    <dimen name="touch_target_min_width">48dp</dimen>
+
 </resources>

@@ -23,7 +23,8 @@
         android:id="@+id/touch_forwarding_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/preview_screen_description"/>
 
     <FrameLayout
         android:id="@+id/hide_floating_sheet_touch_layout"
@@ -78,8 +79,9 @@
                 android:textColor="@color/text_color_on_accent"/>
         </FrameLayout>
 
-        <View
+        <Button
             android:id="@+id/exit_full_preview_button"
+            android:contentDescription="@string/show_preview_controls_action"
             android:layout_width="@dimen/wallpaper_control_button_size"
             android:layout_height="@dimen/wallpaper_control_button_size"
             android:layout_gravity="center_vertical"

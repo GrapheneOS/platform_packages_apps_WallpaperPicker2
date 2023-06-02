@@ -18,6 +18,7 @@
 package com.android.wallpaper.picker.customization.data.repository
 
 import android.graphics.Bitmap
+import android.util.LruCache
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -41,6 +42,10 @@ class WallpaperRepository(
     private val wallpaperPreferences: WallpaperPreferences,
     private val backgroundDispatcher: CoroutineDispatcher,
 ) {
+    val maxOptions = MAX_OPTIONS
+
+    private val thumbnailCache = LruCache<String, Bitmap>(maxOptions)
+
     /** The ID of the currently-selected wallpaper. */
     fun selectedWallpaperId(
         destination: WallpaperDestination,
@@ -69,6 +74,8 @@ class WallpaperRepository(
         return key ?: previews?.firstOrNull()?.wallpaperId ?: DEFAULT_KEY
     }
 
+    val areRecentsAvailable: Boolean by lazy { client.areRecentsAvailable() }
+
     private val _selectingWallpaperId =
         MutableStateFlow<Map<WallpaperDestination, String?>>(emptyMap())
     /**
@@ -90,7 +97,14 @@ class WallpaperRepository(
 
     /** Returns a thumbnail for the wallpaper with the given ID. */
     suspend fun loadThumbnail(wallpaperId: String): Bitmap? {
-        return withContext(backgroundDispatcher) { client.loadThumbnail(wallpaperId) }
+        return thumbnailCache[wallpaperId]
+            ?: withContext(backgroundDispatcher) {
+                val thumbnail = client.loadThumbnail(wallpaperId)
+                if (thumbnail != null) {
+                    thumbnailCache.put(wallpaperId, thumbnail)
+                }
+                thumbnail
+            }
     }
 
     /** Sets the wallpaper to the one with the given ID. */
@@ -113,5 +127,7 @@ class WallpaperRepository(
 
     companion object {
         private const val DEFAULT_KEY = "default_missing_key"
+        /** The maximum number of options to show, including the currently-selected one. */
+        private const val MAX_OPTIONS = 5
     }
 }
