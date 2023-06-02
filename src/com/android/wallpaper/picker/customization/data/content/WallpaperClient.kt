@@ -46,4 +46,7 @@ interface WallpaperClient {
 
     /** Returns a thumbnail for the wallpaper with the given ID. */
     suspend fun loadThumbnail(wallpaperId: String): Bitmap?
+
+    /** Returns whether the recent wallpapers provider is available. */
+    fun areRecentsAvailable(): Boolean
 }
