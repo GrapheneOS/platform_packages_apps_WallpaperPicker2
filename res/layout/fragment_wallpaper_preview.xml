@@ -55,10 +55,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/barrier_start" />
-
-
         <FrameLayout
-            android:id="@+id/button_set_wallpaper"
+            android:id="@+id/button_set_wallpaper_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/set_wallpaper_button_min_height"
@@ -71,6 +69,7 @@
             app:layout_constraintTop_toTopOf="@+id/toolbar"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar">
             <Button
+                android:id="@+id/button_set_wallpaper"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
