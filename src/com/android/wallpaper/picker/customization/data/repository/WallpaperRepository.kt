@@ -74,6 +74,8 @@ class WallpaperRepository(
         return key ?: previews?.firstOrNull()?.wallpaperId ?: DEFAULT_KEY
     }
 
+    val areRecentsAvailable: Boolean by lazy { client.areRecentsAvailable() }
+
     private val _selectingWallpaperId =
         MutableStateFlow<Map<WallpaperDestination, String?>>(emptyMap())
     /**
