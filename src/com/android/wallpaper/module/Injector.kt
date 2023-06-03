@@ -123,7 +123,6 @@ interface Injector {
 
     fun getSnapshotRestorers(
         context: Context,
-        lifecycleOwner: LifecycleOwner
     ): Map<Int, SnapshotRestorer> {
         // Empty because we don't support undoing in WallpaperPicker2.
         return HashMap()
