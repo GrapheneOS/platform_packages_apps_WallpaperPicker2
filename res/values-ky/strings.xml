@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Тушкагаз категориялары"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Тушкагаз орнотуу"</string>
+    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Тушкагаз коюу"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Тушкагаз орнотулууда…"</string>
     <string name="try_again" msgid="8278874823700921234">"Кайталоо"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Тушкагаз орнотулбай жатат."</string>
@@ -43,7 +43,7 @@
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Жандуу тушкагаз кызматы тушкагаздарды алмаштырат"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Күнүмдүк тушкагаз"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Күйгүзүү үчүн таптап коюңуз"</string>
-    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Тушкагаз күн сайын автоматтык түрдө алмашып турат. Жөндөөнү аягына чыгаруу үчүн кийинки экрандан &lt;strong&gt;Тушкагаз орнотуу&lt;/strong&gt; баскычын таптап коюңуз."</string>
+    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Тушкагаз күн сайын автоматтык түрдө алмашып турат. Жөндөөнү аягына чыгаруу үчүн кийинки экрандан &lt;strong&gt;Тушкагаз коюу&lt;/strong&gt; баскычын таптап коюңуз."</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Келечекте тушкагаздар Wi-Fi аркылуу гана жүктөлүп алынсын"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Улантуу"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Биринчи тушкагаз жүктөлүп алынууда…"</string>
@@ -109,7 +109,7 @@
     <string name="accessibility_customize_shown" msgid="590964727831547651">"Ыңгайлаштыруу тактасы көрсөтүлдү"</string>
     <string name="accessibility_info_hidden" msgid="2288603712350168107">"Маалымат жашырылды"</string>
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Маалымат көрсөтүлдү"</string>
-    <string name="settings_snackbar_description" msgid="890168814524778486">"Жөндөөлөрдөн файлдарды жана медианы иштетиңиз."</string>
+    <string name="settings_snackbar_description" msgid="890168814524778486">"Параметрлерден файлдарды жана медианы иштетиңиз."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Иштетүү"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Сүрөттөрүмдү ачуу"</string>
     <string name="lock_screen_tab" msgid="6672930765010407652">"Экранды кулпулоо"</string>

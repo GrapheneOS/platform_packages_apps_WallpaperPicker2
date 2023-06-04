@@ -30,7 +30,7 @@
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Өдөр тутмын дэлгэцийн зураг"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"Нүүр болон түгжигдсэн дэлгэц"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Үндсэн нүүр"</string>
-    <string name="lock_screen_message" msgid="1534506081955058013">"Түгжигдсэн дэлгэц"</string>
+    <string name="lock_screen_message" msgid="1534506081955058013">"Түгжээтэй дэлгэц"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Нүүр хуудас болон түгжээ"</string>
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Дараахад дэлгэцийн зураг тохируулах"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Үндсэн нүүр"</string>
@@ -112,7 +112,7 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"Тохиргоо хэсгээс файл болон мeдиаг идэвхжүүлнэ үү."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Идэвхжүүлэх"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Миний Зургийг нээх"</string>
-    <string name="lock_screen_tab" msgid="6672930765010407652">"Түгжигдсэн дэлгэц"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"Түгжээтэй дэлгэц"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"Үндсэн нүүр"</string>
     <string name="reset" msgid="4945445169532850631">"Шинэчлэх"</string>
     <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->

@@ -114,7 +114,7 @@
     <string name="open_my_photos" msgid="4107196465713868381">"Abrir Mis fotos"</string>
     <string name="lock_screen_tab" msgid="6672930765010407652">"Pantalla de bloqueo"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"Pantalla de inicio"</string>
-    <string name="reset" msgid="4945445169532850631">"Restablecer"</string>
+    <string name="reset" msgid="4945445169532850631">"Revertir"</string>
     <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
     <skip />
     <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->

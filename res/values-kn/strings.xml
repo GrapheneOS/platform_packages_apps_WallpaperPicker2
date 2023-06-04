@@ -54,7 +54,7 @@
     <string name="next_wallpaper" msgid="3911873152952596232">"ಮುಂದಿನ ವಾಲ್‌ಪೇಪರ್"</string>
     <string name="wallpaper_disabled_message" msgid="7309484130562148185">"ಈ ಸಾಧನದಲ್ಲಿ ವಾಲ್‌ಪೇಪರ್ ಹೊಂದಿಸುವುದನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ"</string>
     <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"ನಿಮ್ಮ ಸಾಧನ ನಿರ್ವಾಹಕರಿಂದ ವಾಲ್‌ಪೇಪರ್ ಹೊಂದಿಸುವುದನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ"</string>
-    <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"ವಾಲ್‌ಪೇಪರ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಹೊಂದಿಸಲಾಗಿದೆ"</string>
+    <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"ವಾಲ್‌ಪೇಪರ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೆಟ್ ಮಾಡಲಾಗಿದೆ"</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"ವಾಲ್‌ಪೇಪರ್‌ಗಳನ್ನು ವೀಕ್ಷಿಸಲು ನಿಮಗೆ ಇಂಟರ್ನೆಟ್‌ ಸಂಪರ್ಕ ಅಗತ್ಯವಿದೆ. ಇಂಟರ್ನೆಟ್‌ಗೆ ಸಂಪರ್ಕಿಸಿ ಹಾಗೂ ಪುನಃ ಪ್ರಯತ್ನಿಸಿ."</string>
     <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"ಪ್ರಸ್ತುತವಾಗಿ ಮುಖಪುಟ ಪರದೆಯ ವಾಲ್‌ಪೇಪರ್ ಥಂಬ್‌ನೇಲ್ ಹೊಂದಿಸಿ"</string>
     <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"ಪ್ರಸ್ತುತವಾಗಿ ಲಾಕ್ ಪರದೆಯ ವಾಲ್‌ಪೇಪರ್ ಥಂಬ್‌ನೇಲ್ ಹೊಂದಿಸಿ"</string>
@@ -112,7 +112,7 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಫೈಲ್‌ಗಳು ಮತ್ತು ಮಾಧ್ಯಮವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"ಸಕ್ರಿಯಗೊಳಿಸಿ"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"ನನ್ನ ಫೋಟೋಗಳನ್ನು ತೆರೆಯಿರಿ"</string>
-    <string name="lock_screen_tab" msgid="6672930765010407652">"ಸ್ಕ್ರೀನ್ ಲಾಕ್ ಮಾಡಿ"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"ಲಾಕ್ ಸ್ಕ್ರೀನ್"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"ಹೋಮ್ ಸ್ಕ್ರೀನ್"</string>
     <string name="reset" msgid="4945445169532850631">"ರೀಸೆಟ್ ಮಾಡಿ"</string>
     <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
