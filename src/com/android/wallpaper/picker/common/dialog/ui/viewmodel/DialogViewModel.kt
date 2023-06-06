@@ -23,7 +23,8 @@ import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 
 data class DialogViewModel(
     val icon: Icon? = null,
-    val title: Text? = null,
+    val headline: Text? = null,
+    val supportingText: Text? = null,
     val message: Text? = null,
     val buttons: List<ButtonViewModel> = emptyList(),
     val onDismissed: (() -> Unit)? = null,
