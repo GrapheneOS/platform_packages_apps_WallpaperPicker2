@@ -304,7 +304,7 @@ open class WallpaperPicker2Injector : Injector {
                             scope = getApplicationCoroutineScope(),
                             client =
                                 WallpaperClientImpl(
-                                    context = context,
+                                    context = context.applicationContext,
                                     infoFactory = getCurrentWallpaperInfoFactory(context),
                                     wallpaperManager = WallpaperManager.getInstance(context)
                                 ),
@@ -327,7 +327,7 @@ open class WallpaperPicker2Injector : Injector {
     protected fun getSecureSettingsRepository(context: Context): SecureSettingsRepository {
         return secureSettingsRepository
             ?: SecureSettingsRepositoryImpl(
-                    contentResolver = context.contentResolver,
+                    contentResolver = context.applicationContext.contentResolver,
                     backgroundDispatcher = Dispatchers.IO,
                 )
                 .also { secureSettingsRepository = it }
