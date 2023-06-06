@@ -28,7 +28,7 @@ import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.flow.Flow
 
 /** Models the UI state for a preview of the home screen or lock screen. */
-class ScreenPreviewViewModel(
+open class ScreenPreviewViewModel(
     val previewUtils: PreviewUtils,
     private val initialExtrasProvider: () -> Bundle? = { null },
     private val wallpaperInfoProvider: suspend (forceReload: Boolean) -> WallpaperInfo?,
@@ -51,9 +51,11 @@ class ScreenPreviewViewModel(
     }
 
     /** Returns a flow that is updated whenever the wallpaper has been updated */
-    fun wallpaperUpdateEvents(): Flow<WallpaperModel?>? {
+    fun wallpaperUpdateEvents(): Flow<WallpaperModel?> {
         return wallpaperInteractor.wallpaperUpdateEvents(screen)
     }
+
+    open fun workspaceUpdateEvents(): Flow<Boolean>? = null
 
     fun getInitialExtras(): Bundle? {
         return initialExtrasProvider.invoke()
