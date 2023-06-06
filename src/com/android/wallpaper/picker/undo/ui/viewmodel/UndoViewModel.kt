@@ -50,7 +50,7 @@ class UndoViewModel(
                         res = R.drawable.ic_device_reset,
                         contentDescription = null,
                     ),
-                title = Text.Resource(R.string.reset_confirmation_dialog_title),
+                headline = Text.Resource(R.string.reset_confirmation_dialog_title),
                 message = Text.Resource(R.string.reset_confirmation_dialog_message),
                 buttons =
                     listOf(
