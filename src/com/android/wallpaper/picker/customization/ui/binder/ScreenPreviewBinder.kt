@@ -116,6 +116,7 @@ object ScreenPreviewBinder {
                             override fun onStop(owner: LifecycleOwner) {
                                 super.onStop(owner)
                                 wallpaperConnection?.disconnect()
+                                wallpaperConnection = null
                             }
 
                             override fun onPause(owner: LifecycleOwner) {
@@ -169,6 +170,10 @@ object ScreenPreviewBinder {
                     }
 
                     lifecycleOwner.lifecycle.removeObserver(lifecycleObserver)
+                    workspaceSurface.holder.removeCallback(previewSurfaceCallback)
+                    previewSurfaceCallback?.cleanUp()
+                    wallpaperSurface.holder.removeCallback(wallpaperSurfaceCallback)
+                    wallpaperSurfaceCallback?.cleanUp()
                 }
 
                 launch {
@@ -251,15 +256,6 @@ object ScreenPreviewBinder {
                                 }
                             }
                         }
-                    }
-                }
-
-                launch {
-                    lifecycleOwner.repeatOnLifecycle(Lifecycle.State.DESTROYED) {
-                        workspaceSurface.holder.removeCallback(previewSurfaceCallback)
-                        previewSurfaceCallback?.cleanUp()
-                        wallpaperSurface.holder.removeCallback(wallpaperSurfaceCallback)
-                        wallpaperSurfaceCallback?.cleanUp()
                     }
                 }
             }
