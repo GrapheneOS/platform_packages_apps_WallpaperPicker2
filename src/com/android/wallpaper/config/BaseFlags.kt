@@ -63,7 +63,7 @@ abstract class BaseFlags {
 
     private fun getCustomizationProviderClient(context: Context): CustomizationProviderClient {
         return customizationProviderClient
-            ?: CustomizationProviderClientImpl(context, Dispatchers.IO).also {
+            ?: CustomizationProviderClientImpl(context.applicationContext, Dispatchers.IO).also {
                 customizationProviderClient = it
             }
     }
