@@ -43,7 +43,8 @@ object DialogViewBinder {
     ): Dialog {
         val view = LayoutInflater.from(context).inflate(dialogLayoutResourceId, null)
         val icon: ImageView = view.requireViewById(R.id.icon)
-        val title: TextView = view.requireViewById(R.id.title)
+        val headline: TextView = view.requireViewById(R.id.headline)
+        val supportingText: TextView = view.requireViewById(R.id.supporting_text)
         val message: TextView = view.requireViewById(R.id.message)
         val buttonContainer: ViewGroup = view.requireViewById(R.id.button_container)
 
@@ -56,14 +57,23 @@ object DialogViewBinder {
         }
             ?: run { icon.isVisible = false }
 
-        viewModel.title?.let {
+        viewModel.headline?.let {
             TextViewBinder.bind(
-                view = title,
+                view = headline,
                 viewModel = it,
             )
-            title.isVisible = true
+            headline.isVisible = true
         }
-            ?: run { title.isVisible = false }
+            ?: run { headline.isVisible = false }
+
+        viewModel.supportingText?.let {
+            TextViewBinder.bind(
+                view = supportingText,
+                viewModel = it,
+            )
+            supportingText.isVisible = true
+        }
+            ?: run { supportingText.isVisible = false }
 
         viewModel.message?.let {
             TextViewBinder.bind(
