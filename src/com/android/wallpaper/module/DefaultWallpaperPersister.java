@@ -832,8 +832,10 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             // cannot be  used to identify a wallpaper image on another device after restore is
             // complete.
             Bitmap lockBitmap = getLockWallpaperBitmap();
+            long bitmapHashCode = 0;
             if (lockBitmap != null) {
                 saveLockWallpaperHashCode(lockBitmap);
+                bitmapHashCode = mWallpaperPreferences.getLockWallpaperHashCode();
             }
 
             // If the destination is both, use the home screen bitmap to populate the lock screen
@@ -841,14 +843,14 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             if (lockBitmap == null
                     && lockWallpaperId == mWallpaperPreferences.getHomeWallpaperManagerId()) {
                 lockBitmap = mBitmap;
+                bitmapHashCode = mWallpaperPreferences.getHomeWallpaperHashCode();
             }
 
             if (lockBitmap != null) {
                 mWallpaperPreferences.storeLatestWallpaper(FLAG_LOCK,
-                        TextUtils.isEmpty(mWallpaper.getWallpaperId())
-                                ? String.valueOf(mWallpaperPreferences.getLockWallpaperHashCode())
-                                : mWallpaper.getWallpaperId(),
-                        mWallpaper, lockBitmap, WallpaperColors.fromBitmap(lockBitmap));
+                        TextUtils.isEmpty(mWallpaper.getWallpaperId()) ? String.valueOf(
+                                bitmapHashCode) : mWallpaper.getWallpaperId(), mWallpaper,
+                        lockBitmap, WallpaperColors.fromBitmap(lockBitmap));
             }
         }
 
