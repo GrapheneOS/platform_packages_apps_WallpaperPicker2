@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:minHeight="@dimen/separated_tabs_height"
         android:layout_weight="1"
-        android:background="@drawable/duo_tabs_button_background"
+        android:background="@drawable/duo_tabs_preview_button_background"
         android:gravity="center" />
 
     <TextView
@@ -36,6 +36,6 @@
         android:layout_height="wrap_content"
         android:minHeight="@dimen/separated_tabs_height"
         android:layout_weight="1"
-        android:background="@drawable/duo_tabs_button_background"
+        android:background="@drawable/duo_tabs_preview_button_background"
         android:gravity="center" />
 </LinearLayout>
