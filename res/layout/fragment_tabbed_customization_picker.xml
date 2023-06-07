@@ -21,13 +21,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- TODO (b/281081163): add non_selected_tab_color after creating color token -->
     <com.android.wallpaper.widget.DuoTabs
         android:id="@+id/duo_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:should_use_short_tabs="true"
-        app:selected_tab_color="@color/system_primary"
+        app:selected_tab_drawable="@drawable/duo_tabs_main_picker_button_indicator_background"
+        app:non_selected_tab_drawable="@drawable/duo_tabs_main_picker_button_background"
         app:selected_tab_text_color="@color/system_on_primary"
         app:non_selected_tab_text_color="@color/system_on_surface_variant"
         android:layout_marginHorizontal="@dimen/tab_container_horizontal_padding"/>
