@@ -65,8 +65,8 @@
     <color name="system_on_primary">@android:color/system_on_primary_light</color>
     <color name="system_on_surface">@android:color/system_on_surface_light</color>
     <color name="system_on_surface_variant">@android:color/system_on_surface_variant_light</color>
-    <color name="system_surface_container_high">@android:color/system_surface_container_high_light
-    </color>
+    <color name="system_surface_container_high">@android:color/system_surface_container_high_light</color>
+    <color name="system_surface_container_highest">@android:color/system_surface_container_highest_light</color>
     <color name="system_surface_bright">@android:color/system_surface_bright_light</color>
 
     <!-- UI elements with Dark/Light Theme Variances -->
