@@ -16,7 +16,6 @@
 package com.android.wallpaper.widget;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -64,13 +63,13 @@ public final class DuoTabs extends FrameLayout {
 
     @Tab private int mCurrentOverlayTab;
 
-    private int mSelectedTabColor;
+    private final int mSelectedTabDrawable;
 
-    private int mNonSelectedTabColor;
+    private final int mNonSelectedTabDrawable;
 
-    private int mSelectedTabTextColor;
+    private final int mSelectedTabTextColor;
 
-    private int mNonSelectedTabTextColor;
+    private final int mNonSelectedTabTextColor;
 
     /**
      * Constructor
@@ -80,10 +79,10 @@ public final class DuoTabs extends FrameLayout {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DuoTabs, 0, 0);
         boolean shouldUseShortTabs = a.getBoolean(R.styleable.DuoTabs_should_use_short_tabs, false);
 
-        mSelectedTabColor = a.getColor(R.styleable.DuoTabs_selected_tab_color,
-                getResources().getColor(R.color.color_accent_primary));
-        mNonSelectedTabColor = a.getColor(R.styleable.DuoTabs_non_selected_tab_color,
-                getResources().getColor(R.color.color_surface));
+        mSelectedTabDrawable = a.getResourceId(R.styleable.DuoTabs_selected_tab_drawable,
+                R.drawable.duo_tabs_preview_button_indicator_background);
+        mNonSelectedTabDrawable = a.getResourceId(R.styleable.DuoTabs_non_selected_tab_drawable,
+                R.drawable.duo_tabs_preview_button_background);
         mSelectedTabTextColor = a.getColor(R.styleable.DuoTabs_selected_tab_text_color,
                 getResources().getColor(R.color.text_color_on_accent));
         mNonSelectedTabTextColor = a.getColor(R.styleable.DuoTabs_non_selected_tab_text_color,
@@ -146,27 +145,18 @@ public final class DuoTabs extends FrameLayout {
     }
 
     private void updateTabIndicator(@Tab int tab) {
-        Context c = getContext();
         mPrimaryTab.setBackgroundResource(
                 tab == TAB_PRIMARY
-                        ? R.drawable.duo_tabs_button_indicator_background
-                        : R.drawable.duo_tabs_button_background);
-        mPrimaryTab.setBackgroundTintList(
-                tab == TAB_PRIMARY
-                        ? ColorStateList.valueOf(mSelectedTabColor)
-                        : ColorStateList.valueOf(mNonSelectedTabColor));
+                        ? mSelectedTabDrawable
+                        : mNonSelectedTabDrawable);
         mPrimaryTab.setTextColor(
                 tab == TAB_PRIMARY
                         ? mSelectedTabTextColor
                         : mNonSelectedTabTextColor);
         mSecondaryTab.setBackgroundResource(
                 tab == TAB_SECONDARY
-                        ? R.drawable.duo_tabs_button_indicator_background
-                        : R.drawable.duo_tabs_button_background);
-        mSecondaryTab.setBackgroundTintList(
-                tab == TAB_SECONDARY
-                        ? ColorStateList.valueOf(mSelectedTabColor)
-                        : ColorStateList.valueOf(mNonSelectedTabColor));
+                        ? mSelectedTabDrawable
+                        : mNonSelectedTabDrawable);
         mSecondaryTab.setTextColor(
                 tab == TAB_SECONDARY
                         ? mSelectedTabTextColor
