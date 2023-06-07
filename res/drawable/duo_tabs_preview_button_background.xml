@@ -24,5 +24,5 @@
         </shape>
     </item>
 
-    <item android:drawable="@drawable/duo_tabs_button_background_base" />
+    <item android:drawable="@drawable/duo_tabs_preview_button_background_base" />
 </ripple>
