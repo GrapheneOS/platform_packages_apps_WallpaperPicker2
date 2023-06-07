@@ -28,7 +28,6 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Looper
 import android.util.Log
-import com.android.wallpaper.model.CurrentWallpaperInfoVN
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -128,10 +127,6 @@ class WallpaperClientImpl(
                     val lastUpdatedColumnIndex = cursor.getColumnIndex(KEY_LAST_UPDATED)
                     while (cursor.moveToNext() && size < limit) {
                         val wallpaperId = cursor.getString(idColumnIndex)
-                        if (wallpaperId == CurrentWallpaperInfoVN.UNKNOWN_CURRENT_WALLPAPER_ID) {
-                            continue
-                        }
-
                         val placeholderColor = cursor.getInt(placeholderColorColumnIndex)
                         val lastUpdated = cursor.getLong(lastUpdatedColumnIndex)
                         add(
