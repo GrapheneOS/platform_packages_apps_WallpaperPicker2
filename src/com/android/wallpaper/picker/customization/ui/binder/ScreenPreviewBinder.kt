@@ -41,7 +41,6 @@ import com.android.wallpaper.asset.BitmapCachingAsset
 import com.android.wallpaper.asset.CurrentWallpaperAssetVN
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
-import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.WorkspaceSurfaceHolderCallback
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
 import com.android.wallpaper.util.ResourceUtils
@@ -180,31 +179,13 @@ object ScreenPreviewBinder {
                 launch {
                     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                         var initialWallpaperUpdate = true
-                        viewModel.wallpaperUpdateEvents()?.collect { wallpaperModel ->
+                        viewModel.shouldReloadWallpaper().collect { shouldReload ->
                             // Do not update screen preview on initial update,since the initial
                             // update results from starting or resuming the activity.
-                            //
-                            // In addition, update screen preview only if system color is a preset
-                            // color. Otherwise, setting wallpaper will cause a change in wallpaper
-                            // color and trigger a reset from system ui
                             viewModel.getWallpaperInfo(true)
                             if (initialWallpaperUpdate) {
                                 initialWallpaperUpdate = false
-                            } else if (viewModel.shouldHandleReload()) {
-                                onWallpaperPreviewDirty()
-                            } else if (
-                                viewModel.screen == CustomizationSections.Screen.LOCK_SCREEN &&
-                                    wallpaperManager.getWallpaperInfo(
-                                        WallpaperManager.FLAG_SYSTEM
-                                    ) != null &&
-                                    wallpaperModel?.wallpaperId ==
-                                        wallpaperManager
-                                            .getWallpaperInfo(WallpaperManager.FLAG_SYSTEM)
-                                            .serviceName
-                            ) {
-                                // Setting the lock screen to the same live wp as the home screen
-                                // doesn't trigger a UI update, so fix that here for now.
-                                // TODO(b/281730113) Remove this once better solution is ready.
+                            } else if (shouldReload) {
                                 onWallpaperPreviewDirty()
                             }
                         }
