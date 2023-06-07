@@ -26,6 +26,9 @@ abstract class BaseFlags {
     var customizationProviderClient: CustomizationProviderClient? = null
     open fun isStagingBackdropContentEnabled() = false
     open fun isWallpaperEffectEnabled() = false
+
+    // TODO(b/285047815): Remove flag after adding wallpaper id for default static wallpaper
+    open fun isWallpaperRestorerEnabled() = false
     open fun isFullscreenWallpaperPreviewEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag ->
