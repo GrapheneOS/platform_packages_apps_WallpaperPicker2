@@ -153,12 +153,18 @@ object CustomizationPickerBinder {
 
                 // This happens when the lifecycle is stopped.
                 lockSectionContainer.children
-                    .mapNotNull { it.tag as? CustomizationSectionController<out SectionView> }
-                    .forEach { controller -> controller.release() }
+                    .map { Pair(it, it.tag as? CustomizationSectionController<out SectionView>) }
+                    .forEach {
+                        it.second?.release()
+                        it.first?.tag = null
+                    }
                 lockSectionContainer.removeAllViews()
                 homeSectionContainer.children
-                    .mapNotNull { it.tag as? CustomizationSectionController<out SectionView> }
-                    .forEach { controller -> controller.release() }
+                    .map { Pair(it, it.tag as? CustomizationSectionController<out SectionView>) }
+                    .forEach {
+                        it.second?.release()
+                        it.first?.tag = null
+                    }
                 homeSectionContainer.removeAllViews()
             }
         return DisposableHandle { job.cancel() }
