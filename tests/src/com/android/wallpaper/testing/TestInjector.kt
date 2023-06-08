@@ -259,6 +259,10 @@ open class TestInjector : Injector {
                         // flag for now in case we need to roll back
                         return true
                     }
+
+                    override fun isWallpaperRestorerEnabled(): Boolean {
+                        return true
+                    }
                 }
                 .also { flags = it }
     }
