@@ -291,7 +291,7 @@ open class WallpaperPicker2Injector : Injector {
             ?: UndoInteractor(
                     getApplicationCoroutineScope(),
                     UndoRepository(),
-                    getSnapshotRestorers(context, lifecycleOwner),
+                    getSnapshotRestorers(context),
                 )
                 .also { undoInteractor = it }
     }
