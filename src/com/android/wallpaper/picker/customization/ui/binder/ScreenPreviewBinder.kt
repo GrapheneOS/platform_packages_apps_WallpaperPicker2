@@ -173,7 +173,9 @@ object ScreenPreviewBinder {
                     workspaceSurface.holder.removeCallback(previewSurfaceCallback)
                     previewSurfaceCallback?.cleanUp()
                     wallpaperSurface.holder.removeCallback(wallpaperSurfaceCallback)
-                    wallpaperSurfaceCallback?.cleanUp()
+                    wallpaperSurfaceCallback
+                        ?.homeImageWallpaper
+                        ?.post({ wallpaperSurfaceCallback?.cleanUp() })
                 }
 
                 launch {
