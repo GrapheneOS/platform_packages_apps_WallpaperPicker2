@@ -300,6 +300,11 @@ public abstract class Asset {
         }
 
         decodeRawDimensions(activity, dimensions -> {
+            // TODO (b/286404249): A proper fix here would be to find out why the
+            //  leak happens in first place
+            if (activity.isDestroyed()) {
+                return;
+            }
             if (dimensions == null) {
                 loadDrawable(activity, imageView, placeholderColor);
                 return;
@@ -322,24 +327,27 @@ public abstract class Asset {
                             // Since the size of the cropped bitmap may not exactly the same with
                             // image view(maybe has 1px or 2px difference),
                             // so set CENTER_CROP to let the bitmap to fit the image view.
-                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                            if (!needsTransition) {
-                                imageView.setImageBitmap(croppedBitmap);
-                                return;
+                            if (!activity.isDestroyed()) {
+                                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                                if (!needsTransition) {
+                                    imageView.setImageBitmap(croppedBitmap);
+                                    return;
+                                }
+
+                                Resources resources = activity.getResources();
+
+                                Drawable[] layers = new Drawable[2];
+                                layers[0] = placeholderDrawable;
+                                layers[1] = new BitmapDrawable(resources, croppedBitmap);
+
+                                TransitionDrawable transitionDrawable = new
+                                        TransitionDrawable(layers);
+                                transitionDrawable.setCrossFadeEnabled(true);
+
+                                imageView.setImageDrawable(transitionDrawable);
+                                transitionDrawable.startTransition(resources.getInteger(
+                                        android.R.integer.config_shortAnimTime));
                             }
-
-                            Resources resources = activity.getResources();
-
-                            Drawable[] layers = new Drawable[2];
-                            layers[0] = placeholderDrawable;
-                            layers[1] = new BitmapDrawable(resources, croppedBitmap);
-
-                            TransitionDrawable transitionDrawable = new TransitionDrawable(layers);
-                            transitionDrawable.setCrossFadeEnabled(true);
-
-                            imageView.setImageDrawable(transitionDrawable);
-                            transitionDrawable.startTransition(resources.getInteger(
-                                    android.R.integer.config_shortAnimTime));
                         }
 
                         @Override
