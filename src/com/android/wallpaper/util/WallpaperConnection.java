@@ -43,6 +43,7 @@ import android.view.SurfaceControl;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.WindowManager.LayoutParams;
 
 import androidx.annotation.Nullable;
@@ -174,26 +175,19 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
      */
     public void onServiceConnected(ComponentName name, IBinder service) {
         mService = IWallpaperService.Stub.asInterface(service);
-        try {
-            int displayId = mContainerView.getDisplay().getDisplayId();
-            try {
-                Method preUMethod = mService.getClass().getMethod("attach",
-                        IWallpaperConnection.class, IBinder.class, int.class, boolean.class,
-                        int.class, int.class, Rect.class, int.class);
-                preUMethod.invoke(mService, this, mContainerView.getWindowToken(),
-                        LayoutParams.TYPE_APPLICATION_MEDIA, true, mContainerView.getWidth(),
-                        mContainerView.getHeight(), new Rect(0, 0, 0, 0), displayId);
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                Log.d(TAG, "IWallpaperService#attach method without which argument not available, "
-                        + "will use newer version");
-                // Let's try the new attach method that takes "which" argument
-                mService.attach(this, mContainerView.getWindowToken(),
-                        LayoutParams.TYPE_APPLICATION_MEDIA, true, mContainerView.getWidth(),
-                        mContainerView.getHeight(), new Rect(0, 0, 0, 0), displayId,
-                        WallpaperManager.FLAG_SYSTEM);
-            }
-        } catch (RemoteException e) {
-            Log.w(TAG, "Failed attaching wallpaper; clearing", e);
+        if (mContainerView.getDisplay() == null) {
+            mContainerView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                @Override
+                public void onViewAttachedToWindow(View v) {
+                    attachConnection(v.getDisplay().getDisplayId());
+                    mContainerView.removeOnAttachStateChangeListener(this);
+                }
+
+                @Override
+                public void onViewDetachedFromWindow(View v) {}
+            });
+        } else {
+            attachConnection(mContainerView.getDisplay().getDisplayId());
         }
     }
 
@@ -305,6 +299,29 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
         synchronized (this) {
             mIsVisible = visible;
             setEngineVisibility(visible);
+        }
+    }
+
+    private void attachConnection(int displayId) {
+        try {
+            try {
+                Method preUMethod = mService.getClass().getMethod("attach",
+                        IWallpaperConnection.class, IBinder.class, int.class, boolean.class,
+                        int.class, int.class, Rect.class, int.class);
+                preUMethod.invoke(mService, this, mContainerView.getWindowToken(),
+                        LayoutParams.TYPE_APPLICATION_MEDIA, true, mContainerView.getWidth(),
+                        mContainerView.getHeight(), new Rect(0, 0, 0, 0), displayId);
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                Log.d(TAG, "IWallpaperService#attach method without which argument not available, "
+                        + "will use newer version");
+                // Let's try the new attach method that takes "which" argument
+                mService.attach(this, mContainerView.getWindowToken(),
+                        LayoutParams.TYPE_APPLICATION_MEDIA, true, mContainerView.getWidth(),
+                        mContainerView.getHeight(), new Rect(0, 0, 0, 0), displayId,
+                        WallpaperManager.FLAG_SYSTEM);
+            }
+        } catch (RemoteException e) {
+            Log.w(TAG, "Failed attaching wallpaper; clearing", e);
         }
     }
 
