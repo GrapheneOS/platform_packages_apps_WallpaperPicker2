@@ -29,6 +29,7 @@ import com.android.wallpaper.model.WallpaperColorsViewModel
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
+import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosIntentProvider
 import com.android.wallpaper.picker.PreviewFragment
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperSnapshotRestorer
@@ -133,4 +134,6 @@ interface Injector {
     fun getWallpaperSnapshotRestorer(context: Context): WallpaperSnapshotRestorer
 
     fun getWallpaperColorsViewModel(): WallpaperColorsViewModel
+
+    fun getMyPhotosIntentProvider(): MyPhotosIntentProvider
 }
