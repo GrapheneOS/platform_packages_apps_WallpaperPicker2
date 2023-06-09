@@ -96,12 +96,13 @@ class WallpaperRepository(
     }
 
     /** Returns a thumbnail for the wallpaper with the given ID. */
-    suspend fun loadThumbnail(wallpaperId: String): Bitmap? {
-        return thumbnailCache[wallpaperId]
+    suspend fun loadThumbnail(wallpaperId: String, lastUpdatedTimestamp: Long): Bitmap? {
+        val cacheKey = "$wallpaperId-$lastUpdatedTimestamp"
+        return thumbnailCache[cacheKey]
             ?: withContext(backgroundDispatcher) {
                 val thumbnail = client.loadThumbnail(wallpaperId)
                 if (thumbnail != null) {
-                    thumbnailCache.put(wallpaperId, thumbnail)
+                    thumbnailCache.put(cacheKey, thumbnail)
                 }
                 thumbnail
             }
