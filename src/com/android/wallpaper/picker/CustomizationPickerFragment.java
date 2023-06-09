@@ -45,6 +45,7 @@ import com.android.wallpaper.module.LargeScreenMultiPanesChecker;
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder;
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel;
 import com.android.wallpaper.util.ActivityUtils;
+import com.android.wallpaper.util.DisplayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -386,11 +387,13 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     // TODO (b/282237387): Move wallpaper picker out of the 2-pane settings and make it a
     //                     standalone app. Remove this flag when the bug is fixed.
     private boolean getIsTwoPaneAndSmallWidth(Activity activity) {
+        DisplayUtils utils = InjectorProvider.getInjector().getDisplayUtils(requireContext());
         LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
         int activityWidth = activity.getDisplay().getWidth();
         int widthThreshold = getResources()
                 .getDimensionPixelSize(R.dimen.two_pane_small_width_threshold);
-        return multiPanesChecker.isMultiPanesEnabled(requireContext())
+        return utils.isOnWallpaperDisplay(activity)
+                && multiPanesChecker.isMultiPanesEnabled(requireContext())
                 && activityWidth <= widthThreshold;
     }
 }
