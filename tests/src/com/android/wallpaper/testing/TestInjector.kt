@@ -52,6 +52,7 @@ import com.android.wallpaper.module.WallpaperStatusChecker
 import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.ImagePreviewFragment
+import com.android.wallpaper.picker.MyPhotosStarter
 import com.android.wallpaper.picker.PreviewFragment
 import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
@@ -310,5 +311,9 @@ open class TestInjector : Injector {
     override fun getWallpaperColorsViewModel(): WallpaperColorsViewModel {
         return wallpaperColorsViewModel
             ?: WallpaperColorsViewModel().also { wallpaperColorsViewModel = it }
+    }
+
+    override fun getMyPhotosIntentProvider(): MyPhotosStarter.MyPhotosIntentProvider {
+        return object : MyPhotosStarter.MyPhotosIntentProvider {}
     }
 }
