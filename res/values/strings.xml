@@ -402,6 +402,9 @@
     <!-- Label for a button which lets user show certain parts of the fullscreen preview UI. [CHAR LIMIT=NONE] -->
     <string name="show_preview_controls_action">Show preview controls</string>
 
+    <!-- Label for action to show full preview without information [CHAR LIMIT=NONE] -->
+    <string name="hide_wallpaper_info_action">Hide wallpaper info</string>
+
     <!-- Content description for Talkback to announce with UI preview is hidden. [CHAR LIMIT=50] -->
     <string name="hint_show_ui_preview">UI is displayed in preview. Double tap to hide</string>
 
