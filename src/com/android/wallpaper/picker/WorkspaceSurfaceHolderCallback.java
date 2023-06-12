@@ -66,6 +66,10 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
     private boolean mNeedsToCleanUp;
     @Nullable private final Bundle mExtras;
 
+    private int mWidth = -1;
+
+    private int mHeight = -1;
+
     public WorkspaceSurfaceHolderCallback(
             SurfaceView workspaceSurface,
             PreviewUtils previewUtils) {
@@ -178,7 +182,13 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        if ((mWidth != -1 || mHeight != -1) && (mWidth != width || mHeight != height)) {
+            maybeRenderPreview();
+        }
+        mWidth = width;
+        mHeight = height;
+    }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
