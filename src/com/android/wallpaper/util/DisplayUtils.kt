@@ -102,6 +102,8 @@ class DisplayUtils(private val context: Context) {
      *
      * On a multi-display device the wallpaper display is the largest display while on a single
      * display device the only display is both the wallpaper display and the current display.
+     *
+     * For single display device, this is always true.
      */
     fun isOnWallpaperDisplay(activity: Activity): Boolean {
         return activity.display.uniqueId == getWallpaperDisplay().uniqueId
