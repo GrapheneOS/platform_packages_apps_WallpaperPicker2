@@ -298,6 +298,7 @@ open class WallpaperPicker2Injector : Injector {
     }
 
     override fun getWallpaperInteractor(context: Context): WallpaperInteractor {
+        val appContext = context.applicationContext
         return wallpaperInteractor
             ?: WallpaperInteractor(
                     repository =
@@ -305,11 +306,11 @@ open class WallpaperPicker2Injector : Injector {
                             scope = getApplicationCoroutineScope(),
                             client =
                                 WallpaperClientImpl(
-                                    context = context.applicationContext,
-                                    infoFactory = getCurrentWallpaperInfoFactory(context),
-                                    wallpaperManager = WallpaperManager.getInstance(context)
+                                    context = appContext,
+                                    infoFactory = getCurrentWallpaperInfoFactory(appContext),
+                                    wallpaperManager = WallpaperManager.getInstance(appContext)
                                 ),
-                            wallpaperPreferences = getPreferences(context = context),
+                            wallpaperPreferences = getPreferences(context = appContext),
                             backgroundDispatcher = Dispatchers.IO,
                         ),
                 )
