@@ -45,7 +45,7 @@ class PreviewUtils(
         context: Context,
         authorityMetadataKey: String,
     ) : this(
-        context = context,
+        context = context.applicationContext,
         authorityMetadataKey = authorityMetadataKey,
         authority = null,
     )
