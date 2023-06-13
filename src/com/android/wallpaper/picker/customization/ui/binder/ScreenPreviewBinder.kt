@@ -115,7 +115,7 @@ object ScreenPreviewBinder {
                         object : DefaultLifecycleObserver {
                             override fun onStop(owner: LifecycleOwner) {
                                 super.onStop(owner)
-                                wallpaperConnection?.disconnect()
+                                wallpaperConnection?.destroy()
                                 wallpaperConnection = null
                             }
 
