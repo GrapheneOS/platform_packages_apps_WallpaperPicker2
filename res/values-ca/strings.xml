@@ -66,8 +66,7 @@
     <string name="explore_lock_screen" msgid="268938342103703665">"Explora el fons de pantalla de la pantalla de bloqueig"</string>
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"Actualitza el fons de pantalla diari de la pantalla d\'inici"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Actualitza el fons de pantalla diari"</string>
-    <!-- no translation found for preview_screen_description (3386387053327775919) -->
-    <skip />
+    <string name="preview_screen_description" msgid="3386387053327775919">"Pantalla de previsualització del fons de pantalla"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"S\'està actualitzant el fons de pantalla diari…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"No s\'ha pogut actualitzar el fons de pantalla diari. Comprova la connexió a la xarxa i torna-ho a provar."</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"Fons de pantalla del dispositiu"</string>
@@ -101,24 +100,18 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"Anterior"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Fons de pantalla"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Previsualitz. fons de pantalla"</string>
-    <!-- no translation found for lock_wallpaper_preview_card_content_description (5236839857695985498) -->
-    <skip />
-    <!-- no translation found for home_wallpaper_preview_card_content_description (4059418716070821630) -->
-    <skip />
+    <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"Previsualització del fons de pantalla de bloqueig"</string>
+    <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"Previsualització del fons de pantalla d\'inici"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"La col·lecció no existeix"</string>
     <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"Surt del mode de pantalla dividida i torna-ho a provar"</string>
     <string name="cancel" msgid="4970902691067201584">"Cancel·la"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"Amaga la previsualització de IU"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"IU amagada a la prev. Doble toc per deixar d\'amagar."</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"Mostra la previsualització de IU"</string>
-    <!-- no translation found for hide_preview_controls_content_description (894958599274977655) -->
-    <skip />
-    <!-- no translation found for hide_preview_controls_action (3419260118386783295) -->
-    <skip />
-    <!-- no translation found for show_preview_controls_content_description (908147864005440602) -->
-    <skip />
-    <!-- no translation found for show_preview_controls_action (7700775001986890400) -->
-    <skip />
+    <string name="hide_preview_controls_content_description" msgid="894958599274977655">"Els controls de previsualització estan visibles. Fes doble toc per amagar-los."</string>
+    <string name="hide_preview_controls_action" msgid="3419260118386783295">"Amaga els controls de previsualització"</string>
+    <string name="show_preview_controls_content_description" msgid="908147864005440602">"Els controls de previsualització estan amagats. Fes doble toc per mostrar-los."</string>
+    <string name="show_preview_controls_action" msgid="7700775001986890400">"Mostra els controls de previsualització"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"La IU es mostra a la prev. Fes doble toc per amagar."</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Canvia el fons de pantalla"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Previsual. fons de pantalla de bloqueig"</string>
