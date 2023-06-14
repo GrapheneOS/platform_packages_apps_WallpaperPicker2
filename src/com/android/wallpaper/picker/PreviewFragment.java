@@ -164,7 +164,8 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
         mTestingModeEnabled = getArguments().getBoolean(ARG_TESTING_MODE_ENABLED);
         mWallpaperSetter = new WallpaperSetter(injector.getWallpaperPersister(appContext),
-                injector.getPreferences(appContext), mUserEventLogger, mTestingModeEnabled);
+                injector.getPreferences(appContext), mUserEventLogger,
+                injector.getCurrentWallpaperInfoFactory(appContext), mTestingModeEnabled);
 
         mViewModelProvider = new ViewModelProvider(requireActivity());
         mSetWallpaperViewModel = mViewModelProvider.get(SetWallpaperViewModel.class);
