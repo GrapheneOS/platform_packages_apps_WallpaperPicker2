@@ -66,8 +66,7 @@
     <string name="explore_lock_screen" msgid="268938342103703665">"Utforsk bakgrunnen på låseskjermen"</string>
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"Oppdater den daglige bakgrunnen på startskjermen"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Oppdater daglig bakgrunn"</string>
-    <!-- no translation found for preview_screen_description (3386387053327775919) -->
-    <skip />
+    <string name="preview_screen_description" msgid="3386387053327775919">"Skjerm for forhåndsvisning av bakgrunn"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"Oppdaterer daglig bakgrunn …"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"Kunne ikke oppdatere den daglige bakgrunnen. Sjekk nettverkstilkoblingen din, og prøv igjen."</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"Bakgrunner på enheten"</string>
@@ -101,24 +100,18 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"Forrige"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Bakgrunn"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Forhåndsvisning av bakgrunn"</string>
-    <!-- no translation found for lock_wallpaper_preview_card_content_description (5236839857695985498) -->
-    <skip />
-    <!-- no translation found for home_wallpaper_preview_card_content_description (4059418716070821630) -->
-    <skip />
+    <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"Forhåndsvisning av bakgrunn for låseskjermen"</string>
+    <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"Forhåndsvisning av bakgrunn for startskjermen"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Samlingen eksisterer ikke"</string>
     <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"Gå ut av modus for delt skjerm, og prøv igjen"</string>
     <string name="cancel" msgid="4970902691067201584">"Avbryt"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"Skjul UI-forhåndsvisning"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"UI skjult i forhåndsvisn. Dobbelttrykk for å vise"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"Vis UI-forhåndsvisning"</string>
-    <!-- no translation found for hide_preview_controls_content_description (894958599274977655) -->
-    <skip />
-    <!-- no translation found for hide_preview_controls_action (3419260118386783295) -->
-    <skip />
-    <!-- no translation found for show_preview_controls_content_description (908147864005440602) -->
-    <skip />
-    <!-- no translation found for show_preview_controls_action (7700775001986890400) -->
-    <skip />
+    <string name="hide_preview_controls_content_description" msgid="894958599274977655">"Kontrollene for forhåndsvisning vises. Dobbelttrykk for å skjule"</string>
+    <string name="hide_preview_controls_action" msgid="3419260118386783295">"Skjul kontrollene for forhåndsvisning"</string>
+    <string name="show_preview_controls_content_description" msgid="908147864005440602">"Kontrollene for forhåndsvisning er skjult. Dobbelttrykk for å vise"</string>
+    <string name="show_preview_controls_action" msgid="7700775001986890400">"Vis kontrollene for forhåndsvisning"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"UI skjult i forhåndsvsn. Dobbelttrykk for å skjule"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Endre bakgrunn"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Forhåndsvisning av låseskjermbakgrunn"</string>
