@@ -66,8 +66,7 @@
     <string name="explore_lock_screen" msgid="268938342103703665">"ਲਾਕ ਸਕ੍ਰੀਨ ਵਾਲਪੇਪਰ ਦੀ ਪੜਚੋਲ ਕਰੋ"</string>
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"ਰੋਜ਼ਾਨਾ ਹੋਮ ਸਕ੍ਰੀਨ ਵਾਲਪੇਪਰ ਨੂੰ ਰਿਫ੍ਰੈਸ਼ ਕਰੋ"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"ਰੋਜ਼ਾਨਾ ਵਾਲਪੇਪਰ ਰਿਫ੍ਰੈਸ਼ ਕਰੋ"</string>
-    <!-- no translation found for preview_screen_description (3386387053327775919) -->
-    <skip />
+    <string name="preview_screen_description" msgid="3386387053327775919">"ਵਾਲਪੇਪਰ ਦੀ ਪੂਰਵ-ਝਲਕ ਸਕ੍ਰੀਨ"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"ਰੋਜ਼ਾਨਾ ਵਾਲਪੇਪਰ ਰਿਫ੍ਰੈਸ਼ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"ਰੋਜ਼ਾਨਾ ਵਾਲਪੇਪਰ ਰਿਫ੍ਰੈਸ਼ ਕਰਨਾ ਅਸਫਲ ਰਿਹਾ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਨੈੱਟਵਰਕ ਕਨੈਕਸ਼ਨ ਦੀ ਜਾਂਚ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"ਡੀਵਾਈਸ ਵਿੱਚ ਮੌਜੂਦ ਵਾਲਪੇਪਰ"</string>
@@ -101,24 +100,18 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"ਪਿੱਛੇ ਜਾਓ"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"ਵਾਲਪੇਪਰ"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"ਵਾਲਪੇਪਰ ਦੀ ਪੂਰਵ-ਝਲਕ"</string>
-    <!-- no translation found for lock_wallpaper_preview_card_content_description (5236839857695985498) -->
-    <skip />
-    <!-- no translation found for home_wallpaper_preview_card_content_description (4059418716070821630) -->
-    <skip />
+    <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"ਲਾਕ ਸਕ੍ਰੀਨ ਵਾਲਪੇਪਰ ਦੀ ਪੂਰਵ-ਝਲਕ"</string>
+    <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"ਹੋਮ ਸਕ੍ਰੀਨ ਵਾਲਪੇਪਰ ਦੀ ਪੂਰਵ-ਝਲਕ"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"ਸੰਗ੍ਰਹਿ ਮੌਜੂਦ ਨਹੀਂ ਹੈ"</string>
     <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"ਕਿਰਪਾ ਕਰਕੇ ਸਪਲਿਟ-ਸਕ੍ਰੀਨ ਮੋਡ ਤੋਂ ਬਾਹਰ ਜਾਓ ਅਤੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ"</string>
     <string name="cancel" msgid="4970902691067201584">"ਰੱਦ ਕਰੋ"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"UI ਦੀ ਪੂਰਵ-ਝਲਕ ਲੁਕਾਓ"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"ਪੂਰਵ-ਝਲਕ ਵਿੱਚ UI ਨੂੰ ਲੁਕਾਇਆ ਗਿਆ ਹੈ। ਦਿਖਾਉਣ ਲਈ ਡਬਲ ਟੈਪ ਕਰੋ"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"UI ਦੀ ਪੂਰਵ-ਝਲਕ ਦਿਖਾਓ"</string>
-    <!-- no translation found for hide_preview_controls_content_description (894958599274977655) -->
-    <skip />
-    <!-- no translation found for hide_preview_controls_action (3419260118386783295) -->
-    <skip />
-    <!-- no translation found for show_preview_controls_content_description (908147864005440602) -->
-    <skip />
-    <!-- no translation found for show_preview_controls_action (7700775001986890400) -->
-    <skip />
+    <string name="hide_preview_controls_content_description" msgid="894958599274977655">"ਪੂਰਵ-ਝਲਕ ਕੰਟਰੋਲ ਦਿਖਾਏ ਗਏ ਹਨ। ਲੁਕਾਉਣ ਲਈ ਡਬਲ ਟੈਪ ਕਰੋ"</string>
+    <string name="hide_preview_controls_action" msgid="3419260118386783295">"ਪੂਰਵ-ਝਲਕ ਕੰਟਰੋਲ ਲੁਕਾਓ"</string>
+    <string name="show_preview_controls_content_description" msgid="908147864005440602">"ਪੂਰਵ-ਝਲਕ ਕੰਟਰੋਲ ਲੁਕੇ ਹੋਏ ਹਨ। ਦਿਖਾਉਣ ਲਈ ਡਬਲ ਟੈਪ ਕਰੋ"</string>
+    <string name="show_preview_controls_action" msgid="7700775001986890400">"ਪੂਰਵ-ਝਲਕ ਕੰਟਰੋਲ ਦਿਖਾਓ"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"ਪੂਰਵ-ਝਲਕ ਵਿੱਚ UI ਨੂੰ ਦਿਖਾਇਆ ਗਿਆ ਹੈ। ਲੁਕਾਉਣ ਲਈ ਡਬਲ ਟੈਪ ਕਰੋ"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"ਵਾਲਪੇਪਰ ਬਦਲੋ"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"ਲਾਕਸਕ੍ਰੀਨ ਵਾਲਪੇਪਰ ਦੀ ਪੂਰਵ-ਝਲਕ"</string>
