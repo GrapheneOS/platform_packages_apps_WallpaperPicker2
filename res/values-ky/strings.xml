@@ -40,7 +40,7 @@
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Башкы экран жана кулпуланган экрандар"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Алмаштырма тушкагаз сүрөтү"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Учурдагы тушкагазды бул жерден көрсөтүү үчүн <xliff:g id="APP_NAME">%1$s</xliff:g> колдонмосуна түзмөгүңүздүн сактагычын колдонуу мүмкүнчүлүгү керек."</string>
-    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Учурдагы тушкагазды бул жерден көрсөтүү үчүн Тушкагаздар колдонмосу түзмөгүңүздүн сактагычын колдонуу мүмкүнчүлүгүн алышы керек.\n\nБул жөндөөнү өзгөртүү үчүн Тушкагаздар колдонмосу жөнүндө маалыматтын \"Уруксаттар\" бөлүмүнө өтүңүз."</string>
+    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Учурдагы тушкагазды бул жерден көрсөтүү үчүн Тушкагаздар колдонмосу түзмөгүңүздүн сактагычын колдонуу мүмкүнчүлүгүн алышы керек.\n\nБул параметрди өзгөртүү үчүн Тушкагаздар колдонмосу жөнүндө маалыматтын \"Уруксаттар\" бөлүмүнө өтүңүз."</string>
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Мүмкүнчүлүк берүү"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Жандуу тушкагаз кызматы тушкагаздарды алмаштырат"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Күнүмдүк тушкагаз"</string>
@@ -66,8 +66,7 @@
     <string name="explore_lock_screen" msgid="268938342103703665">"Кулпуланган экрандын тушкагазын изилдөө"</string>
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"Башкы экрандын күнүмдүк тушкагазын жаңыртуу"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Күнүмдүк тушкагазды жаңыртуу"</string>
-    <!-- no translation found for preview_screen_description (3386387053327775919) -->
-    <skip />
+    <string name="preview_screen_description" msgid="3386387053327775919">"Тушкагазды карап көрүү экраны"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"Күнүмдүк тушкагаз жаңыртылууда…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"Күнүмдүк тушкагаз жаңыртылбай калды. Интернетке туташууңузду текшерип, дагы бир жолу аракет кылыңыз."</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"Түзмөктөгү тушкагаздар"</string>
@@ -101,24 +100,18 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"Мурунку"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Тушкагаз"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Тушкагазды алдын ала көрүү"</string>
-    <!-- no translation found for lock_wallpaper_preview_card_content_description (5236839857695985498) -->
-    <skip />
-    <!-- no translation found for home_wallpaper_preview_card_content_description (4059418716070821630) -->
-    <skip />
+    <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"Кулпуланган экрандын тушкагазын карап көрүү"</string>
+    <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"Башкы экрандын тушкагазын карап көрүү"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Мындай жыйнак жок"</string>
     <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"Экранды бөлүү режиминен чыгып, кайталап көрүңүз"</string>
     <string name="cancel" msgid="4970902691067201584">"Кереги жок"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"Алдын ала көрүү экранын жашыруу"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"Эки жолу басып, интерфейсти алдын ала көрүңүз."</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"Алдын ала көрүү экранын көрсөтүү"</string>
-    <!-- no translation found for hide_preview_controls_content_description (894958599274977655) -->
-    <skip />
-    <!-- no translation found for hide_preview_controls_action (3419260118386783295) -->
-    <skip />
-    <!-- no translation found for show_preview_controls_content_description (908147864005440602) -->
-    <skip />
-    <!-- no translation found for show_preview_controls_action (7700775001986890400) -->
-    <skip />
+    <string name="hide_preview_controls_content_description" msgid="894958599274977655">"Алдын ала көрүүнү башкаруу элементтери көрсөтүлдү. Жашыруу үчүн эки жолу басыңыз"</string>
+    <string name="hide_preview_controls_action" msgid="3419260118386783295">"Алдын ала көрүүнү башкаруу элементтерин жашыруу"</string>
+    <string name="show_preview_controls_content_description" msgid="908147864005440602">"Алдын ала көрүүнү башкаруу элементтери жашырылды. Көрсөтүү үчүн эки жолу басыңыз"</string>
+    <string name="show_preview_controls_action" msgid="7700775001986890400">"Алдын ала көрүүнү башкаруу элементтерин көрсөтүү"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"Эки жолу басып, интерфейсти жашырыңыз."</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Тушкагазды өзгөртүү"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Кулпуланган экрандын тушкагазын көрүү"</string>

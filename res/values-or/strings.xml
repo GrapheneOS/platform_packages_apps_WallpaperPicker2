@@ -66,8 +66,7 @@
     <string name="explore_lock_screen" msgid="268938342103703665">"ଲକ୍ ସ୍କ୍ରୀନ୍ ୱାଲପେପର୍‌କୁ ଏକ୍ସପ୍ଲୋର୍ କରନ୍ତୁ"</string>
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"ଦୈନିକ ହୋମ ସ୍କ୍ରିନ ୱାଲପେପର୍‌କୁ ରିଫ୍ରେସ କରନ୍ତୁ"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"ଦୈନିକ ୱାଲପେପର୍‌କୁ ରିଫ୍ରେଶ୍ କରନ୍ତୁ"</string>
-    <!-- no translation found for preview_screen_description (3386387053327775919) -->
-    <skip />
+    <string name="preview_screen_description" msgid="3386387053327775919">"ୱାଲପେପରର ପ୍ରିଭ୍ୟୁ ସ୍କ୍ରିନ"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"ଦୈନିକ ୱାଲପେପର୍ ରିଫ୍ରେଶ୍ ହେଉଛି…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"ଦୈନିକ ୱାଲପେପର୍‌କୁ ରିଫ୍ରେଶ କରିବାରେ ବିଫଳ ହୋଇଛି। ଦୟାକରି ଆପଣଙ୍କର ନେଟୱର୍କ କନେକ୍ସନ୍‍କୁ ଯାଞ୍ଚ କରିବା ସହିତ ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।"</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"ଅନ୍-ଡିଭାଇସ୍ ୱାଲପେପର୍"</string>
@@ -101,24 +100,18 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"ପୂର୍ବବର୍ତ୍ତୀ"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"ୱାଲପେପର୍"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"ୱାଲପେପରର ପ୍ରିଭ୍ୟୁ"</string>
-    <!-- no translation found for lock_wallpaper_preview_card_content_description (5236839857695985498) -->
-    <skip />
-    <!-- no translation found for home_wallpaper_preview_card_content_description (4059418716070821630) -->
-    <skip />
+    <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"ଲକ ସ୍କ୍ରିନ ୱାଲପେପରର ପ୍ରିଭ୍ୟୁ"</string>
+    <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"ହୋମ ସ୍କ୍ରିନ ୱାଲପେପରର ପ୍ରିଭ୍ୟୁ"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"ସଂଗ୍ରହ ଉପଲବ୍ଧ ନାହିଁ"</string>
     <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"ଦୟାକରି ସ୍ପ୍ଲିଟ ସ୍କ୍ରିନ ମୋଡରୁ ବାହାରି ଯାଇ ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ"</string>
     <string name="cancel" msgid="4970902691067201584">"ବାତିଲ କରନ୍ତୁ"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"UI ପ୍ରିଭ୍ୟୁକୁ ଲୁଚାନ୍ତୁ"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"ପ୍ରିଭ୍ୟୁରେ UI ଲୁଚାଯାଇଛି। ଦେଖାଇବାକୁ ଦୁଇଥର ଟାପ କର"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"UI ପ୍ରିଭ୍ୟୁ ଦେଖାନ୍ତୁ"</string>
-    <!-- no translation found for hide_preview_controls_content_description (894958599274977655) -->
-    <skip />
-    <!-- no translation found for hide_preview_controls_action (3419260118386783295) -->
-    <skip />
-    <!-- no translation found for show_preview_controls_content_description (908147864005440602) -->
-    <skip />
-    <!-- no translation found for show_preview_controls_action (7700775001986890400) -->
-    <skip />
+    <string name="hide_preview_controls_content_description" msgid="894958599274977655">"ପ୍ରିଭ୍ୟୁ ନିୟନ୍ତ୍ରଣଗୁଡ଼ିକ ଡିସପ୍ଲେ ହେଉଛି। ଲୁଚାଇବାକୁ ଦୁଇଥର ଟାପକର"</string>
+    <string name="hide_preview_controls_action" msgid="3419260118386783295">"ପ୍ରିଭ୍ୟୁ ନିୟନ୍ତ୍ରଣଗୁଡ଼ିକୁ ଲୁଚାନ୍ତୁ"</string>
+    <string name="show_preview_controls_content_description" msgid="908147864005440602">"ପ୍ରିଭ୍ୟୁ ନିୟନ୍ତ୍ରଣଗୁଡ଼ିକ ଲୁକ୍କାୟିତ ଅଛି ଦେଖିବାକୁ ଦୁଇଥର ଟାପ କରନ୍ତୁ"</string>
+    <string name="show_preview_controls_action" msgid="7700775001986890400">"ପ୍ରିଭ୍ୟୁ ନିୟନ୍ତ୍ରଣଗୁଡ଼ିକ ଦେଖାନ୍ତୁ"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"ପ୍ରିଭ୍ୟୁରେ UI ଡିସପ୍ଲେ ହୋଇଛି। ଲୁଚାଇବାକୁ ଦୁଇଥର ଟାପକର"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"ୱାଲପେପର୍ ପରିବର୍ତ୍ତନ କରନ୍ତୁ"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"ଲକସ୍କ୍ରିନ୍ ୱାଲପେପର୍ ପ୍ରିଭ୍ୟୁ"</string>
