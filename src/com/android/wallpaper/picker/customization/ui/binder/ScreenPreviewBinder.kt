@@ -173,18 +173,18 @@ object ScreenPreviewBinder {
                     workspaceSurface.holder.removeCallback(previewSurfaceCallback)
                     previewSurfaceCallback?.cleanUp()
                     wallpaperSurface.holder.removeCallback(wallpaperSurfaceCallback)
-                    wallpaperSurfaceCallback
-                        ?.homeImageWallpaper
-                        ?.post({ wallpaperSurfaceCallback?.cleanUp() })
+                    wallpaperSurfaceCallback?.homeImageWallpaper?.post {
+                        wallpaperSurfaceCallback?.cleanUp()
+                    }
                 }
 
                 launch {
                     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                         var initialWallpaperUpdate = true
                         viewModel.shouldReloadWallpaper().collect { shouldReload ->
+                            viewModel.getWallpaperInfo(forceReload = false)
                             // Do not update screen preview on initial update,since the initial
                             // update results from starting or resuming the activity.
-                            viewModel.getWallpaperInfo(true)
                             if (initialWallpaperUpdate) {
                                 initialWallpaperUpdate = false
                             } else if (shouldReload) {
@@ -210,7 +210,7 @@ object ScreenPreviewBinder {
                 launch {
                     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                         lifecycleOwner.lifecycleScope.launch {
-                            wallpaperInfo = viewModel.getWallpaperInfo()
+                            wallpaperInfo = viewModel.getWallpaperInfo(forceReload = false)
                             maybeLoadThumbnail(
                                 activity = activity,
                                 wallpaperInfo = wallpaperInfo,
