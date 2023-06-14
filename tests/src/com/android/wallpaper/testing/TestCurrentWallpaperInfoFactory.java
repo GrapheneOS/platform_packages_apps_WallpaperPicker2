@@ -59,6 +59,9 @@ public class TestCurrentWallpaperInfoFactory implements CurrentWallpaperInfoFact
         });
     }
 
+    @Override
+    public void clearCurrentWallpaperInfos() {}
+
     private static WallpaperInfo createTestWallpaperInfo(List<String> attributions,
             String actionUrl, String collectionId) {
         TestStaticWallpaperInfo wallpaper = new TestStaticWallpaperInfo(

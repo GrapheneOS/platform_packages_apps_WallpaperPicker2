@@ -62,16 +62,19 @@ public class WallpaperSetter {
     private final WallpaperPreferences mPreferences;
     private final boolean mTestingModeEnabled;
     private final UserEventLogger mUserEventLogger;
+    private final CurrentWallpaperInfoFactory mCurrentWallpaperInfoFactory;
     private ProgressDialog mProgressDialog;
     private Optional<Integer> mCurrentScreenOrientation = Optional.empty();
 
     public WallpaperSetter(WallpaperPersister wallpaperPersister,
             WallpaperPreferences preferences, UserEventLogger userEventLogger,
+            CurrentWallpaperInfoFactory currentWallpaperInfoFactory,
             boolean isTestingModeEnabled) {
         mTestingModeEnabled = isTestingModeEnabled;
         mWallpaperPersister = wallpaperPersister;
         mPreferences = preferences;
         mUserEventLogger = userEventLogger;
+        mCurrentWallpaperInfoFactory = currentWallpaperInfoFactory;
     }
 
     /**
@@ -189,6 +192,7 @@ public class WallpaperSetter {
                         }
                     }
                 });
+        mCurrentWallpaperInfoFactory.clearCurrentWallpaperInfos();
     }
 
     private void setCurrentLiveWallpaper(Activity activity, LiveWallpaperInfo wallpaper,
@@ -218,6 +222,7 @@ public class WallpaperSetter {
                     0.5f /* xOffset */, 0.0f /* yOffset */);
             mPreferences.storeLatestWallpaper(WallpaperPersister.destinationToFlags(destination),
                     wallpaper.getWallpaperId(), wallpaper, colors);
+            mCurrentWallpaperInfoFactory.clearCurrentWallpaperInfos();
             onWallpaperApplied(wallpaper, activity);
             if (callback != null) {
                 callback.onSuccess(wallpaper, destination);
@@ -274,6 +279,7 @@ public class WallpaperSetter {
                     wallpaper, colors != null ? colors :
                             WallpaperColors.fromBitmap(wallpaper.getThumbAsset(context)
                                     .getLowResBitmap(context)));
+            mCurrentWallpaperInfoFactory.clearCurrentWallpaperInfos();
             // Not call onWallpaperApplied() as no UI is presented.
             if (callback != null) {
                 callback.onSuccess(wallpaper, destination);
