@@ -232,7 +232,7 @@ public class WallpaperSectionController implements
         if (mOnThemingChanged != null) {
             mOnThemingChanged.observe(mLifecycleOwner, update ->
                     updateWorkspacePreview(mWorkspaceSurface, mWorkspaceSurfaceCallback,
-                            mWallpaperColorsViewModel.getHomeWallpaperColors().getValue())
+                            mWallpaperColorsViewModel.getHomeWallpaperColorsLiveData().getValue())
             );
         }
 
@@ -499,7 +499,7 @@ public class WallpaperSectionController implements
 
     private void onHomeWallpaperColorsChanged(WallpaperColors wallpaperColors) {
         if (wallpaperColors != null && wallpaperColors.equals(
-                mWallpaperColorsViewModel.getHomeWallpaperColors().getValue())) {
+                mWallpaperColorsViewModel.getHomeWallpaperColorsLiveData().getValue())) {
             return;
         }
         mWallpaperColorsViewModel.setHomeWallpaperColors(wallpaperColors);
@@ -507,7 +507,7 @@ public class WallpaperSectionController implements
 
     private void onLockWallpaperColorsChanged(WallpaperColors wallpaperColors) {
         if (wallpaperColors != null && wallpaperColors.equals(
-                mWallpaperColorsViewModel.getLockWallpaperColors().getValue())) {
+                mWallpaperColorsViewModel.getLockWallpaperColorsLiveData().getValue())) {
             return;
         }
         mWallpaperColorsViewModel.setLockWallpaperColors(wallpaperColors);
