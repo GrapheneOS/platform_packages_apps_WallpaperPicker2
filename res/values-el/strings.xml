@@ -108,14 +108,10 @@
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"Απόκρυψη προεπ/σης διεπ.χρήστη"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"Η διεπαφή χρήστη είναι κρυφή σε προεπισκόπηση. Διπλό πάτημα για κατάργηση απόκρυψης"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"Εμφάνιση προεπ/σης διεπ.χρήστη"</string>
-    <!-- no translation found for hide_preview_controls_content_description (894958599274977655) -->
-    <skip />
-    <!-- no translation found for hide_preview_controls_action (3419260118386783295) -->
-    <skip />
-    <!-- no translation found for show_preview_controls_content_description (908147864005440602) -->
-    <skip />
-    <!-- no translation found for show_preview_controls_action (7700775001986890400) -->
-    <skip />
+    <string name="hide_preview_controls_content_description" msgid="894958599274977655">"Γίνεται προβολή των στοιχείων ελέγχου προεπισκόπησης. Πατήστε δύο φορές για απόκρυψη"</string>
+    <string name="hide_preview_controls_action" msgid="3419260118386783295">"Απόκρυψη στοιχείων ελέγχου προεπισκόπησης"</string>
+    <string name="show_preview_controls_content_description" msgid="908147864005440602">"Γίνεται απόκρυψη των στοιχείων ελέγχου προεπισκόπησης. Πατήστε δύο φορές για εμφάνιση"</string>
+    <string name="show_preview_controls_action" msgid="7700775001986890400">"Εμφάνιση στοιχείων ελέγχου προεπισκόπησης"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"Η διεπαφή χρήστη εμφανίζεται σε προεπισκόπηση. Διπλό πάτημα για απόκρυψη"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Αλλαγή ταπετσαρίας"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Προεπ/ση ταπετσαρίας οθόνης κλειδώματος"</string>
