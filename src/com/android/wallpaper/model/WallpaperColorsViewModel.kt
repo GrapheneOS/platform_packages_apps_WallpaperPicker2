@@ -43,23 +43,25 @@ class WallpaperColorsViewModel {
     }
     val lockWallpaperColorsLiveData: LiveData<WallpaperColors> = _lockWallpaperColorsLiveData
 
-    private val _homeWallpaperColors = MutableStateFlow<WallpaperColors?>(null)
+    private val _homeWallpaperColors =
+        MutableStateFlow<WallpaperColorsModel>(WallpaperColorsModel.Loading)
     /** WallpaperColors for the currently set home wallpaper */
-    val homeWallpaperColors: StateFlow<WallpaperColors?> = _homeWallpaperColors.asStateFlow()
+    val homeWallpaperColors: StateFlow<WallpaperColorsModel> = _homeWallpaperColors.asStateFlow()
 
-    private val _lockWallpaperColors = MutableStateFlow<WallpaperColors?>(null)
+    private val _lockWallpaperColors =
+        MutableStateFlow<WallpaperColorsModel>(WallpaperColorsModel.Loading)
     /** WallpaperColors for the currently set lock wallpaper */
-    val lockWallpaperColors: StateFlow<WallpaperColors?> = _lockWallpaperColors.asStateFlow()
+    val lockWallpaperColors: StateFlow<WallpaperColorsModel> = _lockWallpaperColors.asStateFlow()
 
     fun setHomeWallpaperColors(colors: WallpaperColors?) {
-        _homeWallpaperColors.value = colors
+        _homeWallpaperColors.value = WallpaperColorsModel.Loaded(colors)
         if (colors != _homeWallpaperColorsLiveData.value) {
             _homeWallpaperColorsLiveData.value = colors
         }
     }
 
     fun setLockWallpaperColors(colors: WallpaperColors?) {
-        _lockWallpaperColors.value = colors
+        _lockWallpaperColors.value = WallpaperColorsModel.Loaded(colors)
         if (colors != _lockWallpaperColorsLiveData.value) {
             _lockWallpaperColorsLiveData.value = colors
         }
