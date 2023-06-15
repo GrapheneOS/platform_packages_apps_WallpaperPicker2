@@ -43,11 +43,9 @@ import com.android.wallpaper.picker.customization.ui.binder.ScreenPreviewBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
 
 /** Controls the screen preview section. */
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -168,10 +166,6 @@ open class ScreenPreviewSectionController(
                                 } else {
                                     homeWallpaper ?: lockWallpaper
                                 }
-                            loadInitialColors(
-                                context = context,
-                                screen = screen,
-                            )
                             continuation.resume(wallpaper, null)
                         },
                         forceReload,
@@ -189,31 +183,6 @@ open class ScreenPreviewSectionController(
             wallpaperInteractor = wallpaperInteractor,
             screen = screen,
         )
-    }
-
-    protected fun loadInitialColors(
-        context: Context,
-        screen: CustomizationSections.Screen,
-    ) {
-        lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            val colors =
-                wallpaperManager.getWallpaperColors(
-                    if (screen == CustomizationSections.Screen.LOCK_SCREEN) {
-                        WallpaperManager.FLAG_LOCK
-                    } else {
-                        WallpaperManager.FLAG_SYSTEM
-                    }
-                )
-            withContext(Dispatchers.Main) {
-                if (colors != null) {
-                    if (screen == CustomizationSections.Screen.LOCK_SCREEN) {
-                        colorViewModel.setLockWallpaperColors(colors)
-                    } else {
-                        colorViewModel.setHomeWallpaperColors(colors)
-                    }
-                }
-            }
-        }
     }
 
     private suspend fun getWallpaperInfo(): WallpaperInfo? {
