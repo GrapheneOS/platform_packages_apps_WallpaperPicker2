@@ -69,6 +69,7 @@ object ScreenPreviewBinder {
             args: Bundle = Bundle.EMPTY,
         )
         fun destroy()
+        fun surface(): SurfaceView
     }
 
     /**
@@ -380,7 +381,8 @@ object ScreenPreviewBinder {
                                                 previewView,
                                                 viewModel,
                                                 wallpaperSurface,
-                                                viewModel.screen,
+                                                mirrorSurface,
+                                                viewModel.screen
                                             ) {
                                                 surfaceViewsReady()
                                                 if (showLoadingAnimation) {
@@ -428,6 +430,10 @@ object ScreenPreviewBinder {
                 // itself anew the next time the bind function is invoked.
                 removeAndReadd(workspaceSurface)
             }
+
+            override fun surface(): SurfaceView {
+                return wallpaperSurface
+            }
         }
     }
 
@@ -436,6 +442,7 @@ object ScreenPreviewBinder {
         previewView: CardView,
         viewModel: ScreenPreviewViewModel,
         wallpaperSurface: SurfaceView,
+        mirrorSurface: SurfaceView?,
         screen: CustomizationSections.Screen,
         onEngineShown: () -> Unit
     ) =
@@ -457,7 +464,7 @@ object ScreenPreviewBinder {
                 }
             },
             wallpaperSurface,
-            null,
+            mirrorSurface,
             screen.toFlag()
         )
 
