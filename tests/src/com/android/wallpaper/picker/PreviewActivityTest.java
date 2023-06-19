@@ -31,10 +31,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeFalse;
-import static org.junit.Assume.assumeTrue;
 
-import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -99,7 +96,6 @@ public class PreviewActivityTest {
     private TestUserEventLogger mEventLogger;
     private TestExploreIntentChecker mExploreIntentChecker;
     private TestWallpaperStatusChecker mWallpaperStatusChecker;
-    private WallpaperManager mWallpaperManager;
 
     private final HiltAndroidRule mHiltRule = new HiltAndroidRule(this);
     private final ActivityTestRule<PreviewActivity> mActivityRule =
@@ -139,7 +135,6 @@ public class PreviewActivityTest {
                 mInjector.getExploreIntentChecker(context);
         mWallpaperStatusChecker = (TestWallpaperStatusChecker)
                 mInjector.getWallpaperStatusChecker(context);
-        mWallpaperManager = WallpaperManager.getInstance(context);
     }
 
     @After
@@ -445,21 +440,7 @@ public class PreviewActivityTest {
     }
 
     @Test
-    public void testDestinationOptions_singleEngine_setLive_doesNotShowLockOption() {
-        assumeFalse(mWallpaperManager.isLockscreenLiveWallpaperEnabled());
-        launchActivityIntentWithWallpaper(mTestLiveWallpaper);
-        mWallpaperStatusChecker.setHomeStaticWallpaperSet(true);
-        mWallpaperStatusChecker.setLockWallpaperSet(false);
-
-        onView(withId(R.id.button_set_wallpaper)).perform(click());
-
-        onView(withText(R.string.set_wallpaper_lock_screen_destination)).inRoot(isDialog())
-                .check(matches(not(isDisplayed())));
-    }
-
-    @Test
     public void testDestinationOptions_multiEngine_setLive_showsLockOption() {
-        assumeTrue(mWallpaperManager.isLockscreenLiveWallpaperEnabled());
         launchActivityIntentWithWallpaper(mTestLiveWallpaper);
         mWallpaperStatusChecker.setHomeStaticWallpaperSet(true);
         mWallpaperStatusChecker.setLockWallpaperSet(false);
