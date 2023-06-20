@@ -576,6 +576,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setWallpaperPresentationMode(
                     WallpaperPreferences.PRESENTATION_MODE_STATIC);
             mWallpaperPreferences.clearDailyRotations();
+            mWallpaperPreferences.setHomeWallpaperCollectionId(
+                    wallpaperInfo.getCollectionId(mAppContext));
         }
 
         if (destination == WallpaperPersister.DEST_LOCK_SCREEN
@@ -583,6 +585,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.clearLockWallpaperMetadata();
             mWallpaperPreferences.setLockWallpaperServiceName(component.getServiceName());
             mWallpaperPreferences.setLockWallpaperEffects(effects);
+            mWallpaperPreferences.setLockWallpaperCollectionId(
+                    wallpaperInfo.getCollectionId(mAppContext));
         }
     }
 
