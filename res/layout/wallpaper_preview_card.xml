@@ -20,7 +20,7 @@
     android:clipChildren="true"
     android:contentDescription="@string/wallpaper_preview_card_content_description">
 
-    <SurfaceView
+    <com.android.wallpaper.picker.customization.ui.view.WallpaperSurfaceView
         android:id="@+id/wallpaper_surface"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
