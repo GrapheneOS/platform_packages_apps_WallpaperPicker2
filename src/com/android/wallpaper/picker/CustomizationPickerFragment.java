@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -162,7 +163,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                         if (scrollY == 0) {
                             setToolbarColor(android.R.color.transparent);
                         } else {
-                            setToolbarColor(R.color.toolbar_color);
+                            setToolbarColor(R.color.system_surface_container_highest);
                         }
                     }
             );
@@ -172,7 +173,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                         if (scrollY == 0) {
                             setToolbarColor(android.R.color.transparent);
                         } else {
-                            setToolbarColor(R.color.toolbar_color);
+                            setToolbarColor(R.color.system_surface_container_highest);
                         }
                     }
             );
@@ -238,6 +239,11 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     @Override
     protected int getToolbarColorId() {
         return android.R.color.transparent;
+    }
+
+    @Override
+    protected int getToolbarTextColor() {
+        return ContextCompat.getColor(requireContext(), R.color.system_on_surface);
     }
 
     @Override
