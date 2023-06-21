@@ -424,7 +424,7 @@ public class ImagePreviewFragment extends PreviewFragment {
 
         BitmapCropper bitmapCropper = mInjector.getBitmapCropper();
         bitmapCropper.cropAndScaleBitmap(mWallpaperAsset, mFullResImageView.getScale(),
-                calculateCropRect(context), /* adjustForRtl= */ false,
+                calculateCropRect(context, /* cropExtraWidth= */ true), /* adjustForRtl= */ false,
                 new BitmapCropper.Callback() {
                     @Override
                     public void onBitmapCropped(Bitmap croppedBitmap) {
@@ -546,7 +546,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         mFullResImageView.setScaleAndCenter(minWallpaperZoom, centerPosition);
     }
 
-    private Rect calculateCropRect(Context context) {
+    private Rect calculateCropRect(Context context, boolean cropExtraWidth) {
         float wallpaperZoom = mFullResImageView.getScale();
         Context appContext = context.getApplicationContext();
 
@@ -563,12 +563,13 @@ public class ImagePreviewFragment extends PreviewFragment {
         Point cropSurfaceSize = WallpaperCropUtils.calculateCropSurfaceSize(res, maxCrop, minCrop,
                 cropWidth, cropHeight);
         return WallpaperCropUtils.calculateCropRect(appContext, hostViewSize,
-                cropSurfaceSize, mRawWallpaperSize, visibleFileRect, wallpaperZoom);
+                cropSurfaceSize, mRawWallpaperSize, visibleFileRect, wallpaperZoom, cropExtraWidth);
     }
 
     @Override
     protected void setCurrentWallpaper(@Destination int destination) {
-        Rect cropRect = calculateCropRect(getContext());
+        // Only crop extra wallpaper width for single display devices.
+        Rect cropRect = calculateCropRect(getContext(), !mDisplayUtils.hasMultiInternalDisplays());
         float screenScale = WallpaperCropUtils.getScaleOfScreenResolution(
                 mFullResImageView.getScale(), cropRect, mWallpaperScreenSize.x,
                 mWallpaperScreenSize.y);

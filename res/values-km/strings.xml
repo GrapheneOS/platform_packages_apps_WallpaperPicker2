@@ -81,11 +81,12 @@
     <string name="tab_info" msgid="818614080690111416">"ព័ត៌មាន"</string>
     <string name="tab_customize" msgid="2533745409174959960">"ប្ដូរ​តាម​បំណង"</string>
     <string name="tab_effects" msgid="3213606157589233901">"បែបផែន"</string>
+    <string name="tab_share" msgid="6676269624804601227">"ចែករំលែក"</string>
     <string name="my_photos" msgid="8613021349284084982">"រូបថត​ខ្ញុំ"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"ការកំណត់…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"លុប"</string>
-    <!-- no translation found for delete_wallpaper_confirmation (33790318361863778) -->
-    <skip />
+    <string name="edit_live_wallpaper" msgid="3132060073690558045">"កែ"</string>
+    <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"លុបផ្ទាំងរូបភាពនេះចេញពីឧបករណ៍របស់អ្នកឬ?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"ថយក្រោយ"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"កែ"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"ទាញយក"</string>
@@ -115,8 +116,7 @@
     <string name="lock_screen_tab" msgid="6672930765010407652">"អេក្រង់ចាក់សោ"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"អេក្រង់ដើម"</string>
     <string name="reset" msgid="4945445169532850631">"កំណត់​ឡើងវិញ"</string>
-    <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
-    <skip />
-    <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->
-    <skip />
+    <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"កំណត់​ការផ្លាស់ប្ដូរ​ឡើង​វិញឬ?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"ការផ្លាស់ប្ដូររបស់អ្នកនឹងមិនត្រូវបានរក្សាទុកទេ"</string>
+    <string name="more_wallpapers" msgid="7585665124282737376">"ផ្ទាំងរូបភាព​ច្រើនទៀត"</string>
 </resources>

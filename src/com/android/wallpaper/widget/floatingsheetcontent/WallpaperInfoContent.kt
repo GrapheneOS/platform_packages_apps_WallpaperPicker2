@@ -75,6 +75,8 @@ class WallpaperInfoContent(private var context: Context, private val wallpaper: 
             wallpaper!!,
             actionLabel,
             WallpaperInfoHelper.shouldShowExploreButton(context, exploreIntent)
-        ) { onExploreClicked() }
+        ) {
+            onExploreClicked()
+        }
     }
 }

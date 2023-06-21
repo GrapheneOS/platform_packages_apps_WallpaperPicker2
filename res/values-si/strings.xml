@@ -81,11 +81,12 @@
     <string name="tab_info" msgid="818614080690111416">"තතු"</string>
     <string name="tab_customize" msgid="2533745409174959960">"අභිරුචිකරණය කරන්න"</string>
     <string name="tab_effects" msgid="3213606157589233901">"ප්‍රයෝග"</string>
+    <string name="tab_share" msgid="6676269624804601227">"බෙදා ගන්න"</string>
     <string name="my_photos" msgid="8613021349284084982">"මගේ ඡායාරූප"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"සැකසීම්…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"මකන්න"</string>
-    <!-- no translation found for delete_wallpaper_confirmation (33790318361863778) -->
-    <skip />
+    <string name="edit_live_wallpaper" msgid="3132060073690558045">"සංස්කරණය කරන්න"</string>
+    <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"ඔබේ උපාංගයෙන් මෙම බිතුපත මකන්න ද?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"ආපසු යන්න"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"සංස්කරණය කරන්න"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"බාගන්න"</string>
@@ -115,8 +116,7 @@
     <string name="lock_screen_tab" msgid="6672930765010407652">"අගුළු තිරය"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"මුල් තිරය"</string>
     <string name="reset" msgid="4945445169532850631">"යළි සකසන්න"</string>
-    <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
-    <skip />
-    <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->
-    <skip />
+    <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"වෙනස්කම් යළි සකසන්න ද?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"ඔබේ වෙනස්කම් සුරැකෙන්නේ නැත"</string>
+    <string name="more_wallpapers" msgid="7585665124282737376">"තවත් වෝල්පේපර"</string>
 </resources>

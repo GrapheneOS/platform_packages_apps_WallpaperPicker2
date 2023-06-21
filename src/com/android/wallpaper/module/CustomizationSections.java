@@ -11,7 +11,8 @@ import com.android.wallpaper.model.CustomizationSectionController.CustomizationS
 import com.android.wallpaper.model.PermissionRequester;
 import com.android.wallpaper.model.WallpaperColorsViewModel;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
-import com.android.wallpaper.model.WorkspaceViewModel;
+import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor;
+import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperQuickSwitchViewModel;
 import com.android.wallpaper.util.DisplayUtils;
 
 import java.util.List;
@@ -26,24 +27,27 @@ public interface CustomizationSections {
     }
 
     /**
+     * Currently protected under BaseFlags.isUseRevampedUi() flag.
+     *
      * Gets a new instance of the section controller list for the given {@link Screen}.
      *
      * Note that the section views will be displayed by the list ordering.
      *
      * <p>Don't keep the section controllers as singleton since they contain views.
      */
-    List<CustomizationSectionController<?>> getSectionControllersForScreen(
+    List<CustomizationSectionController<?>> getRevampedUISectionControllersForScreen(
             Screen screen,
             FragmentActivity activity,
             LifecycleOwner lifecycleOwner,
             WallpaperColorsViewModel wallpaperColorsViewModel,
-            WorkspaceViewModel workspaceViewModel,
             PermissionRequester permissionRequester,
             WallpaperPreviewNavigator wallpaperPreviewNavigator,
             CustomizationSectionNavigationController sectionNavigationController,
             @Nullable Bundle savedInstanceState,
             CurrentWallpaperInfoFactory wallpaperInfoFactory,
-            DisplayUtils displayUtils);
+            DisplayUtils displayUtils,
+            WallpaperQuickSwitchViewModel wallpaperQuickSwitchViewModel,
+            WallpaperInteractor wallpaperInteractor);
 
     /**
      * Gets a new instance of the section controller list.
@@ -56,7 +60,6 @@ public interface CustomizationSections {
             FragmentActivity activity,
             LifecycleOwner lifecycleOwner,
             WallpaperColorsViewModel wallpaperColorsViewModel,
-            WorkspaceViewModel workspaceViewModel,
             PermissionRequester permissionRequester,
             WallpaperPreviewNavigator wallpaperPreviewNavigator,
             CustomizationSectionNavigationController sectionNavigationController,

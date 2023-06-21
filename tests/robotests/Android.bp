@@ -18,5 +18,7 @@ android_robolectric_test {
         "androidx.test.runner",
     ],
 
+    upstream: true,
+
     instrumentation_for: "WallpaperPicker2",
 }

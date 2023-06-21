@@ -88,6 +88,13 @@ public abstract class WallpaperInfo implements Parcelable {
     }
 
     /**
+     * Returns the content description for this wallpaper, or null if none exists.
+     */
+    public String getContentDescription(Context context) {
+        return null;
+    }
+
+    /**
      * @return The available attributions for this wallpaper, as a list of strings. These represent
      * the author / website or any other attribution required to be displayed for this wallpaper
      * regarding authorship, ownership, etc.

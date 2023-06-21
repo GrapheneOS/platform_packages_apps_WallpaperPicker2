@@ -76,6 +76,40 @@ class CustomizationPickerViewModelTest {
         }
 
     @Test
+    fun `setInitialScreen - home screen`() =
+        testScope.runTest {
+            underTest.setInitialScreen(onLockScreen = false)
+
+            val homeScreenTab = collectLastValue(underTest.homeScreenTab)
+            val lockScreenTab = collectLastValue(underTest.lockScreenTab)
+            val isOnLockScreen = collectLastValue(underTest.isOnLockScreen)
+
+            assertThat(homeScreenTab()?.isSelected).isTrue()
+            assertThat(lockScreenTab()?.isSelected).isFalse()
+            assertThat(isOnLockScreen()).isFalse()
+        }
+
+    @Test
+    fun `setInitialScreen - home screen - but lock screen already selected from before`() =
+        testScope.runTest {
+            // First, we start on the Home screen.
+            underTest.setInitialScreen(onLockScreen = false)
+            // Then, we switch to the lock screen.
+            collectLastValue(underTest.lockScreenTab)()?.onClicked?.invoke()
+            // Instantiate a new view-model with the same saved state.
+            val newUnderTest =
+                CustomizationPickerViewModel(
+                    undoInteractor = undoInteractor,
+                    savedStateHandle = savedStateHandle,
+                )
+            val newIsOnLockScreen = collectLastValue(newUnderTest.isOnLockScreen)
+
+            newUnderTest.setInitialScreen(onLockScreen = false)
+
+            assertThat(newIsOnLockScreen()).isTrue()
+        }
+
+    @Test
     fun `switching to the home screen`() =
         testScope.runTest {
             val homeScreenTab = collectLastValue(underTest.homeScreenTab)

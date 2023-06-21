@@ -81,10 +81,15 @@
     <string name="tab_info" msgid="818614080690111416">"Info"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Customise"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Effects"</string>
+    <!-- no translation found for tab_share (6676269624804601227) -->
+    <skip />
     <string name="my_photos" msgid="8613021349284084982">"My Photos"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Settings…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Delete"</string>
-    <string name="delete_wallpaper_confirmation" msgid="33790318361863778">"Delete this wallpaper from your phone?"</string>
+    <!-- no translation found for edit_live_wallpaper (3132060073690558045) -->
+    <skip />
+    <!-- no translation found for delete_wallpaper_confirmation (1905114562243802354) -->
+    <skip />
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Back"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Edit"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Download"</string>
@@ -117,8 +122,10 @@
     <skip />
     <!-- no translation found for reset (4945445169532850631) -->
     <skip />
-    <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
+    <!-- no translation found for reset_confirmation_dialog_title (3391905685838213712) -->
     <skip />
-    <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->
+    <!-- no translation found for reset_confirmation_dialog_message (888669268626289603) -->
+    <skip />
+    <!-- no translation found for more_wallpapers (7585665124282737376) -->
     <skip />
 </resources>

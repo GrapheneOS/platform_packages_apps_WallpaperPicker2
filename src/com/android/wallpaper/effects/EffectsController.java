@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.effects;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -22,6 +23,11 @@ import android.os.Bundle;
  * Utility class to provide methods to generate effects for the wallpaper.
  */
 public abstract class EffectsController {
+    public static final int ERROR_ORIGINAL_DESTROY_CONTROLLER = -16;
+    public static final int ERROR_ORIGINAL_FINISH_ONGOING_SERVICE = -8;
+    public static final int ERROR_ORIGINAL_SERVICE_DISCONNECT = -4;
+    public static final int ERROR_ORIGINAL_TIME_OUT = -2;
+
     public static final int RESULT_ORIGINAL_UNKNOWN = -1;
     public static final int RESULT_SUCCESS = 0;
     public static final int RESULT_ERROR_TRY_ANOTHER_PHOTO = 1;
@@ -76,6 +82,14 @@ public abstract class EffectsController {
     }
 
     /**
+     * Triggers the effect.
+     *
+     * @param context the context
+     */
+    public void triggerEffect(Context context) {
+    }
+
+    /**
      * Interface to listen to different key moments of the connection with the Effects Service.
      */
     public interface EffectsServiceListener {
@@ -91,4 +105,14 @@ public abstract class EffectsController {
         void onEffectFinished(EffectEnumInterface effect, Bundle bundle, int error,
                 int originalStatusCode, String errorMessage);
     }
+
+    /**
+     * Gets whether the effect triggering is successful or not.
+     *
+     * @return whether the effect triggering is successful or not.
+     */
+    public boolean isEffectTriggered() {
+        return false;
+    }
+
 }

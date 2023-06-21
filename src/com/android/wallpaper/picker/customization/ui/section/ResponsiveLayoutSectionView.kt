@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,17 @@
  *
  */
 
-package com.android.wallpaper.picker.undo.ui.viewmodel
+package com.android.wallpaper.picker.customization.ui.section
 
-/** Models the UI state for an undo confirmation dialog. */
-data class UndoDialogViewModel(
-    val onConfirmed: () -> Unit,
-    val onDismissed: () -> Unit,
-)
+import android.content.Context
+import android.util.AttributeSet
+import com.android.wallpaper.picker.SectionView
+
+class ResponsiveLayoutSectionView(
+    context: Context,
+    attrs: AttributeSet?,
+) :
+    SectionView(
+        context,
+        attrs,
+    )

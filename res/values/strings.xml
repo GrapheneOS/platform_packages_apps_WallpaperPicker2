@@ -303,6 +303,10 @@
          [CHAR_LIMIT=25] -->
     <string name="tab_effects">Effects</string>
 
+    <!-- Label for the 'Share' tab of view pager in wallpaper preview activity.
+     [CHAR_LIMIT=25] -->
+    <string name="tab_share">Share</string>
+
     <!-- Generic label for the my photos action [CHAR_LIMIT=20] -->
     <string name="my_photos">My Photos</string>
 
@@ -312,8 +316,11 @@
     <!-- List item for deleting the current wallpaper [CHAR LIMIT=30] -->
     <string name="delete_live_wallpaper">Delete</string>
 
+    <!-- List item for editing the current wallpaper [CHAR LIMIT=NONE] -->
+    <string name="edit_live_wallpaper">Edit</string>
+
     <!-- Confirmation dialog. Shown after user selects to delete one wallpaper. [CHAR LIMIT=NONE] -->
-    <string name="delete_wallpaper_confirmation">Delete this wallpaper from your phone?</string>
+    <string name="delete_wallpaper_confirmation">Delete this wallpaper from your device?</string>
 
     <!-- Content description of back button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_back">Back</string>
@@ -435,7 +442,7 @@
 
     [CHAR LIMIT=32].
     -->
-    <string name="reset_confirmation_dialog_title">Are you sure?</string>
+    <string name="reset_confirmation_dialog_title">Reset changes?</string>
 
     <!--
     Message for dialog confirming with the user that they really wish to reset the customizations
@@ -443,5 +450,13 @@
 
     [CHAR LIMIT=128].
     -->
-    <string name="reset_confirmation_dialog_message">This will reset all changes you made.</string>
+    <string name="reset_confirmation_dialog_message">Your changes won\'t be saved</string>
+
+    <!--
+    Label for button that lets the user navigate to a full-screen experience of selecting
+    wallpapers.
+
+    [CHAR LIMIT=128].
+    -->
+    <string name="more_wallpapers">More Wallpapers</string>
 </resources>

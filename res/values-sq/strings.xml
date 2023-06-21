@@ -81,11 +81,12 @@
     <string name="tab_info" msgid="818614080690111416">"Informacione"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Personalizo"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Efektet"</string>
+    <string name="tab_share" msgid="6676269624804601227">"Ndaj"</string>
     <string name="my_photos" msgid="8613021349284084982">"Fotografitë e mia"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Cilësimet…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Fshi"</string>
-    <!-- no translation found for delete_wallpaper_confirmation (33790318361863778) -->
-    <skip />
+    <string name="edit_live_wallpaper" msgid="3132060073690558045">"Modifiko"</string>
+    <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Të fshihet ky imazh sfondi nga pajisja jote?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"Pas"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Modifiko"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Shkarko"</string>
@@ -115,8 +116,7 @@
     <string name="lock_screen_tab" msgid="6672930765010407652">"Ekrani i kyçjes"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"Ekrani bazë"</string>
     <string name="reset" msgid="4945445169532850631">"Rivendos"</string>
-    <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
-    <skip />
-    <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->
-    <skip />
+    <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Të rivendosen ndryshimet?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Ndryshimet e tua nuk do të ruhen"</string>
+    <string name="more_wallpapers" msgid="7585665124282737376">"Më shumë imazhe të sfondit"</string>
 </resources>

@@ -17,6 +17,12 @@
 
 package com.android.wallpaper.picker.undo.ui.viewmodel
 
+import com.android.wallpaper.R
+import com.android.wallpaper.picker.common.button.ui.viewmodel.ButtonStyle
+import com.android.wallpaper.picker.common.button.ui.viewmodel.ButtonViewModel
+import com.android.wallpaper.picker.common.dialog.ui.viewmodel.DialogViewModel
+import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
+import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,21 +34,39 @@ class UndoViewModel(
 ) {
     /** Whether the "revert" button should be visible. */
     val isRevertButtonVisible: Flow<Boolean> = interactor.isUndoable
-    private val _dialog = MutableStateFlow<UndoDialogViewModel?>(null)
+    private val _dialog = MutableStateFlow<DialogViewModel?>(null)
     /**
      * A view-model of the undo confirmation dialog that should be shown, or `null` when no dialog
      * should be shown.
      */
-    val dialog: Flow<UndoDialogViewModel?> = _dialog.asStateFlow()
+    val dialog: Flow<DialogViewModel?> = _dialog.asStateFlow()
 
     /** Notifies that the "revert" button has been clicked by the user. */
     fun onRevertButtonClicked() {
         _dialog.value =
-            UndoDialogViewModel(
-                onConfirmed = {
-                    interactor.revertAll()
-                    _dialog.value = null
-                },
+            DialogViewModel(
+                icon =
+                    Icon.Resource(
+                        res = R.drawable.ic_device_reset,
+                        contentDescription = null,
+                    ),
+                title = Text.Resource(R.string.reset_confirmation_dialog_title),
+                message = Text.Resource(R.string.reset_confirmation_dialog_message),
+                buttons =
+                    listOf(
+                        ButtonViewModel(
+                            text = Text.Resource(R.string.cancel),
+                            style = ButtonStyle.Secondary,
+                        ),
+                        ButtonViewModel(
+                            text = Text.Resource(R.string.reset),
+                            style = ButtonStyle.Primary,
+                            onClicked = {
+                                interactor.revertAll()
+                                _dialog.value = null
+                            },
+                        ),
+                    ),
                 onDismissed = { _dialog.value = null },
             )
     }

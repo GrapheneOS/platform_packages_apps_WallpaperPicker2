@@ -52,7 +52,6 @@ import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
 import com.android.wallpaper.picker.CategorySelectorFragment.CategorySelectorFragmentHost;
 import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
 import com.android.wallpaper.picker.individual.IndividualPickerFragment.IndividualPickerFragmentHost;
-import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor;
 import com.android.wallpaper.util.ActivityUtils;
 import com.android.wallpaper.util.DeepLinkUtils;
 import com.android.wallpaper.util.LaunchUtils;
@@ -79,7 +78,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
 
     private BottomActionBar mBottomActionBar;
     private boolean mIsSafeToCommitFragmentTransaction;
-    @Nullable private UndoInteractor mUndoInteractor;
+    private boolean mIsUseRevampedUi;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,7 +108,9 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         // See go/pdr-edge-to-edge-guide.
         WindowCompat.setDecorFitsSystemWindows(getWindow(), isSUWMode(this));
 
-        final boolean isUseRevampedUi = injector.getFlags().isUseRevampedUi(this);
+        mIsUseRevampedUi = injector.getFlags().isUseRevampedUiEnabled(this);
+        final boolean startFromLockScreen = getIntent() == null
+                || !ActivityUtils.isLaunchedFromLauncher(getIntent());
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment == null) {
@@ -122,17 +123,30 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
 
             // Switch to the target fragment.
             switchFragment(isWallpaperOnlyMode(getIntent())
-                    ? new WallpaperOnlyFragment()
-                    : CustomizationPickerFragment.newInstance(isUseRevampedUi));
+                    ? WallpaperOnlyFragment.newInstance(mIsUseRevampedUi)
+                    : CustomizationPickerFragment.newInstance(
+                            mIsUseRevampedUi, startFromLockScreen));
+
+            // Cache the categories, but only if we're not restoring state (b/276767415).
+            mDelegate.prefetchCategories();
         }
 
-        if (isUseRevampedUi) {
-            mUndoInteractor = injector.getUndoInteractor(this);
-            mUndoInteractor.startSession();
+        if (savedInstanceState == null) {
+            // We only want to start a new undo session if this activity is brand-new. A non-new
+            // activity will have a non-null savedInstanceState.
+            if (mIsUseRevampedUi) {
+                injector.getUndoInteractor(this).startSession();
+            }
         }
 
         final Intent intent = getIntent();
         final String navigationDestination = intent.getStringExtra(EXTRA_DESTINATION);
+        // Consume the destination and commit the intent back so the OS doesn't revert to the same
+        // destination when we change color or wallpaper (which causes the activity to be
+        // recreated).
+        intent.removeExtra(EXTRA_DESTINATION);
+        setIntent(intent);
+
         final String deepLinkCollectionId = DeepLinkUtils.getCollectionId(intent);
 
         if (!TextUtils.isEmpty(navigationDestination)) {
@@ -147,10 +161,9 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
             // Wallpaper Collection deep link case
             switchFragmentWithBackStack(new CategorySelectorFragment());
             switchFragmentWithBackStack(InjectorProvider.getInjector().getIndividualPickerFragment(
-                    deepLinkCollectionId));
+                    this, deepLinkCollectionId));
             intent.setData(null);
         }
-        mDelegate.prefetchCategories();
     }
 
     @Override
@@ -254,7 +267,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
             return;
         }
         switchFragmentWithBackStack(InjectorProvider.getInjector().getIndividualPickerFragment(
-                category.getCollectionId()));
+                this, category.getCollectionId()));
     }
 
     @Override
@@ -332,6 +345,15 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         if (mDelegate.handleActivityResult(requestCode, resultCode, data)) {
             if (isSUWMode(this)) {
                 finishActivityForSUW();
+            } else if (mIsUseRevampedUi) {
+                // We don't finish in the revamped UI to let the user have a chance to reset the
+                // change they made, should they want to. We do, however, remove all the fragments
+                // from our back stack to reveal the root fragment, revealing the main screen of the
+                // app.
+                final FragmentManager fragmentManager = getSupportFragmentManager();
+                while (fragmentManager.getBackStackEntryCount() > 0) {
+                    fragmentManager.popBackStackImmediate();
+                }
             } else {
                 finishActivityWithResultOk();
             }

@@ -81,11 +81,12 @@
     <string name="tab_info" msgid="818614080690111416">"വിവരം"</string>
     <string name="tab_customize" msgid="2533745409174959960">"ഇഷ്‌ടാനുസൃതമാക്കുക"</string>
     <string name="tab_effects" msgid="3213606157589233901">"ഇഫക്റ്റുകൾ"</string>
+    <string name="tab_share" msgid="6676269624804601227">"പങ്കിടുക"</string>
     <string name="my_photos" msgid="8613021349284084982">"എന്റെ ഫോട്ടോകൾ"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"ക്രമീകരണം…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"ഇല്ലാതാക്കുക"</string>
-    <!-- no translation found for delete_wallpaper_confirmation (33790318361863778) -->
-    <skip />
+    <string name="edit_live_wallpaper" msgid="3132060073690558045">"എഡിറ്റ് ചെയ്യുക"</string>
+    <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"ഉപകരണത്തിൽ നിന്ന് ഈ വാൾപേപ്പർ ഇല്ലാതാക്കണോ?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"മടങ്ങുക"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"എഡിറ്റ് ചെയ്യുക"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"ഡൗൺലോഡ് ചെയ്യുക"</string>
@@ -115,8 +116,7 @@
     <string name="lock_screen_tab" msgid="6672930765010407652">"ലോക്ക് സ്ക്രീൻ"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"ഹോം സ്‌ക്രീൻ"</string>
     <string name="reset" msgid="4945445169532850631">"റീസെറ്റ് ചെയ്യൂ"</string>
-    <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
-    <skip />
-    <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->
-    <skip />
+    <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"മാറ്റങ്ങൾ റീസെറ്റ് ചെയ്യണോ?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"നിങ്ങളുടെ മാറ്റങ്ങൾ സംരക്ഷിക്കില്ല"</string>
+    <string name="more_wallpapers" msgid="7585665124282737376">"കൂടുതൽ വാൾപേപ്പറുകൾ"</string>
 </resources>

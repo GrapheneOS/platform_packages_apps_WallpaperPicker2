@@ -81,11 +81,12 @@
     <string name="tab_info" msgid="818614080690111416">"ಮಾಹಿತಿ"</string>
     <string name="tab_customize" msgid="2533745409174959960">"ಕಸ್ಟಮೈಜ್‌ ಮಾಡಿ"</string>
     <string name="tab_effects" msgid="3213606157589233901">"ಎಫೆಕ್ಟ್‌ಗಳು"</string>
+    <string name="tab_share" msgid="6676269624804601227">"ಹಂಚಿಕೊಳ್ಳಿ"</string>
     <string name="my_photos" msgid="8613021349284084982">"ನನ್ನ ಫೋಟೋಗಳು"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"ಸೆಟ್ಟಿಂಗ್‌ಗಳು..."</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"ಅಳಿಸಿ"</string>
-    <!-- no translation found for delete_wallpaper_confirmation (33790318361863778) -->
-    <skip />
+    <string name="edit_live_wallpaper" msgid="3132060073690558045">"ಎಡಿಟ್ ಮಾಡಿ"</string>
+    <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"ನಿಮ್ಮ ಸಾಧನದಿಂದ ಈ ವಾಲ್‌ಪೇಪರ್ ಅಳಿಸಬೇಕೆ?"</string>
     <string name="bottom_action_bar_back" msgid="8237013112999946725">"ಹಿಂದೆ"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"ಎಡಿಟ್ ಮಾಡಿ"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"ಡೌನ್‌ಲೋಡ್"</string>
@@ -115,8 +116,7 @@
     <string name="lock_screen_tab" msgid="6672930765010407652">"ಲಾಕ್ ಸ್ಕ್ರೀನ್"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"ಹೋಮ್ ಸ್ಕ್ರೀನ್"</string>
     <string name="reset" msgid="4945445169532850631">"ರೀಸೆಟ್ ಮಾಡಿ"</string>
-    <!-- no translation found for reset_confirmation_dialog_title (3006691785800178536) -->
-    <skip />
-    <!-- no translation found for reset_confirmation_dialog_message (4304013650135221616) -->
-    <skip />
+    <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"ಬದಲಾವಣೆಗಳನ್ನು ರೀಸೆಟ್ ಮಾಡಬೇಕೆ?"</string>
+    <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"ನಿಮ್ಮ ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಲಾಗುವುದಿಲ್ಲ"</string>
+    <string name="more_wallpapers" msgid="7585665124282737376">"ಇನ್ನಷ್ಟು ವಾಲ್‌ಪೇಪರ್‌ಗಳು"</string>
 </resources>

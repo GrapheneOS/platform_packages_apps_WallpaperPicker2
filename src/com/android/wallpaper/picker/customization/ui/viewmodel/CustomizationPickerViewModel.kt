@@ -81,7 +81,22 @@ constructor(
         }
 
     init {
-        _isOnLockScreen.value = savedStateHandle[KEY_SAVED_STATE_IS_ON_LOCK_SCREEN] ?: true
+        savedStateHandle.get<Boolean>(KEY_SAVED_STATE_IS_ON_LOCK_SCREEN)?.let {
+            _isOnLockScreen.value = it
+        }
+    }
+
+    /**
+     * Sets the initial screen we should be on, unless there's already a selected screen from a
+     * previous saved state, in which case we ignore the passed-in one.
+     */
+    fun setInitialScreen(onLockScreen: Boolean) {
+        _isOnLockScreen.value =
+            savedStateHandle[KEY_SAVED_STATE_IS_ON_LOCK_SCREEN]
+                ?: run {
+                    savedStateHandle[KEY_SAVED_STATE_IS_ON_LOCK_SCREEN] = onLockScreen
+                    onLockScreen
+                }
     }
 
     companion object {
