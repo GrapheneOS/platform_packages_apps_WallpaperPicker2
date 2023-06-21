@@ -112,6 +112,7 @@
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"Bedieningselementen voor voorbeeld verbergen"</string>
     <string name="show_preview_controls_content_description" msgid="908147864005440602">"Bedieningselementen voor voorbeeld zijn verborgen. Dubbeltik om te tonen."</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"Bedieningselementen voor voorbeeld tonen"</string>
+    <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"Achtergrondinformatie verbergen"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"UI getoond in voorbeeld. Dubbeltik om te verbergen"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Achtergrond wijzigen"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Voorbeeld achtergrond vergrendelscherm"</string>
