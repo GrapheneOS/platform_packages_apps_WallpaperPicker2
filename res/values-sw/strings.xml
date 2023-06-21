@@ -112,6 +112,7 @@
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"Ficha vidhibiti vya onyesho la kukagua"</string>
     <string name="show_preview_controls_content_description" msgid="908147864005440602">"Vidhibiti vya onyesho la kukagua vimefichwa. Gusa mara mbili ili uvionyeshe"</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"Onyesha vidhibiti vya onyesho la kukagua"</string>
+    <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"Ficha maelezo ya mandhari"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"Kiolesura kinaonyeshwa katika onyesho la kukagua. Gusa mara mbili ili ukifiche"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Badilisha mandhari"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Onyesho la kukagua mandhari kwenye skrini iliyofungwa"</string>
