@@ -184,8 +184,7 @@ object CustomizationPickerBinder {
                     controller.createView(
                         context,
                         CustomizationSectionController.ViewCreationParams(
-                            isOnLockScreen = isOnLockScreen,
-                            isWallpaperVisibilityControlledByTab = true,
+                            isOnLockScreen,
                         )
                     )
                 viewToAdd.tag = controller
