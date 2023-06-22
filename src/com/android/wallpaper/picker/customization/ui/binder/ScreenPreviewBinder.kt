@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.customization.ui.binder
 
 import android.app.Activity
 import android.app.WallpaperColors
+import android.app.WallpaperManager
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -41,7 +42,6 @@ import com.android.wallpaper.asset.CurrentWallpaperAssetVN
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.picker.WorkspaceSurfaceHolderCallback
-import com.android.wallpaper.picker.customization.ui.view.WallpaperSurfaceView
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
 import com.android.wallpaper.util.ResourceUtils
 import com.android.wallpaper.util.WallpaperConnection
@@ -82,16 +82,10 @@ object ScreenPreviewBinder {
         dimWallpaper: Boolean = false,
         onWallpaperPreviewDirty: () -> Unit,
         onWorkspacePreviewDirty: () -> Unit = {},
-        isWallpaperAlwaysVisible: Boolean = true,
     ): Binding {
         val workspaceSurface: SurfaceView = previewView.requireViewById(R.id.workspace_surface)
-        val wallpaperSurface: WallpaperSurfaceView =
-            previewView.requireViewById(R.id.wallpaper_surface)
+        val wallpaperSurface: SurfaceView = previewView.requireViewById(R.id.wallpaper_surface)
         val thumbnailRequested = AtomicBoolean(false)
-        // Tracks whether the live preview should be shown, since a) visibility updates may arrive
-        // before the engine is ready, and b) we need this state for onResume
-        // TODO(b/287618705) Remove this
-        val showLivePreview = AtomicBoolean(isWallpaperAlwaysVisible)
         previewView.contentDescription =
             activity.resources.getString(viewModel.previewContentDescription)
         val surfaceViewsReady = {
@@ -99,6 +93,7 @@ object ScreenPreviewBinder {
             workspaceSurface.visibility = View.VISIBLE
         }
         wallpaperSurface.setZOrderOnTop(false)
+        val wallpaperManager = WallpaperManager.getInstance(activity)
 
         if (dimWallpaper) {
             previewView.requireViewById<View>(R.id.wallpaper_dimming_scrim).isVisible = true
@@ -169,13 +164,6 @@ object ScreenPreviewBinder {
                         wallpaperSurface.holder.addCallback(wallpaperSurfaceCallback)
                         if (!dimWallpaper) {
                             wallpaperSurface.setZOrderMediaOverlay(true)
-                        }
-
-                        if (!isWallpaperAlwaysVisible) {
-                            wallpaperSurface.visibilityCallback = { visible: Boolean ->
-                                showLivePreview.set(visible)
-                                wallpaperConnection?.setVisibility(showLivePreview.get())
-                            }
                         }
 
                         lifecycleOwner.lifecycle.addObserver(lifecycleObserver)
@@ -250,7 +238,7 @@ object ScreenPreviewBinder {
                                         object : OnAttachStateChangeListener {
                                             override fun onViewAttachedToWindow(v: View?) {
                                                 connection.connect()
-                                                connection.setVisibility(showLivePreview.get())
+                                                connection.setVisibility(true)
                                                 previewView.removeOnAttachStateChangeListener(this)
                                             }
 
@@ -261,7 +249,7 @@ object ScreenPreviewBinder {
                                     )
                                 } else {
                                     connection.connect()
-                                    connection.setVisibility(showLivePreview.get())
+                                    connection.setVisibility(true)
                                 }
                             }
                         }
