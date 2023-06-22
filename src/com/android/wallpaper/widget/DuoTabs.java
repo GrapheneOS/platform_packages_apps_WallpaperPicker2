@@ -153,6 +153,12 @@ public final class DuoTabs extends FrameLayout {
                 tab == TAB_PRIMARY
                         ? mSelectedTabTextColor
                         : mNonSelectedTabTextColor);
+        // Set selected for talkback
+        if (mPrimaryTabContainer != null) {
+            mPrimaryTabContainer.setSelected(tab == TAB_PRIMARY);
+        } else {
+            mPrimaryTab.setSelected(tab == TAB_PRIMARY);
+        }
         mSecondaryTab.setBackgroundResource(
                 tab == TAB_SECONDARY
                         ? mSelectedTabDrawable
@@ -161,6 +167,12 @@ public final class DuoTabs extends FrameLayout {
                 tab == TAB_SECONDARY
                         ? mSelectedTabTextColor
                         : mNonSelectedTabTextColor);
+        // Set selected for talkback
+        if (mSecondaryTabContainer != null) {
+            mSecondaryTabContainer.setSelected(tab == TAB_SECONDARY);
+        } else {
+            mSecondaryTab.setSelected(tab == TAB_SECONDARY);
+        }
     }
 
     public @Tab int getSelectedTab() {
