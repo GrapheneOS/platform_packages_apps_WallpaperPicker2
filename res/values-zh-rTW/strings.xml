@@ -112,6 +112,7 @@
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"隱藏預覽控制選項"</string>
     <string name="show_preview_controls_content_description" msgid="908147864005440602">"預覽控制選項已隱藏。輕觸兩下即可顯示"</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"顯示預覽控制選項"</string>
+    <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"隱藏桌布資訊"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"預覽畫面顯示了使用者介面，輕觸兩下即可隱藏"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"變更桌布"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"螢幕鎖定畫面桌布預覽"</string>
