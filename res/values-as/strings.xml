@@ -112,6 +112,7 @@
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"পূৰ্বদৰ্শনৰ নিয়ন্ত্ৰণসমূহ লুকুৱাওক"</string>
     <string name="show_preview_controls_content_description" msgid="908147864005440602">"পূৰ্বদৰ্শনৰ নিয়ন্ত্ৰণসমূহ লুকুওৱা হয়। দেখুৱাবলৈ দুবাৰ টিপক"</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"পূৰ্বদৰ্শনৰ নিয়ন্ত্ৰণসমূহ দেখুৱাওক"</string>
+    <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"ৱালপেপাৰৰ তথ্য লুকুৱাওক"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"পূর্বদর্শনত UI দেখুওৱা হৈছে। লুকুৱাবলৈ দুবাৰ টিপক"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"ৱালপেপাৰ সলনি কৰক"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"লকস্ক্ৰীনৰ ৱালপেপাৰৰ পূৰ্বদৰ্শন"</string>
