@@ -112,6 +112,7 @@
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"Ezkutatu aurrebista kontrolatzeko aukerak"</string>
     <string name="show_preview_controls_content_description" msgid="908147864005440602">"Aurrebista kontrolatzeko aukerak ezkutatuta daude. Haiek erakusteko, sakatu pantaila birritan."</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"Erakutsi aurrebista kontrolatzeko aukerak"</string>
+    <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"Ezkutatu horma-paperari buruzko informazioa"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"Interfazea ikusgai dago aurrebistan. Hura ezkutatzeko, sakatu pantaila birritan."</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Aldatu horma-papera"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Pantaila blokeatuko horma-paperaren aurrebista"</string>

@@ -125,6 +125,8 @@
     <skip />
     <!-- no translation found for show_preview_controls_action (7700775001986890400) -->
     <skip />
+    <!-- no translation found for hide_wallpaper_info_action (6572492484253895374) -->
+    <skip />
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"UI is displayed in preview. Double-tap to hide"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Change wallpaper"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Lockscreen wallpaper preview"</string>
