@@ -112,6 +112,7 @@
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"පෙරදසුන් පාලන සඟවන්න"</string>
     <string name="show_preview_controls_content_description" msgid="908147864005440602">"පෙරදසුන් පාලන සඟවා ඇත. පෙන්වීමට දෙවරක් තට්ටු කරන්න"</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"පෙරදසුන් පාලන පෙන්වන්න"</string>
+    <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"බිතුපත් තොරතුරු සඟවන්න"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"UI පෙරදසුන තුළ සංස්කරණය කර ඇත. සැඟවීමට දෙවරක් තට්ටු කරන්න"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"වෝල්පේපරය වෙනස් කරන්න"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"අගුලු තිර වෝල්පේපර පෙරදසුන"</string>

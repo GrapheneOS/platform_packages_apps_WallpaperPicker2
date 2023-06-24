@@ -112,6 +112,7 @@
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"Skrij kontrolnike za predogled"</string>
     <string name="show_preview_controls_content_description" msgid="908147864005440602">"Kontrolniki za predogled so skriti. Dvakrat se dotaknite, če jih želite prikazati."</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"Prikaži kontrolnike za predogled"</string>
+    <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"Skrij podatke o zaslonskem ozadju"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"Upor. vm. je prikazan. Dvakrat se dot. za skritje."</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Zamenjava zaslonskega ozadja"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Predogled zaslon. ozadja zaklen. zaslona"</string>
