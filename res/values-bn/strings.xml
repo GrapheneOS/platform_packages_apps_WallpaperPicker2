@@ -112,6 +112,7 @@
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"প্রিভিউ কন্ট্রোল লুকান"</string>
     <string name="show_preview_controls_content_description" msgid="908147864005440602">"প্রিভিউ কন্ট্রোল লুকানো আছে। দেখতে ডবল ট্যাপ করুন"</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"প্রিভিউ কন্ট্রোল দেখুন"</string>
+    <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"ওয়ালপেপার সম্পর্কিত তথ্য লুকান"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"প্রিভিউতে UI দেখানো হয়েছে। লুকাতে ডবল ট্যাপ করুন"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"ওয়ালপেপার পরিবর্তন করুন"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"লকস্ক্রিন ওয়ালপেপার প্রিভিউ"</string>

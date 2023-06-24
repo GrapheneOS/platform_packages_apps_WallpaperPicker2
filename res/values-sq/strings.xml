@@ -112,6 +112,7 @@
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"Fshih kontrollet e versionit paraprak"</string>
     <string name="show_preview_controls_content_description" msgid="908147864005440602">"Kontrollet e versionit paraprak janë të fshehura. Trokit dy herë për të shfaqur"</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"Shfaq kontrollet e versionit paraprak"</string>
+    <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"Fshih informacionet e imazhit të sfondit"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"Pamja paraprake: UI shfaqet. Fshih me dy trokitje"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Ndrysho imazhin e sfondit"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Pamja paraprake e imazhit të sfondit të ekranit të kyçjes"</string>
