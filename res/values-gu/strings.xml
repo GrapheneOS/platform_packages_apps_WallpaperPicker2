@@ -112,6 +112,7 @@
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"પ્રીવ્યૂના નિયંત્રણો છુપાવો"</string>
     <string name="show_preview_controls_content_description" msgid="908147864005440602">"પ્રીવ્યૂના નિયંત્રણો છુપાવેલા છે. બતાવવા માટે, બે વાર ટૅપ કરો"</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"પ્રીવ્યૂના નિયંત્રણો બતાવો"</string>
+    <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"વૉલપેપરની માહિતી છુપાવો"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"પ્રીવ્યૂમાં UI બતાવેલું છે. છુપાવવા બે વાર ટૅપ કરો"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"વૉલપેપર બદલો"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"લૉકસ્ક્રીન વૉલપેપરનો પ્રીવ્યૂ"</string>

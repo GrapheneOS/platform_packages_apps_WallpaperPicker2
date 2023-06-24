@@ -112,6 +112,7 @@
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"Алдын ала көрүүнү башкаруу элементтерин жашыруу"</string>
     <string name="show_preview_controls_content_description" msgid="908147864005440602">"Алдын ала көрүүнү башкаруу элементтери жашырылды. Көрсөтүү үчүн эки жолу басыңыз"</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"Алдын ала көрүүнү башкаруу элементтерин көрсөтүү"</string>
+    <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"Тушкагаз тууралуу маалыматты жашыруу"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"Эки жолу басып, интерфейсти жашырыңыз."</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Тушкагазды өзгөртүү"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Кулпуланган экрандын тушкагазын көрүү"</string>
