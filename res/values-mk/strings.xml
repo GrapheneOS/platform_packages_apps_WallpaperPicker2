@@ -112,6 +112,7 @@
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"Скриј ги контролите за преглед"</string>
     <string name="show_preview_controls_content_description" msgid="908147864005440602">"Контролите за преглед се скриени. Допрете двапати за да ги прикажете"</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"Прикажи ги контролите за преглед"</string>
+    <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"Скриј ги информациите за тапетот"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"UI е прикажан во прегледот. Допрете двапати за да се скрие"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Сменете го тапетот"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Преглед на тапетот за заклучен екран"</string>

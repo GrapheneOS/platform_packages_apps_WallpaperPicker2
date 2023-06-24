@@ -112,6 +112,7 @@
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"הסתרת פקדי התצוגה המקדימה"</string>
     <string name="show_preview_controls_content_description" msgid="908147864005440602">"הפקדים של התצוגה המקדימה מוסתרים. צריך להקיש הקשה כפולה כדי להציג אותם"</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"הצגת פקדי התצוגה המקדימה"</string>
+    <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"הסתרת פרטי הטפט"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"הממשק מוצג בתצוגה. לוחצים פעמיים לביטול ההסתרה"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"החלפת הטפט"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"תצוגה מקדימה של הטפט במסך הנעילה"</string>
