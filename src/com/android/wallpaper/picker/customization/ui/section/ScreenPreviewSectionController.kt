@@ -81,15 +81,8 @@ open class ScreenPreviewSectionController(
         return true
     }
 
-    override fun createView(context: Context): ScreenPreviewView {
-        return createView(context, CustomizationSectionController.ViewCreationParams())
-    }
-
     @SuppressLint("InflateParams")
-    override fun createView(
-        context: Context,
-        params: CustomizationSectionController.ViewCreationParams,
-    ): ScreenPreviewView {
+    override fun createView(context: Context): ScreenPreviewView {
         val view =
             LayoutInflater.from(context)
                 .inflate(
@@ -127,15 +120,11 @@ open class ScreenPreviewSectionController(
             .setOnClickListener(onClickListener)
         val previewView: CardView = view.requireViewById(R.id.preview)
 
-        bindScreenPreview(previewView, context, !params.isWallpaperVisibilityControlledByTab)
+        bindScreenPreview(previewView, context)
         return view
     }
 
-    protected open fun bindScreenPreview(
-        previewView: CardView,
-        context: Context,
-        isWallpaperAlwaysVisible: Boolean,
-    ) {
+    protected open fun bindScreenPreview(previewView: CardView, context: Context) {
         previewViewBinding?.destroy()
         previewViewBinding =
             ScreenPreviewBinder.bind(
@@ -145,10 +134,7 @@ open class ScreenPreviewSectionController(
                 lifecycleOwner = lifecycleOwner,
                 offsetToStart = displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(activity),
                 onWallpaperPreviewDirty = { activity.recreate() },
-                onWorkspacePreviewDirty = {
-                    bindScreenPreview(previewView, context, isWallpaperAlwaysVisible)
-                },
-                isWallpaperAlwaysVisible = isWallpaperAlwaysVisible
+                onWorkspacePreviewDirty = { bindScreenPreview(previewView, context) }
             )
     }
 
