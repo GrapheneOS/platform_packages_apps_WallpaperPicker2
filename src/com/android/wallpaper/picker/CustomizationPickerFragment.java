@@ -25,11 +25,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.activity.ComponentActivity;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.transition.Transition;
 
 import com.android.settingslib.activityembedding.ActivityEmbeddingUtils;
 import com.android.wallpaper.R;
@@ -202,7 +204,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
             // Post it to the end of adding views to ensure restoring view state the last task.
             view.post(() -> restoreViewState(savedInstanceStateRef));
         }
-
+        ((ViewGroup) view).setTransitionGroup(true);
         return view;
     }
 
@@ -267,6 +269,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
     @Override
     public void navigateTo(Fragment fragment) {
+        prepareFragmentTransitionAnimation();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
@@ -288,6 +291,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     @Override
     public void standaloneNavigateTo(String destinationId) {
         final Fragment fragment = mFragmentFactory.create(destinationId);
+        prepareFragmentTransitionAnimation();
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager
@@ -295,6 +299,42 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                 .replace(R.id.fragment_container, fragment)
                 .commit();
         fragmentManager.executePendingTransactions();
+    }
+
+    private void prepareFragmentTransitionAnimation() {
+        Transition exitTransition = ((Transition) getExitTransition());
+        if (exitTransition == null) return;
+        exitTransition.addListener(new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(@NonNull Transition transition) {
+                setSurfaceViewsVisible(false);
+            }
+
+            @Override
+            public void onTransitionEnd(@NonNull Transition transition) {
+                setSurfaceViewsVisible(true);
+            }
+
+            @Override
+            public void onTransitionCancel(@NonNull Transition transition) {
+                setSurfaceViewsVisible(true);
+                // cancelling the transition breaks the preview, therefore recreating the activity
+                requireActivity().recreate();
+            }
+
+            @Override
+            public void onTransitionPause(@NonNull Transition transition) {}
+
+            @Override
+            public void onTransitionResume(@NonNull Transition transition) {}
+        });
+    }
+
+    private void setSurfaceViewsVisible(boolean isVisible) {
+        mHomeScrollContainer.findViewById(R.id.preview)
+                .setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+        mLockScrollContainer.findViewById(R.id.preview)
+                .setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
     /** Saves state of the fragment. */

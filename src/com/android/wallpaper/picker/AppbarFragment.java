@@ -29,9 +29,14 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 import android.widget.Toolbar.OnMenuItemClickListener;
 
+import androidx.annotation.Nullable;
+
 import com.android.wallpaper.R;
+import com.android.wallpaper.config.BaseFlags;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.widget.BottomActionBar;
+
+import com.google.android.material.transition.MaterialSharedAxis;
 
 /**
  * Base class for Fragments that own a {@link Toolbar} widget and a {@link BottomActionBar}.
@@ -67,6 +72,17 @@ public abstract class AppbarFragment extends BottomActionBarFragment
          * Check if it supports up arrow.
          */
         boolean isUpArrowSupported();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (BaseFlags.get().isPageTransitionsFeatureEnabled()) {
+            setEnterTransition(new MaterialSharedAxis(MaterialSharedAxis.X, /* forward */ true));
+            setReturnTransition(new MaterialSharedAxis(MaterialSharedAxis.X, /* forward */ false));
+            setExitTransition(new MaterialSharedAxis(MaterialSharedAxis.X, /* forward */ true));
+            setReenterTransition(new MaterialSharedAxis(MaterialSharedAxis.X, /* forward */ false));
+        }
     }
 
     @Override
