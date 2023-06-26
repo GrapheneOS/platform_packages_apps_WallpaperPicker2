@@ -64,6 +64,12 @@ abstract class BaseFlags {
             ?.value == true
     }
 
+    fun isTransitClockEnabled(context: Context): Boolean {
+        return runBlocking { getCustomizationProviderClient(context).queryFlags() }
+            .firstOrNull { flag -> flag.name == Contract.FlagsTable.FLAG_NAME_TRANSIT_CLOCK }
+            ?.value == true
+    }
+
     private fun getCustomizationProviderClient(context: Context): CustomizationProviderClient {
         return customizationProviderClient
             ?: CustomizationProviderClientImpl(context.applicationContext, Dispatchers.IO).also {
