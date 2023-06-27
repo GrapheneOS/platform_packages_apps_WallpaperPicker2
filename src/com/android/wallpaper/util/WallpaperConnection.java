@@ -335,7 +335,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
                 mService.attach(this, mContainerView.getWindowToken(),
                         LayoutParams.TYPE_APPLICATION_MEDIA, true, mContainerView.getWidth(),
                         mContainerView.getHeight(), new Rect(0, 0, 0, 0), displayId,
-                        WallpaperManager.FLAG_SYSTEM);
+                        WallpaperManager.FLAG_SYSTEM, null);
             }
         } catch (RemoteException e) {
             Log.w(TAG, "Failed attaching wallpaper; clearing", e);
