@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.config
 
+import android.app.WallpaperManager
 import android.content.Context
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
@@ -30,6 +31,15 @@ abstract class BaseFlags {
 
     // TODO(b/285047815): Remove flag after adding wallpaper id for default static wallpaper
     open fun isWallpaperRestorerEnabled() = false
+
+    /**
+     * Enables new preview UI if both [isMultiCropEnabled] and this flag are true.
+     *
+     * TODO(b/291761856): Create SysUI flag for new preview UI
+     */
+    open fun isMultiCropPreviewUiEnabled() = false
+
+    open fun isMultiCropEnabled() = WallpaperManager.isMultiCropEnabled()
 
     // TODO(b/274443705): Create SysUI flag for animation
     open fun isPreviewLoadingAnimationEnabled() = false
