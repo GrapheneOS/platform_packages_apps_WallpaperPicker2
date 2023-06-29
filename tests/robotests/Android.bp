@@ -9,6 +9,7 @@ android_robolectric_test {
 
     srcs: [
         "src/**/*.java",
+        "src/**/*.kt",
     ],
 
     java_resource_dirs: ["config"],

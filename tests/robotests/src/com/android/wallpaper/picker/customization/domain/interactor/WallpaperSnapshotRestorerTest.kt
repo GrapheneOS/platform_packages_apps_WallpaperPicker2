@@ -17,7 +17,6 @@
 
 package com.android.wallpaper.picker.customization.domain.interactor
 
-import android.util.Log
 import androidx.test.filters.SmallTest
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -57,7 +56,6 @@ class WallpaperSnapshotRestorerTest {
         store =
             object : SnapshotStore {
                 override fun store(snapshot: RestorableSnapshot) {
-                    Log.d("ALE", "storing snapshot #${storedSnapshots.size + 1}")
                     storedSnapshots.add(snapshot)
                 }
 

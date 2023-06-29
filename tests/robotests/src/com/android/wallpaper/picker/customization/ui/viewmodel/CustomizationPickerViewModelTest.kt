@@ -35,11 +35,11 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.robolectric.RobolectricTestRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
-@RunWith(JUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class CustomizationPickerViewModelTest {
 
     private lateinit var underTest: CustomizationPickerViewModel
