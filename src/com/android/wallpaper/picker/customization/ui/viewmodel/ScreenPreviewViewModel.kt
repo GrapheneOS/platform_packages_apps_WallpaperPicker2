@@ -90,8 +90,8 @@ open class ScreenPreviewViewModel(
         onWallpaperColorChanged.invoke(colors)
     }
 
-    val isLoading: Flow<Boolean> =
-        wallpaperInteractor.isLoading(
+    open val isLoading: Flow<Boolean> =
+        wallpaperInteractor.isSelectingWallpaper(
             destination =
                 if (screen == Screen.LOCK_SCREEN) {
                     WallpaperDestination.LOCK

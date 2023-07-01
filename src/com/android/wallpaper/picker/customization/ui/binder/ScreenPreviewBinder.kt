@@ -330,8 +330,6 @@ object ScreenPreviewBinder {
                                             compressedLoadingImageBitmap = stream.toByteArray()
                                         }
                                     }
-
-                                    // TODO (b/274443705): figure out how to get color seed & style
                                     val colorAccent =
                                         ResourceUtils.getColorAttr(
                                             activity,
