@@ -71,27 +71,36 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     private static final int DEFAULT_COMPRESS_QUALITY = 100;
     private static final String TAG = "WallpaperPersister";
 
-    private final Context mAppContext; // The application's context.
-    // Context that accesses files in device protected storage
+    private final Context mAppContext;
     private final WallpaperManager mWallpaperManager;
     private final WallpaperManagerCompat mWallpaperManagerCompat;
     private final WallpaperPreferences mWallpaperPreferences;
     private final WallpaperChangedNotifier mWallpaperChangedNotifier;
     private final DisplayUtils mDisplayUtils;
+    private final BitmapCropper mBitmapCropper;
+    private final WallpaperStatusChecker mWallpaperStatusChecker;
 
     private WallpaperInfo mWallpaperInfoInPreview;
 
     @SuppressLint("ServiceCast")
-    public DefaultWallpaperPersister(Context context) {
+    public DefaultWallpaperPersister(
+            Context context,
+            WallpaperManager wallpaperManager,
+            WallpaperManagerCompat wallpaperManagerCompat,
+            WallpaperPreferences wallpaperPreferences,
+            WallpaperChangedNotifier wallpaperChangedNotifier,
+            DisplayUtils displayUtils,
+            BitmapCropper bitmapCropper,
+            WallpaperStatusChecker wallpaperStatusChecker
+    ) {
         mAppContext = context.getApplicationContext();
-        // Retrieve WallpaperManager using Context#getSystemService instead of
-        // WallpaperManager#getInstance so it can be mocked out in test.
-        Injector injector = InjectorProvider.getInjector();
-        mWallpaperManager = (WallpaperManager) context.getSystemService(Context.WALLPAPER_SERVICE);
-        mWallpaperManagerCompat = injector.getWallpaperManagerCompat(context);
-        mWallpaperPreferences = injector.getPreferences(context);
-        mWallpaperChangedNotifier = WallpaperChangedNotifier.getInstance();
-        mDisplayUtils = injector.getDisplayUtils(context);
+        mWallpaperManager = wallpaperManager;
+        mWallpaperManagerCompat = wallpaperManagerCompat;
+        mWallpaperPreferences = wallpaperPreferences;
+        mWallpaperChangedNotifier = wallpaperChangedNotifier;
+        mDisplayUtils = displayUtils;
+        mBitmapCropper = bitmapCropper;
+        mWallpaperStatusChecker = wallpaperStatusChecker;
     }
 
     @Override
@@ -133,8 +142,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             return;
         }
 
-        BitmapCropper bitmapCropper = InjectorProvider.getInjector().getBitmapCropper();
-        bitmapCropper.cropAndScaleBitmap(asset, scale, cropRect, false, new Callback() {
+        mBitmapCropper.cropAndScaleBitmap(asset, scale, cropRect, false, new Callback() {
             @Override
             public void onBitmapCropped(Bitmap croppedBitmap) {
                 setIndividualWallpaper(wallpaper, croppedBitmap, destination, callback);
@@ -571,13 +579,13 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.clearHomeWallpaperMetadata();
             mWallpaperPreferences.setHomeWallpaperServiceName(component.getServiceName());
             mWallpaperPreferences.setHomeWallpaperEffects(effects);
+            mWallpaperPreferences.setHomeWallpaperCollectionId(
+                    wallpaperInfo.getCollectionId(mAppContext));
 
             // Since rotation affects home screen only, disable it when setting home live wp
             mWallpaperPreferences.setWallpaperPresentationMode(
                     WallpaperPreferences.PRESENTATION_MODE_STATIC);
             mWallpaperPreferences.clearDailyRotations();
-            mWallpaperPreferences.setHomeWallpaperCollectionId(
-                    wallpaperInfo.getCollectionId(mAppContext));
         }
 
         if (destination == WallpaperPersister.DEST_LOCK_SCREEN
@@ -659,9 +667,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                         | WallpaperManagerCompat.FLAG_LOCK;
             }
 
-
-            boolean wasLockWallpaperSet = InjectorProvider.getInjector()
-                    .getWallpaperStatusChecker(mAppContext).isLockWallpaperSet();
+            boolean wasLockWallpaperSet = mWallpaperStatusChecker.isLockWallpaperSet();
 
             boolean allowBackup = mWallpaper.getBackupPermission() == WallpaperInfo.BACKUP_ALLOWED;
             final int wallpaperId;
