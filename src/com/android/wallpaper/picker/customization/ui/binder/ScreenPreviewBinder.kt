@@ -86,8 +86,17 @@ object ScreenPreviewBinder {
         val workspaceSurface: SurfaceView = previewView.requireViewById(R.id.workspace_surface)
         val wallpaperSurface: SurfaceView = previewView.requireViewById(R.id.wallpaper_surface)
         val thumbnailRequested = AtomicBoolean(false)
-        previewView.contentDescription =
+
+        val fixedWidthDisplayFrameLayout = previewView.parent as? View
+        val screenPreviewClickView = fixedWidthDisplayFrameLayout?.parent as? View
+        // Set the content description on the parent view
+        screenPreviewClickView?.contentDescription =
             activity.resources.getString(viewModel.previewContentDescription)
+        fixedWidthDisplayFrameLayout?.importantForAccessibility =
+            View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+
+        // This ensures that we do not announce the time multiple times
+        previewView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
         val surfaceViewsReady = {
             wallpaperSurface.setBackgroundColor(Color.TRANSPARENT)
             workspaceSurface.visibility = View.VISIBLE
