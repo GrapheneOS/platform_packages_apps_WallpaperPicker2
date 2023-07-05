@@ -19,7 +19,6 @@ import static android.app.WallpaperManager.FLAG_LOCK;
 import static android.app.WallpaperManager.FLAG_SYSTEM;
 import static android.app.WallpaperManager.SetWallpaperFlags;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 
@@ -40,9 +39,6 @@ public interface WallpaperPersister {
     int DEST_HOME_SCREEN = 0;
     int DEST_LOCK_SCREEN = 1;
     int DEST_BOTH = 2;
-    int WALLPAPER_POSITION_CENTER = 0;
-    int WALLPAPER_POSITION_CENTER_CROP = 1;
-    int WALLPAPER_POSITION_STRETCH = 2;
 
     /**
      * Sets a static individual wallpaper to the system via the WallpaperManager.
@@ -59,19 +55,6 @@ public interface WallpaperPersister {
      */
     void setIndividualWallpaper(WallpaperInfo wallpaper, Asset asset, @Nullable Rect cropRect,
                                 float scale, @Destination int destination, SetWallpaperCallback callback);
-
-    /**
-     * Sets a static individual wallpaper to the system with the provided wallpaper position
-     * preference to fit the device display. This method does not provide a destination option since
-     * the UI that calls this interface does not support separate home and lock screens.
-     *
-     * @param wallpaper         Wallpaper model object. Wallpaper image will be set from the asset provided
-     *                          by the wallpaper's default asset.
-     * @param wallpaperPosition Crop strategy for fitting the wallpaper asset to the device display.
-     * @param callback          Called once the wallpaper was set or if an error occurred.
-     */
-    void setIndividualWallpaperWithPosition(Activity activity, WallpaperInfo wallpaper,
-                                            @WallpaperPosition int wallpaperPosition, SetWallpaperCallback callback);
 
     /**
      * Sets an individual wallpaper to the system as the wallpaper in the current rotation along with
@@ -201,16 +184,6 @@ public interface WallpaperPersister {
             DEST_LOCK_SCREEN,
             DEST_BOTH})
     @interface Destination {
-    }
-
-    /**
-     * Possible wallpaper positions for setting an image wallpaper on desktop.
-     */
-    @IntDef({
-            WALLPAPER_POSITION_CENTER,
-            WALLPAPER_POSITION_CENTER_CROP,
-            WALLPAPER_POSITION_STRETCH})
-    @interface WallpaperPosition {
     }
 
     /**
