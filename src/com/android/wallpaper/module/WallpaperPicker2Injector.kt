@@ -275,9 +275,13 @@ open class WallpaperPicker2Injector : Injector {
                 .also { wallpaperRotationRefresher = it }
     }
 
-    override fun getWallpaperStatusChecker(): WallpaperStatusChecker {
+    override fun getWallpaperStatusChecker(context: Context): WallpaperStatusChecker {
         return wallpaperStatusChecker
-            ?: DefaultWallpaperStatusChecker().also { wallpaperStatusChecker = it }
+            ?: DefaultWallpaperStatusChecker(
+                    wallpaperManager = WallpaperManager.getInstance(context.applicationContext),
+                    wallpaperManagerCompat = getWallpaperManagerCompat(context.applicationContext),
+                )
+                .also { wallpaperStatusChecker = it }
     }
 
     override fun getFlags(): BaseFlags {

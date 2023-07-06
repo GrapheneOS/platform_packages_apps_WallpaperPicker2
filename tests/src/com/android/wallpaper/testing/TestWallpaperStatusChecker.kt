@@ -15,26 +15,25 @@
  */
 package com.android.wallpaper.testing
 
-import android.content.Context
 import com.android.wallpaper.module.WallpaperStatusChecker
 
 class TestWallpaperStatusChecker : WallpaperStatusChecker {
-    private var isHomeStaticWallpaperSet = true
-    private var isLockWallpaperSet = true
+    private var _isHomeStaticWallpaperSet: Boolean = true
+    private var _isLockWallpaperSet = true
 
     fun setHomeStaticWallpaperSet(isSet: Boolean) {
-        isHomeStaticWallpaperSet = isSet
-    }
-
-    override fun isHomeStaticWallpaperSet(context: Context): Boolean {
-        return isHomeStaticWallpaperSet
+        _isHomeStaticWallpaperSet = isSet
     }
 
     fun setLockWallpaperSet(isSet: Boolean) {
-        isLockWallpaperSet = isSet
+        _isLockWallpaperSet = isSet
     }
 
-    override fun isLockWallpaperSet(context: Context): Boolean {
-        return isLockWallpaperSet
+    override fun isHomeStaticWallpaperSet(): Boolean {
+        return _isHomeStaticWallpaperSet
+    }
+
+    override fun isLockWallpaperSet(): Boolean {
+        return _isLockWallpaperSet
     }
 }
