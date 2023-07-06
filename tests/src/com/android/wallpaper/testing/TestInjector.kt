@@ -247,7 +247,7 @@ open class TestInjector : Injector {
                 .also { wallpaperRotationRefresher = it }
     }
 
-    override fun getWallpaperStatusChecker(): WallpaperStatusChecker {
+    override fun getWallpaperStatusChecker(context: Context): WallpaperStatusChecker {
         return wallpaperStatusChecker
             ?: TestWallpaperStatusChecker().also { wallpaperStatusChecker = it }
     }

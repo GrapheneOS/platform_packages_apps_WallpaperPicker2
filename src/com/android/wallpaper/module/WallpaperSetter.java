@@ -386,16 +386,16 @@ public class WallpaperSetter {
             return;
         }
 
-        WallpaperStatusChecker wallpaperStatusChecker =
-                InjectorProvider.getInjector().getWallpaperStatusChecker();
+        WallpaperStatusChecker wallpaperStatusChecker = InjectorProvider.getInjector()
+                .getWallpaperStatusChecker(activity.getApplicationContext());
         boolean isLiveWallpaperSet =
                 WallpaperManager.getInstance(activity).getWallpaperInfo() != null;
         // Alternative of ag/15567276
         boolean isBuiltIn = !isLiveWallpaperSet
-                && !wallpaperStatusChecker.isHomeStaticWallpaperSet(activity);
+                && !wallpaperStatusChecker.isHomeStaticWallpaperSet();
 
         if ((isLiveWallpaperSet || isBuiltIn)
-                && !wallpaperStatusChecker.isLockWallpaperSet(activity)) {
+                && !wallpaperStatusChecker.isLockWallpaperSet()) {
             if (isLiveWallpaper) {
                 // If lock wallpaper is live and we're setting a live wallpaper, we can only
                 // set it to both, so bypass the dialog.

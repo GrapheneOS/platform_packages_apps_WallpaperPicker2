@@ -112,7 +112,7 @@ interface Injector {
 
     fun getWallpaperRotationRefresher(): WallpaperRotationRefresher
 
-    fun getWallpaperStatusChecker(): WallpaperStatusChecker
+    fun getWallpaperStatusChecker(context: Context): WallpaperStatusChecker
 
     fun getFragmentFactory(): FragmentFactory? {
         return null

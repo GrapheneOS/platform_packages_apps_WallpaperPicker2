@@ -13,23 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.wallpaper.module;
+package com.android.wallpaper.module
 
-import android.content.Context;
-
-/**
- * Checks the status of the home/lock screen wallpaper in the device.
- */
-public interface WallpaperStatusChecker {
-
-    /**
-     * Returns whether a static home wallpaper is set to the device.
-     */
-    boolean isHomeStaticWallpaperSet(Context context);
+/** Checks the status of the home/lock screen wallpaper in the device. */
+interface WallpaperStatusChecker {
+    /** Returns whether a static home wallpaper is set to the device. */
+    fun isHomeStaticWallpaperSet(): Boolean
 
     /**
      * Returns an explicit lock wallpaper is set to the device independently (i.e.,independently
      * shown under the keyguard and separate from the wallpaper shown under the user's launcher).
      */
-    boolean isLockWallpaperSet(Context context);
+    fun isLockWallpaperSet(): Boolean
 }
