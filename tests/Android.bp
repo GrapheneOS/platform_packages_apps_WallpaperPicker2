@@ -23,7 +23,7 @@ package {
 android_library {
     name: "WallpaperPicker2TestLib",
 
-    defaults: ["WallpaperPicker2_defaults"],
+    defaults: ["WallpaperPicker2_common_defaults"],
     srcs: [
         "src/com/android/wallpaper/testing/**/*.java",
         "src/com/android/wallpaper/testing/**/*.kt",

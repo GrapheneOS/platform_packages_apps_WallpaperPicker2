@@ -29,7 +29,7 @@ android_library {
         "androidx.cardview_cardview",
         "androidx-constraintlayout_constraintlayout",
         "androidx.exifinterface_exifinterface",
-	"androidx.lifecycle_lifecycle-livedata-ktx",
+        "androidx.lifecycle_lifecycle-livedata-ktx",
         "androidx.lifecycle_lifecycle-runtime-ktx",
         "androidx.recyclerview_recyclerview",
         "androidx.slice_slice-view",
@@ -105,12 +105,41 @@ filegroup {
     ],
 }
 
+// Common defaults that doesn't have WallpaperPicker2 specifics.
+java_defaults {
+    name: "WallpaperPicker2_common_defaults",
+
+    static_libs: [
+        "wallpaper-common-deps",
+        "monet",
+        "hilt_android",
+    ],
+
+    srcs: [
+        ":WallpaperPicker2_srcs",
+    ],
+    resource_zips: [":WallpaperPicker2_res"],
+
+    certificate: "",
+
+    optimize: {
+        enabled: false,
+    },
+
+    kotlincflags: ["-Xjvm-default=enable"],
+    privileged: true,
+    system_ext_specific: true,
+
+    use_embedded_native_libs: true,
+}
+
 java_defaults {
     name: "WallpaperPicker2_defaults",
 
     static_libs: [
         "wallpaper-common-deps",
         "monet",
+        "hilt_android",
     ],
 
     srcs: [
