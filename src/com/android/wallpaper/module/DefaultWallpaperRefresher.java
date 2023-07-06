@@ -64,7 +64,7 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
 
         Injector injector = InjectorProvider.getInjector();
         mWallpaperPreferences = injector.getPreferences(mAppContext);
-        mWallpaperStatusChecker = injector.getWallpaperStatusChecker();
+        mWallpaperStatusChecker = injector.getWallpaperStatusChecker(context);
 
         // Retrieve WallpaperManager using Context#getSystemService instead of
         // WallpaperManager#getInstance so it can be mocked out in test.
@@ -109,7 +109,7 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
             }
 
             boolean isLockScreenWallpaperCurrentlySet =
-                    mWallpaperStatusChecker.isLockWallpaperSet(mAppContext);
+                    mWallpaperStatusChecker.isLockWallpaperSet();
 
             if (mWallpaperManager.getWallpaperInfo() == null) {
                 wallpaperMetadatas.add(new WallpaperMetadata(
@@ -251,7 +251,7 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
 
         private long getCurrentLockWallpaperHashCode() {
             if (mCurrentLockWallpaperHashCode == 0
-                    && mWallpaperStatusChecker.isLockWallpaperSet(mAppContext)) {
+                    && mWallpaperStatusChecker.isLockWallpaperSet()) {
                 Bitmap wallpaperBitmap = getLockWallpaperBitmap();
                 mCurrentLockWallpaperHashCode = BitmapUtils.generateHashCode(wallpaperBitmap);
             }
