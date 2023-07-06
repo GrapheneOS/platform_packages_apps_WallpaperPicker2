@@ -324,6 +324,7 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
 
         mNoBackupPrefs.edit()
                 .remove(NoBackupKeys.KEY_HOME_WALLPAPER_SERVICE_NAME)
+                .remove(NoBackupKeys.KEY_HOME_WALLPAPER_EFFECTS)
                 .remove(NoBackupKeys.KEY_HOME_WALLPAPER_MANAGER_ID)
                 .remove(NoBackupKeys.KEY_HOME_WALLPAPER_REMOTE_ID)
                 .remove(NoBackupKeys.KEY_HOME_WALLPAPER_BASE_IMAGE_URL)
@@ -552,6 +553,7 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
 
         mNoBackupPrefs.edit()
                 .remove(NoBackupKeys.KEY_LOCK_WALLPAPER_SERVICE_NAME)
+                .remove(NoBackupKeys.KEY_LOCK_WALLPAPER_EFFECTS)
                 .remove(NoBackupKeys.KEY_LOCK_WALLPAPER_MANAGER_ID)
                 .remove(NoBackupKeys.KEY_LOCK_WALLPAPER_REMOTE_ID)
                 .remove(NoBackupKeys.KEY_LOCK_WALLPAPER_BACKING_FILE)
