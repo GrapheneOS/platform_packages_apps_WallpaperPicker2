@@ -132,7 +132,7 @@ public class PreviewActivityTest {
         mExploreIntentChecker = (TestExploreIntentChecker)
                 mInjector.getExploreIntentChecker(context);
         mWallpaperStatusChecker = (TestWallpaperStatusChecker)
-                mInjector.getWallpaperStatusChecker();
+                mInjector.getWallpaperStatusChecker(context);
         mWallpaperManager = WallpaperManager.getInstance(context);
     }
 

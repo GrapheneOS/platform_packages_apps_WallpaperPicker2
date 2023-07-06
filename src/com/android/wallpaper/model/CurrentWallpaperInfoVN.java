@@ -145,8 +145,8 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
     private Asset createCurrentWallpaperAssetVN(Context context) {
         // Whether the wallpaper this object represents is the default built-in wallpaper.
         boolean isSystemBuiltIn = mWallpaperManagerFlag == WallpaperManagerCompat.FLAG_SYSTEM
-                && !InjectorProvider.getInjector().getWallpaperStatusChecker()
-                .isHomeStaticWallpaperSet(context);
+                && !InjectorProvider.getInjector().getWallpaperStatusChecker(context)
+                .isHomeStaticWallpaperSet();
 
         return (isSystemBuiltIn)
                 ? new BuiltInWallpaperAsset(context)
