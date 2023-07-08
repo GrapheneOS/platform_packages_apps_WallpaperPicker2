@@ -20,10 +20,13 @@ import android.app.Application;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.WallpaperPicker2Injector;
 
+import dagger.hilt.android.HiltAndroidApp;
+
 /**
  * Application subclass that initializes the injector.
  */
-public class WallpapersApplication extends Application {
+@HiltAndroidApp(Application.class)
+public class WallpapersApplication extends Hilt_WallpapersApplication {
 
     @Override
     public void onCreate() {
