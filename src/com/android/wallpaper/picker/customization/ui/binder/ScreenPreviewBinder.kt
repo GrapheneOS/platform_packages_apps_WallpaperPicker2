@@ -131,7 +131,10 @@ object ScreenPreviewBinder {
         var wallpaperSurfaceCallback: WallpaperSurfaceCallback? = null
         var wallpaperConnection: WallpaperConnection? = null
         var wallpaperInfo: WallpaperInfo? = null
+        var animationState: AnimationStateViewModel.AnimationState? = null
         var loadingImageDrawable: Drawable? = null
+        var animationTimeToRestore: Long? = null
+        var animationColorToRestore: Int? = null
 
         val job =
             lifecycleOwner.lifecycleScope.launch {
@@ -142,10 +145,20 @@ object ScreenPreviewBinder {
                                 super.onCreate(owner)
                                 if (showLoadingAnimation) {
                                     if (loadingAnimation == null) {
-                                        loadingImageDrawable =
+                                        animationState =
                                             animationStateViewModel?.getAnimationState(
                                                 viewModel.screen
                                             )
+                                        loadingImageDrawable = animationState?.drawable
+                                        // TODO (b/290054874): investigate why app restarts twice
+                                        // The lines below are a workaround for the issue of
+                                        // wallpaper picker lifecycle restarting twice after a
+                                        // config change; because of this, on second start, saved
+                                        // instance state would always return null. Instead we would
+                                        // like the saved instance state on the first restart to
+                                        // pass through to the second.
+                                        animationTimeToRestore = animationState?.time
+                                        animationColorToRestore = animationState?.color
                                         // a null drawable means the loading animation should not
                                         // be played
                                         loadingImageDrawable?.let {
@@ -166,6 +179,7 @@ object ScreenPreviewBinder {
 
                             override fun onStop(owner: LifecycleOwner) {
                                 super.onStop(owner)
+                                animationTimeToRestore = loadingAnimation?.getElapsedTime()
                                 loadingAnimation?.cancel()
                                 loadingAnimation = null
                                 // TODO (b/274443705): fix case of stopping and resuming app on load
@@ -173,12 +187,15 @@ object ScreenPreviewBinder {
                                 // change restart, and reset to null otherwise, so that reveal
                                 // animation is only played after a wallpaper/color switch and not
                                 // on every resume
-                                if (!activity.isChangingConfigurations) {
-                                    loadingImageDrawable = null
-                                }
                                 animationStateViewModel?.saveAnimationState(
                                     viewModel.screen,
-                                    loadingImageDrawable
+                                    if (activity.isChangingConfigurations) {
+                                        AnimationStateViewModel.AnimationState(
+                                            loadingImageDrawable,
+                                            animationTimeToRestore,
+                                            animationColorToRestore,
+                                        )
+                                    } else null
                                 )
                                 if (!isPageTransitionsFeatureEnabled) {
                                     wallpaperConnection?.destroy()
@@ -192,14 +209,6 @@ object ScreenPreviewBinder {
                                 wallpaperConnection?.setVisibility(false)
                                 loadingAnimation?.cancel()
                                 wallpaperIsReadyForReveal = false
-                            }
-
-                            override fun onResume(owner: LifecycleOwner) {
-                                super.onResume(owner)
-                                loadingAnimation?.setupRevealAnimation()
-                                if (wallpaperIsReadyForReveal) {
-                                    loadingAnimation?.playRevealAnimation()
-                                }
                             }
                         }
 
@@ -239,7 +248,20 @@ object ScreenPreviewBinder {
                                     thumbnailRequested = thumbnailRequested
                                 )
                                 if (showLoadingAnimation) {
-                                    loadingAnimation?.setupRevealAnimation()
+                                    val colorAccent =
+                                        animationColorToRestore
+                                            ?: ResourceUtils.getColorAttr(
+                                                activity,
+                                                android.R.attr.colorAccent
+                                            )
+                                    val night =
+                                        (previewView.resources.configuration.uiMode and
+                                            Configuration.UI_MODE_NIGHT_MASK ==
+                                            Configuration.UI_MODE_NIGHT_YES)
+                                    loadingAnimation?.updateColor(
+                                        ColorScheme(seed = colorAccent, darkTheme = night)
+                                    )
+                                    loadingAnimation?.setupRevealAnimation(animationTimeToRestore)
                                     val isStaticWallpaper =
                                         wallpaperInfo != null && wallpaperInfo !is LiveWallpaperInfo
                                     wallpaperIsReadyForReveal =
@@ -322,6 +344,7 @@ object ScreenPreviewBinder {
                                         (previewView.resources.configuration.uiMode and
                                             Configuration.UI_MODE_NIGHT_MASK ==
                                             Configuration.UI_MODE_NIGHT_YES)
+                                    animationColorToRestore = colorAccent
                                     loadingAnimation?.updateColor(
                                         ColorScheme(seed = colorAccent, darkTheme = night)
                                     )

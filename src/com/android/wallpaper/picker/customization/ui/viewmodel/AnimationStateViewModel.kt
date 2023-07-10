@@ -25,25 +25,32 @@ import com.android.wallpaper.module.CustomizationSections
  * change restart.
  */
 abstract class AnimationStateViewModel : ViewModel() {
-    /**
-     * Used to persist the preview section loading animation state through config change restarts
-     */
-    private var homePreviewDrawable: Drawable? = null
-    private var lockPreviewDrawable: Drawable? = null
+    /** Used to persist the preview loading animation state through config change restarts */
+    data class AnimationState(
+        /** The drawable used as animation background */
+        val drawable: Drawable?,
+        /** The elapsed time of the animation */
+        val time: Long?,
+        /** The color used for animation effects */
+        val color: Int?,
+    )
 
-    fun saveAnimationState(screen: CustomizationSections.Screen, drawable: Drawable?) {
+    private var homePreviewAnimationState: AnimationState? = null
+    private var lockPreviewAnimationState: AnimationState? = null
+
+    fun saveAnimationState(screen: CustomizationSections.Screen, state: AnimationState?) {
         if (screen == CustomizationSections.Screen.LOCK_SCREEN) {
-            lockPreviewDrawable = drawable
+            lockPreviewAnimationState = state
         } else {
-            homePreviewDrawable = drawable
+            homePreviewAnimationState = state
         }
     }
 
-    fun getAnimationState(screen: CustomizationSections.Screen): Drawable? {
+    fun getAnimationState(screen: CustomizationSections.Screen): AnimationState? {
         return if (screen == CustomizationSections.Screen.LOCK_SCREEN) {
-            lockPreviewDrawable
+            lockPreviewAnimationState
         } else {
-            homePreviewDrawable
+            homePreviewAnimationState
         }
     }
 }
