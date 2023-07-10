@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.model.LiveWallpaperInfo;
+import com.android.wallpaper.model.StaticWallpaperMetadata;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 
@@ -128,6 +129,11 @@ public interface WallpaperPreferences {
      * Removes all home metadata from SharedPreferences.
      */
     void clearHomeWallpaperMetadata();
+
+    /**
+     * Set homescreen static image wallpaper metadata to SharedPreferences.
+     */
+    void setHomeStaticImageWallpaperMetadata(StaticWallpaperMetadata metadata);
 
     /**
      * Returns the home wallpaper's bitmap hash code or 0 if there is none.
@@ -261,6 +267,11 @@ public interface WallpaperPreferences {
      * Removes all lock screen metadata from SharedPreferences.
      */
     void clearLockWallpaperMetadata();
+
+    /**
+     * Set lockscreen static image wallpaper metadata to SharedPreferences.
+     */
+    void setLockStaticImageWallpaperMetadata(StaticWallpaperMetadata metadata);
 
     /**
      * Returns the lock screen wallpaper's bitmap hash code or 0 if there is none.
