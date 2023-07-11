@@ -169,6 +169,8 @@ public class CategorySelectorFragment extends AppbarFragment {
             gridLayoutManager.setSpanSizeLookup(new
                     GroupedCategorySpanSizeLookup(mGroupedCategoryAdapter));
             mImageGrid.setLayoutManager(gridLayoutManager);
+            //TODO (b/290267060): To be fixed when re-factoring of loading categories is done
+            mImageGrid.setItemAnimator(null);
         } else {
             mImageGrid.setAdapter(mAdapter);
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),
