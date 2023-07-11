@@ -60,6 +60,7 @@
 
     <!-- Material 3 colors -->
     <color name="system_primary">@android:color/system_primary_light</color>
+    <color name="system_primary_container">@android:color/system_primary_container_light</color>
     <color name="system_secondary">@android:color/system_secondary_light</color>
     <color name="system_tertiary">@android:color/system_tertiary_light</color>
     <color name="system_on_primary">@android:color/system_on_primary_light</color>
