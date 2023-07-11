@@ -119,7 +119,8 @@ object ScreenPreviewBinder {
         val flags = BaseFlags.get()
         val isPageTransitionsFeatureEnabled = flags.isPageTransitionsFeatureEnabled(activity)
 
-        val showLoadingAnimation = flags.isPreviewLoadingAnimationEnabled()
+        val showLoadingAnimation =
+            flags.isPreviewLoadingAnimationEnabled(activity.applicationContext)
         var loadingAnimation: LoadingAnimation? = null
         val loadingView: ImageView = previewView.requireViewById(R.id.loading_view)
 
