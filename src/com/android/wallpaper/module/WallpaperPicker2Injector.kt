@@ -239,9 +239,17 @@ open class WallpaperPicker2Injector : Injector {
     @Synchronized
     override fun getWallpaperPersister(context: Context): WallpaperPersister {
         return wallpaperPersister
-            ?: DefaultWallpaperPersister(context.applicationContext).also {
-                wallpaperPersister = it
-            }
+            ?: DefaultWallpaperPersister(
+                    context.applicationContext,
+                    WallpaperManager.getInstance(context),
+                    getWallpaperManagerCompat(context),
+                    getPreferences(context),
+                    WallpaperChangedNotifier.getInstance(),
+                    getDisplayUtils(context),
+                    getBitmapCropper(),
+                    getWallpaperStatusChecker(context),
+                )
+                .also { wallpaperPersister = it }
     }
 
     @Synchronized
