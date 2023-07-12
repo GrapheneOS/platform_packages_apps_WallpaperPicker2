@@ -25,7 +25,7 @@
     <string name="select_wallpaper_label">Wallpaper categories</string>
 
     <!-- Label for a button which lets user set the displayed image as wallpaper. [CHAR LIMIT=30] -->
-    <string name="set_wallpaper_button_text">Set Wallpaper</string>
+    <string name="set_wallpaper_button_text">Set wallpaper</string>
 
     <!-- Message shown in a dialog indicating that the app is setting an image as the device
          wallpaper. [CHAR LIMIT=100] -->
