@@ -24,7 +24,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Parcel;
 import android.service.wallpaper.WallpaperService;
 import android.text.TextUtils;
@@ -374,18 +373,12 @@ public class LiveWallpaperInfo extends WallpaperInfo {
 
     @Override
     public String getActionUrl(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            try {
-                Uri wallpaperContextUri = mInfo.loadContextUri(context.getPackageManager());
-                if (wallpaperContextUri != null) {
-                    return wallpaperContextUri.toString();
-                }
-            } catch (Resources.NotFoundException e) {
-                return null;
-            }
+        try {
+            Uri wallpaperContextUri = mInfo.loadContextUri(context.getPackageManager());
+            return wallpaperContextUri != null ? wallpaperContextUri.toString() : null;
+        } catch (Resources.NotFoundException e) {
+            return null;
         }
-
-        return null;
     }
 
     /**
