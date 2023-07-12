@@ -44,8 +44,8 @@ import android.graphics.Rect;
 import android.widget.TextView;
 
 import androidx.test.espresso.intent.Intents;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
@@ -82,7 +82,7 @@ import java.util.List;
 /**
  * Tests for {@link PreviewActivity}.
  */
-@RunWith(AndroidJUnit4ClassRunner.class)
+@RunWith(AndroidJUnit4.class)
 @MediumTest
 public class PreviewActivityTest {
 

@@ -54,6 +54,7 @@ android_test {
         "androidx.test.espresso.core",
         "androidx.test.espresso.contrib",
         "androidx.test.espresso.intents",
+        "androidx.test.ext.junit",
         "androidx.test.rules",
         "hamcrest-library",
         "hamcrest",
