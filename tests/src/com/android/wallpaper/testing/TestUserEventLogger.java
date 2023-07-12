@@ -18,7 +18,6 @@ package com.android.wallpaper.testing;
 import android.content.Intent;
 
 import com.android.wallpaper.module.UserEventLogger;
-import com.android.wallpaper.module.WallpaperPersister.WallpaperPosition;
 
 /**
  * Test implementation of {@link UserEventLogger}.
@@ -47,8 +46,6 @@ public class TestUserEventLogger implements UserEventLogger {
     private int mLastDailyWallpaperUpdateResult;
     private int mStandalonePreviewLaunches;
     private int mNumRestores;
-    @WallpaperPosition
-    private int mWallpaperPosition;
     private String mWallpaperSetEffects;
     private String mWallpaperApplyEffect;
     private int mWallpaperApplyEffectStatus;
@@ -320,9 +317,5 @@ public class TestUserEventLogger implements UserEventLogger {
 
     public int getNumRestores() {
         return mNumRestores;
-    }
-
-    public int getWallpaperPosition() {
-        return mWallpaperPosition;
     }
 }
