@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.testing;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -23,7 +22,6 @@ import android.graphics.Rect;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.asset.Asset;
-import com.android.wallpaper.asset.Asset.BitmapReceiver;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.WallpaperChangedNotifier;
@@ -52,8 +50,6 @@ public class TestWallpaperPersister implements WallpaperPersister {
     private boolean mFailNextCall;
     private Rect mCropRect;
     private float mScale;
-    @WallpaperPosition
-    private int mWallpaperPosition;
     private WallpaperInfo mWallpaperInfo;
 
     public TestWallpaperPersister(Context appContext) {
@@ -92,31 +88,6 @@ public class TestWallpaperPersister implements WallpaperPersister {
             mCropRect = cropRect;
             mScale = scale;
             mWallpaperInfo = wallpaperInfo;
-        });
-    }
-
-    @Override
-    public void setIndividualWallpaperWithPosition(Activity activity, WallpaperInfo wallpaper,
-            @WallpaperPosition int wallpaperPosition, SetWallpaperCallback callback) {
-        wallpaper.getAsset(activity).decodeBitmap(50, 50, new BitmapReceiver() {
-            @Override
-            public void onBitmapDecoded(@Nullable Bitmap bitmap) {
-                mPendingHomeWallpaper = bitmap;
-                mPrefs.setHomeWallpaperAttributions(wallpaper.getAttributions(mAppContext));
-                mPrefs.setHomeWallpaperBaseImageUrl(wallpaper.getBaseImageUrl());
-                mPrefs.setHomeWallpaperActionUrl(wallpaper.getActionUrl(mAppContext));
-                mPrefs.setHomeWallpaperCollectionId(wallpaper.getCollectionId(mAppContext));
-                mPrefs.setHomeWallpaperRemoteId(wallpaper.getWallpaperId());
-                mPrefs.setWallpaperPresentationMode(WallpaperPreferences.PRESENTATION_MODE_STATIC);
-                mPendingLockWallpaper = bitmap;
-                mPrefs.setLockWallpaperAttributions(wallpaper.getAttributions(mAppContext));
-                mPrefs.setLockWallpaperRemoteId(wallpaper.getWallpaperId());
-
-                mDestination = WallpaperPersister.DEST_BOTH;
-                mCallback = callback;
-                mWallpaperPosition = wallpaperPosition;
-                mWallpaperInfo = wallpaper;
-            }
         });
     }
 
@@ -227,12 +198,6 @@ public class TestWallpaperPersister implements WallpaperPersister {
     /** Returns the last requested wallpaper crop. */
     public Rect getCropRect() {
         return mCropRect;
-    }
-
-    /** Returns the last selected wallpaper position option. */
-    @WallpaperPosition
-    public int getWallpaperPosition() {
-        return mWallpaperPosition;
     }
 
     @Override
