@@ -479,13 +479,13 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
-    public int getLockWallpaperId() {
+    public int getLockWallpaperManagerId() {
         return mNoBackupPrefs.getInt(
                 NoBackupKeys.KEY_LOCK_WALLPAPER_MANAGER_ID, 0);
     }
 
     @Override
-    public void setLockWallpaperId(int lockWallpaperId) {
+    public void setLockWallpaperManagerId(int lockWallpaperId) {
         mNoBackupPrefs.edit().putInt(
                 NoBackupKeys.KEY_LOCK_WALLPAPER_MANAGER_ID, lockWallpaperId)
                 .apply();
