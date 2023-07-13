@@ -336,12 +336,12 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
-    public int getLockWallpaperId() {
+    public int getLockWallpaperManagerId() {
         return mLockWallpaperManagerId;
     }
 
     @Override
-    public void setLockWallpaperId(int lockWallpaperId) {
+    public void setLockWallpaperManagerId(int lockWallpaperId) {
         mLockWallpaperManagerId = lockWallpaperId;
     }
 

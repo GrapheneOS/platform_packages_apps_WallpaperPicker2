@@ -290,13 +290,13 @@ public interface WallpaperPreferences {
      * Gets the lock wallpaper's ID, which is provided by WallpaperManager for static wallpapers.
      */
     @TargetApi(Build.VERSION_CODES.N)
-    int getLockWallpaperId();
+    int getLockWallpaperManagerId();
 
     /**
      * Sets the lock wallpaper's ID, which is provided by WallpaperManager for static wallpapers.
      */
     @TargetApi(Build.VERSION_CODES.N)
-    void setLockWallpaperId(int lockWallpaperId);
+    void setLockWallpaperManagerId(int lockWallpaperId);
 
     /**
      * Gets the lock wallpaper's remote identifier.
