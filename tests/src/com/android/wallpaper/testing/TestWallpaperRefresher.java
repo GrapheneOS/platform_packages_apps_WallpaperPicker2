@@ -45,7 +45,8 @@ public class TestWallpaperRefresher implements WallpaperRefresher {
 
         WallpaperPreferences prefs = InjectorProvider.getInjector().getPreferences(mAppContext);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && prefs.getLockWallpaperId() > 0) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                && prefs.getLockWallpaperManagerId() > 0) {
             listener.onRefreshed(
                     new WallpaperMetadata(
                             prefs.getHomeWallpaperAttributions(),

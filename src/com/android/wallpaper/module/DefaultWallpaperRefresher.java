@@ -209,7 +209,7 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
             mWallpaperPreferences.setLockWallpaperAttributions(
                     Arrays.asList(mAppContext.getResources()
                             .getString(R.string.fallback_wallpaper_title)));
-            mWallpaperPreferences.setLockWallpaperId(mWallpaperManagerCompat.getWallpaperId(
+            mWallpaperPreferences.setLockWallpaperManagerId(mWallpaperManagerCompat.getWallpaperId(
                     FLAG_LOCK));
         }
 
@@ -342,7 +342,7 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
             long savedLockWallpaperHash = mWallpaperPreferences.getLockWallpaperHashCode();
 
             if (savedLockWallpaperHash == 0) {
-                return mWallpaperPreferences.getLockWallpaperId()
+                return mWallpaperPreferences.getLockWallpaperManagerId()
                         == mWallpaperManagerCompat.getWallpaperId(FLAG_LOCK);
             } else {
                 return savedLockWallpaperHash == getCurrentLockWallpaperHashCode();
