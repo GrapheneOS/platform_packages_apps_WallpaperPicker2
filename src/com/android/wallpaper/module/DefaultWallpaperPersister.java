@@ -420,7 +420,10 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setHomeWallpaperCollectionId(
                     wallpaperInfo.getCollectionId(mAppContext));
 
-            // Since rotation affects home screen only, disable it when setting home live wp
+            // Disable rotation wallpaper when setting live wallpaper to home screen
+            // Daily rotation rotates both home and lock screen wallpaper when lock screen is not
+            // set; otherwise daily rotation only rotates home screen while lock screen wallpaper
+            // stays as what it's set to.
             mWallpaperPreferences.setWallpaperPresentationMode(
                     WallpaperPreferences.PRESENTATION_MODE_STATIC);
             mWallpaperPreferences.clearDailyRotations();
@@ -609,19 +612,19 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                 mWallpaperPreferences.setHomeWallpaperEffects(null);
                 setImageWallpaperHomeMetadata(wallpaperId);
 
-                // Reset presentation mode to STATIC if an individual wallpaper is set to the
-                // home screen
-                // because rotation always affects at least the home screen.
+                // Disable rotation wallpaper when setting static image wallpaper to home screen
+                // Daily rotation rotates both home and lock screen wallpaper when lock screen is
+                // not set; otherwise daily rotation only rotates home screen while lock screen
+                // wallpaper stays as what it's set to.
                 mWallpaperPreferences.setWallpaperPresentationMode(
                         WallpaperPreferences.PRESENTATION_MODE_STATIC);
+                mWallpaperPreferences.clearDailyRotations();
             }
 
             if (destination == DEST_LOCK_SCREEN || destination == DEST_BOTH) {
                 mWallpaperPreferences.clearLockWallpaperMetadata();
                 setImageWallpaperLockMetadata(wallpaperId);
             }
-
-            mWallpaperPreferences.clearDailyRotations();
         }
 
         private void setImageWallpaperHomeMetadata(int homeWallpaperId) {
