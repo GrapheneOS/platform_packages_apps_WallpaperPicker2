@@ -121,16 +121,6 @@ public class TestUserEventLogger implements UserEventLogger {
     }
 
     @Override
-    public void logLiveWallpaperInfoSelected(String collectionId, String wallpaperId) {
-        // No-op
-    }
-
-    @Override
-    public void logLiveWallpaperCustomizeSelected(String collectionId, String wallpaperId) {
-        // No-op
-    }
-
-    @Override
     public void logSnapshot() {
         // No-op
     }
