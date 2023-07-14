@@ -253,7 +253,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         if (destination == DEST_LOCK_SCREEN || destination == DEST_BOTH
                 || !isSeparateLockScreenWallpaperSet()) {
             mWallpaperPreferences.clearLockWallpaperMetadata();
-            mWallpaperPreferences.setLockWallpaperId(wallpaperId);
+            mWallpaperPreferences.setLockWallpaperManagerId(wallpaperId);
             mWallpaperPreferences.setLockWallpaperAttributions(attributions);
             mWallpaperPreferences.setLockWallpaperActionUrl(actionUrl);
             mWallpaperPreferences.setLockWallpaperActionLabelRes(actionLabelRes);
@@ -589,7 +589,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             // Set the lock wallpaper ID to what Android set it to, following its having
             // copied the system wallpaper over to the lock screen when we changed from
             // "both" to distinct system and lock screen wallpapers.
-            mWallpaperPreferences.setLockWallpaperId(
+            mWallpaperPreferences.setLockWallpaperManagerId(
                     mWallpaperManagerCompat.getWallpaperId(WallpaperManagerCompat.FLAG_LOCK));
 
         }
@@ -660,7 +660,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         }
 
         private void setImageWallpaperLockMetadata(int lockWallpaperId) {
-            mWallpaperPreferences.setLockWallpaperId(lockWallpaperId);
+            mWallpaperPreferences.setLockWallpaperManagerId(lockWallpaperId);
             mWallpaperPreferences.setLockWallpaperAttributions(
                     mWallpaper.getAttributions(mAppContext));
             mWallpaperPreferences.setLockWallpaperActionUrl(mWallpaper.getActionUrl(mAppContext));
