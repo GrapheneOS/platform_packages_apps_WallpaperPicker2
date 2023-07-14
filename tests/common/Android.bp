@@ -1,4 +1,4 @@
-// Copyright (C) 2021 The Android Open Source Project
+// Copyright (C) 2023 The Android Open Source Project
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,39 +20,19 @@ package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
 
-android_test {
-    name: "WallpaperPicker2Tests",
+android_library {
+    name: "WallpaperPicker2TestLib",
 
-    defaults: ["WallpaperPicker2_defaults"],
+    defaults: ["WallpaperPicker2_common_defaults"],
     srcs: [
-        "src/**/*.java",
-        "src/**/*.kt",
-    ],
-    exclude_srcs: [
         "src/com/android/wallpaper/testing/**/*.java",
         "src/com/android/wallpaper/testing/**/*.kt",
     ],
     static_libs: [
-        "WallpaperPicker2TestLib",
-        "androidx.test.espresso.core",
-        "androidx.test.espresso.contrib",
-        "androidx.test.espresso.intents",
-        "androidx.test.ext.junit",
-        "androidx.test.rules",
-        "hamcrest-library",
-        "hamcrest",
-        "mockito-target-minus-junit4",
-        "ub-uiautomator",
-        "junit",
+        "androidx.annotation_annotation",
         "kotlinx_coroutines_test",
         "truth-prebuilt",
     ],
-    libs: [
-        "android.test.runner",
-        "android.test.base",
-        "android.test.mock",
-    ],
 
     platform_apis: true,
-    test_suites: ["device-tests"],
 }
