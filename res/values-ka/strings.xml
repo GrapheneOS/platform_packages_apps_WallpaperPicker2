@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"ფონის კატეგორიები"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"ფონის დაყენება"</string>
+    <string name="set_wallpaper_button_text" msgid="5445978864530156290">"ფონის დაყენება"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"მიმდინარეობს ფონის დაყენება…"</string>
     <string name="try_again" msgid="8278874823700921234">"ხელახლა ცდა"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"ფონის დაყენება ვერ მოხერხდა."</string>
