@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"壁紙のカテゴリ"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"壁紙を設定"</string>
+    <string name="set_wallpaper_button_text" msgid="5445978864530156290">"壁紙に設定"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"壁紙を設定しています…"</string>
     <string name="try_again" msgid="8278874823700921234">"再試行"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"壁紙を設定できませんでした。"</string>

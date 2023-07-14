@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Kategori kertas dinding"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Tetapkan Hiasan Latar"</string>
+    <string name="set_wallpaper_button_text" msgid="5445978864530156290">"Tetapkan hiasan latar"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Menetapkan kertas dinding…"</string>
     <string name="try_again" msgid="8278874823700921234">"Cuba lagi"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Tidak dapat menetapkan kertas dinding."</string>

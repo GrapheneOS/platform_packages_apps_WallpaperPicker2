@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Mga kategorya ng wallpaper"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Itakda na Wallpaper"</string>
+    <string name="set_wallpaper_button_text" msgid="5445978864530156290">"Itakda ang wallpaper"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Itinatakda ang wallpaper…"</string>
     <string name="try_again" msgid="8278874823700921234">"Subukang muli"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Hindi maitakda ang wallpaper."</string>
