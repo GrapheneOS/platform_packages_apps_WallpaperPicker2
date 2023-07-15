@@ -63,6 +63,7 @@ public class SystemStaticWallpaperInfo extends WallpaperInfo {
     private static final String SUBTITLE2_RES_SUFFIX = "_subtitle2";
     private static final String ACTION_TYPE_RES_SUFFIX = "_action_type";
     private static final String ACTION_URL_RES_SUFFIX = "_action_url";
+    private static final String THUMBNAIL_RES_SUFFIX = "_thumbnail";
 
     // Xml parsing attribute names
     public static final String ATTR_ID = "id";
@@ -71,6 +72,24 @@ public class SystemStaticWallpaperInfo extends WallpaperInfo {
     public static final String ATTR_SUBTITLE1_RES = "subtitle1";
     public static final String ATTR_SUBTITLE2_RES = "subtitle2";
     public static final String ATTR_ACTION_URL_RES = "actionUrl";
+    public static final String ATTR_THUMBNAIL = "thumbnail";
+
+    private final int mDrawableResId;
+    private final String mWallpaperId;
+    private final String mCollectionId;
+    private final int mTitleResId;
+    private final int mSubtitle1ResId;
+    private final int mSubtitle2ResId;
+    private final int mActionTypeResId;
+    private final int mActionUrlResId;
+    private ResourceAsset mAsset;
+    private Resources mResources;
+    private final String mPackageName;
+    private List<String> mAttributions;
+    private String mActionUrl;
+    private int mActionType;
+    private final int mThumbnailResId;
+    private ResourceAsset mThumbnailAsset;
 
     /**
      * Create and return a new {@link SystemStaticWallpaperInfo} from the information in the given
@@ -94,10 +113,11 @@ public class SystemStaticWallpaperInfo extends WallpaperInfo {
         int wallpaperSubtitle1ResId = attrs.getAttributeResourceValue(null, ATTR_SUBTITLE1_RES, 0);
         int wallpaperSubtitle2ResId = attrs.getAttributeResourceValue(null, ATTR_SUBTITLE2_RES, 0);
         int actionUrlResId = attrs.getAttributeResourceValue(null, ATTR_ACTION_URL_RES, 0);
+        int thumbnailResId = attrs.getAttributeResourceValue(null, ATTR_THUMBNAIL, 0);
 
         return new SystemStaticWallpaperInfo(packageName, wallpaperId,
                 categoryId, drawableResId, wallpaperTitleResId, wallpaperSubtitle1ResId,
-                wallpaperSubtitle2ResId, 0, actionUrlResId);
+                wallpaperSubtitle2ResId, 0, actionUrlResId, thumbnailResId);
     }
 
     /**
@@ -132,31 +152,19 @@ public class SystemStaticWallpaperInfo extends WallpaperInfo {
             int actionUrlResId = stubApkResources.getIdentifier(
                     wallpaperResName + ACTION_URL_RES_SUFFIX, STRING_DEF_TYPE,
                     partnerStubPackageName);
+            int thumbnailResId = stubApkResources.getIdentifier(
+                    wallpaperResName + THUMBNAIL_RES_SUFFIX, STRING_DEF_TYPE,
+                    partnerStubPackageName);
 
             SystemStaticWallpaperInfo wallpaperInfo = new SystemStaticWallpaperInfo(
                     partnerStubPackageName, wallpaperResName, categoryId,
                     drawableResId, wallpaperTitleResId, wallpaperSubtitle1ResId,
-                    wallpaperSubtitle2ResId, actionTypeResId, actionUrlResId);
+                    wallpaperSubtitle2ResId, actionTypeResId, actionUrlResId, thumbnailResId);
             wallpapers.add(wallpaperInfo);
         }
 
         return wallpapers;
     }
-
-    private final int mDrawableResId;
-    private final String mWallpaperId;
-    private final String mCollectionId;
-    private final int mTitleResId;
-    private final int mSubtitle1ResId;
-    private final int mSubtitle2ResId;
-    private final int mActionTypeResId;
-    private final int mActionUrlResId;
-    private ResourceAsset mAsset;
-    private Resources mResources;
-    private final String mPackageName;
-    private List<String> mAttributions;
-    private String mActionUrl;
-    private int mActionType;
 
     /**
      * Constructs a new Nexus static wallpaper model object.
@@ -168,10 +176,11 @@ public class SystemStaticWallpaperInfo extends WallpaperInfo {
      * @param titleResId     Resource ID of the string for the title attribution.
      * @param subtitle1ResId Resource ID of the string for the first subtitle attribution.
      * @param subtitle2ResId Resource ID of the string for the second subtitle attribution.
+     * @param thumbnailResId Resource ID of the thumbnail image.
      */
     public SystemStaticWallpaperInfo(String packageName, String resName, String collectionId,
             int drawableResId, int titleResId, int subtitle1ResId, int subtitle2ResId,
-            int actionTypeResId, int actionUrlResId) {
+            int actionTypeResId, int actionUrlResId, int thumbnailResId) {
         mPackageName = packageName;
         mWallpaperId = resName;
         mCollectionId = collectionId;
@@ -181,6 +190,7 @@ public class SystemStaticWallpaperInfo extends WallpaperInfo {
         mSubtitle2ResId = subtitle2ResId;
         mActionTypeResId = actionTypeResId;
         mActionUrlResId = actionUrlResId;
+        mThumbnailResId = thumbnailResId;
     }
 
     private SystemStaticWallpaperInfo(Parcel in) {
@@ -194,13 +204,14 @@ public class SystemStaticWallpaperInfo extends WallpaperInfo {
         mSubtitle2ResId = in.readInt();
         mActionTypeResId = in.readInt();
         mActionUrlResId = in.readInt();
+        mThumbnailResId = in.readInt();
     }
 
     @Override
     public Asset getAsset(Context context) {
         if (mAsset == null) {
             Resources res = getPackageResources(context);
-            mAsset = new SystemStaticAsset(res, mDrawableResId, mWallpaperId);
+            mAsset = new SystemStaticAsset(res, mDrawableResId, mWallpaperId, false);
         }
 
         return mAsset;
@@ -208,6 +219,13 @@ public class SystemStaticWallpaperInfo extends WallpaperInfo {
 
     @Override
     public Asset getThumbAsset(Context context) {
+        if (mThumbnailResId != 0) {
+            if (mThumbnailAsset == null) {
+                Resources res = getPackageResources(context);
+                mThumbnailAsset = new SystemStaticAsset(res, mThumbnailResId, mWallpaperId, true);
+            }
+            return mThumbnailAsset;
+        }
         return getAsset(context);
     }
 
@@ -303,5 +321,6 @@ public class SystemStaticWallpaperInfo extends WallpaperInfo {
         dest.writeInt(mSubtitle2ResId);
         dest.writeInt(mActionTypeResId);
         dest.writeInt(mActionUrlResId);
+        dest.writeInt(mThumbnailResId);
     }
 }
