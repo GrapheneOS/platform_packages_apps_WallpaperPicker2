@@ -35,6 +35,7 @@ public class ResourceAsset extends StreamableAsset {
     protected final Resources mRes;
     protected final int mResId;
     private final RequestOptions mRequestOptions;
+    protected boolean mIsThumbnail;
 
     protected Key mKey;
 
@@ -42,11 +43,14 @@ public class ResourceAsset extends StreamableAsset {
      * @param res   Resources containing the asset.
      * @param resId Resource ID referencing the asset.
      * @param requestOptions {@link RequestOptions} to be applied when loading the asset.
+     * @param isThumbnail Indicates this resource is specific for thumbnail.
      */
-    public ResourceAsset(Resources res, int resId, RequestOptions requestOptions) {
+    public ResourceAsset(Resources res, int resId, RequestOptions requestOptions,
+            boolean isThumbnail) {
         mRes = res;
         mResId = resId;
         mRequestOptions = requestOptions;
+        mIsThumbnail = isThumbnail;
     }
 
     /**
@@ -54,7 +58,16 @@ public class ResourceAsset extends StreamableAsset {
      * @param resId Resource ID referencing the asset.
      */
     public ResourceAsset(Resources res, int resId) {
-        this(res, resId, RequestOptions.centerCropTransform());
+        this(res, resId, RequestOptions.centerCropTransform(), false);
+    }
+
+    /**
+     * @param res   Resources containing the asset.
+     * @param resId Resource ID referencing the asset.
+     * @param isThumbnail Indicates this resource is specific for thumbnail.
+     */
+    public ResourceAsset(Resources res, int resId, boolean isThumbnail) {
+        this(res, resId, RequestOptions.centerCropTransform(), isThumbnail);
     }
 
     @Override
