@@ -21,7 +21,8 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"ប្រភេទផ្ទាំងរូបភាព"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"កំណត់ផ្ទាំងរូបភាព"</string>
+    <!-- no translation found for set_wallpaper_button_text (5445978864530156290) -->
+    <skip />
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"កំពុង​កំណត់​ផ្ទាំង​រូបភាព..."</string>
     <string name="try_again" msgid="8278874823700921234">"ព្យាយាមម្ដងទៀត"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"មិនអាចកំណត់ផ្ទាំងរូបភាពបានទេ"</string>
