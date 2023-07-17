@@ -37,9 +37,10 @@ public final class SystemStaticAsset extends ResourceAsset {
     /**
      * @param res   Resources containing the asset.
      * @param resId Resource ID referencing the asset.
+     * @param isThumbnail Indicates this resource is specific for thumbnail.
      */
-    public SystemStaticAsset(Resources res, int resId, String resName) {
-        super(res, resId);
+    public SystemStaticAsset(Resources res, int resId, String resName, boolean isThumbnail) {
+        super(res, resId, isThumbnail);
         mResName = resName;
     }
 
