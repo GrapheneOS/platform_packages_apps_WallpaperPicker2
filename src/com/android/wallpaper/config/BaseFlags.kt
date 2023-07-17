@@ -19,6 +19,7 @@ import android.content.Context
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
 import com.android.systemui.shared.customization.data.content.CustomizationProviderContract as Contract
+import com.android.wallpaper.module.InjectorProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
@@ -29,6 +30,10 @@ abstract class BaseFlags {
 
     // TODO(b/285047815): Remove flag after adding wallpaper id for default static wallpaper
     open fun isWallpaperRestorerEnabled() = false
+
+    // TODO(b/274443705): Create SysUI flag for animation
+    open fun isPreviewLoadingAnimationEnabled() = false
+
     open fun isFullscreenWallpaperPreviewEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag ->
@@ -75,5 +80,11 @@ abstract class BaseFlags {
             ?: CustomizationProviderClientImpl(context.applicationContext, Dispatchers.IO).also {
                 customizationProviderClient = it
             }
+    }
+    companion object {
+        @JvmStatic
+        fun get(): BaseFlags {
+            return InjectorProvider.getInjector().getFlags()
+        }
     }
 }

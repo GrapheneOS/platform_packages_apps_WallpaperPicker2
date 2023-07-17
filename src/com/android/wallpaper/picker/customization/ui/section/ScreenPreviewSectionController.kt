@@ -62,6 +62,7 @@ open class ScreenPreviewSectionController(
     private val wallpaperInteractor: WallpaperInteractor,
     private val wallpaperManager: WallpaperManager,
     private val isTwoPaneAndSmallWidth: Boolean,
+    private val savedInstanceState: Bundle? = null,
 ) : CustomizationSectionController<ScreenPreviewView> {
 
     protected val isOnLockScreen: Boolean = screen == CustomizationSections.Screen.LOCK_SCREEN
@@ -134,8 +135,35 @@ open class ScreenPreviewSectionController(
                 lifecycleOwner = lifecycleOwner,
                 offsetToStart = displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(activity),
                 onWallpaperPreviewDirty = { activity.recreate() },
-                onWorkspacePreviewDirty = { bindScreenPreview(previewView, context) }
+                onWorkspacePreviewDirty = { bindScreenPreview(previewView, context) },
+                savedBitmap = getSavedBitmap(savedInstanceState, screen),
             )
+    }
+
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        val wallpaperLoadingImageBitmap = previewViewBinding?.getWallpaperLoadingImageBitmap()
+        savedInstanceState.putByteArray(
+            if (screen == CustomizationSections.Screen.LOCK_SCREEN) LOCK_WALLPAPER_BITMAP_KEY
+            else HOME_WALLPAPER_BITMAP_KEY,
+            wallpaperLoadingImageBitmap
+        )
+    }
+
+    private fun getSavedBitmap(
+        savedInstanceState: Bundle?,
+        screen: CustomizationSections.Screen,
+    ): ByteArray? {
+        var savedBitmap: ByteArray? = null
+        if (savedInstanceState != null) {
+            savedBitmap =
+                if (screen == CustomizationSections.Screen.LOCK_SCREEN) {
+                    savedInstanceState[LOCK_WALLPAPER_BITMAP_KEY] as ByteArray?
+                } else {
+                    savedInstanceState[HOME_WALLPAPER_BITMAP_KEY] as ByteArray?
+                }
+        }
+        return savedBitmap
     }
 
     protected open fun createScreenPreviewViewModel(context: Context): ScreenPreviewViewModel {
@@ -247,5 +275,10 @@ open class ScreenPreviewSectionController(
         } else {
             null
         }
+    }
+
+    companion object {
+        private const val LOCK_WALLPAPER_BITMAP_KEY = "wallpaperLoadingImageBitmapLock"
+        private const val HOME_WALLPAPER_BITMAP_KEY = "wallpaperLoadingImageBitmapHome"
     }
 }
