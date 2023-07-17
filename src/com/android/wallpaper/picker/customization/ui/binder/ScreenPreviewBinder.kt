@@ -19,33 +19,42 @@ package com.android.wallpaper.picker.customization.ui.binder
 
 import android.app.Activity
 import android.app.WallpaperColors
-import android.app.WallpaperManager
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceView
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.cardview.widget.CardView
+import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.systemui.monet.ColorScheme
 import com.android.wallpaper.R
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.asset.BitmapCachingAsset
 import com.android.wallpaper.asset.CurrentWallpaperAssetVN
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.picker.WorkspaceSurfaceHolderCallback
+import com.android.wallpaper.picker.customization.animation.view.LoadingAnimation
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
 import com.android.wallpaper.util.ResourceUtils
 import com.android.wallpaper.util.WallpaperConnection
 import com.android.wallpaper.util.WallpaperSurfaceCallback
+import java.io.ByteArrayOutputStream
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -58,6 +67,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoroutinesApi::class)
 object ScreenPreviewBinder {
     interface Binding {
+        fun getWallpaperLoadingImageBitmap(): ByteArray?
         fun sendMessage(
             id: Int,
             args: Bundle = Bundle.EMPTY,
@@ -72,6 +82,9 @@ object ScreenPreviewBinder {
      * something that is changing on top of the wallpaper, for example, the lock screen shortcuts or
      * the clock).
      */
+    // TODO (b/274443705): incorporate color picker to allow preview loading on color change
+    // TODO (b/274443705): make loading animation more continuous on reveal
+    // TODO (b/274443705): adjust for better timing on animation reveal
     @JvmStatic
     fun bind(
         activity: Activity,
@@ -82,6 +95,7 @@ object ScreenPreviewBinder {
         dimWallpaper: Boolean = false,
         onWallpaperPreviewDirty: () -> Unit,
         onWorkspacePreviewDirty: () -> Unit = {},
+        savedBitmap: ByteArray? = null,
     ): Binding {
         val workspaceSurface: SurfaceView = previewView.requireViewById(R.id.workspace_surface)
         val wallpaperSurface: SurfaceView = previewView.requireViewById(R.id.wallpaper_surface)
@@ -97,12 +111,16 @@ object ScreenPreviewBinder {
 
         // This ensures that we do not announce the time multiple times
         previewView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+        var wallpaperIsReadyForReveal = false
         val surfaceViewsReady = {
             wallpaperSurface.setBackgroundColor(Color.TRANSPARENT)
             workspaceSurface.visibility = View.VISIBLE
         }
         wallpaperSurface.setZOrderOnTop(false)
-        val wallpaperManager = WallpaperManager.getInstance(activity)
+
+        val showLoadingAnimation = BaseFlags.get().isPreviewLoadingAnimationEnabled()
+        var loadingAnimation: LoadingAnimation? = null
+        val loadingView: ImageView = previewView.requireViewById(R.id.loading_view)
 
         if (dimWallpaper) {
             previewView.requireViewById<View>(R.id.wallpaper_dimming_scrim).isVisible = true
@@ -116,21 +134,68 @@ object ScreenPreviewBinder {
         var wallpaperSurfaceCallback: WallpaperSurfaceCallback? = null
         var wallpaperConnection: WallpaperConnection? = null
         var wallpaperInfo: WallpaperInfo? = null
+        var compressedLoadingImageBitmap: ByteArray? = null
 
         val job =
             lifecycleOwner.lifecycleScope.launch {
                 launch {
                     val lifecycleObserver =
                         object : DefaultLifecycleObserver {
+                            override fun onCreate(owner: LifecycleOwner) {
+                                super.onCreate(owner)
+                                if (showLoadingAnimation) {
+                                    if (loadingAnimation == null) {
+                                        // TODO (b/290054874): investigate why app restarts twice
+                                        // The line below is a workaround for the issue of wallpaper
+                                        // picker lifecycle restarting twice after a config change;
+                                        // because of this, on second start, saved instance state
+                                        // would always return null. Instead we would like the saved
+                                        // instance state on the first restart to pass through
+                                        // to the second.
+                                        compressedLoadingImageBitmap = savedBitmap
+                                        // only create the loading animation on lifecycle create
+                                        // when there is a saved bitmap, so that reveal animation is
+                                        // only played after a wallpaper switch
+                                        if (savedBitmap != null) {
+                                            // decompress the saved bitmap
+                                            val bitmap =
+                                                BitmapFactory.decodeByteArray(
+                                                    savedBitmap,
+                                                    0,
+                                                    savedBitmap.size
+                                                )
+                                            loadingAnimation =
+                                                LoadingAnimation(
+                                                    BitmapDrawable(bitmap),
+                                                    loadingView
+                                                )
+                                        }
+                                    }
+                                }
+                            }
+
                             override fun onStop(owner: LifecycleOwner) {
                                 super.onStop(owner)
                                 wallpaperConnection?.destroy()
                                 wallpaperConnection = null
+                                loadingAnimation?.cancel()
+                                loadingAnimation = null
+                                wallpaperIsReadyForReveal = false
                             }
 
                             override fun onPause(owner: LifecycleOwner) {
                                 super.onPause(owner)
                                 wallpaperConnection?.setVisibility(false)
+                                loadingAnimation?.cancel()
+                                wallpaperIsReadyForReveal = false
+                            }
+
+                            override fun onResume(owner: LifecycleOwner) {
+                                super.onResume(owner)
+                                loadingAnimation?.setupRevealAnimation()
+                                if (wallpaperIsReadyForReveal) {
+                                    loadingAnimation?.playRevealAnimation()
+                                }
                             }
                         }
 
@@ -169,6 +234,16 @@ object ScreenPreviewBinder {
                                     onSurfaceViewsReady = surfaceViewsReady,
                                     thumbnailRequested = thumbnailRequested
                                 )
+                                if (showLoadingAnimation) {
+                                    loadingAnimation?.setupRevealAnimation()
+                                    val isStaticWallpaper =
+                                        wallpaperInfo != null && wallpaperInfo !is LiveWallpaperInfo
+                                    wallpaperIsReadyForReveal =
+                                        isStaticWallpaper || wallpaperIsReadyForReveal
+                                    if (wallpaperIsReadyForReveal) {
+                                        loadingAnimation?.playRevealAnimation()
+                                    }
+                                }
                             }
                         wallpaperSurface.holder.addCallback(wallpaperSurfaceCallback)
                         if (!dimWallpaper) {
@@ -216,6 +291,52 @@ object ScreenPreviewBinder {
                     }
                 }
 
+                if (showLoadingAnimation) {
+                    launch {
+                        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                            viewModel.isLoading.collect { isLoading ->
+                                if (isLoading) {
+                                    loadingAnimation?.cancel()
+
+                                    // When loading is started, create a new loading animation
+                                    // with the current wallpaper as background.
+                                    // Current solution to get wallpaper for animation background
+                                    // works for static & live wallpapers, not for emoji
+                                    wallpaperSurfaceCallback?.homeImageWallpaper?.let {
+                                        loadingAnimation =
+                                            LoadingAnimation(it.drawable, loadingView)
+                                        // Compress bitmap to be saved in on save instance state.
+                                        // If save instance state bundle is too large, it can cause
+                                        // a crash
+                                        launch {
+                                            val bitmap = it.drawToBitmap(Bitmap.Config.RGB_565)
+                                            val stream = ByteArrayOutputStream()
+                                            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream)
+                                            // TODO (b/274443705): maybe not save if too large still
+                                            compressedLoadingImageBitmap = stream.toByteArray()
+                                        }
+                                    }
+
+                                    // TODO (b/274443705): figure out how to get color seed & style
+                                    val colorAccent =
+                                        ResourceUtils.getColorAttr(
+                                            activity,
+                                            android.R.attr.colorAccent
+                                        )
+                                    val night =
+                                        (previewView.resources.configuration.uiMode and
+                                            Configuration.UI_MODE_NIGHT_MASK ==
+                                            Configuration.UI_MODE_NIGHT_YES)
+                                    loadingAnimation?.updateColor(
+                                        ColorScheme(seed = colorAccent, darkTheme = night)
+                                    )
+                                    loadingAnimation?.playLoadingAnimation()
+                                }
+                            }
+                        }
+                    }
+                }
+
                 launch {
                     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                         lifecycleOwner.lifecycleScope.launch {
@@ -228,6 +349,9 @@ object ScreenPreviewBinder {
                                 onSurfaceViewsReady = surfaceViewsReady,
                                 thumbnailRequested = thumbnailRequested
                             )
+                            if (showLoadingAnimation && wallpaperInfo !is LiveWallpaperInfo) {
+                                loadingAnimation?.playRevealAnimation()
+                            }
                             (wallpaperInfo as? LiveWallpaperInfo)?.let { liveWallpaperInfo ->
                                 val connection =
                                     wallpaperConnection
@@ -236,8 +360,13 @@ object ScreenPreviewBinder {
                                                 previewView,
                                                 viewModel,
                                                 wallpaperSurface,
-                                                surfaceViewsReady
-                                            )
+                                            ) {
+                                                surfaceViewsReady()
+                                                if (showLoadingAnimation) {
+                                                    wallpaperIsReadyForReveal = true
+                                                    loadingAnimation?.playRevealAnimation()
+                                                }
+                                            }
                                             .also { wallpaperConnection = it }
                                 if (!previewView.isAttachedToWindow) {
                                     // Sometimes the service gets connected before the view
@@ -267,6 +396,10 @@ object ScreenPreviewBinder {
             }
 
         return object : Binding {
+            override fun getWallpaperLoadingImageBitmap(): ByteArray? {
+                return compressedLoadingImageBitmap
+            }
+
             override fun sendMessage(id: Int, args: Bundle) {
                 previewSurfaceCallback?.send(id, args)
             }
@@ -286,7 +419,7 @@ object ScreenPreviewBinder {
         previewView: CardView,
         viewModel: ScreenPreviewViewModel,
         wallpaperSurface: SurfaceView,
-        onSurfaceViewsReady: () -> Unit
+        onEngineShown: () -> Unit
     ) =
         WallpaperConnection(
             Intent(WallpaperService.SERVICE_INTERFACE).apply {
@@ -302,7 +435,7 @@ object ScreenPreviewBinder {
                 }
 
                 override fun onEngineShown() {
-                    onSurfaceViewsReady()
+                    onEngineShown()
                 }
             },
             wallpaperSurface,
