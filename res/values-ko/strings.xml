@@ -21,8 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"배경화면 카테고리"</string>
-    <!-- no translation found for set_wallpaper_button_text (5445978864530156290) -->
-    <skip />
+    <string name="set_wallpaper_button_text" msgid="5445978864530156290">"배경화면 설정"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"배경화면을 설정하는 중..."</string>
     <string name="try_again" msgid="8278874823700921234">"다시 시도"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"배경화면을 설정할 수 없습니다."</string>

@@ -21,8 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"බිතුපත් ප්‍රවර්ග"</string>
-    <!-- no translation found for set_wallpaper_button_text (5445978864530156290) -->
-    <skip />
+    <string name="set_wallpaper_button_text" msgid="5445978864530156290">"වෝල්පේපරය සකසන්න"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"වෝල්පේපරය සකසමින්…"</string>
     <string name="try_again" msgid="8278874823700921234">"නැවත උත්සාහ කර."</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"වෝල්පේපරය සැකසීමට නොහැකිය."</string>
