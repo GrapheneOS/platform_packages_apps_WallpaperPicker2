@@ -17,10 +17,12 @@ package com.android.wallpaper.picker.wallpaper
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.transition.Slide
 import android.view.Window
+import android.widget.Toast
 import com.android.wallpaper.R
 import com.android.wallpaper.model.ImageWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
@@ -31,6 +33,7 @@ import com.android.wallpaper.picker.PreviewFragment
 import com.android.wallpaper.picker.di.navigation.NavigationController
 import com.android.wallpaper.picker.di.navigation.Transition
 import com.android.wallpaper.util.ActivityUtils
+import com.android.wallpaper.util.DisplayUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -40,6 +43,8 @@ class WallpaperPreviewSectionActivity :
     Hilt_WallpaperPreviewSectionActivity(), AppbarFragment.AppbarFragmentHost {
 
     @Inject lateinit var navigator: NavigationController
+
+    @Inject lateinit var displayUtils: DisplayUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,6 +110,18 @@ class WallpaperPreviewSectionActivity :
                     Transition.REPLACE
                 )
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val orientation =
+            if (displayUtils.isOnWallpaperDisplay(this)) ActivityInfo.SCREEN_ORIENTATION_USER
+            else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        requestedOrientation = orientation
+        if (isInMultiWindowMode) {
+            Toast.makeText(this, R.string.wallpaper_exit_split_screen, Toast.LENGTH_SHORT).show()
+            onBackPressed()
         }
     }
 
