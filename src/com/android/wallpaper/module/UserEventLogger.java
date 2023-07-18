@@ -66,22 +66,6 @@ public interface UserEventLogger {
     void logCategorySelected(String collectionId);
 
     /**
-     * Logs the behavior of tapping live wallpaper info page.
-     *
-     * @param collectionId wallpaper category.
-     * @param wallpaperId wallpaper id.
-     */
-    void logLiveWallpaperInfoSelected(String collectionId, String wallpaperId);
-
-    /**
-     * Logs the behavior of tapping live wallpaper customize page.
-     *
-     * @param collectionId wallpaper category.
-     * @param wallpaperId wallpaper id.
-     */
-    void logLiveWallpaperCustomizeSelected(String collectionId, String wallpaperId);
-
-    /**
      * Log current existing snapshot data.
      */
     void logSnapshot();
