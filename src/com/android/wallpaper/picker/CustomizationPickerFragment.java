@@ -124,17 +124,22 @@ public class CustomizationPickerFragment extends AppbarFragment implements
             if (mBinding != null) {
                 mBinding.dispose();
             }
+            final List<CustomizationSectionController<?>> lockSectionControllers =
+                    getSectionControllers(CustomizationSections.Screen.LOCK_SCREEN,
+                            finalSavedInstanceState);
+            final List<CustomizationSectionController<?>> homeSectionControllers =
+                    getSectionControllers(CustomizationSections.Screen.HOME_SCREEN,
+                            finalSavedInstanceState);
+            mSectionControllers.addAll(lockSectionControllers);
+            mSectionControllers.addAll(homeSectionControllers);
             mBinding = CustomizationPickerBinder.bind(
                     view,
                     getToolbarId(),
                     mViewModel,
                     this,
                     isOnLockScreen -> filterAvailableSections(
-                            getSectionControllers(
-                                    isOnLockScreen
-                                            ? CustomizationSections.Screen.LOCK_SCREEN
-                                            : CustomizationSections.Screen.HOME_SCREEN,
-                                    finalSavedInstanceState)));
+                            isOnLockScreen ? lockSectionControllers : homeSectionControllers
+                    ));
         } else {
             setContentView(view, R.layout.fragment_customization_picker);
         }
