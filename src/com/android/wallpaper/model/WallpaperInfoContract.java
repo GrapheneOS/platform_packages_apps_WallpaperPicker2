@@ -25,6 +25,8 @@ public final class WallpaperInfoContract {
     public static final String CATEGORY_PRIORITY = "category_priority";
     public static final String ASSET_ID = "asset_id";
     public static final String WALLPAPER_TITLE = "wallpaper_title";
+    public static final String WALLPAPER_AUTHOR = "wallpaper_author";
+    public static final String WALLPAPER_DESCRIPTION = "wallpaper_description";
     public static final String WALLPAPER_CONTENT_DESCRIPTION = "wallpaper_content_description";
     public static final String WALLPAPER_THUMBNAIL = "wallpaper_thumbnail";
     public static final String WALLPAPER_CONFIG_PREVIEW_URI = "wallpaper_config_preview_uri";
