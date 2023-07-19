@@ -56,7 +56,7 @@ android_library {
         enabled: false,
     },
 
-    kotlincflags: ["-Xjvm-default=enable"],
+    kotlincflags: ["-Xjvm-default=all"],
 
     sdk_version: "current",
 
@@ -127,7 +127,7 @@ java_defaults {
         enabled: false,
     },
 
-    kotlincflags: ["-Xjvm-default=enable"],
+    kotlincflags: ["-Xjvm-default=all"],
     privileged: true,
     system_ext_specific: true,
 
@@ -155,7 +155,7 @@ java_defaults {
         enabled: false,
     },
 
-    kotlincflags: ["-Xjvm-default=enable"],
+    kotlincflags: ["-Xjvm-default=all"],
     privileged: true,
     system_ext_specific: true,
 
