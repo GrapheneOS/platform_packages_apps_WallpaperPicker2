@@ -402,7 +402,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
      * Returns whether a separate lock-screen wallpaper is set to the WallpaperManager.
      */
     private boolean isSeparateLockScreenWallpaperSet() {
-        return mWallpaperManager.getWallpaperId(WallpaperManager.FLAG_LOCK) < 0;
+        return mWallpaperManager.getWallpaperId(WallpaperManager.FLAG_LOCK) >= 0;
     }
 
     @Override
