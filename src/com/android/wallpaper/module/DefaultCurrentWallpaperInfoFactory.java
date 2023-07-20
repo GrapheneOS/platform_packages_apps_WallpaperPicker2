@@ -15,9 +15,6 @@
  */
 package com.android.wallpaper.module;
 
-import android.app.WallpaperManager;
-import android.content.Context;
-
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.compat.WallpaperManagerCompat;
@@ -32,10 +29,8 @@ import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
  */
 public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoFactory {
 
-    private final Context mAppContext;
     private final WallpaperRefresher mWallpaperRefresher;
     private final LiveWallpaperInfoFactory mLiveWallpaperInfoFactory;
-    private final WallpaperManager mWallpaperManager;
 
     // Cached copies of the currently-set WallpaperInfo(s) and presentation mode.
     private WallpaperInfo mHomeWallpaper;
@@ -44,12 +39,10 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
     @PresentationMode
     private int mPresentationMode;
 
-    public DefaultCurrentWallpaperInfoFactory(Context context) {
-        mAppContext = context.getApplicationContext();
-        Injector injector = InjectorProvider.getInjector();
-        mWallpaperRefresher = injector.getWallpaperRefresher(mAppContext);
-        mLiveWallpaperInfoFactory = injector.getLiveWallpaperInfoFactory(mAppContext);
-        mWallpaperManager = WallpaperManager.getInstance(context);
+    public DefaultCurrentWallpaperInfoFactory(WallpaperRefresher wallpaperRefresher,
+            LiveWallpaperInfoFactory liveWallpaperInfoFactory) {
+        mWallpaperRefresher = wallpaperRefresher;
+        mLiveWallpaperInfoFactory = liveWallpaperInfoFactory;
     }
 
     @Override
