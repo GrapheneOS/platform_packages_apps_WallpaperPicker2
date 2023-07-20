@@ -215,7 +215,7 @@ public class TestWallpaperPersister implements WallpaperPersister {
     }
 
     @Override
-    public int setBitmapToWallpaperManagerCompat(Bitmap wallpaperBitmap, boolean allowBackup,
+    public int setBitmapToWallpaperManager(Bitmap wallpaperBitmap, boolean allowBackup,
             int whichWallpaper) {
         return 0;
     }

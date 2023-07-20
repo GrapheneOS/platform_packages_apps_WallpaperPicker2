@@ -23,7 +23,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
-import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.dispatchers.BackgroundDispatcher
 import com.android.wallpaper.dispatchers.MainDispatcher
@@ -78,7 +77,6 @@ internal constructor(
     private var requester: Requester? = null
     private var systemFeatureChecker: SystemFeatureChecker? = null
     private var userEventLogger: UserEventLogger? = null
-    private var wallpaperManagerCompat: WallpaperManagerCompat? = null
     private var wallpaperPersister: WallpaperPersister? = null
     private var prefs: WallpaperPreferences? = null
     private var wallpaperPreviewFragmentManager: WallpaperPreviewFragmentManager? = null
@@ -242,18 +240,11 @@ internal constructor(
     }
 
     @Synchronized
-    override fun getWallpaperManagerCompat(context: Context): WallpaperManagerCompat {
-        return wallpaperManagerCompat
-            ?: WallpaperManagerCompat.getInstance(context).also { wallpaperManagerCompat = it }
-    }
-
-    @Synchronized
     override fun getWallpaperPersister(context: Context): WallpaperPersister {
         return wallpaperPersister
             ?: DefaultWallpaperPersister(
                     context.applicationContext,
                     WallpaperManager.getInstance(context),
-                    getWallpaperManagerCompat(context),
                     getPreferences(context),
                     WallpaperChangedNotifier.getInstance(),
                     getDisplayUtils(context),
@@ -298,7 +289,6 @@ internal constructor(
         return wallpaperStatusChecker
             ?: DefaultWallpaperStatusChecker(
                     wallpaperManager = WallpaperManager.getInstance(context.applicationContext),
-                    wallpaperManagerCompat = getWallpaperManagerCompat(context.applicationContext),
                 )
                 .also { wallpaperStatusChecker = it }
     }

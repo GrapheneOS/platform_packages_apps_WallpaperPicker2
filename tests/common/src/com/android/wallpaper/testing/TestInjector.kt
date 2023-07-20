@@ -23,7 +23,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
-import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.CategoryProvider
@@ -82,7 +81,6 @@ open class TestInjector : Injector {
     private var requester: Requester? = null
     private var systemFeatureChecker: SystemFeatureChecker? = null
     private var userEventLogger: UserEventLogger? = null
-    private var wallpaperManagerCompat: WallpaperManagerCompat? = null
     private var wallpaperPersister: WallpaperPersister? = null
     private var prefs: WallpaperPreferences? = null
     private var wallpaperPreviewFragmentManager: WallpaperPreviewFragmentManager? = null
@@ -208,13 +206,6 @@ open class TestInjector : Injector {
 
     override fun getUserEventLogger(context: Context): UserEventLogger {
         return userEventLogger ?: TestUserEventLogger().also { userEventLogger = it }
-    }
-
-    override fun getWallpaperManagerCompat(context: Context): WallpaperManagerCompat {
-        return wallpaperManagerCompat
-            ?: TestWallpaperManagerCompat(context.applicationContext).also {
-                wallpaperManagerCompat = it
-            }
     }
 
     override fun getWallpaperPersister(context: Context): WallpaperPersister {
