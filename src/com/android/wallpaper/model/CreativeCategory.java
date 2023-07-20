@@ -71,14 +71,18 @@ public class CreativeCategory extends WallpaperCategory {
     public static CreativeWallpaperInfo saveCreativeCategoryWallpaper(Context context,
             LiveWallpaperInfo wallpaper, Uri saveWallpaperUri, int destination) {
 
+        // Adding destination field which depicts whether it is home-screen or lock-screen.
+        Uri updatedSaveWallpaperUri = saveWallpaperUri.buildUpon()
+                .appendQueryParameter("destination", String.valueOf(destination))
+                .build();
         try (ContentProviderClient client =
                      context.getContentResolver().acquireContentProviderClient(
-                             saveWallpaperUri.getAuthority())) {
+                             updatedSaveWallpaperUri.getAuthority())) {
             if (client == null) {
-                Log.w(TAG, "Couldn't resolve content provider for " + saveWallpaperUri);
+                Log.w(TAG, "Couldn't resolve content provider for " + updatedSaveWallpaperUri);
                 return null;
             }
-            try (Cursor cursor = client.query(saveWallpaperUri, /* projection= */ null,
+            try (Cursor cursor = client.query(updatedSaveWallpaperUri, /* projection= */ null,
                     /* selection= */ null, /* selectionArgs= */ null, /* sortOrder= */ null)) {
                 if (cursor == null || !cursor.moveToFirst()) {
                     return null;
