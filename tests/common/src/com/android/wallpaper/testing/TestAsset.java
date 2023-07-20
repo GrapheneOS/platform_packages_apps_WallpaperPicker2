@@ -35,7 +35,7 @@ import com.android.wallpaper.asset.Asset;
 public final class TestAsset extends Asset {
 
     private Bitmap mBitmap;
-    private boolean mIsCorrupt;
+    private final boolean mIsCorrupt;
 
     /**
      * Constructs an asset underpinned by a 1x1 bitmap uniquely identifiable by the given pixel
