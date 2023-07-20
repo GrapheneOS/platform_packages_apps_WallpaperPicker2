@@ -108,9 +108,11 @@ open class WallpaperPicker2Injector : Injector {
     @Synchronized
     override fun getCurrentWallpaperInfoFactory(context: Context): CurrentWallpaperInfoFactory {
         return currentWallpaperFactory
-            ?: DefaultCurrentWallpaperInfoFactory(context.applicationContext).also {
-                currentWallpaperFactory = it
-            }
+            ?: DefaultCurrentWallpaperInfoFactory(
+                    getWallpaperRefresher(context.applicationContext),
+                    getLiveWallpaperInfoFactory(context.applicationContext),
+                )
+                .also { currentWallpaperFactory = it }
     }
 
     override fun getCustomizationSections(activity: ComponentActivity): CustomizationSections {
