@@ -25,6 +25,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.config.BaseFlags
+import com.android.wallpaper.dispatchers.BackgroundDispatcher
+import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.CategoryProvider
 import com.android.wallpaper.model.LiveWallpaperInfo
@@ -48,11 +50,18 @@ import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import com.android.wallpaper.settings.data.repository.SecureSettingsRepository
 import com.android.wallpaper.settings.data.repository.SecureSettingsRepositoryImpl
 import com.android.wallpaper.util.DisplayUtils
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 
-open class WallpaperPicker2Injector : Injector {
-    private var appScope: CoroutineScope? = null
+@Singleton
+open class WallpaperPicker2Injector
+@Inject
+internal constructor(
+    @MainDispatcher private val mainScope: CoroutineScope,
+    @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
+) : Injector {
     private var alarmManagerWrapper: AlarmManagerWrapper? = null
     private var bitmapCropper: BitmapCropper? = null
     private var categoryProvider: CategoryProvider? = null
@@ -84,7 +93,7 @@ open class WallpaperPicker2Injector : Injector {
     private var wallpaperColorsViewModel: WallpaperColorsViewModel? = null
 
     override fun getApplicationCoroutineScope(): CoroutineScope {
-        return appScope ?: CoroutineScope(Dispatchers.Main).also { appScope = it }
+        return mainScope
     }
 
     @Synchronized
@@ -325,7 +334,7 @@ open class WallpaperPicker2Injector : Injector {
                                     wallpaperManager = WallpaperManager.getInstance(appContext)
                                 ),
                             wallpaperPreferences = getPreferences(context = appContext),
-                            backgroundDispatcher = Dispatchers.IO,
+                            backgroundDispatcher = bgDispatcher,
                         ),
                 )
                 .also { wallpaperInteractor = it }
@@ -344,7 +353,7 @@ open class WallpaperPicker2Injector : Injector {
         return secureSettingsRepository
             ?: SecureSettingsRepositoryImpl(
                     contentResolver = context.applicationContext.contentResolver,
-                    backgroundDispatcher = Dispatchers.IO,
+                    backgroundDispatcher = bgDispatcher,
                 )
                 .also { secureSettingsRepository = it }
     }
