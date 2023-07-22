@@ -22,17 +22,21 @@ import com.android.wallpaper.module.WallpaperPicker2Injector;
 
 import dagger.hilt.android.HiltAndroidApp;
 
+import javax.inject.Inject;
+
 /**
  * Application subclass that initializes the injector.
  */
 @HiltAndroidApp(Application.class)
 public class WallpapersApplication extends Hilt_WallpapersApplication {
 
+    @Inject WallpaperPicker2Injector mInjector;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         // Initialize the injector.
-        InjectorProvider.setInjector(new WallpaperPicker2Injector());
+        InjectorProvider.setInjector(mInjector);
     }
 }
