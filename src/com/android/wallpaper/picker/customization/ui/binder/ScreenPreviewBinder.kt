@@ -57,14 +57,12 @@ import com.android.wallpaper.util.WallpaperSurfaceCallback
 import java.io.ByteArrayOutputStream
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
 /**
  * Binds between view and view-model for rendering the preview of the home screen or the lock
  * screen.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
 object ScreenPreviewBinder {
     interface Binding {
         fun getWallpaperLoadingImageBitmap(): ByteArray?
@@ -118,7 +116,10 @@ object ScreenPreviewBinder {
         }
         wallpaperSurface.setZOrderOnTop(false)
 
-        val showLoadingAnimation = BaseFlags.get().isPreviewLoadingAnimationEnabled()
+        val flags = BaseFlags.get()
+        val isPageTransitionsFeatureEnabled = flags.isPageTransitionsFeatureEnabled()
+
+        val showLoadingAnimation = flags.isPreviewLoadingAnimationEnabled()
         var loadingAnimation: LoadingAnimation? = null
         val loadingView: ImageView = previewView.requireViewById(R.id.loading_view)
 
@@ -174,13 +175,26 @@ object ScreenPreviewBinder {
                                 }
                             }
 
+                            override fun onDestroy(owner: LifecycleOwner) {
+                                super.onDestroy(owner)
+                                if (isPageTransitionsFeatureEnabled) {
+                                    wallpaperConnection?.destroy()
+                                    wallpaperConnection = null
+                                    loadingAnimation?.cancel()
+                                    loadingAnimation = null
+                                    wallpaperIsReadyForReveal = false
+                                }
+                            }
+
                             override fun onStop(owner: LifecycleOwner) {
                                 super.onStop(owner)
-                                wallpaperConnection?.destroy()
-                                wallpaperConnection = null
-                                loadingAnimation?.cancel()
-                                loadingAnimation = null
-                                wallpaperIsReadyForReveal = false
+                                if (!isPageTransitionsFeatureEnabled) {
+                                    wallpaperConnection?.destroy()
+                                    wallpaperConnection = null
+                                    loadingAnimation?.cancel()
+                                    loadingAnimation = null
+                                    wallpaperIsReadyForReveal = false
+                                }
                             }
 
                             override fun onPause(owner: LifecycleOwner) {
@@ -338,7 +352,13 @@ object ScreenPreviewBinder {
                 }
 
                 launch {
-                    lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                    lifecycleOwner.repeatOnLifecycle(
+                        if (isPageTransitionsFeatureEnabled) {
+                            Lifecycle.State.STARTED
+                        } else {
+                            Lifecycle.State.RESUMED
+                        }
+                    ) {
                         lifecycleOwner.lifecycleScope.launch {
                             wallpaperInfo = viewModel.getWallpaperInfo(forceReload = false)
                             maybeLoadThumbnail(
@@ -353,13 +373,17 @@ object ScreenPreviewBinder {
                                 loadingAnimation?.playRevealAnimation()
                             }
                             (wallpaperInfo as? LiveWallpaperInfo)?.let { liveWallpaperInfo ->
+                                if (isPageTransitionsFeatureEnabled) {
+                                    wallpaperConnection?.destroy()
+                                    wallpaperConnection = null
+                                }
                                 val connection =
                                     wallpaperConnection
                                         ?: createWallpaperConnection(
                                                 liveWallpaperInfo,
                                                 previewView,
                                                 viewModel,
-                                                wallpaperSurface,
+                                                wallpaperSurface
                                             ) {
                                                 surfaceViewsReady()
                                                 if (showLoadingAnimation) {
