@@ -24,7 +24,15 @@ public interface CustomizationSections {
     /** Enumerates all screens supported by {@code getSectionControllersForScreen}. */
     enum Screen {
         LOCK_SCREEN,
-        HOME_SCREEN,
+        HOME_SCREEN;
+
+        public int toFlag() {
+            switch (this) {
+                case HOME_SCREEN: return WallpaperManager.FLAG_SYSTEM;
+                case LOCK_SCREEN: return WallpaperManager.FLAG_LOCK;
+                default: return WallpaperManager.FLAG_SYSTEM | WallpaperManager.FLAG_LOCK;
+            }
+        }
     }
 
     /**
