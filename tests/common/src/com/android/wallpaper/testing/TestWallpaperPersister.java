@@ -28,6 +28,7 @@ import com.android.wallpaper.module.WallpaperChangedNotifier;
 import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.module.WallpaperPreferences;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -217,6 +218,12 @@ public class TestWallpaperPersister implements WallpaperPersister {
     @Override
     public int setBitmapToWallpaperManager(Bitmap wallpaperBitmap, boolean allowBackup,
             int whichWallpaper) {
-        return 0;
+        return 1;
+    }
+
+    @Override
+    public int setStreamToWallpaperManager(InputStream inputStream, boolean allowBackup,
+            int whichWallpaper) {
+        return 1;
     }
 }
