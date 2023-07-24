@@ -273,7 +273,8 @@ public class CustomizationPickerFragment extends AppbarFragment implements
         prepareFragmentTransitionAnimation();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
-        boolean isPageTransitionsFeatureEnabled = BaseFlags.get().isPageTransitionsFeatureEnabled();
+        boolean isPageTransitionsFeatureEnabled =
+                BaseFlags.get().isPageTransitionsFeatureEnabled(requireContext());
 
         fragmentManager
                 .beginTransaction()
@@ -300,7 +301,8 @@ public class CustomizationPickerFragment extends AppbarFragment implements
         final Fragment fragment = mFragmentFactory.create(destinationId);
         prepareFragmentTransitionAnimation();
 
-        boolean isPageTransitionsFeatureEnabled = BaseFlags.get().isPageTransitionsFeatureEnabled();
+        boolean isPageTransitionsFeatureEnabled =
+                BaseFlags.get().isPageTransitionsFeatureEnabled(requireContext());
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager
