@@ -264,6 +264,10 @@ open class TestInjector : Injector {
                     override fun isWallpaperRestorerEnabled(): Boolean {
                         return true
                     }
+
+                    override fun isPageTransitionsFeatureEnabled(context: Context): Boolean {
+                        return true
+                    }
                 }
                 .also { flags = it }
     }

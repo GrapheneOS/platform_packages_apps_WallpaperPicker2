@@ -39,11 +39,11 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.robolectric.RobolectricTestRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
-@RunWith(JUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class WallpaperQuickSwitchViewModelTest {
 
     private lateinit var underTest: WallpaperQuickSwitchViewModel

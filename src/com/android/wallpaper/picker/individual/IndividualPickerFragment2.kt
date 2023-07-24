@@ -125,7 +125,6 @@ class IndividualPickerFragment2 :
     private var appStatusListener: PackageStatusNotifier.Listener? = null
     private var progressDialog: ProgressDialog? = null
 
-    private var testingMode = false
     private var loading: ContentLoadingProgressBar? = null
     private var shouldReloadWallpapers = false
     private lateinit var categoryProvider: CategoryProvider
@@ -592,39 +591,25 @@ class IndividualPickerFragment2 :
         startRotation(networkPreference)
     }
 
-    /**
-     * Enable a test mode of operation -- in which certain UI features are disabled to allow for UI
-     * tests to run correctly. Works around issue in ProgressDialog currently where the dialog
-     * constantly keeps the UI thread alive and blocks a test forever.
-     *
-     * @param testingMode
-     */
-    fun setTestingMode(testingMode: Boolean) {
-        this.testingMode = testingMode
-    }
-
     override fun startRotation(@NetworkPreference networkPreference: Int) {
         if (!isRotationEnabled()) {
             Log.e(TAG, "Rotation is not enabled for this category " + category?.title)
             return
         }
 
-        // ProgressDialog endlessly updates the UI thread, keeping it from going idle which
-        // therefore causes Espresso to hang once the dialog is shown.
-        if (!testingMode) {
-            val themeResId =
-                if (Build.VERSION.SDK_INT < VERSION_CODES.LOLLIPOP) {
-                    R.style.ProgressDialogThemePreL
-                } else {
-                    R.style.LightDialogTheme
-                }
-            val progressDialog = ProgressDialog(activity, themeResId)
-            progressDialog.setTitle(PROGRESS_DIALOG_NO_TITLE)
-            progressDialog.setMessage(resources.getString(R.string.start_rotation_progress_message))
-            progressDialog.isIndeterminate = PROGRESS_DIALOG_INDETERMINATE
-            progressDialog.show()
-            this.progressDialog = progressDialog
-        }
+        val themeResId =
+            if (Build.VERSION.SDK_INT < VERSION_CODES.LOLLIPOP) {
+                R.style.ProgressDialogThemePreL
+            } else {
+                R.style.LightDialogTheme
+            }
+        val progressDialog = ProgressDialog(activity, themeResId)
+        progressDialog.setTitle(PROGRESS_DIALOG_NO_TITLE)
+        progressDialog.setMessage(resources.getString(R.string.start_rotation_progress_message))
+        progressDialog.isIndeterminate = PROGRESS_DIALOG_INDETERMINATE
+        progressDialog.show()
+        this.progressDialog = progressDialog
+
         val appContext = requireActivity().applicationContext
         wallpaperRotationInitializer?.setFirstWallpaperInRotation(
             appContext,

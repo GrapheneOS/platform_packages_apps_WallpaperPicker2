@@ -35,6 +35,7 @@ import androidx.transition.Transition;
 
 import com.android.settingslib.activityembedding.ActivityEmbeddingUtils;
 import com.android.wallpaper.R;
+import com.android.wallpaper.config.BaseFlags;
 import com.android.wallpaper.model.CustomizationSectionController;
 import com.android.wallpaper.model.CustomizationSectionController.CustomizationSectionNavigationController;
 import com.android.wallpaper.model.PermissionRequester;
@@ -271,12 +272,19 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     public void navigateTo(Fragment fragment) {
         prepareFragmentTransitionAnimation();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+        boolean isPageTransitionsFeatureEnabled =
+                BaseFlags.get().isPageTransitionsFeatureEnabled(requireContext());
+
         fragmentManager
                 .beginTransaction()
+                .setReorderingAllowed(isPageTransitionsFeatureEnabled)
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
-        fragmentManager.executePendingTransactions();
+        if (!isPageTransitionsFeatureEnabled) {
+            fragmentManager.executePendingTransactions();
+        }
     }
 
     @Override
@@ -293,12 +301,18 @@ public class CustomizationPickerFragment extends AppbarFragment implements
         final Fragment fragment = mFragmentFactory.create(destinationId);
         prepareFragmentTransitionAnimation();
 
+        boolean isPageTransitionsFeatureEnabled =
+                BaseFlags.get().isPageTransitionsFeatureEnabled(requireContext());
+
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
+                .setReorderingAllowed(isPageTransitionsFeatureEnabled)
                 .replace(R.id.fragment_container, fragment)
                 .commit();
-        fragmentManager.executePendingTransactions();
+        if (!isPageTransitionsFeatureEnabled) {
+            fragmentManager.executePendingTransactions();
+        }
     }
 
     private void prepareFragmentTransitionAnimation() {
