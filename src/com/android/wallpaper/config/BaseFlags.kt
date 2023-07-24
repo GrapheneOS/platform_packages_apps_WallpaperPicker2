@@ -75,8 +75,11 @@ abstract class BaseFlags {
             ?.value == true
     }
 
-    // TODO(b/278929581): Create SysUI flag for page transitions
-    fun isPageTransitionsFeatureEnabled() = false
+    open fun isPageTransitionsFeatureEnabled(context: Context): Boolean {
+        return runBlocking { getCustomizationProviderClient(context).queryFlags() }
+            .firstOrNull { flag -> flag.name == Contract.FlagsTable.FLAG_NAME_PAGE_TRANSITIONS }
+            ?.value == true
+    }
 
     private fun getCustomizationProviderClient(context: Context): CustomizationProviderClient {
         return customizationProviderClient
