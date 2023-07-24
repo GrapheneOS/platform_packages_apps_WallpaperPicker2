@@ -117,7 +117,7 @@ object ScreenPreviewBinder {
         wallpaperSurface.setZOrderOnTop(false)
 
         val flags = BaseFlags.get()
-        val isPageTransitionsFeatureEnabled = flags.isPageTransitionsFeatureEnabled()
+        val isPageTransitionsFeatureEnabled = flags.isPageTransitionsFeatureEnabled(activity)
 
         val showLoadingAnimation = flags.isPreviewLoadingAnimationEnabled()
         var loadingAnimation: LoadingAnimation? = null
