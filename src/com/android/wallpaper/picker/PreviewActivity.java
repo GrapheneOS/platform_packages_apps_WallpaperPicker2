@@ -119,11 +119,16 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
     public static class PreviewActivityIntentFactory implements InlinePreviewIntentFactory {
         @Override
         public Intent newIntent(Context context, WallpaperInfo wallpaper) {
+            final BaseFlags flags = InjectorProvider.getInjector().getFlags();
+            if (flags.isMultiCropPreviewUiEnabled() && flags.isMultiCropEnabled()) {
+                // TODO(b/291761856): Start new preview flow
+                return new Intent();
+            }
+
             LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
             // Launch a full preview activity for devices supporting multipanel mode
             if (multiPanesChecker.isMultiPanesEnabled(context)
-                    && InjectorProvider.getInjector().getFlags()
-                        .isFullscreenWallpaperPreviewEnabled(context)) {
+                    && flags.isFullscreenWallpaperPreviewEnabled(context)) {
                 return FullPreviewActivity.newIntent(context, wallpaper);
             }
 

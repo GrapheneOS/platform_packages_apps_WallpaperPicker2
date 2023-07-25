@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.config.BaseFlags;
 import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
@@ -95,11 +96,16 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
 
         @Override
         public Intent newIntent(Context context, WallpaperInfo wallpaper) {
+            final BaseFlags flags = InjectorProvider.getInjector().getFlags();
+            if (flags.isMultiCropPreviewUiEnabled() && flags.isMultiCropEnabled()) {
+                // TODO(b/291761856): Start new preview flow
+                return new Intent();
+            }
+
             LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
             // Launch a full preview activity for devices supporting multipanel mode
             if (multiPanesChecker.isMultiPanesEnabled(context)
-                    && InjectorProvider.getInjector().getFlags()
-                        .isFullscreenWallpaperPreviewEnabled(context)) {
+                    && flags.isFullscreenWallpaperPreviewEnabled(context)) {
                 return FullPreviewActivity.newIntent(context, wallpaper, mIsViewAsHome);
             }
 
