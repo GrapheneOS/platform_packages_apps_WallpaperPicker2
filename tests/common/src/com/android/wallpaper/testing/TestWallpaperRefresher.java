@@ -11,14 +11,13 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
+ * limitations under the License.O
  */
 package com.android.wallpaper.testing;
 
 
 import android.app.WallpaperManager;
 import android.content.Context;
-import android.os.Build;
 
 import com.android.wallpaper.model.WallpaperMetadata;
 import com.android.wallpaper.module.InjectorProvider;
@@ -45,8 +44,7 @@ public class TestWallpaperRefresher implements WallpaperRefresher {
 
         WallpaperPreferences prefs = InjectorProvider.getInjector().getPreferences(mAppContext);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                && prefs.getLockWallpaperManagerId() > 0) {
+        if (prefs.getLockWallpaperManagerId() > 0) {
             listener.onRefreshed(
                     new WallpaperMetadata(
                             prefs.getHomeWallpaperAttributions(),

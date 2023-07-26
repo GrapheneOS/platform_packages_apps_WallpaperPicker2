@@ -31,7 +31,6 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.util.Log;
@@ -540,8 +539,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                 if (mDestination == DEST_HOME_SCREEN
                         && mWallpaperPreferences.getWallpaperPresentationMode()
                         == WallpaperPreferences.PRESENTATION_MODE_ROTATING
-                        && !wasLockWallpaperSet
-                        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        && !wasLockWallpaperSet) {
                     copyRotatingWallpaperToLock();
                 }
                 setImageWallpaperMetadata(mDestination, wallpaperId);
@@ -631,9 +629,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         }
 
         private void setImageWallpaperHomeMetadata(int homeWallpaperId) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                mWallpaperPreferences.setHomeWallpaperManagerId(homeWallpaperId);
-            }
+            mWallpaperPreferences.setHomeWallpaperManagerId(homeWallpaperId);
 
             // Compute bitmap hash code after setting the wallpaper because JPEG compression has
             // likely changed many pixels' color values. Forget the previously loaded wallpaper

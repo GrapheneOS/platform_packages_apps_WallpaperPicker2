@@ -20,7 +20,6 @@ import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
@@ -39,10 +38,8 @@ public class MissingHashCodeGenerator extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // This receiver is a no-op on pre-N Android and should only respond to a MY_PACKAGE_REPLACED
-        // intent.
-        if (!intent.getAction().equals(Intent.ACTION_MY_PACKAGE_REPLACED)
-                || Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        String action = intent.getAction();
+        if (action == null  || !action.equals(Intent.ACTION_MY_PACKAGE_REPLACED)) {
             return;
         }
 
