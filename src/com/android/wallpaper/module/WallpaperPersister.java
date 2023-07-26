@@ -68,11 +68,12 @@ public interface WallpaperPersister {
      * @param attributions    List of attribution items.
      * @param actionUrl       The action or "explore" URL for the wallpaper.
      * @param collectionId    ID of this wallpaper's collection.
+     * @param remoteId        Remote ID of this wallpaper
      * @return Whether the set wallpaper operation was successful.
      */
     boolean setWallpaperInRotation(Bitmap wallpaperBitmap, List<String> attributions,
                                    int actionLabelRes, int actionIconRes,
-                                   String actionUrl, String collectionId);
+                                   String actionUrl, String collectionId, String remoteId);
 
     /**
      * Sets only the bitmap of a rotating wallpaper of the next rotation to the system and stores
@@ -98,23 +99,27 @@ public interface WallpaperPersister {
      * @param collectionId ID of this wallpaper's collection.
      * @param wallpaperId  Wallpaper ID that on Android N and later uniquely identifies the wallpaper
      *                     image.
+     * @param remoteId     Remote ID of this wallpaper.
      * @return Whether the operation succeeded.
      */
     boolean finalizeWallpaperForNextRotation(List<String> attributions, String actionUrl,
                                              int actionLabelRes, int actionIconRes,
-                                             String collectionId, int wallpaperId);
+                                             String collectionId, int wallpaperId, String remoteId);
 
     /**
      * Finalizes wallpaper metadata by persisting them to SharedPreferences and finalizes the
      * wallpaper image for live rotating components by copying the "preview" image to the "final"
      * image file location.
      *
-     * @param attributions List of attribution items.
-     * @param actionUrl    The action or "explore" URL for the wallpaper.
-     * @param actionLabelRes Resource ID of the action label
-     * @param actionIconRes Resource ID of the action icon
-     * @param collectionId ID of this wallpaper's collection.
-     * @param wallpaperId  Wallpaper ID that uniquely identifies the wallpaper image.
+     * @param attributions      List of attribution items.
+     * @param actionUrl         The action or "explore" URL for the wallpaper.
+     * @param actionLabelRes    Resource ID of the action label
+     * @param actionIconRes     Resource ID of the action icon
+     * @param collectionId      ID of this wallpaper's collection.
+     * @param wallpaperId       ID that uniquely identifies a wallpaper set to the
+     *                          {@link android.app.WallpaperManager}.
+     * @param remoteId          Remote ID of this wallpaper.
+     * @param destination       Lock, home screen or both.
      * @return Whether the operation was successful.
      */
     boolean saveStaticWallpaperMetadata(List<String> attributions,
@@ -123,6 +128,7 @@ public interface WallpaperPersister {
             int actionIconRes,
             String collectionId,
             int wallpaperId,
+            String remoteId,
             @Destination int destination
         );
 
