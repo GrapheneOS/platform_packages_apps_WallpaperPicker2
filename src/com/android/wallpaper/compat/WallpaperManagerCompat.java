@@ -20,7 +20,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.ParcelFileDescriptor;
 
 import androidx.annotation.IntDef;
@@ -42,11 +41,7 @@ public abstract class WallpaperManagerCompat {
     public static WallpaperManagerCompat getInstance(Context context) {
         synchronized (sInstanceLock) {
             if (sInstance == null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    sInstance = new WallpaperManagerCompatVN(context.getApplicationContext());
-                } else {
-                    sInstance = new WallpaperManagerCompatV16(context.getApplicationContext());
-                }
+                sInstance = new WallpaperManagerCompatVN(context.getApplicationContext());
             }
             return sInstance;
         }
