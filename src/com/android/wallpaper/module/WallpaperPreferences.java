@@ -15,11 +15,9 @@
  */
 package com.android.wallpaper.module;
 
-import android.annotation.TargetApi;
 import android.app.WallpaperColors;
 import android.app.WallpaperManager.SetWallpaperFlags;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.text.TextUtils;
 
 import androidx.annotation.IntDef;
@@ -154,13 +152,11 @@ public interface WallpaperPreferences {
     /**
      * Gets the home wallpaper's ID, which is provided by WallpaperManager for static wallpapers.
      */
-    @TargetApi(Build.VERSION_CODES.N)
     int getHomeWallpaperManagerId();
 
     /**
      * Sets the home wallpaper's ID, which is provided by WallpaperManager for static wallpapers.
      */
-    @TargetApi(Build.VERSION_CODES.N)
     void setHomeWallpaperManagerId(int homeWallpaperId);
 
     /**
@@ -289,13 +285,11 @@ public interface WallpaperPreferences {
     /**
      * Gets the lock wallpaper's ID, which is provided by WallpaperManager for static wallpapers.
      */
-    @TargetApi(Build.VERSION_CODES.N)
     int getLockWallpaperManagerId();
 
     /**
      * Sets the lock wallpaper's ID, which is provided by WallpaperManager for static wallpapers.
      */
-    @TargetApi(Build.VERSION_CODES.N)
     void setLockWallpaperManagerId(int lockWallpaperId);
 
     /**
