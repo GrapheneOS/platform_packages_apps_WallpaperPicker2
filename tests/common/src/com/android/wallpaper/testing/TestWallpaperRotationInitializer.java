@@ -16,8 +16,6 @@
 package com.android.wallpaper.testing;
 
 import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.android.wallpaper.model.WallpaperRotationInitializer;
 import com.android.wallpaper.module.InjectorProvider;
@@ -45,11 +43,6 @@ public class TestWallpaperRotationInitializer implements WallpaperRotationInitia
         mIsRotationInitialized = false;
         mNetworkPreference = NETWORK_PREFERENCE_WIFI_ONLY;
         mRotationInitializationState = rotationState;
-    }
-
-    private TestWallpaperRotationInitializer(Parcel unused) {
-        mIsRotationInitialized = false;
-        mNetworkPreference = NETWORK_PREFERENCE_WIFI_ONLY;
     }
 
     @Override
@@ -108,26 +101,4 @@ public class TestWallpaperRotationInitializer implements WallpaperRotationInitia
     public boolean isWifiOnly() {
         return mNetworkPreference == NETWORK_PREFERENCE_WIFI_ONLY;
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Parcelable.Creator<TestWallpaperRotationInitializer> CREATOR =
-            new Parcelable.Creator<TestWallpaperRotationInitializer>() {
-                @Override
-                public TestWallpaperRotationInitializer createFromParcel(Parcel in) {
-                    return new TestWallpaperRotationInitializer(in);
-                }
-
-                @Override
-                public TestWallpaperRotationInitializer[] newArray(int size) {
-                    return new TestWallpaperRotationInitializer[size];
-                }
-            };
 }

@@ -16,14 +16,13 @@
 package com.android.wallpaper.model;
 
 import android.content.Context;
-import android.os.Parcelable;
 
 import androidx.annotation.IntDef;
 
 /**
  * Interface for objects which initialize daily wallpaper rotations.
  */
-public interface WallpaperRotationInitializer extends Parcelable {
+public interface WallpaperRotationInitializer {
 
     /**
      * OK to download on both metered (i.e., cellular) and unmetered (i.e., wifi) networks.
