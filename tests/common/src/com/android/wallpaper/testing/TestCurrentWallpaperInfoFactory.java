@@ -16,7 +16,6 @@
 package com.android.wallpaper.testing;
 
 import android.content.Context;
-import android.os.Build;
 
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory;
@@ -48,7 +47,7 @@ public class TestCurrentWallpaperInfoFactory implements CurrentWallpaperInfoFact
                     homeWallpaperMetadata.getCollectionId());
 
             WallpaperInfo lockWallpaper = null;
-            if (lockWallpaperMetadata != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (lockWallpaperMetadata != null) {
                 lockWallpaper = createTestWallpaperInfo(
                         lockWallpaperMetadata.getAttributions(),
                         lockWallpaperMetadata.getActionUrl(),
