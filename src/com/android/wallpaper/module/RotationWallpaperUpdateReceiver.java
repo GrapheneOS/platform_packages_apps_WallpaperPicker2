@@ -101,7 +101,8 @@ public class RotationWallpaperUpdateReceiver extends BroadcastReceiver {
                     wallpaperPreferences.getHomeWallpaperActionLabelRes(),
                     wallpaperPreferences.getHomeWallpaperActionIconRes(),
                     wallpaperPreferences.getHomeWallpaperActionUrl(),
-                    wallpaperPreferences.getHomeWallpaperCollectionId());
+                    wallpaperPreferences.getHomeWallpaperCollectionId(),
+                    wallpaperPreferences.getHomeWallpaperRemoteId());
             wallpaperFile.delete();
 
         } catch (Exception ex) {

@@ -185,10 +185,11 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
 
     @Override
     public boolean setWallpaperInRotation(Bitmap wallpaperBitmap, List<String> attributions,
-            int actionLabelRes, int actionIconRes, String actionUrl, String collectionId) {
+            int actionLabelRes, int actionIconRes, String actionUrl, String collectionId,
+            String remoteId) {
 
         return setWallpaperInRotationStatic(wallpaperBitmap, attributions, actionUrl,
-                actionLabelRes, actionIconRes, collectionId);
+                actionLabelRes, actionIconRes, collectionId, remoteId);
     }
 
     @Override
@@ -200,9 +201,10 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
 
     @Override
     public boolean finalizeWallpaperForNextRotation(List<String> attributions, String actionUrl,
-            int actionLabelRes, int actionIconRes, String collectionId, int wallpaperId) {
+            int actionLabelRes, int actionIconRes, String collectionId, int wallpaperId,
+            String remoteId) {
         return saveStaticWallpaperMetadata(attributions, actionUrl, actionLabelRes,
-                actionIconRes, collectionId, wallpaperId, DEST_HOME_SCREEN);
+                actionIconRes, collectionId, wallpaperId, remoteId, DEST_HOME_SCREEN);
     }
 
     /**
@@ -210,7 +212,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
      * the current "daily wallpaper".
      */
     private boolean setWallpaperInRotationStatic(Bitmap wallpaperBitmap, List<String> attributions,
-            String actionUrl, int actionLabelRes, int actionIconRes, String collectionId) {
+            String actionUrl, int actionLabelRes, int actionIconRes, String collectionId,
+            String remoteId) {
         final int wallpaperId = cropAndSetWallpaperBitmapInRotationStatic(wallpaperBitmap,
                 attributions, actionUrl, collectionId);
 
@@ -218,8 +221,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             return false;
         }
 
-        return saveStaticWallpaperMetadata(attributions, actionUrl, actionLabelRes,
-                actionIconRes, collectionId, wallpaperId, DEST_HOME_SCREEN);
+        return saveStaticWallpaperMetadata(attributions, actionUrl, actionLabelRes, actionIconRes,
+                collectionId, wallpaperId, remoteId, DEST_HOME_SCREEN);
     }
 
     @Override
@@ -229,6 +232,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             int actionIconRes,
             String collectionId,
             int wallpaperId,
+            String remoteId,
             @Destination int destination) {
         if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
             mWallpaperPreferences.clearHomeWallpaperMetadata();
@@ -246,6 +250,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             // Only set base image URL for static Backdrop images, not for rotation.
             mWallpaperPreferences.setHomeWallpaperBaseImageUrl(null);
             mWallpaperPreferences.setHomeWallpaperCollectionId(collectionId);
+            mWallpaperPreferences.setHomeWallpaperRemoteId(remoteId);
         }
 
         // Set metadata to lock screen also when the rotating wallpaper so if user sets a home
@@ -259,6 +264,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setLockWallpaperActionLabelRes(actionLabelRes);
             mWallpaperPreferences.setLockWallpaperActionIconRes(actionIconRes);
             mWallpaperPreferences.setLockWallpaperCollectionId(collectionId);
+            mWallpaperPreferences.setLockWallpaperRemoteId(remoteId);
         }
 
         return true;
@@ -574,7 +580,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
          * rotating is now copied to the lock screen.
          */
         private void copyRotatingWallpaperToLock() {
-
             mWallpaperPreferences.setLockWallpaperAttributions(
                     mWallpaperPreferences.getHomeWallpaperAttributions());
             mWallpaperPreferences.setLockWallpaperActionUrl(
