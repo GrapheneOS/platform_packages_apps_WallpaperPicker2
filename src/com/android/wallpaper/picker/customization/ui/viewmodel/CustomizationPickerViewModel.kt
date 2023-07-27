@@ -41,7 +41,7 @@ constructor(
     undoInteractor: UndoInteractor,
     wallpaperInteractor: WallpaperInteractor,
     private val savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : AnimationStateViewModel() {
 
     val undo: UndoViewModel =
         UndoViewModel(
