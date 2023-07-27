@@ -191,6 +191,9 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
      * @see ServiceConnection#onServiceConnected(ComponentName, IBinder)
      */
     public void onServiceConnected(ComponentName name, IBinder service) {
+        if (mContainerView == null) {
+            return;
+        }
         mService = IWallpaperService.Stub.asInterface(service);
         if (mContainerView.getDisplay() == null) {
             mContainerView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
@@ -278,11 +281,13 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
 
     @Override
     public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
-        mContainerView.post(() -> {
-            if (mListener != null) {
-                mListener.onWallpaperColorsChanged(colors, displayId);
-            }
-        });
+        if (mContainerView != null) {
+            mContainerView.post(() -> {
+                if (mListener != null) {
+                    mListener.onWallpaperColorsChanged(colors, displayId);
+                }
+            });
+        }
     }
 
     @Override
@@ -294,12 +299,13 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
         if (mSecondContainerView != null) {
             mSecondContainerView.post(() -> reparentWallpaperSurface(mSecondContainerView));
         }
-
-        mContainerView.post(() -> {
-            if (mListener != null) {
-                mListener.onEngineShown();
-            }
-        });
+        if (mContainerView != null) {
+            mContainerView.post(() -> {
+                if (mListener != null) {
+                    mListener.onEngineShown();
+                }
+            });
+        }
     }
 
     /**
@@ -354,6 +360,9 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     }
 
     private void reparentWallpaperSurface(SurfaceView parentSurface) {
+        if (parentSurface == null) {
+            return;
+        }
         synchronized (this) {
             if (mEngine == null) {
                 Log.i(TAG, "Engine is null, was the service disconnected?");
