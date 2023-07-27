@@ -40,6 +40,7 @@ import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.FixedWidthDisplayRatioFrameLayout
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.ui.binder.ScreenPreviewBinder
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
@@ -62,7 +63,7 @@ open class ScreenPreviewSectionController(
     private val wallpaperInteractor: WallpaperInteractor,
     private val wallpaperManager: WallpaperManager,
     private val isTwoPaneAndSmallWidth: Boolean,
-    private val savedInstanceState: Bundle? = null,
+    private val customizationPickerViewModel: CustomizationPickerViewModel,
 ) : CustomizationSectionController<ScreenPreviewView> {
 
     protected val isOnLockScreen: Boolean = screen == CustomizationSections.Screen.LOCK_SCREEN
@@ -136,34 +137,8 @@ open class ScreenPreviewSectionController(
                 offsetToStart = displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(activity),
                 onWallpaperPreviewDirty = { activity.recreate() },
                 onWorkspacePreviewDirty = { bindScreenPreview(previewView, context) },
-                savedBitmap = getSavedBitmap(savedInstanceState, screen),
+                animationStateViewModel = customizationPickerViewModel,
             )
-    }
-
-    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        super.onSaveInstanceState(savedInstanceState)
-        val wallpaperLoadingImageBitmap = previewViewBinding?.getWallpaperLoadingImageBitmap()
-        savedInstanceState.putByteArray(
-            if (screen == CustomizationSections.Screen.LOCK_SCREEN) LOCK_WALLPAPER_BITMAP_KEY
-            else HOME_WALLPAPER_BITMAP_KEY,
-            wallpaperLoadingImageBitmap
-        )
-    }
-
-    private fun getSavedBitmap(
-        savedInstanceState: Bundle?,
-        screen: CustomizationSections.Screen,
-    ): ByteArray? {
-        var savedBitmap: ByteArray? = null
-        if (savedInstanceState != null) {
-            savedBitmap =
-                if (screen == CustomizationSections.Screen.LOCK_SCREEN) {
-                    savedInstanceState[LOCK_WALLPAPER_BITMAP_KEY] as ByteArray?
-                } else {
-                    savedInstanceState[HOME_WALLPAPER_BITMAP_KEY] as ByteArray?
-                }
-        }
-        return savedBitmap
     }
 
     protected open fun createScreenPreviewViewModel(context: Context): ScreenPreviewViewModel {
@@ -275,10 +250,5 @@ open class ScreenPreviewSectionController(
         } else {
             null
         }
-    }
-
-    companion object {
-        private const val LOCK_WALLPAPER_BITMAP_KEY = "wallpaperLoadingImageBitmapLock"
-        private const val HOME_WALLPAPER_BITMAP_KEY = "wallpaperLoadingImageBitmapHome"
     }
 }
