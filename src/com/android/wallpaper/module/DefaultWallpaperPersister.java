@@ -44,7 +44,6 @@ import com.android.wallpaper.asset.Asset.BitmapReceiver;
 import com.android.wallpaper.asset.BitmapUtils;
 import com.android.wallpaper.asset.StreamableAsset;
 import com.android.wallpaper.asset.StreamableAsset.StreamReceiver;
-import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.BitmapCropper.Callback;
 import com.android.wallpaper.util.BitmapTransformer;
@@ -70,7 +69,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
 
     private final Context mAppContext;
     private final WallpaperManager mWallpaperManager;
-    private final WallpaperManagerCompat mWallpaperManagerCompat;
     private final WallpaperPreferences mWallpaperPreferences;
     private final WallpaperChangedNotifier mWallpaperChangedNotifier;
     private final DisplayUtils mDisplayUtils;
@@ -83,7 +81,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     public DefaultWallpaperPersister(
             Context context,
             WallpaperManager wallpaperManager,
-            WallpaperManagerCompat wallpaperManagerCompat,
             WallpaperPreferences wallpaperPreferences,
             WallpaperChangedNotifier wallpaperChangedNotifier,
             DisplayUtils displayUtils,
@@ -92,7 +89,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     ) {
         mAppContext = context.getApplicationContext();
         mWallpaperManager = wallpaperManager;
-        mWallpaperManagerCompat = wallpaperManagerCompat;
         mWallpaperPreferences = wallpaperPreferences;
         mWallpaperChangedNotifier = wallpaperChangedNotifier;
         mDisplayUtils = displayUtils;
@@ -316,7 +312,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                 scaledCropRect.height());
         int whichWallpaper = getDefaultWhichWallpaper();
 
-        int wallpaperId = setBitmapToWallpaperManagerCompat(wallpaperBitmap,
+        int wallpaperId = setBitmapToWallpaperManager(wallpaperBitmap,
                 /* allowBackup */ false, whichWallpaper);
         if (wallpaperId > 0) {
             mWallpaperPreferences.storeLatestWallpaper(whichWallpaper,
@@ -333,18 +329,18 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     @Override
     public int getDefaultWhichWallpaper() {
         return isSeparateLockScreenWallpaperSet()
-                ? WallpaperManagerCompat.FLAG_SYSTEM
-                : WallpaperManagerCompat.FLAG_SYSTEM | WallpaperManagerCompat.FLAG_LOCK;
+                ? WallpaperManager.FLAG_SYSTEM
+                : WallpaperManager.FLAG_SYSTEM | WallpaperManager.FLAG_LOCK;
     }
 
     @Override
-    public int setBitmapToWallpaperManagerCompat(Bitmap wallpaperBitmap, boolean allowBackup,
+    public int setBitmapToWallpaperManager(Bitmap wallpaperBitmap, boolean allowBackup,
             int whichWallpaper) {
         ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
         if (wallpaperBitmap.compress(CompressFormat.PNG, DEFAULT_COMPRESS_QUALITY, tmpOut)) {
             try {
                 byte[] outByteArray = tmpOut.toByteArray();
-                return mWallpaperManagerCompat.setStream(
+                return mWallpaperManager.setStream(
                         new ByteArrayInputStream(outByteArray),
                         null /* visibleCropHint */,
                         allowBackup,
@@ -356,7 +352,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         } else {
             Log.e(TAG, "unable to compress wallpaper");
             try {
-                return mWallpaperManagerCompat.setBitmap(
+                return mWallpaperManager.setBitmap(
                         wallpaperBitmap,
                         null /* visibleCropHint */,
                         allowBackup,
@@ -368,10 +364,10 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         }
     }
 
-    private int setStreamToWallpaperManagerCompat(InputStream inputStream, boolean allowBackup,
+    private int setStreamToWallpaperManager(InputStream inputStream, boolean allowBackup,
             int whichWallpaper) {
         try {
-            return mWallpaperManagerCompat.setStream(inputStream, null, allowBackup,
+            return mWallpaperManager.setStream(inputStream, null, allowBackup,
                     whichWallpaper);
         } catch (IOException e) {
             return 0;
@@ -500,12 +496,12 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         protected Boolean doInBackground(Void... unused) {
             int whichWallpaper;
             if (mDestination == DEST_HOME_SCREEN) {
-                whichWallpaper = WallpaperManagerCompat.FLAG_SYSTEM;
+                whichWallpaper = WallpaperManager.FLAG_SYSTEM;
             } else if (mDestination == DEST_LOCK_SCREEN) {
-                whichWallpaper = WallpaperManagerCompat.FLAG_LOCK;
+                whichWallpaper = WallpaperManager.FLAG_LOCK;
             } else { // DEST_BOTH
-                whichWallpaper = WallpaperManagerCompat.FLAG_SYSTEM
-                        | WallpaperManagerCompat.FLAG_LOCK;
+                whichWallpaper = WallpaperManager.FLAG_SYSTEM
+                        | WallpaperManager.FLAG_LOCK;
             }
 
             boolean wasLockWallpaperSet = mWallpaperStatusChecker.isLockWallpaperSet();
@@ -522,10 +518,10 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                             true);
                 }
 
-                wallpaperId = setBitmapToWallpaperManagerCompat(mBitmap, allowBackup,
+                wallpaperId = setBitmapToWallpaperManager(mBitmap, allowBackup,
                         whichWallpaper);
             } else if (mInputStream != null) {
-                wallpaperId = setStreamToWallpaperManagerCompat(mInputStream, allowBackup,
+                wallpaperId = setStreamToWallpaperManager(mInputStream, allowBackup,
                         whichWallpaper);
             } else {
                 Log.e(TAG,
@@ -593,8 +589,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             // copied the system wallpaper over to the lock screen when we changed from
             // "both" to distinct system and lock screen wallpapers.
             mWallpaperPreferences.setLockWallpaperManagerId(
-                    mWallpaperManagerCompat.getWallpaperId(WallpaperManagerCompat.FLAG_LOCK));
-
+                    mWallpaperManager.getWallpaperId(WallpaperManager.FLAG_LOCK));
         }
 
         /**
@@ -637,7 +632,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             // on N+ devices in addition to saving the wallpaper ID for the purpose of backup &
             // restore.
             mWallpaperManager.forgetLoadedWallpaper();
-            mBitmap = ((BitmapDrawable) mWallpaperManagerCompat.getDrawable()).getBitmap();
+            mBitmap = ((BitmapDrawable) mWallpaperManager.getDrawable()).getBitmap();
             long bitmapHash = BitmapUtils.generateHashCode(mBitmap);
             WallpaperColors colors = WallpaperColors.fromBitmap(mBitmap);
 
@@ -701,8 +696,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         }
 
         private Bitmap getLockWallpaperBitmap() {
-            ParcelFileDescriptor parcelFd = mWallpaperManagerCompat.getWallpaperFile(
-                    WallpaperManagerCompat.FLAG_LOCK);
+            ParcelFileDescriptor parcelFd = mWallpaperManager.getWallpaperFile(
+                    WallpaperManager.FLAG_LOCK);
 
             if (parcelFd == null) {
                 return null;

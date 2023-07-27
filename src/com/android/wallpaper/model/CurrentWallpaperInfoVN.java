@@ -15,7 +15,10 @@
  */
 package com.android.wallpaper.model;
 
+import static android.app.WallpaperManager.SetWallpaperFlags;
+
 import android.app.Activity;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.os.Parcel;
 
@@ -25,8 +28,6 @@ import androidx.annotation.StringRes;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.BuiltInWallpaperAsset;
 import com.android.wallpaper.asset.CurrentWallpaperAssetVN;
-import com.android.wallpaper.compat.WallpaperManagerCompat;
-import com.android.wallpaper.compat.WallpaperManagerCompat.WallpaperLocation;
 import com.android.wallpaper.module.InjectorProvider;
 
 import java.util.ArrayList;
@@ -50,16 +51,16 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
                 }
             };
     private static final String TAG = "CurrentWallpaperInfoVN";
-    private List<String> mAttributions;
+    private final List<String> mAttributions;
     private Asset mAsset;
-    private String mActionUrl;
+    private final String mActionUrl;
     @StringRes
     private int mActionLabelRes;
     @DrawableRes
     private int mActionIconRes;
-    private String mCollectionId;
-    @WallpaperLocation
-    private int mWallpaperManagerFlag;
+    private final String mCollectionId;
+    @SetWallpaperFlags
+    private final int mWallpaperManagerFlag;
     public static final String UNKNOWN_CURRENT_WALLPAPER_ID = "unknown_current_wallpaper_id";
 
     /**
@@ -71,7 +72,7 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
     public CurrentWallpaperInfoVN(List<String> attributions, String actionUrl,
                                   @StringRes int actionLabelRes, @DrawableRes int actionIconRes,
                                   String collectionId,
-                                  @WallpaperLocation int wallpaperManagerFlag) {
+                                  @SetWallpaperFlags int wallpaperManagerFlag) {
         mAttributions = attributions;
         mWallpaperManagerFlag = wallpaperManagerFlag;
         mActionUrl = actionUrl;
@@ -135,16 +136,12 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
         return mActionLabelRes != 0 ? mActionLabelRes : WallpaperInfo.getDefaultActionLabel();
     }
 
-    public int getWallpaperManagerFlag() {
-        return mWallpaperManagerFlag;
-    }
-
     /**
      * Constructs and returns an Asset instance representing the currently-set wallpaper asset.
      */
     private Asset createCurrentWallpaperAssetVN(Context context) {
         // Whether the wallpaper this object represents is the default built-in wallpaper.
-        boolean isSystemBuiltIn = mWallpaperManagerFlag == WallpaperManagerCompat.FLAG_SYSTEM
+        boolean isSystemBuiltIn = mWallpaperManagerFlag == WallpaperManager.FLAG_SYSTEM
                 && !InjectorProvider.getInjector().getWallpaperStatusChecker(context)
                 .isHomeStaticWallpaperSet();
 
