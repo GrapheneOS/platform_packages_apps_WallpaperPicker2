@@ -83,13 +83,13 @@ public abstract class PreviewFragment extends AppbarFragment implements
      * User can view wallpaper and attributions in full screen, but "Set wallpaper" button is
      * hidden.
      */
-    static final int MODE_VIEW_ONLY = 0;
+    public static final int MODE_VIEW_ONLY = 0;
 
     /**
      * User can view wallpaper and attributions in full screen and click "Set wallpaper" to set the
      * wallpaper with pan and crop position to the device.
      */
-    static final int MODE_CROP_AND_SET_WALLPAPER = 1;
+    public static final int MODE_CROP_AND_SET_WALLPAPER = 1;
 
     /**
      * Possible preview modes for the fragment.
