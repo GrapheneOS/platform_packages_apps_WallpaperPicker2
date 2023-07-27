@@ -26,7 +26,6 @@ import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.asset.Asset;
-import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.model.WallpaperInfo;
 
 import java.util.List;
@@ -140,13 +139,13 @@ public interface WallpaperPersister {
     int getDefaultWhichWallpaper();
 
     /**
-     * Sets a wallpaper bitmap to the {@link WallpaperManagerCompat}.
+     * Sets a wallpaper bitmap to the {@link android.app.WallpaperManager}.
      *
      * @return an integer wallpaper ID. This is an actual wallpaper ID on N and later versions of
      * Android, otherwise on pre-N versions of Android will return a positive integer when the
      * operation was successful and zero if the operation encountered an error.
      */
-    int setBitmapToWallpaperManagerCompat(Bitmap wallpaperBitmap, boolean allowBackup,
+    int setBitmapToWallpaperManager(Bitmap wallpaperBitmap, boolean allowBackup,
             int whichWallpaper);
 
     /**

@@ -17,17 +17,14 @@ package com.android.wallpaper.module
 
 import android.app.WallpaperManager
 import android.util.Log
-import com.android.wallpaper.compat.WallpaperManagerCompat
 import java.io.IOException
 
 /** Default implementation of [WallpaperStatusChecker]. */
 class DefaultWallpaperStatusChecker(
     private val wallpaperManager: WallpaperManager,
-    private val wallpaperManagerCompat: WallpaperManagerCompat,
 ) : WallpaperStatusChecker {
     override fun isHomeStaticWallpaperSet(): Boolean {
-        val systemWallpaperFile =
-            wallpaperManagerCompat.getWallpaperFile(WallpaperManagerCompat.FLAG_SYSTEM)
+        val systemWallpaperFile = wallpaperManager.getWallpaperFile(WallpaperManager.FLAG_SYSTEM)
         return if (systemWallpaperFile != null) {
             try {
                 systemWallpaperFile.close()
