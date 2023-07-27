@@ -15,9 +15,10 @@
  */
 package com.android.wallpaper.module;
 
+import android.app.WallpaperManager;
+
 import androidx.annotation.Nullable;
 
-import com.android.wallpaper.compat.WallpaperManagerCompat;
 import com.android.wallpaper.model.CurrentWallpaperInfoVN;
 import com.android.wallpaper.model.LiveWallpaperMetadata;
 import com.android.wallpaper.model.WallpaperInfo;
@@ -74,7 +75,7 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                                 homeWallpaperMetadata.getActionLabelRes(),
                                 homeWallpaperMetadata.getActionIconRes(),
                                 homeWallpaperMetadata.getCollectionId(),
-                                WallpaperManagerCompat.FLAG_SYSTEM);
+                                WallpaperManager.FLAG_SYSTEM);
                     }
 
                     WallpaperInfo lockWallpaper = null;
@@ -91,7 +92,7 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                                     lockWallpaperMetadata.getActionLabelRes(),
                                     lockWallpaperMetadata.getActionIconRes(),
                                     lockWallpaperMetadata.getCollectionId(),
-                                    WallpaperManagerCompat.FLAG_LOCK);
+                                    WallpaperManager.FLAG_LOCK);
                         }
                     }
 

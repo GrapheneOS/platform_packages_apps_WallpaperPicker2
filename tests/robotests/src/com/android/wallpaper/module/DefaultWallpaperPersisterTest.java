@@ -40,7 +40,6 @@ import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.testing.TestAsset;
 import com.android.wallpaper.testing.TestBitmapCropper;
 import com.android.wallpaper.testing.TestStaticWallpaperInfo;
-import com.android.wallpaper.testing.TestWallpaperManagerCompat;
 import com.android.wallpaper.testing.TestWallpaperPreferences;
 import com.android.wallpaper.testing.TestWallpaperStatusChecker;
 import com.android.wallpaper.util.DisplayUtils;
@@ -65,8 +64,6 @@ public class DefaultWallpaperPersisterTest {
     private DefaultWallpaperPersister mPersister;
     /** Spy on real WallpaperManager instance  */
     private WallpaperManager mManager;
-    /** Fake instance of WallpaperManagerCompat */
-    private TestWallpaperManagerCompat mManagerCompat;
     /** Fake instance of WallpaperPreferences */
     private TestWallpaperPreferences mPrefs;
     /** Executor to use for AsyncTask */
@@ -76,15 +73,14 @@ public class DefaultWallpaperPersisterTest {
     public void setUp() {
         mContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         mManager = spy(WallpaperManager.getInstance(mContext));
-        mManagerCompat = new TestWallpaperManagerCompat(mContext);
         mPrefs = new TestWallpaperPreferences();
         WallpaperChangedNotifier changedNotifier = spy(WallpaperChangedNotifier.getInstance());
         DisplayUtils displayUtils = new DisplayUtils(mContext);
         TestBitmapCropper cropper = new TestBitmapCropper();
         TestWallpaperStatusChecker statusChecker = new TestWallpaperStatusChecker();
 
-        mPersister = new DefaultWallpaperPersister(mContext, mManager, mManagerCompat, mPrefs,
-                changedNotifier, displayUtils, cropper, statusChecker);
+        mPersister = new DefaultWallpaperPersister(mContext, mManager, mPrefs, changedNotifier,
+                displayUtils, cropper, statusChecker);
     }
 
     @Test
@@ -144,11 +140,11 @@ public class DefaultWallpaperPersisterTest {
 
     // Call this method to prepare for a call to setIndividualWallpaper with non-streamable bitmap.
     private void prepareWallpaperSetFromInfo(TestStaticWallpaperInfo wallpaperInfo) {
-        // Retrieve the bitmap to be set by the given WallpaperInfo, and set it in
-        // WallpaperManagerCompat for calculation of the bitmap has.
+        // Retrieve the bitmap to be set by the given WallpaperInfo, and override the return value
+        // from WallpaperManager.getDrawable().
         TestAsset asset = (TestAsset) wallpaperInfo.getAsset(mContext);
-        mManagerCompat.setDrawable(new BitmapDrawable(mContext.getResources(), asset.getBitmap()));
-
+        doReturn(new BitmapDrawable(mContext.getResources(), asset.getBitmap())).when(mManager)
+                .getDrawable();
         // Override the background executor for AsyncTask to that we can explicitly execute its
         // tasks - otherwise this will remain in the queue even after main looper idle.
         ShadowPausedAsyncTask.overrideExecutor(mPausedExecutor);
