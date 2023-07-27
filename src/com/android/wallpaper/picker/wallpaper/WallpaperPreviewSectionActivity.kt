@@ -24,15 +24,22 @@ import android.view.Window
 import com.android.wallpaper.R
 import com.android.wallpaper.model.ImageWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.BasePreviewActivity
+import com.android.wallpaper.picker.PreviewFragment
+import com.android.wallpaper.picker.di.navigation.NavigationController
+import com.android.wallpaper.picker.di.navigation.Transition
 import com.android.wallpaper.util.ActivityUtils
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /** This activity holds the flow for the preview screen. */
 @AndroidEntryPoint(BasePreviewActivity::class)
 class WallpaperPreviewSectionActivity :
     Hilt_WallpaperPreviewSectionActivity(), AppbarFragment.AppbarFragmentHost {
+
+    @Inject lateinit var navigator: NavigationController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +54,29 @@ class WallpaperPreviewSectionActivity :
         // TODO: @abdullahirum create new layout and use here
         setContentView(R.layout.activity_preview)
         enableFullScreen()
-        // TODO: @abdullahirum navigate to appropriate screen here
+        val fm = supportFragmentManager
+        var fragment = fm.findFragmentById(R.id.fragment_container)
+        if (fragment == null) {
+            val intent = intent
+            val wallpaper = intent.getParcelableExtra<WallpaperInfo>(EXTRA_WALLPAPER_INFO)
+            val flags = InjectorProvider.getInjector().getFlags()
+            val viewAsHome =
+                intent.getBooleanExtra(
+                    EXTRA_VIEW_AS_HOME,
+                    !flags.isFullscreenWallpaperPreviewEnabled(this)
+                )
+            val testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false)
+            navigator.navigateToPreview(
+                this,
+                wallpaper,
+                PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
+                viewAsHome,
+                /* viewFullScreen= */ false,
+                testingModeEnabled,
+                R.id.fragment_container,
+                Transition.ADD
+            )
+        }
     }
 
     override fun onUpArrowPressed() {
@@ -65,7 +94,16 @@ class WallpaperPreviewSectionActivity :
             val imageUri = data?.let { it.data as? Uri }
             if (imageUri != null) {
                 val imageWallpaper = ImageWallpaperInfo(imageUri)
-                // TODO: @abullahirum navigate to preview screen
+                navigator.navigateToPreview(
+                    this,
+                    imageWallpaper,
+                    PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
+                    true,
+                    /* viewFullScreen= */ false,
+                    false,
+                    R.id.fragment_container,
+                    Transition.REPLACE
+                )
             }
         }
     }
