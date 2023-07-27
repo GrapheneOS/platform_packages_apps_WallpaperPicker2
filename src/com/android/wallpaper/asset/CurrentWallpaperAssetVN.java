@@ -15,6 +15,8 @@
  */
 package com.android.wallpaper.asset;
 
+import static android.app.WallpaperManager.SetWallpaperFlags;
+
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Context;
@@ -29,8 +31,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.WorkerThread;
 
-import com.android.wallpaper.compat.WallpaperManagerCompat;
-import com.android.wallpaper.compat.WallpaperManagerCompat.WallpaperLocation;
 import com.android.wallpaper.util.WallpaperCropUtils;
 
 import com.bumptech.glide.Glide;
@@ -53,21 +53,19 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
 
     private static final String TAG = "CurrentWallpaperAssetVN";
     int mWallpaperId;
-    private WallpaperManager mWallpaperManager;
-    private WallpaperManagerCompat mWallpaperManagerCompat;
-    @WallpaperLocation
-    private int mWallpaperManagerFlag;
+    private final WallpaperManager mWallpaperManager;
+    @SetWallpaperFlags
+    private final int mWallpaperManagerFlag;
 
-    public CurrentWallpaperAssetVN(Context context, @WallpaperLocation int wallpaperManagerFlag) {
+    public CurrentWallpaperAssetVN(Context context, @SetWallpaperFlags int wallpaperManagerFlag) {
         mWallpaperManager = WallpaperManager.getInstance(context);
-        mWallpaperManagerCompat = WallpaperManagerCompat.getInstance(context);
         mWallpaperManagerFlag = wallpaperManagerFlag;
-        mWallpaperId = mWallpaperManagerCompat.getWallpaperId(mWallpaperManagerFlag);
+        mWallpaperId = mWallpaperManager.getWallpaperId(mWallpaperManagerFlag);
     }
 
     @Override
     protected InputStream openInputStream() {
-        ParcelFileDescriptor pfd = mWallpaperManagerCompat.getWallpaperFile(mWallpaperManagerFlag);
+        ParcelFileDescriptor pfd = getWallpaperPfd();
 
         if (pfd == null) {
             Log.e(TAG, "ParcelFileDescriptor for wallpaper " + mWallpaperManagerFlag + " is null, unable "
@@ -151,7 +149,7 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
     }
 
     ParcelFileDescriptor getWallpaperPfd() {
-        return mWallpaperManagerCompat.getWallpaperFile(mWallpaperManagerFlag);
+        return mWallpaperManager.getWallpaperFile(mWallpaperManagerFlag);
     }
 
     /**
@@ -159,11 +157,12 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
      * provided by WallpaperManager.
      */
     private static final class CurrentWallpaperVNKey implements Key {
-        private WallpaperManager mWallpaperManager;
-        private int mWallpaperFlag;
+        private final WallpaperManager mWallpaperManager;
+        @SetWallpaperFlags
+        private final int mWallpaperFlag;
 
-        public CurrentWallpaperVNKey(WallpaperManager wallpaperManager,
-                                     @WallpaperLocation int wallpaperFlag) {
+        CurrentWallpaperVNKey(WallpaperManager wallpaperManager,
+                @SetWallpaperFlags int wallpaperFlag) {
             mWallpaperManager = wallpaperManager;
             mWallpaperFlag = wallpaperFlag;
         }

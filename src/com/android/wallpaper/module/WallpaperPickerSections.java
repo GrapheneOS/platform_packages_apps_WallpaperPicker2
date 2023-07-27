@@ -55,7 +55,7 @@ public final class WallpaperPickerSections implements CustomizationSections {
                         wallpaperInteractor,
                         wallpaperManager,
                         isTwoPaneAndSmallWidth,
-                        savedInstanceState));
+                        customizationPickerViewModel));
         sectionControllers.add(
                 new WallpaperQuickSwitchSectionController(
                         customizationPickerViewModel.getWallpaperQuickSwitchViewModel(screen),
