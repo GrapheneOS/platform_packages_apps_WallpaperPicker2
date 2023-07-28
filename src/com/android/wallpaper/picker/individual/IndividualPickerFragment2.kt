@@ -42,6 +42,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
@@ -933,5 +934,13 @@ class IndividualPickerFragment2 :
                 badge.visibility = View.GONE
             }
         }
+    }
+
+    override fun getToolbarColorId(): Int {
+        return android.R.color.transparent
+    }
+
+    override fun getToolbarTextColor(): Int {
+        return ContextCompat.getColor(requireContext(), R.color.system_on_surface)
     }
 }
