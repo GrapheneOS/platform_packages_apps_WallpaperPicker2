@@ -87,6 +87,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     private boolean mIsEngineVisible;
     private boolean mEngineReady;
     private boolean mDestroyed;
+    private int mDestinationFlag;
 
     /**
      * @param intent used to bind the wallpaper service
@@ -96,7 +97,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
      */
     public WallpaperConnection(Intent intent, Context context,
             @Nullable WallpaperConnectionListener listener, @NonNull SurfaceView containerView) {
-        this(intent, context, listener, containerView, null);
+        this(intent, context, listener, containerView, null, null);
     }
 
     /**
@@ -106,15 +107,20 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
      * @param containerView SurfaceView that will display the wallpaper
      * @param secondaryContainerView optional SurfaceView that will display a second, mirrored
      *                               version of the wallpaper
+     * @param destinationFlag one of WallpaperManager.FLAG_SYSTEM, WallpaperManager.FLAG_LOCK
+     *                        indicating for which screen we're previewing the wallpaper, or null if
+     *                        unknown
      */
     public WallpaperConnection(Intent intent, Context context,
             @Nullable WallpaperConnectionListener listener, @NonNull SurfaceView containerView,
-            @Nullable SurfaceView secondaryContainerView) {
+            @Nullable SurfaceView secondaryContainerView,
+            @Nullable @WallpaperManager.SetWallpaperFlags Integer destinationFlag) {
         mContext = context.getApplicationContext();
         mIntent = intent;
         mListener = listener;
         mContainerView = containerView;
         mSecondContainerView = secondaryContainerView;
+        mDestinationFlag = destinationFlag == null ? WallpaperManager.FLAG_SYSTEM : destinationFlag;
     }
 
     /**
@@ -341,7 +347,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
                 mService.attach(this, mContainerView.getWindowToken(),
                         LayoutParams.TYPE_APPLICATION_MEDIA, true, mContainerView.getWidth(),
                         mContainerView.getHeight(), new Rect(0, 0, 0, 0), displayId,
-                        WallpaperManager.FLAG_SYSTEM);
+                        mDestinationFlag);
             }
         } catch (RemoteException e) {
             Log.w(TAG, "Failed attaching wallpaper; clearing", e);

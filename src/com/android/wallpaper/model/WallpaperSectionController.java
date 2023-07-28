@@ -547,7 +547,8 @@ public class WallpaperSectionController implements
                         }
                     }
                 },
-                mainSurface, mirrorSurface);
+                mainSurface, mirrorSurface,
+                isHomeWallpaper ? WallpaperManager.FLAG_SYSTEM : WallpaperManager.FLAG_LOCK);
 
         connection.setVisibility(true);
         if (isHomeWallpaper) {
@@ -601,7 +602,9 @@ public class WallpaperSectionController implements
                             }
                         }
                     },
-                    mHomeWallpaperSurface, isLockLive ? mLockWallpaperSurface : null);
+                    mHomeWallpaperSurface, isLockLive ? mLockWallpaperSurface : null,
+                    /* destinationFlag= */ null
+            );
 
             mHomeWallpaperConnection.setVisibility(true);
             mHomeWallpaperSurface.post(() -> {
