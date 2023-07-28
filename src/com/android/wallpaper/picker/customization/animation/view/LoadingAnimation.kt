@@ -73,7 +73,7 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
             Shader.TileMode.CLAMP
         )
 
-    fun playLoadingAnimation() {
+    fun playLoadingAnimation(seed: Long? = null) {
         if (
             animationState == AnimationState.FADE_IN_PLAYING ||
                 animationState == AnimationState.FADE_IN_PLAYED
@@ -87,8 +87,7 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
         revealOverlay.visibility = View.VISIBLE
         revealOverlay.setImageDrawable(currentImage)
 
-        val randomSeed = (0L..10000L).random()
-        elapsedTime = randomSeed
+        elapsedTime = seed ?: (0L..10000L).random()
 
         fadeInAnimator?.cancel()
         timeAnimator?.cancel()
@@ -244,14 +243,13 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
         revealAnimator?.cancel()
     }
 
-    fun setupRevealAnimation() {
+    fun setupRevealAnimation(seed: Long? = null) {
         cancel()
 
         revealOverlay.visibility = View.VISIBLE
         revealOverlay.setImageDrawable(currentImage)
 
-        val randomSeed = (0L..10000L).random()
-        elapsedTime = randomSeed
+        elapsedTime = seed ?: (0L..10000L).random()
 
         // Fast forward to state at the end of fade in animation
         blurRadius = MAX_BLUR_PX
@@ -262,6 +260,7 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
                 Shader.TileMode.MIRROR
             )
         animationState = AnimationState.FADE_IN_PLAYED
+        loadingShader.setAlpha(1f)
 
         // Keep clouds moving until we finish loading
         timeAnimator =
@@ -269,6 +268,10 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
                 setTimeListener { _, _, deltaTime -> flushUniforms(deltaTime) }
                 start()
             }
+    }
+
+    fun getElapsedTime(): Long {
+        return elapsedTime
     }
 
     companion object {
