@@ -48,6 +48,7 @@ import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.WorkspaceSurfaceHolderCallback
 import com.android.wallpaper.picker.customization.animation.view.LoadingAnimation
+import com.android.wallpaper.picker.customization.ui.view.WallpaperSurfaceView
 import com.android.wallpaper.picker.customization.ui.viewmodel.AnimationStateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
 import com.android.wallpaper.util.ResourceUtils
@@ -91,11 +92,17 @@ object ScreenPreviewBinder {
         onWallpaperPreviewDirty: () -> Unit,
         onWorkspacePreviewDirty: () -> Unit = {},
         animationStateViewModel: AnimationStateViewModel? = null,
+        isWallpaperAlwaysVisible: Boolean = true,
+        mirrorSurface: SurfaceView? = null,
     ): Binding {
         val workspaceSurface: SurfaceView = previewView.requireViewById(R.id.workspace_surface)
-        val wallpaperSurface: SurfaceView = previewView.requireViewById(R.id.wallpaper_surface)
+        val wallpaperSurface: WallpaperSurfaceView =
+            previewView.requireViewById(R.id.wallpaper_surface)
         val thumbnailRequested = AtomicBoolean(false)
-
+        // Tracks whether the live preview should be shown, since a) visibility updates may arrive
+        // before the engine is ready, and b) we need this state for onResume
+        // TODO(b/287618705) Remove this
+        val showLivePreview = AtomicBoolean(isWallpaperAlwaysVisible)
         val fixedWidthDisplayFrameLayout = previewView.parent as? View
         val screenPreviewClickView = fixedWidthDisplayFrameLayout?.parent as? View
         // Set the content description on the parent view
@@ -277,6 +284,13 @@ object ScreenPreviewBinder {
                             wallpaperSurface.setZOrderMediaOverlay(true)
                         }
 
+                        if (!isWallpaperAlwaysVisible) {
+                            wallpaperSurface.visibilityCallback = { visible: Boolean ->
+                                showLivePreview.set(visible)
+                                wallpaperConnection?.setVisibility(showLivePreview.get())
+                            }
+                        }
+
                         lifecycleOwner.lifecycle.addObserver(lifecycleObserver)
                     }
 
@@ -406,7 +420,7 @@ object ScreenPreviewBinder {
                                         object : OnAttachStateChangeListener {
                                             override fun onViewAttachedToWindow(v: View?) {
                                                 connection.connect()
-                                                connection.setVisibility(true)
+                                                connection.setVisibility(showLivePreview.get())
                                                 previewView.removeOnAttachStateChangeListener(this)
                                             }
 
@@ -417,7 +431,7 @@ object ScreenPreviewBinder {
                                     )
                                 } else {
                                     connection.connect()
-                                    connection.setVisibility(true)
+                                    connection.setVisibility(showLivePreview.get())
                                 }
                             }
                         }
