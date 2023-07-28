@@ -364,7 +364,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         }
     }
 
-    private int setStreamToWallpaperManager(InputStream inputStream, boolean allowBackup,
+    @Override
+    public int setStreamToWallpaperManager(InputStream inputStream, boolean allowBackup,
             int whichWallpaper) {
         try {
             return mWallpaperManager.setStream(inputStream, null, allowBackup,
