@@ -22,8 +22,8 @@
     <solid android:color="@color/connected_sections_background" />
 
     <corners
-        android:topLeftRadius="8dp"
-        android:topRightRadius="8dp"
-        android:bottomLeftRadius="32dp"
-        android:bottomRightRadius="32dp" />
+        android:topLeftRadius="32dp"
+        android:topRightRadius="32dp"
+        android:bottomLeftRadius="8dp"
+        android:bottomRightRadius="8dp" />
 </shape>
