@@ -36,18 +36,18 @@ import java.util.List;
 /**
  * Represents the currently set wallpaper on N+ devices. Should not be used to set a new wallpaper.
  */
-public class CurrentWallpaperInfoVN extends WallpaperInfo {
+public class CurrentWallpaperInfo extends WallpaperInfo {
 
-    public static final Creator<CurrentWallpaperInfoVN> CREATOR =
-            new Creator<CurrentWallpaperInfoVN>() {
+    public static final Creator<CurrentWallpaperInfo> CREATOR =
+            new Creator<CurrentWallpaperInfo>() {
                 @Override
-                public CurrentWallpaperInfoVN createFromParcel(Parcel source) {
-                    return new CurrentWallpaperInfoVN(source);
+                public CurrentWallpaperInfo createFromParcel(Parcel source) {
+                    return new CurrentWallpaperInfo(source);
                 }
 
                 @Override
-                public CurrentWallpaperInfoVN[] newArray(int size) {
-                    return new CurrentWallpaperInfoVN[size];
+                public CurrentWallpaperInfo[] newArray(int size) {
+                    return new CurrentWallpaperInfo[size];
                 }
             };
     private static final String TAG = "CurrentWallpaperInfoVN";
@@ -69,7 +69,7 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
      * @param wallpaperManagerFlag Either SYSTEM or LOCK--the source of image data which this object
      *                             represents.
      */
-    public CurrentWallpaperInfoVN(List<String> attributions, String actionUrl,
+    public CurrentWallpaperInfo(List<String> attributions, String actionUrl,
                                   @StringRes int actionLabelRes, @DrawableRes int actionIconRes,
                                   String collectionId,
                                   @SetWallpaperFlags int wallpaperManagerFlag) {
@@ -81,7 +81,7 @@ public class CurrentWallpaperInfoVN extends WallpaperInfo {
         mCollectionId = collectionId;
     }
 
-    private CurrentWallpaperInfoVN(Parcel in) {
+    private CurrentWallpaperInfo(Parcel in) {
         super(in);
         mAttributions = new ArrayList<>();
         in.readStringList(mAttributions);

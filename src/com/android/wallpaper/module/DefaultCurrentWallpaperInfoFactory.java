@@ -19,7 +19,7 @@ import android.app.WallpaperManager;
 
 import androidx.annotation.Nullable;
 
-import com.android.wallpaper.model.CurrentWallpaperInfoVN;
+import com.android.wallpaper.model.CurrentWallpaperInfo;
 import com.android.wallpaper.model.LiveWallpaperMetadata;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
@@ -69,7 +69,7 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                         homeWallpaper = mLiveWallpaperInfoFactory.getLiveWallpaperInfo(
                                 homeWallpaperMetadata.getWallpaperComponent());
                     } else {
-                        homeWallpaper = new CurrentWallpaperInfoVN(
+                        homeWallpaper = new CurrentWallpaperInfo(
                                 homeWallpaperMetadata.getAttributions(),
                                 homeWallpaperMetadata.getActionUrl(),
                                 homeWallpaperMetadata.getActionLabelRes(),
@@ -86,7 +86,7 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                             lockWallpaper = mLiveWallpaperInfoFactory.getLiveWallpaperInfo(
                                     lockWallpaperMetadata.getWallpaperComponent());
                         } else {
-                            lockWallpaper = new CurrentWallpaperInfoVN(
+                            lockWallpaper = new CurrentWallpaperInfo(
                                     lockWallpaperMetadata.getAttributions(),
                                     lockWallpaperMetadata.getActionUrl(),
                                     lockWallpaperMetadata.getActionLabelRes(),
