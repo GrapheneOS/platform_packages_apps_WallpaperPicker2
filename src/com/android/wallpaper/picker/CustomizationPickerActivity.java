@@ -93,6 +93,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         mNetworkStatusNotifier = injector.getNetworkStatusNotifier(this);
         mNetworkStatus = mNetworkStatusNotifier.getNetworkStatus();
         mDisplayUtils = injector.getDisplayUtils(this);
+        mIsUseRevampedUi = injector.getFlags().isUseRevampedUiEnabled(this);
 
         enforceOrientation();
 
@@ -116,7 +117,6 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         // See go/pdr-edge-to-edge-guide.
         WindowCompat.setDecorFitsSystemWindows(getWindow(), isSUWMode(this));
 
-        mIsUseRevampedUi = injector.getFlags().isUseRevampedUiEnabled(this);
         final boolean startFromLockScreen = getIntent() == null
                 || !ActivityUtils.isLaunchedFromLauncher(getIntent());
 
