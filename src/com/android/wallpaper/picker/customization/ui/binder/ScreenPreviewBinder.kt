@@ -45,6 +45,7 @@ import com.android.wallpaper.asset.CurrentWallpaperAssetVN
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.WorkspaceSurfaceHolderCallback
 import com.android.wallpaper.picker.customization.animation.view.LoadingAnimation
 import com.android.wallpaper.picker.customization.ui.viewmodel.AnimationStateViewModel
@@ -364,7 +365,8 @@ object ScreenPreviewBinder {
                                                 liveWallpaperInfo,
                                                 previewView,
                                                 viewModel,
-                                                wallpaperSurface
+                                                wallpaperSurface,
+                                                viewModel.screen,
                                             ) {
                                                 surfaceViewsReady()
                                                 if (showLoadingAnimation) {
@@ -420,6 +422,7 @@ object ScreenPreviewBinder {
         previewView: CardView,
         viewModel: ScreenPreviewViewModel,
         wallpaperSurface: SurfaceView,
+        screen: CustomizationSections.Screen,
         onEngineShown: () -> Unit
     ) =
         WallpaperConnection(
@@ -441,6 +444,7 @@ object ScreenPreviewBinder {
             },
             wallpaperSurface,
             null,
+            screen.toFlag()
         )
 
     private fun removeAndReadd(view: View) {
