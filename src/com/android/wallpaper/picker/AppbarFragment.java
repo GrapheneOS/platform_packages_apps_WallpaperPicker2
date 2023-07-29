@@ -168,6 +168,10 @@ public abstract class AppbarFragment extends BottomActionBarFragment
         return R.color.toolbar_color;
     }
 
+    protected int getToolbarTextColor() {
+        return ResourceUtils.getColorAttr(getActivity(), android.R.attr.textColorPrimary);
+    }
+
     /**
      * Set up arrow feature status to enabled or not. Enable it for updating
      * onBottomActionBarReady() while initializing without toolbar setup.
@@ -182,8 +186,7 @@ public abstract class AppbarFragment extends BottomActionBarFragment
         Drawable backIcon = getResources().getDrawable(R.drawable.material_ic_arrow_back_black_24,
                 null).mutate();
         backIcon.setAutoMirrored(true);
-        backIcon.setTint(
-                ResourceUtils.getColorAttr(getActivity(), android.R.attr.textColorPrimary));
+        backIcon.setTint(getToolbarTextColor());
         mToolbar.setNavigationIcon(backIcon);
         mToolbar.setNavigationContentDescription(R.string.bottom_action_bar_back);
         mToolbar.setNavigationOnClickListener(v -> mHost.onUpArrowPressed());
@@ -226,8 +229,10 @@ public abstract class AppbarFragment extends BottomActionBarFragment
         if (mTitleView != null) {
             mToolbar.setTitle(null);
             mTitleView.setText(title);
+            mTitleView.setTextColor(getToolbarTextColor());
         } else {
             mToolbar.setTitle(title);
+            mToolbar.setTitleTextColor(getToolbarTextColor());
         }
 
         // Set Activity title to make TalkBack announce title after updating toolbar title.

@@ -43,6 +43,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -1064,5 +1065,15 @@ public class CategorySelectorFragment extends AppbarFragment {
             }
             return DEFAULT_CATEGORY_SPAN_SIZE;
         }
+    }
+
+    @Override
+    protected int getToolbarColorId() {
+        return android.R.color.transparent;
+    }
+
+    @Override
+    protected int getToolbarTextColor() {
+        return ContextCompat.getColor(requireContext(), R.color.system_on_surface);
     }
 }
