@@ -41,9 +41,6 @@ abstract class BaseFlags {
 
     open fun isMultiCropEnabled() = WallpaperManager.isMultiCropEnabled()
 
-    // TODO(b/274443705): Create SysUI flag for animation
-    open fun isPreviewLoadingAnimationEnabled() = false
-
     open fun isFullscreenWallpaperPreviewEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag ->
@@ -88,6 +85,14 @@ abstract class BaseFlags {
     open fun isPageTransitionsFeatureEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag -> flag.name == Contract.FlagsTable.FLAG_NAME_PAGE_TRANSITIONS }
+            ?.value == true
+    }
+
+    open fun isPreviewLoadingAnimationEnabled(context: Context): Boolean {
+        return runBlocking { getCustomizationProviderClient(context).queryFlags() }
+            .firstOrNull { flag ->
+                flag.name == Contract.FlagsTable.FLAG_NAME_WALLPAPER_PICKER_PREVIEW_ANIMATION
+            }
             ?.value == true
     }
 
