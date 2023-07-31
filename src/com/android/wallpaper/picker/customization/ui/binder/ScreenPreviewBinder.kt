@@ -350,8 +350,6 @@ object ScreenPreviewBinder {
                                             LoadingAnimation(it.drawable, loadingView)
                                         loadingImageDrawable = it.drawable
                                     }
-
-                                    // TODO (b/274443705): figure out how to get color seed & style
                                     val colorAccent =
                                         ResourceUtils.getColorAttr(
                                             activity,
