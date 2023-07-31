@@ -69,6 +69,7 @@ object ScreenPreviewBinder {
             args: Bundle = Bundle.EMPTY,
         )
         fun destroy()
+        fun surface(): SurfaceView
     }
 
     /**
@@ -123,7 +124,8 @@ object ScreenPreviewBinder {
         val flags = BaseFlags.get()
         val isPageTransitionsFeatureEnabled = flags.isPageTransitionsFeatureEnabled(activity)
 
-        val showLoadingAnimation = flags.isPreviewLoadingAnimationEnabled()
+        val showLoadingAnimation =
+            flags.isPreviewLoadingAnimationEnabled(activity.applicationContext)
         var loadingAnimation: LoadingAnimation? = null
         val loadingView: ImageView = previewView.requireViewById(R.id.loading_view)
 
@@ -348,8 +350,6 @@ object ScreenPreviewBinder {
                                             LoadingAnimation(it.drawable, loadingView)
                                         loadingImageDrawable = it.drawable
                                     }
-
-                                    // TODO (b/274443705): figure out how to get color seed & style
                                     val colorAccent =
                                         ResourceUtils.getColorAttr(
                                             activity,
@@ -403,7 +403,8 @@ object ScreenPreviewBinder {
                                                 previewView,
                                                 viewModel,
                                                 wallpaperSurface,
-                                                viewModel.screen,
+                                                mirrorSurface,
+                                                viewModel.screen
                                             ) {
                                                 surfaceViewsReady()
                                                 if (showLoadingAnimation) {
@@ -451,6 +452,10 @@ object ScreenPreviewBinder {
                 // itself anew the next time the bind function is invoked.
                 removeAndReadd(workspaceSurface)
             }
+
+            override fun surface(): SurfaceView {
+                return wallpaperSurface
+            }
         }
     }
 
@@ -459,6 +464,7 @@ object ScreenPreviewBinder {
         previewView: CardView,
         viewModel: ScreenPreviewViewModel,
         wallpaperSurface: SurfaceView,
+        mirrorSurface: SurfaceView?,
         screen: CustomizationSections.Screen,
         onEngineShown: () -> Unit
     ) =
@@ -480,7 +486,7 @@ object ScreenPreviewBinder {
                 }
             },
             wallpaperSurface,
-            null,
+            mirrorSurface,
             screen.toFlag()
         )
 

@@ -67,7 +67,8 @@ class WallpaperInteractor(
         return repository.selectingWallpaperId.map { it[destination] }
     }
 
-    fun isLoading(
+    /** This is true when a wallpaper is selected but not yet set to the System. */
+    fun isSelectingWallpaper(
         destination: WallpaperDestination,
     ): Flow<Boolean> {
         return selectingWallpaperId(destination).distinctUntilChanged().map { it != null }
