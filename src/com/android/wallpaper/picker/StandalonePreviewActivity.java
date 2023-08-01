@@ -15,8 +15,6 @@
  */
 package com.android.wallpaper.picker;
 
-import static com.android.wallpaper.util.ActivityUtils.startActivityForResultSafely;
-
 import android.Manifest.permission;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -161,13 +159,8 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
         MultiPanesChecker checker = new LargeScreenMultiPanesChecker();
         if (checker.isMultiPanesEnabled(/* context= */ this)) {
             Intent intent = getIntent();
-            if (!ActivityUtils.isLaunchedFromSettingsTrampoline(intent)
-                    && !ActivityUtils.isLaunchedFromSettingsRelated(intent)) {
-                if (!InjectorProvider.getInjector().getFlags().isFullscreenWallpaperPreviewEnabled(
-                        this)) {
-                    launchMultiPanes(checker);
-                }
-            } else {
+            if (ActivityUtils.isLaunchedFromSettingsTrampoline(intent)
+                    || ActivityUtils.isLaunchedFromSettingsRelated(intent)) {
                 Uri uri = intent.hasExtra(Intent.EXTRA_STREAM) ? intent.getParcelableExtra(
                         Intent.EXTRA_STREAM) : null;
                 if (uri != null) {
@@ -175,26 +168,6 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
                 }
             }
         }
-    }
-
-    private void launchMultiPanes(MultiPanesChecker checker) {
-        Intent intent = getIntent();
-        Uri uri = intent.getData();
-        if (uri != null) {
-            // Grant URI permission for next launching activity.
-            grantUriPermission(getPackageName(), uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        }
-
-        Intent previewLaunch = checker.getMultiPanesIntent(intent);
-        previewLaunch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                // Put image URI and back arrow condition to separate extras.
-                .putExtra(Intent.EXTRA_STREAM, intent.getData())
-                .putExtra(KEY_UP_ARROW, true);
-
-        startActivityForResultSafely(/* activity= */ this, previewLaunch, /* requestCode= */
-                0);
-        finish();
     }
 
     /**

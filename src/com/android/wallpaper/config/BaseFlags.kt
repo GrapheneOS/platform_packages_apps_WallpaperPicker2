@@ -42,13 +42,6 @@ abstract class BaseFlags {
 
     open fun isMultiCropEnabled() = WallpaperManager.isMultiCropEnabled()
 
-    open fun isFullscreenWallpaperPreviewEnabled(context: Context): Boolean {
-        return runBlocking { getCustomizationProviderClient(context).queryFlags() }
-            .firstOrNull { flag ->
-                flag.name == Contract.FlagsTable.FLAG_NAME_WALLPAPER_FULLSCREEN_PREVIEW
-            }
-            ?.value == true
-    }
     open fun isUseRevampedUiEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag ->
