@@ -185,8 +185,12 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                         wallpaperComponent.loadLabel(mAppContext.getPackageManager()).toString()));
                 mWallpaperPreferences.setHomeWallpaperServiceName(mSystemWallpaperServiceName);
             }
+
+            // Disable rotation wallpaper when setting fallback home screen wallpaper
+            // Daily rotation wallpaper only rotates the home screen wallpaper
             mWallpaperPreferences.setWallpaperPresentationMode(
                     WallpaperPreferences.PRESENTATION_MODE_STATIC);
+            mWallpaperPreferences.clearDailyRotations();
         }
 
         /**
