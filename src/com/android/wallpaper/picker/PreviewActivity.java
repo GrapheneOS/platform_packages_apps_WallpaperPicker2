@@ -32,6 +32,7 @@ import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker;
 import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
+import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity;
 import com.android.wallpaper.util.ActivityUtils;
 
 /**
@@ -119,8 +120,8 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
         public Intent newIntent(Context context, WallpaperInfo wallpaper) {
             final BaseFlags flags = InjectorProvider.getInjector().getFlags();
             if (flags.isMultiCropPreviewUiEnabled() && flags.isMultiCropEnabled()) {
-                // TODO(b/291761856): Start new preview flow
-                return new Intent();
+                return WallpaperPreviewActivity.Companion.newIntent(context,
+                        wallpaper, /* isNewTask= */ false);
             }
 
             LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
