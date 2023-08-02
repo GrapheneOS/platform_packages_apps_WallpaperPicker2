@@ -22,6 +22,7 @@
 
     <!-- Material 3 colors -->
     <color name="system_primary">@android:color/system_primary_dark</color>
+    <color name="system_primary_container">@android:color/system_primary_container_dark</color>
     <color name="system_secondary">@android:color/system_secondary_dark</color>
     <color name="system_tertiary">@android:color/system_tertiary_dark</color>
     <color name="system_on_primary">@android:color/system_on_primary_dark</color>

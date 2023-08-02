@@ -133,4 +133,8 @@ interface Injector {
     fun getWallpaperColorsViewModel(): WallpaperColorsViewModel
 
     fun getMyPhotosIntentProvider(): MyPhotosIntentProvider
+
+    fun isInstrumentationTest(): Boolean {
+        return false
+    }
 }
