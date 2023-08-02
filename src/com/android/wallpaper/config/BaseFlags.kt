@@ -28,6 +28,7 @@ abstract class BaseFlags {
     var customizationProviderClient: CustomizationProviderClient? = null
     open fun isStagingBackdropContentEnabled() = false
     open fun isWallpaperEffectEnabled() = false
+    open fun isWallpaperEffectModelDownloadEnabled() = true
 
     // TODO(b/285047815): Remove flag after adding wallpaper id for default static wallpaper
     open fun isWallpaperRestorerEnabled() = false
@@ -48,27 +49,27 @@ abstract class BaseFlags {
             }
             ?.value == true
     }
-    fun isUseRevampedUiEnabled(context: Context): Boolean {
+    open fun isUseRevampedUiEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag ->
                 flag.name == Contract.FlagsTable.FLAG_NAME_REVAMPED_WALLPAPER_UI
             }
             ?.value == true
     }
-    fun isCustomClocksEnabled(context: Context): Boolean {
+    open fun isCustomClocksEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag ->
                 flag.name == Contract.FlagsTable.FLAG_NAME_CUSTOM_CLOCKS_ENABLED
             }
             ?.value == true
     }
-    fun isMonochromaticThemeEnabled(context: Context): Boolean {
+    open fun isMonochromaticThemeEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag -> flag.name == Contract.FlagsTable.FLAG_NAME_MONOCHROMATIC_THEME }
             ?.value == true
     }
 
-    fun isAIWallpaperEnabled(context: Context): Boolean {
+    open fun isAIWallpaperEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag ->
                 flag.name == Contract.FlagsTable.FLAG_NAME_WALLPAPER_PICKER_UI_FOR_AIWP
@@ -76,7 +77,7 @@ abstract class BaseFlags {
             ?.value == true
     }
 
-    fun isTransitClockEnabled(context: Context): Boolean {
+    open fun isTransitClockEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag -> flag.name == Contract.FlagsTable.FLAG_NAME_TRANSIT_CLOCK }
             ?.value == true
