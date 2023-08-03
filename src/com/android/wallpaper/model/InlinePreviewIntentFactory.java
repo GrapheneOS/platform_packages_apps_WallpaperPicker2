@@ -44,5 +44,5 @@ public interface InlinePreviewIntentFactory {
      * @param wallpaper
      * @return Intent to show the inline preview activity.
      */
-    Intent newIntent(Context ctx, WallpaperInfo wallpaper);
+    Intent newIntent(Context ctx, WallpaperInfo wallpaper, boolean isAssetIdPresent);
 }

@@ -77,7 +77,7 @@ class CreativeCategoryIndividualHolder extends IndividualHolder implements View.
         mWallpaperPersister.setWallpaperInfoInPreview(wallpaperInfo);
         wallpaperInfo.showPreview(mActivity, mPreviewIntentFactory,
                 wallpaperInfo instanceof LiveWallpaperInfo ? PREVIEW_LIVE_WALLPAPER_REQUEST_CODE
-                        : PREVIEW_WALLPAPER_REQUEST_CODE);
+                        : PREVIEW_WALLPAPER_REQUEST_CODE, true);
     }
 
 }

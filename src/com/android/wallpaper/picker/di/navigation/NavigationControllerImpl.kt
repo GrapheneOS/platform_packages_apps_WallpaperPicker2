@@ -34,12 +34,14 @@ class NavigationControllerImpl @Inject constructor() : NavigationController {
         viewFullScreen: Boolean,
         testingModeEnabled: Boolean,
         @IdRes viewId: Int,
-        transition: Transition
+        transition: Transition,
+        isAssetIdPresent: Boolean
     ) {
         // TODO(b/295199906): arguments removed in next diff
         val args = Bundle()
         args.putParcelable(PreviewFragment.ARG_WALLPAPER, wallpaperInfo)
         args.putBoolean(PreviewFragment.ARG_VIEW_AS_HOME, viewAsHome)
+        args.putBoolean(PreviewFragment.ARG_IS_ASSET_ID_PRESENT, isAssetIdPresent)
 
         val previewFragment = SmallPreviewFragment()
         previewFragment.arguments = args
