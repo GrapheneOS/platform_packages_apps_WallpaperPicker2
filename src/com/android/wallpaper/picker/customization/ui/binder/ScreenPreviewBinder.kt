@@ -151,8 +151,8 @@ object ScreenPreviewBinder {
                 launch {
                     val lifecycleObserver =
                         object : DefaultLifecycleObserver {
-                            override fun onCreate(owner: LifecycleOwner) {
-                                super.onCreate(owner)
+                            override fun onStart(owner: LifecycleOwner) {
+                                super.onStart(owner)
                                 if (showLoadingAnimation) {
                                     if (loadingAnimation == null) {
                                         animationState =
@@ -192,7 +192,6 @@ object ScreenPreviewBinder {
                                 animationTimeToRestore = loadingAnimation?.getElapsedTime()
                                 loadingAnimation?.cancel()
                                 loadingAnimation = null
-                                // TODO (b/274443705): fix case of stopping and resuming app on load
                                 // only save the current loading image if this is a configuration
                                 // change restart, and reset to null otherwise, so that reveal
                                 // animation is only played after a wallpaper/color switch and not
