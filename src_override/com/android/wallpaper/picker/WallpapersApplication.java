@@ -17,8 +17,8 @@ package com.android.wallpaper.picker;
 
 import android.app.Application;
 
+import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
-import com.android.wallpaper.module.WallpaperPicker2Injector;
 
 import dagger.hilt.android.HiltAndroidApp;
 
@@ -30,7 +30,8 @@ import javax.inject.Inject;
 @HiltAndroidApp(Application.class)
 public class WallpapersApplication extends Hilt_WallpapersApplication {
 
-    @Inject WallpaperPicker2Injector mInjector;
+    @Inject
+    Injector mInjector;
 
     @Override
     public void onCreate() {
