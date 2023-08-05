@@ -22,6 +22,7 @@ import android.graphics.Rect;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.asset.Asset;
+import com.android.wallpaper.model.StaticWallpaperMetadata;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.WallpaperChangedNotifier;
@@ -52,6 +53,8 @@ public class TestWallpaperPersister implements WallpaperPersister {
     private Rect mCropRect;
     private float mScale;
     private WallpaperInfo mWallpaperInfo;
+    private StaticWallpaperMetadata mHomeStaticWallpaperMetadata;
+    private StaticWallpaperMetadata mLockStaticWallpaperMetadata;
 
     public TestWallpaperPersister(Context appContext) {
         mAppContext = appContext;
@@ -208,6 +211,19 @@ public class TestWallpaperPersister implements WallpaperPersister {
             int actionLabelRes, int actionIconRes, String collectionId, int wallpaperId,
             String remoteId, @Destination int destination) {
         return false;
+    }
+
+    @Override
+    public boolean saveStaticWallpaperToPreferences(int destination,
+            StaticWallpaperMetadata metadata) {
+        if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
+            mHomeStaticWallpaperMetadata = metadata;
+        }
+
+        if (destination == DEST_LOCK_SCREEN || destination == DEST_BOTH) {
+            mLockStaticWallpaperMetadata = metadata;
+        }
+        return true;
     }
 
     @Override

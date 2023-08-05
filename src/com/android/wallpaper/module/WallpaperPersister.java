@@ -26,6 +26,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.asset.Asset;
+import com.android.wallpaper.model.StaticWallpaperMetadata;
 import com.android.wallpaper.model.WallpaperInfo;
 
 import java.io.InputStream;
@@ -131,6 +132,12 @@ public interface WallpaperPersister {
             String remoteId,
             @Destination int destination
         );
+
+    /**
+     * Save static image wallpaper's meta to the system preferences.
+     */
+    boolean saveStaticWallpaperToPreferences(int destination,
+            StaticWallpaperMetadata metadata);
 
     /**
      * @return the flag indicating which wallpaper to set when we're trying to set a wallpaper with
