@@ -16,7 +16,7 @@ import com.android.wallpaper.util.DisplayUtils
 
 /** Test implementation of [CustomizationSections] */
 class TestCustomizationSections : CustomizationSections {
-    override fun getRevampedUISectionControllersForScreen(
+    override fun getSectionControllersForScreen(
         screen: CustomizationSections.Screen?,
         activity: FragmentActivity?,
         lifecycleOwner: LifecycleOwner?,
@@ -32,20 +32,6 @@ class TestCustomizationSections : CustomizationSections {
         wallpaperInteractor: WallpaperInteractor,
         wallpaperManager: WallpaperManager,
         isTwoPaneAndSmallWidth: Boolean,
-    ): MutableList<CustomizationSectionController<*>> {
-        return arrayListOf()
-    }
-
-    override fun getAllSectionControllers(
-        activity: FragmentActivity?,
-        lifecycleOwner: LifecycleOwner?,
-        wallpaperColorsViewModel: WallpaperColorsViewModel?,
-        permissionRequester: PermissionRequester?,
-        wallpaperPreviewNavigator: WallpaperPreviewNavigator?,
-        sectionNavigationController:
-            CustomizationSectionController.CustomizationSectionNavigationController?,
-        savedInstanceState: Bundle?,
-        displayUtils: DisplayUtils?,
     ): MutableList<CustomizationSectionController<*>> {
         return arrayListOf()
     }
