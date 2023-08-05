@@ -250,6 +250,7 @@ internal constructor(
                     getDisplayUtils(context),
                     getBitmapCropper(),
                     getWallpaperStatusChecker(context),
+                    getFlags().isRefactorSettingWallpaper(),
                 )
                 .also { wallpaperPersister = it }
     }

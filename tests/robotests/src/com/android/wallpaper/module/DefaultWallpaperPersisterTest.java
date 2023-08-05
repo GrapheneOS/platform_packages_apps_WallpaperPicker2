@@ -80,7 +80,7 @@ public class DefaultWallpaperPersisterTest {
         TestWallpaperStatusChecker statusChecker = new TestWallpaperStatusChecker();
 
         mPersister = new DefaultWallpaperPersister(mContext, mManager, mPrefs, changedNotifier,
-                displayUtils, cropper, statusChecker);
+                displayUtils, cropper, statusChecker, false);
     }
 
     @Test

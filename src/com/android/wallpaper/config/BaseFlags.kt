@@ -83,6 +83,14 @@ abstract class BaseFlags {
             ?.value == true
     }
 
+    /**
+     * This flag is to for refactoring the process of setting a wallpaper from the Wallpaper Picker,
+     * such as changes in WallpaperSetter, WallpaperPersister and WallpaperPreferences.
+     */
+    fun isRefactorSettingWallpaper(): Boolean {
+        return false
+    }
+
     open fun isPageTransitionsFeatureEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag -> flag.name == Contract.FlagsTable.FLAG_NAME_PAGE_TRANSITIONS }
