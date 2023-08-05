@@ -24,6 +24,7 @@ import android.graphics.Color;
 
 import androidx.annotation.Nullable;
 
+import com.android.wallpaper.model.StaticWallpaperMetadata;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
 
@@ -85,6 +86,8 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     private int mLockWallpaperActionIconRes;
     private String mHomeWallpaperEffects;
     private String mLockWallpaperEffects;
+    private StaticWallpaperMetadata mHomeStaticWallpaperMetadata;
+    private StaticWallpaperMetadata mLockStaticWallpaperMetadata;
     private HashMap<String, String> mWallStoredColor;
 
     public TestWallpaperPreferences() {
@@ -194,6 +197,11 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
         mHomeScreenBitmapHashCode = 0;
         mHomeScreenServiceName = null;
         mHomeWallpaperManagerId = 0;
+    }
+
+    @Override
+    public void setHomeStaticImageWallpaperMetadata(StaticWallpaperMetadata metadata) {
+        mHomeStaticWallpaperMetadata = metadata;
     }
 
     @Override
@@ -323,6 +331,11 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
         mLockScreenAttributions = null;
         mLockScreenBitmapHashCode = 0;
         mLockWallpaperManagerId = 0;
+    }
+
+    @Override
+    public void setLockStaticImageWallpaperMetadata(StaticWallpaperMetadata metadata) {
+        mLockStaticWallpaperMetadata = metadata;
     }
 
     @Override

@@ -44,6 +44,7 @@ import com.android.wallpaper.asset.Asset.BitmapReceiver;
 import com.android.wallpaper.asset.BitmapUtils;
 import com.android.wallpaper.asset.StreamableAsset;
 import com.android.wallpaper.asset.StreamableAsset.StreamReceiver;
+import com.android.wallpaper.model.StaticWallpaperMetadata;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.BitmapCropper.Callback;
 import com.android.wallpaper.util.BitmapTransformer;
@@ -74,6 +75,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     private final DisplayUtils mDisplayUtils;
     private final BitmapCropper mBitmapCropper;
     private final WallpaperStatusChecker mWallpaperStatusChecker;
+    private final boolean mIsRefactorSettingWallpaper;
 
     private WallpaperInfo mWallpaperInfoInPreview;
 
@@ -85,7 +87,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             WallpaperChangedNotifier wallpaperChangedNotifier,
             DisplayUtils displayUtils,
             BitmapCropper bitmapCropper,
-            WallpaperStatusChecker wallpaperStatusChecker
+            WallpaperStatusChecker wallpaperStatusChecker,
+            boolean isRefactorSettingWallpaper
     ) {
         mAppContext = context.getApplicationContext();
         mWallpaperManager = wallpaperManager;
@@ -94,6 +97,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         mDisplayUtils = displayUtils;
         mBitmapCropper = bitmapCropper;
         mWallpaperStatusChecker = wallpaperStatusChecker;
+        mIsRefactorSettingWallpaper = isRefactorSettingWallpaper;
     }
 
     @Override
@@ -262,6 +266,21 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setLockWallpaperRemoteId(remoteId);
         }
 
+        return true;
+    }
+
+    @Override
+    public boolean saveStaticWallpaperToPreferences(@Destination int destination,
+            StaticWallpaperMetadata metadata) {
+        if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
+            mWallpaperPreferences.clearHomeWallpaperMetadata();
+            mWallpaperPreferences.setHomeStaticImageWallpaperMetadata(metadata);
+        }
+
+        if (destination == DEST_LOCK_SCREEN || destination == DEST_BOTH) {
+            mWallpaperPreferences.clearLockWallpaperMetadata();
+            mWallpaperPreferences.setLockStaticImageWallpaperMetadata(metadata);
+        }
         return true;
     }
 
@@ -529,9 +548,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                         whichWallpaper);
             } else {
                 Log.e(TAG,
-                        "Both the wallpaper bitmap and input stream are null so we're unable to "
-                                + "set any "
-                                + "kind of wallpaper here.");
+                        "Both the wallpaper bitmap and input stream are null so we're unable "
+                                + "to set any kind of wallpaper here.");
                 wallpaperId = 0;
             }
 
@@ -542,7 +560,23 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                         && !wasLockWallpaperSet) {
                     copyRotatingWallpaperToLock();
                 }
-                setImageWallpaperMetadata(mDestination, wallpaperId);
+
+                if (mIsRefactorSettingWallpaper) {
+                    if (mBitmap == null) {
+                        mWallpaperManager.forgetLoadedWallpaper();
+                        mBitmap = ((BitmapDrawable) mWallpaperManager
+                                .getDrawable(WallpaperPersister.destinationToFlags(mDestination)))
+                                .getBitmap();
+                    }
+                    setStaticWallpaperMetadataToPreferences(
+                            mDestination,
+                            wallpaperId,
+                            BitmapUtils.generateHashCode(mBitmap),
+                            WallpaperColors.fromBitmap(mBitmap));
+                } else {
+                    setImageWallpaperMetadata(mDestination, wallpaperId);
+                }
+
                 return true;
             } else {
                 return false;
@@ -654,8 +688,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                     mWallpaper.getCollectionId(mAppContext));
             mWallpaperPreferences.setHomeWallpaperRemoteId(mWallpaper.getWallpaperId());
             mWallpaperPreferences.storeLatestWallpaper(FLAG_SYSTEM,
-                    TextUtils.isEmpty(mWallpaper.getWallpaperId()) ? String.valueOf(bitmapHash)
-                            : mWallpaper.getWallpaperId(),
+                    mWallpaper.getWallpaperId(),
                     mWallpaper, mBitmap, colors);
         }
 
@@ -696,6 +729,43 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                         TextUtils.isEmpty(mWallpaper.getWallpaperId()) ? String.valueOf(
                                 bitmapHashCode) : mWallpaper.getWallpaperId(), mWallpaper,
                         lockBitmap, WallpaperColors.fromBitmap(lockBitmap));
+            }
+        }
+
+        private void setStaticWallpaperMetadataToPreferences(@Destination int destination,
+                int wallpaperId, long bitmapHash, WallpaperColors colors) {
+            saveStaticWallpaperToPreferences(
+                    destination,
+                    new StaticWallpaperMetadata(
+                            mWallpaper.getAttributions(mAppContext),
+                            mWallpaper.getActionUrl(mAppContext),
+                            mWallpaper.getActionLabelRes(mAppContext),
+                            mWallpaper.getActionIconRes(mAppContext),
+                            mWallpaper.getCollectionId(mAppContext),
+                            bitmapHash,
+                            wallpaperId,
+                            mWallpaper.getWallpaperId()));
+
+            if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
+                mWallpaperPreferences.storeLatestWallpaper(
+                        FLAG_SYSTEM,
+                        mWallpaper.getWallpaperId(),
+                        mWallpaper,
+                        mBitmap,
+                        colors);
+                // Stop wallpaper rotation if a static wallpaper is set to home.
+                mWallpaperPreferences.setWallpaperPresentationMode(
+                        WallpaperPreferences.PRESENTATION_MODE_STATIC);
+                mWallpaperPreferences.clearDailyRotations();
+            }
+
+            if (destination == DEST_LOCK_SCREEN || destination == DEST_BOTH) {
+                mWallpaperPreferences.storeLatestWallpaper(
+                        FLAG_LOCK,
+                        mWallpaper.getWallpaperId(),
+                        mWallpaper,
+                        mBitmap,
+                        colors);
             }
         }
 
