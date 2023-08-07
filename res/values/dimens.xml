@@ -291,6 +291,11 @@
     <dimen name="screen_preview_height">380dp</dimen>
 
     <!--
+    Space between the folded and unfolded previews on the small preview screen
+    -->
+    <dimen name="small_preview_inter_preview_margin">5dp</dimen>
+
+    <!--
     Width of the screen preview. The height will be determined based on the aspect ratio of the
     display.
     -->

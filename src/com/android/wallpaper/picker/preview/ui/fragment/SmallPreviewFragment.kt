@@ -19,10 +19,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.android.wallpaper.R
+import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
@@ -31,6 +33,8 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewView
 import com.android.wallpaper.picker.preview.di.modules.preview.utils.PreviewUtilsModule
 import com.android.wallpaper.picker.preview.ui.viewmodel.PreviewTransitionViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout
+import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -43,6 +47,7 @@ import javax.inject.Inject
 class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
     @Inject lateinit var wallpaperInteractor: WallpaperInteractor
+    @Inject lateinit var displayUtils: DisplayUtils
 
     @PreviewUtilsModule.LockScreenPreviewUtils @Inject lateinit var lockPreviewUtils: PreviewUtils
 
@@ -54,7 +59,11 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         savedInstanceState: Bundle?
     ): View {
         val view =
-            inflater.inflate(R.layout.fragment_small_preview, container, /* attachToRoot= */ false)
+            inflater.inflate(
+                R.layout.fragment_small_preview_for_two_screens,
+                container,
+                /* attachToRoot= */ false
+            )
         setUpToolbar(view)
         bindScreenPreview(view)
 
@@ -76,10 +85,38 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
     // TODO(b/291761856): Replace placeholder preview
     private fun bindScreenPreview(view: View) {
+        val dualDisplayAspectRatioView: DualDisplayAspectRatioLayout =
+            view.requireViewById(R.id.dual_preview)
+        dualDisplayAspectRatioView.setDisplaySizes(
+            displayUtils.getRealSize(displayUtils.getSmallerDisplay()),
+            displayUtils.getRealSize(displayUtils.getWallpaperDisplay())
+        )
+        val foldedPreviewView: CardView =
+            view.requireViewById(DualDisplayAspectRatioLayout.foldedPreviewId)
+        val unfoldedPreviewView: CardView =
+            view.requireViewById(DualDisplayAspectRatioLayout.unfoldedPreviewId)
+        ScreenPreviewBinder.bind(
+            activity = requireActivity(),
+            previewView = foldedPreviewView,
+            viewModel =
+                ScreenPreviewViewModel(
+                    previewUtils = lockPreviewUtils,
+                    wallpaperInfoProvider = { wallpaperPreviewViewModel.editingWallpaper },
+                    wallpaperInteractor = wallpaperInteractor,
+                    screen = CustomizationSections.Screen.HOME_SCREEN,
+                    onPreviewClicked = {
+                        findNavController()
+                            .navigate(R.id.action_smallPreviewFragment_to_fullPreviewFragment)
+                    }
+                ),
+            lifecycleOwner = viewLifecycleOwner,
+            offsetToStart = false,
+            onWallpaperPreviewDirty = {},
+        )
 
         ScreenPreviewBinder.bind(
             activity = requireActivity(),
-            previewView = view.requireViewById(R.id.preview),
+            previewView = unfoldedPreviewView,
             viewModel =
                 ScreenPreviewViewModel(
                     previewUtils = lockPreviewUtils,

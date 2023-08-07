@@ -119,6 +119,19 @@ class DisplayUtils(private val context: Context) {
         return Point(displayInfo.logicalWidth, displayInfo.logicalHeight)
     }
 
+    /**
+     * Returns the smallest display on a device
+     *
+     * For foldable devices, this method will return the outer display or the primary display when
+     * the device is folded. This is always the smallest display in foldable devices.
+     */
+    fun getSmallerDisplay(): Display {
+        val internalDisplays = getInternalDisplays()
+        var largestDisplay = getWallpaperDisplay()
+        val smallestDisplay = internalDisplays.firstOrNull() { it != largestDisplay }
+        return smallestDisplay ?: largestDisplay
+    }
+
     private fun getRealArea(display: Display): Int {
         val displayInfo = DisplayInfo()
         display.getDisplayInfo(displayInfo)
