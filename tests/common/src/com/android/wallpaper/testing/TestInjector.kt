@@ -246,12 +246,6 @@ open class TestInjector : Injector {
     override fun getFlags(): BaseFlags {
         return flags
             ?: object : BaseFlags() {
-                    override fun isFullscreenWallpaperPreviewEnabled(context: Context): Boolean {
-                        // This is already true by default in all environments, only keeping the
-                        // flag for now in case we need to roll back
-                        return true
-                    }
-
                     override fun isWallpaperRestorerEnabled(): Boolean {
                         return true
                     }
