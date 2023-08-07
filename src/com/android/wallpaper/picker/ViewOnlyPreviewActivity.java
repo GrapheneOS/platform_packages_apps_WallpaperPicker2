@@ -104,8 +104,7 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
 
             LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
             // Launch a full preview activity for devices supporting multipanel mode
-            if (multiPanesChecker.isMultiPanesEnabled(context)
-                    && flags.isFullscreenWallpaperPreviewEnabled(context)) {
+            if (multiPanesChecker.isMultiPanesEnabled(context)) {
                 return FullPreviewActivity.newIntent(context, wallpaper, mIsViewAsHome);
             }
 
