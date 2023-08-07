@@ -63,9 +63,7 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
         if (fragment == null) {
             Intent intent = getIntent();
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
-            BaseFlags flags = InjectorProvider.getInjector().getFlags();
-            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, !flags
-                    .isFullscreenWallpaperPreviewEnabled(this));
+            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, false);
             boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context */ this,
@@ -127,8 +125,7 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
 
             LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
             // Launch a full preview activity for devices supporting multipanel mode
-            if (multiPanesChecker.isMultiPanesEnabled(context)
-                    && flags.isFullscreenWallpaperPreviewEnabled(context)) {
+            if (multiPanesChecker.isMultiPanesEnabled(context)) {
                 return FullPreviewActivity.newIntent(context, wallpaper);
             }
 

@@ -65,11 +65,7 @@ class WallpaperPreviewSectionActivity :
             val intent = intent
             val wallpaper = intent.getParcelableExtra<WallpaperInfo>(EXTRA_WALLPAPER_INFO)
             val flags = InjectorProvider.getInjector().getFlags()
-            val viewAsHome =
-                intent.getBooleanExtra(
-                    EXTRA_VIEW_AS_HOME,
-                    !flags.isFullscreenWallpaperPreviewEnabled(this)
-                )
+            val viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, false)
             val testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false)
             navigator.navigateToPreview(
                 this,
