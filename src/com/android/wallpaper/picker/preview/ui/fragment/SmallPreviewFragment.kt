@@ -19,10 +19,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.android.wallpaper.R
-import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.AppbarFragment
@@ -38,7 +38,6 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint(AppbarFragment::class)
 class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
-
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
 
     override fun onCreateView(
@@ -46,38 +45,55 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_small_preview, container)
+        val view =
+            inflater.inflate(R.layout.fragment_small_preview, container, /* attachToRoot= */ false)
+        setUpToolbar(view)
+        bindScreenPreview(view)
 
-        val previewView: CardView = view.requireViewById(R.id.preview)
+        return view
+    }
 
-        val wallpaper: WallpaperInfo? = wallpaperPreviewViewModel.editingWallpaper
+    // TODO(b/291761856): Use real string
+    override fun getDefaultTitle(): CharSequence {
+        return "Small Preview"
+    }
 
+    override fun getToolbarColorId(): Int {
+        return android.R.color.transparent
+    }
+
+    override fun getToolbarTextColor(): Int {
+        return ContextCompat.getColor(requireContext(), R.color.system_on_surface)
+    }
+
+    // TODO(b/291761856): Replace placeholder preview
+    private fun bindScreenPreview(view: View) {
         ScreenPreviewBinder.bind(
             activity = requireActivity(),
-            previewView = previewView,
-            // TODO(b/295199906): view model injected in next diff
+            previewView = view.requireViewById(R.id.preview),
             viewModel =
                 ScreenPreviewViewModel(
                     previewUtils =
                         PreviewUtils(
                             context = requireContext(),
-                            authority =
+                            authorityMetadataKey =
                                 requireContext()
                                     .getString(
                                         R.string.grid_control_metadata_name,
                                     ),
                         ),
-                    wallpaperInfoProvider = { wallpaper },
-                    // TODO(b/295199906): Interactor injected in next diff
+                    wallpaperInfoProvider = { wallpaperPreviewViewModel.editingWallpaper },
                     wallpaperInteractor =
                         InjectorProvider.getInjector().getWallpaperInteractor(requireContext()),
                     screen = CustomizationSections.Screen.HOME_SCREEN,
+                    onPreviewClicked = {
+                        findNavController()
+                            .navigate(R.id.action_smallPreviewFragment_to_fullPreviewFragment)
+                    }
                 ),
             lifecycleOwner = viewLifecycleOwner,
             offsetToStart = false,
             onWallpaperPreviewDirty = { activity?.recreate() },
         )
-
-        return view
     }
 }
