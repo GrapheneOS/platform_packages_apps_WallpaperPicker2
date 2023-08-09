@@ -30,6 +30,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.config.BaseFlags;
 import com.android.wallpaper.model.ImageWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
@@ -37,6 +38,7 @@ import com.android.wallpaper.module.LargeScreenMultiPanesChecker;
 import com.android.wallpaper.module.MultiPanesChecker;
 import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
+import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity;
 import com.android.wallpaper.util.ActivityUtils;
 
 /**
@@ -175,10 +177,17 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
      * fragment container so that it's shown to the user.
      */
     private void loadPreviewFragment() {
+        BaseFlags flags = InjectorProvider.getInjector().getFlags();
         Intent intent = getIntent();
+        WallpaperInfo wallpaper = new ImageWallpaperInfo(intent.getData());
+        if (flags.isMultiCropPreviewUiEnabled() && flags.isMultiCropEnabled()) {
+            startActivity(WallpaperPreviewActivity.Companion.newIntent(
+                    this.getApplicationContext(), wallpaper, /* isNewTask= */ false));
+            finish();
+            return;
+        }
 
         boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
-        WallpaperInfo wallpaper = new ImageWallpaperInfo(intent.getData());
         Fragment fragment = InjectorProvider.getInjector().getPreviewFragment(
                 /* context */ this,
                 wallpaper,

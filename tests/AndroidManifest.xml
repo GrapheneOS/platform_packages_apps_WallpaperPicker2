@@ -25,7 +25,7 @@
             android:resizeableActivity="false">
         </activity>
 
-        <activity android:name="com.android.wallpaper.picker.wallpaper.WallpaperPreviewSectionActivity"
+        <activity android:name="com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity"
             android:resizeableActivity="false">
         </activity>
     </application>

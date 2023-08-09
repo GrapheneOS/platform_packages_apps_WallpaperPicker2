@@ -129,7 +129,7 @@
     </activity>
 
       <activity
-          android:name="com.android.wallpaper.picker.wallpaper.WallpaperPreviewSectionActivity"
+          android:name="com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity"
           android:resizeableActivity="false"
           android:theme="@style/WallpaperTheme.Preview">
       </activity>

@@ -25,6 +25,7 @@ android_library {
     name: "wallpaper-common-deps",
 
     static_libs: [
+        "androidx.activity_activity-ktx",
         "androidx.appcompat_appcompat",
         "androidx.cardview_cardview",
         "androidx-constraintlayout_constraintlayout",
