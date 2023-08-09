@@ -22,6 +22,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.WindowCompat
 import com.android.wallpaper.R
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.picker.AppbarFragment
@@ -44,8 +45,15 @@ class WallpaperPreviewActivity :
         window.navigationBarColor = Color.TRANSPARENT
         window.statusBarColor = Color.TRANSPARENT
         setContentView(R.layout.activity_wallpaper_preview)
-        viewModel.editingWallpaper =
-            intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java)
+        // Fits screen to navbar and statusbar
+        WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
+        viewModel.initializeViewModel(
+            context = applicationContext,
+            wallpaper =
+                checkNotNull(
+                    intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java)
+                ),
+        )
     }
 
     override fun onUpArrowPressed() {

@@ -23,12 +23,13 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.android.wallpaper.R
-import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.ui.binder.ScreenPreviewBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
 import com.android.wallpaper.picker.preview.di.modules.preview.utils.PreviewUtilsModule
+import com.android.wallpaper.picker.preview.ui.viewmodel.PreviewTransitionViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.PreviewUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -84,8 +85,14 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                     previewUtils = lockPreviewUtils,
                     wallpaperInfoProvider = { wallpaperPreviewViewModel.editingWallpaper },
                     wallpaperInteractor = wallpaperInteractor,
-                    screen = CustomizationSections.Screen.HOME_SCREEN,
+                    screen = Screen.HOME_SCREEN,
                     onPreviewClicked = {
+                        // TODO(b/291761856): update preview transition view model from
+                        //                    [SmallPreviewFragment].
+                        wallpaperPreviewViewModel.previewTransitionViewModel =
+                            PreviewTransitionViewModel(
+                                previewTab = Screen.HOME_SCREEN,
+                            )
                         findNavController()
                             .navigate(R.id.action_smallPreviewFragment_to_fullPreviewFragment)
                     }

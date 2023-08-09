@@ -27,7 +27,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.android.wallpaper.R
 import com.android.wallpaper.picker.preview.ui.util.FullResImageViewUtil
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullResWallpaperViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.StaticWallpaperPreviewViewModel
@@ -42,16 +41,14 @@ object StaticWallpaperPreviewBinder {
     private const val CROSS_FADE_DURATION: Long = 200
 
     fun bind(
-        view: View,
+        fullResImageView: SubsamplingScaleImageView,
+        lowResImageView: ImageView,
         viewModel: StaticWallpaperPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
         isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
         isRtl: Boolean,
     ) {
-        val lowResImageView: ImageView = view.requireViewById(R.id.low_res_image)
         lowResImageView.initLowResImageView()
-
-        val fullResImageView: SubsamplingScaleImageView = view.requireViewById(R.id.full_res_image)
         fullResImageView.initFullResImageView()
 
         lifecycleOwner.lifecycleScope.launch {

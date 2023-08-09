@@ -15,15 +15,37 @@
  */
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 /** Top level [ViewModel] for [WallpaperPreviewActivity] and its fragments */
 @HiltViewModel
-class WallpaperPreviewViewModel @Inject constructor() : ViewModel() {
+class WallpaperPreviewViewModel
+@Inject
+constructor(
+    private val staticWallpaperPreviewViewModel: StaticWallpaperPreviewViewModel,
+) : ViewModel() {
     /** User selected [WallpaperInfo] for editing. */
     var editingWallpaper: WallpaperInfo? = null
+
+    /** Data used during transition from small to full preview, based on duo preview view pager. */
+    var previewTransitionViewModel: PreviewTransitionViewModel? = null
+
+    /** Gets the view model for static wallpaper preview views. */
+    fun getStaticWallpaperPreviewViewModel(): StaticWallpaperPreviewViewModel =
+        staticWallpaperPreviewViewModel
+
+    /** Initializes [WallpaperPreviewViewModel] and all its children view models. */
+    fun initializeViewModel(context: Context, wallpaper: WallpaperInfo) {
+        editingWallpaper = wallpaper
+        viewModelScope.launch {
+            staticWallpaperPreviewViewModel.initializeViewModel(context, wallpaper)
+        }
+    }
 }
