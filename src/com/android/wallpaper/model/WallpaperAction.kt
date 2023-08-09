@@ -20,9 +20,9 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class WallpaperAction(
-    val label: String,
-    val applyActionUri: Uri,
-    val effectId: String,
+    val label: String?,
+    val applyActionUri: Uri?,
+    val effectId: String?,
     var toggled: Boolean
 ) : Parcelable {
     constructor(
