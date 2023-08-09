@@ -74,7 +74,7 @@ object CustomizationPickerBinder {
             lifecycleOwner = lifecycleOwner,
         )
 
-        val sectionContainer = view.findViewById<ViewGroup>(R.id.section_container)
+        val sectionContainer = view.requireViewById<ViewGroup>(R.id.section_container)
         sectionContainer.setOnApplyWindowInsetsListener { v: View, windowInsets: WindowInsets ->
             v.setPadding(
                 v.paddingLeft,

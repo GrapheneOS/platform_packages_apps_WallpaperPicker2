@@ -301,7 +301,7 @@ class IndividualPickerFragment2 :
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_individual_picker, container, false)
         if (getIndividualPickerFragmentHost().isHostToolbarShown) {
-            view.findViewById<View>(R.id.header_bar).visibility = View.GONE
+            view.requireViewById<View>(R.id.header_bar).visibility = View.GONE
             setUpArrowEnabled(/* upArrow= */ true)
             if (isRotationEnabled()) {
                 getIndividualPickerFragmentHost().setToolbarMenu(R.menu.individual_picker_menu)
@@ -313,8 +313,8 @@ class IndividualPickerFragment2 :
             }
             setTitle(category?.title)
         }
-        imageGrid = view.findViewById<View>(R.id.wallpaper_grid) as RecyclerView
-        loading = view.findViewById(R.id.loading_indicator)
+        imageGrid = view.requireViewById<View>(R.id.wallpaper_grid) as RecyclerView
+        loading = view.requireViewById(R.id.loading_indicator)
         updateLoading()
         maybeSetUpImageGrid()
         // For nav bar edge-to-edge effect.
@@ -789,7 +789,7 @@ class IndividualPickerFragment2 :
             val wallpaper = item.wallpaperInfo
             wallpaper.computeColorInfo(holder.itemView.context)
             (holder as IndividualHolder).bindWallpaper(wallpaper)
-            val container = holder.itemView.findViewById<CardView>(R.id.wallpaper_container)
+            val container = holder.itemView.requireViewById<CardView>(R.id.wallpaper_container)
             val radiusId: Int =
                 if (isFewerColumnLayout) {
                     R.dimen.grid_item_all_radius
@@ -808,7 +808,7 @@ class IndividualPickerFragment2 :
             @DrawableRes icon: Int,
             show: Boolean
         ) {
-            val badge = holder.itemView.findViewById<ImageView>(R.id.indicator_icon)
+            val badge = holder.itemView.requireViewById<ImageView>(R.id.indicator_icon)
             if (show) {
                 val margin =
                     if (isFewerColumnLayout) {
