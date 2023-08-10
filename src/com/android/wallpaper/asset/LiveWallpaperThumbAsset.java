@@ -121,6 +121,24 @@ public class LiveWallpaperThumbAsset extends Asset {
     }
 
     @Override
+    public void decodeBitmap(BitmapReceiver receiver) {
+        sExecutorService.execute(() -> {
+            Drawable thumb = getThumbnailDrawable();
+            Bitmap bitmap = null;
+            // Live wallpaper components may or may not specify a thumbnail drawable.
+            if (thumb instanceof BitmapDrawable) {
+                bitmap = ((BitmapDrawable) thumb).getBitmap();
+            } else if (thumb != null) {
+                if (thumb.getIntrinsicWidth() > 0 && thumb.getIntrinsicHeight() > 0) {
+                    bitmap = Bitmap.createBitmap(thumb.getIntrinsicWidth(),
+                            thumb.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                }
+            }
+            decodeBitmapCompleted(receiver, bitmap);
+        });
+    }
+
+    @Override
     public void decodeBitmapRegion(Rect rect, int targetWidth, int targetHeight,
             boolean shouldAdjustForRtl, BitmapReceiver receiver) {
         receiver.onBitmapDecoded(null);

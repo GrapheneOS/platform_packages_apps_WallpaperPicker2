@@ -86,6 +86,14 @@ public abstract class Asset {
     public abstract void decodeBitmap(int targetWidth, int targetHeight, BitmapReceiver receiver);
 
     /**
+     * Decodes a full bitmap.
+     *
+     * @param receiver     Called with the decoded bitmap or null if there was an error decoding the
+     *                     bitmap.
+     */
+    public abstract void decodeBitmap(BitmapReceiver receiver);
+
+    /**
      * For {@link #decodeBitmap(int, int, BitmapReceiver)} to use when it is done. It then call
      * the receiver with decoded bitmap in the main thread.
      *
