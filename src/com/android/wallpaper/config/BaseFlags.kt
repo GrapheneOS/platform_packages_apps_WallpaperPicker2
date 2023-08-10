@@ -90,6 +90,12 @@ abstract class BaseFlags {
             ?.value == true
     }
 
+    open fun isGridApplyButtonEnabled(context: Context): Boolean {
+        return runBlocking { getCustomizationProviderClient(context).queryFlags() }
+            .firstOrNull { flag -> flag.name == Contract.FlagsTable.FLAG_NAME_GRID_APPLY_BUTTON }
+            ?.value == true
+    }
+
     open fun isPreviewLoadingAnimationEnabled(context: Context): Boolean {
         return runBlocking { getCustomizationProviderClient(context).queryFlags() }
             .firstOrNull { flag ->
