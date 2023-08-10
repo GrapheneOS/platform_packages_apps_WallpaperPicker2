@@ -116,7 +116,7 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
         // Keep clouds moving until we finish loading
         timeAnimator =
             TimeAnimator().apply {
-                setTimeListener { _, _, deltaTime -> flushUniforms(deltaTime) }
+                setTimeListener { _, totalTime, deltaTime -> flushUniforms(totalTime, deltaTime) }
                 start()
             }
     }
@@ -189,7 +189,7 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
         loadingShader.setScreenColor(colorScheme.accent1.s900)
     }
 
-    private fun flushUniforms(deltaTime: Long) {
+    private fun flushUniforms(totalTime: Long, deltaTime: Long) {
         elapsedTime += deltaTime
         val time = elapsedTime / 1000f
         val viewWidth = revealOverlay.width.toFloat()
@@ -221,6 +221,11 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
                     blurRadius * pixelDensity,
                     Shader.TileMode.MIRROR
                 )
+        }
+
+        // Animation time out
+        if (totalTime > TIME_OUT_DURATION_MS && animationState == AnimationState.FADE_IN_PLAYED) {
+            playRevealAnimation()
         }
 
         if (animationState == AnimationState.REVEAL_PLAYING) {
@@ -265,7 +270,7 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
         // Keep clouds moving until we finish loading
         timeAnimator =
             TimeAnimator().apply {
-                setTimeListener { _, _, deltaTime -> flushUniforms(deltaTime) }
+                setTimeListener { _, totalTime, deltaTime -> flushUniforms(totalTime, deltaTime) }
                 start()
             }
     }
@@ -281,6 +286,7 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
         private const val MIN_BLUR_PX = 1f
         private const val FADE_IN_DURATION_MS = 1100L
         private const val FADE_OUT_DURATION_MS = 1500L
+        private const val TIME_OUT_DURATION_MS = 10000L
         private const val REVEAL_DURATION_MS = 3600L
         private const val MIN_REVEAL_BLUR_AMOUNT = 1f
         private const val MAX_REVEAL_BLUR_AMOUNT = 2.5f
