@@ -153,8 +153,8 @@ public interface WallpaperPersister {
      * Android, otherwise on pre-N versions of Android will return a positive integer when the
      * operation was successful and zero if the operation encountered an error.
      */
-    int setBitmapToWallpaperManager(Bitmap wallpaperBitmap, boolean allowBackup,
-            int whichWallpaper);
+    int setBitmapToWallpaperManager(Bitmap wallpaperBitmap, Rect cropHint,
+            boolean allowBackup, int whichWallpaper);
 
     /**
      * Sets a wallpaper stream to the {@link android.app.WallpaperManager}.
@@ -163,8 +163,8 @@ public interface WallpaperPersister {
      * Android, otherwise on pre-N versions of Android will return a positive integer when the
      * operation was successful and zero if the operation encountered an error.
      */
-    int setStreamToWallpaperManager(InputStream inputStream, boolean allowBackup,
-            int whichWallpaper);
+    int setStreamToWallpaperManager(InputStream inputStream, Rect cropHint,
+            boolean allowBackup, int whichWallpaper);
 
     /**
      * Saves the last wallpaper which showed a preview from this app.
