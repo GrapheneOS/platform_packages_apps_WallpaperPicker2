@@ -244,6 +244,11 @@ public class TestUserEventLogger implements UserEventLogger {
         mWallpaperProbeStatus = status;
     }
 
+    @Override
+    public void logEffectForegroundDownload(String effect, int status, long timeElapsedMillis) {
+        // No-op
+    }
+
     public int getNumWallpaperSetEvents() {
         return mNumWallpaperSetEvents;
     }
