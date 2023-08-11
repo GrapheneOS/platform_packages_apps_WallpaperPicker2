@@ -33,7 +33,7 @@ class CreativeCategoryHolder(private val mActivity: Activity, itemView: View) :
     private var adapter: CreativeCategoryAdapter? = null
 
     init {
-        recyclerViewCreativeCategory = itemView.findViewById(R.id.recyclerview_container)
+        recyclerViewCreativeCategory = itemView.requireViewById(R.id.recyclerview_container)
         recyclerViewCreativeCategory.addItemDecoration(
             MarginItemDecoration(
                 mActivity.resources.getInteger(R.integer.creative_category_individual_item_padding)
