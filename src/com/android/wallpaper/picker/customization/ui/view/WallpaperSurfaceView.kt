@@ -35,8 +35,8 @@ class WallpaperSurfaceView(context: Context, attrs: AttributeSet? = null) :
     init {
         addOnAttachStateChangeListener(
             object : OnAttachStateChangeListener {
-                override fun onViewAttachedToWindow(v: View?) {
-                    var parent: ViewParent? = v?.parent
+                override fun onViewAttachedToWindow(v: View) {
+                    var parent: ViewParent? = v.parent
                     while (parent != null && scrollContainer == null) {
                         parent = parent.parent
                         val view = parent as? View
@@ -46,7 +46,7 @@ class WallpaperSurfaceView(context: Context, attrs: AttributeSet? = null) :
                     }
                 }
 
-                override fun onViewDetachedFromWindow(v: View?) {
+                override fun onViewDetachedFromWindow(v: View) {
                     // Do nothing
                 }
             }

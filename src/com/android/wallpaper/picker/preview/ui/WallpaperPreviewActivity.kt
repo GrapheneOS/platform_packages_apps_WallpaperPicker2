@@ -48,7 +48,8 @@ class WallpaperPreviewActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java)
+        val wallpaper =
+            checkNotNull(intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java))
         viewModel.editingWallpaper = wallpaper
         val isFullScreen = intent.getBooleanExtra(EXTRA_IS_FULL_SCREEN, false)
         if (isFullScreen) {
