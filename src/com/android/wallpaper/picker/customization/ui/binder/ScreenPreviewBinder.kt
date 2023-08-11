@@ -176,7 +176,13 @@ object ScreenPreviewBinder {
                                         // a null drawable means the loading animation should not
                                         // be played
                                         loadingImageDrawable?.let {
-                                            loadingAnimation = LoadingAnimation(it, loadingView)
+                                            loadingView.setImageDrawable(it)
+                                            loadingAnimation =
+                                                LoadingAnimation(
+                                                    loadingView,
+                                                    LoadingAnimation.RevealType.CIRCULAR,
+                                                    LoadingAnimation.TIME_OUT_DURATION_MS
+                                                )
                                         }
                                     }
                                 }
@@ -370,8 +376,13 @@ object ScreenPreviewBinder {
                                                 ?: wallpaperPreviewImage.drawable
                                         } else wallpaperPreviewImage?.drawable
                                     animationBackground?.let {
+                                        loadingView.setImageDrawable(animationBackground)
                                         loadingAnimation =
-                                            LoadingAnimation(animationBackground, loadingView)
+                                            LoadingAnimation(
+                                                loadingView,
+                                                LoadingAnimation.RevealType.CIRCULAR,
+                                                LoadingAnimation.TIME_OUT_DURATION_MS
+                                            )
                                     }
                                     loadingImageDrawable = animationBackground
                                     val colorAccent =
