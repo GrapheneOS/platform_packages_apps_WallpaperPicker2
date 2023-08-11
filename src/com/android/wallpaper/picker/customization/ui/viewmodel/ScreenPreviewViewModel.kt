@@ -18,6 +18,7 @@
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import android.app.WallpaperColors
+import android.graphics.Bitmap
 import android.os.Bundle
 import com.android.wallpaper.R
 import com.android.wallpaper.model.WallpaperInfo
@@ -28,6 +29,7 @@ import com.android.wallpaper.picker.customization.shared.model.WallpaperDestinat
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -56,6 +58,12 @@ open class ScreenPreviewViewModel(
             val otherWallpaper = wallpaperUpdateEvents(otherScreen()).first()
             wallpaperInteractor.shouldHandleReload() ||
                 thisWallpaper?.wallpaperId == otherWallpaper?.wallpaperId
+        }
+    }
+
+    fun wallpaperThumbnail(): Flow<Bitmap?> {
+        return wallpaperUpdateEvents().filterNotNull().map { wallpaper ->
+            wallpaperInteractor.loadThumbnail(wallpaper.wallpaperId, wallpaper.lastUpdated)
         }
     }
 

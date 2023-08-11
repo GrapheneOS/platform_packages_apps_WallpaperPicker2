@@ -25,7 +25,7 @@ import androidx.core.content.ContextCompat;
 
 /**
  * Factory for getting an intent to show the in-app (inline) preview activity for a given
- * wallpaper, if appropriate for that wallpaper.
+ * {@link WallpaperInfo}, if appropriate for that wallpaper.
  */
 public interface InlinePreviewIntentFactory {
 

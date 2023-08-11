@@ -15,6 +15,7 @@ android_robolectric_test {
     java_resource_dirs: ["config"],
 
     static_libs: [
+        "hilt_android_testing",
         "WallpaperPicker2TestLib",
     ],
 

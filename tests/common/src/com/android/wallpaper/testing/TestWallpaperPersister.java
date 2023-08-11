@@ -232,14 +232,14 @@ public class TestWallpaperPersister implements WallpaperPersister {
     }
 
     @Override
-    public int setBitmapToWallpaperManager(Bitmap wallpaperBitmap, boolean allowBackup,
-            int whichWallpaper) {
+    public int setBitmapToWallpaperManager(Bitmap wallpaperBitmap, Rect cropHint,
+            boolean allowBackup, int whichWallpaper) {
         return 1;
     }
 
     @Override
-    public int setStreamToWallpaperManager(InputStream inputStream, boolean allowBackup,
-            int whichWallpaper) {
+    public int setStreamToWallpaperManager(InputStream inputStream, Rect cropHint,
+            boolean allowBackup, int whichWallpaper) {
         return 1;
     }
 }

@@ -39,6 +39,8 @@ public class BitmapCachingAsset extends Asset {
 
     private static class CacheKey {
         final Asset mAsset;
+
+        /** a (width x height) of (0 x 0) represents the full image */
         final int mWidth;
         final int mHeight;
         final boolean mRtl;
@@ -102,13 +104,23 @@ public class BitmapCachingAsset extends Asset {
         if (cached != null) {
             receiver.onBitmapDecoded(cached);
         } else {
-            mOriginalAsset.decodeBitmap(targetWidth, targetHeight, bitmap -> {
+            BitmapReceiver cachingReceiver = bitmap -> {
                 if (bitmap != null) {
                     sCache.put(key, bitmap);
                 }
                 receiver.onBitmapDecoded(bitmap);
-            });
+            };
+            if (targetWidth == 0 && targetHeight == 0) {
+                mOriginalAsset.decodeBitmap(cachingReceiver);
+            } else {
+                mOriginalAsset.decodeBitmap(targetWidth, targetHeight, cachingReceiver);
+            }
         }
+    }
+
+    @Override
+    public void decodeBitmap(BitmapReceiver receiver) {
+        decodeBitmap(0, 0, receiver);
     }
 
     @Override
