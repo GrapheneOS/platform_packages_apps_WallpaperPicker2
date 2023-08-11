@@ -22,9 +22,7 @@ import android.animation.ValueAnimator
 import android.graphics.Color
 import android.graphics.RenderEffect
 import android.graphics.Shader
-import android.graphics.drawable.Drawable
 import android.view.View
-import android.widget.ImageView
 import com.android.systemui.monet.ColorScheme
 import com.android.systemui.surfaceeffects.turbulencenoise.TurbulenceNoiseShader
 import com.android.wallpaper.picker.customization.animation.Interpolators
@@ -35,7 +33,32 @@ import kotlin.math.max
 
 /** Renders loading and reveal animation. */
 // TODO (b/281878827): remove this and use loading animation in SystemUIShaderLib when available
-class LoadingAnimation(private val currentImage: Drawable, private val revealOverlay: ImageView) {
+class LoadingAnimation(
+    /** The view used to play the loading and reveal animation */
+    private val revealOverlay: View,
+    /** The type of reveal animation to play */
+    private val revealType: RevealType = RevealType.CIRCULAR,
+    /**
+     * Amount of time before the loading animation times out and plays reveal animation, null
+     * represents no time out
+     */
+    private val timeOutDuration: Long? = null
+) {
+
+    /** Type representing the reveal animation to be played in [LoadingAnimation] */
+    enum class RevealType {
+        /**
+         * Reveal animation that reveals the views beneath with an expanding circle starting from
+         * the center, ending with the loading view hidden
+         */
+        CIRCULAR,
+        /**
+         * Reveal animation that fades out the animation effects on the loading view, leaving the
+         * original loading view visible
+         */
+        FADE
+    }
+
     private val pixelDensity = revealOverlay.resources.displayMetrics.density
 
     private val loadingShader = CompositeLoadingShader()
@@ -85,7 +108,6 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
         animationState = AnimationState.FADE_IN_PLAYING
 
         revealOverlay.visibility = View.VISIBLE
-        revealOverlay.setImageDrawable(currentImage)
 
         elapsedTime = seed ?: (0L..10000L).random()
 
@@ -122,9 +144,18 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
     }
 
     fun playRevealAnimation() {
+        when (revealType) {
+            RevealType.CIRCULAR -> playCircularRevealAnimation()
+            RevealType.FADE -> playFadeRevealAnimation()
+        }
+    }
+
+    private fun playCircularRevealAnimation() {
         if (
             animationState == AnimationState.REVEAL_PLAYING ||
-                animationState == AnimationState.REVEAL_PLAYED
+                animationState == AnimationState.REVEAL_PLAYED ||
+                animationState == AnimationState.FADE_OUT_PLAYING ||
+                animationState == AnimationState.FADE_OUT_PLAYED
         )
             return
 
@@ -162,8 +193,6 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
                         override fun onAnimationEnd(animation: Animator) {
                             animationState = AnimationState.REVEAL_PLAYED
 
-                            // No need to hold on to the drawable after the animation.
-                            revealOverlay.setImageDrawable(null)
                             revealOverlay.setRenderEffect(null)
                             revealOverlay.visibility = View.INVISIBLE
 
@@ -175,6 +204,49 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
                     }
                 )
 
+                start()
+            }
+    }
+
+    private fun playFadeRevealAnimation() {
+        if (
+            animationState == AnimationState.REVEAL_PLAYING ||
+                animationState == AnimationState.REVEAL_PLAYED ||
+                animationState == AnimationState.FADE_OUT_PLAYING ||
+                animationState == AnimationState.FADE_OUT_PLAYED
+        )
+            return
+
+        if (animationState == AnimationState.FADE_IN_PLAYING) fadeInAnimator?.cancel()
+
+        animationState = AnimationState.FADE_OUT_PLAYING
+
+        revealOverlay.visibility = View.VISIBLE
+
+        fadeInAnimator =
+            ValueAnimator.ofFloat(transitionProgress, 0f).apply {
+                duration = FADE_OUT_DURATION_MS
+                interpolator = Interpolators.STANDARD_DECELERATE
+                addUpdateListener {
+                    transitionProgress = it.animatedValue as Float
+                    loadingShader.setAlpha(transitionProgress)
+                    // Match the timing with the fade animations.
+                    blurRadius = maxOf(MAX_BLUR_PX * transitionProgress, MIN_BLUR_PX)
+                }
+                addListener(
+                    object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            animationState = AnimationState.FADE_OUT_PLAYED
+
+                            revealOverlay.setRenderEffect(null)
+
+                            // Stop turbulence and reset everything.
+                            timeAnimator?.cancel()
+                            blurRadius = MIN_BLUR_PX
+                            transitionProgress = 0f
+                        }
+                    }
+                )
                 start()
             }
     }
@@ -214,7 +286,10 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
         val renderEffect = RenderEffect.createRuntimeShaderEffect(loadingShader, "in_background")
 
         // Update the blur effect only when loading animation is playing.
-        if (animationState == AnimationState.FADE_IN_PLAYING) {
+        if (
+            animationState == AnimationState.FADE_IN_PLAYING ||
+                animationState == AnimationState.FADE_OUT_PLAYING
+        ) {
             blurEffect =
                 RenderEffect.createBlurEffect(
                     blurRadius * pixelDensity,
@@ -224,7 +299,11 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
         }
 
         // Animation time out
-        if (totalTime > TIME_OUT_DURATION_MS && animationState == AnimationState.FADE_IN_PLAYED) {
+        if (
+            timeOutDuration != null &&
+                totalTime > timeOutDuration &&
+                animationState == AnimationState.FADE_IN_PLAYED
+        ) {
             playRevealAnimation()
         }
 
@@ -252,9 +331,9 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
         cancel()
 
         revealOverlay.visibility = View.VISIBLE
-        revealOverlay.setImageDrawable(currentImage)
 
         elapsedTime = seed ?: (0L..10000L).random()
+        transitionProgress = 1f
 
         // Fast forward to state at the end of fade in animation
         blurRadius = MAX_BLUR_PX
@@ -286,7 +365,7 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
         private const val MIN_BLUR_PX = 1f
         private const val FADE_IN_DURATION_MS = 1100L
         private const val FADE_OUT_DURATION_MS = 1500L
-        private const val TIME_OUT_DURATION_MS = 10000L
+        const val TIME_OUT_DURATION_MS = 10000L
         private const val REVEAL_DURATION_MS = 3600L
         private const val MIN_REVEAL_BLUR_AMOUNT = 1f
         private const val MAX_REVEAL_BLUR_AMOUNT = 2.5f
@@ -296,6 +375,8 @@ class LoadingAnimation(private val currentImage: Drawable, private val revealOve
         IDLE,
         FADE_IN_PLAYING,
         FADE_IN_PLAYED,
+        FADE_OUT_PLAYING,
+        FADE_OUT_PLAYED,
         REVEAL_PLAYING,
         REVEAL_PLAYED
     }
