@@ -83,7 +83,23 @@ public abstract class Asset {
      * @param receiver     Called with the decoded bitmap or null if there was an error decoding the
      *                     bitmap.
      */
-    public abstract void decodeBitmap(int targetWidth, int targetHeight, BitmapReceiver receiver);
+    public final void decodeBitmap(int targetWidth, int targetHeight, BitmapReceiver receiver) {
+        decodeBitmap(targetWidth, targetHeight, true, receiver);
+    }
+
+
+    /**
+     * Decodes a bitmap sized for the destination view's dimensions off the main UI thread.
+     *
+     * @param targetWidth  Width of target view in physical pixels.
+     * @param targetHeight Height of target view in physical pixels.
+     * @param hardwareBitmapAllowed if true and it's possible, we'll try to decode into a HARDWARE
+     *                              bitmap
+     * @param receiver     Called with the decoded bitmap or null if there was an error decoding the
+     *                     bitmap.
+     */
+    public abstract void decodeBitmap(int targetWidth, int targetHeight,
+            boolean hardwareBitmapAllowed, BitmapReceiver receiver);
 
     /**
      * Decodes a full bitmap.

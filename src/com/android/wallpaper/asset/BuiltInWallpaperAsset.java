@@ -100,7 +100,7 @@ public final class BuiltInWallpaperAsset extends Asset {
     }
 
     @Override
-    public void decodeBitmap(int targetWidth, int targetHeight,
+    public void decodeBitmap(int targetWidth, int targetHeight, boolean useHardwareBitmapIfPossible,
                              BitmapReceiver receiver) {
         sExecutorService.execute(() -> {
             final WallpaperManager wallpaperManager = WallpaperManager.getInstance(mContext);
