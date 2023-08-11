@@ -443,13 +443,13 @@ object ScreenPreviewBinder {
                                     // TODO(b/284233455): investigate why and remove this workaround
                                     previewView.addOnAttachStateChangeListener(
                                         object : OnAttachStateChangeListener {
-                                            override fun onViewAttachedToWindow(v: View?) {
+                                            override fun onViewAttachedToWindow(v: View) {
                                                 connection.connect()
                                                 connection.setVisibility(showLivePreview.get())
                                                 previewView.removeOnAttachStateChangeListener(this)
                                             }
 
-                                            override fun onViewDetachedFromWindow(v: View?) {
+                                            override fun onViewDetachedFromWindow(v: View) {
                                                 // Do nothing
                                             }
                                         }
