@@ -331,6 +331,18 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
         }
     }
 
+
+    /**
+     * Set the {@link android.app.WallpaperManager.SetWallpaperFlags} to the Engine to indicate
+     * which screen it's being applied/previewed to.
+     */
+    public void setWallpaperFlags(@WallpaperManager.SetWallpaperFlags int wallpaperFlags)
+            throws RemoteException {
+        if (mEngine != null && mEngineReady) {
+            mEngine.setWallpaperFlags(wallpaperFlags);
+        }
+    }
+
     private void attachConnection(int displayId) {
         try {
             try {
