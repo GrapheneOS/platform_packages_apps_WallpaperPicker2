@@ -142,4 +142,5 @@ android_app {
     manifest: ":WallpaperPicker2_Manifest",
 
     platform_apis: true,
+    overrides: ["WallpaperPicker"],
 }
