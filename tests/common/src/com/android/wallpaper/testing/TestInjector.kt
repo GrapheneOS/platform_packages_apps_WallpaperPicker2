@@ -305,4 +305,8 @@ open class TestInjector : Injector {
     override fun getMyPhotosIntentProvider(): MyPhotosStarter.MyPhotosIntentProvider {
         return object : MyPhotosStarter.MyPhotosIntentProvider {}
     }
+
+    override fun isCurrentSelectedColorPreset(context: Context): Boolean {
+        return false
+    }
 }
