@@ -137,4 +137,6 @@ interface Injector {
     fun isInstrumentationTest(): Boolean {
         return false
     }
+
+    fun isCurrentSelectedColorPreset(context: Context): Boolean
 }
