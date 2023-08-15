@@ -29,6 +29,7 @@ abstract class BaseFlags {
     open fun isStagingBackdropContentEnabled() = false
     open fun isWallpaperEffectEnabled() = false
     open fun isWallpaperEffectModelDownloadEnabled() = true
+    open fun isInterruptModelDownloadEnabled() = false
 
     // TODO(b/285047815): Remove flag after adding wallpaper id for default static wallpaper
     open fun isWallpaperRestorerEnabled() = false
