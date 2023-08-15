@@ -18,7 +18,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.android.customization.picker.HorizontalTouchMovementAwareNestedScrollView
+    <com.android.wallpaper.picker.HorizontalTouchMovementAwareNestedScrollView
         android:id="@+id/home_scroll_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,9 +31,9 @@
             android:layout_height="match_parent"
             android:layout_marginVertical="@dimen/section_container_vertical_margin"
             android:orientation="vertical" />
-    </com.android.customization.picker.HorizontalTouchMovementAwareNestedScrollView>
+    </com.android.wallpaper.picker.HorizontalTouchMovementAwareNestedScrollView>
 
-    <com.android.customization.picker.HorizontalTouchMovementAwareNestedScrollView
+    <com.android.wallpaper.picker.HorizontalTouchMovementAwareNestedScrollView
         android:id="@+id/lock_scroll_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -47,6 +47,6 @@
             android:layout_height="match_parent"
             android:layout_marginVertical="@dimen/section_container_vertical_margin"
             android:orientation="vertical" />
-    </com.android.customization.picker.HorizontalTouchMovementAwareNestedScrollView>
+    </com.android.wallpaper.picker.HorizontalTouchMovementAwareNestedScrollView>
 </FrameLayout>
 
