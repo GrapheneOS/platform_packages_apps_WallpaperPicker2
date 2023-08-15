@@ -21,8 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Categorias de plano de fundo"</string>
-    <!-- no translation found for set_wallpaper_button_text (5445978864530156290) -->
-    <skip />
+    <string name="set_wallpaper_button_text" msgid="5445978864530156290">"Definir plano de fundo"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Definindo plano de fundo…"</string>
     <string name="try_again" msgid="8278874823700921234">"Tentar novamente"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Não foi possível definir o plano de fundo."</string>
@@ -106,9 +105,9 @@
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"A coleção não existe"</string>
     <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"Saia do modo de tela dividida e tente de novo"</string>
     <string name="cancel" msgid="4970902691067201584">"Cancelar"</string>
-    <string name="hide_ui_preview_text" msgid="6766076482511252295">"Ocultar visualização da IU"</string>
+    <string name="hide_ui_preview_text" msgid="6766076482511252295">"Ocultar visualização da interface"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"IU ocultada na prévia. Toque 2 vezes para mostrar"</string>
-    <string name="show_ui_preview_text" msgid="5993063062417070806">"Mostrar visualização da IU"</string>
+    <string name="show_ui_preview_text" msgid="5993063062417070806">"Mostrar visualização da interface"</string>
     <string name="hide_preview_controls_content_description" msgid="894958599274977655">"Os controles de visualização estão sendo mostrados. Toque duas vezes para ocultar"</string>
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"Ocultar controles de visualização"</string>
     <string name="show_preview_controls_content_description" msgid="908147864005440602">"Os controles de visualização estão ocultos. Toque duas vezes para mostrar"</string>
