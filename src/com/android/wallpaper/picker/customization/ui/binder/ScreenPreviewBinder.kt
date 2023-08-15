@@ -20,6 +20,7 @@ package com.android.wallpaper.picker.customization.ui.binder
 import android.app.Activity
 import android.app.WallpaperColors
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -202,13 +203,22 @@ object ScreenPreviewBinder {
                                 animationTimeToRestore = loadingAnimation?.getElapsedTime()
                                 loadingAnimation?.cancel()
                                 loadingAnimation = null
-                                // only save the current loading image if this is a configuration
-                                // change restart, and reset to null otherwise, so that reveal
-                                // animation is only played after a wallpaper/color switch and not
-                                // on every resume
+                                // To ensure reveal animation is only played after a theme config
+                                // change from wallpaper/color switch, only save the current loading
+                                // image if this is a configuration change restart and reset to
+                                // null otherwise
                                 animationStateViewModel?.saveAnimationState(
                                     viewModel.screen,
-                                    if (activity.isChangingConfigurations) {
+                                    // Check if activity is changing configurations, and check that
+                                    // the set of changing configurations does not include screen
+                                    // size changes (such as rotation and folding/unfolding device)
+                                    // Note: activity.changingConfigurations is not 100% accurate
+                                    if (
+                                        activity.isChangingConfigurations &&
+                                            (activity.changingConfigurations.and(
+                                                ActivityInfo.CONFIG_SCREEN_SIZE
+                                            ) == 0)
+                                    ) {
                                         AnimationStateViewModel.AnimationState(
                                             loadingImageDrawable,
                                             animationTimeToRestore,
