@@ -52,7 +52,7 @@ class PreviewUtils(
 
     init {
         val providerAuthority =
-            authority ?: homeAuthority(context, checkNotNull(authorityMetadataKey))
+            authority ?: homeAuthority(context, checkNotNull(authorityMetadataKey)) ?: ""
 
         providerInfo =
             if (!TextUtils.isEmpty(providerAuthority)) {

@@ -35,7 +35,7 @@ class PreviewCustomizeSettingsContent(
         get() = R.layout.preview_customize_settings
 
     override fun onViewCreated(previewPage: View) {
-        settingsSliceView = previewPage.findViewById(R.id.settings_slice)
+        settingsSliceView = previewPage.requireViewById(R.id.settings_slice)
         settingsSliceView.mode = SliceView.MODE_LARGE
         settingsSliceView.isScrollable = false
         if (uriSettingsSlice != null) {

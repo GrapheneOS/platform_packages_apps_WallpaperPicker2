@@ -64,7 +64,7 @@ class DisplayUtils(private val context: Context) {
      * (portrait).
      */
     fun isUnfoldedHorizontalHinge(activity: Activity): Boolean {
-        return activity.display.rotation in ROTATION_HORIZONTAL_HINGE &&
+        return activity.display?.rotation in ROTATION_HORIZONTAL_HINGE &&
             isOnWallpaperDisplay(activity) &&
             hasMultiInternalDisplays()
     }
@@ -85,7 +85,7 @@ class DisplayUtils(private val context: Context) {
      * display device the only display is both the wallpaper display and the current display.
      */
     fun isOnWallpaperDisplay(activity: Activity): Boolean {
-        return activity.display.uniqueId == getWallpaperDisplay().uniqueId
+        return activity.display?.uniqueId == getWallpaperDisplay().uniqueId
     }
 
     private fun getRealArea(display: Display): Int {
