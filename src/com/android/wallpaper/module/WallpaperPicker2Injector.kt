@@ -358,6 +358,10 @@ internal constructor(
         return object : MyPhotosStarter.MyPhotosIntentProvider {}
     }
 
+    override fun isCurrentSelectedColorPreset(context: Context): Boolean {
+        return false
+    }
+
     companion object {
         /**
          * When this injector is overridden, this is the minimal value that should be used by
