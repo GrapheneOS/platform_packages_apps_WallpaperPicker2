@@ -34,12 +34,9 @@ import com.android.wallpaper.config.BaseFlags;
 import com.android.wallpaper.model.ImageWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
-import com.android.wallpaper.module.LargeScreenMultiPanesChecker;
-import com.android.wallpaper.module.MultiPanesChecker;
 import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity;
-import com.android.wallpaper.util.ActivityUtils;
 
 /**
  * Activity that displays a preview of a specific wallpaper and provides the ability to set the
@@ -57,9 +54,6 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
-
-        // Trampoline for the multi-pane.
-        launchMultiPanesIfNeeded();
 
         enableFullScreen();
 
@@ -151,25 +145,6 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
     public boolean isUpArrowSupported() {
         // Show up arrow for multi-pane.
         return getIntent().getBooleanExtra(KEY_UP_ARROW, false);
-    }
-
-    /**
-     * Launches multi-pane when it is enabled, for non-Settings' trampoline launch case will
-     * retrieve EXTRA_STREAM's image URI and assign back its intent by calling setData().
-     */
-    private void launchMultiPanesIfNeeded() {
-        MultiPanesChecker checker = new LargeScreenMultiPanesChecker();
-        if (checker.isMultiPanesEnabled(/* context= */ this)) {
-            Intent intent = getIntent();
-            if (ActivityUtils.isLaunchedFromSettingsTrampoline(intent)
-                    || ActivityUtils.isLaunchedFromSettingsRelated(intent)) {
-                Uri uri = intent.hasExtra(Intent.EXTRA_STREAM) ? intent.getParcelableExtra(
-                        Intent.EXTRA_STREAM) : null;
-                if (uri != null) {
-                    intent.setData(uri);
-                }
-            }
-        }
     }
 
     /**
