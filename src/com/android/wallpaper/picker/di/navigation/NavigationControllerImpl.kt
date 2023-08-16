@@ -16,14 +16,16 @@
 
 package com.android.wallpaper.picker.di.navigation
 
+import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
 import com.android.wallpaper.model.WallpaperInfo
-import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.PreviewFragment
+import com.android.wallpaper.picker.preview.ui.fragment.SmallPreviewFragment
 import javax.inject.Inject
 
 class NavigationControllerImpl @Inject constructor() : NavigationController {
+
     override fun navigateToPreview(
         activity: FragmentActivity,
         wallpaperInfo: WallpaperInfo,
@@ -34,17 +36,13 @@ class NavigationControllerImpl @Inject constructor() : NavigationController {
         @IdRes viewId: Int,
         transition: Transition
     ) {
-        // TODO: @abdullairum replace this preview fragment with the new preview fragment
-        val previewFragment =
-            InjectorProvider.getInjector()
-                .getPreviewFragment(
-                    activity,
-                    wallpaperInfo,
-                    mode,
-                    viewAsHome,
-                    viewFullScreen,
-                    testingModeEnabled
-                )
+        // TODO(b/295199906): arguments removed in next diff
+        val args = Bundle()
+        args.putParcelable(PreviewFragment.ARG_WALLPAPER, wallpaperInfo)
+        args.putBoolean(PreviewFragment.ARG_VIEW_AS_HOME, viewAsHome)
+
+        val previewFragment = SmallPreviewFragment()
+        previewFragment.arguments = args
 
         when (transition) {
             Transition.ADD ->
