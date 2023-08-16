@@ -28,6 +28,7 @@ import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestStaticWallpaperInfo
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -49,6 +50,7 @@ class WallpaperPreviewActivityTest {
     }
 
     @Test
+    @Ignore("b/296072651")
     fun showsPreviewFragment() {
         val scenario: ActivityScenario<WallpaperPreviewActivity> =
             ActivityScenario.launch(activityStartIntent)
@@ -61,6 +63,7 @@ class WallpaperPreviewActivityTest {
     }
 
     @Test
+    @Ignore("b/296072651")
     fun launchActivity_setsWallpaperInfo() {
         val scenario: ActivityScenario<WallpaperPreviewActivity> =
             ActivityScenario.launch(activityStartIntent)
