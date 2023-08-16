@@ -93,10 +93,12 @@ public class BitmapCachingAsset extends Asset {
     }
 
     @Override
-    public void decodeBitmap(int targetWidth, int targetHeight, BitmapReceiver receiver) {
+    public void decodeBitmap(int targetWidth, int targetHeight, boolean useHardwareBitmapIfPossible,
+            BitmapReceiver receiver) {
         // Skip the cache in low ram devices
         if (mIsLowRam) {
-            mOriginalAsset.decodeBitmap(targetWidth, targetHeight, receiver::onBitmapDecoded);
+            mOriginalAsset.decodeBitmap(targetWidth, targetHeight, useHardwareBitmapIfPossible,
+                    receiver);
             return;
         }
         CacheKey key = new CacheKey(mOriginalAsset, targetWidth, targetHeight);
@@ -113,7 +115,8 @@ public class BitmapCachingAsset extends Asset {
             if (targetWidth == 0 && targetHeight == 0) {
                 mOriginalAsset.decodeBitmap(cachingReceiver);
             } else {
-                mOriginalAsset.decodeBitmap(targetWidth, targetHeight, cachingReceiver);
+                mOriginalAsset.decodeBitmap(targetWidth, targetHeight, useHardwareBitmapIfPossible,
+                        cachingReceiver);
             }
         }
     }

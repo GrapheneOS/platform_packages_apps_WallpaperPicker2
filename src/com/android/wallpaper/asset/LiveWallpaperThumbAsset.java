@@ -90,14 +90,28 @@ public class LiveWallpaperThumbAsset extends Asset {
     }
 
     @Override
-    public void decodeBitmap(int targetWidth, int targetHeight,
+    public void decodeBitmap(int targetWidth, int targetHeight, boolean useHardwareBitmapIfPossible,
                              BitmapReceiver receiver) {
         sExecutorService.execute(() -> {
             Drawable thumb = getThumbnailDrawable();
 
             // Live wallpaper components may or may not specify a thumbnail drawable.
             if (thumb instanceof BitmapDrawable) {
-                decodeBitmapCompleted(receiver, ((BitmapDrawable) thumb).getBitmap());
+                BitmapDrawable drawableThumb = (BitmapDrawable) thumb;
+                int thumbHeight = drawableThumb.getIntrinsicHeight();
+                int thumbWidth = drawableThumb.getIntrinsicWidth();
+                int height, width;
+                if (thumbHeight > 0 && thumbWidth > 0) {
+                    double ratio = thumbHeight > thumbWidth ? (double) targetHeight / thumbHeight
+                            : (double) targetWidth / thumbWidth;
+                    height = (int) (thumbHeight * ratio);
+                    width =  (int) (thumbWidth * ratio);
+                } else {
+                    height = targetHeight;
+                    width = targetWidth;
+                }
+                decodeBitmapCompleted(receiver,
+                        Bitmap.createScaledBitmap(drawableThumb.getBitmap(), width, height, true));
                 return;
             } else if (thumb != null) {
                 Bitmap bitmap;
