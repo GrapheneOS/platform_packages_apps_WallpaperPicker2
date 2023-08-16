@@ -77,7 +77,7 @@ public abstract class StreamableAsset extends Asset {
     }
 
     @Override
-    public void decodeBitmap(int targetWidth, int targetHeight,
+    public void decodeBitmap(int targetWidth, int targetHeight, boolean useHardwareBitmapIfPossible,
                              BitmapReceiver receiver) {
         sExecutorService.execute(() -> {
             int newTargetWidth = targetWidth;
@@ -101,7 +101,9 @@ public abstract class StreamableAsset extends Asset {
             }
             options.inSampleSize = BitmapUtils.calculateInSampleSize(
                     rawDimensions.x, rawDimensions.y, newTargetWidth, newTargetHeight);
-            options.inPreferredConfig = Config.HARDWARE;
+            if (useHardwareBitmapIfPossible) {
+                options.inPreferredConfig = Config.HARDWARE;
+            }
 
             InputStream inputStream = openInputStream();
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
