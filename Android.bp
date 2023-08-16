@@ -36,6 +36,8 @@ android_library {
         "androidx.slice_slice-view",
         "androidx.transition_transition-ktx-nodeps",
         "androidx.viewpager2_viewpager2",
+        "androidx.navigation_navigation-ui-ktx",
+        "androidx.navigation_navigation-fragment-ktx",
         "com.google.android.material_material",
         "glide-prebuilt",
         "glide-gifdecoder-prebuilt",
@@ -173,4 +175,5 @@ android_app {
     manifest: ":WallpaperPicker2_Manifest",
 
     platform_apis: true,
+    overrides: ["WallpaperPicker"],
 }
