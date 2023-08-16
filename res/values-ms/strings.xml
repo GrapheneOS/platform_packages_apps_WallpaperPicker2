@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Kategori kertas dinding"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Tetapkan Hiasan Latar"</string>
+    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Tetapkan Kertas Dinding"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Menetapkan kertas dinding…"</string>
     <string name="try_again" msgid="8278874823700921234">"Cuba lagi"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Tidak dapat menetapkan kertas dinding."</string>
@@ -29,10 +29,14 @@
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Ditetapkan pada masa ini"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Kertas dinding harian"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"Skrin utama &amp; Skrin kunci"</string>
+    <!-- no translation found for choose_a_wallpaper_section_title (1009823506890453891) -->
+    <skip />
+    <!-- no translation found for creative_wallpaper_title (8459226435723103934) -->
+    <skip />
     <string name="home_screen_message" msgid="106444102822522813">"Skrin utama"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Kunci skrin"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Skrin Utama &amp; Kunci"</string>
-    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Tetapkan hiasan latar"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Tetapkan kertas dinding"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Skrin utama"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Kunci skrin"</string>
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Skrin utama dan skrin kunci"</string>
@@ -118,5 +122,5 @@
     <string name="reset" msgid="4945445169532850631">"Tetapkan semula"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Tetapkan semula perubahan?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Perubahan anda tidak akan disimpan"</string>
-    <string name="more_wallpapers" msgid="7585665124282737376">"Lagi Hiasan Latar"</string>
+    <string name="more_wallpapers" msgid="8116268433411881705">"Lagi penghias latar"</string>
 </resources>

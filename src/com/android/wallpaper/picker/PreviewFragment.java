@@ -164,7 +164,8 @@ public abstract class PreviewFragment extends AppbarFragment implements
 
         mTestingModeEnabled = getArguments().getBoolean(ARG_TESTING_MODE_ENABLED);
         mWallpaperSetter = new WallpaperSetter(injector.getWallpaperPersister(appContext),
-                injector.getPreferences(appContext), mUserEventLogger, mTestingModeEnabled);
+                injector.getPreferences(appContext), mUserEventLogger,
+                injector.getCurrentWallpaperInfoFactory(appContext), mTestingModeEnabled);
 
         mViewModelProvider = new ViewModelProvider(requireActivity());
         mSetWallpaperViewModel = mViewModelProvider.get(SetWallpaperViewModel.class);
@@ -293,7 +294,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
                 LayerDrawable layerDrawable = (LayerDrawable) ripple.getDrawable(/* index= */ 0);
                 Drawable backgroundDrawable = layerDrawable.getDrawable(/* index= */ 0);
                 backgroundDrawable.setTint(!visible ? ResourceUtils.getColorAttr(getActivity(),
-                        com.android.internal.R.attr.colorAccentSecondary)
+                        com.android.internal.R.attr.materialColorSecondary)
                         : ResourceUtils.getColorAttr(getActivity(),
                                 com.android.internal.R.attr.colorAccentPrimary));
             });

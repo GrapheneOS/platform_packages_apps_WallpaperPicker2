@@ -29,6 +29,8 @@
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"നിലവിൽ സജ്ജമാക്കിയിരിക്കുന്നത്"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"പ്രതിദിന വാൾപേപ്പർ"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"ഹോമും ലോക്ക് സ്‌ക്രീനും"</string>
+    <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"ഒരു വാൾപേപ്പർ തിരഞ്ഞെടുക്കുക"</string>
+    <string name="creative_wallpaper_title" msgid="8459226435723103934">"ഒരു വാൾപേപ്പർ സൃഷ്ടിക്കുക"</string>
     <string name="home_screen_message" msgid="106444102822522813">"ഹോം സ്‌ക്രീൻ"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"ലോക്ക് സ്‌ക്രീൻ"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"ഹോമും ലോക്ക് സ്‌ക്രീനും"</string>
@@ -43,7 +45,7 @@
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"വാൾപേപ്പറുകൾ തിരിക്കുന്നതിനുള്ള സജീവ വാൾപേപ്പർ സേവനം"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"പ്രതിദിന വാൾപേപ്പർ"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"ഓണാക്കാൻ ടാപ്പ് ചെയ്യുക"</string>
-    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"എല്ലാ ദിവസവും വാൾപേപ്പർ സ്വയമേവ മാറും. സജ്ജീകരണം പൂർത്തിയാക്കാൻ, അടുത്ത സ്ക്രീനിലെ &lt;strong&gt;വാൾപേപ്പർ സജ്ജീകരിക്കുക&lt;/strong&gt; എന്നതിൽ ടാപ്പ് ചെയ്യുക."</string>
+    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"എല്ലാ ദിവസവും വാൾപേപ്പർ സ്വമേധയാ മാറും. സജ്ജീകരണം പൂർത്തിയാക്കാൻ, അടുത്ത സ്ക്രീനിലെ &lt;strong&gt;വാൾപേപ്പർ സജ്ജീകരിക്കുക&lt;/strong&gt; എന്നതിൽ ടാപ്പ് ചെയ്യുക."</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"ഭാവി വാൾപേപ്പറുകൾ വൈഫൈയിൽ മാത്രം ഡൗൺലോഡ് ചെയ്യുക"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"തുടരുക"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"ആദ്യ വാൾപേപ്പർ ഡൗൺലോഡ് ചെയ്യുന്നു…"</string>
@@ -113,10 +115,10 @@
     <string name="settings_snackbar_description" msgid="890168814524778486">"ക്രമീകരണത്തിൽ ഫയലുകളും മീഡിയയും പ്രവർത്തനക്ഷമമാക്കുക."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"പ്രവർത്തനക്ഷമമാക്കുക"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"എന്റെ ഫോട്ടോകൾ തുറക്കുക"</string>
-    <string name="lock_screen_tab" msgid="6672930765010407652">"ലോക്ക് സ്ക്രീൻ"</string>
+    <string name="lock_screen_tab" msgid="6672930765010407652">"സ്‌ക്രീൻ ലോക്ക് ചെയ്യുക"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"ഹോം സ്‌ക്രീൻ"</string>
     <string name="reset" msgid="4945445169532850631">"റീസെറ്റ് ചെയ്യൂ"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"മാറ്റങ്ങൾ റീസെറ്റ് ചെയ്യണോ?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"നിങ്ങളുടെ മാറ്റങ്ങൾ സംരക്ഷിക്കില്ല"</string>
-    <string name="more_wallpapers" msgid="7585665124282737376">"കൂടുതൽ വാൾപേപ്പറുകൾ"</string>
+    <string name="more_wallpapers" msgid="8116268433411881705">"കൂടുതൽ വാൾപേപ്പറുകൾ"</string>
 </resources>

@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Categorii de imagini de fundal"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Setează fundal"</string>
+    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Setează imaginea de fundal"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Se setează imaginea de fundal…"</string>
     <string name="try_again" msgid="8278874823700921234">"Încearcă din nou"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Nu s-a putut seta imaginea de fundal."</string>
@@ -29,6 +29,10 @@
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Setată în prezent"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Imaginea de fundal zilnică"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"Ecran de pornire și de blocare"</string>
+    <!-- no translation found for choose_a_wallpaper_section_title (1009823506890453891) -->
+    <skip />
+    <!-- no translation found for creative_wallpaper_title (8459226435723103934) -->
+    <skip />
     <string name="home_screen_message" msgid="106444102822522813">"Ecran de pornire"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Ecran de blocare"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"De pornire și de blocare"</string>
@@ -118,5 +122,5 @@
     <string name="reset" msgid="4945445169532850631">"Resetează"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Resetezi modificările?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Modificările nu se vor salva"</string>
-    <string name="more_wallpapers" msgid="7585665124282737376">"Mai multe imagini de fundal"</string>
+    <string name="more_wallpapers" msgid="8116268433411881705">"Mai multe imagini de fundal"</string>
 </resources>

@@ -33,6 +33,9 @@ interface CustomizationSectionController<T : SectionView> {
 
         /** Navigates to a `fragment` that maps to the given destination ID. */
         fun navigateTo(destinationId: String?)
+
+        /** Navigates like [navigateTo] but without adding picker to back stack. */
+        fun standaloneNavigateTo(destinationId: String?)
     }
 
     data class ViewCreationParams(
@@ -43,6 +46,11 @@ interface CustomizationSectionController<T : SectionView> {
          * are laid out side-by-side in a horizontal layout.
          */
         val isConnectedHorizontallyToOtherSections: Boolean = false,
+        /**
+         * Whether the Wallpaper's engine visibility is determined by which tab is currently
+         * selected
+         */
+        val isWallpaperVisibilityControlledByTab: Boolean = false,
     )
 
     /**
@@ -81,7 +89,4 @@ interface CustomizationSectionController<T : SectionView> {
 
     /** Gets called when the section gets transitioned out. */
     fun onTransitionOut() = Unit
-
-    /** Notifies when the screen was switched. */
-    fun onScreenSwitched(isOnLockScreen: Boolean) = Unit
 }

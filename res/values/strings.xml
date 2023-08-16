@@ -56,6 +56,13 @@
         screen [CHAR LIMIT=100] -->
     <string name="wallpaper_destination_both">Home &amp; Lock screen</string>
 
+    <!-- Label indicating the title for block that allows user to select a on-device
+         wallpaper in the WallpaperPicker screen [CHAR LIMIT=100] -->
+    <string name="choose_a_wallpaper_section_title">Choose a Wallpaper</string>
+
+    <!-- Label indicating the title for Creative Wallpapers block in the WallpaperPicker screen [CHAR LIMIT=100] -->
+    <string name="creative_wallpaper_title">Create a Wallpaper</string>
+
     <!-- Label referring to the home screen of the device, i.e. shown behind the launcher.
          [CHAR LIMIT=30] -->
     <string name="home_screen_message">Home screen</string>
@@ -227,6 +234,9 @@
          [CHAR LIMIT=none] -->
     <string name="refresh_daily_wallpaper_content_description">Refresh daily wallpaper</string>
 
+    <!-- Content description for the wallpaper preview screen. [CHAR LIMIT=none] -->
+    <string name="preview_screen_description">Wallpaper preview screen</string>
+
     <!-- Message shown to user in a progress dialog when the app is in the process of refreshing the
          daily wallpaper. [CHAR LIMIT=none] -->
     <string name="refreshing_daily_wallpaper_dialog_message">
@@ -290,7 +300,7 @@
       third_party_app_wallpapers
     </string>
 
-    <!-- Label for a checkbox which lets user preview the displayed image as wallpaper. [CHAR LIMIT=30] -->
+    <!-- Title for the toolbar when displaying a wallpaper preview. [CHAR LIMIT=30] -->
     <string name="preview">Preview</string>
 
     <!-- Label for the 'Info' tab of view pager in wallpaper preview activity. [CHAR_LIMIT=25] -->
@@ -356,8 +366,17 @@
     <!-- Content description of wallpaper preview card. [CHAR_LIMIT=40]-->
     <string name="wallpaper_preview_card_content_description">Wallpaper preview</string>
 
+    <!-- Content description of lock screen wallpaper preview card. [CHAR_LIMIT=NONE]-->
+    <string name="lock_wallpaper_preview_card_content_description">Lock screen wallpaper preview</string>
+
+    <!-- Content description of home screen wallpaper preview card. [CHAR_LIMIT=NONE]-->
+    <string name="home_wallpaper_preview_card_content_description">Home screen wallpaper preview</string>
+
     <!-- Error message of the wallpaper's collection doesn't exist. [CHAR_LIMIT=NONE] -->
     <string name="collection_not_exist_msg">The collection doesn\'t exist</string>
+
+    <!-- Error message advising user to exit our of split screen in order to see preview. [CHAR_LIMIT=NONE] -->
+    <string name="wallpaper_exit_split_screen">Please exit split screen mode and try again</string>
 
     <!-- Label for a cancel button of a dialog. [CHAR LIMIT=30] -->
     <string name="cancel">Cancel</string>
@@ -370,6 +389,21 @@
 
     <!-- Label for a button which lets user show certain parts of the fullscreen preview UI. [CHAR LIMIT=30] -->
     <string name="show_ui_preview_text">Show UI Preview</string>
+
+    <!-- Content description for Talkback to announce with UI preview is hidden. [CHAR LIMIT=NONE] -->
+    <string name="hide_preview_controls_content_description">Preview controls are displayed. Double tap to hide</string>
+
+    <!-- Label for a button which lets user hide certain parts of the fullscreen preview UI. [CHAR LIMIT=NONE] -->
+    <string name="hide_preview_controls_action">Hide preview controls</string>
+
+    <!-- Content description for Talkback to announce with UI preview is hidden. [CHAR LIMIT=NONE] -->
+    <string name="show_preview_controls_content_description">Preview controls are hidden. Double tap to show</string>
+
+    <!-- Label for a button which lets user show certain parts of the fullscreen preview UI. [CHAR LIMIT=NONE] -->
+    <string name="show_preview_controls_action">Show preview controls</string>
+
+    <!-- Label for action to show full preview without information [CHAR LIMIT=NONE] -->
+    <string name="hide_wallpaper_info_action">Hide wallpaper info</string>
 
     <!-- Content description for Talkback to announce with UI preview is hidden. [CHAR LIMIT=50] -->
     <string name="hint_show_ui_preview">UI is displayed in preview. Double tap to hide</string>
@@ -458,5 +492,5 @@
 
     [CHAR LIMIT=128].
     -->
-    <string name="more_wallpapers">More Wallpapers</string>
+    <string name="more_wallpapers">More wallpapers</string>
 </resources>

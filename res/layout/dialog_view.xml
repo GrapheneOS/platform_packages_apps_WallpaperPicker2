@@ -28,18 +28,26 @@
         android:id="@+id/icon"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:tint="@color/color_accent_primary"
+        android:tint="@color/system_primary"
         tools:ignore="UseAppTint" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Headline"
         android:textColor="@color/text_color_primary"
-        android:maxLines="2"
+        android:maxLines="1"
         android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/supporting_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:textColor="@color/system_on_surface_variant" />
 
     <TextView
         android:id="@+id/message"

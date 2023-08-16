@@ -21,7 +21,7 @@ import android.content.Intent
 /** Checks if the device is supporting multi panes' features */
 interface MultiPanesChecker {
     /**
-     * Checks if the device is supporting multi-panes landscape
+     * Checks if the device is supporting multi-panes
      *
      * @param context the Activity's context
      * @return `true` if supported, `false` otherwise.

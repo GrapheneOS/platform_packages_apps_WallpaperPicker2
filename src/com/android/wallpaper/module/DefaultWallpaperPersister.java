@@ -358,13 +358,12 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     public boolean finalizeWallpaperForNextRotation(List<String> attributions, String actionUrl,
             int actionLabelRes, int actionIconRes, String collectionId, int wallpaperId) {
         return saveStaticWallpaperMetadata(attributions, actionUrl, actionLabelRes,
-                actionIconRes, collectionId, wallpaperId);
+                actionIconRes, collectionId, wallpaperId, DEST_HOME_SCREEN);
     }
 
     /**
      * Sets wallpaper image and attributions when a static wallpaper is responsible for presenting
-     * the
-     * current "daily wallpaper".
+     * the current "daily wallpaper".
      */
     private boolean setWallpaperInRotationStatic(Bitmap wallpaperBitmap, List<String> attributions,
             String actionUrl, int actionLabelRes, int actionIconRes, String collectionId) {
@@ -376,7 +375,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         }
 
         return saveStaticWallpaperMetadata(attributions, actionUrl, actionLabelRes,
-                actionIconRes, collectionId, wallpaperId);
+                actionIconRes, collectionId, wallpaperId, DEST_HOME_SCREEN);
     }
 
     @Override
@@ -385,32 +384,32 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             int actionLabelRes,
             int actionIconRes,
             String collectionId,
-            int wallpaperId) {
-        mWallpaperPreferences.clearHomeWallpaperMetadata();
+            int wallpaperId,
+            @Destination int destination) {
+        if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
+            mWallpaperPreferences.clearHomeWallpaperMetadata();
 
-        boolean isLockWallpaperSet = isSeparateLockScreenWallpaperSet();
+            // Persist wallpaper IDs if the rotating wallpaper component
+            mWallpaperPreferences.setHomeWallpaperManagerId(wallpaperId);
 
-        // Persist wallpaper IDs if the rotating wallpaper component
-        mWallpaperPreferences.setHomeWallpaperManagerId(wallpaperId);
+            // Only copy over wallpaper ID to lock wallpaper if no explicit lock wallpaper is set
+            // (so metadata isn't lost if a user explicitly sets a home-only wallpaper).
 
-        // Only copy over wallpaper ID to lock wallpaper if no explicit lock wallpaper is set
-        // (so metadata isn't lost if a user explicitly sets a home-only wallpaper).
-        if (!isLockWallpaperSet) {
-            mWallpaperPreferences.setLockWallpaperId(wallpaperId);
+            mWallpaperPreferences.setHomeWallpaperAttributions(attributions);
+            mWallpaperPreferences.setHomeWallpaperActionUrl(actionUrl);
+            mWallpaperPreferences.setHomeWallpaperActionLabelRes(actionLabelRes);
+            mWallpaperPreferences.setHomeWallpaperActionIconRes(actionIconRes);
+            // Only set base image URL for static Backdrop images, not for rotation.
+            mWallpaperPreferences.setHomeWallpaperBaseImageUrl(null);
+            mWallpaperPreferences.setHomeWallpaperCollectionId(collectionId);
         }
-
-
-        mWallpaperPreferences.setHomeWallpaperAttributions(attributions);
-        mWallpaperPreferences.setHomeWallpaperActionUrl(actionUrl);
-        mWallpaperPreferences.setHomeWallpaperActionLabelRes(actionLabelRes);
-        mWallpaperPreferences.setHomeWallpaperActionIconRes(actionIconRes);
-        // Only set base image URL for static Backdrop images, not for rotation.
-        mWallpaperPreferences.setHomeWallpaperBaseImageUrl(null);
-        mWallpaperPreferences.setHomeWallpaperCollectionId(collectionId);
 
         // Set metadata to lock screen also when the rotating wallpaper so if user sets a home
         // screen-only wallpaper later, these attributions will still be available.
-        if (!isLockWallpaperSet) {
+        if (destination == DEST_LOCK_SCREEN || destination == DEST_BOTH
+                || !isSeparateLockScreenWallpaperSet()) {
+            mWallpaperPreferences.clearLockWallpaperMetadata();
+            mWallpaperPreferences.setLockWallpaperId(wallpaperId);
             mWallpaperPreferences.setLockWallpaperAttributions(attributions);
             mWallpaperPreferences.setLockWallpaperActionUrl(actionUrl);
             mWallpaperPreferences.setLockWallpaperActionLabelRes(actionLabelRes);
@@ -556,25 +555,10 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     }
 
     /**
-     * Returns whether a separate lock-screen (static) wallpaper is set to the WallpaperManager.
+     * Returns whether a separate lock-screen wallpaper is set to the WallpaperManager.
      */
     private boolean isSeparateLockScreenWallpaperSet() {
-        ParcelFileDescriptor lockWallpaperFile =
-                mWallpaperManagerCompat.getWallpaperFile(WallpaperManagerCompat.FLAG_LOCK);
-
-        boolean isLockWallpaperSet = false;
-
-        if (lockWallpaperFile != null) {
-            isLockWallpaperSet = true;
-
-            try {
-                lockWallpaperFile.close();
-            } catch (IOException e) {
-                Log.e(TAG, "Unable to close PFD for lock wallpaper", e);
-            }
-        }
-
-        return isLockWallpaperSet;
+        return mWallpaperManager.getWallpaperId(WallpaperManager.FLAG_LOCK) < 0;
     }
 
     @Override
@@ -848,13 +832,25 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             // cannot be  used to identify a wallpaper image on another device after restore is
             // complete.
             Bitmap lockBitmap = getLockWallpaperBitmap();
+            long bitmapHashCode = 0;
             if (lockBitmap != null) {
                 saveLockWallpaperHashCode(lockBitmap);
+                bitmapHashCode = mWallpaperPreferences.getLockWallpaperHashCode();
+            }
+
+            // If the destination is both, use the home screen bitmap to populate the lock screen
+            // recents list.
+            if (lockBitmap == null
+                    && lockWallpaperId == mWallpaperPreferences.getHomeWallpaperManagerId()) {
+                lockBitmap = mBitmap;
+                bitmapHashCode = mWallpaperPreferences.getHomeWallpaperHashCode();
+            }
+
+            if (lockBitmap != null) {
                 mWallpaperPreferences.storeLatestWallpaper(FLAG_LOCK,
-                        TextUtils.isEmpty(mWallpaper.getWallpaperId())
-                                ? String.valueOf(mWallpaperPreferences.getLockWallpaperHashCode())
-                                : mWallpaper.getWallpaperId(),
-                        mWallpaper, lockBitmap, WallpaperColors.fromBitmap(lockBitmap));
+                        TextUtils.isEmpty(mWallpaper.getWallpaperId()) ? String.valueOf(
+                                bitmapHashCode) : mWallpaper.getWallpaperId(), mWallpaper,
+                        lockBitmap, WallpaperColors.fromBitmap(lockBitmap));
             }
         }
 

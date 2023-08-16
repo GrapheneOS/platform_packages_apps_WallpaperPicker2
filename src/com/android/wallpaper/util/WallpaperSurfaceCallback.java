@@ -76,6 +76,10 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
     private PackageStatusNotifier.Listener mAppStatusListener;
     private PackageStatusNotifier mPackageStatusNotifier;
 
+    private int mWidth = -1;
+
+    private int mHeight = -1;
+
     public WallpaperSurfaceCallback(Context context, View containerView,
             SurfaceView wallpaperSurface, @Nullable Future<ColorInfo> colorFuture,
             @Nullable SurfaceListener listener) {
@@ -117,11 +121,21 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
         if (mListener != null) {
             mListener.onSurfaceCreated();
         }
+        if (mHost != null && mHost.getView() != null) {
+            mWidth = mHost.getView().getWidth();
+            mHeight = mHost.getView().getHeight();
+        }
         mSurfaceCreated = true;
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        if ((mWidth != -1 || mHeight != -1) && (mWidth != width || mHeight != height)) {
+            resizeSurfaceWallpaper();
+        }
+        mWidth = width;
+        mHeight = height;
+    }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
@@ -137,6 +151,9 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
             mHomeImageWallpaper.setImageDrawable(null);
         }
         mPackageStatusNotifier.removeListener(mAppStatusListener);
+        if (mWallpaperSurface.getSurfaceControl() != null) {
+            mWallpaperSurface.getSurfaceControl().release();
+        }
     }
 
     private void releaseHost() {
@@ -173,8 +190,10 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
                 Log.e(TAG, "Couldn't get placeholder from ColorInfo.");
             }
         }
-        mHomeImageWallpaper.setBackgroundColor((placeholder != null) ? placeholder
-                : ResourceUtils.getColorAttr(mContext, android.R.attr.colorSecondary));
+        int bkgColor = (placeholder != null) ? placeholder
+                : ResourceUtils.getColorAttr(mContext, android.R.attr.colorSecondary);
+        mHomeImageWallpaper.setBackgroundColor(bkgColor);
+        mWallpaperSurface.setBackgroundColor(bkgColor);
         mHomeImageWallpaper.measure(makeMeasureSpec(mContainerView.getWidth(), EXACTLY),
                 makeMeasureSpec(mContainerView.getHeight(), EXACTLY));
         mHomeImageWallpaper.layout(0, 0, mContainerView.getWidth(),
@@ -187,6 +206,14 @@ public class WallpaperSurfaceCallback implements SurfaceHolder.Callback {
         mHost.setView(mHomeImageWallpaper, mHomeImageWallpaper.getWidth(),
                 mHomeImageWallpaper.getHeight());
         mWallpaperSurface.setChildSurfacePackage(mHost.getSurfacePackage());
+    }
+
+    private void resizeSurfaceWallpaper() {
+        mHomeImageWallpaper.measure(makeMeasureSpec(mContainerView.getWidth(), EXACTLY),
+                makeMeasureSpec(mContainerView.getHeight(), EXACTLY));
+        mHomeImageWallpaper.layout(0, 0, mContainerView.getWidth(),
+                mContainerView.getHeight());
+        mHost.relayout(mHomeImageWallpaper.getWidth(), mHomeImageWallpaper.getHeight());
     }
 
     @Nullable

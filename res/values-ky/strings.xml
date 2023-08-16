@@ -29,6 +29,10 @@
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Учурда тушкагаз катары орнотулган"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Күнүмдүк тушкагаз"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"Башкы жана кулпуланган экран"</string>
+    <!-- no translation found for choose_a_wallpaper_section_title (1009823506890453891) -->
+    <skip />
+    <!-- no translation found for creative_wallpaper_title (8459226435723103934) -->
+    <skip />
     <string name="home_screen_message" msgid="106444102822522813">"Башкы экран"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Кулпуланган экран"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Башкы жана кулпуланган экран"</string>
@@ -110,7 +114,7 @@
     <string name="accessibility_customize_shown" msgid="590964727831547651">"Ыңгайлаштыруу тактасы көрсөтүлдү"</string>
     <string name="accessibility_info_hidden" msgid="2288603712350168107">"Маалымат жашырылды"</string>
     <string name="accessibility_info_shown" msgid="6626025722456105632">"Маалымат көрсөтүлдү"</string>
-    <string name="settings_snackbar_description" msgid="890168814524778486">"Параметрлерден файлдарды жана медианы иштетиңиз."</string>
+    <string name="settings_snackbar_description" msgid="890168814524778486">"Жөндөөлөрдөн файлдарды жана медианы иштетиңиз."</string>
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Иштетүү"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Сүрөттөрүмдү ачуу"</string>
     <string name="lock_screen_tab" msgid="6672930765010407652">"Экранды кулпулоо"</string>
@@ -118,5 +122,5 @@
     <string name="reset" msgid="4945445169532850631">"Баштапкы абалга келтирүү"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Өзгөртүүлөр жоюлсунбу?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Өзгөртүүлөрүңүз сакталбайт"</string>
-    <string name="more_wallpapers" msgid="7585665124282737376">"Дагы башка тушкагаздар"</string>
+    <string name="more_wallpapers" msgid="8116268433411881705">"Дагы башка тушкагаздар"</string>
 </resources>

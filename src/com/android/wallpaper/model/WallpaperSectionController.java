@@ -232,7 +232,7 @@ public class WallpaperSectionController implements
         if (mOnThemingChanged != null) {
             mOnThemingChanged.observe(mLifecycleOwner, update ->
                     updateWorkspacePreview(mWorkspaceSurface, mWorkspaceSurfaceCallback,
-                            mWallpaperColorsViewModel.getHomeWallpaperColors().getValue())
+                            mWallpaperColorsViewModel.getHomeWallpaperColorsLiveData().getValue())
             );
         }
 
@@ -353,9 +353,12 @@ public class WallpaperSectionController implements
     }
 
     private void showPermissionNeededDialog() {
+        if (mActivity == null) {
+            return;
+        }
         String permissionNeededMessage = mAppContext.getResources().getString(
                 R.string.permission_needed_explanation_go_to_settings);
-        AlertDialog dialog = new AlertDialog.Builder(mAppContext, R.style.LightDialogTheme)
+        AlertDialog dialog = new AlertDialog.Builder(mActivity, R.style.LightDialogTheme)
                 .setMessage(permissionNeededMessage)
                 .setPositiveButton(android.R.string.ok, /* onClickListener= */ null)
                 .setNegativeButton(
@@ -496,7 +499,7 @@ public class WallpaperSectionController implements
 
     private void onHomeWallpaperColorsChanged(WallpaperColors wallpaperColors) {
         if (wallpaperColors != null && wallpaperColors.equals(
-                mWallpaperColorsViewModel.getHomeWallpaperColors().getValue())) {
+                mWallpaperColorsViewModel.getHomeWallpaperColorsLiveData().getValue())) {
             return;
         }
         mWallpaperColorsViewModel.setHomeWallpaperColors(wallpaperColors);
@@ -504,7 +507,7 @@ public class WallpaperSectionController implements
 
     private void onLockWallpaperColorsChanged(WallpaperColors wallpaperColors) {
         if (wallpaperColors != null && wallpaperColors.equals(
-                mWallpaperColorsViewModel.getLockWallpaperColors().getValue())) {
+                mWallpaperColorsViewModel.getLockWallpaperColorsLiveData().getValue())) {
             return;
         }
         mWallpaperColorsViewModel.setLockWallpaperColors(wallpaperColors);
@@ -690,15 +693,12 @@ public class WallpaperSectionController implements
     @Override
     public void onTransitionOut() {
         if (mHomeWallpaperSurface != null) {
-            mHomeWallpaperSurface.setUseAlpha();
             mHomeWallpaperSurface.setAlpha(0f);
         }
         if (mLockWallpaperSurface != null) {
-            mLockWallpaperSurface.setUseAlpha();
             mLockWallpaperSurface.setAlpha(0f);
         }
         if (mWorkspaceSurface != null) {
-            mWorkspaceSurface.setUseAlpha();
             mWorkspaceSurface.setAlpha(0f);
         }
         if (mLockPreviewContainer != null) {

@@ -32,16 +32,19 @@ class WallpaperInteractor(
     /** Returns whether wallpaper picker should handle reload */
     val shouldHandleReload: () -> Boolean = { true },
 ) {
+    val areRecentsAvailable: Boolean = repository.areRecentsAvailable
+    val maxOptions = repository.maxOptions
+
     /** Returns a flow that is updated whenever the wallpaper has been updated */
-    fun wallpaperUpdateEvents(screen: CustomizationSections.Screen): Flow<WallpaperModel> {
+    fun wallpaperUpdateEvents(screen: CustomizationSections.Screen): Flow<WallpaperModel?> {
         return when (screen) {
             CustomizationSections.Screen.LOCK_SCREEN ->
                 previews(WallpaperDestination.LOCK, 1).map { recentWallpapers ->
-                    recentWallpapers[0]
+                    if (recentWallpapers.isEmpty()) null else recentWallpapers[0]
                 }
             CustomizationSections.Screen.HOME_SCREEN ->
                 previews(WallpaperDestination.HOME, 1).map { recentWallpapers ->
-                    recentWallpapers[0]
+                    if (recentWallpapers.isEmpty()) null else recentWallpapers[0]
                 }
         }
     }
@@ -98,9 +101,10 @@ class WallpaperInteractor(
     }
 
     /** Returns a thumbnail for the wallpaper with the given ID. */
-    suspend fun loadThumbnail(wallpaperId: String): Bitmap? {
+    suspend fun loadThumbnail(wallpaperId: String, lastUpdatedTimestamp: Long): Bitmap? {
         return repository.loadThumbnail(
             wallpaperId = wallpaperId,
+            lastUpdatedTimestamp = lastUpdatedTimestamp
         )
     }
 }

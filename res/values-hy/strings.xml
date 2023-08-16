@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Պաստառների կատեգորիաներ"</string>
-    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Պաստառ դնել"</string>
+    <string name="set_wallpaper_button_text" msgid="4426286890442731310">"Օգտագործել որպես պաստառ"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Պաստառը տեղադրվում է…"</string>
     <string name="try_again" msgid="8278874823700921234">"Նորից փորձել"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Չհաջողվեց տեղադրել պաստառը:"</string>
@@ -29,10 +29,14 @@
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Ընթացիկ պաստառ"</string>
     <string name="rotating_wallpaper_presentation_mode_message" msgid="3361676041605733288">"Օրվա պաստառ"</string>
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"Հիմնական էկրան և կողպէկրան"</string>
+    <!-- no translation found for choose_a_wallpaper_section_title (1009823506890453891) -->
+    <skip />
+    <!-- no translation found for creative_wallpaper_title (8459226435723103934) -->
+    <skip />
     <string name="home_screen_message" msgid="106444102822522813">"Հիմնական էկրան"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Կողպէկրան"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Հիմնական էկրան և կողպէկրան"</string>
-    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Որտեղ օգտագործել որպես պաստառ"</string>
+    <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Դնել պաստառ՝"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Հիմնական էկրան"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Կողպէկրան"</string>
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Հիմնական էկրան և կողպէկրան"</string>
@@ -116,7 +120,7 @@
     <string name="lock_screen_tab" msgid="6672930765010407652">"Կողպէկրան"</string>
     <string name="home_screen_tab" msgid="1080445697837877526">"Հիմնական էկրան"</string>
     <string name="reset" msgid="4945445169532850631">"Զրոյացնել"</string>
-    <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Զրոյացնե՞լ փոփոխությունները"</string>
+    <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Չեղարկե՞լ փոփոխությունները"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Ձեր փոփոխությունները չեն պահվի"</string>
-    <string name="more_wallpapers" msgid="7585665124282737376">"Այլ պաստառներ"</string>
+    <string name="more_wallpapers" msgid="8116268433411881705">"Այլ պաստառներ"</string>
 </resources>
