@@ -95,7 +95,7 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
 
     @Override
     public String getWallpaperId() {
-        return UNKNOWN_CURRENT_WALLPAPER_ID;
+        return UNKNOWN_CURRENT_WALLPAPER_ID + mWallpaperManagerFlag;
     }
 
     @Override
