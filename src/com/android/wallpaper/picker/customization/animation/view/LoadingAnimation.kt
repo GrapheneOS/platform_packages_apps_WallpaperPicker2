@@ -327,6 +327,14 @@ class LoadingAnimation(
         revealAnimator?.cancel()
     }
 
+    fun end() {
+        fadeInAnimator?.end()
+        timeAnimator?.end()
+        revealAnimator?.removeAllListeners()
+        revealAnimator?.removeAllUpdateListeners()
+        revealAnimator?.end()
+    }
+
     fun setupRevealAnimation(seed: Long? = null) {
         cancel()
 
