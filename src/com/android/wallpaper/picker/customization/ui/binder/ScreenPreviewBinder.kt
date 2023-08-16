@@ -193,14 +193,13 @@ object ScreenPreviewBinder {
                                 if (isPageTransitionsFeatureEnabled) {
                                     wallpaperConnection?.destroy()
                                     wallpaperConnection = null
-                                    wallpaperIsReadyForReveal = false
                                 }
                             }
 
                             override fun onStop(owner: LifecycleOwner) {
                                 super.onStop(owner)
                                 animationTimeToRestore = loadingAnimation?.getElapsedTime()
-                                loadingAnimation?.cancel()
+                                loadingAnimation?.end()
                                 loadingAnimation = null
                                 // only save the current loading image if this is a configuration
                                 // change restart, and reset to null otherwise, so that reveal
@@ -216,18 +215,16 @@ object ScreenPreviewBinder {
                                         )
                                     } else null
                                 )
+                                wallpaperIsReadyForReveal = false
                                 if (!isPageTransitionsFeatureEnabled) {
                                     wallpaperConnection?.destroy()
                                     wallpaperConnection = null
-                                    wallpaperIsReadyForReveal = false
                                 }
                             }
 
                             override fun onPause(owner: LifecycleOwner) {
                                 super.onPause(owner)
                                 wallpaperConnection?.setVisibility(false)
-                                loadingAnimation?.cancel()
-                                wallpaperIsReadyForReveal = false
                             }
                         }
 
