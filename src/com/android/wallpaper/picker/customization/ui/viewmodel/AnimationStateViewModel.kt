@@ -31,6 +31,8 @@ abstract class AnimationStateViewModel : ViewModel() {
         val drawable: Drawable?,
         /** The elapsed time of the animation */
         val time: Long?,
+        /** The transition progress for fade in animation */
+        val transitionProgress: Float?,
         /** The color used for animation effects */
         val color: Int?,
     )

@@ -20,6 +20,7 @@ package com.android.wallpaper.picker.customization.ui.binder
 import android.app.Activity
 import android.app.WallpaperColors
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -147,6 +148,7 @@ object ScreenPreviewBinder {
         var animationState: AnimationStateViewModel.AnimationState? = null
         var loadingImageDrawable: Drawable? = null
         var animationTimeToRestore: Long? = null
+        var animationTransitionProgress: Float? = null
         var animationColorToRestore: Int? = null
         var currentWallpaperThumbnail: Bitmap? = null
 
@@ -172,6 +174,8 @@ object ScreenPreviewBinder {
                                         // like the saved instance state on the first restart to
                                         // pass through to the second.
                                         animationTimeToRestore = animationState?.time
+                                        animationTransitionProgress =
+                                            animationState?.transitionProgress
                                         animationColorToRestore = animationState?.color
                                         // a null drawable means the loading animation should not
                                         // be played
@@ -198,19 +202,33 @@ object ScreenPreviewBinder {
 
                             override fun onStop(owner: LifecycleOwner) {
                                 super.onStop(owner)
-                                animationTimeToRestore = loadingAnimation?.getElapsedTime()
+                                animationTimeToRestore =
+                                    loadingAnimation?.getElapsedTime() ?: animationTimeToRestore
+                                animationTransitionProgress =
+                                    loadingAnimation?.getTransitionProgress()
+                                        ?: animationTransitionProgress
                                 loadingAnimation?.end()
                                 loadingAnimation = null
-                                // only save the current loading image if this is a configuration
-                                // change restart, and reset to null otherwise, so that reveal
-                                // animation is only played after a wallpaper/color switch and not
-                                // on every resume
+                                // To ensure reveal animation is only played after a theme config
+                                // change from wallpaper/color switch, only save the current loading
+                                // image if this is a configuration change restart and reset to
+                                // null otherwise
                                 animationStateViewModel?.saveAnimationState(
                                     viewModel.screen,
-                                    if (activity.isChangingConfigurations) {
+                                    // Check if activity is changing configurations, and check that
+                                    // the set of changing configurations does not include screen
+                                    // size changes (such as rotation and folding/unfolding device)
+                                    // Note: activity.changingConfigurations is not 100% accurate
+                                    if (
+                                        activity.isChangingConfigurations &&
+                                            (activity.changingConfigurations.and(
+                                                ActivityInfo.CONFIG_SCREEN_SIZE
+                                            ) == 0)
+                                    ) {
                                         AnimationStateViewModel.AnimationState(
                                             loadingImageDrawable,
                                             animationTimeToRestore,
+                                            animationTransitionProgress,
                                             animationColorToRestore,
                                         )
                                     } else null
@@ -277,7 +295,10 @@ object ScreenPreviewBinder {
                                     loadingAnimation?.updateColor(
                                         ColorScheme(seed = colorAccent, darkTheme = night)
                                     )
-                                    loadingAnimation?.setupRevealAnimation(animationTimeToRestore)
+                                    loadingAnimation?.setupRevealAnimation(
+                                        animationTimeToRestore,
+                                        animationTransitionProgress
+                                    )
                                     val isStaticWallpaper =
                                         wallpaperInfo != null && wallpaperInfo !is LiveWallpaperInfo
                                     wallpaperIsReadyForReveal =
