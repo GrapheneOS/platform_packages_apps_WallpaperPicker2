@@ -71,6 +71,7 @@
     <color name="system_surface_container_high">@android:color/system_surface_container_high_light</color>
     <color name="system_surface_container_highest">@android:color/system_surface_container_highest_light</color>
     <color name="system_surface_bright">@android:color/system_surface_bright_light</color>
+    <color name="system_outline">@android:color/system_outline_light</color>
     <color name="system_outline_variant">@android:color/system_outline_variant_light</color>
 
     <!-- UI elements with Dark/Light Theme Variances -->
