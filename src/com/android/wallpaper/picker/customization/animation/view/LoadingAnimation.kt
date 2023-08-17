@@ -335,16 +335,16 @@ class LoadingAnimation(
         revealAnimator?.end()
     }
 
-    fun setupRevealAnimation(seed: Long? = null) {
+    fun setupRevealAnimation(seed: Long? = null, revealTransitionProgress: Float? = null) {
         cancel()
 
         revealOverlay.visibility = View.VISIBLE
 
         elapsedTime = seed ?: (0L..10000L).random()
-        transitionProgress = 1f
+        transitionProgress = revealTransitionProgress ?: 1f
 
         // Fast forward to state at the end of fade in animation
-        blurRadius = MAX_BLUR_PX
+        blurRadius = maxOf(MAX_BLUR_PX * transitionProgress, MIN_BLUR_PX)
         blurEffect =
             RenderEffect.createBlurEffect(
                 blurRadius * pixelDensity,
@@ -352,7 +352,7 @@ class LoadingAnimation(
                 Shader.TileMode.MIRROR
             )
         animationState = AnimationState.FADE_IN_PLAYED
-        loadingShader.setAlpha(1f)
+        loadingShader.setAlpha(transitionProgress)
 
         // Keep clouds moving until we finish loading
         timeAnimator =
@@ -364,6 +364,10 @@ class LoadingAnimation(
 
     fun getElapsedTime(): Long {
         return elapsedTime
+    }
+
+    fun getTransitionProgress(): Float {
+        return transitionProgress
     }
 
     companion object {
