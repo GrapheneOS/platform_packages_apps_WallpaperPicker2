@@ -148,6 +148,7 @@ object ScreenPreviewBinder {
         var animationState: AnimationStateViewModel.AnimationState? = null
         var loadingImageDrawable: Drawable? = null
         var animationTimeToRestore: Long? = null
+        var animationTransitionProgress: Float? = null
         var animationColorToRestore: Int? = null
         var currentWallpaperThumbnail: Bitmap? = null
 
@@ -173,6 +174,8 @@ object ScreenPreviewBinder {
                                         // like the saved instance state on the first restart to
                                         // pass through to the second.
                                         animationTimeToRestore = animationState?.time
+                                        animationTransitionProgress =
+                                            animationState?.transitionProgress
                                         animationColorToRestore = animationState?.color
                                         // a null drawable means the loading animation should not
                                         // be played
@@ -199,7 +202,11 @@ object ScreenPreviewBinder {
 
                             override fun onStop(owner: LifecycleOwner) {
                                 super.onStop(owner)
-                                animationTimeToRestore = loadingAnimation?.getElapsedTime()
+                                animationTimeToRestore =
+                                    loadingAnimation?.getElapsedTime() ?: animationTimeToRestore
+                                animationTransitionProgress =
+                                    loadingAnimation?.getTransitionProgress()
+                                        ?: animationTransitionProgress
                                 loadingAnimation?.end()
                                 loadingAnimation = null
                                 // To ensure reveal animation is only played after a theme config
@@ -221,6 +228,7 @@ object ScreenPreviewBinder {
                                         AnimationStateViewModel.AnimationState(
                                             loadingImageDrawable,
                                             animationTimeToRestore,
+                                            animationTransitionProgress,
                                             animationColorToRestore,
                                         )
                                     } else null
@@ -287,7 +295,10 @@ object ScreenPreviewBinder {
                                     loadingAnimation?.updateColor(
                                         ColorScheme(seed = colorAccent, darkTheme = night)
                                     )
-                                    loadingAnimation?.setupRevealAnimation(animationTimeToRestore)
+                                    loadingAnimation?.setupRevealAnimation(
+                                        animationTimeToRestore,
+                                        animationTransitionProgress
+                                    )
                                     val isStaticWallpaper =
                                         wallpaperInfo != null && wallpaperInfo !is LiveWallpaperInfo
                                     wallpaperIsReadyForReveal =
