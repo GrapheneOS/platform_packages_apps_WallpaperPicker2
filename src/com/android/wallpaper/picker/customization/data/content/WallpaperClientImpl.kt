@@ -51,15 +51,17 @@ class WallpaperClientImpl(
         EnumMap(WallpaperDestination::class.java)
 
     init {
-        context.contentResolver.registerContentObserver(
-            LIST_RECENTS_URI,
-            /* notifyForDescendants= */ true,
-            object : ContentObserver(null) {
-                override fun onChange(selfChange: Boolean) {
-                    cachedRecents.clear()
-                }
-            },
-        )
+        if (areRecentsAvailable()) {
+            context.contentResolver.registerContentObserver(
+                LIST_RECENTS_URI,
+                /* notifyForDescendants= */ true,
+                object : ContentObserver(null) {
+                    override fun onChange(selfChange: Boolean) {
+                        cachedRecents.clear()
+                    }
+                },
+            )
+        }
     }
 
     override fun recentWallpapers(
