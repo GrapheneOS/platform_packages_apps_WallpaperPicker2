@@ -182,7 +182,8 @@ open class TestInjector : Injector {
         mode: Int,
         viewAsHome: Boolean,
         viewFullScreen: Boolean,
-        testingModeEnabled: Boolean
+        testingModeEnabled: Boolean,
+        isAssetIdPresent: Boolean
     ): Fragment {
         val args = Bundle()
         args.putParcelable(PreviewFragment.ARG_WALLPAPER, wallpaperInfo)

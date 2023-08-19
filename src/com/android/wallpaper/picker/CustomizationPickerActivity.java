@@ -259,8 +259,9 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
     }
 
     @Override
-    public void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome) {
-        mDelegate.showViewOnlyPreview(wallpaperInfo, isViewAsHome);
+    public void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome,
+            boolean isAssetIdPresent) {
+        mDelegate.showViewOnlyPreview(wallpaperInfo, isViewAsHome, isAssetIdPresent);
     }
 
     @Override

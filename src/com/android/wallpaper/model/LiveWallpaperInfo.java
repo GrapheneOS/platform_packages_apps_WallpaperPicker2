@@ -408,10 +408,11 @@ public class LiveWallpaperInfo extends WallpaperInfo {
 
     @Override
     public void showPreview(Activity srcActivity, InlinePreviewIntentFactory factory,
-                            int requestCode) {
+                            int requestCode, boolean isAssetIdPresent) {
         //Only use internal live picker if available, otherwise, default to the Framework one
         if (factory.shouldUseInternalLivePicker(srcActivity)) {
-            srcActivity.startActivityForResult(factory.newIntent(srcActivity, this), requestCode);
+            srcActivity.startActivityForResult(factory.newIntent(srcActivity, this,
+                    isAssetIdPresent), requestCode);
         } else {
             Intent preview = new Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
             preview.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, mInfo.getComponent());

@@ -100,6 +100,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
     public @interface PreviewMode {
     }
 
+    public static final String ARG_IS_ASSET_ID_PRESENT = "is_asset_id_present";
     public static final String ARG_WALLPAPER = "wallpaper";
     public static final String ARG_PREVIEW_MODE = "preview_mode";
     public static final String ARG_VIEW_AS_HOME = "view_as_home";
@@ -256,7 +257,7 @@ public abstract class PreviewFragment extends AppbarFragment implements
             return;
         }
         startActivity(FullPreviewActivity.newIntent(getActivity(), wallpaperInfo,
-                        /* viewAsHome= */ mLastSelectedTabPositionOptional.orElse(0) == 0),
+                        /* viewAsHome= */ mLastSelectedTabPositionOptional.orElse(0) == 0, false),
                 ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
     }
 
@@ -300,7 +301,8 @@ public abstract class PreviewFragment extends AppbarFragment implements
             });
             setUpToolbarMenuClickListener(R.id.action_set_wallpaper,
                     view -> mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(),
-                            this, mWallpaper instanceof LiveWallpaperInfo));
+                            this, mWallpaper instanceof LiveWallpaperInfo,
+                            /* isHomeOption= */ false, /* isLockOption= */ false));
         }
 
         mFullScreenAnimation.ensureBottomActionBarIsCorrectlyLocated();
@@ -403,8 +405,11 @@ public abstract class PreviewFragment extends AppbarFragment implements
     }
 
     protected void onSetWallpaperClicked(View button, WallpaperInfo wallpaperInfo) {
+        // We don't expect this to be called since PreviewFragment is deprecated in favour of
+        // PreviewFragment2
         mWallpaperSetter.requestDestination(getActivity(), getFragmentManager(), this,
-                wallpaperInfo instanceof LiveWallpaperInfo);
+                wallpaperInfo instanceof LiveWallpaperInfo,
+                true, true);
     }
 
     protected void setUpTabs(TabLayout tabs) {

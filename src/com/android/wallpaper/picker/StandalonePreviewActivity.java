@@ -169,7 +169,7 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
                 PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
                 /* viewAsHome= */ true,
                 /* viewFullScreen= */ false,
-                testingModeEnabled);
+                testingModeEnabled, false);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, fragment)
                 .commit();
