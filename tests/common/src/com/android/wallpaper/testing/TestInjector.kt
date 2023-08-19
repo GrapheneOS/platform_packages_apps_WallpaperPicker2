@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.testing
 
-import android.app.WallpaperManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -54,7 +53,6 @@ import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.ImagePreviewFragment
 import com.android.wallpaper.picker.MyPhotosStarter
 import com.android.wallpaper.picker.PreviewFragment
-import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperSnapshotRestorer
@@ -282,12 +280,7 @@ open class TestInjector : Injector {
                     repository =
                         WallpaperRepository(
                             scope = getApplicationCoroutineScope(),
-                            client =
-                                WallpaperClientImpl(
-                                    context = context,
-                                    infoFactory = getCurrentWallpaperInfoFactory(context),
-                                    wallpaperManager = WallpaperManager.getInstance(context)
-                                ),
+                            client = FakeWallpaperClient(),
                             wallpaperPreferences = getPreferences(context = context),
                             backgroundDispatcher = Dispatchers.IO,
                         ),

@@ -141,6 +141,8 @@ object ScreenPreviewBinder {
         previewView.radius =
             previewView.resources.getDimension(R.dimen.wallpaper_picker_entry_card_corner_radius)
 
+        previewView.setOnClickListener { viewModel.onPreviewClicked?.invoke() }
+
         var previewSurfaceCallback: WorkspaceSurfaceHolderCallback? = null
         var wallpaperSurfaceCallback: WallpaperSurfaceCallback? = null
         var wallpaperConnection: WallpaperConnection? = null
