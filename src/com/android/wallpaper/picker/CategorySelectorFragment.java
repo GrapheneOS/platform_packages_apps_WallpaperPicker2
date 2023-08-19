@@ -426,7 +426,7 @@ public class CategorySelectorFragment extends AppbarFragment {
                 wallpaper.showPreview(activity,
                         new PreviewActivity.PreviewActivityIntentFactory(),
                         wallpaper instanceof LiveWallpaperInfo ? PREVIEW_LIVE_WALLPAPER_REQUEST_CODE
-                                : PREVIEW_WALLPAPER_REQUEST_CODE);
+                                : PREVIEW_WALLPAPER_REQUEST_CODE, true);
                 return;
             }
 
@@ -623,7 +623,7 @@ public class CategorySelectorFragment extends AppbarFragment {
                         new PreviewActivity.PreviewActivityIntentFactory(),
                         wallpaper instanceof LiveWallpaperInfo
                                 ? PREVIEW_LIVE_WALLPAPER_REQUEST_CODE
-                                : PREVIEW_WALLPAPER_REQUEST_CODE);
+                                : PREVIEW_WALLPAPER_REQUEST_CODE, true);
                 return;
             }
 

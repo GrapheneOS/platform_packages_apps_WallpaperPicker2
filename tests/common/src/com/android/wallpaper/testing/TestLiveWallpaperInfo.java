@@ -164,9 +164,11 @@ public class TestLiveWallpaperInfo extends LiveWallpaperInfo {
 
     @Override
     public void showPreview(Activity srcActivity,
-            InlinePreviewIntentFactory inlinePreviewIntentFactory, int requestCode) {
+            InlinePreviewIntentFactory inlinePreviewIntentFactory, int requestCode,
+            boolean isAssetIdPresent) {
         srcActivity.startActivityForResult(
-                inlinePreviewIntentFactory.newIntent(srcActivity, this), requestCode);
+                inlinePreviewIntentFactory.newIntent(srcActivity, this, isAssetIdPresent),
+                requestCode);
     }
 
     @Override

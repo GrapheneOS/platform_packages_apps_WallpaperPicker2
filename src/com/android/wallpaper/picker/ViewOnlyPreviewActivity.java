@@ -46,8 +46,9 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
     }
 
     protected static Intent newIntent(Context context, WallpaperInfo wallpaper,
-            boolean isVewAsHome) {
-        return newIntent(context, wallpaper).putExtra(EXTRA_VIEW_AS_HOME, isVewAsHome);
+            boolean isVewAsHome, boolean isAssetIdPresent) {
+        return newIntent(context, wallpaper).putExtra(EXTRA_VIEW_AS_HOME, isVewAsHome)
+                        .putExtra(IS_ASSET_ID_PRESENT, isAssetIdPresent);
     }
 
     @Override
@@ -65,13 +66,14 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
             boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
             boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, true);
+            boolean isAssetIdPresent = intent.getBooleanExtra(IS_ASSET_ID_PRESENT, true);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context */ this,
                     wallpaper,
                     PreviewFragment.MODE_VIEW_ONLY,
                     viewAsHome,
                     /* viewFullScreen= */ false,
-                    testingModeEnabled);
+                    testingModeEnabled, isAssetIdPresent);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();
@@ -96,7 +98,8 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
         private boolean mIsViewAsHome;
 
         @Override
-        public Intent newIntent(Context context, WallpaperInfo wallpaper) {
+        public Intent newIntent(Context context, WallpaperInfo wallpaper,
+                boolean isAssetIdPresent) {
             LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
             final boolean isMultiPanel = multiPanesChecker.isMultiPanesEnabled(context);
             final BaseFlags flags = InjectorProvider.getInjector().getFlags();
@@ -107,11 +110,13 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
 
             // Launch a full preview activity for devices supporting multipanel mode
             if (isMultiPanel) {
-                return FullPreviewActivity.newIntent(context, wallpaper, mIsViewAsHome);
+                return FullPreviewActivity.newIntent(context, wallpaper, mIsViewAsHome,
+                        isAssetIdPresent);
             }
 
             if (mIsHomeAndLockPreviews) {
-                return ViewOnlyPreviewActivity.newIntent(context, wallpaper, mIsViewAsHome);
+                return ViewOnlyPreviewActivity.newIntent(context, wallpaper, mIsViewAsHome,
+                        isAssetIdPresent);
             }
             return ViewOnlyPreviewActivity.newIntent(context, wallpaper);
         }

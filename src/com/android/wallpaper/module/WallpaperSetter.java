@@ -337,12 +337,15 @@ public class WallpaperSetter {
      * @param isLiveWallpaper whether the wallpaper that we want to set is a live wallpaper.
      * @param listener        {@link SetWallpaperDialogFragment.Listener} that will receive the
      *                        response.
+     * @param isLockOptionAllowed whether the wallpaper we want to set can be set on lockscreen
+     * @param isHomeOptionAllowed whether the wallpaper we want to set can be set on homescreen
      * @see Destination
      */
     public void requestDestination(Activity activity, FragmentManager fragmentManager,
-            Listener listener, boolean isLiveWallpaper) {
+            Listener listener, boolean isLiveWallpaper, boolean isHomeOptionAllowed,
+            boolean isLockOptionAllowed) {
         requestDestination(activity, fragmentManager, R.string.set_wallpaper_dialog_message,
-                listener, isLiveWallpaper);
+                listener, isLiveWallpaper, isHomeOptionAllowed, isLockOptionAllowed);
     }
 
     /**
@@ -353,10 +356,13 @@ public class WallpaperSetter {
      * @param listener        {@link SetWallpaperDialogFragment.Listener} that will receive the
      *                        response.
      * @param titleResId      title for the dialog
+     * @param isHomeOption    whether the wallpaper we want to set can be set on homescreen
+     * @param isLockOption    whether the wallpaper we want to set can be set on lockscreen
      * @see Destination
      */
     public void requestDestination(Activity activity, FragmentManager fragmentManager,
-            @StringRes int titleResId, Listener listener, boolean isLiveWallpaper) {
+            @StringRes int titleResId, Listener listener, boolean isLiveWallpaper,
+            boolean isHomeOption, boolean isLockOption) {
         saveAndLockScreenOrientationIfNeeded(activity);
         Listener listenerWrapper = new Listener() {
             @Override
@@ -381,6 +387,10 @@ public class WallpaperSetter {
         SetWallpaperDialogFragment setWallpaperDialog = new SetWallpaperDialogFragment();
         setWallpaperDialog.setTitleResId(titleResId);
         setWallpaperDialog.setListener(listenerWrapper);
+        if (isLiveWallpaper) {
+            setWallpaperDialog.setHomeOptionAvailable(isHomeOption);
+            setWallpaperDialog.setLockOptionAvailable(isLockOption);
+        }
         if (wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
             setWallpaperDialog.show(fragmentManager, TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
             return;

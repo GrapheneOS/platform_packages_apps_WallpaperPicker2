@@ -27,6 +27,7 @@ interface WallpaperPreviewFragmentManager {
         mode: Int,
         viewAsHome: Boolean,
         viewFullScreen: Boolean,
-        testingModeEnabled: Boolean
+        testingModeEnabled: Boolean,
+        isAssetIdPresent: Boolean
     ): Fragment
 }

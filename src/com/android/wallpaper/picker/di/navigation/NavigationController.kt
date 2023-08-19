@@ -58,6 +58,7 @@ interface NavigationController {
         viewFullScreen: Boolean,
         testingModeEnabled: Boolean,
         @IdRes viewId: Int,
-        transition: Transition
+        transition: Transition,
+        isAssetIdPresent: Boolean
     )
 }

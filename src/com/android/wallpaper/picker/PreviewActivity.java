@@ -45,9 +45,11 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
     /**
      * Returns a new Intent with the provided WallpaperInfo instance put as an extra.
      */
-    public static Intent newIntent(Context packageContext, WallpaperInfo wallpaperInfo) {
+    public static Intent newIntent(Context packageContext, WallpaperInfo wallpaperInfo,
+            boolean isAssetIdPresent) {
         Intent intent = new Intent(packageContext, PreviewActivity.class);
         intent.putExtra(EXTRA_WALLPAPER_INFO, wallpaperInfo);
+        intent.putExtra(IS_ASSET_ID_PRESENT, isAssetIdPresent);
         return intent;
     }
 
@@ -65,14 +67,18 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
             Intent intent = getIntent();
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
             boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, false);
-            boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
+            boolean isAssetIdPresent = intent.getBooleanExtra(IS_ASSET_ID_PRESENT,
+                    false);
+            boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED,
+                    false);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context */ this,
                     wallpaper,
                     PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
                     viewAsHome,
                     /* viewFullScreen= */ false,
-                    testingModeEnabled);
+                    testingModeEnabled,
+                    isAssetIdPresent);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();
@@ -104,7 +110,7 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
                         PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
                         true,
                         /* viewFullScreen= */ false,
-                        false);
+                        /* testingModeEnabled= */ false, /* isAssetIdPresent= */ true);
                 fm.beginTransaction()
                         .replace(R.id.fragment_container, fragment)
                         .commit();
@@ -117,7 +123,8 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
      */
     public static class PreviewActivityIntentFactory implements InlinePreviewIntentFactory {
         @Override
-        public Intent newIntent(Context context, WallpaperInfo wallpaper) {
+        public Intent newIntent(Context context, WallpaperInfo wallpaper,
+                boolean isAssetIdPresent) {
             final BaseFlags flags = InjectorProvider.getInjector().getFlags();
             LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
             final boolean isMultiPanel = multiPanesChecker.isMultiPanesEnabled(context);
@@ -131,8 +138,7 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
             if (isMultiPanel) {
                 return FullPreviewActivity.newIntent(context, wallpaper);
             }
-
-            return PreviewActivity.newIntent(context, wallpaper);
+            return PreviewActivity.newIntent(context, wallpaper, isAssetIdPresent);
         }
     }
 }

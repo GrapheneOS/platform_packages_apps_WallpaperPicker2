@@ -352,12 +352,13 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     /**
      * Shows the view-only preview activity for the given wallpaper.
      */
-    public void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome) {
+    public void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome,
+            boolean isAssetIdPresent) {
         ((ViewOnlyPreviewActivityIntentFactory) mViewOnlyPreviewIntentFactory).setAsHomePreview(
                 /* isHomeAndLockPreviews= */ true, isViewAsHome);
         wallpaperInfo.showPreview(
                 mActivity, mViewOnlyPreviewIntentFactory,
-                VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE);
+                VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE, isAssetIdPresent);
     }
 
     /**
@@ -481,7 +482,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
 
                 mWallpaperPersister.setWallpaperInfoInPreview(imageWallpaper);
                 imageWallpaper.showPreview(mActivity, getPreviewIntentFactory(),
-                        PREVIEW_WALLPAPER_REQUEST_CODE);
+                        PREVIEW_WALLPAPER_REQUEST_CODE, true);
                 return false;
             case PREVIEW_LIVE_WALLPAPER_REQUEST_CODE:
                 populateCategories(/* forceRefresh= */ true);
