@@ -54,8 +54,9 @@ public class FullPreviewActivity extends BasePreviewActivity implements AppbarFr
      * put as an extra.
      */
     public static Intent newIntent(Context packageContext, WallpaperInfo wallpaperInfo,
-            boolean viewAsHome) {
-        return newIntent(packageContext, wallpaperInfo).putExtra(EXTRA_VIEW_AS_HOME, viewAsHome);
+            boolean viewAsHome, boolean isAssetIdPresent) {
+        return newIntent(packageContext, wallpaperInfo).putExtra(EXTRA_VIEW_AS_HOME, viewAsHome)
+                .putExtra(IS_ASSET_ID_PRESENT, isAssetIdPresent);
     }
 
     @Override
@@ -76,6 +77,7 @@ public class FullPreviewActivity extends BasePreviewActivity implements AppbarFr
             Intent intent = getIntent();
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
             boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, false);
+            boolean isAssetIDPresent = intent.getBooleanExtra(IS_ASSET_ID_PRESENT, false);
             boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context= */ this,
@@ -83,7 +85,7 @@ public class FullPreviewActivity extends BasePreviewActivity implements AppbarFr
                     PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
                     viewAsHome,
                     /* viewFullScreen= */ true,
-                    testingModeEnabled);
+                    testingModeEnabled, isAssetIDPresent);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();

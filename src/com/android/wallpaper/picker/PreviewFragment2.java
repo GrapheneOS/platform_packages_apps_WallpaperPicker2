@@ -17,6 +17,7 @@ package com.android.wallpaper.picker;
 
 import static android.view.View.VISIBLE;
 
+import static com.android.wallpaper.picker.PreviewFragment.ARG_IS_ASSET_ID_PRESENT;
 import static com.android.wallpaper.picker.PreviewFragment.ARG_VIEW_AS_HOME;
 import static com.android.wallpaper.picker.PreviewFragment.ARG_WALLPAPER;
 
@@ -108,6 +109,18 @@ public abstract class PreviewFragment2 extends Fragment implements WallpaperColo
 
     protected ProgressBar mProgressBar;
 
+    private boolean mIsViewAsHome;
+
+    /**
+     * We create an instance of WallpaperInfo from CurrentWallpaperInfo when a user taps on
+     * the preview of a wallpapers in the wallpaper picker main screen. However, there are
+     * other instances as well in which an instance of the specific WallpaperInfo is created. This
+     * variable is used in order to identify whether the instance created has an assetId or not.
+     * This is needed for restricting the destination where a wallpaper can be set after editing
+     * it.
+     */
+    private boolean mIsAssetIdPresent;
+
     // The system "short" animation time duration, in milliseconds. This
     // duration is ideal for subtle animations or animations that occur
     // very frequently.
@@ -165,9 +178,9 @@ public abstract class PreviewFragment2 extends Fragment implements WallpaperColo
         super.onCreate(savedInstanceState);
         Bundle args = requireArguments();
         mWallpaper = args.getParcelable(ARG_WALLPAPER);
-        boolean viewAsHome = args.getBoolean(ARG_VIEW_AS_HOME);
-        mInitSelectedTab = viewAsHome ? DuoTabs.TAB_SECONDARY
-                : DuoTabs.TAB_PRIMARY;
+        mIsViewAsHome = args.getBoolean(ARG_VIEW_AS_HOME);
+        mIsAssetIdPresent = args.getBoolean(ARG_IS_ASSET_ID_PRESENT);
+        mInitSelectedTab = mIsViewAsHome ? DuoTabs.TAB_SECONDARY : DuoTabs.TAB_PRIMARY;
         Context appContext = requireContext().getApplicationContext();
         Injector injector = InjectorProvider.getInjector();
 
@@ -497,12 +510,31 @@ public abstract class PreviewFragment2 extends Fragment implements WallpaperColo
     }
 
     private void showDestinationSelectionDialogForWallpaper(WallpaperInfo wallpaperInfo) {
+
+        // This logic is implemented for the editing of live wallpapers. The purpose is to
+        // restrict users to set the edited creative wallpaper only to the destination from
+        // where they originally started the editing process. For instance, if they began editing
+        // by clicking on the homescreen preview, they would be allowed to set the wallpaper on the
+        // homescreen and both the homescreen and lockscreen. On the other hand, if they initiated
+        // editing by clicking on the lockscreen preview, they would only be allowed to set the
+        // wallpaper on the lockscreen and both the homescreen and lockscreen. It's essential to
+        // note that this restriction only applies when the editing process is started by tapping
+        // on the preview available on the wallpaper picker home page.
+        boolean isLockOption = true;
+        boolean isHomeOption = true;
+        if (wallpaperInfo instanceof LiveWallpaperInfo) {
+            if (!mIsAssetIdPresent) {
+                isHomeOption = mIsViewAsHome;
+                isLockOption = !mIsViewAsHome;
+            }
+        }
+
         mWallpaperSetter.requestDestination(getActivity(), getParentFragmentManager(),
                 destination -> {
                     mSetWallpaperViewModel.setDestination(destination);
                     setWallpaper(destination);
                 },
-                wallpaperInfo instanceof LiveWallpaperInfo);
+                wallpaperInfo instanceof LiveWallpaperInfo, isHomeOption, isLockOption);
     }
 
     protected void showSetWallpaperErrorDialog() {

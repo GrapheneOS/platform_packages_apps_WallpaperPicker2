@@ -31,7 +31,8 @@ class DefaultWallpaperPreviewFragmentManager : WallpaperPreviewFragmentManager {
         @PreviewFragment.PreviewMode mode: Int,
         viewAsHome: Boolean,
         viewFullScreen: Boolean,
-        testingModeEnabled: Boolean
+        testingModeEnabled: Boolean,
+        isAssetIdPresent: Boolean
     ): Fragment {
         val args = Bundle()
         args.putParcelable(PreviewFragment.ARG_WALLPAPER, wallpaperInfo)
@@ -39,6 +40,8 @@ class DefaultWallpaperPreviewFragmentManager : WallpaperPreviewFragmentManager {
         args.putBoolean(PreviewFragment.ARG_VIEW_AS_HOME, viewAsHome)
         args.putBoolean(PreviewFragment.ARG_FULL_SCREEN, viewFullScreen)
         args.putBoolean(PreviewFragment.ARG_TESTING_MODE_ENABLED, testingModeEnabled)
+        args.putBoolean(PreviewFragment.ARG_IS_ASSET_ID_PRESENT, isAssetIdPresent)
+
         val fragment =
             if (wallpaperInfo is LiveWallpaperInfo) LivePreviewFragment()
             else ImagePreviewFragment()

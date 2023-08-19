@@ -276,7 +276,7 @@ public class CreativeWallpaperInfo extends LiveWallpaperInfo {
      * Returns true if this wallpaper can be deleted.
      */
     public boolean canBeDeleted() {
-        return !TextUtils.isEmpty(mDeleteUri.toString());
+        return mDeleteUri != null && !TextUtils.isEmpty(mDeleteUri.toString());
     }
 
     @Override

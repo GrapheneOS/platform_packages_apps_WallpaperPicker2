@@ -37,6 +37,8 @@ public abstract class BasePreviewActivity extends BaseActivity {
             "com.android.wallpaper.picker.view_as_home";
     public static final String EXTRA_TESTING_MODE_ENABLED =
             "com.android.wallpaper.picker.testing_mode_enabled";
+    public static final String IS_ASSET_ID_PRESENT =
+            "com.android.wallpaper.picker.asset_id_present";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

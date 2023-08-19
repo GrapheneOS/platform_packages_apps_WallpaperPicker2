@@ -90,7 +90,8 @@ interface Injector {
         @PreviewFragment.PreviewMode mode: Int,
         viewAsHome: Boolean,
         viewFullScreen: Boolean,
-        testingModeEnabled: Boolean
+        testingModeEnabled: Boolean,
+        isAssetIdPresent: Boolean
     ): Fragment
 
     fun getRequester(context: Context): Requester
