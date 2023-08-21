@@ -78,7 +78,7 @@ internal constructor(
     private var systemFeatureChecker: SystemFeatureChecker? = null
     private var userEventLogger: UserEventLogger? = null
     private var wallpaperPersister: WallpaperPersister? = null
-    private var prefs: WallpaperPreferences? = null
+    @Inject lateinit var prefs: WallpaperPreferences
     private var wallpaperPreviewFragmentManager: WallpaperPreviewFragmentManager? = null
     private var wallpaperRefresher: WallpaperRefresher? = null
     private var wallpaperRotationRefresher: WallpaperRotationRefresher? = null
@@ -259,7 +259,7 @@ internal constructor(
 
     @Synchronized
     override fun getPreferences(context: Context): WallpaperPreferences {
-        return prefs ?: DefaultWallpaperPreferences(context.applicationContext).also { prefs = it }
+        return prefs
     }
 
     @Synchronized
