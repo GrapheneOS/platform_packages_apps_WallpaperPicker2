@@ -91,6 +91,7 @@ open class TestInjector : Injector {
     private var wallpaperInteractor: WallpaperInteractor? = null
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
     private var wallpaperColorsViewModel: WallpaperColorsViewModel? = null
+    private var wallpaperClient: FakeWallpaperClient? = null
 
     override fun getApplicationCoroutineScope(): CoroutineScope {
         return appScope ?: CoroutineScope(Dispatchers.Main).also { appScope = it }
@@ -281,7 +282,7 @@ open class TestInjector : Injector {
                     repository =
                         WallpaperRepository(
                             scope = getApplicationCoroutineScope(),
-                            client = FakeWallpaperClient(),
+                            client = getWallpaperClient(),
                             wallpaperPreferences = getPreferences(context = context),
                             backgroundDispatcher = Dispatchers.IO,
                         ),
@@ -309,5 +310,9 @@ open class TestInjector : Injector {
 
     override fun isCurrentSelectedColorPreset(context: Context): Boolean {
         return false
+    }
+
+    fun getWallpaperClient(): FakeWallpaperClient {
+        return wallpaperClient ?: FakeWallpaperClient().also { wallpaperClient = it }
     }
 }
