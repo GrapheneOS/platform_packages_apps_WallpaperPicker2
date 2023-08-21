@@ -485,7 +485,7 @@ public abstract class PreviewFragment2 extends Fragment implements WallpaperColo
                 == View.LAYOUT_DIRECTION_RTL;
     }
 
-    private void onSetWallpaperSuccess() {
+    protected void onSetWallpaperSuccess() {
         Activity activity = getActivity();
         if (activity == null) {
             return;
