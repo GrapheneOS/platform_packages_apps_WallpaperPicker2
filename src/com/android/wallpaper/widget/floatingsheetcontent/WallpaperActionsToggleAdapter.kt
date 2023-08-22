@@ -39,8 +39,8 @@ class WallpaperActionsToggleAdapter(
         val textView: TextView
         val switchView: Switch
         init {
-            textView = v.findViewById(R.id.wallpaper_action_switch_label)
-            switchView = v.findViewById(R.id.wallpaper_action_switch)
+            textView = v.requireViewById(R.id.wallpaper_action_switch_label)
+            switchView = v.requireViewById(R.id.wallpaper_action_switch)
         }
     }
 
