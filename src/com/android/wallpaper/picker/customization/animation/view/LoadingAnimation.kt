@@ -191,21 +191,25 @@ class LoadingAnimation(
                 addListener(
                     object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator) {
-                            animationState = AnimationState.REVEAL_PLAYED
-
-                            revealOverlay.setRenderEffect(null)
-                            revealOverlay.visibility = View.INVISIBLE
-
-                            // Stop turbulence and reset everything.
-                            timeAnimator?.cancel()
-                            blurRadius = MIN_BLUR_PX
-                            transitionProgress = 0f
+                            resetCircularRevealAnimation()
                         }
                     }
                 )
 
                 start()
             }
+    }
+
+    private fun resetCircularRevealAnimation() {
+        animationState = AnimationState.REVEAL_PLAYED
+
+        revealOverlay.setRenderEffect(null)
+        revealOverlay.visibility = View.INVISIBLE
+
+        // Stop turbulence and reset everything.
+        timeAnimator?.cancel()
+        blurRadius = MIN_BLUR_PX
+        transitionProgress = 0f
     }
 
     private fun playFadeRevealAnimation() {
@@ -236,19 +240,23 @@ class LoadingAnimation(
                 addListener(
                     object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator) {
-                            animationState = AnimationState.FADE_OUT_PLAYED
-
-                            revealOverlay.setRenderEffect(null)
-
-                            // Stop turbulence and reset everything.
-                            timeAnimator?.cancel()
-                            blurRadius = MIN_BLUR_PX
-                            transitionProgress = 0f
+                            resetFadeRevealAnimation()
                         }
                     }
                 )
                 start()
             }
+    }
+
+    private fun resetFadeRevealAnimation() {
+        animationState = AnimationState.FADE_OUT_PLAYED
+
+        revealOverlay.setRenderEffect(null)
+
+        // Stop turbulence and reset everything.
+        timeAnimator?.cancel()
+        blurRadius = MIN_BLUR_PX
+        transitionProgress = 0f
     }
 
     fun updateColor(colorScheme: ColorScheme) {
@@ -319,6 +327,7 @@ class LoadingAnimation(
         }
     }
 
+    /** Cancels the animation. Unlike end() , cancel() causes the animation to stop in its tracks */
     fun cancel() {
         fadeInAnimator?.cancel()
         timeAnimator?.cancel()
@@ -327,12 +336,17 @@ class LoadingAnimation(
         revealAnimator?.cancel()
     }
 
+    /** Ends the animation, and causes the animation to skip to the end state */
     fun end() {
         fadeInAnimator?.end()
         timeAnimator?.end()
         revealAnimator?.removeAllListeners()
         revealAnimator?.removeAllUpdateListeners()
         revealAnimator?.end()
+        when (revealType) {
+            RevealType.CIRCULAR -> resetCircularRevealAnimation()
+            RevealType.FADE -> resetFadeRevealAnimation()
+        }
     }
 
     fun setupRevealAnimation(seed: Long? = null, revealTransitionProgress: Float? = null) {
