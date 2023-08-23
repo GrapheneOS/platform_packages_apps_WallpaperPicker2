@@ -20,31 +20,31 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
-import com.android.wallpaper.picker.ImagePreviewFragment
-import com.android.wallpaper.picker.LivePreviewFragment
-import com.android.wallpaper.picker.PreviewFragment
+import com.android.wallpaper.picker.ImagePreviewFragment2
+import com.android.wallpaper.picker.LivePreviewFragment2
+import com.android.wallpaper.picker.PreviewFragment2
 
 class DefaultWallpaperPreviewFragmentManager : WallpaperPreviewFragmentManager {
     override fun getPreviewFragment(
         context: Context,
         wallpaperInfo: WallpaperInfo,
-        @PreviewFragment.PreviewMode mode: Int,
+        @PreviewFragment2.PreviewMode mode: Int,
         viewAsHome: Boolean,
         viewFullScreen: Boolean,
         testingModeEnabled: Boolean,
         isAssetIdPresent: Boolean
     ): Fragment {
         val args = Bundle()
-        args.putParcelable(PreviewFragment.ARG_WALLPAPER, wallpaperInfo)
-        args.putInt(PreviewFragment.ARG_PREVIEW_MODE, mode)
-        args.putBoolean(PreviewFragment.ARG_VIEW_AS_HOME, viewAsHome)
-        args.putBoolean(PreviewFragment.ARG_FULL_SCREEN, viewFullScreen)
-        args.putBoolean(PreviewFragment.ARG_TESTING_MODE_ENABLED, testingModeEnabled)
-        args.putBoolean(PreviewFragment.ARG_IS_ASSET_ID_PRESENT, isAssetIdPresent)
+        args.putParcelable(PreviewFragment2.ARG_WALLPAPER, wallpaperInfo)
+        args.putInt(PreviewFragment2.ARG_PREVIEW_MODE, mode)
+        args.putBoolean(PreviewFragment2.ARG_VIEW_AS_HOME, viewAsHome)
+        args.putBoolean(PreviewFragment2.ARG_FULL_SCREEN, viewFullScreen)
+        args.putBoolean(PreviewFragment2.ARG_TESTING_MODE_ENABLED, testingModeEnabled)
+        args.putBoolean(PreviewFragment2.ARG_IS_ASSET_ID_PRESENT, isAssetIdPresent)
 
         val fragment =
-            if (wallpaperInfo is LiveWallpaperInfo) LivePreviewFragment()
-            else ImagePreviewFragment()
+            if (wallpaperInfo is LiveWallpaperInfo) LivePreviewFragment2()
+            else ImagePreviewFragment2()
         fragment.arguments = args
         return fragment
     }

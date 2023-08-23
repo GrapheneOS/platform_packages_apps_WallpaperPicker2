@@ -29,7 +29,7 @@ import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosIntentProvider
-import com.android.wallpaper.picker.PreviewFragment
+import com.android.wallpaper.picker.PreviewFragment2
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperSnapshotRestorer
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotRestorer
@@ -87,7 +87,7 @@ interface Injector {
     fun getPreviewFragment(
         context: Context,
         wallpaperInfo: WallpaperInfo,
-        @PreviewFragment.PreviewMode mode: Int,
+        @PreviewFragment2.PreviewMode mode: Int,
         viewAsHome: Boolean,
         viewFullScreen: Boolean,
         testingModeEnabled: Boolean,

@@ -85,6 +85,9 @@ import java.util.concurrent.TimeoutException;
  */
 public class LivePreviewFragment2 extends PreviewFragment2 {
 
+    public static final String EXTRA_LIVE_WALLPAPER_INFO = "android.live_wallpaper.info";
+    public static final String KEY_ACTION_DELETE_LIVE_WALLPAPER = "action_delete_live_wallpaper";
+
     private static final String TAG = "LivePreviewFragment2";
     private static final String KEY_TOOLBAR_GONE = "toolbar_gone";
     private static final ExecutorService sExecutorService = Executors.newCachedThreadPool();
@@ -571,7 +574,7 @@ public class LivePreviewFragment2 extends PreviewFragment2 {
                                         .setStartDelay(250)
                                         .setDuration(250)
                                         .alpha(0f)
-                                        .setInterpolator(PreviewFragment.ALPHA_OUT)
+                                        .setInterpolator(PreviewFragment2.ALPHA_OUT)
                                         .start();
                             }
                         }
