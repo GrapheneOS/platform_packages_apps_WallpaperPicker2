@@ -32,9 +32,9 @@ class WallpaperActionSelectionBottomSheet(context: Context?, attrs: AttributeSet
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        wallpaperActionsTitle = findViewById(R.id.wallpaper_effects_title)
-        wallpaperActionsSubtitle = findViewById(R.id.wallpaper_effects_subtitle)
-        wallpaperActionsToggles = findViewById(R.id.wallpaper_action_toggles)
+        wallpaperActionsTitle = requireViewById(R.id.wallpaper_effects_title)
+        wallpaperActionsSubtitle = requireViewById(R.id.wallpaper_effects_subtitle)
+        wallpaperActionsToggles = requireViewById(R.id.wallpaper_action_toggles)
     }
 
     // This function takes in a WallpaperToggleSwitchAdapter and completes the initialization of the
