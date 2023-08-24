@@ -223,8 +223,6 @@ public class CategorySelectorFragment extends AppbarFragment {
         // indicator.
         if (mIsCreativeWallpaperEnabled) {
             if (loading && !mAwaitingCategories) {
-                mGroupedCategoryAdapter.notifyItemChanged(getNumColumns());
-                mGroupedCategoryAdapter.notifyItemInserted(getNumColumns());
                 mAwaitingCategories = true;
             }
             // Not add existing category to category list
