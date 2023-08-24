@@ -34,6 +34,8 @@ import com.android.wallpaper.util.ActivityUtils;
 
 /**
  * Activity that displays a view-only preview of a specific wallpaper.
+ *
+ * <p>TODO(b/298037335): Maybe reuse PreviewActivity and remove ViewOnlyPreviewActivity.
  */
 public class ViewOnlyPreviewActivity extends BasePreviewActivity implements AppbarFragmentHost {
 
@@ -45,10 +47,15 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
                 .putExtra(EXTRA_WALLPAPER_INFO, wallpaper);
     }
 
-    protected static Intent newIntent(Context context, WallpaperInfo wallpaper,
+    /**
+     * Returns a new Intent with extra to start this activity.
+     *
+     * @param isVewAsHome true to preview home screen, otherwise preview lock screen.
+     */
+    public static Intent newIntent(Context context, WallpaperInfo wallpaper,
             boolean isVewAsHome, boolean isAssetIdPresent) {
         return newIntent(context, wallpaper).putExtra(EXTRA_VIEW_AS_HOME, isVewAsHome)
-                        .putExtra(IS_ASSET_ID_PRESENT, isAssetIdPresent);
+                .putExtra(IS_ASSET_ID_PRESENT, isAssetIdPresent);
     }
 
     @Override
@@ -70,7 +77,8 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
                     /* context */ this,
                     wallpaper,
                     viewAsHome,
-                    isAssetIdPresent);
+                    isAssetIdPresent,
+                    /* isNewTask= */ false);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();
@@ -89,37 +97,36 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
 
     /**
      * Implementation that provides an intent to start a PreviewActivity.
+     *
+     * <p>Get singleton instance from [Injector] instead of creating new instance directly.
      */
     public static class ViewOnlyPreviewActivityIntentFactory implements InlinePreviewIntentFactory {
-        private boolean mIsHomeAndLockPreviews;
-        private boolean mIsViewAsHome;
+        private boolean mIsViewAsHome = false;
 
         @Override
         public Intent newIntent(Context context, WallpaperInfo wallpaper,
                 boolean isAssetIdPresent) {
+            Context appContext = context.getApplicationContext();
             LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
-            final boolean isMultiPanel = multiPanesChecker.isMultiPanesEnabled(context);
+            final boolean isMultiPanel = multiPanesChecker.isMultiPanesEnabled(appContext);
             final BaseFlags flags = InjectorProvider.getInjector().getFlags();
             if (flags.isMultiCropPreviewUiEnabled() && flags.isMultiCropEnabled()) {
-                return WallpaperPreviewActivity.Companion.newIntent(context,
+                return WallpaperPreviewActivity.Companion.newIntent(appContext,
                         wallpaper, /* isNewTask= */ isMultiPanel);
             }
 
             // Launch a full preview activity for devices supporting multipanel mode
             if (isMultiPanel) {
-                return FullPreviewActivity.newIntent(context, wallpaper, mIsViewAsHome,
+                return FullPreviewActivity.newIntent(appContext, wallpaper, mIsViewAsHome,
                         isAssetIdPresent);
             }
 
-            if (mIsHomeAndLockPreviews) {
-                return ViewOnlyPreviewActivity.newIntent(context, wallpaper, mIsViewAsHome,
-                        isAssetIdPresent);
-            }
-            return ViewOnlyPreviewActivity.newIntent(context, wallpaper);
+            return ViewOnlyPreviewActivity.newIntent(appContext, wallpaper, mIsViewAsHome,
+                    isAssetIdPresent);
         }
 
-        protected void setAsHomePreview(boolean isHomeAndLockPreview, boolean isViewAsHome) {
-            mIsHomeAndLockPreviews = isHomeAndLockPreview;
+        @Override
+        public void setViewAsHome(boolean isViewAsHome) {
             mIsViewAsHome = isViewAsHome;
         }
     }

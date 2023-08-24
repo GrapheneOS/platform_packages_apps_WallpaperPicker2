@@ -82,7 +82,8 @@ public class FullPreviewActivity extends BasePreviewActivity implements AppbarFr
                     /* context= */ this,
                     wallpaper,
                     viewAsHome,
-                    isAssetIDPresent);
+                    isAssetIDPresent,
+                    /* isNewTask= */ true);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();

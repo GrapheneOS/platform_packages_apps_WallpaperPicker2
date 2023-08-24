@@ -37,12 +37,13 @@ public interface InlinePreviewIntentFactory {
         return ContextCompat.checkSelfPermission(context, BIND_WALLPAPER) == PERMISSION_GRANTED;
     }
 
-    /**
-     * Gets an intent to show the preview activity for the given wallpaper.
-     *
-     * @param ctx
-     * @param wallpaper
-     * @return Intent to show the inline preview activity.
-     */
+    /** Gets an intent to show the inline preview activity for the given wallpaper. */
     Intent newIntent(Context ctx, WallpaperInfo wallpaper, boolean isAssetIdPresent);
+
+    /**
+     * Sets rendering preview as home or lock screen.
+     *
+     * @param isViewAsHome true to render home preview, otherwise render lock preview.
+     */
+    void setViewAsHome(boolean isViewAsHome);
 }
