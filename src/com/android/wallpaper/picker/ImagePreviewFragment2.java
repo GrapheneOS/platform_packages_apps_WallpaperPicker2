@@ -53,6 +53,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
@@ -163,6 +164,11 @@ public class ImagePreviewFragment2 extends PreviewFragment2 {
         // Trim memory from Glide to make room for the full-size image in this fragment.
         Glide.get(activity).setMemoryCategory(MemoryCategory.LOW);
         return view;
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    public SubsamplingScaleImageView getFullResImageView() {
+        return mFullResImageView;
     }
 
     private void setUpTouchForwardingLayout() {

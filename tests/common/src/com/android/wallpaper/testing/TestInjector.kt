@@ -50,9 +50,9 @@ import com.android.wallpaper.module.WallpaperRotationRefresher
 import com.android.wallpaper.module.WallpaperStatusChecker
 import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
-import com.android.wallpaper.picker.ImagePreviewFragment
+import com.android.wallpaper.picker.ImagePreviewFragment2
 import com.android.wallpaper.picker.MyPhotosStarter
-import com.android.wallpaper.picker.PreviewFragment
+import com.android.wallpaper.picker.PreviewFragment2
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperSnapshotRestorer
@@ -187,12 +187,12 @@ open class TestInjector : Injector {
         isAssetIdPresent: Boolean
     ): Fragment {
         val args = Bundle()
-        args.putParcelable(PreviewFragment.ARG_WALLPAPER, wallpaperInfo)
-        args.putInt(PreviewFragment.ARG_PREVIEW_MODE, mode)
-        args.putBoolean(PreviewFragment.ARG_VIEW_AS_HOME, viewAsHome)
-        args.putBoolean(PreviewFragment.ARG_FULL_SCREEN, viewFullScreen)
-        args.putBoolean(PreviewFragment.ARG_TESTING_MODE_ENABLED, testingModeEnabled)
-        val fragment = ImagePreviewFragment()
+        args.putParcelable(PreviewFragment2.ARG_WALLPAPER, wallpaperInfo)
+        args.putInt(PreviewFragment2.ARG_PREVIEW_MODE, mode)
+        args.putBoolean(PreviewFragment2.ARG_VIEW_AS_HOME, viewAsHome)
+        args.putBoolean(PreviewFragment2.ARG_FULL_SCREEN, viewFullScreen)
+        args.putBoolean(PreviewFragment2.ARG_TESTING_MODE_ENABLED, testingModeEnabled)
+        val fragment = ImagePreviewFragment2()
         fragment.arguments = args
         return fragment
     }
@@ -314,5 +314,9 @@ open class TestInjector : Injector {
 
     fun getWallpaperClient(): FakeWallpaperClient {
         return wallpaperClient ?: FakeWallpaperClient().also { wallpaperClient = it }
+    }
+
+    override fun isInstrumentationTest(): Boolean {
+        return true
     }
 }
