@@ -29,7 +29,6 @@ class NavigationControllerImpl @Inject constructor() : NavigationController {
     override fun navigateToPreview(
         activity: FragmentActivity,
         wallpaperInfo: WallpaperInfo,
-        @PreviewFragment.PreviewMode mode: Int,
         viewAsHome: Boolean,
         viewFullScreen: Boolean,
         testingModeEnabled: Boolean,
