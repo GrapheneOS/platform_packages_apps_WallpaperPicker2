@@ -87,9 +87,9 @@ import java.util.concurrent.Future;
  * Fragment which displays the UI for previewing an individual static image wallpaper and its
  * attribution information.
  */
-public class ImagePreviewFragment2 extends PreviewFragment2 {
+public class ImagePreviewFragment extends PreviewFragment {
 
-    private static final String TAG = "ImagePreviewFragment2";
+    private static final String TAG = "ImagePreviewFragment";
 
     private static final float DEFAULT_WALLPAPER_MAX_ZOOM = 8f;
     private static final Interpolator ALPHA_OUT = new PathInterpolator(0f, 0f, 0.8f, 1f);

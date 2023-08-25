@@ -78,7 +78,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 /**
  * Base Fragment to display the UI for previewing an individual wallpaper.
  */
-public abstract class PreviewFragment2 extends Fragment implements WallpaperColorThemePreview {
+public abstract class PreviewFragment extends Fragment implements WallpaperColorThemePreview {
 
     public static final Interpolator ALPHA_OUT = new PathInterpolator(0f, 0f, 0.8f, 1f);
 
@@ -110,7 +110,7 @@ public abstract class PreviewFragment2 extends Fragment implements WallpaperColo
     public static final String ARG_FULL_SCREEN = "view_full_screen";
     public static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
 
-    private static final String TAG = "PreviewFragment2";
+    private static final String TAG = "PreviewFragment";
 
     protected WallpaperInfo mWallpaper;
     protected WallpaperSetter mWallpaperSetter;

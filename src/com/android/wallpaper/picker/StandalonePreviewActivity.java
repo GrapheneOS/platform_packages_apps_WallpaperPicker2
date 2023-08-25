@@ -148,7 +148,7 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
     }
 
     /**
-     * Creates a new instance of {@link PreviewFragment2} and loads the fragment into this
+     * Creates a new instance of {@link PreviewFragment} and loads the fragment into this
      * activity's fragment container so that it's shown to the user.
      */
     private void loadPreviewFragment() {
@@ -166,7 +166,7 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
         Fragment fragment = InjectorProvider.getInjector().getPreviewFragment(
                 /* context */ this,
                 wallpaper,
-                PreviewFragment2.MODE_CROP_AND_SET_WALLPAPER,
+                PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
                 /* viewAsHome= */ true,
                 /* viewFullScreen= */ false,
                 testingModeEnabled, false);
