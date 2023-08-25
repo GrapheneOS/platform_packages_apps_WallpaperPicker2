@@ -714,8 +714,10 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setHomeWallpaperCollectionId(
                     mWallpaper.getCollectionId(mAppContext));
             mWallpaperPreferences.setHomeWallpaperRemoteId(mWallpaper.getWallpaperId());
-            mWallpaperPreferences.storeLatestWallpaper(FLAG_SYSTEM,
-                    mWallpaper.getWallpaperId(),
+            // Wallpaper ID can not be null or empty to save to the recent wallpaper as preferences
+            String recentWallpaperId = TextUtils.isEmpty(mWallpaper.getWallpaperId())
+                    ? String.valueOf(bitmapHash) : mWallpaper.getWallpaperId();
+            mWallpaperPreferences.storeLatestWallpaper(FLAG_SYSTEM, recentWallpaperId,
                     mWallpaper, mBitmap, colors);
         }
 
