@@ -121,7 +121,8 @@ constructor(
     // TODO b/296288298 Create a util class for Bitmap and Asset
     private suspend fun Asset.decodeRawDimensions(): Point =
         suspendCancellableCoroutine { k: CancellableContinuation<Point> ->
-            val callback = Asset.DimensionsReceiver { k.resumeWith(Result.success(Point(it))) }
+            val callback =
+                Asset.DimensionsReceiver { it?.let { k.resumeWith(Result.success(Point(it))) } }
             decodeRawDimensions(null, callback)
         }
 
