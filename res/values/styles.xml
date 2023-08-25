@@ -115,6 +115,7 @@
     </style>
 
     <style name="CategorySectionTitleTextAppearance" parent="TitleTextAppearance">
+        <item name="android:color">@color/system_on_surface</item>
         <item name="android:textStyle" />
         <item name="textAllCaps">false</item>
         <item name="android:textSize">16sp</item>
