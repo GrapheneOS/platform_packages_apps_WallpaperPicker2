@@ -17,10 +17,6 @@ package com.android.wallpaper.picker;
 
 import static android.view.View.VISIBLE;
 
-import static com.android.wallpaper.picker.PreviewFragment.ARG_IS_ASSET_ID_PRESENT;
-import static com.android.wallpaper.picker.PreviewFragment.ARG_VIEW_AS_HOME;
-import static com.android.wallpaper.picker.PreviewFragment.ARG_WALLPAPER;
-
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN;
 
@@ -39,6 +35,8 @@ import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
+import android.view.animation.PathInterpolator;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -46,6 +44,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.res.ResourcesCompat;
@@ -80,6 +79,36 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
  * Base Fragment to display the UI for previewing an individual wallpaper.
  */
 public abstract class PreviewFragment2 extends Fragment implements WallpaperColorThemePreview {
+
+    public static final Interpolator ALPHA_OUT = new PathInterpolator(0f, 0f, 0.8f, 1f);
+
+    /**
+     * User can view wallpaper and attributions in full screen, but "Set wallpaper" button is
+     * hidden.
+     */
+    public static final int MODE_VIEW_ONLY = 0;
+
+    /**
+     * User can view wallpaper and attributions in full screen and click "Set wallpaper" to set the
+     * wallpaper with pan and crop position to the device.
+     */
+    public static final int MODE_CROP_AND_SET_WALLPAPER = 1;
+
+    /**
+     * Possible preview modes for the fragment.
+     */
+    @IntDef({
+            MODE_VIEW_ONLY,
+            MODE_CROP_AND_SET_WALLPAPER})
+    public @interface PreviewMode {
+    }
+
+    public static final String ARG_IS_ASSET_ID_PRESENT = "is_asset_id_present";
+    public static final String ARG_WALLPAPER = "wallpaper";
+    public static final String ARG_PREVIEW_MODE = "preview_mode";
+    public static final String ARG_VIEW_AS_HOME = "view_as_home";
+    public static final String ARG_FULL_SCREEN = "view_full_screen";
+    public static final String ARG_TESTING_MODE_ENABLED = "testing_mode_enabled";
 
     private static final String TAG = "PreviewFragment2";
 

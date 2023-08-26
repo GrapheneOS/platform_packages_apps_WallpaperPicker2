@@ -82,7 +82,7 @@ public class FullPreviewActivity extends BasePreviewActivity implements AppbarFr
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context= */ this,
                     wallpaper,
-                    PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
+                    PreviewFragment2.MODE_CROP_AND_SET_WALLPAPER,
                     viewAsHome,
                     /* viewFullScreen= */ true,
                     testingModeEnabled, isAssetIDPresent);

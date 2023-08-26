@@ -74,7 +74,7 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context */ this,
                     wallpaper,
-                    PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
+                    PreviewFragment2.MODE_CROP_AND_SET_WALLPAPER,
                     viewAsHome,
                     /* viewFullScreen= */ false,
                     testingModeEnabled,
@@ -107,7 +107,7 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
                 Fragment fragment = InjectorProvider.getInjector().getPreviewFragment(
                         /* context= */ this,
                         imageWallpaper,
-                        PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
+                        PreviewFragment2.MODE_CROP_AND_SET_WALLPAPER,
                         true,
                         /* viewFullScreen= */ false,
                         /* testingModeEnabled= */ false, /* isAssetIdPresent= */ true);

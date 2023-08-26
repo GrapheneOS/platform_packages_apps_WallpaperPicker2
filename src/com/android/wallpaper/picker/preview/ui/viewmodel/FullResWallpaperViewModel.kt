@@ -15,15 +15,11 @@
  */
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
-import androidx.lifecycle.ViewModel
-import com.android.wallpaper.model.WallpaperInfo
-import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import android.graphics.Bitmap
+import android.graphics.Point
 
-/** Top level [ViewModel] for [WallpaperPreviewActivity] and its fragments */
-@HiltViewModel
-class WallpaperPreviewViewModel @Inject constructor() : ViewModel() {
-    /** User selected [WallpaperInfo] for editing. */
-    var editingWallpaper: WallpaperInfo? = null
-}
+data class FullResWallpaperViewModel(
+    val rawWallpaperBitmap: Bitmap,
+    val rawWallpaperSize: Point,
+    val offsetToStart: Boolean,
+)
