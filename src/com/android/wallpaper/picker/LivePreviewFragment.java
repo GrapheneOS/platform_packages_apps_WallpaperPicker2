@@ -83,12 +83,12 @@ import java.util.concurrent.TimeoutException;
  * Fragment which displays the UI for previewing an individual live wallpaper, its attribution
  * information and settings slices if available.
  */
-public class LivePreviewFragment2 extends PreviewFragment2 {
+public class LivePreviewFragment extends PreviewFragment {
 
     public static final String EXTRA_LIVE_WALLPAPER_INFO = "android.live_wallpaper.info";
     public static final String KEY_ACTION_DELETE_LIVE_WALLPAPER = "action_delete_live_wallpaper";
 
-    private static final String TAG = "LivePreviewFragment2";
+    private static final String TAG = "LivePreviewFragment";
     private static final String KEY_TOOLBAR_GONE = "toolbar_gone";
     private static final ExecutorService sExecutorService = Executors.newCachedThreadPool();
     private ActivityResultLauncher<Void> mSettingsActivityResult;
@@ -574,7 +574,7 @@ public class LivePreviewFragment2 extends PreviewFragment2 {
                                         .setStartDelay(250)
                                         .setDuration(250)
                                         .alpha(0f)
-                                        .setInterpolator(PreviewFragment2.ALPHA_OUT)
+                                        .setInterpolator(PreviewFragment.ALPHA_OUT)
                                         .start();
                             }
                         }
@@ -582,7 +582,7 @@ public class LivePreviewFragment2 extends PreviewFragment2 {
                         @Override
                         public void onWallpaperColorsChanged(WallpaperColors colors,
                                 int displayId) {
-                            LivePreviewFragment2.super.onWallpaperColorsChanged(colors);
+                            LivePreviewFragment.super.onWallpaperColorsChanged(colors);
                         }
                     },
                     mWallpaperSurface);

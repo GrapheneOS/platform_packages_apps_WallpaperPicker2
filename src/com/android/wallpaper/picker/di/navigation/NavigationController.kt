@@ -19,7 +19,6 @@ package com.android.wallpaper.picker.di.navigation
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
 import com.android.wallpaper.model.WallpaperInfo
-import com.android.wallpaper.picker.PreviewFragment2
 
 /** Enum is used to indicate how a fragment will be added to the view hierarchy */
 enum class Transition {
@@ -53,7 +52,6 @@ interface NavigationController {
     fun navigateToPreview(
         activity: FragmentActivity,
         wallpaperInfo: WallpaperInfo,
-        @PreviewFragment2.PreviewMode mode: Int,
         viewAsHome: Boolean,
         viewFullScreen: Boolean,
         testingModeEnabled: Boolean,

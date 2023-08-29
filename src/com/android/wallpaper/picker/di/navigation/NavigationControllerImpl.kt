@@ -20,7 +20,7 @@ import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
 import com.android.wallpaper.model.WallpaperInfo
-import com.android.wallpaper.picker.PreviewFragment2
+import com.android.wallpaper.picker.PreviewFragment
 import com.android.wallpaper.picker.preview.ui.fragment.SmallPreviewFragment
 import javax.inject.Inject
 
@@ -29,7 +29,6 @@ class NavigationControllerImpl @Inject constructor() : NavigationController {
     override fun navigateToPreview(
         activity: FragmentActivity,
         wallpaperInfo: WallpaperInfo,
-        @PreviewFragment2.PreviewMode mode: Int,
         viewAsHome: Boolean,
         viewFullScreen: Boolean,
         testingModeEnabled: Boolean,
@@ -39,9 +38,9 @@ class NavigationControllerImpl @Inject constructor() : NavigationController {
     ) {
         // TODO(b/295199906): arguments removed in next diff
         val args = Bundle()
-        args.putParcelable(PreviewFragment2.ARG_WALLPAPER, wallpaperInfo)
-        args.putBoolean(PreviewFragment2.ARG_VIEW_AS_HOME, viewAsHome)
-        args.putBoolean(PreviewFragment2.ARG_IS_ASSET_ID_PRESENT, isAssetIdPresent)
+        args.putParcelable(PreviewFragment.ARG_WALLPAPER, wallpaperInfo)
+        args.putBoolean(PreviewFragment.ARG_VIEW_AS_HOME, viewAsHome)
+        args.putBoolean(PreviewFragment.ARG_IS_ASSET_ID_PRESENT, isAssetIdPresent)
 
         val previewFragment = SmallPreviewFragment()
         previewFragment.arguments = args

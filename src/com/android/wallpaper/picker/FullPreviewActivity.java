@@ -78,14 +78,11 @@ public class FullPreviewActivity extends BasePreviewActivity implements AppbarFr
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
             boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, false);
             boolean isAssetIDPresent = intent.getBooleanExtra(IS_ASSET_ID_PRESENT, false);
-            boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context= */ this,
                     wallpaper,
-                    PreviewFragment2.MODE_CROP_AND_SET_WALLPAPER,
                     viewAsHome,
-                    /* viewFullScreen= */ true,
-                    testingModeEnabled, isAssetIDPresent);
+                    isAssetIDPresent);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();

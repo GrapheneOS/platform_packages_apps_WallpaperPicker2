@@ -35,10 +35,10 @@ import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
 import com.android.wallpaper.network.WallpaperRequester
 import com.android.wallpaper.picker.CustomizationPickerActivity
-import com.android.wallpaper.picker.ImagePreviewFragment2
-import com.android.wallpaper.picker.LivePreviewFragment2
+import com.android.wallpaper.picker.ImagePreviewFragment
+import com.android.wallpaper.picker.LivePreviewFragment
 import com.android.wallpaper.picker.MyPhotosStarter
-import com.android.wallpaper.picker.PreviewFragment2
+import com.android.wallpaper.picker.PreviewFragment
 import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
@@ -79,7 +79,6 @@ internal constructor(
     private var userEventLogger: UserEventLogger? = null
     private var wallpaperPersister: WallpaperPersister? = null
     @Inject lateinit var prefs: WallpaperPreferences
-    private var wallpaperPreviewFragmentManager: WallpaperPreviewFragmentManager? = null
     private var wallpaperRefresher: WallpaperRefresher? = null
     private var wallpaperRotationRefresher: WallpaperRotationRefresher? = null
     private var wallpaperStatusChecker: WallpaperStatusChecker? = null
@@ -206,24 +205,18 @@ internal constructor(
     override fun getPreviewFragment(
         context: Context,
         wallpaperInfo: WallpaperInfo,
-        mode: Int,
         viewAsHome: Boolean,
-        viewFullScreen: Boolean,
-        testingModeEnabled: Boolean,
         isAssetIdPresent: Boolean
     ): Fragment {
-        val args = Bundle()
-        args.putParcelable(PreviewFragment2.ARG_WALLPAPER, wallpaperInfo)
-        args.putInt(PreviewFragment2.ARG_PREVIEW_MODE, mode)
-        args.putBoolean(PreviewFragment2.ARG_VIEW_AS_HOME, viewAsHome)
-        args.putBoolean(PreviewFragment2.ARG_FULL_SCREEN, viewFullScreen)
-        args.putBoolean(PreviewFragment2.ARG_TESTING_MODE_ENABLED, testingModeEnabled)
-        args.putBoolean(PreviewFragment2.ARG_IS_ASSET_ID_PRESENT, isAssetIdPresent)
-        val fragment =
-            if (wallpaperInfo is LiveWallpaperInfo) LivePreviewFragment2()
-            else ImagePreviewFragment2()
-        fragment.arguments = args
-        return fragment
+        val isLiveWallpaper = wallpaperInfo is LiveWallpaperInfo
+        return (if (isLiveWallpaper) LivePreviewFragment() else ImagePreviewFragment()).apply {
+            arguments =
+                Bundle().apply {
+                    putParcelable(PreviewFragment.ARG_WALLPAPER, wallpaperInfo)
+                    putBoolean(PreviewFragment.ARG_VIEW_AS_HOME, viewAsHome)
+                    putBoolean(PreviewFragment.ARG_IS_ASSET_ID_PRESENT, isAssetIdPresent)
+                }
+        }
     }
 
     @Synchronized
@@ -260,14 +253,6 @@ internal constructor(
     @Synchronized
     override fun getPreferences(context: Context): WallpaperPreferences {
         return prefs
-    }
-
-    @Synchronized
-    override fun getWallpaperPreviewFragmentManager(): WallpaperPreviewFragmentManager {
-        return wallpaperPreviewFragmentManager
-            ?: DefaultWallpaperPreviewFragmentManager().also {
-                wallpaperPreviewFragmentManager = it
-            }
     }
 
     @Synchronized

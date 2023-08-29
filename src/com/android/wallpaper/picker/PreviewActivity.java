@@ -69,15 +69,10 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
             boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, false);
             boolean isAssetIdPresent = intent.getBooleanExtra(IS_ASSET_ID_PRESENT,
                     false);
-            boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED,
-                    false);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context */ this,
                     wallpaper,
-                    PreviewFragment2.MODE_CROP_AND_SET_WALLPAPER,
                     viewAsHome,
-                    /* viewFullScreen= */ false,
-                    testingModeEnabled,
                     isAssetIdPresent);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
@@ -107,10 +102,8 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
                 Fragment fragment = InjectorProvider.getInjector().getPreviewFragment(
                         /* context= */ this,
                         imageWallpaper,
-                        PreviewFragment2.MODE_CROP_AND_SET_WALLPAPER,
                         true,
-                        /* viewFullScreen= */ false,
-                        /* testingModeEnabled= */ false, /* isAssetIdPresent= */ true);
+                        /* isAssetIdPresent= */ true);
                 fm.beginTransaction()
                         .replace(R.id.fragment_container, fragment)
                         .commit();
