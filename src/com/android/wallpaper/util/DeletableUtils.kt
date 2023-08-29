@@ -22,7 +22,7 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.text.TextUtils
 import android.util.Log
-import com.android.wallpaper.picker.LivePreviewFragment2
+import com.android.wallpaper.picker.LivePreviewFragment
 
 /** The utility class for live wallpaper the can be deleted */
 object DeletableUtils {
@@ -53,7 +53,7 @@ object DeletableUtils {
         }
         val deleteActionIntent = Intent(deleteAction)
         deleteActionIntent.setPackage(wallpaperInfo.packageName)
-        deleteActionIntent.putExtra(LivePreviewFragment2.EXTRA_LIVE_WALLPAPER_INFO, wallpaperInfo)
+        deleteActionIntent.putExtra(LivePreviewFragment.EXTRA_LIVE_WALLPAPER_INFO, wallpaperInfo)
         return deleteActionIntent
     }
 
@@ -74,6 +74,6 @@ object DeletableUtils {
             return null
         }
         val metaData = serviceInfo.metaData
-        return metaData?.getString(LivePreviewFragment2.KEY_ACTION_DELETE_LIVE_WALLPAPER)
+        return metaData?.getString(LivePreviewFragment.KEY_ACTION_DELETE_LIVE_WALLPAPER)
     }
 }

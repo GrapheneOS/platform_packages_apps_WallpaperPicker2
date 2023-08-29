@@ -171,11 +171,11 @@ public class PreviewActivityTest {
     }
 
     private SubsamplingScaleImageView getFullResImageView(PreviewActivity activity) {
-        PreviewFragment2 fragment =
-                (PreviewFragment2) activity.getSupportFragmentManager().findFragmentById(
+        PreviewFragment fragment =
+                (PreviewFragment) activity.getSupportFragmentManager().findFragmentById(
                         R.id.fragment_container);
-        if (fragment instanceof ImagePreviewFragment2) {
-            return ((ImagePreviewFragment2) fragment).getFullResImageView();
+        if (fragment instanceof ImagePreviewFragment) {
+            return ((ImagePreviewFragment) fragment).getFullResImageView();
         } else {
             return null;
         }
