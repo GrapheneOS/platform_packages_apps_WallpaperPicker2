@@ -70,7 +70,7 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context */ this,
                     wallpaper,
-                    PreviewFragment2.MODE_VIEW_ONLY,
+                    PreviewFragment.MODE_VIEW_ONLY,
                     viewAsHome,
                     /* viewFullScreen= */ false,
                     testingModeEnabled, isAssetIdPresent);
