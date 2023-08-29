@@ -161,15 +161,11 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
             finish();
             return;
         }
-
-        boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
         Fragment fragment = InjectorProvider.getInjector().getPreviewFragment(
                 /* context */ this,
                 wallpaper,
-                PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
                 /* viewAsHome= */ true,
-                /* viewFullScreen= */ false,
-                testingModeEnabled, false);
+                false);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, fragment)
                 .commit();

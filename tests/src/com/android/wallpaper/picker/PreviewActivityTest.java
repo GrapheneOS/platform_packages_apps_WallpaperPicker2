@@ -146,8 +146,6 @@ public class PreviewActivityTest {
         Intent intent = PreviewActivity.newIntent(
                 InstrumentationRegistry.getInstrumentation().getTargetContext(),
                 wallpaperInfo, true);
-        intent.putExtra(BasePreviewActivity.EXTRA_TESTING_MODE_ENABLED, true);
-
         mActivityRule.launchActivity(intent);
     }
 
