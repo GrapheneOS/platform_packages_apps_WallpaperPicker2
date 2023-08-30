@@ -23,7 +23,6 @@ import android.graphics.Rect;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.view.Display;
-import android.view.View;
 
 /**
  * Static utility methods for wallpaper cropping operations.
@@ -209,7 +208,7 @@ public final class WallpaperCropUtils {
         if (cropExtraWidth) {
             // Try to increase size of screenRect to include extra width depending on the layout
             // direction.
-            if (isRtl(context)) {
+            if (RtlUtils.isRtl(context)) {
                 cropRect.left = Math.max(cropRect.left - extraWidth, rect.left);
             } else {
                 cropRect.right = Math.min(cropRect.right + extraWidth, rect.right);
@@ -365,15 +364,6 @@ public final class WallpaperCropUtils {
                         /* name= */ "config_wallpaperMaxScale",
                         /* defType= */ "dimen",
                         /* defPackage= */ "android"));
-    }
-
-    /**
-     * Returns whether layout direction is RTL (or false for LTR). Since native RTL layout support
-     * was added in API 17, returns false for versions lower than 17.
-     */
-    public static boolean isRtl(Context context) {
-        return context.getResources().getConfiguration().getLayoutDirection()
-                == View.LAYOUT_DIRECTION_RTL;
     }
 
     /**

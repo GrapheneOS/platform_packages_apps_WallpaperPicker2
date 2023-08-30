@@ -62,6 +62,7 @@ import com.android.wallpaper.model.WallpaperInfo.ColorInfo;
 import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.util.DeletableUtils;
 import com.android.wallpaper.util.ResourceUtils;
+import com.android.wallpaper.util.RtlUtils;
 import com.android.wallpaper.util.WallpaperConnection;
 import com.android.wallpaper.util.WallpaperSurfaceCallback2;
 import com.android.wallpaper.widget.FloatingSheet;
@@ -520,7 +521,7 @@ public class LivePreviewFragment extends PreviewFragment {
         Integer placeholderColor = colorInfo.getPlaceholderColor();
         // This is for showing a lower resolution image before the live wallpaper shows
         WallpaperPreviewBitmapTransformation transformation =
-                new WallpaperPreviewBitmapTransformation(appContext, isRtl());
+                new WallpaperPreviewBitmapTransformation(appContext, RtlUtils.isRtl(context));
         mWallpaper.getThumbAsset(activity.getApplicationContext())
                 .loadLowResDrawable(activity,
                         homeImageWallpaper,
