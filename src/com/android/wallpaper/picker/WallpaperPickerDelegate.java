@@ -36,15 +36,13 @@ import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.CategoryProvider;
 import com.android.wallpaper.model.CategoryReceiver;
 import com.android.wallpaper.model.ImageWallpaperInfo;
-import com.android.wallpaper.model.InlinePreviewIntentFactory;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.Injector;
+import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.PackageStatusNotifier;
 import com.android.wallpaper.module.PackageStatusNotifier.PackageStatus;
 import com.android.wallpaper.module.WallpaperPersister;
 import com.android.wallpaper.module.WallpaperPreferences;
-import com.android.wallpaper.picker.PreviewActivity.PreviewActivityIntentFactory;
-import com.android.wallpaper.picker.ViewOnlyPreviewActivity.ViewOnlyPreviewActivityIntentFactory;
 import com.android.wallpaper.picker.WallpaperDisabledFragment.WallpaperSupportLevel;
 
 import java.util.ArrayList;
@@ -67,10 +65,6 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     public static final int PREVIEW_LIVE_WALLPAPER_REQUEST_CODE = 4;
     public static final String IS_LIVE_WALLPAPER = "isLiveWallpaper";
     private final MyPhotosIntentProvider mMyPhotosIntentProvider;
-
-    private InlinePreviewIntentFactory mPreviewIntentFactory;
-    private InlinePreviewIntentFactory mViewOnlyPreviewIntentFactory;
-
     private WallpaperPreferences mPreferences;
     private PackageStatusNotifier mPackageStatusNotifier;
 
@@ -87,9 +81,6 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
             Injector injector) {
         mContainer = container;
         mActivity = activity;
-        mPreviewIntentFactory = new PreviewActivityIntentFactory();
-        mViewOnlyPreviewIntentFactory =
-                new ViewOnlyPreviewActivityIntentFactory();
 
         mCategoryProvider = injector.getCategoryProvider(activity);
         mPreferences = injector.getPreferences(activity);
@@ -352,12 +343,9 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     /**
      * Shows the view-only preview activity for the given wallpaper.
      */
-    public void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome,
-            boolean isAssetIdPresent) {
-        ((ViewOnlyPreviewActivityIntentFactory) mViewOnlyPreviewIntentFactory).setAsHomePreview(
-                /* isHomeAndLockPreviews= */ true, isViewAsHome);
+    public void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isAssetIdPresent) {
         wallpaperInfo.showPreview(
-                mActivity, mViewOnlyPreviewIntentFactory,
+                mActivity, InjectorProvider.getInjector().getViewOnlyPreviewActivityIntentFactory(),
                 VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE, isAssetIdPresent);
     }
 
@@ -399,10 +387,6 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
             return isSupported ? WallpaperDisabledFragment.SUPPORTED_CAN_SET
                     : WallpaperDisabledFragment.NOT_SUPPORTED_BY_DEVICE;
         }
-    }
-
-    public InlinePreviewIntentFactory getPreviewIntentFactory() {
-        return mPreviewIntentFactory;
     }
 
     public WallpaperPreferences getPreferences() {
@@ -481,7 +465,8 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
                 ImageWallpaperInfo imageWallpaper = new ImageWallpaperInfo(imageUri);
 
                 mWallpaperPersister.setWallpaperInfoInPreview(imageWallpaper);
-                imageWallpaper.showPreview(mActivity, getPreviewIntentFactory(),
+                imageWallpaper.showPreview(mActivity,
+                        InjectorProvider.getInjector().getPreviewActivityIntentFactory(),
                         PREVIEW_WALLPAPER_REQUEST_CODE, true);
                 return false;
             case PREVIEW_LIVE_WALLPAPER_REQUEST_CODE:

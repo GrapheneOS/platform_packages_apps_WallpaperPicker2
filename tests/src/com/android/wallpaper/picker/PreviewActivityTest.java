@@ -145,7 +145,8 @@ public class PreviewActivityTest {
     private void launchActivityIntentWithWallpaper(WallpaperInfo wallpaperInfo) {
         Intent intent = PreviewActivity.newIntent(
                 InstrumentationRegistry.getInstrumentation().getTargetContext(),
-                wallpaperInfo, true);
+                wallpaperInfo, /* viewAsHome= */ false, /* isAssetIdPresent= */ true);
+
         mActivityRule.launchActivity(intent);
     }
 

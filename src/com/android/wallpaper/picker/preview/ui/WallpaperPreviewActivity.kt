@@ -84,6 +84,8 @@ class WallpaperPreviewActivity :
         ): Intent {
             val intent = Intent(context.applicationContext, WallpaperPreviewActivity::class.java)
             if (isNewTask) {
+                // TODO(b/291761856): When going back to main screen, use startActivity instead of
+                //                    onActivityResult, which won't work.
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             }
             intent.putExtra(EXTRA_WALLPAPER_INFO, wallpaperInfo)
