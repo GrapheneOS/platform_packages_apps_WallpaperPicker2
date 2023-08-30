@@ -120,7 +120,6 @@ open class ScreenPreviewSectionController(
                         wallpaperPreviewNavigator.showViewOnlyPreview(
                             wallpaperInfo,
                             !isOnLockScreen,
-                            false
                         )
                     }
                 }

@@ -405,7 +405,7 @@ public class CategorySelectorFragment extends AppbarFragment {
                 InjectorProvider.getInjector().getWallpaperPersister(activity)
                         .setWallpaperInfoInPreview(wallpaper);
                 wallpaper.showPreview(activity,
-                        new PreviewActivity.PreviewActivityIntentFactory(),
+                        InjectorProvider.getInjector().getPreviewActivityIntentFactory(),
                         wallpaper instanceof LiveWallpaperInfo ? PREVIEW_LIVE_WALLPAPER_REQUEST_CODE
                                 : PREVIEW_WALLPAPER_REQUEST_CODE, true);
                 return;
@@ -601,7 +601,7 @@ public class CategorySelectorFragment extends AppbarFragment {
                 InjectorProvider.getInjector().getWallpaperPersister(activity)
                         .setWallpaperInfoInPreview(wallpaper);
                 wallpaper.showPreview(activity,
-                        new PreviewActivity.PreviewActivityIntentFactory(),
+                        InjectorProvider.getInjector().getPreviewActivityIntentFactory(),
                         wallpaper instanceof LiveWallpaperInfo
                                 ? PREVIEW_LIVE_WALLPAPER_REQUEST_CODE
                                 : PREVIEW_WALLPAPER_REQUEST_CODE, true);
