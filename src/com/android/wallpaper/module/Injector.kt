@@ -24,6 +24,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.CategoryProvider
+import com.android.wallpaper.model.InlinePreviewIntentFactory
 import com.android.wallpaper.model.WallpaperColorsViewModel
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.monitor.PerformanceMonitor
@@ -87,7 +88,8 @@ interface Injector {
         context: Context,
         wallpaperInfo: WallpaperInfo,
         viewAsHome: Boolean,
-        isAssetIdPresent: Boolean
+        isAssetIdPresent: Boolean,
+        isNewTask: Boolean,
     ): Fragment
 
     fun getRequester(context: Context): Requester
@@ -134,4 +136,17 @@ interface Injector {
     }
 
     fun isCurrentSelectedColorPreset(context: Context): Boolean
+
+    /**
+     * Implements [InlinePreviewIntentFactory] that provides an intent to start [PreviewActivity].
+     */
+    fun getPreviewActivityIntentFactory(): InlinePreviewIntentFactory
+
+    /**
+     * Implements [InlinePreviewIntentFactory] that provides an intent to start
+     * [ViewOnlyPreviewActivity].
+     *
+     * TODO(b/298037335): Rename or remove view only preview.
+     */
+    fun getViewOnlyPreviewActivityIntentFactory(): InlinePreviewIntentFactory
 }

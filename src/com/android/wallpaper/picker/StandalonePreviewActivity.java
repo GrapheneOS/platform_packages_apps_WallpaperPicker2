@@ -165,7 +165,8 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
                 /* context */ this,
                 wallpaper,
                 /* viewAsHome= */ true,
-                false);
+                /* isAssetIdPresent= */ false,
+                /* isNewTask= */ false);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, fragment)
                 .commit();

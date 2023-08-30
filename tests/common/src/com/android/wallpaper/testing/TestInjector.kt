@@ -26,6 +26,7 @@ import com.android.systemui.shared.customization.data.content.CustomizationProvi
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.CategoryProvider
+import com.android.wallpaper.model.InlinePreviewIntentFactory
 import com.android.wallpaper.model.WallpaperColorsViewModel
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.AlarmManagerWrapper
@@ -51,7 +52,9 @@ import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.ImagePreviewFragment
 import com.android.wallpaper.picker.MyPhotosStarter
+import com.android.wallpaper.picker.PreviewActivity
 import com.android.wallpaper.picker.PreviewFragment
+import com.android.wallpaper.picker.ViewOnlyPreviewActivity
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperSnapshotRestorer
@@ -90,6 +93,8 @@ open class TestInjector : Injector {
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
     private var wallpaperColorsViewModel: WallpaperColorsViewModel? = null
     private var wallpaperClient: FakeWallpaperClient? = null
+    private var previewActivityIntentFactory: InlinePreviewIntentFactory? = null
+    private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
 
     override fun getApplicationCoroutineScope(): CoroutineScope {
         return appScope ?: CoroutineScope(Dispatchers.Main).also { appScope = it }
@@ -179,11 +184,14 @@ open class TestInjector : Injector {
         context: Context,
         wallpaperInfo: WallpaperInfo,
         viewAsHome: Boolean,
-        isAssetIdPresent: Boolean
+        isAssetIdPresent: Boolean,
+        isNewTask: Boolean,
     ): Fragment {
         val args = Bundle()
         args.putParcelable(PreviewFragment.ARG_WALLPAPER, wallpaperInfo)
         args.putBoolean(PreviewFragment.ARG_VIEW_AS_HOME, viewAsHome)
+        args.putBoolean(PreviewFragment.ARG_IS_ASSET_ID_PRESENT, isAssetIdPresent)
+        args.putBoolean(PreviewFragment.ARG_IS_NEW_TASK, isNewTask)
         val fragment = ImagePreviewFragment()
         fragment.arguments = args
         return fragment
@@ -297,6 +305,20 @@ open class TestInjector : Injector {
 
     override fun isCurrentSelectedColorPreset(context: Context): Boolean {
         return false
+    }
+
+    override fun getPreviewActivityIntentFactory(): InlinePreviewIntentFactory {
+        return previewActivityIntentFactory
+            ?: PreviewActivity.PreviewActivityIntentFactory().also {
+                previewActivityIntentFactory = it
+            }
+    }
+
+    override fun getViewOnlyPreviewActivityIntentFactory(): InlinePreviewIntentFactory {
+        return viewOnlyPreviewActivityIntentFactory
+            ?: ViewOnlyPreviewActivity.ViewOnlyPreviewActivityIntentFactory().also {
+                viewOnlyPreviewActivityIntentFactory = it
+            }
     }
 
     fun getWallpaperClient(): FakeWallpaperClient {

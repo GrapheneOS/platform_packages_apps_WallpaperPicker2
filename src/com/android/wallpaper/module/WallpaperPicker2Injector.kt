@@ -28,6 +28,7 @@ import com.android.wallpaper.dispatchers.BackgroundDispatcher
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.CategoryProvider
+import com.android.wallpaper.model.InlinePreviewIntentFactory
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperColorsViewModel
 import com.android.wallpaper.model.WallpaperInfo
@@ -38,7 +39,9 @@ import com.android.wallpaper.picker.CustomizationPickerActivity
 import com.android.wallpaper.picker.ImagePreviewFragment
 import com.android.wallpaper.picker.LivePreviewFragment
 import com.android.wallpaper.picker.MyPhotosStarter
+import com.android.wallpaper.picker.PreviewActivity
 import com.android.wallpaper.picker.PreviewFragment
+import com.android.wallpaper.picker.ViewOnlyPreviewActivity
 import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
@@ -88,6 +91,8 @@ internal constructor(
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
     private var secureSettingsRepository: SecureSettingsRepository? = null
     private var wallpaperColorsViewModel: WallpaperColorsViewModel? = null
+    private var previewActivityIntentFactory: InlinePreviewIntentFactory? = null
+    private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
 
     override fun getApplicationCoroutineScope(): CoroutineScope {
         return mainScope
@@ -206,7 +211,8 @@ internal constructor(
         context: Context,
         wallpaperInfo: WallpaperInfo,
         viewAsHome: Boolean,
-        isAssetIdPresent: Boolean
+        isAssetIdPresent: Boolean,
+        isNewTask: Boolean,
     ): Fragment {
         val isLiveWallpaper = wallpaperInfo is LiveWallpaperInfo
         return (if (isLiveWallpaper) LivePreviewFragment() else ImagePreviewFragment()).apply {
@@ -215,6 +221,7 @@ internal constructor(
                     putParcelable(PreviewFragment.ARG_WALLPAPER, wallpaperInfo)
                     putBoolean(PreviewFragment.ARG_VIEW_AS_HOME, viewAsHome)
                     putBoolean(PreviewFragment.ARG_IS_ASSET_ID_PRESENT, isAssetIdPresent)
+                    putBoolean(PreviewFragment.ARG_IS_NEW_TASK, isNewTask)
                 }
         }
     }
@@ -347,6 +354,20 @@ internal constructor(
 
     override fun isCurrentSelectedColorPreset(context: Context): Boolean {
         return false
+    }
+
+    override fun getPreviewActivityIntentFactory(): InlinePreviewIntentFactory {
+        return previewActivityIntentFactory
+            ?: PreviewActivity.PreviewActivityIntentFactory().also {
+                previewActivityIntentFactory = it
+            }
+    }
+
+    override fun getViewOnlyPreviewActivityIntentFactory(): InlinePreviewIntentFactory {
+        return viewOnlyPreviewActivityIntentFactory
+            ?: ViewOnlyPreviewActivity.ViewOnlyPreviewActivityIntentFactory().also {
+                viewOnlyPreviewActivityIntentFactory = it
+            }
     }
 
     companion object {
