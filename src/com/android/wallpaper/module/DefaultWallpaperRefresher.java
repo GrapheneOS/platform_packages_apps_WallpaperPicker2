@@ -158,7 +158,7 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
             if (metadatas.size() > 2) {
                 Log.e(TAG,
                         "Got more than 2 WallpaperMetadata objects - only home and (optionally) "
-                        + "lock are permitted.");
+                                + "lock are permitted.");
                 return;
             }
 
@@ -230,8 +230,12 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
         private long getCurrentHomeWallpaperHashCode() {
             if (mCurrentHomeWallpaperHashCode == 0) {
                 BitmapDrawable wallpaperDrawable = (BitmapDrawable) mWallpaperManager.getDrawable();
-                Bitmap wallpaperBitmap = wallpaperDrawable.getBitmap();
-                mCurrentHomeWallpaperHashCode = BitmapUtils.generateHashCode(wallpaperBitmap);
+                // wallpaperDrawable should always be non-null, unless if there's a error in
+                // WallpaperManager's state, in which case we'll consider the hashcode as unset.
+                Bitmap wallpaperBitmap = wallpaperDrawable != null ? wallpaperDrawable.getBitmap()
+                        : null;
+                mCurrentHomeWallpaperHashCode =
+                        wallpaperBitmap != null ? BitmapUtils.generateHashCode(wallpaperBitmap) : 0;
 
                 // Manually request that WallpaperManager loses its reference to the current
                 // wallpaper bitmap, which can occupy a large memory allocation for the lifetime of
@@ -245,7 +249,11 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
             if (mCurrentLockWallpaperHashCode == 0
                     && mWallpaperStatusChecker.isLockWallpaperSet()) {
                 Bitmap wallpaperBitmap = getLockWallpaperBitmap();
-                mCurrentLockWallpaperHashCode = BitmapUtils.generateHashCode(wallpaperBitmap);
+                // If isLockWallpaperSet() returned true, wallpaperBitmap should always be
+                // non-null, unless if there's a error in WallpaperManager, in which case we'll
+                // consider the hashcode as unset.
+                mCurrentLockWallpaperHashCode =
+                        wallpaperBitmap != null ? BitmapUtils.generateHashCode(wallpaperBitmap) : 0;
             }
             return mCurrentLockWallpaperHashCode;
         }
