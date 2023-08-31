@@ -39,7 +39,7 @@ class WallpaperPreviewDemoActivity : Hilt_WallpaperPreviewDemoActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wallpaper_preview_demo)
         val wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java)
-        viewModel.initializeViewModel(applicationContext, wallpaper)
+        viewModel.initializeViewModel(applicationContext, checkNotNull(wallpaper))
         StaticWallpaperPreviewBinder.bind(
             requireViewById(R.id.wallpaper_preview),
             viewModel,
