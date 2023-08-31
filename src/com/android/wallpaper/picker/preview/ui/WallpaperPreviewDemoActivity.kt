@@ -25,7 +25,7 @@ import com.android.wallpaper.picker.BasePreviewActivity
 import com.android.wallpaper.picker.preview.ui.binder.StaticWallpaperPreviewBinder
 import com.android.wallpaper.picker.preview.ui.viewmodel.StaticWallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
-import com.android.wallpaper.util.WallpaperCropUtils
+import com.android.wallpaper.util.RtlUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -45,7 +45,7 @@ class WallpaperPreviewDemoActivity : Hilt_WallpaperPreviewDemoActivity() {
             viewModel,
             this,
             displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(this),
-            WallpaperCropUtils.isRtl(applicationContext),
+            RtlUtils.isRtl(applicationContext),
         )
     }
 
