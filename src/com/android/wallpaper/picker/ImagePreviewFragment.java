@@ -68,6 +68,7 @@ import com.android.wallpaper.module.WallpaperPreferences;
 import com.android.wallpaper.util.DisplayUtils;
 import com.android.wallpaper.util.OnFullResImageViewStateChangedListener;
 import com.android.wallpaper.util.ResourceUtils;
+import com.android.wallpaper.util.RtlUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.WallpaperColorsExtractor;
 import com.android.wallpaper.util.WallpaperCropUtils;
@@ -132,7 +133,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         mColorFuture = mWallpaper.computeColorInfo(context);
         mWallpaperPreferences = mInjector.getPreferences(context);
         mPreviewBitmapTransformation = new WallpaperPreviewBitmapTransformation(
-                appContext, isRtl());
+                appContext, RtlUtils.isRtl(context));
         mBitmapCropper = mInjector.getBitmapCropper();
         mWallpaperColorsExtractor = new WallpaperColorsExtractor(sExecutor, Handler.getMain());
         mWallpaperManager = context.getSystemService(WallpaperManager.class);
@@ -398,7 +399,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                 WallpaperCropUtils.calculateVisibleRect(mRawWallpaperSize, crop);
         if (offsetToStart && mDisplayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(
                 requireActivity())) {
-            if (WallpaperCropUtils.isRtl(requireContext())) {
+            if (RtlUtils.isRtl(requireContext())) {
                 visibleRawWallpaperRect.offsetTo(mRawWallpaperSize.x
                         - visibleRawWallpaperRect.width(), visibleRawWallpaperRect.top);
             } else {
@@ -505,7 +506,7 @@ public class ImagePreviewFragment extends PreviewFragment {
             int left = (origWidth - width) / 2;
             int top = (origHeight - height) / 2;
 
-            if (WallpaperCropUtils.isRtl(context)) {
+            if (RtlUtils.isRtl(context)) {
                 left *= -1;
             }
 
