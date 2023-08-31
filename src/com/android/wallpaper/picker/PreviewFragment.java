@@ -514,15 +514,6 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
         }
     }
 
-    /**
-     * Returns whether layout direction is RTL (or false for LTR). Since native RTL layout support
-     * was added in API 17, returns false for versions lower than 17.
-     */
-    protected boolean isRtl() {
-        return getResources().getConfiguration().getLayoutDirection()
-                == View.LAYOUT_DIRECTION_RTL;
-    }
-
     protected void onSetWallpaperSuccess() {
         Activity activity = getActivity();
         if (activity == null) {
