@@ -225,7 +225,7 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
         mUserEventLogger = injector.getUserEventLogger(appContext);
         mWallpaperSetter = new WallpaperSetter(injector.getWallpaperPersister(appContext),
                 injector.getPreferences(appContext), mUserEventLogger,
-                injector.getCurrentWallpaperInfoFactory(appContext), false);
+                injector.getCurrentWallpaperInfoFactory(appContext));
         mViewModelProvider = new ViewModelProvider(requireActivity());
         mSetWallpaperViewModel = mViewModelProvider.get(SetWallpaperViewModel.class);
         mSetWallpaperViewModel.getStatus().observe(requireActivity(), setWallpaperStatus -> {
