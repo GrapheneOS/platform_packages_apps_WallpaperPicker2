@@ -22,6 +22,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ViewConfiguration
 import android.widget.FrameLayout
+import com.android.wallpaper.R
+import com.android.wallpaper.util.RtlUtils
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -36,6 +38,9 @@ class ScreenPreviewClickView(
 
     private var downX = 0f
     private var downY = 0f
+    private var onPreviewClicked: (() -> Unit)? = null
+    // isStart true means the start side; otherwise the end side
+    private var onSideClicked: ((isStart: Boolean) -> Unit)? = null
 
     override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
         if (event.actionMasked == MotionEvent.ACTION_DOWN) {
@@ -46,10 +51,28 @@ class ScreenPreviewClickView(
         // We want to intercept clicks so the Carousel MotionLayout child doesn't prevent users from
         // clicking on the screen preview.
         if (isClick(event, downX, downY)) {
-            return performClick()
+            val viewCenterX = width / 2F
+            val halfPreviewWidth =
+                context.resources.getDimensionPixelSize(R.dimen.screen_preview_width) / 2F
+            val leftXBound = viewCenterX - halfPreviewWidth
+            val rightXBound = viewCenterX + halfPreviewWidth
+            val isRtl = RtlUtils.isRtl(context)
+            when {
+                downX in (leftXBound..rightXBound) -> onPreviewClicked?.invoke()
+                downX < leftXBound -> onSideClicked?.invoke(!isRtl)
+                downX > rightXBound -> onSideClicked?.invoke(isRtl)
+            }
+            return true
         }
-
         return super.onInterceptTouchEvent(event)
+    }
+
+    fun setOnPreviewClickedListener(onPreviewClicked: (() -> Unit)) {
+        this.onPreviewClicked = onPreviewClicked
+    }
+
+    fun setOnSideClickedListener(onSideClicked: ((isStart: Boolean) -> Unit)) {
+        this.onSideClicked = onSideClicked
     }
 
     companion object {
