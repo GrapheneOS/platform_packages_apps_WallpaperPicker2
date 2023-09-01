@@ -20,12 +20,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-/**
- * ViewModel class to keep track of WallpaperColors for the current wallpaper
- *
- * TODO (b/269451870): Rename to WallpaperColorsRepository
- */
-class WallpaperColorsViewModel {
+/** ViewModel class to keep track of WallpaperColors for the current wallpaper */
+class WallpaperColorsRepository {
 
     private val _homeWallpaperColors =
         MutableStateFlow<WallpaperColorsModel>(WallpaperColorsModel.Loading)

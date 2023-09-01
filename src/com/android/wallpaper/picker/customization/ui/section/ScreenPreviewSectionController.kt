@@ -31,7 +31,7 @@ import androidx.lifecycle.lifecycleScope
 import com.android.systemui.shared.clocks.shared.model.ClockPreviewConstants
 import com.android.wallpaper.R
 import com.android.wallpaper.model.CustomizationSectionController
-import com.android.wallpaper.model.WallpaperColorsViewModel
+import com.android.wallpaper.model.WallpaperColorsRepository
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.model.WallpaperPreviewNavigator
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory
@@ -56,7 +56,7 @@ open class ScreenPreviewSectionController(
     private val lifecycleOwner: LifecycleOwner,
     private val screen: CustomizationSections.Screen,
     private val wallpaperInfoFactory: CurrentWallpaperInfoFactory,
-    private val colorViewModel: WallpaperColorsViewModel,
+    private val colorViewModel: WallpaperColorsRepository,
     private val displayUtils: DisplayUtils,
     private val wallpaperPreviewNavigator: WallpaperPreviewNavigator,
     private val wallpaperInteractor: WallpaperInteractor,

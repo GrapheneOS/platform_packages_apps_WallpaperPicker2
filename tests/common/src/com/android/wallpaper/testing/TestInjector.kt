@@ -27,7 +27,7 @@ import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.CategoryProvider
 import com.android.wallpaper.model.InlinePreviewIntentFactory
-import com.android.wallpaper.model.WallpaperColorsViewModel
+import com.android.wallpaper.model.WallpaperColorsRepository
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.AlarmManagerWrapper
 import com.android.wallpaper.module.BitmapCropper
@@ -91,7 +91,7 @@ open class TestInjector : Injector {
     private var undoInteractor: UndoInteractor? = null
     private var wallpaperInteractor: WallpaperInteractor? = null
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
-    private var wallpaperColorsViewModel: WallpaperColorsViewModel? = null
+    private var wallpaperColorsRepository: WallpaperColorsRepository? = null
     private var wallpaperClient: FakeWallpaperClient? = null
     private var previewActivityIntentFactory: InlinePreviewIntentFactory? = null
     private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
@@ -294,9 +294,9 @@ open class TestInjector : Injector {
                 .also { wallpaperSnapshotRestorer = it }
     }
 
-    override fun getWallpaperColorsViewModel(): WallpaperColorsViewModel {
-        return wallpaperColorsViewModel
-            ?: WallpaperColorsViewModel().also { wallpaperColorsViewModel = it }
+    override fun getWallpaperColorsRepository(): WallpaperColorsRepository {
+        return wallpaperColorsRepository
+            ?: WallpaperColorsRepository().also { wallpaperColorsRepository = it }
     }
 
     override fun getMyPhotosIntentProvider(): MyPhotosStarter.MyPhotosIntentProvider {
