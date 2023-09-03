@@ -23,7 +23,7 @@
         android:id="@+id/floating_sheet_container"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:clickable="true"
+        android:importantForAccessibility="no"
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:behavior_skipCollapsed="true"
