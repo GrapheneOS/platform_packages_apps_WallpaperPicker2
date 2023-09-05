@@ -670,7 +670,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         private void setImageWallpaperMetadata(@Destination int destination, int wallpaperId) {
             if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
                 mWallpaperPreferences.clearHomeWallpaperMetadata();
-                mWallpaperPreferences.setHomeWallpaperEffects(null);
                 setImageWallpaperHomeMetadata(wallpaperId);
 
                 // Disable rotation wallpaper when setting static image wallpaper to home screen
