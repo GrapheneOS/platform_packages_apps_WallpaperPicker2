@@ -60,7 +60,6 @@ public class WallpaperSetter {
 
     private final WallpaperPersister mWallpaperPersister;
     private final WallpaperPreferences mPreferences;
-    private final boolean mTestingModeEnabled;
     private final UserEventLogger mUserEventLogger;
     private final CurrentWallpaperInfoFactory mCurrentWallpaperInfoFactory;
     private ProgressDialog mProgressDialog;
@@ -68,45 +67,11 @@ public class WallpaperSetter {
 
     public WallpaperSetter(WallpaperPersister wallpaperPersister,
             WallpaperPreferences preferences, UserEventLogger userEventLogger,
-            CurrentWallpaperInfoFactory currentWallpaperInfoFactory,
-            boolean isTestingModeEnabled) {
-        mTestingModeEnabled = isTestingModeEnabled;
+            CurrentWallpaperInfoFactory currentWallpaperInfoFactory) {
         mWallpaperPersister = wallpaperPersister;
         mPreferences = preferences;
         mUserEventLogger = userEventLogger;
         mCurrentWallpaperInfoFactory = currentWallpaperInfoFactory;
-    }
-
-    /**
-     * Sets current wallpaper to the device with the minimum scale to fit the screen size.
-     *
-     * @param containerActivity main Activity that owns the current fragment
-     * @param wallpaper         info for the actual wallpaper to set
-     * @param destination       the wallpaper destination i.e. home vs. lockscreen vs. both.
-     * @param callback          optional callback to be notified when the wallpaper is set.
-     */
-    public void setCurrentWallpaper(Activity containerActivity, WallpaperInfo wallpaper,
-            @Destination final int destination,
-            @Nullable SetWallpaperCallback callback) {
-        Asset wallpaperAsset = wallpaper.getAsset(containerActivity.getApplicationContext());
-        wallpaperAsset.decodeRawDimensions(containerActivity, dimensions -> {
-            if (dimensions == null) {
-                Log.e(TAG, "Raw wallpaper's dimensions are null");
-                return;
-            }
-
-            Display defaultDisplay = containerActivity.getWindowManager().getDefaultDisplay();
-            Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(defaultDisplay);
-            Rect visibleRawWallpaperRect =
-                    WallpaperCropUtils.calculateVisibleRect(dimensions, screenSize);
-            float wallpaperScale = WallpaperCropUtils.calculateMinZoom(dimensions, screenSize);
-            Rect cropRect = WallpaperCropUtils.calculateCropRect(
-                    containerActivity.getApplicationContext(), defaultDisplay,
-                    dimensions, visibleRawWallpaperRect, wallpaperScale);
-
-            setCurrentWallpaper(containerActivity, wallpaper, wallpaperAsset, destination,
-                    wallpaperScale, cropRect, null, callback);
-        });
     }
 
     /**
@@ -145,7 +110,7 @@ public class WallpaperSetter {
 
         // ProgressDialog endlessly updates the UI thread, keeping it from going idle which
         // therefore causes Espresso to hang once the dialog is shown.
-        if (!mTestingModeEnabled && !containerActivity.isFinishing()) {
+        if (!containerActivity.isFinishing()) {
             int themeResId = (VERSION.SDK_INT < VERSION_CODES.LOLLIPOP)
                     ? R.style.ProgressDialogThemePreL : R.style.LightDialogTheme;
             mProgressDialog = new ProgressDialog(containerActivity, themeResId);
