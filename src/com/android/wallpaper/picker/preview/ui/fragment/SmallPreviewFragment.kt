@@ -24,13 +24,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.android.wallpaper.R
 import com.android.wallpaper.module.CustomizationSections
-import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.AppbarFragment
+import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.ui.binder.ScreenPreviewBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
+import com.android.wallpaper.picker.preview.di.modules.preview.utils.PreviewUtilsModule
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.PreviewUtils
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * This fragment displays the preview of the selected wallpaper on all available workspaces and
@@ -38,6 +40,11 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint(AppbarFragment::class)
 class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
+
+    @Inject lateinit var wallpaperInteractor: WallpaperInteractor
+
+    @PreviewUtilsModule.LockScreenPreviewUtils @Inject lateinit var lockPreviewUtils: PreviewUtils
+
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
 
     override fun onCreateView(
@@ -68,23 +75,15 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
     // TODO(b/291761856): Replace placeholder preview
     private fun bindScreenPreview(view: View) {
+
         ScreenPreviewBinder.bind(
             activity = requireActivity(),
             previewView = view.requireViewById(R.id.preview),
             viewModel =
                 ScreenPreviewViewModel(
-                    previewUtils =
-                        PreviewUtils(
-                            context = requireContext(),
-                            authorityMetadataKey =
-                                requireContext()
-                                    .getString(
-                                        R.string.grid_control_metadata_name,
-                                    ),
-                        ),
+                    previewUtils = lockPreviewUtils,
                     wallpaperInfoProvider = { wallpaperPreviewViewModel.editingWallpaper },
-                    wallpaperInteractor =
-                        InjectorProvider.getInjector().getWallpaperInteractor(requireContext()),
+                    wallpaperInteractor = wallpaperInteractor,
                     screen = CustomizationSections.Screen.HOME_SCREEN,
                     onPreviewClicked = {
                         findNavController()
