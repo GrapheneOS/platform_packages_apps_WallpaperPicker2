@@ -50,8 +50,10 @@ import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.picker.FixedWidthDisplayRatioFrameLayout
 import com.android.wallpaper.picker.WorkspaceSurfaceHolderCallback
 import com.android.wallpaper.picker.customization.animation.view.LoadingAnimation
+import com.android.wallpaper.picker.customization.ui.section.ScreenPreviewClickView
 import com.android.wallpaper.picker.customization.ui.view.WallpaperSurfaceView
 import com.android.wallpaper.picker.customization.ui.viewmodel.AnimationStateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
@@ -108,16 +110,21 @@ object ScreenPreviewBinder {
         // before the engine is ready, and b) we need this state for onResume
         // TODO(b/287618705) Remove this
         val showLivePreview = AtomicBoolean(isWallpaperAlwaysVisible)
-        val fixedWidthDisplayFrameLayout = previewView.parent as? View
-        val screenPreviewClickView = fixedWidthDisplayFrameLayout?.parent as? View
-        // Set the content description on the parent view
-        screenPreviewClickView?.contentDescription =
-            activity.resources.getString(viewModel.previewContentDescription)
-        fixedWidthDisplayFrameLayout?.importantForAccessibility =
-            View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+        val fixedWidthDisplayFrameLayout = previewView.parent as? FixedWidthDisplayRatioFrameLayout
+        val screenPreviewClickView = fixedWidthDisplayFrameLayout?.parent as? ScreenPreviewClickView
+        if (screenPreviewClickView != null) {
+            // If screenPreviewClickView exists, we will have it handle accessibility and
+            // disable a11y for the descendants.
+            // Set the content description on the parent view
+            screenPreviewClickView.contentDescription =
+                activity.resources.getString(viewModel.previewContentDescription)
+            fixedWidthDisplayFrameLayout.importantForAccessibility =
+                View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+            // This ensures that we do not announce the time multiple times
+            previewView.importantForAccessibility =
+                View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+        }
 
-        // This ensures that we do not announce the time multiple times
-        previewView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
         var wallpaperIsReadyForReveal = false
         val surfaceViewsReady = {
             wallpaperSurface.setBackgroundColor(Color.TRANSPARENT)
