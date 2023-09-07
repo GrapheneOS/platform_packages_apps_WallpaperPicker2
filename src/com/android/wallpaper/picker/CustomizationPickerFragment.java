@@ -342,7 +342,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                 screen,
                 getActivity(),
                 getViewLifecycleOwner(),
-                injector.getWallpaperColorsViewModel(),
+                injector.getWallpaperColorsRepository(),
                 getPermissionRequester(),
                 getWallpaperPreviewNavigator(),
                 this,

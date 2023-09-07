@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.model.CustomizationSectionController
 import com.android.wallpaper.model.PermissionRequester
-import com.android.wallpaper.model.WallpaperColorsViewModel
+import com.android.wallpaper.model.WallpaperColorsRepository
 import com.android.wallpaper.model.WallpaperPreviewNavigator
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory
 import com.android.wallpaper.module.CustomizationSections
@@ -20,7 +20,7 @@ class TestCustomizationSections : CustomizationSections {
         screen: CustomizationSections.Screen?,
         activity: FragmentActivity?,
         lifecycleOwner: LifecycleOwner?,
-        wallpaperColorsViewModel: WallpaperColorsViewModel?,
+        wallpaperColorsRepository: WallpaperColorsRepository?,
         permissionRequester: PermissionRequester?,
         wallpaperPreviewNavigator: WallpaperPreviewNavigator?,
         sectionNavigationController:

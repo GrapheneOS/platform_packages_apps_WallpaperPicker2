@@ -30,7 +30,7 @@ import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.CategoryProvider
 import com.android.wallpaper.model.InlinePreviewIntentFactory
 import com.android.wallpaper.model.LiveWallpaperInfo
-import com.android.wallpaper.model.WallpaperColorsViewModel
+import com.android.wallpaper.model.WallpaperColorsRepository
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
@@ -90,7 +90,7 @@ internal constructor(
     private var wallpaperInteractor: WallpaperInteractor? = null
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
     private var secureSettingsRepository: SecureSettingsRepository? = null
-    private var wallpaperColorsViewModel: WallpaperColorsViewModel? = null
+    private var wallpaperColorsRepository: WallpaperColorsRepository? = null
     private var previewActivityIntentFactory: InlinePreviewIntentFactory? = null
     private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
 
@@ -343,9 +343,9 @@ internal constructor(
                 .also { secureSettingsRepository = it }
     }
 
-    override fun getWallpaperColorsViewModel(): WallpaperColorsViewModel {
-        return wallpaperColorsViewModel
-            ?: WallpaperColorsViewModel().also { wallpaperColorsViewModel = it }
+    override fun getWallpaperColorsRepository(): WallpaperColorsRepository {
+        return wallpaperColorsRepository
+            ?: WallpaperColorsRepository().also { wallpaperColorsRepository = it }
     }
 
     override fun getMyPhotosIntentProvider(): MyPhotosStarter.MyPhotosIntentProvider {
