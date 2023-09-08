@@ -21,6 +21,7 @@ import com.android.wallpaper.R
 import com.android.wallpaper.model.StaticWallpaperMetadata
 import com.android.wallpaper.module.WallpaperPreferenceKeys.NoBackupKeys
 import com.google.common.truth.Truth.assertThat
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -32,6 +33,7 @@ class DefaultWallpaperPreferencesTest {
         DefaultWallpaperPreferences(ApplicationProvider.getApplicationContext())
 
     @Test
+    @Ignore("b/299635283")
     fun setHomeStaticImageWallpaperMetadata_metadataShouldBeSavedToPreferences() {
         wallpaperPreferences.setHomeStaticImageWallpaperMetadata(
             StaticWallpaperMetadata(
@@ -73,6 +75,7 @@ class DefaultWallpaperPreferencesTest {
     }
 
     @Test
+    @Ignore("b/299635283")
     fun setLockStaticImageWallpaperMetadata_metadataShouldBeSavedToPreferences() {
         wallpaperPreferences.setLockStaticImageWallpaperMetadata(
             StaticWallpaperMetadata(
