@@ -119,7 +119,7 @@ open class ScreenPreviewSectionController(
                     getWallpaperInfo()?.let { wallpaperInfo ->
                         wallpaperPreviewNavigator.showViewOnlyPreview(
                             wallpaperInfo,
-                            !isOnLockScreen,
+                            /* isAssetIdPresent= */ false,
                         )
                     }
                 }
