@@ -24,100 +24,33 @@ import com.android.wallpaper.module.UserEventLogger;
  */
 public class TestUserEventLogger implements UserEventLogger {
 
-    private int mNumDailyRefreshTurnedOnEvents;
-    private int mNumCurrentWallpaperPreviewedEvents;
-    private int mNumActionClickedEvents;
-    private int mNumIndividualWallpaperSelectedEvents;
-    private int mNumCategorySelectedEvents;
     private int mNumWallpaperSetEvents;
     private int mNumWallpaperSetResultEvents;
-    private String mLastCollectionId;
-    private String mLastWallpaperId;
     @WallpaperSetResult
     private int mLastWallpaperSetResult;
-    private int mLastDailyRotationHour;
-    private int mNum1DayActiveLogs;
-    private int mNum7DayActiveLogs;
-    private int mNum14DayActiveLogs;
-    private int mNum28DayActiveLogs;
-    private int mLastDailyWallpaperRotationStatus;
-    private int mNumDaysDailyRotationFailed;
-    private int mNumDaysDailyRotationNotAttempted;
-    private int mLastDailyWallpaperUpdateResult;
-    private int mStandalonePreviewLaunches;
-    private int mNumRestores;
-    private String mWallpaperSetEffects;
-    private String mWallpaperApplyEffect;
-    private int mWallpaperApplyEffectStatus;
-    private long mTimeElapsedMillis;
-    private int mResultCode;
-    private String mWallpaperProbeEffect;
-    private int mWallpaperProbeStatus;
 
     public TestUserEventLogger() {
-        mLastDailyRotationHour = -1;
-        mLastDailyWallpaperRotationStatus = -1;
-        mNumDaysDailyRotationFailed = -1;
-        mNumDaysDailyRotationNotAttempted = -1;
-    }
-
-    @Override
-    public void logResumed(boolean provisioned, boolean wallpaper) {
-
-    }
-
-    @Override
-    public void logStopped() {
-
+        // No-op
     }
 
     @Override
     public void logAppLaunched(Intent launchSource) {
-        // Do nothing.
-    }
-
-    @Override
-    public void logDailyRefreshTurnedOn() {
-        mNumDailyRefreshTurnedOnEvents++;
-    }
-
-    public int getNumDailyRefreshTurnedOnEvents() {
-        return mNumDailyRefreshTurnedOnEvents;
-    }
-
-    @Override
-    public void logCurrentWallpaperPreviewed() {
-        mNumCurrentWallpaperPreviewedEvents++;
+        // No-op
     }
 
     @Override
     public void logActionClicked(String collectionId, int actionLabelResId) {
-        mNumActionClickedEvents++;
-        mLastCollectionId = collectionId;
-    }
-
-    public int getNumCurrentWallpaperPreviewedEvents() {
-        return mNumCurrentWallpaperPreviewedEvents;
-    }
-
-    public int getNumActionClickedEvents() {
-        return mNumActionClickedEvents;
+        // No-op
     }
 
     @Override
     public void logIndividualWallpaperSelected(String collectionId) {
-        mNumIndividualWallpaperSelectedEvents++;
-        mLastCollectionId = collectionId;
-    }
-
-    public int getNumIndividualWallpaperSelectedEvents() {
-        return mNumIndividualWallpaperSelectedEvents;
+        // No-op
     }
 
     @Override
     public void logCategorySelected(String collectionId) {
-        mNumCategorySelectedEvents++;
-        mLastCollectionId = collectionId;
+        // No-op
     }
 
     @Override
@@ -125,16 +58,9 @@ public class TestUserEventLogger implements UserEventLogger {
         // No-op
     }
 
-    public int getNumCategorySelectedEvents() {
-        return mNumCategorySelectedEvents;
-    }
-
     @Override
     public void logWallpaperSet(String collectionId, String wallpaperId, String effects) {
         mNumWallpaperSetEvents++;
-        mLastCollectionId = collectionId;
-        mLastWallpaperId = wallpaperId;
-        mWallpaperSetEffects = effects;
     }
 
     @Override
@@ -160,28 +86,18 @@ public class TestUserEventLogger implements UserEventLogger {
     }
 
     @Override
-    public void logDailyWallpaperRotationHour(int hour) {
-        mLastDailyRotationHour = hour;
-    }
-
-    @Override
-    public void logDailyWallpaperDecodes(boolean decodes) {
-        // No-op
-    }
-
-    @Override
     public void logRefreshDailyWallpaperButtonClicked() {
         // No-op
     }
 
     @Override
     public void logDailyWallpaperRotationStatus(int status) {
-        mLastDailyWallpaperRotationStatus = status;
+        // No-ops
     }
 
     @Override
     public void logDailyWallpaperSetNextWallpaperResult(@DailyWallpaperUpdateResult int result) {
-        mLastDailyWallpaperUpdateResult = result;
+        // No-op
     }
 
     @Override
@@ -191,7 +107,7 @@ public class TestUserEventLogger implements UserEventLogger {
 
     @Override
     public void logNumDaysDailyRotationFailed(int days) {
-        mNumDaysDailyRotationFailed = days;
+        // No-op
     }
 
     @Override
@@ -202,12 +118,12 @@ public class TestUserEventLogger implements UserEventLogger {
 
     @Override
     public void logNumDaysDailyRotationNotAttempted(int days) {
-        mNumDaysDailyRotationNotAttempted = days;
+        // No-op
     }
 
     @Override
     public void logStandalonePreviewLaunched() {
-        mStandalonePreviewLaunches++;
+        // No-op
     }
 
     @Override
@@ -227,21 +143,17 @@ public class TestUserEventLogger implements UserEventLogger {
 
     @Override
     public void logRestored() {
-        mNumRestores++;
+        // No-op
     }
 
     @Override
     public void logEffectApply(String effect, int status, long timeElapsedMillis, int resultCode) {
-        mWallpaperApplyEffect = effect;
-        mWallpaperApplyEffectStatus = status;
-        mTimeElapsedMillis = timeElapsedMillis;
-        mResultCode = resultCode;
+        // No-op
     }
 
     @Override
     public void logEffectProbe(String effect, @EffectStatus int status) {
-        mWallpaperProbeEffect = effect;
-        mWallpaperProbeStatus = status;
+        // No-op
     }
 
     @Override
@@ -253,14 +165,6 @@ public class TestUserEventLogger implements UserEventLogger {
         return mNumWallpaperSetEvents;
     }
 
-    public String getLastCollectionId() {
-        return mLastCollectionId;
-    }
-
-    public String getLastWallpaperId() {
-        return mLastWallpaperId;
-    }
-
     public int getNumWallpaperSetResultEvents() {
         return mNumWallpaperSetResultEvents;
     }
@@ -268,49 +172,5 @@ public class TestUserEventLogger implements UserEventLogger {
     @WallpaperSetResult
     public int getLastWallpaperSetResult() {
         return mLastWallpaperSetResult;
-    }
-
-    public int getLastDailyRotationHour() {
-        return mLastDailyRotationHour;
-    }
-
-    public int getNum1DayActiveLogs() {
-        return mNum1DayActiveLogs;
-    }
-
-    public int getNum7DayActiveLogs() {
-        return mNum7DayActiveLogs;
-    }
-
-    public int getNum14DayActiveLogs() {
-        return mNum14DayActiveLogs;
-    }
-
-    public int getNum28DayActiveLogs() {
-        return mNum28DayActiveLogs;
-    }
-
-    public int getLastDailyWallpaperRotationStatus() {
-        return mLastDailyWallpaperRotationStatus;
-    }
-
-    public int getNumDaysDailyRotationFailed() {
-        return mNumDaysDailyRotationFailed;
-    }
-
-    public int getNumDaysDailyRotationNotAttempted() {
-        return mNumDaysDailyRotationNotAttempted;
-    }
-
-    public int getLastDailyWallpaperUpdateResult() {
-        return mLastDailyWallpaperUpdateResult;
-    }
-
-    public int getStandalonePreviewLaunches() {
-        return mStandalonePreviewLaunches;
-    }
-
-    public int getNumRestores() {
-        return mNumRestores;
     }
 }

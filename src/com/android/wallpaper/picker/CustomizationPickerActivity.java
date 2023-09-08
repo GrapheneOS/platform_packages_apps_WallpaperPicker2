@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -191,11 +190,6 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
     protected void onResume() {
         super.onResume();
         mIsSafeToCommitFragmentTransaction = true;
-        boolean wallpaperOnly = isWallpaperOnlyMode(getIntent());
-        boolean provisioned = Settings.Global.getInt(getContentResolver(),
-                Settings.Global.DEVICE_PROVISIONED, 0) != 0;
-
-        mUserEventLogger.logResumed(provisioned, wallpaperOnly);
     }
 
     @Override
@@ -206,7 +200,6 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
 
     @Override
     protected void onStop() {
-        mUserEventLogger.logStopped();
         if (mNetworkStatusListener != null) {
             mNetworkStatusNotifier.unregisterListener(mNetworkStatusListener);
             mNetworkStatusListener = null;

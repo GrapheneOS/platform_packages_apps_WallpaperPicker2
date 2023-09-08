@@ -51,15 +51,7 @@ public interface UserEventLogger {
     int DAILY_WALLPAPER_METADATA_FAILURE_SERVER_ERROR = 3;
     int DAILY_WALLPAPER_METADATA_FAILURE_TIMEOUT = 4;
 
-    void logResumed(boolean provisioned, boolean wallpaper);
-
-    void logStopped();
-
     void logAppLaunched(Intent launchSource);
-
-    void logDailyRefreshTurnedOn();
-
-    void logCurrentWallpaperPreviewed();
 
     void logActionClicked(String collectionId, int actionLabelResId);
 
@@ -99,21 +91,6 @@ public interface UserEventLogger {
      * midnight to midnight) if daily rotation has been enabled at least since midnight yesterday.
      */
     void logNumDailyWallpaperRotationsPreviousDay();
-
-    /**
-     * Logs given the hour of day that a successful "daily wallpaper" rotation occurred.
-     *
-     * @param hour An hour from 0 to 23.
-     */
-    void logDailyWallpaperRotationHour(int hour);
-
-    /**
-     * Logs whether the image file for the daily wallpaper "rotating image wallpaper" is successfully
-     * decoded as a bitmap.
-     *
-     * @param decodes Whether the decode succeeded.
-     */
-    void logDailyWallpaperDecodes(boolean decodes);
 
     /**
      * Logs the last-known status of daily wallpapers on the device.
