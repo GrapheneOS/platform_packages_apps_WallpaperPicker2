@@ -46,7 +46,6 @@ import com.android.wallpaper.module.UserEventLogger
 import com.android.wallpaper.module.WallpaperPersister
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.WallpaperRefresher
-import com.android.wallpaper.module.WallpaperRotationRefresher
 import com.android.wallpaper.module.WallpaperStatusChecker
 import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
@@ -85,7 +84,6 @@ open class TestInjector : Injector {
     private var wallpaperPersister: WallpaperPersister? = null
     private var prefs: WallpaperPreferences? = null
     private var wallpaperRefresher: WallpaperRefresher? = null
-    private var wallpaperRotationRefresher: WallpaperRotationRefresher? = null
     private var wallpaperStatusChecker: WallpaperStatusChecker? = null
     private var flags: BaseFlags? = null
     private var undoInteractor: UndoInteractor? = null
@@ -221,17 +219,6 @@ open class TestInjector : Injector {
     override fun getWallpaperRefresher(context: Context): WallpaperRefresher {
         return wallpaperRefresher
             ?: TestWallpaperRefresher(context.applicationContext).also { wallpaperRefresher = it }
-    }
-
-    override fun getWallpaperRotationRefresher(): WallpaperRotationRefresher {
-        return wallpaperRotationRefresher
-            ?: WallpaperRotationRefresher {
-                    context: Context?,
-                    listener: WallpaperRotationRefresher.Listener ->
-                    // Not implemented
-                    listener.onError()
-                }
-                .also { wallpaperRotationRefresher = it }
     }
 
     override fun getWallpaperStatusChecker(context: Context): WallpaperStatusChecker {
