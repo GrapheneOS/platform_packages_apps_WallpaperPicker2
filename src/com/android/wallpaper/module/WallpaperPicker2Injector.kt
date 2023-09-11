@@ -83,7 +83,6 @@ internal constructor(
     private var wallpaperPersister: WallpaperPersister? = null
     @Inject lateinit var prefs: WallpaperPreferences
     private var wallpaperRefresher: WallpaperRefresher? = null
-    private var wallpaperRotationRefresher: WallpaperRotationRefresher? = null
     private var wallpaperStatusChecker: WallpaperStatusChecker? = null
     private var flags: BaseFlags? = null
     private var undoInteractor: UndoInteractor? = null
@@ -268,16 +267,6 @@ internal constructor(
             ?: DefaultWallpaperRefresher(context.applicationContext).also {
                 wallpaperRefresher = it
             }
-    }
-
-    @Synchronized
-    override fun getWallpaperRotationRefresher(): WallpaperRotationRefresher {
-        return wallpaperRotationRefresher
-            ?: WallpaperRotationRefresher { _, listener ->
-                    // Not implemented
-                    listener.onError()
-                }
-                .also { wallpaperRotationRefresher = it }
     }
 
     override fun getWallpaperStatusChecker(context: Context): WallpaperStatusChecker {
