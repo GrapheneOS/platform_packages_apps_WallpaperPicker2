@@ -15,18 +15,11 @@
      limitations under the License.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.android.wallpaper.picker.TouchForwardingLayout
-        android:id="@+id/touch_forwarding_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/preview_screen_description"/>
-
-    <include layout="@layout/wallpaper_preview_crop" />
-
-    <include layout="@layout/section_header" />
-
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+    <com.android.wallpaper.picker.preview.ui.view.FullPreviewSurfaceView
+        android:id="@+id/wallpaper_surface"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </FrameLayout>

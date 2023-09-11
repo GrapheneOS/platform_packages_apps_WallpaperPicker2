@@ -21,15 +21,13 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ColorSpace
 import android.graphics.Point
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.asset.CurrentWallpaperAssetVN
 import com.android.wallpaper.dispatchers.BackgroundDispatcher
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.scopes.ViewModelScoped
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 import kotlinx.coroutines.CancellableContinuation
@@ -40,17 +38,17 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 
-/** Top level [ViewModel] for [WallpaperPreviewActivity] and its fragments */
-@HiltViewModel
+/** View model for static wallpaper preview used in [WallpaperPreviewActivity] and its fragments */
+@ViewModelScoped
 class StaticWallpaperPreviewViewModel
 @Inject
 constructor(
     private val wallpaperPreferences: WallpaperPreferences,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
-) : ViewModel() {
+) {
 
     private var initialized = false
 
@@ -102,7 +100,7 @@ constructor(
      * Init function for setting the wallpaper info that is retrieved from the intent bundle when
      * onCreate() in Activity or Fragment.
      */
-    fun initializeViewModel(context: Context, wallpaper: WallpaperInfo) {
+    suspend fun initializeViewModel(context: Context, wallpaper: WallpaperInfo) {
         val appContext = context.applicationContext
         if (!initialized) {
             val asset: Asset? = wallpaper.getAsset(appContext)
@@ -111,9 +109,7 @@ constructor(
             wallpaperId = id
             id?.let { wallpaperPreferences.getWallpaperColors(it) }
                 ?.run { _cachedWallpaperColors.value = this }
-            viewModelScope.launch(bgDispatcher) {
-                _lowResBitmap.value = asset?.getLowResBitmap(appContext)
-            }
+            withContext(bgDispatcher) { _lowResBitmap.value = asset?.getLowResBitmap(appContext) }
             initialized = true
         }
     }
