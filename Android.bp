@@ -39,6 +39,7 @@ android_library {
         "androidx.navigation_navigation-ui-ktx",
         "androidx.navigation_navigation-fragment-ktx",
         "com.google.android.material_material",
+        "com_android_wallpaper_flags_lib",
         "glide-prebuilt",
         "glide-gifdecoder-prebuilt",
         "glide-disklrucache-prebuilt",
