@@ -142,7 +142,7 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
 
     protected ProgressBar mProgressBar;
 
-    private boolean mIsViewAsHome;
+    protected boolean mIsViewAsHome;
 
     /**
      * We create an instance of WallpaperInfo from CurrentWallpaperInfo when a user taps on
