@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Категорії фонових малюнків"</string>
-    <string name="set_wallpaper_button_text" msgid="5445978864530156290">"Зробити фоновим малюнком"</string>
+    <string name="set_wallpaper_button_text" msgid="5445978864530156290">"Зробити фоном"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Налаштування фонового малюнка…"</string>
     <string name="try_again" msgid="8278874823700921234">"Повторити"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Не вдалося налаштувати фоновий малюнок."</string>
