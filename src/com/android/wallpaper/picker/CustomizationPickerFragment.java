@@ -62,17 +62,13 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
     private static final String TAG = "CustomizationPickerFragment";
     private static final String SCROLL_POSITION_Y = "SCROLL_POSITION_Y";
-    protected static final String KEY_IS_USE_REVAMPED_UI = "is_use_revamped_ui";
     private static final String KEY_START_FROM_LOCK_SCREEN = "start_from_lock_screen";
     private DisposableHandle mBinding;
 
     /** Returns a new instance of {@link CustomizationPickerFragment}. */
-    public static CustomizationPickerFragment newInstance(
-            boolean isUseRevampedUi,
-            boolean startFromLockScreen) {
+    public static CustomizationPickerFragment newInstance(boolean startFromLockScreen) {
         final CustomizationPickerFragment fragment = new CustomizationPickerFragment();
         final Bundle args = new Bundle();
-        args.putBoolean(KEY_IS_USE_REVAMPED_UI, isUseRevampedUi);
         args.putBoolean(KEY_START_FROM_LOCK_SCREEN, startFromLockScreen);
         fragment.setArguments(args);
         return fragment;
@@ -95,10 +91,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        final boolean shouldUseRevampedUi = shouldUseRevampedUi();
-        final int layoutId = shouldUseRevampedUi
-                ? R.layout.toolbar_container_layout
-                : R.layout.collapsing_toolbar_container_layout;
+        final int layoutId = R.layout.toolbar_container_layout;
         final View view = inflater.inflate(layoutId, container, false);
         if (ActivityUtils.isLaunchedFromSettingsRelated(getActivity().getIntent())) {
             setUpToolbar(view, !ActivityEmbeddingUtils.shouldHideNavigateUpButton(
@@ -198,7 +191,7 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
     @Override
     protected int getToolbarId() {
-        return shouldUseRevampedUi() ? R.id.toolbar : R.id.action_bar;
+        return R.id.toolbar;
     }
 
     @Override
@@ -377,17 +370,6 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
     private WallpaperPreviewNavigator getWallpaperPreviewNavigator() {
         return (WallpaperPreviewNavigator) getActivity();
-    }
-
-    private boolean shouldUseRevampedUi() {
-        final Bundle args = getArguments();
-        if (args != null && args.containsKey(KEY_IS_USE_REVAMPED_UI)) {
-            return args.getBoolean(KEY_IS_USE_REVAMPED_UI);
-        } else {
-            throw new IllegalStateException(
-                    "Must contain KEY_IS_USE_REVAMPED_UI argument, did you instantiate directly"
-                            + " instead of using the newInstance function?");
-        }
     }
 
     // TODO (b/282237387): Move wallpaper picker out of the 2-pane settings and make it a
