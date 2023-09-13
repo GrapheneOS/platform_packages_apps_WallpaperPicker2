@@ -586,7 +586,8 @@ public class LivePreviewFragment extends PreviewFragment {
                             LivePreviewFragment.super.onWallpaperColorsChanged(colors);
                         }
                     },
-                    mWallpaperSurface);
+                    mWallpaperSurface, null, mIsViewAsHome
+                    ? WallpaperManager.FLAG_SYSTEM : WallpaperManager.FLAG_LOCK);
             mWallpaperConnection.setVisibility(true);
         } else {
             WallpaperColorsLoader.getWallpaperColors(
