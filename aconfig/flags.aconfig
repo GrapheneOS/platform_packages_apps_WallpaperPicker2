@@ -1,0 +1,8 @@
+package: "com.android.wallpaper"
+
+flag {
+    name: "multi_crop_preview_ui_flag"
+    namespace: "customization_picker"
+    description: "Enables new preview UI if both the SysUI multi crop flag and this flag are true."
+    bug: "291761856"
+}
