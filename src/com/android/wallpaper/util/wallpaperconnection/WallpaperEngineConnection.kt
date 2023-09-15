@@ -25,8 +25,8 @@ class WallpaperEngineConnection(
 
     suspend fun getEngine(
         wallpaperService: IWallpaperService,
+        destinationFlag: Int,
         surfaceView: SurfaceView,
-        destinationFlag: Int
     ): IWallpaperEngine {
         return engine
             ?: suspendCancellableCoroutine { k: CancellableContinuation<IWallpaperEngine> ->
@@ -34,8 +34,8 @@ class WallpaperEngineConnection(
                 attachEngineConnection(
                     wallpaperEngineConnection = this,
                     wallpaperService = wallpaperService,
+                    destinationFlag = destinationFlag,
                     surfaceView = surfaceView,
-                    destinationFlag = destinationFlag
                 )
             }
     }
@@ -77,8 +77,8 @@ class WallpaperEngineConnection(
         private fun attachEngineConnection(
             wallpaperEngineConnection: WallpaperEngineConnection,
             wallpaperService: IWallpaperService,
-            surfaceView: SurfaceView,
             destinationFlag: Int,
+            surfaceView: SurfaceView,
         ) {
             try {
                 val preUMethod: Method =

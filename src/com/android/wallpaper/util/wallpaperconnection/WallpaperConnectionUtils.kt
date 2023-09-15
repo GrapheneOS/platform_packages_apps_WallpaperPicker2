@@ -16,30 +16,65 @@ import android.view.SurfaceControlViewHost
 import android.view.SurfaceView
 import android.view.View
 import android.widget.ImageView
+import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.util.ScreenSizeCalculator
 import com.android.wallpaper.util.WallpaperConnection
 import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 object WallpaperConnectionUtils {
+
+    private val engineMap = mutableMapOf<String, Deferred<IWallpaperEngine>>()
+    private val mutex = Mutex()
 
     /** Only call this function when the surface view is attached. */
     suspend fun connect(
         context: Context,
+        @MainDispatcher mainScope: CoroutineScope,
         wallpaperInfo: WallpaperInfo,
         destinationFlag: Int,
-        surfaceView: SurfaceView
+        surfaceView: SurfaceView,
     ) {
-        val intent = wallpaperInfo.getWallpaperIntent() ?: return
-        // TODO b/300976040(giolin): Reuse services and engines for live wallpapers.
-        // Bind service
-        val wallpaperService = bindService(context, intent)
-        // Attach wallpaper connection to service and get wallpaper engine
         val displayMetrics = getDisplayMetrics(surfaceView)
-        val connection = WallpaperEngineConnection(displayMetrics)
-        val wallpaperEngine = connection.getEngine(wallpaperService, surfaceView, destinationFlag)
-        // Use wallpaper engine to mirror and reparent
-        mirrorAndReparent(wallpaperEngine, surfaceView, displayMetrics)
+        val engineKey = wallpaperInfo.getKey()
+
+        if (!engineMap.containsKey(engineKey)) {
+            mutex.withLock {
+                if (!engineMap.containsKey(engineKey)) {
+                    engineMap[engineKey] =
+                        mainScope.async {
+                            initEngine(
+                                context,
+                                wallpaperInfo.getWallpaperIntent(),
+                                displayMetrics,
+                                destinationFlag,
+                                surfaceView,
+                            )
+                        }
+                }
+            }
+        }
+
+        engineMap[engineKey]?.await()?.let { mirrorAndReparent(it, surfaceView, displayMetrics) }
+    }
+
+    private suspend fun initEngine(
+        context: Context,
+        wallpaperIntent: Intent,
+        displayMetrics: Point,
+        destinationFlag: Int,
+        surfaceView: SurfaceView
+    ): IWallpaperEngine {
+        // Bind service
+        val wallpaperService = bindService(context, wallpaperIntent)
+        // Attach wallpaper connection to service and get wallpaper engine
+        return WallpaperEngineConnection(displayMetrics)
+            .getEngine(wallpaperService, destinationFlag, surfaceView)
     }
 
     fun SurfaceView.setUpSurface(context: Context) {
@@ -55,9 +90,13 @@ object WallpaperConnectionUtils {
         host.surfacePackage?.let { setChildSurfacePackage(it) }
     }
 
-    private fun WallpaperInfo.getWallpaperIntent(): Intent? {
+    private fun WallpaperInfo.getWallpaperIntent(): Intent {
         return Intent(WallpaperService.SERVICE_INTERFACE)
             .setClassName(this.packageName, this.serviceName)
+    }
+
+    private fun WallpaperInfo.getKey(): String {
+        return this.packageName.plus(":").plus(this.serviceName)
     }
 
     private suspend fun bindService(context: Context, intent: Intent): IWallpaperService =

@@ -58,6 +58,7 @@ class WallpaperPreviewDemoActivity : Hilt_WallpaperPreviewDemoActivity() {
                             surfaceView.setUpSurface(applicationContext)
                             WallpaperConnectionUtils.connect(
                                 applicationContext,
+                                lifecycleScope,
                                 wallpaper.wallpaperComponent,
                                 WallpaperPersister.DEST_LOCK_SCREEN,
                                 surfaceView,
