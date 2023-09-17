@@ -268,11 +268,12 @@ public class WallpaperSetter {
             @Destination final int destination, @Nullable WallpaperColors colors,
             @Nullable SetWallpaperCallback callback) {
         try {
-            if (destination == WallpaperPersister.DEST_LOCK_SCREEN) {
+            WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
+            if (destination == WallpaperPersister.DEST_LOCK_SCREEN
+                    && !wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
                 throw new IllegalArgumentException(
                         "Live wallpaper cannot be applied on lock screen only");
             }
-            WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
             setWallpaperComponent(wallpaperManager, wallpaper, destination);
             mPreferences.storeLatestWallpaper(WallpaperPersister.destinationToFlags(destination),
                     wallpaper.getWallpaperId(),
