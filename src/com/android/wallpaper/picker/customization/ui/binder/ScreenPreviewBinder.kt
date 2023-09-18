@@ -542,7 +542,8 @@ object ScreenPreviewBinder {
             },
             wallpaperSurface,
             mirrorSurface,
-            screen.toFlag()
+            screen.toFlag(),
+            WallpaperConnection.WHICH_PREVIEW.PREVIEW_CURRENT
         )
 
     private fun removeAndReadd(view: View) {
