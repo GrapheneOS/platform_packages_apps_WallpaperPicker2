@@ -587,7 +587,10 @@ public class LivePreviewFragment extends PreviewFragment {
                         }
                     },
                     mWallpaperSurface, null, mIsViewAsHome
-                    ? WallpaperManager.FLAG_SYSTEM : WallpaperManager.FLAG_LOCK);
+                    ? WallpaperManager.FLAG_SYSTEM : WallpaperManager.FLAG_LOCK,
+                    mIsAssetIdPresent ? WallpaperConnection.WHICH_PREVIEW.EDIT_NON_CURRENT
+                            : WallpaperConnection.WHICH_PREVIEW.EDIT_CURRENT
+                    );
             mWallpaperConnection.setVisibility(true);
         } else {
             WallpaperColorsLoader.getWallpaperColors(
