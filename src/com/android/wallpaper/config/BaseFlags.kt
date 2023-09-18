@@ -41,13 +41,6 @@ abstract class BaseFlags {
 
     open fun isMultiCropEnabled() = WallpaperManager.isMultiCropEnabled()
 
-    open fun isUseRevampedUiEnabled(context: Context): Boolean {
-        return getCachedFlags(context)
-            .firstOrNull { flag ->
-                flag.name == Contract.FlagsTable.FLAG_NAME_REVAMPED_WALLPAPER_UI
-            }
-            ?.value == true
-    }
     open fun isCustomClocksEnabled(context: Context): Boolean {
         return getCachedFlags(context)
             .firstOrNull { flag ->
