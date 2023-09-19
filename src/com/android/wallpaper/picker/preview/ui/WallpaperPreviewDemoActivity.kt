@@ -18,17 +18,24 @@ package com.android.wallpaper.picker.preview.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.SurfaceHolder
+import android.view.SurfaceView
 import androidx.activity.viewModels
-import androidx.core.app.ActivityCompat.requireViewById
+import androidx.lifecycle.lifecycleScope
 import com.android.wallpaper.R
+import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.module.WallpaperPersister
 import com.android.wallpaper.picker.BasePreviewActivity
 import com.android.wallpaper.picker.preview.ui.binder.StaticWallpaperPreviewBinder
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.RtlUtils
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.setUpSurface
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 /** A demo Activity showing wallpaper preview rendering built in the recommended architecture. */
 @AndroidEntryPoint(BasePreviewActivity::class)
@@ -36,25 +43,53 @@ class WallpaperPreviewDemoActivity : Hilt_WallpaperPreviewDemoActivity() {
 
     private val viewModel: WallpaperPreviewViewModel by viewModels()
     @Inject lateinit var displayUtils: DisplayUtils
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wallpaper_preview_demo)
-        viewModel.initializeViewModel(
-            context = applicationContext,
-            wallpaper =
-                checkNotNull(
-                    intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java)
-                ),
-        )
-        StaticWallpaperPreviewBinder.bind(
-            fullResImageView = requireViewById(R.id.full_res_image),
-            lowResImageView = requireViewById(R.id.low_res_image),
-            viewModel = viewModel.getStaticWallpaperPreviewViewModel(),
-            lifecycleOwner = this,
-            isSingleDisplayOrUnfoldedHorizontalHinge =
-                displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(this),
-            isRtl = RtlUtils.isRtl(applicationContext),
-        )
+        val wallpaper =
+            checkNotNull(intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java))
+        if (wallpaper is LiveWallpaperInfo) {
+            val surfaceView = requireViewById<SurfaceView>(R.id.wallpaper_surface)
+            surfaceView.holder.addCallback(
+                object : SurfaceHolder.Callback {
+                    override fun surfaceCreated(holder: SurfaceHolder) {
+                        lifecycleScope.launch {
+                            surfaceView.setUpSurface(applicationContext)
+                            WallpaperConnectionUtils.connect(
+                                applicationContext,
+                                wallpaper.wallpaperComponent,
+                                WallpaperPersister.DEST_LOCK_SCREEN,
+                                surfaceView,
+                            )
+                        }
+                    }
+
+                    override fun surfaceChanged(
+                        holder: SurfaceHolder,
+                        format: Int,
+                        width: Int,
+                        height: Int
+                    ) {}
+
+                    override fun surfaceDestroyed(holder: SurfaceHolder) {}
+                }
+            )
+        } else {
+            viewModel.initializeViewModel(
+                context = applicationContext,
+                wallpaper = wallpaper,
+            )
+            StaticWallpaperPreviewBinder.bind(
+                fullResImageView = requireViewById(R.id.full_res_image),
+                lowResImageView = requireViewById(R.id.low_res_image),
+                viewModel = viewModel.getStaticWallpaperPreviewViewModel(),
+                lifecycleOwner = this,
+                isSingleDisplayOrUnfoldedHorizontalHinge =
+                    displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(this),
+                isRtl = RtlUtils.isRtl(applicationContext),
+            )
+        }
     }
 
     companion object {
