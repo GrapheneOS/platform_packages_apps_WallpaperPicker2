@@ -91,6 +91,13 @@ filegroup {
     ],
 }
 
+// Production-only files that should be excluded in tests.
+filegroup {
+    name: "WallpaperPicker2_src_prod",
+    visibility: [":__subpackages__"],
+    srcs: ["src_override/com/android/wallpaper/picker/WallpapersApplication.java"],
+}
+
 genrule {
    name: "WallpaperPicker2_res",
    tools: ["soong_zip"],

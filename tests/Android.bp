@@ -31,19 +31,20 @@ filegroup {
         "src/**/*.java",
         "src/**/*.kt",
     ],
-    exclude_srcs: [
-        "src/com/android/wallpaper/testing/**/*.java",
-        "src/com/android/wallpaper/testing/**/*.kt",
-    ],
 }
 
 android_test {
     name: "WallpaperPicker2Tests",
 
     defaults: ["WallpaperPicker2_defaults"],
-    srcs: [":WallpaperPicker2Tests_srcs"],
+    srcs: [
+        ":WallpaperPicker2Tests_srcs",
+        "module/src/com/android/wallpaper/TestModule.kt",
+    ],
+    exclude_srcs: [":WallpaperPicker2_src_prod"],
     static_libs: [
         "WallpaperPicker2TestLib",
+        "WallpaperPicker2TestRunner",
         "androidx.test.espresso.core",
         "androidx.test.espresso.contrib",
         "androidx.test.espresso.intents",
@@ -51,6 +52,8 @@ android_test {
         "androidx.test.rules",
         "hamcrest-library",
         "hamcrest",
+        "hilt_android",
+        "hilt_android_testing",
         "mockito-target-minus-junit4",
         "junit",
         "kotlinx_coroutines_test",
