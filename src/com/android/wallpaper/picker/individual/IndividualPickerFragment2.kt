@@ -233,7 +233,8 @@ class IndividualPickerFragment2 :
                 updateLoading()
                 val supportsUserCreated = category?.supportsUserCreatedWallpapers() == true
                 val byGroup = fetchedWallpapers.groupBy { it.getGroupName(context) }.toMutableMap()
-                val appliedWallpaperIds = getAppliedWallpaperIds()
+                val appliedWallpaperIds =
+                    getAppliedWallpaperIds().also { this.appliedWallpaperIds = it }
                 val firstEntry = byGroup.keys.firstOrNull()
                 val currentWallpaper: android.app.WallpaperInfo? =
                     WallpaperManager.getInstance(context).wallpaperInfo

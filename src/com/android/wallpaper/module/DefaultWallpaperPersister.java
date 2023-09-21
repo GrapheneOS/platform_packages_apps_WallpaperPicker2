@@ -670,7 +670,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         private void setImageWallpaperMetadata(@Destination int destination, int wallpaperId) {
             if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
                 mWallpaperPreferences.clearHomeWallpaperMetadata();
-                mWallpaperPreferences.setHomeWallpaperEffects(null);
                 setImageWallpaperHomeMetadata(wallpaperId);
 
                 // Disable rotation wallpaper when setting static image wallpaper to home screen
@@ -714,8 +713,10 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setHomeWallpaperCollectionId(
                     mWallpaper.getCollectionId(mAppContext));
             mWallpaperPreferences.setHomeWallpaperRemoteId(mWallpaper.getWallpaperId());
-            mWallpaperPreferences.storeLatestWallpaper(FLAG_SYSTEM,
-                    mWallpaper.getWallpaperId(),
+            // Wallpaper ID can not be null or empty to save to the recent wallpaper as preferences
+            String recentWallpaperId = TextUtils.isEmpty(mWallpaper.getWallpaperId())
+                    ? String.valueOf(bitmapHash) : mWallpaper.getWallpaperId();
+            mWallpaperPreferences.storeLatestWallpaper(FLAG_SYSTEM, recentWallpaperId,
                     mWallpaper, mBitmap, colors);
         }
 

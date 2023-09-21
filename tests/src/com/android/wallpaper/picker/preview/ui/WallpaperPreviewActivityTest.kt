@@ -16,19 +16,18 @@
 package com.android.wallpaper.picker.preview.ui
 
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.InjectorProvider
-import com.android.wallpaper.picker.ImagePreviewFragment
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestStaticWallpaperInfo
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -50,20 +49,18 @@ class WallpaperPreviewActivityTest {
     }
 
     @Test
-    @Ignore("b/296072651")
-    fun showsPreviewFragment() {
+    fun showsNavHostFragment() {
         val scenario: ActivityScenario<WallpaperPreviewActivity> =
             ActivityScenario.launch(activityStartIntent)
 
         scenario.onActivity { activity ->
             val previews =
-                activity.supportFragmentManager.fragments.filterIsInstance<ImagePreviewFragment>()
+                activity.supportFragmentManager.fragments.filterIsInstance<NavHostFragment>()
             assertThat(previews).hasSize(1)
         }
     }
 
     @Test
-    @Ignore("b/296072651")
     fun launchActivity_setsWallpaperInfo() {
         val scenario: ActivityScenario<WallpaperPreviewActivity> =
             ActivityScenario.launch(activityStartIntent)

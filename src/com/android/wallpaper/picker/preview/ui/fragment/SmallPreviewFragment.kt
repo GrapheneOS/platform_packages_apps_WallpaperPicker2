@@ -19,18 +19,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.android.wallpaper.R
-import com.android.wallpaper.model.WallpaperInfo
-import com.android.wallpaper.module.CustomizationSections
-import com.android.wallpaper.module.InjectorProvider
+import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.picker.AppbarFragment
-import com.android.wallpaper.picker.customization.ui.binder.ScreenPreviewBinder
-import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
+import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
+import com.android.wallpaper.picker.preview.di.modules.preview.utils.PreviewUtilsModule
+import com.android.wallpaper.picker.preview.ui.binder.SmallPreviewBinder
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout
+import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
+import com.android.wallpaper.util.RtlUtils
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * This fragment displays the preview of the selected wallpaper on all available workspaces and
@@ -39,6 +43,11 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint(AppbarFragment::class)
 class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
+    @Inject lateinit var wallpaperInteractor: WallpaperInteractor
+    @Inject lateinit var displayUtils: DisplayUtils
+    @PreviewUtilsModule.LockScreenPreviewUtils @Inject lateinit var lockPreviewUtils: PreviewUtils
+    @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
+
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
 
     override fun onCreateView(
@@ -46,38 +55,62 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_small_preview, container)
-
-        val previewView: CardView = view.requireViewById(R.id.preview)
-
-        val wallpaper: WallpaperInfo? = wallpaperPreviewViewModel.editingWallpaper
-
-        ScreenPreviewBinder.bind(
-            activity = requireActivity(),
-            previewView = previewView,
-            // TODO(b/295199906): view model injected in next diff
-            viewModel =
-                ScreenPreviewViewModel(
-                    previewUtils =
-                        PreviewUtils(
-                            context = requireContext(),
-                            authority =
-                                requireContext()
-                                    .getString(
-                                        R.string.grid_control_metadata_name,
-                                    ),
-                        ),
-                    wallpaperInfoProvider = { wallpaper },
-                    // TODO(b/295199906): Interactor injected in next diff
-                    wallpaperInteractor =
-                        InjectorProvider.getInjector().getWallpaperInteractor(requireContext()),
-                    screen = CustomizationSections.Screen.HOME_SCREEN,
-                ),
-            lifecycleOwner = viewLifecycleOwner,
-            offsetToStart = false,
-            onWallpaperPreviewDirty = { activity?.recreate() },
-        )
+        val view =
+            inflater.inflate(
+                R.layout.fragment_small_preview_for_two_screens,
+                container,
+                /* attachToRoot= */ false
+            )
+        setUpToolbar(view)
+        bindScreenPreview(view)
 
         return view
+    }
+
+    // TODO(b/291761856): Use real string
+    override fun getDefaultTitle(): CharSequence {
+        return "Small Preview"
+    }
+
+    override fun getToolbarColorId(): Int {
+        return android.R.color.transparent
+    }
+
+    override fun getToolbarTextColor(): Int {
+        return ContextCompat.getColor(requireContext(), R.color.system_on_surface)
+    }
+
+    private fun bindScreenPreview(view: View) {
+        val dualDisplayAspectRatioView: DualDisplayAspectRatioLayout =
+            view.requireViewById(R.id.dual_preview)
+        dualDisplayAspectRatioView.setDisplaySizes(
+            displayUtils.getRealSize(displayUtils.getSmallerDisplay()),
+            displayUtils.getRealSize(displayUtils.getWallpaperDisplay())
+        )
+
+        val activity = activity ?: return
+        val applicationContext = activity.applicationContext
+        val isSingleDisplayOrUnfoldedHorizontalHinge =
+            displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(activity)
+        val isRtl = RtlUtils.isRtl(applicationContext)
+
+        SmallPreviewBinder.bind(
+            applicationContext = applicationContext,
+            view = view.requireViewById(DualDisplayAspectRatioLayout.foldedPreviewId),
+            viewModel = wallpaperPreviewViewModel,
+            mainScope = mainScope,
+            lifecycleOwner = viewLifecycleOwner,
+            isSingleDisplayOrUnfoldedHorizontalHinge = isSingleDisplayOrUnfoldedHorizontalHinge,
+            isRtl = isRtl,
+        )
+        SmallPreviewBinder.bind(
+            applicationContext = applicationContext,
+            view = view.requireViewById(DualDisplayAspectRatioLayout.unfoldedPreviewId),
+            viewModel = wallpaperPreviewViewModel,
+            mainScope = mainScope,
+            lifecycleOwner = viewLifecycleOwner,
+            isSingleDisplayOrUnfoldedHorizontalHinge = isSingleDisplayOrUnfoldedHorizontalHinge,
+            isRtl = isRtl,
+        )
     }
 }

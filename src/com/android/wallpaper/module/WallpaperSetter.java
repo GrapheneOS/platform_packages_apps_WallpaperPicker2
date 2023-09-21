@@ -60,7 +60,6 @@ public class WallpaperSetter {
 
     private final WallpaperPersister mWallpaperPersister;
     private final WallpaperPreferences mPreferences;
-    private final boolean mTestingModeEnabled;
     private final UserEventLogger mUserEventLogger;
     private final CurrentWallpaperInfoFactory mCurrentWallpaperInfoFactory;
     private ProgressDialog mProgressDialog;
@@ -68,45 +67,11 @@ public class WallpaperSetter {
 
     public WallpaperSetter(WallpaperPersister wallpaperPersister,
             WallpaperPreferences preferences, UserEventLogger userEventLogger,
-            CurrentWallpaperInfoFactory currentWallpaperInfoFactory,
-            boolean isTestingModeEnabled) {
-        mTestingModeEnabled = isTestingModeEnabled;
+            CurrentWallpaperInfoFactory currentWallpaperInfoFactory) {
         mWallpaperPersister = wallpaperPersister;
         mPreferences = preferences;
         mUserEventLogger = userEventLogger;
         mCurrentWallpaperInfoFactory = currentWallpaperInfoFactory;
-    }
-
-    /**
-     * Sets current wallpaper to the device with the minimum scale to fit the screen size.
-     *
-     * @param containerActivity main Activity that owns the current fragment
-     * @param wallpaper         info for the actual wallpaper to set
-     * @param destination       the wallpaper destination i.e. home vs. lockscreen vs. both.
-     * @param callback          optional callback to be notified when the wallpaper is set.
-     */
-    public void setCurrentWallpaper(Activity containerActivity, WallpaperInfo wallpaper,
-            @Destination final int destination,
-            @Nullable SetWallpaperCallback callback) {
-        Asset wallpaperAsset = wallpaper.getAsset(containerActivity.getApplicationContext());
-        wallpaperAsset.decodeRawDimensions(containerActivity, dimensions -> {
-            if (dimensions == null) {
-                Log.e(TAG, "Raw wallpaper's dimensions are null");
-                return;
-            }
-
-            Display defaultDisplay = containerActivity.getWindowManager().getDefaultDisplay();
-            Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(defaultDisplay);
-            Rect visibleRawWallpaperRect =
-                    WallpaperCropUtils.calculateVisibleRect(dimensions, screenSize);
-            float wallpaperScale = WallpaperCropUtils.calculateMinZoom(dimensions, screenSize);
-            Rect cropRect = WallpaperCropUtils.calculateCropRect(
-                    containerActivity.getApplicationContext(), defaultDisplay,
-                    dimensions, visibleRawWallpaperRect, wallpaperScale);
-
-            setCurrentWallpaper(containerActivity, wallpaper, wallpaperAsset, destination,
-                    wallpaperScale, cropRect, null, callback);
-        });
     }
 
     /**
@@ -145,7 +110,7 @@ public class WallpaperSetter {
 
         // ProgressDialog endlessly updates the UI thread, keeping it from going idle which
         // therefore causes Espresso to hang once the dialog is shown.
-        if (!mTestingModeEnabled && !containerActivity.isFinishing()) {
+        if (!containerActivity.isFinishing()) {
             int themeResId = (VERSION.SDK_INT < VERSION_CODES.LOLLIPOP)
                     ? R.style.ProgressDialogThemePreL : R.style.LightDialogTheme;
             mProgressDialog = new ProgressDialog(containerActivity, themeResId);
@@ -268,11 +233,12 @@ public class WallpaperSetter {
             @Destination final int destination, @Nullable WallpaperColors colors,
             @Nullable SetWallpaperCallback callback) {
         try {
-            if (destination == WallpaperPersister.DEST_LOCK_SCREEN) {
+            WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
+            if (destination == WallpaperPersister.DEST_LOCK_SCREEN
+                    && !wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
                 throw new IllegalArgumentException(
                         "Live wallpaper cannot be applied on lock screen only");
             }
-            WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
             setWallpaperComponent(wallpaperManager, wallpaper, destination);
             mPreferences.storeLatestWallpaper(WallpaperPersister.destinationToFlags(destination),
                     wallpaper.getWallpaperId(),
@@ -337,12 +303,15 @@ public class WallpaperSetter {
      * @param isLiveWallpaper whether the wallpaper that we want to set is a live wallpaper.
      * @param listener        {@link SetWallpaperDialogFragment.Listener} that will receive the
      *                        response.
+     * @param isLockOptionAllowed whether the wallpaper we want to set can be set on lockscreen
+     * @param isHomeOptionAllowed whether the wallpaper we want to set can be set on homescreen
      * @see Destination
      */
     public void requestDestination(Activity activity, FragmentManager fragmentManager,
-            Listener listener, boolean isLiveWallpaper) {
+            Listener listener, boolean isLiveWallpaper, boolean isHomeOptionAllowed,
+            boolean isLockOptionAllowed) {
         requestDestination(activity, fragmentManager, R.string.set_wallpaper_dialog_message,
-                listener, isLiveWallpaper);
+                listener, isLiveWallpaper, isHomeOptionAllowed, isLockOptionAllowed);
     }
 
     /**
@@ -353,10 +322,13 @@ public class WallpaperSetter {
      * @param listener        {@link SetWallpaperDialogFragment.Listener} that will receive the
      *                        response.
      * @param titleResId      title for the dialog
+     * @param isHomeOption    whether the wallpaper we want to set can be set on homescreen
+     * @param isLockOption    whether the wallpaper we want to set can be set on lockscreen
      * @see Destination
      */
     public void requestDestination(Activity activity, FragmentManager fragmentManager,
-            @StringRes int titleResId, Listener listener, boolean isLiveWallpaper) {
+            @StringRes int titleResId, Listener listener, boolean isLiveWallpaper,
+            boolean isHomeOption, boolean isLockOption) {
         saveAndLockScreenOrientationIfNeeded(activity);
         Listener listenerWrapper = new Listener() {
             @Override
@@ -381,6 +353,10 @@ public class WallpaperSetter {
         SetWallpaperDialogFragment setWallpaperDialog = new SetWallpaperDialogFragment();
         setWallpaperDialog.setTitleResId(titleResId);
         setWallpaperDialog.setListener(listenerWrapper);
+        if (isLiveWallpaper) {
+            setWallpaperDialog.setHomeOptionAvailable(isHomeOption);
+            setWallpaperDialog.setLockOptionAvailable(isLockOption);
+        }
         if (wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
             setWallpaperDialog.show(fragmentManager, TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
             return;

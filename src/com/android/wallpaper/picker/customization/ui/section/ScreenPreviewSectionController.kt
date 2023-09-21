@@ -24,7 +24,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.FrameLayout
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.LifecycleOwner
@@ -32,7 +31,7 @@ import androidx.lifecycle.lifecycleScope
 import com.android.systemui.shared.clocks.shared.model.ClockPreviewConstants
 import com.android.wallpaper.R
 import com.android.wallpaper.model.CustomizationSectionController
-import com.android.wallpaper.model.WallpaperColorsViewModel
+import com.android.wallpaper.model.WallpaperColorsRepository
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.model.WallpaperPreviewNavigator
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory
@@ -57,7 +56,7 @@ open class ScreenPreviewSectionController(
     private val lifecycleOwner: LifecycleOwner,
     private val screen: CustomizationSections.Screen,
     private val wallpaperInfoFactory: CurrentWallpaperInfoFactory,
-    private val colorViewModel: WallpaperColorsViewModel,
+    private val colorViewModel: WallpaperColorsRepository,
     private val displayUtils: DisplayUtils,
     private val wallpaperPreviewNavigator: WallpaperPreviewNavigator,
     private val wallpaperInteractor: WallpaperInteractor,
@@ -113,20 +112,19 @@ open class ScreenPreviewSectionController(
             previewHost.layoutParams = layoutParams
         }
 
-        val onClickListener =
-            View.OnClickListener {
+        view
+            .requireViewById<ScreenPreviewClickView>(R.id.screen_preview_click_view)
+            .setOnPreviewClickedListener {
                 lifecycleOwner.lifecycleScope.launch {
                     getWallpaperInfo()?.let { wallpaperInfo ->
                         wallpaperPreviewNavigator.showViewOnlyPreview(
                             wallpaperInfo,
-                            !isOnLockScreen
+                            /* isAssetIdPresent= */ false,
                         )
                     }
                 }
             }
-        view
-            .requireViewById<ScreenPreviewClickView>(R.id.screen_preview_click_view)
-            .setOnClickListener(onClickListener)
+
         val previewView: CardView = view.requireViewById(R.id.preview)
 
         bindScreenPreview(previewView, context, !params.isWallpaperVisibilityControlledByTab)

@@ -29,10 +29,9 @@ import java.util.stream.Collectors;
 public class WallpaperOnlyFragment extends CustomizationPickerFragment {
 
     /** Returns a new instance of {@link WallpaperOnlyFragment}. */
-    public static WallpaperOnlyFragment newInstance(boolean isUseRevampedUi) {
+    public static WallpaperOnlyFragment newInstance() {
         final WallpaperOnlyFragment fragment = new WallpaperOnlyFragment();
         final Bundle args = new Bundle();
-        args.putBoolean(KEY_IS_USE_REVAMPED_UI, isUseRevampedUi);
         fragment.setArguments(args);
         return fragment;
     }

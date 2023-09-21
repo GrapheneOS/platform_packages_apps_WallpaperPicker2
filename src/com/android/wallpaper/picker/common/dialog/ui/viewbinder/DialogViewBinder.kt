@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.android.wallpaper.R
@@ -40,6 +41,7 @@ object DialogViewBinder {
         onDismissed: (() -> Unit)? = null,
         @LayoutRes dialogLayoutResourceId: Int = R.layout.dialog_view,
         @LayoutRes buttonLayoutResourceId: Int = R.layout.dialog_button,
+        @StyleRes dialogStyleResourceId: Int = R.style.LightDialogTheme,
     ): Dialog {
         val view = LayoutInflater.from(context).inflate(dialogLayoutResourceId, null)
         val icon: ImageView = view.requireViewById(R.id.icon)
@@ -85,7 +87,7 @@ object DialogViewBinder {
             ?: run { message.isVisible = false }
 
         val dialog =
-            AlertDialog.Builder(context, R.style.LightDialogTheme)
+            AlertDialog.Builder(context, dialogStyleResourceId)
                 .setView(view)
                 .apply {
                     if (viewModel.onDismissed != null || onDismissed != null) {

@@ -39,6 +39,7 @@ android_library {
         "androidx.navigation_navigation-ui-ktx",
         "androidx.navigation_navigation-fragment-ktx",
         "com.google.android.material_material",
+        "com_android_wallpaper_flags_lib",
         "glide-prebuilt",
         "glide-gifdecoder-prebuilt",
         "glide-disklrucache-prebuilt",
@@ -139,30 +140,11 @@ java_defaults {
 
 java_defaults {
     name: "WallpaperPicker2_defaults",
-
-    static_libs: [
-        "wallpaper-common-deps",
-        "monet",
-        "hilt_android",
-    ],
+    defaults: ["WallpaperPicker2_common_defaults"],
 
     srcs: [
-        ":WallpaperPicker2_srcs",
         ":WallpaperPicker2_src_overrides",
     ],
-    resource_zips: [":WallpaperPicker2_res"],
-
-    certificate: "",
-
-    optimize: {
-        enabled: false,
-    },
-
-    kotlincflags: ["-Xjvm-default=all"],
-    privileged: true,
-    system_ext_specific: true,
-
-    use_embedded_native_libs: true,
 }
 
 //

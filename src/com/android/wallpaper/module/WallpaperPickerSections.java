@@ -10,7 +10,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.android.wallpaper.model.CustomizationSectionController;
 import com.android.wallpaper.model.CustomizationSectionController.CustomizationSectionNavigationController;
 import com.android.wallpaper.model.PermissionRequester;
-import com.android.wallpaper.model.WallpaperColorsViewModel;
+import com.android.wallpaper.model.WallpaperColorsRepository;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor;
 import com.android.wallpaper.picker.customization.ui.section.ScreenPreviewSectionController;
@@ -29,7 +29,7 @@ public final class WallpaperPickerSections implements CustomizationSections {
             Screen screen,
             FragmentActivity activity,
             LifecycleOwner lifecycleOwner,
-            WallpaperColorsViewModel wallpaperColorsViewModel,
+            WallpaperColorsRepository wallpaperColorsRepository,
             PermissionRequester permissionRequester,
             WallpaperPreviewNavigator wallpaperPreviewNavigator,
             CustomizationSectionNavigationController sectionNavigationController,
@@ -48,7 +48,7 @@ public final class WallpaperPickerSections implements CustomizationSections {
                         lifecycleOwner,
                         screen,
                         wallpaperInfoFactory,
-                        wallpaperColorsViewModel,
+                        wallpaperColorsRepository,
                         displayUtils,
                         wallpaperPreviewNavigator,
                         wallpaperInteractor,

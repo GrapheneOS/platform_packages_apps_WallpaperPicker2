@@ -1,0 +1,10 @@
+aconfig_declarations {
+    name: "com_android_wallpaper_flags",
+    package: "com.android.wallpaper",
+    srcs: ["flags.aconfig"],
+}
+
+java_aconfig_library {
+    name: "com_android_wallpaper_flags_lib",
+    aconfig_declarations: "com_android_wallpaper_flags",
+}

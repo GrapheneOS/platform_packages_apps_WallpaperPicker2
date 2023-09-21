@@ -191,21 +191,25 @@ class LoadingAnimation(
                 addListener(
                     object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator) {
-                            animationState = AnimationState.REVEAL_PLAYED
-
-                            revealOverlay.setRenderEffect(null)
-                            revealOverlay.visibility = View.INVISIBLE
-
-                            // Stop turbulence and reset everything.
-                            timeAnimator?.cancel()
-                            blurRadius = MIN_BLUR_PX
-                            transitionProgress = 0f
+                            resetCircularRevealAnimation()
                         }
                     }
                 )
 
                 start()
             }
+    }
+
+    private fun resetCircularRevealAnimation() {
+        animationState = AnimationState.REVEAL_PLAYED
+
+        revealOverlay.setRenderEffect(null)
+        revealOverlay.visibility = View.INVISIBLE
+
+        // Stop turbulence and reset everything.
+        timeAnimator?.cancel()
+        blurRadius = MIN_BLUR_PX
+        transitionProgress = 0f
     }
 
     private fun playFadeRevealAnimation() {
@@ -236,19 +240,23 @@ class LoadingAnimation(
                 addListener(
                     object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator) {
-                            animationState = AnimationState.FADE_OUT_PLAYED
-
-                            revealOverlay.setRenderEffect(null)
-
-                            // Stop turbulence and reset everything.
-                            timeAnimator?.cancel()
-                            blurRadius = MIN_BLUR_PX
-                            transitionProgress = 0f
+                            resetFadeRevealAnimation()
                         }
                     }
                 )
                 start()
             }
+    }
+
+    private fun resetFadeRevealAnimation() {
+        animationState = AnimationState.FADE_OUT_PLAYED
+
+        revealOverlay.setRenderEffect(null)
+
+        // Stop turbulence and reset everything.
+        timeAnimator?.cancel()
+        blurRadius = MIN_BLUR_PX
+        transitionProgress = 0f
     }
 
     fun updateColor(colorScheme: ColorScheme) {
@@ -319,6 +327,7 @@ class LoadingAnimation(
         }
     }
 
+    /** Cancels the animation. Unlike end() , cancel() causes the animation to stop in its tracks */
     fun cancel() {
         fadeInAnimator?.cancel()
         timeAnimator?.cancel()
@@ -327,24 +336,29 @@ class LoadingAnimation(
         revealAnimator?.cancel()
     }
 
+    /** Ends the animation, and causes the animation to skip to the end state */
     fun end() {
         fadeInAnimator?.end()
         timeAnimator?.end()
         revealAnimator?.removeAllListeners()
         revealAnimator?.removeAllUpdateListeners()
         revealAnimator?.end()
+        when (revealType) {
+            RevealType.CIRCULAR -> resetCircularRevealAnimation()
+            RevealType.FADE -> resetFadeRevealAnimation()
+        }
     }
 
-    fun setupRevealAnimation(seed: Long? = null) {
+    fun setupRevealAnimation(seed: Long? = null, revealTransitionProgress: Float? = null) {
         cancel()
 
         revealOverlay.visibility = View.VISIBLE
 
         elapsedTime = seed ?: (0L..10000L).random()
-        transitionProgress = 1f
+        transitionProgress = revealTransitionProgress ?: 1f
 
         // Fast forward to state at the end of fade in animation
-        blurRadius = MAX_BLUR_PX
+        blurRadius = maxOf(MAX_BLUR_PX * transitionProgress, MIN_BLUR_PX)
         blurEffect =
             RenderEffect.createBlurEffect(
                 blurRadius * pixelDensity,
@@ -352,7 +366,7 @@ class LoadingAnimation(
                 Shader.TileMode.MIRROR
             )
         animationState = AnimationState.FADE_IN_PLAYED
-        loadingShader.setAlpha(1f)
+        loadingShader.setAlpha(transitionProgress)
 
         // Keep clouds moving until we finish loading
         timeAnimator =
@@ -364,6 +378,10 @@ class LoadingAnimation(
 
     fun getElapsedTime(): Long {
         return elapsedTime
+    }
+
+    fun getTransitionProgress(): Float {
+        return transitionProgress
     }
 
     companion object {

@@ -20,6 +20,7 @@ import android.content.Context
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
 import com.android.systemui.shared.customization.data.content.CustomizationProviderContract as Contract
+import com.android.wallpaper.Flags.multiCropPreviewUiFlag
 import com.android.wallpaper.module.InjectorProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -35,22 +36,11 @@ abstract class BaseFlags {
     // TODO(b/285047815): Remove flag after adding wallpaper id for default static wallpaper
     open fun isWallpaperRestorerEnabled() = false
 
-    /**
-     * Enables new preview UI if both [isMultiCropEnabled] and this flag are true.
-     *
-     * TODO(b/291761856): Create SysUI flag for new preview UI
-     */
-    open fun isMultiCropPreviewUiEnabled() = false
+    /** Enables new preview UI if both [isMultiCropEnabled] and this flag are true. */
+    open fun isMultiCropPreviewUiEnabled() = multiCropPreviewUiFlag()
 
     open fun isMultiCropEnabled() = WallpaperManager.isMultiCropEnabled()
 
-    open fun isUseRevampedUiEnabled(context: Context): Boolean {
-        return getCachedFlags(context)
-            .firstOrNull { flag ->
-                flag.name == Contract.FlagsTable.FLAG_NAME_REVAMPED_WALLPAPER_UI
-            }
-            ?.value == true
-    }
     open fun isCustomClocksEnabled(context: Context): Boolean {
         return getCachedFlags(context)
             .firstOrNull { flag ->

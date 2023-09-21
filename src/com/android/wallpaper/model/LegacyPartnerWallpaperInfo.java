@@ -167,8 +167,9 @@ public class LegacyPartnerWallpaperInfo extends WallpaperInfo {
 
     @Override
     public void showPreview(Activity srcActivity, InlinePreviewIntentFactory factory,
-                            int requestCode) {
-        srcActivity.startActivityForResult(factory.newIntent(srcActivity, this), requestCode);
+                            int requestCode, boolean isAssetIdPresent) {
+        srcActivity.startActivityForResult(factory.newIntent(srcActivity, this,
+                isAssetIdPresent), requestCode);
     }
 
     @Override

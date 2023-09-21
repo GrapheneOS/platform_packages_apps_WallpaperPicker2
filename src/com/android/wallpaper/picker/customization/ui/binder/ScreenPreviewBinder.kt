@@ -20,6 +20,7 @@ package com.android.wallpaper.picker.customization.ui.binder
 import android.app.Activity
 import android.app.WallpaperColors
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -49,8 +50,10 @@ import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.picker.FixedWidthDisplayRatioFrameLayout
 import com.android.wallpaper.picker.WorkspaceSurfaceHolderCallback
 import com.android.wallpaper.picker.customization.animation.view.LoadingAnimation
+import com.android.wallpaper.picker.customization.ui.section.ScreenPreviewClickView
 import com.android.wallpaper.picker.customization.ui.view.WallpaperSurfaceView
 import com.android.wallpaper.picker.customization.ui.viewmodel.AnimationStateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
@@ -107,16 +110,21 @@ object ScreenPreviewBinder {
         // before the engine is ready, and b) we need this state for onResume
         // TODO(b/287618705) Remove this
         val showLivePreview = AtomicBoolean(isWallpaperAlwaysVisible)
-        val fixedWidthDisplayFrameLayout = previewView.parent as? View
-        val screenPreviewClickView = fixedWidthDisplayFrameLayout?.parent as? View
-        // Set the content description on the parent view
-        screenPreviewClickView?.contentDescription =
-            activity.resources.getString(viewModel.previewContentDescription)
-        fixedWidthDisplayFrameLayout?.importantForAccessibility =
-            View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+        val fixedWidthDisplayFrameLayout = previewView.parent as? FixedWidthDisplayRatioFrameLayout
+        val screenPreviewClickView = fixedWidthDisplayFrameLayout?.parent as? ScreenPreviewClickView
+        if (screenPreviewClickView != null) {
+            // If screenPreviewClickView exists, we will have it handle accessibility and
+            // disable a11y for the descendants.
+            // Set the content description on the parent view
+            screenPreviewClickView.contentDescription =
+                activity.resources.getString(viewModel.previewContentDescription)
+            fixedWidthDisplayFrameLayout.importantForAccessibility =
+                View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+            // This ensures that we do not announce the time multiple times
+            previewView.importantForAccessibility =
+                View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+        }
 
-        // This ensures that we do not announce the time multiple times
-        previewView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
         var wallpaperIsReadyForReveal = false
         val surfaceViewsReady = {
             wallpaperSurface.setBackgroundColor(Color.TRANSPARENT)
@@ -140,6 +148,8 @@ object ScreenPreviewBinder {
         previewView.radius =
             previewView.resources.getDimension(R.dimen.wallpaper_picker_entry_card_corner_radius)
 
+        previewView.setOnClickListener { viewModel.onPreviewClicked?.invoke() }
+
         var previewSurfaceCallback: WorkspaceSurfaceHolderCallback? = null
         var wallpaperSurfaceCallback: WallpaperSurfaceCallback? = null
         var wallpaperConnection: WallpaperConnection? = null
@@ -147,6 +157,7 @@ object ScreenPreviewBinder {
         var animationState: AnimationStateViewModel.AnimationState? = null
         var loadingImageDrawable: Drawable? = null
         var animationTimeToRestore: Long? = null
+        var animationTransitionProgress: Float? = null
         var animationColorToRestore: Int? = null
         var currentWallpaperThumbnail: Bitmap? = null
 
@@ -172,6 +183,8 @@ object ScreenPreviewBinder {
                                         // like the saved instance state on the first restart to
                                         // pass through to the second.
                                         animationTimeToRestore = animationState?.time
+                                        animationTransitionProgress =
+                                            animationState?.transitionProgress
                                         animationColorToRestore = animationState?.color
                                         // a null drawable means the loading animation should not
                                         // be played
@@ -198,19 +211,33 @@ object ScreenPreviewBinder {
 
                             override fun onStop(owner: LifecycleOwner) {
                                 super.onStop(owner)
-                                animationTimeToRestore = loadingAnimation?.getElapsedTime()
+                                animationTimeToRestore =
+                                    loadingAnimation?.getElapsedTime() ?: animationTimeToRestore
+                                animationTransitionProgress =
+                                    loadingAnimation?.getTransitionProgress()
+                                        ?: animationTransitionProgress
                                 loadingAnimation?.end()
                                 loadingAnimation = null
-                                // only save the current loading image if this is a configuration
-                                // change restart, and reset to null otherwise, so that reveal
-                                // animation is only played after a wallpaper/color switch and not
-                                // on every resume
+                                // To ensure reveal animation is only played after a theme config
+                                // change from wallpaper/color switch, only save the current loading
+                                // image if this is a configuration change restart and reset to
+                                // null otherwise
                                 animationStateViewModel?.saveAnimationState(
                                     viewModel.screen,
-                                    if (activity.isChangingConfigurations) {
+                                    // Check if activity is changing configurations, and check that
+                                    // the set of changing configurations does not include screen
+                                    // size changes (such as rotation and folding/unfolding device)
+                                    // Note: activity.changingConfigurations is not 100% accurate
+                                    if (
+                                        activity.isChangingConfigurations &&
+                                            (activity.changingConfigurations.and(
+                                                ActivityInfo.CONFIG_SCREEN_SIZE
+                                            ) == 0)
+                                    ) {
                                         AnimationStateViewModel.AnimationState(
                                             loadingImageDrawable,
                                             animationTimeToRestore,
+                                            animationTransitionProgress,
                                             animationColorToRestore,
                                         )
                                     } else null
@@ -277,7 +304,10 @@ object ScreenPreviewBinder {
                                     loadingAnimation?.updateColor(
                                         ColorScheme(seed = colorAccent, darkTheme = night)
                                     )
-                                    loadingAnimation?.setupRevealAnimation(animationTimeToRestore)
+                                    loadingAnimation?.setupRevealAnimation(
+                                        animationTimeToRestore,
+                                        animationTransitionProgress
+                                    )
                                     val isStaticWallpaper =
                                         wallpaperInfo != null && wallpaperInfo !is LiveWallpaperInfo
                                     wallpaperIsReadyForReveal =
@@ -519,7 +549,8 @@ object ScreenPreviewBinder {
             },
             wallpaperSurface,
             mirrorSurface,
-            screen.toFlag()
+            screen.toFlag(),
+            WallpaperConnection.WHICH_PREVIEW.PREVIEW_CURRENT
         )
 
     private fun removeAndReadd(view: View) {

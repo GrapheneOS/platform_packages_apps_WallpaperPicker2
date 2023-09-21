@@ -20,4 +20,11 @@
     <item name="foreground" type="id" />
     <item name="text" type="id" />
     <item name="selection_border" type="id" />
+
+    <!-- View id for the folded preview view in the small preview screen -->
+    <item name="small_preview_folded_preview" type="id" />
+
+    <!-- View id for the  unfolded preview view in the small preview screen -->
+    <item name="small_preview_unfolded_preview" type="id" />
+
 </resources>

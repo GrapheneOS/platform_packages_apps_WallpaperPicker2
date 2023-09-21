@@ -37,6 +37,7 @@ import androidx.annotation.WorkerThread;
 
 import com.android.wallpaper.module.BitmapCropper;
 import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.util.RtlUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.WallpaperCropUtils;
 
@@ -344,7 +345,7 @@ public abstract class Asset {
 
             BitmapCropper bitmapCropper = InjectorProvider.getInjector().getBitmapCropper();
             bitmapCropper.cropAndScaleBitmap(this, /* scale= */ 1f, visibleRawWallpaperRect,
-                    WallpaperCropUtils.isRtl(activity),
+                    RtlUtils.isRtl(activity),
                     new BitmapCropper.Callback() {
                         @Override
                         public void onBitmapCropped(Bitmap croppedBitmap) {
