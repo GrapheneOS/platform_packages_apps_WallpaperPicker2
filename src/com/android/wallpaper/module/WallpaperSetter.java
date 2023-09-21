@@ -29,7 +29,7 @@ import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.module.logging.UserEventLogger;
-import com.android.wallpaper.module.logging.UserEventLogger.WallpaperSetFailureReason;
+import com.android.wallpaper.module.logging.UserEventLogger.Companion.WallpaperSetFailureReason;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment.Listener;
 import com.android.wallpaper.util.ThrowableAnalyzer;
