@@ -28,6 +28,7 @@ import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.module.WallpaperPersister
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import com.android.wallpaper.util.PreviewUtils
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.setUpSurface
 import kotlinx.coroutines.CoroutineScope
@@ -43,16 +44,23 @@ object SmallPreviewBinder {
         lifecycleOwner: LifecycleOwner,
         isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
         isRtl: Boolean,
+        previewUtils: PreviewUtils? = null,
+        displayId: Int? = null,
     ) {
-        val surface = view.requireViewById<SurfaceView>(R.id.wallpaper_surface)
-        surface.setZOrderMediaOverlay(true)
-        surface.holder.addCallback(
+        val workspaceSurface = view.requireViewById<SurfaceView>(R.id.workspace_surface)
+        workspaceSurface.visibility = View.VISIBLE
+        workspaceSurface.setZOrderMediaOverlay(true)
+        previewUtils?.let { WorkspacePreviewBinder.bind(workspaceSurface, it, displayId) }
+
+        val wallpaperSurface = view.requireViewById<SurfaceView>(R.id.wallpaper_surface)
+        wallpaperSurface.setZOrderMediaOverlay(true)
+        wallpaperSurface.holder.addCallback(
             object : SurfaceHolder.Callback {
                 override fun surfaceCreated(holder: SurfaceHolder) {
                     val wallpaper = viewModel.editingWallpaper
                     if (wallpaper is LiveWallpaperInfo) {
                         lifecycleOwner.lifecycleScope.launch {
-                            surface.setUpSurface(applicationContext)
+                            wallpaperSurface.setUpSurface(applicationContext)
                             WallpaperConnectionUtils.connect(
                                 applicationContext,
                                 mainScope,
@@ -61,7 +69,7 @@ object SmallPreviewBinder {
                                 //                           destination for live
                                 //                           wallpaper preview
                                 WallpaperPersister.DEST_LOCK_SCREEN,
-                                surface,
+                                wallpaperSurface,
                             )
                         }
                     } else {
@@ -73,7 +81,7 @@ object SmallPreviewBinder {
                         attachStaticWallpaperPreviewToSurface(
                             applicationContext,
                             staticWallpaperPreview,
-                            surface,
+                            wallpaperSurface,
                         )
                         StaticWallpaperPreviewBinder.bind(
                             fullResImageView =

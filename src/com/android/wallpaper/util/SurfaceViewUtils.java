@@ -28,7 +28,7 @@ public class SurfaceViewUtils {
     private static final String KEY_HOST_TOKEN = "host_token";
     private static final String KEY_VIEW_WIDTH = "width";
     private static final String KEY_VIEW_HEIGHT = "height";
-    private static final String KEY_DISPLAY_ID = "display_id";
+    public static final String KEY_DISPLAY_ID = "display_id";
     private static final String KEY_SURFACE_PACKAGE = "surface_package";
     private static final String KEY_CALLBACK = "callback";
 
