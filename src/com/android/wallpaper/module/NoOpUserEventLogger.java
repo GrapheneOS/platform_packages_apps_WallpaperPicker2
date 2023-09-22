@@ -23,25 +23,7 @@ import android.content.Intent;
 public class NoOpUserEventLogger implements UserEventLogger {
 
     @Override
-    public void logResumed(boolean provisioned, boolean wallpaper) {
-
-    }
-
-    @Override
-    public void logStopped() {
-
-    }
-
-    @Override
     public void logAppLaunched(Intent launchSource) {
-    }
-
-    @Override
-    public void logDailyRefreshTurnedOn() {
-    }
-
-    @Override
-    public void logCurrentWallpaperPreviewed() {
     }
 
     @Override
@@ -79,14 +61,6 @@ public class NoOpUserEventLogger implements UserEventLogger {
 
     @Override
     public void logNumDailyWallpaperRotationsPreviousDay() {
-    }
-
-    @Override
-    public void logDailyWallpaperRotationHour(int hour) {
-    }
-
-    @Override
-    public void logDailyWallpaperDecodes(boolean decodes) {
     }
 
     @Override
