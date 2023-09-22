@@ -27,13 +27,22 @@ import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewMod
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestStaticWallpaperInfo
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import javax.inject.Inject
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@HiltAndroidTest
 @MediumTest
 @RunWith(AndroidJUnit4::class)
 class WallpaperPreviewActivityTest {
+    @get:Rule var hiltRule = HiltAndroidRule(this)
+
+    @Inject lateinit var testInjector: TestInjector
+
     private val testStaticWallpaper =
         TestStaticWallpaperInfo(TestStaticWallpaperInfo.COLOR_DEFAULT).setWallpaperAttributions()
     private val activityStartIntent =
@@ -45,7 +54,8 @@ class WallpaperPreviewActivityTest {
 
     @Before
     fun setUp() {
-        InjectorProvider.setInjector(TestInjector())
+        hiltRule.inject()
+        InjectorProvider.setInjector(testInjector)
     }
 
     @Test
