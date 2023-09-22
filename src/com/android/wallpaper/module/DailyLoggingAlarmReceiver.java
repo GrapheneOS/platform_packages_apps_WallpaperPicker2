@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import com.android.wallpaper.model.WallpaperMetadata;
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
 import com.android.wallpaper.module.WallpaperRefresher.RefreshListener;
+import com.android.wallpaper.module.logging.UserEventLogger;
 import com.android.wallpaper.util.DiskBasedLogger;
 
 import java.util.Calendar;

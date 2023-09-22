@@ -25,7 +25,7 @@ import androidx.core.view.WindowCompat;
 import com.android.wallpaper.R;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
-import com.android.wallpaper.module.UserEventLogger;
+import com.android.wallpaper.module.logging.UserEventLogger;
 
 /**
  * Abstract base class for a wallpaper full-screen preview activity.
