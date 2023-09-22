@@ -1,4 +1,4 @@
-package com.android.wallpaper.model
+package com.android.wallpaper.picker.customization.shared.model
 
 import android.app.WallpaperColors
 
