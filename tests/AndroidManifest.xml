@@ -30,7 +30,7 @@
         </activity>
     </application>
 
-    <instrumentation android:name="androidx.test.runner.AndroidJUnitRunner"
+    <instrumentation android:name="com.android.wallpaper.CustomTestRunner"
         android:targetPackage="com.android.wallpaper"
         android:label="Tests for WallpaperPicker2" />
 

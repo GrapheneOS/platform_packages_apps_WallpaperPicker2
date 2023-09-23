@@ -37,9 +37,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Test implementation of the WallpaperPreferences interface. Just keeps prefs in memory.
  */
+@Singleton
 public class TestWallpaperPreferences implements WallpaperPreferences {
 
     private int mAppLaunchCount;
@@ -90,6 +94,7 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     private StaticWallpaperMetadata mLockStaticWallpaperMetadata;
     private HashMap<String, String> mWallStoredColor;
 
+    @Inject
     public TestWallpaperPreferences() {
         mWallpaperPresentationMode = WallpaperPreferences.PRESENTATION_MODE_STATIC;
         mHomeScreenAttributions = Arrays.asList("Android wallpaper");

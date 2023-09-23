@@ -49,7 +49,7 @@ import com.android.wallpaper.module.LargeScreenMultiPanesChecker;
 import com.android.wallpaper.module.MultiPanesChecker;
 import com.android.wallpaper.module.NetworkStatusNotifier;
 import com.android.wallpaper.module.NetworkStatusNotifier.NetworkStatus;
-import com.android.wallpaper.module.UserEventLogger;
+import com.android.wallpaper.module.logging.UserEventLogger;
 import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
 import com.android.wallpaper.picker.CategorySelectorFragment.CategorySelectorFragmentHost;
 import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;

@@ -42,11 +42,11 @@ import com.android.wallpaper.module.NetworkStatusNotifier
 import com.android.wallpaper.module.PackageStatusNotifier
 import com.android.wallpaper.module.PartnerProvider
 import com.android.wallpaper.module.SystemFeatureChecker
-import com.android.wallpaper.module.UserEventLogger
 import com.android.wallpaper.module.WallpaperPersister
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.WallpaperRefresher
 import com.android.wallpaper.module.WallpaperStatusChecker
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.ImagePreviewFragment
@@ -61,11 +61,14 @@ import com.android.wallpaper.picker.individual.IndividualPickerFragment
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import com.android.wallpaper.util.DisplayUtils
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 /** Test implementation of [Injector] */
-open class TestInjector : Injector {
+@Singleton
+open class TestInjector @Inject constructor() : Injector {
     private var appScope: CoroutineScope? = null
     private var alarmManagerWrapper: AlarmManagerWrapper? = null
     private var bitmapCropper: BitmapCropper? = null
@@ -82,7 +85,7 @@ open class TestInjector : Injector {
     private var systemFeatureChecker: SystemFeatureChecker? = null
     private var userEventLogger: UserEventLogger? = null
     private var wallpaperPersister: WallpaperPersister? = null
-    private var prefs: WallpaperPreferences? = null
+    @Inject lateinit var prefs: WallpaperPreferences
     private var wallpaperRefresher: WallpaperRefresher? = null
     private var wallpaperStatusChecker: WallpaperStatusChecker? = null
     private var flags: BaseFlags? = null
@@ -195,7 +198,7 @@ open class TestInjector : Injector {
         return fragment
     }
 
-    override fun getRequester(unused: Context): Requester {
+    override fun getRequester(context: Context): Requester {
         return requester ?: TestRequester().also { requester = it }
     }
 
@@ -213,7 +216,7 @@ open class TestInjector : Injector {
     }
 
     override fun getPreferences(context: Context): WallpaperPreferences {
-        return prefs ?: TestWallpaperPreferences().also { prefs = it }
+        return prefs
     }
 
     override fun getWallpaperRefresher(context: Context): WallpaperRefresher {

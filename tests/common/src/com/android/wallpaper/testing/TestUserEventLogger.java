@@ -17,7 +17,7 @@ package com.android.wallpaper.testing;
 
 import android.content.Intent;
 
-import com.android.wallpaper.module.UserEventLogger;
+import com.android.wallpaper.module.logging.UserEventLogger;
 
 /**
  * Test implementation of {@link UserEventLogger}.

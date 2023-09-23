@@ -290,6 +290,15 @@
     -->
     <dimen name="screen_preview_height">380dp</dimen>
 
+    <!-- The space in between previews in the small preview screen on handheld -->
+    <dimen name="small_preview_space_between_previews_hh">10dp</dimen>
+
+    <!-- The padding on top of the previews in the small preview screen-->
+    <dimen name="small_preview_preview_top_padding">20dp</dimen>
+
+    <!-- The padding on bottom of the previews in the small preview screen-->
+    <dimen name="small_preview_preview_bottom_padding">40dp</dimen>
+
     <!--
     Space between the folded and unfolded previews on the small preview screen
     -->

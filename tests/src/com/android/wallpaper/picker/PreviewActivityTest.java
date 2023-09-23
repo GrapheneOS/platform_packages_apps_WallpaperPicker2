@@ -51,11 +51,10 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.WallpaperInfo;
-import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
-import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperChangedNotifier;
 import com.android.wallpaper.module.WallpaperPersister;
+import com.android.wallpaper.module.logging.UserEventLogger;
 import com.android.wallpaper.testing.TestAsset;
 import com.android.wallpaper.testing.TestExploreIntentChecker;
 import com.android.wallpaper.testing.TestInjector;
@@ -69,43 +68,51 @@ import com.android.wallpaper.util.WallpaperCropUtils;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
+import dagger.hilt.android.testing.HiltAndroidRule;
+import dagger.hilt.android.testing.HiltAndroidTest;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Tests for {@link PreviewActivity}.
  */
+@HiltAndroidTest
 @RunWith(AndroidJUnit4.class)
 @MediumTest
 public class PreviewActivityTest {
-
     private static final float FLOAT_ERROR_MARGIN = 0.001f;
     private static final String ACTION_URL = "http://google.com";
 
     private TestStaticWallpaperInfo mTestStaticWallpaper;
     private TestLiveWallpaperInfo mTestLiveWallpaper;
-    private Injector mInjector;
     private TestWallpaperPersister mWallpaperPersister;
     private TestUserEventLogger mEventLogger;
     private TestExploreIntentChecker mExploreIntentChecker;
     private TestWallpaperStatusChecker mWallpaperStatusChecker;
     private WallpaperManager mWallpaperManager;
 
-    @Rule
-    public ActivityTestRule<PreviewActivity> mActivityRule =
+    private final HiltAndroidRule mHiltRule = new HiltAndroidRule(this);
+    private final ActivityTestRule<PreviewActivity> mActivityRule =
             new ActivityTestRule<>(PreviewActivity.class, false, false);
+    @Rule
+    public RuleChain rules = RuleChain.outerRule(mHiltRule).around(mActivityRule);
+
+    @Inject TestInjector mInjector;
 
     @Before
     public void setUp() {
-
-        mInjector = new TestInjector();
+        mHiltRule.inject();
         InjectorProvider.setInjector(mInjector);
 
         Intents.init();

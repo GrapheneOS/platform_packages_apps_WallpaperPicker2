@@ -25,8 +25,8 @@ import android.view.View;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
-import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPersister;
+import com.android.wallpaper.module.logging.UserEventLogger;
 
 /**
  * CreativeCategoryIndividualHolder subclass for a creative category wallpaper tile in the
