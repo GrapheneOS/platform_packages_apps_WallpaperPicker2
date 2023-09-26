@@ -60,7 +60,7 @@ class PreviewUtilsModule {
     ): PreviewUtils {
         return PreviewUtils(
             context = appContext,
-            authority =
+            authorityMetadataKey =
                 appContext.getString(
                     R.string.grid_control_metadata_name,
                 ),
