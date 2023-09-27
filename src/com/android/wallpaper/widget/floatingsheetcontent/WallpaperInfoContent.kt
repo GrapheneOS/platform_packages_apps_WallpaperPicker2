@@ -62,11 +62,7 @@ class WallpaperInfoContent(private var context: Context, private val wallpaper: 
 
     private fun onExploreClicked() {
         val injector = InjectorProvider.getInjector()
-        val userEventLogger = injector.getUserEventLogger(context!!.applicationContext)
-        userEventLogger.logActionClicked(
-            wallpaper!!.getCollectionId(context),
-            wallpaper.getActionLabelRes(context)
-        )
+        injector.getUserEventLogger(context.applicationContext).logWallpaperExploreButtonClicked()
         context.startActivity(exploreIntent)
     }
 
