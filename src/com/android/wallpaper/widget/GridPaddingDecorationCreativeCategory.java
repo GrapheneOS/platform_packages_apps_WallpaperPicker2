@@ -53,35 +53,53 @@ public class GridPaddingDecorationCreativeCategory extends RecyclerView.ItemDeco
         if (position >= 0) {
             if (parent.getAdapter().getItemViewType(position)
                     == ITEM_VIEW_TYPE_INDIVIDUAL_WALLPAPER) {
+                outRect.bottom = mPaddingBottom;
+                // Calculate the total horizontal space available for items in a row
+                int totalHorizontalSpace = parent.getWidth()
+                        - parent.getPaddingLeft()
+                        - parent.getPaddingRight()
+                        - (mEdgePadding * 2); // Account for the gaps on both sides
+
+                // Calculate the width of each item in the row
+                int itemWidth = totalHorizontalSpace / spanCount;
+
+                // Calculate the left and right padding for all items
+                int padding = (totalHorizontalSpace - (itemWidth * spanCount)) / (spanCount - 1);
+
                 boolean isFirstItem = position % spanCount == 0;
-                // This needs to be done since the emoji wallpaers creation tile is at position 1
+                // This needs to be done since the emoji wallpapers creation tile is at position 1
                 // which is the first element in the row
                 if (position == 1) {
                     isFirstItem = true;
                 }
-                outRect.bottom = mPaddingBottom;
-                // Check if the item is the first item in the row
                 if (isFirstItem) {
                     if (isRtl) {
                         outRect.right = mEdgePadding;
+                        outRect.left = padding;
                     } else {
                         outRect.left = mEdgePadding;
+                        outRect.right = padding;
                     }
                 }
-
                 boolean isLastItem = (position + 1) % spanCount == 0;
-                if (isRtl) {
-                    outRect.left = mEdgePadding;
-                } else {
-                    outRect.right = mEdgePadding;
+                if (isLastItem) {
+                    if (isRtl) {
+                        outRect.right = padding;
+                        outRect.left = mEdgePadding;
+                    } else {
+                        outRect.left = padding;
+                        outRect.right = mEdgePadding;
+                    }
                 }
                 if (!isFirstItem && !isLastItem) {
-                    outRect.right = outRect.right + mEdgePadding / 2;
+                    // Middle items
                     outRect.left = outRect.left + mEdgePadding / 2;
+                    outRect.right = outRect.right + mEdgePadding / 2;
                 }
             } else if ((parent.getAdapter().getItemViewType(position) == ITEM_VIEW_TYPE_HEADER)
                     || (parent.getAdapter().getItemViewType(position)
                     == ITEM_VIEW_TYPE_HEADER_TOP)) {
+                // Header items
                 outRect.left = mPaddingHorizontal;
                 outRect.right = mPaddingHorizontal;
                 outRect.bottom = mPaddingBottom;
