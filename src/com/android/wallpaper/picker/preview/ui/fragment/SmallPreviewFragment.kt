@@ -24,11 +24,13 @@ import androidx.fragment.app.activityViewModels
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.picker.AppbarFragment
+import com.android.wallpaper.picker.preview.di.modules.preview.utils.PreviewUtilsModule
 import com.android.wallpaper.picker.preview.ui.binder.SmallPreviewBinder
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.PreviewViewPagerSynchronizationBinder
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout
 import com.android.wallpaper.util.DisplayUtils
+import com.android.wallpaper.util.PreviewUtils
 import com.android.wallpaper.util.RtlUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -42,6 +44,7 @@ import kotlinx.coroutines.CoroutineScope
 class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
     @Inject lateinit var displayUtils: DisplayUtils
+    @PreviewUtilsModule.HomeScreenPreviewUtils @Inject lateinit var homePreviewUtils: PreviewUtils
     @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
 
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
@@ -98,6 +101,8 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 lifecycleOwner = viewLifecycleOwner,
                 isSingleDisplayOrUnfoldedHorizontalHinge = isSingleDisplayOrUnfoldedHorizontalHinge,
                 isRtl = isRtl,
+                previewUtils = homePreviewUtils,
+                displayId = displayUtils.getSmallerDisplay().displayId,
             )
             SmallPreviewBinder.bind(
                 applicationContext = applicationContext,
@@ -107,6 +112,8 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 lifecycleOwner = viewLifecycleOwner,
                 isSingleDisplayOrUnfoldedHorizontalHinge = isSingleDisplayOrUnfoldedHorizontalHinge,
                 isRtl = isRtl,
+                previewUtils = homePreviewUtils,
+                displayId = displayUtils.getWallpaperDisplay().displayId,
             )
         } else {
             PreviewViewPagerSynchronizationBinder.bind(

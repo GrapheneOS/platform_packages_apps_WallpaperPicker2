@@ -2,6 +2,7 @@
   "presubmit": [
     {
       "name": "WallpaperPickerGoogleTests",
+      "keywords": ["internal"],
       "options": [
         {
           "exclude-annotation": "org.junit.Ignore"
