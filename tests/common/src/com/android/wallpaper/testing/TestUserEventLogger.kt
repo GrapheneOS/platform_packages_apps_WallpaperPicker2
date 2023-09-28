@@ -17,11 +17,7 @@ package com.android.wallpaper.testing
 
 import android.content.Intent
 import com.android.wallpaper.module.logging.UserEventLogger
-import com.android.wallpaper.module.logging.UserEventLogger.Companion.DailyWallpaperMetadataFailureReason
-import com.android.wallpaper.module.logging.UserEventLogger.Companion.DailyWallpaperUpdateCrash
-import com.android.wallpaper.module.logging.UserEventLogger.Companion.DailyWallpaperUpdateResult
 import com.android.wallpaper.module.logging.UserEventLogger.Companion.EffectStatus
-import com.android.wallpaper.module.logging.UserEventLogger.Companion.WallpaperSetFailureReason
 import com.android.wallpaper.module.logging.UserEventLogger.Companion.WallpaperSetResult
 
 /** Test implementation of [UserEventLogger]. */
@@ -38,50 +34,13 @@ open class TestUserEventLogger : UserEventLogger {
 
     override fun logActionClicked(collectionId: String, actionLabelResId: Int) {}
 
-    override fun logIndividualWallpaperSelected(collectionId: String) {}
-
-    override fun logCategorySelected(collectionId: String) {}
-
     override fun logSnapshot() {}
 
-    override fun logWallpaperSet(collectionId: String?, wallpaperId: String?, effects: String?) {}
-
-    override fun logWallpaperSetResult(@WallpaperSetResult result: Int) {
-        numWallpaperSetResultEvents++
-        lastWallpaperSetResult = result
-    }
-
-    override fun logWallpaperSetFailureReason(@WallpaperSetFailureReason reason: Int) {}
-
-    override fun logNumDailyWallpaperRotationsInLastWeek() {}
-
-    override fun logNumDailyWallpaperRotationsPreviousDay() {}
-
-    override fun logRefreshDailyWallpaperButtonClicked() {}
-
-    override fun logDailyWallpaperRotationStatus(status: Int) {}
-
-    override fun logDailyWallpaperSetNextWallpaperResult(@DailyWallpaperUpdateResult result: Int) {}
-
-    override fun logDailyWallpaperSetNextWallpaperCrash(@DailyWallpaperUpdateCrash crash: Int) {}
-
-    override fun logNumDaysDailyRotationFailed(days: Int) {}
-
-    override fun logDailyWallpaperMetadataRequestFailure(
-        @DailyWallpaperMetadataFailureReason reason: Int
+    override fun logWallpaperApplied(
+        collectionId: String?,
+        wallpaperId: String?,
+        effects: String?
     ) {}
-
-    override fun logNumDaysDailyRotationNotAttempted(days: Int) {}
-
-    override fun logStandalonePreviewLaunched() {}
-
-    override fun logStandalonePreviewImageUriHasReadPermission(isReadPermissionGranted: Boolean) {}
-
-    override fun logStandalonePreviewStorageDialogApproved(isApproved: Boolean) {}
-
-    override fun logWallpaperPresentationMode() {}
-
-    override fun logRestored() {}
 
     override fun logEffectApply(
         effect: String,

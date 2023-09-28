@@ -370,9 +370,6 @@ public class CategorySelectorFragment extends AppbarFragment {
         @Override
         public void onClick(View view) {
             Activity activity = getActivity();
-            final UserEventLogger eventLogger =
-                    InjectorProvider.getInjector().getUserEventLogger(activity);
-            eventLogger.logCategorySelected(mCategory.getCollectionId());
 
             if (mCategory.supportsCustomPhotos()) {
                 EffectsController effectsController =
@@ -399,8 +396,6 @@ public class CategorySelectorFragment extends AppbarFragment {
 
             if (mCategory.isSingleWallpaperCategory()) {
                 WallpaperInfo wallpaper = mCategory.getSingleWallpaper();
-                // Log click on individual wallpaper
-                eventLogger.logIndividualWallpaperSelected(mCategory.getCollectionId());
 
                 InjectorProvider.getInjector().getWallpaperPersister(activity)
                         .setWallpaperInfoInPreview(wallpaper);
@@ -568,8 +563,6 @@ public class CategorySelectorFragment extends AppbarFragment {
             Activity activity = getActivity();
             final UserEventLogger eventLogger =
                     InjectorProvider.getInjector().getUserEventLogger(activity);
-            eventLogger.logCategorySelected(mCategories.get(position)
-                    .getCollectionId());
             if (mCategories.get(position).supportsCustomPhotos()) {
                 getCategorySelectorFragmentHost().requestCustomPhotoPicker(
                         new MyPhotosStarter.PermissionChangedListener() {
@@ -594,9 +587,6 @@ public class CategorySelectorFragment extends AppbarFragment {
             if (mCategories.get(position).isSingleWallpaperCategory()) {
                 WallpaperInfo wallpaper = mCategories.get(position)
                         .getSingleWallpaper();
-                // Log click on individual wallpaper
-                eventLogger.logIndividualWallpaperSelected(
-                        mCategories.get(position).getCollectionId());
 
                 InjectorProvider.getInjector().getWallpaperPersister(activity)
                         .setWallpaperInfoInPreview(wallpaper);
