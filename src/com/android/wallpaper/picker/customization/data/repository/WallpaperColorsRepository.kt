@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.wallpaper.model
+package com.android.wallpaper.picker.customization.data.repository
 
 import android.app.WallpaperColors
+import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
