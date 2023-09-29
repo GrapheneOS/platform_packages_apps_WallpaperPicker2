@@ -26,7 +26,6 @@ import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.WallpaperPersister;
-import com.android.wallpaper.module.logging.UserEventLogger;
 
 /**
  * CreativeCategoryIndividualHolder subclass for a creative category wallpaper tile in the
@@ -59,10 +58,6 @@ class CreativeCategoryIndividualHolder extends IndividualHolder implements View.
             Log.w(TAG, "onClick received on VH on finishing Activity");
             return;
         }
-        UserEventLogger eventLogger =
-                InjectorProvider.getInjector().getUserEventLogger(mActivity);
-        eventLogger.logIndividualWallpaperSelected(mWallpaper.getCollectionId(mActivity));
-
         showPreview(mWallpaper);
     }
 

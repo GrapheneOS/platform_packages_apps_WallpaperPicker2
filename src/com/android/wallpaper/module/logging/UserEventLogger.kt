@@ -26,10 +26,6 @@ interface UserEventLogger {
 
     fun logActionClicked(collectionId: String, actionLabelResId: Int)
 
-    fun logIndividualWallpaperSelected(collectionId: String)
-
-    fun logCategorySelected(collectionId: String)
-
     /** Log current existing snapshot data. */
     fun logSnapshot()
 
@@ -40,77 +36,7 @@ interface UserEventLogger {
      * @param wallpaperId wallpaper id.
      * @param effects effects set with wallpaper.
      */
-    fun logWallpaperSet(collectionId: String?, wallpaperId: String?, effects: String?)
-
-    fun logWallpaperSetResult(@WallpaperSetResult result: Int)
-
-    /**
-     * Logs that a particular failure to set an individual wallpaper occurred for the given reason.
-     */
-    fun logWallpaperSetFailureReason(@WallpaperSetFailureReason reason: Int)
-
-    /**
-     * Logs the number of daily rotations that occurred in the last week if daily rotation has been
-     * enabled for at least a week.
-     */
-    fun logNumDailyWallpaperRotationsInLastWeek()
-
-    /**
-     * Logs the number of daily rotations that occurred during the previous day (24 hour period
-     * midnight to midnight) if daily rotation has been enabled at least since midnight yesterday.
-     */
-    fun logNumDailyWallpaperRotationsPreviousDay()
-
-    /** Logs the last-known status of daily wallpapers on the device. */
-    fun logDailyWallpaperRotationStatus(status: Int)
-
-    /** Logs the result of an operation to update the daily wallpaper. */
-    fun logDailyWallpaperSetNextWallpaperResult(@DailyWallpaperUpdateResult result: Int)
-
-    /**
-     * Logs that a particular crash occurred when trying to set the next wallpaper in a daily
-     * rotation.
-     */
-    fun logDailyWallpaperSetNextWallpaperCrash(@DailyWallpaperUpdateCrash crash: Int)
-
-    /**
-     * Logs that the request for metadata for the next wallpaper in a daily rotation failed for the
-     * given reason.
-     */
-    fun logDailyWallpaperMetadataRequestFailure(@DailyWallpaperMetadataFailureReason reason: Int)
-
-    /** Logs that the "refresh daily wallpaper" button was clicked. */
-    fun logRefreshDailyWallpaperButtonClicked()
-
-    /** Logs the number of consecutive days that daily rotation was attempted but failed. */
-    fun logNumDaysDailyRotationFailed(days: Int)
-
-    /**
-     * Logs the number of consecutive days that daily rotation was not attempted but should have
-     * been attempted ("network conditions not met" doesn't count).
-     */
-    fun logNumDaysDailyRotationNotAttempted(days: Int)
-
-    /** Logs that the StandalonePreviewActivity was launched. */
-    fun logStandalonePreviewLaunched()
-
-    /**
-     * Logs whether the image URI passed to StandalonePreviewActivity came properly preconfigured
-     * with read permissions.
-     */
-    fun logStandalonePreviewImageUriHasReadPermission(isReadPermissionGranted: Boolean)
-
-    /**
-     * Logs whether the user approved the runtime dialog to grant this app READ_MEDIA_IMAGES
-     * permission in order to open an image URI.
-     */
-    fun logStandalonePreviewStorageDialogApproved(isApproved: Boolean)
-
-    /** Logs the presentation mode of the current wallpaper. */
-    fun logWallpaperPresentationMode()
-
-    /** Logs that the app was restored from a backup set. */
-    fun logRestored()
+    fun logWallpaperApplied(collectionId: String?, wallpaperId: String?, effects: String?)
 
     /** Logs the action related to effect. */
     fun logEffectApply(

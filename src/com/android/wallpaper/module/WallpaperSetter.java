@@ -257,13 +257,11 @@ public class WallpaperSetter {
     }
 
     private void onWallpaperApplied(WallpaperInfo wallpaper, Activity containerActivity) {
-        mUserEventLogger.logWallpaperSet(
+        mUserEventLogger.logWallpaperApplied(
                 wallpaper.getCollectionId(containerActivity),
                 wallpaper.getWallpaperId(), wallpaper.getEffectNames());
         mPreferences.setPendingWallpaperSetStatus(
                 WallpaperPreferences.WALLPAPER_SET_NOT_PENDING);
-        mUserEventLogger.logWallpaperSetResult(
-                UserEventLogger.WALLPAPER_SET_RESULT_SUCCESS);
         cleanUp();
         restoreScreenOrientationIfNeeded(containerActivity);
     }
@@ -271,14 +269,10 @@ public class WallpaperSetter {
     private void onWallpaperApplyError(Throwable throwable, Activity containerActivity) {
         mPreferences.setPendingWallpaperSetStatus(
                 WallpaperPreferences.WALLPAPER_SET_NOT_PENDING);
-        mUserEventLogger.logWallpaperSetResult(
-                UserEventLogger.WALLPAPER_SET_RESULT_FAILURE);
         @WallpaperSetFailureReason int failureReason = ThrowableAnalyzer.isOOM(
                 throwable)
                 ? UserEventLogger.WALLPAPER_SET_FAILURE_REASON_OOM
                 : UserEventLogger.WALLPAPER_SET_FAILURE_REASON_OTHER;
-        mUserEventLogger.logWallpaperSetFailureReason(failureReason);
-
         cleanUp();
         restoreScreenOrientationIfNeeded(containerActivity);
     }
