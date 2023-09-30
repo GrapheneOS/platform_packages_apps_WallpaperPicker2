@@ -56,9 +56,6 @@ public class DailyLoggingAlarmReceiver extends BroadcastReceiver {
         UserEventLogger logger = injector.getUserEventLogger(appContext);
         WallpaperPreferences preferences = injector.getPreferences(appContext);
 
-        logger.logNumDailyWallpaperRotationsInLastWeek();
-        logger.logNumDailyWallpaperRotationsPreviousDay();
-        logger.logWallpaperPresentationMode();
         logger.logSnapshot();
 
         preferences.setLastDailyLogTimestamp(System.currentTimeMillis());
@@ -124,15 +121,11 @@ public class DailyLoggingAlarmReceiver extends BroadcastReceiver {
                     long lastRotationStatusTimestamp =
                             preferences.getDailyWallpaperLastRotationStatusTimestamp();
 
-                    UserEventLogger logger = injector.getUserEventLogger(appContext);
-
                     // If a rotation status was reported more recently than midnight yesterday,
                     // then log it. Otherwise, log a "not attempted" rotation status.
                     if (lastRotationStatusTimestamp > midnightYesterday.getTimeInMillis()) {
                         int lastDailyWallpaperRotationStatus =
                                 preferences.getDailyWallpaperLastRotationStatus();
-
-                        logger.logDailyWallpaperRotationStatus(lastDailyWallpaperRotationStatus);
 
                         // If the daily rotation status is "failed", increment the num days
                         // failed in SharedPreferences and log it, otherwise reset the counter in
@@ -140,8 +133,6 @@ public class DailyLoggingAlarmReceiver extends BroadcastReceiver {
                         if (UserEventLogger.ROTATION_STATUS_FAILED
                                 == lastDailyWallpaperRotationStatus) {
                             preferences.incrementNumDaysDailyRotationFailed();
-                            logger.logNumDaysDailyRotationFailed(
-                                    preferences.getNumDaysDailyRotationFailed());
                         } else {
                             preferences.resetNumDaysDailyRotationFailed();
                         }
@@ -151,14 +142,9 @@ public class DailyLoggingAlarmReceiver extends BroadcastReceiver {
                         // attempted".
                         preferences.resetNumDaysDailyRotationNotAttempted();
                     } else {
-                        logger.logDailyWallpaperRotationStatus(
-                                UserEventLogger.ROTATION_STATUS_NOT_ATTEMPTED);
-
                         // Increment and log the consecutive # days in a row that daily rotation
                         // was not attempted.
                         preferences.incrementNumDaysDailyRotationNotAttempted();
-                        logger.logNumDaysDailyRotationNotAttempted(
-                                preferences.getNumDaysDailyRotationNotAttempted());
 
                         // Reset the disk-based counter for number of consecutive days daily
                         // rotation failed because if rotation was not attempted but restarts

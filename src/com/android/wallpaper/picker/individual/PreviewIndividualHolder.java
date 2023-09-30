@@ -26,7 +26,6 @@ import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.WallpaperPersister;
-import com.android.wallpaper.module.logging.UserEventLogger;
 
 /**
  * IndividualHolder subclass for a wallpaper tile in the RecyclerView for which a click should
@@ -51,10 +50,6 @@ class PreviewIndividualHolder extends IndividualHolder implements View.OnClickLi
             Log.w(TAG, "onClick received on VH on finishing Activity");
             return;
         }
-        UserEventLogger eventLogger =
-                InjectorProvider.getInjector().getUserEventLogger(mActivity);
-        eventLogger.logIndividualWallpaperSelected(mWallpaper.getCollectionId(mActivity));
-
         showPreview(mWallpaper);
     }
 
