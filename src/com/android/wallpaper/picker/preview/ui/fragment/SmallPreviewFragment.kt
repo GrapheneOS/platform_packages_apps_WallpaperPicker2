@@ -21,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.picker.AppbarFragment
@@ -29,6 +30,7 @@ import com.android.wallpaper.picker.preview.ui.binder.SmallPreviewBinder
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.PreviewViewPagerSynchronizationBinder
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout
+import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout.Companion.PreviewView
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
 import com.android.wallpaper.util.RtlUtils
@@ -87,34 +89,41 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         val isRtl = RtlUtils.isRtl(applicationContext)
 
         if (displayUtils.hasMultiInternalDisplays()) {
+            val previewDisplays =
+                mapOf(
+                    PreviewView.FOLDED to displayUtils.getSmallerDisplay(),
+                    PreviewView.UNFOLDED to displayUtils.getWallpaperDisplay(),
+                )
             val dualDisplayAspectRatioView: DualDisplayAspectRatioLayout =
                 view.requireViewById(R.id.dual_preview)
+
             dualDisplayAspectRatioView.setDisplaySizes(
-                displayUtils.getRealSize(displayUtils.getSmallerDisplay()),
-                displayUtils.getRealSize(displayUtils.getWallpaperDisplay())
+                previewDisplays.mapValues { displayUtils.getRealSize(it.value) }
             )
-            SmallPreviewBinder.bind(
-                applicationContext = applicationContext,
-                view = view.requireViewById(DualDisplayAspectRatioLayout.foldedPreviewId),
-                viewModel = wallpaperPreviewViewModel,
-                mainScope = mainScope,
-                lifecycleOwner = viewLifecycleOwner,
-                isSingleDisplayOrUnfoldedHorizontalHinge = isSingleDisplayOrUnfoldedHorizontalHinge,
-                isRtl = isRtl,
-                previewUtils = homePreviewUtils,
-                displayId = displayUtils.getSmallerDisplay().displayId,
-            )
-            SmallPreviewBinder.bind(
-                applicationContext = applicationContext,
-                view = view.requireViewById(DualDisplayAspectRatioLayout.unfoldedPreviewId),
-                viewModel = wallpaperPreviewViewModel,
-                mainScope = mainScope,
-                lifecycleOwner = viewLifecycleOwner,
-                isSingleDisplayOrUnfoldedHorizontalHinge = isSingleDisplayOrUnfoldedHorizontalHinge,
-                isRtl = isRtl,
-                previewUtils = homePreviewUtils,
-                displayId = displayUtils.getWallpaperDisplay().displayId,
-            )
+            PreviewView.entries.stream().forEach { previewView ->
+                previewView.viewId.let { id ->
+                    SmallPreviewBinder.bind(
+                        applicationContext = applicationContext,
+                        view = view.requireViewById(id),
+                        viewModel = wallpaperPreviewViewModel,
+                        mainScope = mainScope,
+                        lifecycleOwner = viewLifecycleOwner,
+                        isSingleDisplayOrUnfoldedHorizontalHinge =
+                            isSingleDisplayOrUnfoldedHorizontalHinge,
+                        isRtl = isRtl,
+                        previewDisplaySize =
+                            checkNotNull(
+                                dualDisplayAspectRatioView.getPreviewDisplaySize(previewView)
+                            ),
+                        previewDisplayId = checkNotNull(previewDisplays[previewView]).displayId,
+                        previewUtils = homePreviewUtils,
+                        navigate = {
+                            findNavController()
+                                .navigate(R.id.action_smallPreviewFragment_to_fullPreviewFragment)
+                        },
+                    )
+                }
+            }
         } else {
             PreviewViewPagerSynchronizationBinder.bind(
                 view.requireViewById(R.id.pager_tabs),

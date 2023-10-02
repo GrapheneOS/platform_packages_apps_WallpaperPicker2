@@ -16,6 +16,7 @@
 package com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters
 
 import android.content.Context
+import android.graphics.Point
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,6 +55,7 @@ class SinglePreviewPagerAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val previewView: CardView = itemView.requireViewById(R.id.preview)
 
+        // TODO(b/291761856): Move out of adapter.
         fun bind(position: Int) {
             SmallPreviewBinder.bind(
                 applicationContext = applicationContext,
@@ -63,6 +65,7 @@ class SinglePreviewPagerAdapter(
                 lifecycleOwner = lifecycleOwner,
                 isSingleDisplayOrUnfoldedHorizontalHinge = isSingleDisplayOrUnfoldedHorizontalHinge,
                 isRtl = isRtl,
+                previewDisplaySize = Point(2208, 1840)
             )
         }
     }

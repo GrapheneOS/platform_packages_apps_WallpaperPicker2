@@ -16,11 +16,14 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
+import android.graphics.Point
 import android.view.SurfaceView
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
+import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.picker.preview.ui.viewmodel.PreviewTransitionViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.CoroutineScope
@@ -35,13 +38,25 @@ object SmallPreviewBinder {
         lifecycleOwner: LifecycleOwner,
         isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
         isRtl: Boolean,
+        previewDisplaySize: Point,
+        previewDisplayId: Int? = null,
         previewUtils: PreviewUtils? = null,
-        displayId: Int? = null,
+        navigate: (() -> Unit)? = null,
     ) {
+        view.setOnClickListener {
+            // TODO(b/291761856): update preview transition view model from
+            //                    [SmallPreviewFragment].
+            viewModel.previewTransitionViewModel =
+                PreviewTransitionViewModel(
+                    previewTab = CustomizationSections.Screen.HOME_SCREEN,
+                    targetDisplaySize = previewDisplaySize,
+                )
+            navigate?.invoke()
+        }
         val workspaceSurface = view.requireViewById<SurfaceView>(R.id.workspace_surface)
         workspaceSurface.visibility = View.VISIBLE
         workspaceSurface.setZOrderMediaOverlay(true)
-        previewUtils?.let { WorkspacePreviewBinder.bind(workspaceSurface, it, displayId) }
+        previewUtils?.let { WorkspacePreviewBinder.bind(workspaceSurface, it, previewDisplayId) }
 
         val wallpaperSurface = view.requireViewById<SurfaceView>(R.id.wallpaper_surface)
         wallpaperSurface.setZOrderMediaOverlay(true)
