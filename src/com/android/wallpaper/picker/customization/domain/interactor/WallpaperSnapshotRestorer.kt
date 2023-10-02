@@ -17,6 +17,7 @@
 
 package com.android.wallpaper.picker.customization.domain.interactor
 
+import android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_RESET
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotRestorer
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotStore
@@ -48,6 +49,7 @@ class WallpaperSnapshotRestorer(
         val homeWallpaperId = snapshot.args[SELECTED_HOME_SCREEN_WALLPAPER_ID]
         if (!homeWallpaperId.isNullOrEmpty()) {
             interactor.setWallpaper(
+                setWallpaperEntryPoint = SET_WALLPAPER_ENTRY_POINT_RESET,
                 destination = WallpaperDestination.HOME,
                 wallpaperId = homeWallpaperId
             )
@@ -56,6 +58,7 @@ class WallpaperSnapshotRestorer(
         val lockWallpaperId = snapshot.args[SELECTED_LOCK_SCREEN_WALLPAPER_ID]
         if (!lockWallpaperId.isNullOrEmpty()) {
             interactor.setWallpaper(
+                setWallpaperEntryPoint = SET_WALLPAPER_ENTRY_POINT_RESET,
                 destination = WallpaperDestination.LOCK,
                 wallpaperId = lockWallpaperId
             )

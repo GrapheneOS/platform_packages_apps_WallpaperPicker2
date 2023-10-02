@@ -16,6 +16,8 @@
 package com.android.wallpaper.module.logging
 
 import android.content.Intent
+import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
+import com.android.wallpaper.module.logging.UserEventLogger.WallpaperDestination
 
 /** [UserEventLogger] which does not do anything. */
 open class NoOpUserEventLogger : UserEventLogger {
@@ -25,7 +27,9 @@ open class NoOpUserEventLogger : UserEventLogger {
     override fun logWallpaperApplied(
         collectionId: String?,
         wallpaperId: String?,
-        effects: String?
+        effects: String?,
+        @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
+        @WallpaperDestination destination: Int,
     ) {}
     override fun logEffectApply(
         effect: String,

@@ -18,6 +18,7 @@
 package com.android.wallpaper.testing
 
 import android.graphics.Bitmap
+import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -78,12 +79,13 @@ class FakeWallpaperClient : WallpaperClient {
     }
 
     override suspend fun setWallpaper(
+        @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
         destination: WallpaperDestination,
         wallpaperId: String,
         onDone: () -> Unit
     ) {
         if (isPaused) {
-            deferred.add { setWallpaper(destination, wallpaperId, onDone) }
+            deferred.add { setWallpaper(setWallpaperEntryPoint, destination, wallpaperId, onDone) }
         } else {
             _recentWallpapers.value =
                 _recentWallpapers.value.toMutableMap().apply {

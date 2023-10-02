@@ -1,6 +1,7 @@
 package com.android.wallpaper.module;
 
 import static android.app.WallpaperManager.FLAG_LOCK;
+import static android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_RESTORE;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -29,6 +30,7 @@ import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.module.logging.UserEventLogger;
+import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment.Listener;
 
@@ -75,6 +77,7 @@ public class WallpaperSetter {
      * @param containerActivity main Activity that owns the current fragment
      * @param wallpaper         Info for the actual wallpaper to set
      * @param wallpaperAsset    Wallpaper asset from which to retrieve image data.
+     * @param setWallpaperEntryPoint The entry point where the wallpaper is set.
      * @param destination       The wallpaper destination i.e. home vs. lockscreen vs. both.
      * @param wallpaperScale    Scaling factor applied to the source image before setting the
      *                          wallpaper to the device.
@@ -84,12 +87,12 @@ public class WallpaperSetter {
      * @param callback          Optional callback to be notified when the wallpaper is set.
      */
     public void setCurrentWallpaper(Activity containerActivity, WallpaperInfo wallpaper,
-            @Nullable Asset wallpaperAsset, @Destination final int destination,
-            float wallpaperScale, @Nullable Rect cropRect, WallpaperColors wallpaperColors,
-            @Nullable SetWallpaperCallback callback) {
+            @Nullable Asset wallpaperAsset, @SetWallpaperEntryPoint int setWallpaperEntryPoint,
+            @Destination final int destination, float wallpaperScale, @Nullable Rect cropRect,
+            WallpaperColors wallpaperColors, @Nullable SetWallpaperCallback callback) {
         if (wallpaper instanceof LiveWallpaperInfo) {
-            setCurrentLiveWallpaper(containerActivity, (LiveWallpaperInfo) wallpaper, destination,
-                    wallpaperColors, callback);
+            setCurrentLiveWallpaper(containerActivity, (LiveWallpaperInfo) wallpaper,
+                    setWallpaperEntryPoint, destination, wallpaperColors, callback);
             return;
         }
         mPreferences.setPendingWallpaperSetStatus(
@@ -138,7 +141,8 @@ public class WallpaperSetter {
                     @Override
                     public void onSuccess(WallpaperInfo wallpaperInfo,
                             @Destination int destination) {
-                        onWallpaperApplied(wallpaper, containerActivity);
+                        onWallpaperApplied(containerActivity, wallpaper, setWallpaperEntryPoint,
+                                destination);
                         if (callback != null) {
                             callback.onSuccess(wallpaper, destination);
                         }
@@ -156,8 +160,8 @@ public class WallpaperSetter {
     }
 
     private void setCurrentLiveWallpaper(Activity activity, LiveWallpaperInfo wallpaper,
-            @Destination final int destination, WallpaperColors colors,
-            @Nullable SetWallpaperCallback callback) {
+            @SetWallpaperEntryPoint int setWallpaperEntryPoint, @Destination final int destination,
+            WallpaperColors colors, @Nullable SetWallpaperCallback callback) {
         try {
             // Save current screen rotation so we can temporarily disable rotation while setting the
             // wallpaper and restore after setting the wallpaper finishes.
@@ -183,7 +187,7 @@ public class WallpaperSetter {
             mPreferences.storeLatestWallpaper(WallpaperPersister.destinationToFlags(destination),
                     wallpaper.getWallpaperId(), wallpaper, colors);
             mCurrentWallpaperInfoFactory.clearCurrentWallpaperInfos();
-            onWallpaperApplied(wallpaper, activity);
+            onWallpaperApplied(activity, wallpaper, setWallpaperEntryPoint, destination);
             if (callback != null) {
                 callback.onSuccess(wallpaper, destination);
             }
@@ -242,6 +246,11 @@ public class WallpaperSetter {
                                     .getLowResBitmap(context)));
             mCurrentWallpaperInfoFactory.clearCurrentWallpaperInfos();
             // Not call onWallpaperApplied() as no UI is presented.
+            mUserEventLogger.logWallpaperApplied(
+                    wallpaper.getCollectionId(context),
+                    wallpaper.getWallpaperId(), wallpaper.getEffectNames(),
+                    SET_WALLPAPER_ENTRY_POINT_RESTORE,
+                    UserEventLogger.Companion.toWallpaperDestinationForLogging(destination));
             if (callback != null) {
                 callback.onSuccess(wallpaper, destination);
             }
@@ -254,10 +263,16 @@ public class WallpaperSetter {
         }
     }
 
-    private void onWallpaperApplied(WallpaperInfo wallpaper, Activity containerActivity) {
+    private void onWallpaperApplied(
+            Activity containerActivity,
+            WallpaperInfo wallpaper,
+            @SetWallpaperEntryPoint int setWallpaperEntryPoint,
+            @Destination int destination) {
         mUserEventLogger.logWallpaperApplied(
                 wallpaper.getCollectionId(containerActivity),
-                wallpaper.getWallpaperId(), wallpaper.getEffectNames());
+                wallpaper.getWallpaperId(), wallpaper.getEffectNames(),
+                setWallpaperEntryPoint,
+                UserEventLogger.Companion.toWallpaperDestinationForLogging(destination));
         mPreferences.setPendingWallpaperSetStatus(
                 WallpaperPreferences.WALLPAPER_SET_NOT_PENDING);
         cleanUp();
