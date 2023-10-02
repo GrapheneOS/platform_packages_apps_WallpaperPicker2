@@ -226,7 +226,7 @@ public class WallpaperSetter {
      * @param colors      The {@link WallpaperColors} for placeholder of quickswitching
      * @param callback    Optional callback to be notified when the wallpaper is set.
      */
-    public void setCurrentLiveWallpaper(Context context, LiveWallpaperInfo wallpaper,
+    public void setCurrentLiveWallpaperFromRestore(Context context, LiveWallpaperInfo wallpaper,
             @Destination final int destination, @Nullable WallpaperColors colors,
             @Nullable SetWallpaperCallback callback) {
         try {
