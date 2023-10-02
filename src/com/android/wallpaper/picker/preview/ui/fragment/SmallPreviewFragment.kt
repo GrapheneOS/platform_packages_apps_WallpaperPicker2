@@ -29,7 +29,7 @@ import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.preview.di.modules.preview.utils.PreviewUtilsModule
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewPagerBinder
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.PreviewViewPagerSynchronizationBinder
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
+import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.SingleAndDualPreviewPagerAdapter
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
@@ -93,14 +93,14 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             val dualPreviewView: ViewPager2 = view.requireViewById(R.id.dual_preview_pager)
             DualPreviewPagerBinder.bind(
                 dualPreviewView,
-                DualPreviewPagerAdapter.DualPreviewPagerViewModel(
+                SingleAndDualPreviewPagerAdapter.DualPreviewPagerViewModel(
                     wallpaperPreviewViewModel,
                     homePreviewUtils
                 ) {
                     findNavController()
                         .navigate(R.id.action_smallPreviewFragment_to_fullPreviewFragment)
                 },
-                DualPreviewPagerAdapter.DualPreviewPagerViewModel(
+                SingleAndDualPreviewPagerAdapter.DualPreviewPagerViewModel(
                     wallpaperPreviewViewModel,
                     lockPreviewUtils
                 ) {
@@ -116,17 +116,21 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             )
         } else {
             PreviewViewPagerSynchronizationBinder.bind(
-                view.requireViewById(R.id.pager_tabs),
-                view.requireViewById(R.id.pager_previews),
-                displayUtils.getRealSize(displayUtils.getSmallerDisplay()),
-                resources,
+                tabsViewPager = view.requireViewById(R.id.pager_tabs),
+                previewsViewPager = view.requireViewById(R.id.pager_previews),
+                previewDisplaySize = displayUtils.getRealSize(displayUtils.getWallpaperDisplay()),
                 // TODO: pass correct view models for the view pager
-                listOf(wallpaperPreviewViewModel, wallpaperPreviewViewModel),
-                applicationContext,
-                isSingleDisplayOrUnfoldedHorizontalHinge,
-                viewLifecycleOwner,
-                isRtl,
-                mainScope
+                wallpaperPreviewViewModels =
+                    listOf(wallpaperPreviewViewModel, wallpaperPreviewViewModel),
+                applicationContext = applicationContext,
+                isSingleDisplayOrUnfoldedHorizontalHinge = isSingleDisplayOrUnfoldedHorizontalHinge,
+                viewLifecycleOwner = viewLifecycleOwner,
+                isRtl = isRtl,
+                mainScope = mainScope,
+                navigate = {
+                    findNavController()
+                        .navigate(R.id.action_smallPreviewFragment_to_fullPreviewFragment)
+                },
             )
         }
     }

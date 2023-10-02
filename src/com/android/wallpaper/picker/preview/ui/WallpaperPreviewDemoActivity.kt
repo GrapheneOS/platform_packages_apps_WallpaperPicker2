@@ -85,7 +85,7 @@ class WallpaperPreviewDemoActivity : Hilt_WallpaperPreviewDemoActivity() {
                 fullResImageView = requireViewById(R.id.full_res_image),
                 lowResImageView = requireViewById(R.id.low_res_image),
                 viewModel = viewModel.getStaticWallpaperPreviewViewModel(),
-                lifecycleOwner = this,
+                viewLifecycleOwner = this,
                 isSingleDisplayOrUnfoldedHorizontalHinge =
                     displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(this),
                 isRtl = RtlUtils.isRtl(applicationContext),

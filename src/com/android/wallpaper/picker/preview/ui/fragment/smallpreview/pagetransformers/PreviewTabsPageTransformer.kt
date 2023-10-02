@@ -26,7 +26,9 @@ import kotlin.math.abs
  * behaviour where one out of two tabs cna be focused on and the other is clamped to the side of the
  * left or right of the display
  */
-class PreviewTabsPageTransformer(private val screenSizePx: Point) : ViewPager.PageTransformer {
+class PreviewTabsPageTransformer(
+    private val previewDisplaySize: Point,
+) : ViewPager.PageTransformer {
     override fun transformPage(page: View, position: Float) {
         // TODO: cache this reference since findViewById is expensive
         val textView = page.requireViewById<View>(R.id.preview_tab_text)
@@ -36,7 +38,7 @@ class PreviewTabsPageTransformer(private val screenSizePx: Point) : ViewPager.Pa
         if (position > 0) {
             textViewWidthOffset *= -1
         }
-        page.translationX = -screenSizePx.x / 2 * position + textViewWidthOffset
+        page.translationX = -previewDisplaySize.x / 2 * position + textViewWidthOffset
         val scaleFactor = 0.95f
         page.scaleX = scaleFactor + (1 - scaleFactor) * (1 - absPosition)
         page.scaleY = scaleFactor + (1 - scaleFactor) * (1 - absPosition)

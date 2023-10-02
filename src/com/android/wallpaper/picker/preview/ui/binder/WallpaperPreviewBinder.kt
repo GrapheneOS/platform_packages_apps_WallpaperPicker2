@@ -39,7 +39,7 @@ object WallpaperPreviewBinder {
         wallpaperSurface: SurfaceView,
         viewModel: WallpaperPreviewViewModel,
         @MainDispatcher mainScope: CoroutineScope,
-        lifecycleOwner: LifecycleOwner,
+        viewLifecycleOwner: LifecycleOwner,
         isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
         isRtl: Boolean,
     ) {
@@ -48,7 +48,7 @@ object WallpaperPreviewBinder {
                 override fun surfaceCreated(holder: SurfaceHolder) {
                     val wallpaper = viewModel.editingWallpaper
                     if (wallpaper is LiveWallpaperInfo) {
-                        lifecycleOwner.lifecycleScope.launch {
+                        viewLifecycleOwner.lifecycleScope.launch {
                             wallpaperSurface.setUpSurface(applicationContext)
                             WallpaperConnectionUtils.connect(
                                 applicationContext,
@@ -78,7 +78,7 @@ object WallpaperPreviewBinder {
                             lowResImageView =
                                 staticWallpaperPreview.requireViewById(R.id.low_res_image),
                             viewModel = viewModel.getStaticWallpaperPreviewViewModel(),
-                            lifecycleOwner = lifecycleOwner,
+                            viewLifecycleOwner = viewLifecycleOwner,
                             isSingleDisplayOrUnfoldedHorizontalHinge =
                                 isSingleDisplayOrUnfoldedHorizontalHinge,
                             isRtl,
