@@ -29,10 +29,8 @@ import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.module.logging.UserEventLogger;
-import com.android.wallpaper.module.logging.UserEventLogger.Companion.WallpaperSetFailureReason;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment.Listener;
-import com.android.wallpaper.util.ThrowableAnalyzer;
 
 import com.bumptech.glide.Glide;
 
@@ -148,7 +146,7 @@ public class WallpaperSetter {
 
                     @Override
                     public void onError(Throwable throwable) {
-                        onWallpaperApplyError(throwable, containerActivity);
+                        onWallpaperApplyError(containerActivity);
                         if (callback != null) {
                             callback.onError(throwable);
                         }
@@ -191,7 +189,7 @@ public class WallpaperSetter {
             }
             mWallpaperPersister.onLiveWallpaperSet(destination);
         } catch (RuntimeException | IOException e) {
-            onWallpaperApplyError(e, activity);
+            onWallpaperApplyError(activity);
             if (callback != null) {
                 callback.onError(e);
             }
@@ -266,13 +264,9 @@ public class WallpaperSetter {
         restoreScreenOrientationIfNeeded(containerActivity);
     }
 
-    private void onWallpaperApplyError(Throwable throwable, Activity containerActivity) {
+    private void onWallpaperApplyError(Activity containerActivity) {
         mPreferences.setPendingWallpaperSetStatus(
                 WallpaperPreferences.WALLPAPER_SET_NOT_PENDING);
-        @WallpaperSetFailureReason int failureReason = ThrowableAnalyzer.isOOM(
-                throwable)
-                ? UserEventLogger.WALLPAPER_SET_FAILURE_REASON_OOM
-                : UserEventLogger.WALLPAPER_SET_FAILURE_REASON_OTHER;
         cleanUp();
         restoreScreenOrientationIfNeeded(containerActivity);
     }

@@ -17,17 +17,13 @@ package com.android.wallpaper.testing
 
 import android.content.Intent
 import com.android.wallpaper.module.logging.UserEventLogger
-import com.android.wallpaper.module.logging.UserEventLogger.Companion.EffectStatus
-import com.android.wallpaper.module.logging.UserEventLogger.Companion.WallpaperSetResult
+import com.android.wallpaper.module.logging.UserEventLogger.EffectStatus
 
 /** Test implementation of [UserEventLogger]. */
 open class TestUserEventLogger : UserEventLogger {
 
     val numWallpaperSetEvents = 0
     var numWallpaperSetResultEvents = 0
-        private set
-    @WallpaperSetResult
-    var lastWallpaperSetResult = 0
         private set
 
     override fun logAppLaunched(launchSource: Intent) {}
