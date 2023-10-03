@@ -41,7 +41,6 @@ open class ScreenPreviewViewModel(
     private val onWallpaperColorChanged: (WallpaperColors?) -> Unit = {},
     private val wallpaperInteractor: WallpaperInteractor,
     val screen: Screen,
-    val onPreviewClicked: (() -> Unit)? = null,
 ) {
 
     val previewContentDescription: Int =

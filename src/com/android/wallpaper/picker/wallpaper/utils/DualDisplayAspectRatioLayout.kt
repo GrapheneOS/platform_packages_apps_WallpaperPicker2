@@ -32,20 +32,18 @@ class DualDisplayAspectRatioLayout(
     attrs: AttributeSet?,
 ) : LinearLayout(context, attrs) {
 
-    private var smallestDisplaySize: Point? = null
-
-    private var largestDisplaySize: Point? = null
+    private var previewDisplaySizes: Map<PreviewView, Point>? = null
 
     init {
         val inflater =
             getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val foldedPreview = inflater.inflate(R.layout.wallpaper_preview_card, null)
 
-        foldedPreview.id = foldedPreviewId
+        foldedPreview.id = PreviewView.FOLDED.viewId
         addView(foldedPreview)
 
         val unfoldedPreview = inflater.inflate(R.layout.wallpaper_preview_card, null)
-        unfoldedPreview.id = unfoldedPreviewId
+        unfoldedPreview.id = PreviewView.UNFOLDED.viewId
         addView(unfoldedPreview)
     }
 
@@ -57,7 +55,7 @@ class DualDisplayAspectRatioLayout(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        if (smallestDisplaySize == null || largestDisplaySize == null) {
+        if (previewDisplaySizes == null) {
             setMeasuredDimension(widthMeasureSpec, heightMeasureSpec)
             return
         }
@@ -71,8 +69,8 @@ class DualDisplayAspectRatioLayout(
         // TODO: This only works for portrait mode currently, need to incorporate landscape
         val parentWidth = this.measuredWidth - totalMarginPixels
 
-        smallestDisplaySize?.let { smallDisplaySize ->
-            largestDisplaySize?.let { largeDisplaySize ->
+        getPreviewDisplaySize(PreviewView.FOLDED)?.let { smallDisplaySize ->
+            getPreviewDisplaySize(PreviewView.UNFOLDED)?.let { largeDisplaySize ->
                 // calculate the aspect ratio (ar) of the folded display
                 val smallDisplayAR = smallDisplaySize.x.toFloat() / smallDisplaySize.y
 
@@ -136,13 +134,19 @@ class DualDisplayAspectRatioLayout(
         )
     }
 
-    fun setDisplaySizes(smallDisplay: Point, largeDisplay: Point) {
-        smallestDisplaySize = smallDisplay
-        largestDisplaySize = largeDisplay
+    fun setDisplaySizes(displaySizes: Map<PreviewView, Point>) {
+        previewDisplaySizes = displaySizes
+    }
+
+    fun getPreviewDisplaySize(previewView: PreviewView): Point? {
+        return previewDisplaySizes?.get(previewView)
     }
 
     companion object {
-        val foldedPreviewId = R.id.small_preview_folded_preview
-        val unfoldedPreviewId = R.id.small_preview_unfolded_preview
+        /** Defines children view ids for [DualDisplayAspectRatioLayout]. */
+        enum class PreviewView(val viewId: Int) {
+            FOLDED(R.id.small_preview_folded_preview),
+            UNFOLDED(R.id.small_preview_unfolded_preview),
+        }
     }
 }
