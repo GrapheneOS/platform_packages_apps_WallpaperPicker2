@@ -19,12 +19,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import android.view.View
 import androidx.core.os.bundleOf
 import com.android.wallpaper.util.PreviewUtils
 import com.android.wallpaper.util.SurfaceViewUtils
 
 object WorkspacePreviewBinder {
     fun bind(workspaceSurface: SurfaceView, previewUtils: PreviewUtils, displayId: Int? = null) {
+        workspaceSurface.visibility = View.VISIBLE
+        workspaceSurface.setZOrderMediaOverlay(true)
         workspaceSurface.holder.addCallback(
             object : SurfaceHolder.Callback {
                 override fun surfaceCreated(holder: SurfaceHolder) {

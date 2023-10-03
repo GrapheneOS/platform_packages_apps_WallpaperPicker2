@@ -17,11 +17,13 @@ package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
 import android.graphics.Point
+import android.view.LayoutInflater
 import android.view.SurfaceView
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
+import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.preview.ui.viewmodel.PreviewTransitionViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
@@ -39,8 +41,8 @@ object SmallPreviewBinder {
         isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
         isRtl: Boolean,
         previewDisplaySize: Point,
+        previewUtils: PreviewUtils,
         previewDisplayId: Int? = null,
-        previewUtils: PreviewUtils? = null,
         navigate: (() -> Unit)? = null,
     ) {
         view.setOnClickListener {
@@ -53,21 +55,29 @@ object SmallPreviewBinder {
                 )
             navigate?.invoke()
         }
-        val workspaceSurface = view.requireViewById<SurfaceView>(R.id.workspace_surface)
-        workspaceSurface.visibility = View.VISIBLE
-        workspaceSurface.setZOrderMediaOverlay(true)
-        previewUtils?.let { WorkspacePreviewBinder.bind(workspaceSurface, it, previewDisplayId) }
+
+        WorkspacePreviewBinder.bind(
+            view.requireViewById<SurfaceView>(R.id.workspace_surface),
+            previewUtils,
+            previewDisplayId,
+        )
 
         val wallpaperSurface = view.requireViewById<SurfaceView>(R.id.wallpaper_surface)
-        wallpaperSurface.setZOrderMediaOverlay(true)
-        WallpaperPreviewBinder.bind(
+        SmallWallpaperPreviewBinder.bind(
             applicationContext,
             wallpaperSurface,
             viewModel,
-            mainScope,
             viewLifecycleOwner,
+            mainScope,
             isSingleDisplayOrUnfoldedHorizontalHinge,
-            isRtl
+            isRtl,
+            staticPreviewView =
+                if (checkNotNull(viewModel.editingWallpaper) is LiveWallpaperInfo) {
+                    null
+                } else {
+                    LayoutInflater.from(applicationContext)
+                        .inflate(R.layout.fullscreen_wallpaper_preview, null)
+                },
         )
     }
 }

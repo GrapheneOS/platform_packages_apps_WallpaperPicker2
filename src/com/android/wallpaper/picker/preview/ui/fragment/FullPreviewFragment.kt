@@ -22,22 +22,26 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.android.wallpaper.R
+import com.android.wallpaper.dispatchers.MainDispatcher
+import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.picker.AppbarFragment
-import com.android.wallpaper.picker.preview.ui.binder.FullPreviewSurfaceViewBinder
-import com.android.wallpaper.picker.preview.ui.binder.StaticWallpaperPreviewBinder
+import com.android.wallpaper.picker.TouchForwardingLayout
+import com.android.wallpaper.picker.preview.ui.binder.FullWallpaperPreviewBinder
+import com.android.wallpaper.picker.preview.ui.view.FullPreviewSurfaceView
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewSurfaceViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.RtlUtils
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
 
 /** Shows full preview of user selected wallpaper for cropping, zooming and positioning. */
 @AndroidEntryPoint(AppbarFragment::class)
 class FullPreviewFragment : Hilt_FullPreviewFragment() {
 
     @Inject lateinit var displayUtils: DisplayUtils
+    @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
 
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
 
@@ -47,34 +51,31 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_full_preview, container, false)
-        val previewContainer =
-            inflater.inflate(R.layout.fullscreen_wallpaper_preview, container, false)
-        val fullResImageView =
-            previewContainer.requireViewById<SubsamplingScaleImageView>(R.id.full_res_image)
+
         setUpToolbar(view)
 
-        FullPreviewSurfaceViewBinder.bind(
-            surfaceView = view.requireViewById(R.id.wallpaper_surface),
-            surfaceViewModel =
-                FullPreviewSurfaceViewModel(
-                    previewTransitionViewModel =
-                        checkNotNull(wallpaperPreviewViewModel.previewTransitionViewModel),
-                    currentDisplaySize =
-                        displayUtils.getRealSize(checkNotNull(view.context.display))
-                ),
-            viewHierarchyContainer = previewContainer,
-            surfaceTouchForwardingLayout = view.requireViewById(R.id.touch_forwarding_layout),
-            touchRecipientView = fullResImageView,
-            viewLifecycleOwner = viewLifecycleOwner,
-        )
-        StaticWallpaperPreviewBinder.bind(
-            fullResImageView = fullResImageView,
-            lowResImageView = previewContainer.requireViewById(R.id.low_res_image),
-            viewModel = wallpaperPreviewViewModel.getStaticWallpaperPreviewViewModel(),
-            viewLifecycleOwner = viewLifecycleOwner,
-            isSingleDisplayOrUnfoldedHorizontalHinge =
-                displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(requireActivity()),
-            isRtl = RtlUtils.isRtl(requireContext().applicationContext),
+        val appContext = requireContext().applicationContext
+        FullWallpaperPreviewBinder.bind(
+            appContext,
+            view.requireViewById<FullPreviewSurfaceView>(R.id.wallpaper_surface),
+            view.requireViewById<TouchForwardingLayout>(R.id.touch_forwarding_layout),
+            FullPreviewSurfaceViewModel(
+                previewTransitionViewModel =
+                    checkNotNull(wallpaperPreviewViewModel.previewTransitionViewModel),
+                currentDisplaySize = displayUtils.getRealSize(checkNotNull(view.context.display))
+            ),
+            wallpaperPreviewViewModel,
+            viewLifecycleOwner,
+            mainScope,
+            displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(requireActivity()),
+            RtlUtils.isRtl(requireContext().applicationContext),
+            staticPreviewView =
+                if (checkNotNull(wallpaperPreviewViewModel.editingWallpaper) is LiveWallpaperInfo) {
+                    null
+                } else {
+                    LayoutInflater.from(appContext)
+                        .inflate(R.layout.fullscreen_wallpaper_preview, null)
+                },
         )
 
         return view

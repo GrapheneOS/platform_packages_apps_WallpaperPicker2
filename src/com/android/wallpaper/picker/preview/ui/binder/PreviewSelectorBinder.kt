@@ -15,23 +15,17 @@
  */
 package com.android.wallpaper.picker.preview.ui.binder
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
-import com.android.wallpaper.R
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.SinglePreviewPagerAdapter
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.TabTextPagerAdapter
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.pagetransformers.PreviewCardPageTransformer
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.pagetransformers.PreviewTabsPageTransformer
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.CoroutineScope
 
-/** This class initializes and synchronizes the tab and preview view pagers */
-object SinglePreviewBinder {
+/** Binds and synchronizes the tab and preview view pagers. */
+object PreviewSelectorBinder {
 
     fun bind(
         tabsViewPager: ViewPager,
@@ -43,13 +37,14 @@ object SinglePreviewBinder {
         viewLifecycleOwner: LifecycleOwner,
         isRtl: Boolean,
         mainScope: CoroutineScope,
+        previewUtils: PreviewUtils,
         navigate: (() -> Unit)? = null,
     ) {
         // set up tabs view pager
-        bindTabsViewPager(tabsViewPager, previewDisplaySize)
+        TabPagerBinder.bind(tabsViewPager, previewDisplaySize)
 
         // set up previews view pager
-        bindPreviewsViewPager(
+        PreviewPagerBinder.bind(
             applicationContext,
             isSingleDisplayOrUnfoldedHorizontalHinge,
             viewLifecycleOwner,
@@ -58,61 +53,12 @@ object SinglePreviewBinder {
             previewsViewPager,
             wallpaperPreviewViewModels,
             previewDisplaySize,
+            previewUtils,
             navigate,
         )
 
         // synchronize the two pagers
         synchronizePreviewAndTabsPager(tabsViewPager, previewsViewPager)
-    }
-
-    @SuppressLint("WrongConstant")
-    private fun bindPreviewsViewPager(
-        applicationContext: Context,
-        isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
-        viewLifecycleOwner: LifecycleOwner,
-        isRtl: Boolean,
-        mainScope: CoroutineScope,
-        previewsViewPager: ViewPager2,
-        wallpaperPreviewViewModels: List<WallpaperPreviewViewModel>,
-        previewDisplaySize: Point,
-        navigate: (() -> Unit)? = null,
-    ) {
-        previewsViewPager.apply {
-            adapter = SinglePreviewPagerAdapter { viewHolder, position ->
-                SmallPreviewBinder.bind(
-                    applicationContext = applicationContext,
-                    view = viewHolder.itemView.requireViewById(R.id.preview),
-                    viewModel = wallpaperPreviewViewModels[position],
-                    mainScope = mainScope,
-                    viewLifecycleOwner = viewLifecycleOwner,
-                    isSingleDisplayOrUnfoldedHorizontalHinge =
-                        isSingleDisplayOrUnfoldedHorizontalHinge,
-                    isRtl = isRtl,
-                    previewDisplaySize = previewDisplaySize,
-                    navigate = navigate,
-                )
-            }
-            offscreenPageLimit = DualPreviewPagerAdapter.PREVIEW_PAGER_ITEM_COUNT
-            clipChildren = false
-            clipToPadding = false
-            setPageTransformer(PreviewCardPageTransformer(previewDisplaySize))
-        }
-    }
-
-    private fun bindTabsViewPager(
-        tabsViewPager: ViewPager,
-        previewDisplaySize: Point,
-    ) {
-        tabsViewPager.apply {
-            adapter = TabTextPagerAdapter()
-            offscreenPageLimit = 2
-            clipChildren = false
-            clipToPadding = false
-            setPageTransformer(
-                /* reverseDrawingOrder= */ true,
-                PreviewTabsPageTransformer(previewDisplaySize)
-            )
-        }
     }
 
     private fun synchronizePreviewAndTabsPager(
