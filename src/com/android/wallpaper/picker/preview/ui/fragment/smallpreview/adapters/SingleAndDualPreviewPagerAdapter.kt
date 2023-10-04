@@ -24,14 +24,23 @@ import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewMod
 import com.android.wallpaper.util.PreviewUtils
 
 /** This class provides the dual preview views for the small preview screen on foldable devices */
-class DualPreviewPagerAdapter(
-    val onBindViewHolder: (ViewHolder, Int) -> Unit,
-) : RecyclerView.Adapter<DualPreviewPagerAdapter.ViewHolder>() {
+class SingleAndDualPreviewPagerAdapter(
+    private val isDualPreview: Boolean,
+    private val onBindViewHolder: (ViewHolder, Int) -> Unit,
+) : RecyclerView.Adapter<SingleAndDualPreviewPagerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.preview_foldable_card_view, parent, false)
+                .inflate(
+                    if (isDualPreview) {
+                        R.layout.preview_foldable_card_view
+                    } else {
+                        R.layout.preview_handheld_card_view
+                    },
+                    parent,
+                    false
+                )
         return ViewHolder(view)
     }
 
@@ -39,7 +48,7 @@ class DualPreviewPagerAdapter(
         onBindViewHolder.invoke(holder, position)
     }
 
-    override fun getItemCount(): Int = DUAL_PREVIEW_PAGER_ITEM_COUNT
+    override fun getItemCount(): Int = PREVIEW_PAGER_ITEM_COUNT
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
@@ -50,6 +59,6 @@ class DualPreviewPagerAdapter(
     )
 
     companion object {
-        const val DUAL_PREVIEW_PAGER_ITEM_COUNT = 2
+        const val PREVIEW_PAGER_ITEM_COUNT = 2
     }
 }

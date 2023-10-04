@@ -44,15 +44,15 @@ object StaticWallpaperPreviewBinder {
         fullResImageView: SubsamplingScaleImageView,
         lowResImageView: ImageView,
         viewModel: StaticWallpaperPreviewViewModel,
-        lifecycleOwner: LifecycleOwner,
+        viewLifecycleOwner: LifecycleOwner,
         isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
         isRtl: Boolean,
     ) {
         lowResImageView.initLowResImageView()
         fullResImageView.initFullResImageView()
 
-        lifecycleOwner.lifecycleScope.launch {
-            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.lowResBitmap.collect { lowResImageView.setImageBitmap(it) } }
 
                 launch {

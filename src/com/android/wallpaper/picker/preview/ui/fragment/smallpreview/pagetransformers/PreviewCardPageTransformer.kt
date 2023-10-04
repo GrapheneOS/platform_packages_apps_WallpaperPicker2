@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.picker.preview.ui.fragment.smallpreview.pagetransformers
 
-import android.content.res.Resources
 import android.graphics.Point
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2
@@ -26,14 +25,13 @@ import kotlin.math.abs
  * This class implements the translations on a view pagers adjacent pages (adjacent to the currently
  * focused page) to make the page peek out from the end of the screen.
  */
-class PreviewCardPageTransformer(private val screenSizePx: Point, val resources: Resources) :
-    ViewPager2.PageTransformer {
+class PreviewCardPageTransformer(private val screenSizePx: Point) : ViewPager2.PageTransformer {
     override fun transformPage(page: View, position: Float) {
         // TODO: cache this call
         val cardPreview = page.requireViewById<View>(R.id.preview)
 
         val nextItemVisibleOffsetPx =
-            resources.getDimension(R.dimen.wallpaper_control_button_group_divider_space)
+            page.resources.getDimension(R.dimen.wallpaper_control_button_group_divider_space)
 
         // device width in pixels minus the page width will give margin
         val availableMargin = screenSizePx.x - cardPreview.width - nextItemVisibleOffsetPx
