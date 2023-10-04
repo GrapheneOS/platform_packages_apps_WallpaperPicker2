@@ -1,7 +1,7 @@
 aconfig_declarations {
     name: "com_android_wallpaper_flags",
     package: "com.android.wallpaper",
-    srcs: ["flags.aconfig"],
+    srcs: ["customization_picker.aconfig"],
 }
 
 java_aconfig_library {
