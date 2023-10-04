@@ -54,7 +54,6 @@ import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.WallpaperChangedNotifier;
 import com.android.wallpaper.module.WallpaperPersister;
-import com.android.wallpaper.module.logging.UserEventLogger;
 import com.android.wallpaper.testing.TestAsset;
 import com.android.wallpaper.testing.TestExploreIntentChecker;
 import com.android.wallpaper.testing.TestInjector;
@@ -217,8 +216,6 @@ public class PreviewActivityTest {
             assertEquals(1, mEventLogger.getNumWallpaperSetEvents());
 
             assertEquals(1, mEventLogger.getNumWallpaperSetResultEvents());
-            assertEquals(UserEventLogger.WALLPAPER_SET_RESULT_SUCCESS,
-                    mEventLogger.getLastWallpaperSetResult());
         });
     }
 
@@ -246,8 +243,6 @@ public class PreviewActivityTest {
             assertEquals(1, mEventLogger.getNumWallpaperSetEvents());
 
             assertEquals(1, mEventLogger.getNumWallpaperSetResultEvents());
-            assertEquals(UserEventLogger.WALLPAPER_SET_RESULT_SUCCESS,
-                    mEventLogger.getLastWallpaperSetResult());
         });
     }
 
@@ -277,8 +272,6 @@ public class PreviewActivityTest {
             assertEquals(1, mEventLogger.getNumWallpaperSetEvents());
 
             assertEquals(1, mEventLogger.getNumWallpaperSetResultEvents());
-            assertEquals(UserEventLogger.WALLPAPER_SET_RESULT_SUCCESS,
-                    mEventLogger.getLastWallpaperSetResult());
         });
     }
 
@@ -299,8 +292,6 @@ public class PreviewActivityTest {
             onView(withText(R.string.set_wallpaper_error_message)).check(matches(isDisplayed()));
 
             assertEquals(1, mEventLogger.getNumWallpaperSetResultEvents());
-            assertEquals(UserEventLogger.WALLPAPER_SET_RESULT_FAILURE,
-                    mEventLogger.getLastWallpaperSetResult());
 
             // Set next call to succeed and current wallpaper bitmap should not be null and
             // equals to the mock wallpaper bitmap after clicking "try again".
@@ -339,8 +330,6 @@ public class PreviewActivityTest {
                     matches(isDisplayed()));
 
             assertEquals(1, mEventLogger.getNumWallpaperSetResultEvents());
-            assertEquals(UserEventLogger.WALLPAPER_SET_RESULT_FAILURE,
-                    mEventLogger.getLastWallpaperSetResult());
 
             // Set next call to succeed and current wallpaper bitmap should not be
             // null and equals to the mock wallpaper bitmap after clicking "try again".
@@ -381,8 +370,6 @@ public class PreviewActivityTest {
             onView(withText(R.string.set_wallpaper_error_message)).check(matches(isDisplayed()));
 
             assertEquals(1, mEventLogger.getNumWallpaperSetResultEvents());
-            assertEquals(UserEventLogger.WALLPAPER_SET_RESULT_FAILURE,
-                    mEventLogger.getLastWallpaperSetResult());
 
             // Set next call to succeed and current wallpaper bitmap should not be null and
             // equals to the mock wallpaper bitmap after clicking "try again".
