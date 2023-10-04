@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.picker;
 
+import static android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW;
 import static android.view.View.MeasureSpec.EXACTLY;
 import static android.view.View.MeasureSpec.makeMeasureSpec;
 
@@ -230,9 +231,16 @@ public class ImagePreviewFragment extends PreviewFragment {
                 Math.round((float) cropRect.top * screenScale),
                 Math.round((float) cropRect.right * screenScale),
                 Math.round((float) cropRect.bottom * screenScale));
-        mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, mWallpaperAsset,
-                destination, mFullResImageView.getScale() * screenScale, scaledCropRect,
-                mWallpaperColors, SetWallpaperViewModel.getCallback(mViewModelProvider));
+        mWallpaperSetter.setCurrentWallpaper(
+                getActivity(),
+                mWallpaper,
+                mWallpaperAsset,
+                SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
+                destination,
+                mFullResImageView.getScale() * screenScale,
+                scaledCropRect,
+                mWallpaperColors,
+                SetWallpaperViewModel.getCallback(mViewModelProvider));
     }
 
     /**

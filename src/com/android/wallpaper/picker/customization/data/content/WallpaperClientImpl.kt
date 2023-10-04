@@ -30,6 +30,7 @@ import android.os.Looper
 import android.util.Log
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory
+import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import java.io.IOException
@@ -105,13 +106,15 @@ class WallpaperClientImpl(
     }
 
     override suspend fun setWallpaper(
+        @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
         destination: WallpaperDestination,
         wallpaperId: String,
-        onDone: () -> Unit
+        onDone: () -> Unit,
     ) {
         val updateValues = ContentValues()
         updateValues.put(KEY_ID, wallpaperId)
         updateValues.put(KEY_SCREEN, destination.asString())
+        updateValues.put(KEY_SET_WALLPAPER_ENTRY_POINT, setWallpaperEntryPoint)
         val updatedRowCount = context.contentResolver.update(SET_WALLPAPER_URI, updateValues, null)
         if (updatedRowCount == 0) {
             Log.e(TAG, "Error setting wallpaper: $wallpaperId")
@@ -298,6 +301,8 @@ class WallpaperClientImpl(
         private const val KEY_ID = "id"
         /** Key for a parameter used to pass the screen to/from the content provider. */
         private const val KEY_SCREEN = "screen"
+        /** Key for a parameter used to pass the screen to/from the content provider. */
+        private const val KEY_SET_WALLPAPER_ENTRY_POINT = "key_set_wallpaper_entry_point"
         private const val KEY_LAST_UPDATED = "last_updated"
         private const val SCREEN_ALL = "all_screens"
         private const val SCREEN_HOME = "home_screen"

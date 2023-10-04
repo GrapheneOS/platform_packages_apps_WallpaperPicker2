@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.customization.domain.interactor
 
 import android.graphics.Bitmap
 import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -99,10 +100,12 @@ class WallpaperInteractor(
 
     /** Sets the wallpaper to the one with the given ID. */
     suspend fun setWallpaper(
+        @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
         destination: WallpaperDestination,
         wallpaperId: String,
     ) {
         repository.setWallpaper(
+            setWallpaperEntryPoint = setWallpaperEntryPoint,
             destination = destination,
             wallpaperId = wallpaperId,
         )

@@ -18,6 +18,8 @@ package com.android.wallpaper.module.logging
 import android.content.Intent
 import android.stats.style.StyleEnums
 import androidx.annotation.IntDef
+import com.android.wallpaper.module.WallpaperPersister
+import com.android.wallpaper.module.WallpaperPersister.Destination
 
 /** Interface for logging user events in the wallpaper picker. */
 interface UserEventLogger {
@@ -29,14 +31,14 @@ interface UserEventLogger {
     /** Log current existing snapshot data. */
     fun logSnapshot()
 
-    /**
-     * Logs the behavior when applying wallpaper.
-     *
-     * @param collectionId wallpaper category.
-     * @param wallpaperId wallpaper id.
-     * @param effects effects set with wallpaper.
-     */
-    fun logWallpaperApplied(collectionId: String?, wallpaperId: String?, effects: String?)
+    /** Logs the event when applying a wallpaper. */
+    fun logWallpaperApplied(
+        collectionId: String?,
+        wallpaperId: String?,
+        effects: String?,
+        @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
+        @WallpaperDestination destination: Int,
+    )
 
     /** Logs the action related to effect. */
     fun logEffectApply(
@@ -70,4 +72,42 @@ interface UserEventLogger {
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class EffectStatus
+
+    /**
+     * Possible actions for cinematic effect. These actions would be used for effect apply, effect
+     * probe, effect download.
+     */
+    @IntDef(
+        StyleEnums.SET_WALLPAPER_ENTRY_POINT_UNSPECIFIED,
+        StyleEnums.SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
+        StyleEnums.SET_WALLPAPER_ENTRY_POINT_WALLPAPER_QUICK_SWITCHER,
+        StyleEnums.SET_WALLPAPER_ENTRY_POINT_LAUNCHER_WALLPAPER_QUICK_SWITCHER,
+        StyleEnums.SET_WALLPAPER_ENTRY_POINT_ROTATION_WALLPAPER,
+        StyleEnums.SET_WALLPAPER_ENTRY_POINT_RESET,
+        StyleEnums.SET_WALLPAPER_ENTRY_POINT_RESTORE,
+    )
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class SetWallpaperEntryPoint
+
+    @IntDef(
+        StyleEnums.WALLPAPER_DESTINATION_UNSPECIFIED,
+        StyleEnums.WALLPAPER_DESTINATION_HOME_SCREEN,
+        StyleEnums.WALLPAPER_DESTINATION_LOCK_SCREEN,
+        StyleEnums.WALLPAPER_DESTINATION_HOME_AND_LOCK_SCREEN,
+    )
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class WallpaperDestination
+
+    companion object {
+        @WallpaperDestination
+        fun toWallpaperDestinationForLogging(@Destination destination: Int): Int {
+            return when (destination) {
+                WallpaperPersister.DEST_HOME_SCREEN -> StyleEnums.WALLPAPER_DESTINATION_HOME_SCREEN
+                WallpaperPersister.DEST_LOCK_SCREEN -> StyleEnums.WALLPAPER_DESTINATION_LOCK_SCREEN
+                WallpaperPersister.DEST_BOTH ->
+                    StyleEnums.WALLPAPER_DESTINATION_HOME_AND_LOCK_SCREEN
+                else -> StyleEnums.WALLPAPER_DESTINATION_UNSPECIFIED
+            }
+        }
+    }
 }

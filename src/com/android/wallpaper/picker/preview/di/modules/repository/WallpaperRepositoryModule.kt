@@ -19,6 +19,7 @@ import android.graphics.Bitmap
 import com.android.wallpaper.dispatchers.BackgroundDispatcher
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.module.WallpaperPreferences
+import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -56,9 +57,10 @@ class WallpaperRepositoryModule {
                     }
 
                     override suspend fun setWallpaper(
+                        @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
                         destination: WallpaperDestination,
                         wallpaperId: String,
-                        onDone: () -> Unit
+                        onDone: () -> Unit,
                     ) {}
 
                     override suspend fun loadThumbnail(

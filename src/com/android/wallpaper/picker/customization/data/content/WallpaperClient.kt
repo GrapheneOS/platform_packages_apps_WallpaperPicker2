@@ -18,6 +18,7 @@
 package com.android.wallpaper.picker.customization.data.content
 
 import android.graphics.Bitmap
+import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import kotlinx.coroutines.flow.Flow
@@ -34,14 +35,16 @@ interface WallpaperClient {
     /**
      * Asynchronously sets the wallpaper to the one with the given ID.
      *
+     * @param setWallpaperEntryPoint The entry point where we set the wallpaper from.
      * @param destination The screen to set the wallpaper on.
      * @param wallpaperId The ID of the wallpaper to set.
      * @param onDone A callback to invoke when setting is done.
      */
     suspend fun setWallpaper(
+        @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
         destination: WallpaperDestination,
         wallpaperId: String,
-        onDone: () -> Unit
+        onDone: () -> Unit,
     )
 
     /** Returns a thumbnail for the wallpaper with the given ID. */

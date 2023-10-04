@@ -17,6 +17,7 @@
 
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
+import android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_WALLPAPER_QUICK_SWITCHER
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
@@ -155,6 +156,8 @@ constructor(
                                             // A selectable option can become selected.
                                             coroutineScope.launch {
                                                 interactor.setWallpaper(
+                                                    setWallpaperEntryPoint =
+                                                        SET_WALLPAPER_ENTRY_POINT_WALLPAPER_QUICK_SWITCHER,
                                                     destination = destination,
                                                     wallpaperId = preview.wallpaperId,
                                                 )
