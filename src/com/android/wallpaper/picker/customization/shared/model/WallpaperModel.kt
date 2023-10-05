@@ -22,4 +22,5 @@ data class WallpaperModel(
     val wallpaperId: String,
     val placeholderColor: Int,
     val lastUpdated: Long = -1,
+    val title: String?,
 )
