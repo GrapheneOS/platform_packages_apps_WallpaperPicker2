@@ -350,8 +350,4 @@ public abstract class WallpaperInfo implements Parcelable {
             return mPlaceholderColor;
         }
     }
-
-    public ColorInfo getColorInfo() {
-        return mColorInfo;
-    }
 }

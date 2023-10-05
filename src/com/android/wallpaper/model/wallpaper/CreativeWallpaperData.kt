@@ -29,4 +29,5 @@ data class CreativeWallpaperData(
     val description: String,
     val contentDescription: String,
     val isCurrent: String,
+    val groupName: String
 )
