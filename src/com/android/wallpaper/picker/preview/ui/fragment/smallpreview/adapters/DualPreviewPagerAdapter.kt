@@ -19,38 +19,39 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.PagerAdapter
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.PreviewUtils
 
 /** This class provides the dual preview views for the small preview screen on foldable devices */
-class SingleAndDualPreviewPagerAdapter(
-    private val isDualPreview: Boolean,
-    private val onBindViewHolder: (ViewHolder, Int) -> Unit,
-) : RecyclerView.Adapter<SingleAndDualPreviewPagerAdapter.ViewHolder>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context)
-                .inflate(
-                    if (isDualPreview) {
-                        R.layout.preview_foldable_card_view
-                    } else {
-                        R.layout.preview_handheld_card_view
-                    },
-                    parent,
-                    false
-                )
-        return ViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        onBindViewHolder.invoke(holder, position)
-    }
-
-    override fun getItemCount(): Int = PREVIEW_PAGER_ITEM_COUNT
+class DualPreviewPagerAdapter(
+    val onBindViewHolder: (View, Int) -> Unit,
+) : PagerAdapter() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+    override fun isViewFromObject(item: View, `object`: Any): Boolean {
+        return item == `object`
+    }
+
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        val view =
+            LayoutInflater.from(container.context)
+                .inflate(R.layout.preview_foldable_card_view, container, false)
+
+        onBindViewHolder.invoke(view, position)
+        container.addView(view)
+        return view
+    }
+
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        container.removeView(`object` as View)
+    }
+
+    override fun getCount(): Int {
+        return PREVIEW_PAGER_ITEM_COUNT
+    }
 
     data class DualPreviewPagerViewModel(
         val viewModel: WallpaperPreviewViewModel,

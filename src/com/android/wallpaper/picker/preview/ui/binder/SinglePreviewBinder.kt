@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.wallpaper.picker.preview.ui.fragment.smallpreview
+package com.android.wallpaper.picker.preview.ui.binder
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -22,8 +22,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
-import com.android.wallpaper.picker.preview.ui.binder.SmallPreviewBinder
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.SingleAndDualPreviewPagerAdapter
+import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
+import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.SinglePreviewPagerAdapter
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.TabTextPagerAdapter
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.pagetransformers.PreviewCardPageTransformer
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.pagetransformers.PreviewTabsPageTransformer
@@ -31,7 +31,7 @@ import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewMod
 import kotlinx.coroutines.CoroutineScope
 
 /** This class initializes and synchronizes the tab and preview view pagers */
-object PreviewViewPagerSynchronizationBinder {
+object SinglePreviewBinder {
 
     fun bind(
         tabsViewPager: ViewPager,
@@ -78,23 +78,21 @@ object PreviewViewPagerSynchronizationBinder {
         navigate: (() -> Unit)? = null,
     ) {
         previewsViewPager.apply {
-            adapter =
-                SingleAndDualPreviewPagerAdapter(/* isDualPreview= */ false) { viewHolder, position
-                    ->
-                    SmallPreviewBinder.bind(
-                        applicationContext = applicationContext,
-                        view = viewHolder.itemView.requireViewById(R.id.preview),
-                        viewModel = wallpaperPreviewViewModels[position],
-                        mainScope = mainScope,
-                        viewLifecycleOwner = viewLifecycleOwner,
-                        isSingleDisplayOrUnfoldedHorizontalHinge =
-                            isSingleDisplayOrUnfoldedHorizontalHinge,
-                        isRtl = isRtl,
-                        previewDisplaySize = previewDisplaySize,
-                        navigate = navigate,
-                    )
-                }
-            offscreenPageLimit = SingleAndDualPreviewPagerAdapter.PREVIEW_PAGER_ITEM_COUNT
+            adapter = SinglePreviewPagerAdapter { viewHolder, position ->
+                SmallPreviewBinder.bind(
+                    applicationContext = applicationContext,
+                    view = viewHolder.itemView.requireViewById(R.id.preview),
+                    viewModel = wallpaperPreviewViewModels[position],
+                    mainScope = mainScope,
+                    viewLifecycleOwner = viewLifecycleOwner,
+                    isSingleDisplayOrUnfoldedHorizontalHinge =
+                        isSingleDisplayOrUnfoldedHorizontalHinge,
+                    isRtl = isRtl,
+                    previewDisplaySize = previewDisplaySize,
+                    navigate = navigate,
+                )
+            }
+            offscreenPageLimit = DualPreviewPagerAdapter.PREVIEW_PAGER_ITEM_COUNT
             clipChildren = false
             clipToPadding = false
             setPageTransformer(PreviewCardPageTransformer(previewDisplaySize))

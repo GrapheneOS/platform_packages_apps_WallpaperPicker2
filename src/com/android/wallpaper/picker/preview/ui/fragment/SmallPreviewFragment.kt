@@ -22,14 +22,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.preview.di.modules.preview.utils.PreviewUtilsModule
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewPagerBinder
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.PreviewViewPagerSynchronizationBinder
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.SingleAndDualPreviewPagerAdapter
+import com.android.wallpaper.picker.preview.ui.binder.DualPreviewPagerBinder
+import com.android.wallpaper.picker.preview.ui.binder.SinglePreviewBinder
+import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
+import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
@@ -90,17 +90,18 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         val isRtl = RtlUtils.isRtl(applicationContext)
 
         if (displayUtils.hasMultiInternalDisplays()) {
-            val dualPreviewView: ViewPager2 = view.requireViewById(R.id.dual_preview_pager)
+            val dualPreviewView: DualPreviewViewPager =
+                view.requireViewById(R.id.dual_preview_pager)
             DualPreviewPagerBinder.bind(
                 dualPreviewView,
-                SingleAndDualPreviewPagerAdapter.DualPreviewPagerViewModel(
+                DualPreviewPagerAdapter.DualPreviewPagerViewModel(
                     wallpaperPreviewViewModel,
                     homePreviewUtils
                 ) {
                     findNavController()
                         .navigate(R.id.action_smallPreviewFragment_to_fullPreviewFragment)
                 },
-                SingleAndDualPreviewPagerAdapter.DualPreviewPagerViewModel(
+                DualPreviewPagerAdapter.DualPreviewPagerViewModel(
                     wallpaperPreviewViewModel,
                     lockPreviewUtils
                 ) {
@@ -115,7 +116,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 displayUtils,
             )
         } else {
-            PreviewViewPagerSynchronizationBinder.bind(
+            SinglePreviewBinder.bind(
                 tabsViewPager = view.requireViewById(R.id.pager_tabs),
                 previewsViewPager = view.requireViewById(R.id.pager_previews),
                 previewDisplaySize = displayUtils.getRealSize(displayUtils.getWallpaperDisplay()),
