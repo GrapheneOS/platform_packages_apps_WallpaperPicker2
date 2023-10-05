@@ -24,12 +24,10 @@ import com.android.wallpaper.module.WallpaperPersister.Destination
 /** Interface for logging user events in the wallpaper picker. */
 interface UserEventLogger {
 
-    fun logAppLaunched(launchSource: Intent)
-
-    fun logActionClicked(collectionId: String, actionLabelResId: Int)
-
-    /** Log current existing snapshot data. */
+    /** Logs the current snapshot data, e.g. the currently-set home and lock screen wallpapers. */
     fun logSnapshot()
+
+    fun logAppLaunched(launchSource: Intent)
 
     /** Logs the event when applying a wallpaper. */
     fun logWallpaperApplied(
@@ -57,6 +55,11 @@ interface UserEventLogger {
         @EffectStatus status: Int,
         timeElapsedMillis: Long,
     )
+
+    /** Logs the event when reset is applied. */
+    fun logResetApplied()
+
+    fun logWallpaperExploreButtonClicked()
 
     /**
      * Possible actions for cinematic effect. These actions would be used for effect apply, effect
