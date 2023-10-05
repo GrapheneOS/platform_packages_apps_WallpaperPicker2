@@ -76,9 +76,8 @@ public final class SystemStaticAsset extends ResourceAsset {
     @Override
     public void copy(File dest) {
         super.copy(dest);
-        try {
-            InputStream inputStream = openInputStream();
-            OutputStream outputStream = new FileOutputStream(dest);
+        try (InputStream inputStream = openInputStream();
+                OutputStream outputStream = new FileOutputStream(dest)) {
             FileUtils.copy(inputStream, outputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
