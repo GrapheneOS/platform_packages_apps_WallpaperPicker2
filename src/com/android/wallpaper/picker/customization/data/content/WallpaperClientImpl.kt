@@ -194,11 +194,11 @@ class WallpaperClientImpl(
     private suspend fun getCurrentWallpapers(): Pair<WallpaperInfo, WallpaperInfo?> =
         suspendCancellableCoroutine { continuation ->
             infoFactory.createCurrentWallpaperInfos(
-                { homeWallpaper, lockWallpaper, _ ->
-                    continuation.resume(Pair(homeWallpaper, lockWallpaper), null)
-                },
-                false
-            )
+                context,
+                false,
+            ) { homeWallpaper, lockWallpaper, _ ->
+                continuation.resume(Pair(homeWallpaper, lockWallpaper), null)
+            }
         }
 
     override suspend fun loadThumbnail(
