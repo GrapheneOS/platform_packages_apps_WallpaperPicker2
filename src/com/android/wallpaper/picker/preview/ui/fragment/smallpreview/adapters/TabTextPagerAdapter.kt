@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters
 
-import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,7 @@ import androidx.viewpager.widget.PagerAdapter
 import com.android.wallpaper.R
 
 /** This class provides the tab views for the tabs in small preview page */
-class TabTextPagerAdapter(val resources: Resources) : PagerAdapter() {
+class TabTextPagerAdapter : PagerAdapter() {
 
     // TODO: move to view model when ready
     private val textPages = listOf(R.string.home_screen_message, R.string.lock_screen_message)
@@ -42,7 +41,7 @@ class TabTextPagerAdapter(val resources: Resources) : PagerAdapter() {
             LayoutInflater.from(container.context).inflate(R.layout.item_text, container, false)
 
         val textView = itemView.requireViewById<TextView>(R.id.preview_tab_text)
-        textView.text = resources.getString(textPages[position])
+        textView.text = container.resources.getString(textPages[position])
 
         container.addView(itemView)
         return itemView

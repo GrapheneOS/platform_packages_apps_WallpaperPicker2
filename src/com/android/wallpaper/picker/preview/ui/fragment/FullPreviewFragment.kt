@@ -71,7 +71,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
             fullResImageView = fullResImageView,
             lowResImageView = previewContainer.requireViewById(R.id.low_res_image),
             viewModel = wallpaperPreviewViewModel.getStaticWallpaperPreviewViewModel(),
-            lifecycleOwner = viewLifecycleOwner,
+            viewLifecycleOwner = viewLifecycleOwner,
             isSingleDisplayOrUnfoldedHorizontalHinge =
                 displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(requireActivity()),
             isRtl = RtlUtils.isRtl(requireContext().applicationContext),

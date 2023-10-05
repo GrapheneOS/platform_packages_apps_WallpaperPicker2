@@ -18,6 +18,8 @@ package com.android.wallpaper.testing
 import android.content.Intent
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.module.logging.UserEventLogger.EffectStatus
+import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
+import com.android.wallpaper.module.logging.UserEventLogger.WallpaperDestination
 
 /** Test implementation of [UserEventLogger]. */
 open class TestUserEventLogger : UserEventLogger {
@@ -35,7 +37,9 @@ open class TestUserEventLogger : UserEventLogger {
     override fun logWallpaperApplied(
         collectionId: String?,
         wallpaperId: String?,
-        effects: String?
+        effects: String?,
+        @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
+        @WallpaperDestination destination: Int,
     ) {}
 
     override fun logEffectApply(

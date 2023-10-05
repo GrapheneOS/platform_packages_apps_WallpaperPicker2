@@ -16,6 +16,7 @@
 package com.android.wallpaper.picker;
 
 import static android.app.Activity.RESULT_OK;
+import static android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
@@ -122,8 +123,14 @@ public class LivePreviewFragment extends PreviewFragment {
                 return;
             }
         }
-        mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, null,
-                destination, 0, null,
+        mWallpaperSetter.setCurrentWallpaper(
+                getActivity(),
+                mWallpaper,
+                null,
+                SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
+                destination,
+                0,
+                null,
                 mWallpaperColors != null ? mWallpaperColors : getColorInfo().getWallpaperColors(),
                 callback);
     }

@@ -20,6 +20,7 @@ package com.android.wallpaper.picker.customization.data.repository
 import android.graphics.Bitmap
 import android.util.LruCache
 import com.android.wallpaper.module.WallpaperPreferences
+import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -110,6 +111,7 @@ class WallpaperRepository(
 
     /** Sets the wallpaper to the one with the given ID. */
     suspend fun setWallpaper(
+        @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
         destination: WallpaperDestination,
         wallpaperId: String,
     ) {
@@ -117,6 +119,7 @@ class WallpaperRepository(
             _selectingWallpaperId.value.toMutableMap().apply { this[destination] = wallpaperId }
         withContext(backgroundDispatcher) {
             client.setWallpaper(
+                setWallpaperEntryPoint = setWallpaperEntryPoint,
                 destination = destination,
                 wallpaperId = wallpaperId,
             ) {

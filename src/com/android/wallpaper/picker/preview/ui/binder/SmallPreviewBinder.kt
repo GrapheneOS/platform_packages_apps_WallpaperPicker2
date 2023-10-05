@@ -35,7 +35,7 @@ object SmallPreviewBinder {
         view: View,
         viewModel: WallpaperPreviewViewModel,
         @MainDispatcher mainScope: CoroutineScope,
-        lifecycleOwner: LifecycleOwner,
+        viewLifecycleOwner: LifecycleOwner,
         isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
         isRtl: Boolean,
         previewDisplaySize: Point,
@@ -65,7 +65,7 @@ object SmallPreviewBinder {
             wallpaperSurface,
             viewModel,
             mainScope,
-            lifecycleOwner,
+            viewLifecycleOwner,
             isSingleDisplayOrUnfoldedHorizontalHinge,
             isRtl
         )

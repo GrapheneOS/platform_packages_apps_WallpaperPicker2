@@ -17,6 +17,7 @@
 
 package com.android.wallpaper.picker.customization.domain.interactor
 
+import android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW
 import androidx.test.filters.SmallTest
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
@@ -113,8 +114,16 @@ class WallpaperInteractorTest {
 
             val homeWallpaperId1 = FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[1].wallpaperId
             val lockWallpaperId1 = FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[2].wallpaperId
-            underTest.setWallpaper(WallpaperDestination.HOME, homeWallpaperId1)
-            underTest.setWallpaper(WallpaperDestination.LOCK, lockWallpaperId1)
+            underTest.setWallpaper(
+                SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
+                WallpaperDestination.HOME,
+                homeWallpaperId1
+            )
+            underTest.setWallpaper(
+                SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
+                WallpaperDestination.LOCK,
+                lockWallpaperId1
+            )
             assertThat(homeWallpaperUpdateEvents()).isNotEqualTo(homeWallpaperUpdateOutput1)
             assertThat(lockWallpaperUpdateEvents()).isNotEqualTo(lockWallpaperUpdateOutput1)
             val homeWallpaperUpdateOutput2 = homeWallpaperUpdateEvents()
@@ -122,8 +131,16 @@ class WallpaperInteractorTest {
 
             val homeWallpaperId2 = FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[2].wallpaperId
             val lockWallpaperId2 = FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[2].wallpaperId
-            underTest.setWallpaper(WallpaperDestination.HOME, homeWallpaperId2)
-            underTest.setWallpaper(WallpaperDestination.LOCK, lockWallpaperId2)
+            underTest.setWallpaper(
+                SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
+                WallpaperDestination.HOME,
+                homeWallpaperId2
+            )
+            underTest.setWallpaper(
+                SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
+                WallpaperDestination.LOCK,
+                lockWallpaperId2
+            )
             assertThat(homeWallpaperUpdateEvents()).isNotEqualTo(homeWallpaperUpdateOutput2)
             assertThat(lockWallpaperUpdateEvents()).isEqualTo(lockWallpaperUpdateOutput2)
         }
@@ -166,8 +183,16 @@ class WallpaperInteractorTest {
 
             // Pause the client so we can examine the interim state.
             client.pause()
-            underTest.setWallpaper(WallpaperDestination.HOME, homeWallpaperId)
-            underTest.setWallpaper(WallpaperDestination.LOCK, lockWallpaperId)
+            underTest.setWallpaper(
+                SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
+                WallpaperDestination.HOME,
+                homeWallpaperId
+            )
+            underTest.setWallpaper(
+                SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
+                WallpaperDestination.LOCK,
+                lockWallpaperId
+            )
             assertThat(homePreviews()).isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS)
             assertThat(lockPreviews()).isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS)
             assertThat(selectedHomeWallpaperId())
