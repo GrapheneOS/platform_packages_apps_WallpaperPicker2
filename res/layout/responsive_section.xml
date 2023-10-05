@@ -21,5 +21,5 @@
     android:layout_height="wrap_content"
     android:paddingHorizontal="@dimen/tab_container_horizontal_padding"
     android:orientation="vertical"
-    android:divider="@drawable/vertical_divider_24dp"
+    android:divider="@drawable/vertical_divider_8dp"
     android:showDividers="middle" />

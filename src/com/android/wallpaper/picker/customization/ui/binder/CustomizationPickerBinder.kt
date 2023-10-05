@@ -17,13 +17,16 @@
 
 package com.android.wallpaper.picker.customization.ui.binder
 
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
 import android.widget.FrameLayout
 import androidx.annotation.IdRes
 import androidx.core.view.children
+import androidx.core.view.isInvisible
 import androidx.core.view.updateLayoutParams
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -74,8 +77,11 @@ object CustomizationPickerBinder {
             lifecycleOwner = lifecycleOwner,
         )
 
-        val sectionContainer = view.requireViewById<ViewGroup>(R.id.section_container)
-        sectionContainer.setOnApplyWindowInsetsListener { v: View, windowInsets: WindowInsets ->
+        val lockScrollContainer = view.requireViewById<NestedScrollView>(R.id.lock_scroll_container)
+        val homeScrollContainer = view.requireViewById<NestedScrollView>(R.id.home_scroll_container)
+
+        val lockSectionContainer = view.requireViewById<ViewGroup>(R.id.lock_section_container)
+        lockSectionContainer.setOnApplyWindowInsetsListener { v: View, windowInsets: WindowInsets ->
             v.setPadding(
                 v.paddingLeft,
                 v.paddingTop,
@@ -84,88 +90,97 @@ object CustomizationPickerBinder {
             )
             windowInsets.consumeSystemWindowInsets()
         }
-        sectionContainer.updateLayoutParams<FrameLayout.LayoutParams> {
+        lockSectionContainer.updateLayoutParams<FrameLayout.LayoutParams> {
             // We don't want the top margin from the XML because our tabs have that as padding so
             // they can be collapsed into the toolbar with spacing from the actual title text.
             topMargin = 0
         }
+
+        val homeSectionContainer = view.requireViewById<ViewGroup>(R.id.home_section_container)
+        homeSectionContainer.setOnApplyWindowInsetsListener { v: View, windowInsets: WindowInsets ->
+            v.setPadding(
+                v.paddingLeft,
+                v.paddingTop,
+                v.paddingRight,
+                windowInsets.systemWindowInsetBottom
+            )
+            windowInsets.consumeSystemWindowInsets()
+        }
+        homeSectionContainer.updateLayoutParams<FrameLayout.LayoutParams> {
+            // We don't want the top margin from the XML because our tabs have that as padding so
+            // they can be collapsed into the toolbar with spacing from the actual title text.
+            topMargin = 0
+        }
+
+        // create and add sections to both the lock and home screen tabs ahead of time, since
+        // the lock and home screen preview sections are both needed to load initial wallpaper
+        // colors for the correct functioning of the color picker
+        createAndAddSections(
+            view.context,
+            homeSectionContainer,
+            isOnLockScreen = false,
+            sectionControllerProvider
+        )
+        createAndAddSections(
+            view.context,
+            lockSectionContainer,
+            isOnLockScreen = true,
+            sectionControllerProvider
+        )
 
         val job =
             lifecycleOwner.lifecycleScope.launch {
                 lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     launch {
                         viewModel.isOnLockScreen.collect { isOnLockScreen ->
-                            // These are the available section controllers we should use now.
-                            val newSectionControllers =
-                                sectionControllerProvider.invoke(isOnLockScreen).filter {
-                                    it.isAvailable(view.context)
-                                }
+                            // Offset the scroll position of both tabs
+                            lockScrollContainer.scrollTo(0, 0)
+                            homeScrollContainer.scrollTo(0, 0)
 
-                            check(
-                                newSectionControllers[0].shouldRetainInstanceWhenSwitchingTabs()
-                            ) {
-                                "We are not recreating the first section when the users switching" +
-                                    " between the home screen and lock screen tab. The first" +
-                                    " section should always retain."
-                            }
-
-                            val firstTime = sectionContainer.childCount == 0
-                            if (!firstTime) {
-                                // Remove all views, except the very first one, which we assume is
-                                // for
-                                // the wallpaper preview section.
-                                sectionContainer.removeViews(1, sectionContainer.childCount - 1)
-
-                                // The old controllers for the removed views should be released,
-                                // except
-                                // for the very first one, which is for the wallpaper preview
-                                // section;
-                                // that one we keep but just tell it that we switched screens.
-                                sectionContainer.children
-                                    .mapNotNull { it.tag as? SectionController }
-                                    .forEachIndexed { index, oldController ->
-                                        if (index == 0) {
-                                            // We assume that index 0 is the wallpaper preview
-                                            // section.
-                                            // We keep it because it's an expensive section (as it
-                                            // needs
-                                            // to maintain a wallpaper connection that seems to be
-                                            // making assumptions about its SurfaceView always
-                                            // remaining
-                                            // attached to the window).
-                                            oldController.onScreenSwitched(isOnLockScreen)
-                                        } else {
-                                            // All other old controllers will be thrown out so let's
-                                            // release them.
-                                            oldController.release()
-                                        }
-                                    }
-                            }
-
-                            // Let's add the new controllers and views.
-                            newSectionControllers.forEachIndexed { index, controller ->
-                                if (firstTime || index > 0) {
-                                    val addedView =
-                                        controller.createView(
-                                            view.context,
-                                            CustomizationSectionController.ViewCreationParams(
-                                                isOnLockScreen = isOnLockScreen,
-                                            )
-                                        )
-                                    addedView?.tag = controller
-                                    sectionContainer.addView(addedView)
-                                }
-                            }
+                            lockScrollContainer.isInvisible = !isOnLockScreen
+                            homeScrollContainer.isInvisible = isOnLockScreen
                         }
                     }
                 }
 
                 // This happens when the lifecycle is stopped.
-                sectionContainer.children
-                    .mapNotNull { it.tag as? CustomizationSectionController<out SectionView> }
-                    .forEach { controller -> controller.release() }
-                sectionContainer.removeAllViews()
+                lockSectionContainer.children
+                    .map { Pair(it, it.tag as? CustomizationSectionController<out SectionView>) }
+                    .forEach {
+                        it.second?.release()
+                        it.first?.tag = null
+                    }
+                lockSectionContainer.removeAllViews()
+                homeSectionContainer.children
+                    .map { Pair(it, it.tag as? CustomizationSectionController<out SectionView>) }
+                    .forEach {
+                        it.second?.release()
+                        it.first?.tag = null
+                    }
+                homeSectionContainer.removeAllViews()
             }
         return DisposableHandle { job.cancel() }
+    }
+
+    private fun createAndAddSections(
+        context: Context,
+        container: ViewGroup,
+        isOnLockScreen: Boolean,
+        sectionControllerProvider: (isOnLockScreen: Boolean) -> List<SectionController>,
+    ) {
+        sectionControllerProvider
+            .invoke(isOnLockScreen)
+            .filter { it.isAvailable(context) }
+            .forEach { controller ->
+                val viewToAdd =
+                    controller.createView(
+                        context,
+                        CustomizationSectionController.ViewCreationParams(
+                            isOnLockScreen,
+                        )
+                    )
+                viewToAdd.tag = controller
+                container.addView(viewToAdd)
+            }
     }
 }

@@ -358,6 +358,22 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
                 .apply();
     }
 
+    @Override
+    @Nullable
+    public String getHomeWallpaperRecentsKey() {
+        return mNoBackupPrefs.getString(
+                NoBackupKeys.KEY_HOME_WALLPAPER_RECENTS_KEY,
+                WallpaperPreferences.generateRecentsKey(getHomeWallpaperRemoteId(),
+                        getHomeWallpaperHashCode()));
+    }
+
+    @Override
+    public void setHomeWallpaperRecentsKey(String recentsKey) {
+        mNoBackupPrefs.edit().putString(
+                        NoBackupKeys.KEY_HOME_WALLPAPER_RECENTS_KEY, recentsKey)
+                .apply();
+    }
+
     @Nullable
     @Override
     public String getHomeWallpaperRemoteId() {
@@ -472,6 +488,22 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     public void setLockWallpaperId(int lockWallpaperId) {
         mNoBackupPrefs.edit().putInt(
                 NoBackupKeys.KEY_LOCK_WALLPAPER_MANAGER_ID, lockWallpaperId)
+                .apply();
+    }
+
+    @Override
+    @Nullable
+    public String getLockWallpaperRecentsKey() {
+        return mNoBackupPrefs.getString(
+                NoBackupKeys.KEY_LOCK_WALLPAPER_RECENTS_KEY,
+                WallpaperPreferences.generateRecentsKey(getLockWallpaperRemoteId(),
+                        getLockWallpaperHashCode()));
+    }
+
+    @Override
+    public void setLockWallpaperRecentsKey(String recentsKey) {
+        mNoBackupPrefs.edit().putString(
+                        NoBackupKeys.KEY_LOCK_WALLPAPER_RECENTS_KEY, recentsKey)
                 .apply();
     }
 

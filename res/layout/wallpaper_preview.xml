@@ -15,8 +15,7 @@
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:contentDescription="@string/wallpaper_preview_card_content_description">
+    android:layout_height="match_parent">
 
     <SurfaceView
         android:id="@+id/wallpaper_surface"
@@ -35,8 +34,8 @@
         android:layout_height="match_parent"
         android:importantForAccessibility="noHideDescendants" />
 
-    <FrameLayout
-        android:id="@+id/lock_screen_preview_container"
+    <com.android.wallpaper.picker.FadeAnimationSurfaceView
+        android:id="@+id/lock_screen_overlay_surface"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:importantForAccessibility="noHideDescendants" />

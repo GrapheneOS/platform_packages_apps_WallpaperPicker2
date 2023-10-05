@@ -65,8 +65,7 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
         // Refresher so that multiple calls to this method after a call with forceRefresh=true don't
         // provide old cached copies.
         if (forceRefresh) {
-            mHomeWallpaper = null;
-            mLockWallpaper = null;
+            clearCurrentWallpaperInfos();
         }
 
         mWallpaperRefresher.refresh(
@@ -109,5 +108,11 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
 
                     callback.onWallpaperInfoCreated(homeWallpaper, lockWallpaper, presentationMode);
                 });
+    }
+
+    @Override
+    public void clearCurrentWallpaperInfos() {
+        mHomeWallpaper = null;
+        mLockWallpaper = null;
     }
 }

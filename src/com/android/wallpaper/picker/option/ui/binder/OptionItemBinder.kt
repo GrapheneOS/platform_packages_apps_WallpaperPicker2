@@ -26,6 +26,7 @@ import android.view.animation.PathInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -79,7 +80,7 @@ object OptionItemBinder {
         val foregroundView: View = view.requireViewById(R.id.foreground)
         val textView: TextView? = view.findViewById(R.id.text)
 
-        if (textView != null) {
+        if (textView != null && viewModel.isTextUserVisible) {
             TextViewBinder.bind(
                 view = textView,
                 viewModel = viewModel.text,
@@ -92,12 +93,29 @@ object OptionItemBinder {
                 viewModel = viewModel.text,
             )
         }
-        view.alpha =
+        textView?.isVisible = viewModel.isTextUserVisible
+
+        textView?.alpha =
             if (viewModel.isEnabled) {
                 animationSpec.enabledAlpha
             } else {
-                animationSpec.disabledAlpha
+                animationSpec.disabledTextAlpha
             }
+
+        backgroundView.alpha =
+            if (viewModel.isEnabled) {
+                animationSpec.enabledAlpha
+            } else {
+                animationSpec.disabledBackgroundAlpha
+            }
+
+        foregroundView.alpha =
+            if (viewModel.isEnabled) {
+                animationSpec.enabledAlpha
+            } else {
+                animationSpec.disabledForegroundAlpha
+            }
+
         view.onLongClickListener =
             if (viewModel.onLongClicked != null) {
                 View.OnLongClickListener {
@@ -149,6 +167,7 @@ object OptionItemBinder {
                                     isSelected = isSelected,
                                     animate = lastSelected != null && lastSelected != isSelected,
                                 )
+                                view.isSelected = isSelected
                                 lastSelected = isSelected
                             }
                     }
@@ -281,8 +300,12 @@ object OptionItemBinder {
     data class AnimationSpec(
         /** Opacity of the option when it's enabled. */
         val enabledAlpha: Float = 1f,
-        /** Opacity of the option when it's disabled. */
-        val disabledAlpha: Float = 0.3f,
+        /** Opacity of the option background when it's disabled. */
+        val disabledBackgroundAlpha: Float = 0.5f,
+        /** Opacity of the option foreground when it's disabled. */
+        val disabledForegroundAlpha: Float = 0.5f,
+        /** Opacity of the option text when it's disabled. */
+        val disabledTextAlpha: Float = 0.61f,
         /** Duration of the animation, in milliseconds. */
         val durationMs: Long = 333L,
     )

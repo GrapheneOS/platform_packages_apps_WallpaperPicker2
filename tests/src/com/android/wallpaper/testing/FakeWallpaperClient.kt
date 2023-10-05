@@ -15,9 +15,10 @@
  *
  */
 
-package com.android.wallpaper.picker.customization.data.content
+package com.android.wallpaper.testing
 
 import android.graphics.Bitmap
+import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import kotlin.math.min
@@ -69,7 +70,7 @@ class FakeWallpaperClient : WallpaperClient {
         }
     }
 
-    override suspend fun getCurrentWallpaper(
+    fun getCurrentWallpaper(
         destination: WallpaperDestination,
     ): WallpaperModel {
         return _recentWallpapers.value[destination]?.get(0)
@@ -98,6 +99,10 @@ class FakeWallpaperClient : WallpaperClient {
 
     override suspend fun loadThumbnail(wallpaperId: String): Bitmap? {
         return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+    }
+
+    override fun areRecentsAvailable(): Boolean {
+        return true
     }
 
     companion object {

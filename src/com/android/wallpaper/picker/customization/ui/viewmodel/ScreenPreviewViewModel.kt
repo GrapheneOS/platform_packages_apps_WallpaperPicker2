@@ -19,38 +19,70 @@ package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import android.app.WallpaperColors
 import android.os.Bundle
+import com.android.wallpaper.R
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 /** Models the UI state for a preview of the home screen or lock screen. */
-class ScreenPreviewViewModel(
+open class ScreenPreviewViewModel(
     val previewUtils: PreviewUtils,
     private val initialExtrasProvider: () -> Bundle? = { null },
-    private val wallpaperInfoProvider: suspend () -> WallpaperInfo?,
+    private val wallpaperInfoProvider: suspend (forceReload: Boolean) -> WallpaperInfo?,
     private val onWallpaperColorChanged: (WallpaperColors?) -> Unit = {},
-    // TODO (b/270193793): add below field to all usages, remove default value & make non-nullable
-    private val wallpaperInteractor: WallpaperInteractor? = null,
+    private val wallpaperInteractor: WallpaperInteractor,
+    val screen: Screen,
 ) {
+
+    val previewContentDescription: Int =
+        when (screen) {
+            Screen.HOME_SCREEN -> R.string.home_wallpaper_preview_card_content_description
+            Screen.LOCK_SCREEN -> R.string.lock_wallpaper_preview_card_content_description
+        }
+
     /** Returns whether wallpaper picker should handle reload */
-    fun shouldHandleReload(): Boolean {
-        return wallpaperInteractor?.let { it.shouldHandleReload() } ?: true
+    fun shouldReloadWallpaper(): Flow<Boolean> {
+        // Setting the lock screen to the same wp as the home screen doesn't trigger a UI update,
+        // so fix that here for now
+        // TODO(b/281730113) Remove this once better solution is ready.
+        return wallpaperUpdateEvents().map { thisWallpaper ->
+            val otherWallpaper = wallpaperUpdateEvents(otherScreen()).first()
+            wallpaperInteractor.shouldHandleReload() ||
+                thisWallpaper?.wallpaperId == otherWallpaper?.wallpaperId
+        }
+    }
+
+    private fun otherScreen(): Screen {
+        return if (screen == Screen.LOCK_SCREEN) Screen.HOME_SCREEN else Screen.LOCK_SCREEN
     }
 
     /** Returns a flow that is updated whenever the wallpaper has been updated */
-    fun wallpaperUpdateEvents(screen: CustomizationSections.Screen): Flow<WallpaperModel>? {
-        return wallpaperInteractor?.wallpaperUpdateEvents(screen)
+    private fun wallpaperUpdateEvents(
+        s: CustomizationSections.Screen = screen
+    ): Flow<WallpaperModel?> {
+        return wallpaperInteractor.wallpaperUpdateEvents(s)
     }
+
+    open fun workspaceUpdateEvents(): Flow<Boolean>? = null
 
     fun getInitialExtras(): Bundle? {
         return initialExtrasProvider.invoke()
     }
 
-    suspend fun getWallpaperInfo(): WallpaperInfo? {
-        return wallpaperInfoProvider.invoke()
+    /**
+     * Returns the current wallpaper's WallpaperInfo
+     *
+     * @param forceReload if true, any cached values will be ignored and current wallpaper info will
+     *   be reloaded
+     */
+    suspend fun getWallpaperInfo(forceReload: Boolean = false): WallpaperInfo? {
+        return wallpaperInfoProvider.invoke(forceReload)
     }
 
     fun onWallpaperColorsChanged(colors: WallpaperColors?) {

@@ -18,11 +18,12 @@
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import androidx.test.filters.SmallTest
-import com.android.wallpaper.picker.customization.data.content.FakeWallpaperClient
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
+import com.android.wallpaper.testing.FakeWallpaperClient
+import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
@@ -63,12 +64,15 @@ class WallpaperQuickSwitchViewModelTest {
                     WallpaperRepository(
                         scope = testScope.backgroundScope,
                         client = client,
+                        wallpaperPreferences = TestWallpaperPreferences(),
                         backgroundDispatcher = testDispatcher,
                     ),
             )
         underTest =
             WallpaperQuickSwitchViewModel(
                 interactor = interactor,
+                destination = WallpaperDestination.HOME,
+                coroutineScope = testScope.backgroundScope,
                 maxOptions = FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.size,
             )
     }
@@ -120,6 +124,30 @@ class WallpaperQuickSwitchViewModelTest {
         }
 
     @Test
+    fun `recentOptions_lastUpdatedChange_updatesOptions`() =
+        testScope.runTest {
+            val options = collectLastValue(underTest.options)
+
+            val models =
+                FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.mapIndexed { idx, wp ->
+                    WallpaperModel(
+                        wp.wallpaperId,
+                        wp.placeholderColor,
+                        if (idx == 0) 100 else wp.lastUpdated
+                    )
+                }
+            client.setRecentWallpapers(buildMap { put(WallpaperDestination.HOME, models) })
+
+            assertOptions(
+                observed = options(),
+                expected =
+                    expectations(
+                        models = models,
+                    ),
+            )
+        }
+
+    @Test
     fun `switches to third option`() =
         testScope.runTest {
             val options = collectLastValue(underTest.options)
@@ -147,51 +175,6 @@ class WallpaperQuickSwitchViewModelTest {
                 expected =
                     expectations(
                         selectedIndex = selectedIndex,
-                    ),
-            )
-        }
-
-    @Test
-    fun `switches between screens`() =
-        testScope.runTest {
-            val options = collectLastValue(underTest.options)
-
-            // We begin on the home screen by default.
-            // Select option at index 2 on the home screen.
-            val selectedIndex = 2
-            val optionToSelect = checkNotNull(options()?.get(selectedIndex))
-            val onSelected = collectLastValue(optionToSelect.onSelected)
-            onSelected()?.invoke()
-            runCurrent()
-            assertOptions(
-                observed = options(),
-                expected =
-                    expectations(
-                        selectedIndex = selectedIndex,
-                    ),
-            )
-
-            // Switch to the lock screen, it should still have the original option selected.
-            underTest.setOnLockScreen(isLockScreenSelected = true)
-            runCurrent()
-            assertOptions(
-                observed = options(),
-                expected = expectations(),
-            )
-
-            // Switch back to the home screen, it should still have option at index 2 selected.
-            underTest.setOnLockScreen(isLockScreenSelected = false)
-            runCurrent()
-            assertOptions(
-                observed = options(),
-                expected =
-                    expectations(
-                        models =
-                            listOf(
-                                FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[2],
-                                FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[0],
-                                FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[1],
-                            ),
                     ),
             )
         }

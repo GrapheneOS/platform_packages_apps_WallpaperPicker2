@@ -18,6 +18,8 @@
 package com.android.wallpaper.picker.customization.data.repository
 
 import android.graphics.Bitmap
+import android.util.LruCache
+import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -31,31 +33,48 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 /** Encapsulates access to wallpaper-related data. */
 class WallpaperRepository(
     private val scope: CoroutineScope,
     private val client: WallpaperClient,
+    private val wallpaperPreferences: WallpaperPreferences,
     private val backgroundDispatcher: CoroutineDispatcher,
 ) {
+    val maxOptions = MAX_OPTIONS
+
+    private val thumbnailCache = LruCache<String, Bitmap>(maxOptions)
+
     /** The ID of the currently-selected wallpaper. */
     fun selectedWallpaperId(
         destination: WallpaperDestination,
     ): StateFlow<String> {
         return client
             .recentWallpapers(destination = destination, limit = 1)
-            .map { previews -> previews.first().wallpaperId }
+            .map { previews -> currentWallpaperKey(destination, previews) }
+            .flowOn(backgroundDispatcher)
             .stateIn(
                 scope = scope,
                 started = SharingStarted.WhileSubscribed(),
-                initialValue =
-                    runBlocking {
-                        client.getCurrentWallpaper(destination = destination).wallpaperId
-                    },
+                initialValue = currentWallpaperKey(destination, null)
             )
     }
+
+    private fun currentWallpaperKey(
+        destination: WallpaperDestination,
+        previews: List<WallpaperModel>?,
+    ): String {
+        val key =
+            when (destination) {
+                WallpaperDestination.HOME -> wallpaperPreferences.homeWallpaperRecentsKey
+                WallpaperDestination.LOCK -> wallpaperPreferences.lockWallpaperRecentsKey
+                else -> error("Unsupported destination")
+            }
+        return key ?: previews?.firstOrNull()?.wallpaperId ?: DEFAULT_KEY
+    }
+
+    val areRecentsAvailable: Boolean by lazy { client.areRecentsAvailable() }
 
     private val _selectingWallpaperId =
         MutableStateFlow<Map<WallpaperDestination, String?>>(emptyMap())
@@ -77,8 +96,16 @@ class WallpaperRepository(
     }
 
     /** Returns a thumbnail for the wallpaper with the given ID. */
-    suspend fun loadThumbnail(wallpaperId: String): Bitmap? {
-        return withContext(backgroundDispatcher) { client.loadThumbnail(wallpaperId) }
+    suspend fun loadThumbnail(wallpaperId: String, lastUpdatedTimestamp: Long): Bitmap? {
+        val cacheKey = "$wallpaperId-$lastUpdatedTimestamp"
+        return thumbnailCache[cacheKey]
+            ?: withContext(backgroundDispatcher) {
+                val thumbnail = client.loadThumbnail(wallpaperId)
+                if (thumbnail != null) {
+                    thumbnailCache.put(cacheKey, thumbnail)
+                }
+                thumbnail
+            }
     }
 
     /** Sets the wallpaper to the one with the given ID. */
@@ -97,5 +124,11 @@ class WallpaperRepository(
                     _selectingWallpaperId.value.toMutableMap().apply { this[destination] = null }
             }
         }
+    }
+
+    companion object {
+        private const val DEFAULT_KEY = "default_missing_key"
+        /** The maximum number of options to show, including the currently-selected one. */
+        private const val MAX_OPTIONS = 5
     }
 }

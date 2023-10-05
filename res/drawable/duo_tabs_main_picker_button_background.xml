@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2021 The Android Open Source Project
+     Copyright (C) 2023 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,8 +14,15 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <size
-        android:height="24dp"
-        android:width="0dp" />
-</shape>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?android:colorControlHighlight">
+
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/duo_tabs_button_corner_radius" />
+            <solid android:color="?android:colorControlHighlight" />
+        </shape>
+    </item>
+
+    <item android:drawable="@drawable/duo_tabs_main_picker_button_background_base" />
+</ripple>

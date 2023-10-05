@@ -20,6 +20,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.EffectsController
@@ -28,18 +29,27 @@ import com.android.wallpaper.model.WallpaperColorsViewModel
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
+import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosIntentProvider
 import com.android.wallpaper.picker.PreviewFragment
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperSnapshotRestorer
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotRestorer
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import com.android.wallpaper.util.DisplayUtils
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * Interface for a provider of "injected dependencies." (NOTE: The term "injector" is somewhat of a
  * misnomer; this is more aptly a service registry as part of a service locator design pattern.)
  */
 interface Injector {
+    /**
+     * Returns a [CoroutineScope] that's bound to the lifecycle of the application.
+     *
+     * It starts immediately and is never paused, stopped, or destroyed.
+     */
+    fun getApplicationCoroutineScope(): CoroutineScope
+
     fun getAlarmManagerWrapper(context: Context): AlarmManagerWrapper
 
     fun getBitmapCropper(): BitmapCropper
@@ -110,9 +120,11 @@ interface Injector {
 
     fun getFlags(): BaseFlags
 
-    fun getUndoInteractor(context: Context): UndoInteractor
+    fun getUndoInteractor(context: Context, lifecycleOwner: LifecycleOwner): UndoInteractor
 
-    fun getSnapshotRestorers(context: Context): Map<Int, SnapshotRestorer> {
+    fun getSnapshotRestorers(
+        context: Context,
+    ): Map<Int, SnapshotRestorer> {
         // Empty because we don't support undoing in WallpaperPicker2.
         return HashMap()
     }
@@ -122,4 +134,6 @@ interface Injector {
     fun getWallpaperSnapshotRestorer(context: Context): WallpaperSnapshotRestorer
 
     fun getWallpaperColorsViewModel(): WallpaperColorsViewModel
+
+    fun getMyPhotosIntentProvider(): MyPhotosIntentProvider
 }
