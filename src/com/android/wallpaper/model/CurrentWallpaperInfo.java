@@ -172,4 +172,8 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
     public String getStoredWallpaperId(Context context) {
         return null;
     }
+
+    public int getWallpaperManagerFlag() {
+        return mWallpaperManagerFlag;
+    }
 }
