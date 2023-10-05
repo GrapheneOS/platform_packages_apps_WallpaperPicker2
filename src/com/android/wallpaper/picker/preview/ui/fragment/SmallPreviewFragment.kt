@@ -69,9 +69,8 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         return view
     }
 
-    // TODO(b/291761856): Use real string
     override fun getDefaultTitle(): CharSequence {
-        return "Small Preview"
+        return getString(R.string.preview)
     }
 
     override fun getToolbarColorId(): Int {

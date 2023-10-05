@@ -297,7 +297,7 @@
     <dimen name="small_preview_preview_top_padding">20dp</dimen>
 
     <!-- The padding on bottom of the previews in the small preview screen-->
-    <dimen name="small_preview_preview_bottom_padding">40dp</dimen>
+    <dimen name="small_preview_preview_bottom_padding">20dp</dimen>
 
     <!--
     Space between the folded and unfolded previews on the small preview screen
