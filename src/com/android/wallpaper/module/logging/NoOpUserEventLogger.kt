@@ -19,11 +19,13 @@ import android.content.Intent
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.module.logging.UserEventLogger.WallpaperDestination
 
-/** [UserEventLogger] which does not do anything. */
+/** [UserEventLogger] implementation that does nothing. */
 open class NoOpUserEventLogger : UserEventLogger {
-    override fun logAppLaunched(launchSource: Intent) {}
-    override fun logActionClicked(collectionId: String, actionLabelResId: Int) {}
+
     override fun logSnapshot() {}
+
+    override fun logAppLaunched(launchSource: Intent) {}
+
     override fun logWallpaperApplied(
         collectionId: String?,
         wallpaperId: String?,
@@ -31,16 +33,23 @@ open class NoOpUserEventLogger : UserEventLogger {
         @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
         @WallpaperDestination destination: Int,
     ) {}
+
     override fun logEffectApply(
         effect: String,
         status: Int,
         timeElapsedMillis: Long,
-        resultCode: Int
+        resultCode: Int,
     ) {}
+
     override fun logEffectProbe(effect: String, status: Int) {}
+
     override fun logEffectForegroundDownload(
         effect: String,
         status: Int,
-        timeElapsedMillis: Long
+        timeElapsedMillis: Long,
     ) {}
+
+    override fun logResetApplied() {}
+
+    override fun logWallpaperExploreButtonClicked() {}
 }

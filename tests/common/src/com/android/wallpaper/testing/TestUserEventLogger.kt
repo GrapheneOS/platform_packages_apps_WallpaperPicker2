@@ -28,11 +28,9 @@ open class TestUserEventLogger : UserEventLogger {
     var numWallpaperSetResultEvents = 0
         private set
 
-    override fun logAppLaunched(launchSource: Intent) {}
-
-    override fun logActionClicked(collectionId: String, actionLabelResId: Int) {}
-
     override fun logSnapshot() {}
+
+    override fun logAppLaunched(launchSource: Intent) {}
 
     override fun logWallpaperApplied(
         collectionId: String?,
@@ -54,6 +52,10 @@ open class TestUserEventLogger : UserEventLogger {
     override fun logEffectForegroundDownload(
         effect: String,
         status: Int,
-        timeElapsedMillis: Long
+        timeElapsedMillis: Long,
     ) {}
+
+    override fun logResetApplied() {}
+
+    override fun logWallpaperExploreButtonClicked() {}
 }
