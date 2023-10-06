@@ -27,6 +27,7 @@ interface UserEventLogger {
     /** Logs the current snapshot data, e.g. the currently-set home and lock screen wallpapers. */
     fun logSnapshot()
 
+    /** Logs when the app is launched */
     fun logAppLaunched(launchSource: Intent)
 
     /** Logs the event when applying a wallpaper. */
@@ -59,6 +60,7 @@ interface UserEventLogger {
     /** Logs the event when reset is applied. */
     fun logResetApplied()
 
+    /** Logs when clicking the explore button in the wallpaper information dialog. */
     fun logWallpaperExploreButtonClicked()
 
     /**
