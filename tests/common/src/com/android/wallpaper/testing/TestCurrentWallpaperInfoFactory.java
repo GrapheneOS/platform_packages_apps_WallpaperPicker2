@@ -37,8 +37,8 @@ public class TestCurrentWallpaperInfoFactory implements CurrentWallpaperInfoFact
     }
 
     @Override
-    public void createCurrentWallpaperInfos(final WallpaperInfoCallback callback,
-            boolean forceRefresh) {
+    public void createCurrentWallpaperInfos(Context context, boolean forceRefresh,
+            WallpaperInfoCallback callback) {
         mRefresher.refresh((homeWallpaperMetadata, lockWallpaperMetadata, presentationMode) -> {
 
             WallpaperInfo homeWallpaper = createTestWallpaperInfo(
