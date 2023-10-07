@@ -24,5 +24,6 @@ data class LiveWallpaperData(
     val isDownloadable: Boolean,
     val systemWallpaperInfo: WallpaperInfo,
     val isTitleVisible: Boolean,
+    val isSystemApp: Boolean,
     val isApplied: Boolean,
 )

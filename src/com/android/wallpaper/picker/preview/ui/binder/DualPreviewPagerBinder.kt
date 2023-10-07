@@ -61,8 +61,8 @@ object DualPreviewPagerBinder {
             )
 
             val dualPreviewPagerViewModel =
-                if (position == LOCK_PREVIEW_POSITION) homeScreenPreviewViewModel
-                else lockScreenPreviewViewModel
+                if (position == LOCK_PREVIEW_POSITION) lockScreenPreviewViewModel
+                else homeScreenPreviewViewModel
             DualDisplayAspectRatioLayout.Companion.PreviewView.entries.stream().forEach {
                 previewView ->
                 previewView.viewId.let { id ->
