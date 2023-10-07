@@ -31,7 +31,7 @@ android_library {
     static_libs: [
         "androidx.annotation_annotation",
         "kotlinx_coroutines_test",
-        "truth-prebuilt",
+        "truth",
     ],
 
     platform_apis: true,
@@ -61,7 +61,7 @@ android_test {
         "ub-uiautomator",
         "junit",
         "kotlinx_coroutines_test",
-        "truth-prebuilt",
+        "truth",
     ],
     libs: [
         "android.test.runner",
