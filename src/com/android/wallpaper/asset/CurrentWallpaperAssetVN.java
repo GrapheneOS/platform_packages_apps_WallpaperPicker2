@@ -58,7 +58,7 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
     private final int mWallpaperManagerFlag;
 
     public CurrentWallpaperAssetVN(Context context, @SetWallpaperFlags int wallpaperManagerFlag) {
-        mWallpaperManager = WallpaperManager.getInstance(context);
+        mWallpaperManager = WallpaperManager.getInstance(context.getApplicationContext());
         mWallpaperManagerFlag = wallpaperManagerFlag;
         mWallpaperId = mWallpaperManager.getWallpaperId(mWallpaperManagerFlag);
     }
