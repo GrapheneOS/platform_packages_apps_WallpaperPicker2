@@ -26,7 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 abstract class BaseFlags {
-    var customizationProviderClient: CustomizationProviderClient? = null
+    private var customizationProviderClient: CustomizationProviderClient? = null
     private var cachedFlags: List<CustomizationProviderClient.Flag>? = null
     open fun isStagingBackdropContentEnabled() = false
     open fun isWallpaperEffectEnabled() = false
@@ -41,6 +41,15 @@ abstract class BaseFlags {
 
     open fun isMultiCropEnabled() = WallpaperManager.isMultiCropEnabled()
 
+    open fun isKeyguardQuickAffordanceEnabled(context: Context): Boolean {
+        return getCachedFlags(context)
+            .firstOrNull { flag ->
+                flag.name ==
+                    Contract.FlagsTable.FLAG_NAME_CUSTOM_LOCK_SCREEN_QUICK_AFFORDANCES_ENABLED
+            }
+            ?.value == true
+    }
+
     open fun isCustomClocksEnabled(context: Context): Boolean {
         return getCachedFlags(context)
             .firstOrNull { flag ->
@@ -48,6 +57,7 @@ abstract class BaseFlags {
             }
             ?.value == true
     }
+
     open fun isMonochromaticThemeEnabled(context: Context): Boolean {
         return getCachedFlags(context)
             .firstOrNull { flag -> flag.name == Contract.FlagsTable.FLAG_NAME_MONOCHROMATIC_THEME }
