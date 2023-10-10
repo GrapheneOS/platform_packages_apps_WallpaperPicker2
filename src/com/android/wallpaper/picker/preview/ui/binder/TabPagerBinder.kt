@@ -15,27 +15,20 @@
  */
 package com.android.wallpaper.picker.preview.ui.binder
 
-import android.graphics.Point
+import android.view.View.OVER_SCROLL_NEVER
 import androidx.viewpager.widget.ViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.TabTextPagerAdapter
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.pagetransformers.PreviewTabsPageTransformer
 
 /** Binds single preview home screen and lock screen tabs. */
 object TabPagerBinder {
 
-    fun bind(
-        tabsViewPager: ViewPager,
-        previewDisplaySize: Point,
-    ) {
+    fun bind(tabsViewPager: ViewPager) {
         tabsViewPager.apply {
             adapter = TabTextPagerAdapter()
             offscreenPageLimit = 2
             clipChildren = false
             clipToPadding = false
-            setPageTransformer(
-                /* reverseDrawingOrder= */ true,
-                PreviewTabsPageTransformer(previewDisplaySize)
-            )
+            overScrollMode = OVER_SCROLL_NEVER
         }
     }
 }
