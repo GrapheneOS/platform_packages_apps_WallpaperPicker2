@@ -24,7 +24,7 @@ filegroup {
     name: "WallpaperPicker2Tests_srcs",
 
     visibility: [
-        "//visibility:public"
+        "//visibility:public",
     ],
 
     srcs: [
@@ -55,7 +55,7 @@ android_test {
         "ub-uiautomator",
         "junit",
         "kotlinx_coroutines_test",
-        "truth-prebuilt",
+        "truth",
     ],
     libs: [
         "android.test.runner",
