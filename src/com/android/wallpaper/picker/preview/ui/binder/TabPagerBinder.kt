@@ -22,7 +22,9 @@ import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.Ta
 /** Binds single preview home screen and lock screen tabs. */
 object TabPagerBinder {
 
-    fun bind(tabsViewPager: ViewPager) {
+    fun bind(
+        tabsViewPager: ViewPager,
+    ) {
         tabsViewPager.apply {
             adapter = TabTextPagerAdapter()
             offscreenPageLimit = 2

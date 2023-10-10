@@ -112,8 +112,10 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                     .navigate(R.id.action_smallPreviewFragment_to_fullPreviewFragment)
             }
         } else {
+            val tabPager: TabsPagerContainer = view.requireViewById(R.id.pager_container)
+
             PreviewSelectorBinder.bind(
-                view.requireViewById(R.id.pager_tabs),
+                tabPager.getViewPager(),
                 view.requireViewById(R.id.pager_previews),
                 displayUtils.getRealSize(displayUtils.getWallpaperDisplay()),
                 // TODO: pass correct view models for the view pager
