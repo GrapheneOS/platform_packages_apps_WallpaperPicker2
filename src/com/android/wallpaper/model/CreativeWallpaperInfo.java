@@ -472,48 +472,4 @@ public class CreativeWallpaperInfo extends LiveWallpaperInfo {
         return CreativeCategory.saveCreativeCategoryWallpaper(
                 context, this, saveWallpaperUri, destination);
     }
-
-    public Uri getConfigPreviewUri() {
-        return mConfigPreviewUri;
-    }
-
-    public Uri getCleanPreviewUri() {
-        return mCleanPreviewUri;
-    }
-
-    public Uri getDeleteUri() {
-        return mDeleteUri;
-    }
-
-    public Uri getThumbnailUri() {
-        return mThumbnailUri;
-    }
-
-    public Uri getShareUri() {
-        return mShareUri;
-    }
-
-    public String getTitle() {
-        return mTitle;
-    }
-
-    public String getAuthor() {
-        return mAuthor;
-    }
-
-    public String getDescription() {
-        return mDescription;
-    }
-
-    public String getContentDescription() {
-        return mContentDescription;
-    }
-
-    public boolean isCurrent() {
-        return mIsCurrent;
-    }
-
-    public String getGroupName() {
-        return mGroupName;
-    }
 }
