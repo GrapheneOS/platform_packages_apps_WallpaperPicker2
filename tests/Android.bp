@@ -24,7 +24,7 @@ filegroup {
     name: "WallpaperPicker2Tests_srcs",
 
     visibility: [
-        "//visibility:public"
+        "//visibility:public",
     ],
 
     srcs: [
@@ -57,7 +57,7 @@ android_test {
         "mockito-target-minus-junit4",
         "junit",
         "kotlinx_coroutines_test",
-        "truth-prebuilt",
+        "truth",
     ],
     libs: [
         "android.test.runner",
