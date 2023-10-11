@@ -138,23 +138,6 @@ public class LiveWallpaperInfo extends WallpaperInfo {
         return new LiveWallpaperInfo(wallpaperInfo, false, categoryId);
     }
 
-    public android.app.WallpaperInfo getInfo() {
-        return mInfo;
-    }
-
-    public LiveWallpaperThumbAsset getThumbAsset() {
-        return mThumbAsset;
-    }
-
-    public boolean isVisibleTitle() {
-        return mVisibleTitle;
-    }
-
-    @Nullable
-    public String getCollectionId() {
-        return mCollectionId;
-    }
-
     protected android.app.WallpaperInfo mInfo;
     protected LiveWallpaperThumbAsset mThumbAsset;
     protected boolean mVisibleTitle;

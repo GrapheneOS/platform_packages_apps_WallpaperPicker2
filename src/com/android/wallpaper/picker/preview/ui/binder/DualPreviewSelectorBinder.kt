@@ -26,9 +26,9 @@ import kotlinx.coroutines.CoroutineScope
 
 /**
  * This binder binds the data and view models for the dual preview collection on the small preview
- * screen
+ * screen.
  */
-object DualPreviewPagerBinder {
+object DualPreviewSelectorBinder {
 
     fun bind(
         dualPreviewView: DualPreviewViewPager,
@@ -52,13 +52,12 @@ object DualPreviewPagerBinder {
                         displayUtils.getWallpaperDisplay(),
                 )
 
-            dualDisplayAspectRatioLayout.setDisplaySizes(
-                previewDisplays.mapValues { displayUtils.getRealSize(it.value) }
-            )
-
-            dualPreviewView.setDisplaySizes(
-                previewDisplays.mapValues { displayUtils.getRealSize(it.value) }
-            )
+            previewDisplays
+                .mapValues { displayUtils.getRealSize(it.value) }
+                .let {
+                    dualDisplayAspectRatioLayout.setDisplaySizes(it)
+                    dualPreviewView.setDisplaySizes(it)
+                }
 
             val dualPreviewPagerViewModel =
                 if (position == LOCK_PREVIEW_POSITION) lockScreenPreviewViewModel
@@ -81,7 +80,7 @@ object DualPreviewPagerBinder {
                             ),
                         previewDisplayId = checkNotNull(previewDisplays[previewView]).displayId,
                         previewUtils = dualPreviewPagerViewModel.previewUtils,
-                        navigate = { dualPreviewPagerViewModel.navigate?.let { it() } },
+                        navigate = dualPreviewPagerViewModel.navigate,
                     )
                 }
             }

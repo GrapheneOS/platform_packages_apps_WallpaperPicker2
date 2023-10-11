@@ -26,8 +26,8 @@ import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.preview.di.modules.preview.utils.PreviewUtilsModule
-import com.android.wallpaper.picker.preview.ui.binder.DualPreviewPagerBinder
-import com.android.wallpaper.picker.preview.ui.binder.SinglePreviewBinder
+import com.android.wallpaper.picker.preview.ui.binder.DualPreviewSelectorBinder
+import com.android.wallpaper.picker.preview.ui.binder.PreviewSelectorBinder
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
@@ -91,7 +91,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         if (displayUtils.hasMultiInternalDisplays()) {
             val dualPreviewView: DualPreviewViewPager =
                 view.requireViewById(R.id.dual_preview_pager)
-            DualPreviewPagerBinder.bind(
+            DualPreviewSelectorBinder.bind(
                 dualPreviewView,
                 DualPreviewPagerAdapter.DualPreviewPagerViewModel(
                     wallpaperPreviewViewModel,
@@ -115,7 +115,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 displayUtils,
             )
         } else {
-            SinglePreviewBinder.bind(
+            PreviewSelectorBinder.bind(
                 tabsViewPager = view.requireViewById(R.id.pager_tabs),
                 previewsViewPager = view.requireViewById(R.id.pager_previews),
                 previewDisplaySize = displayUtils.getRealSize(displayUtils.getWallpaperDisplay()),
@@ -127,6 +127,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 viewLifecycleOwner = viewLifecycleOwner,
                 isRtl = isRtl,
                 mainScope = mainScope,
+                previewUtils = homePreviewUtils,
                 navigate = {
                     findNavController()
                         .navigate(R.id.action_smallPreviewFragment_to_fullPreviewFragment)
