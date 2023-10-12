@@ -18,6 +18,7 @@
 package com.android.wallpaper.picker.undo.ui.viewmodel
 
 import androidx.test.filters.SmallTest
+import com.android.wallpaper.module.logging.TestUserEventLogger
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import com.android.wallpaper.testing.FAKE_RESTORERS
@@ -56,6 +57,7 @@ class UndoViewModelTest {
         underTest =
             UndoViewModel(
                 interactor = interactor,
+                logger = TestUserEventLogger(),
             )
     }
 

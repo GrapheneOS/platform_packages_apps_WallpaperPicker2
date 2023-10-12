@@ -108,7 +108,8 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                         this,
                         savedInstanceState,
                         injector.getUndoInteractor(requireContext(), requireActivity()),
-                        injector.getWallpaperInteractor(requireContext()))
+                        injector.getWallpaperInteractor(requireContext()),
+                        injector.getUserEventLogger(requireContext()))
         ).get(CustomizationPickerViewModel.class);
         final Bundle arguments = getArguments();
         mViewModel.setInitialScreen(

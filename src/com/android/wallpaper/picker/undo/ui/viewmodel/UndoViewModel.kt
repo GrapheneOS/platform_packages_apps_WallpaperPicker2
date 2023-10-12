@@ -18,6 +18,7 @@
 package com.android.wallpaper.picker.undo.ui.viewmodel
 
 import com.android.wallpaper.R
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.common.button.ui.viewmodel.ButtonStyle
 import com.android.wallpaper.picker.common.button.ui.viewmodel.ButtonViewModel
 import com.android.wallpaper.picker.common.dialog.ui.viewmodel.DialogViewModel
@@ -31,6 +32,7 @@ import kotlinx.coroutines.flow.asStateFlow
 /** Models the UI state of the undo system. */
 class UndoViewModel(
     private val interactor: UndoInteractor,
+    private val logger: UserEventLogger,
 ) {
     /** Whether the "revert" button should be visible. */
     val isRevertButtonVisible: Flow<Boolean> = interactor.isUndoable
@@ -63,6 +65,7 @@ class UndoViewModel(
                             style = ButtonStyle.Primary,
                             onClicked = {
                                 interactor.revertAll()
+                                logger.logResetApplied()
                                 _dialog.value = null
                             },
                         ),
