@@ -18,6 +18,8 @@ package com.android.wallpaper
 import com.android.wallpaper.module.AppModule
 import com.android.wallpaper.module.Injector
 import com.android.wallpaper.module.WallpaperPreferences
+import com.android.wallpaper.module.logging.TestUserEventLogger
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestWallpaperPreferences
 import dagger.Binds
@@ -30,6 +32,8 @@ import javax.inject.Singleton
 @TestInstallIn(components = [SingletonComponent::class], replaces = [AppModule::class])
 abstract class TestModule {
     @Binds @Singleton abstract fun bindInjector(impl: TestInjector): Injector
+
+    @Binds @Singleton abstract fun bindUserEventLogger(impl: TestUserEventLogger): UserEventLogger
 
     @Binds
     @Singleton

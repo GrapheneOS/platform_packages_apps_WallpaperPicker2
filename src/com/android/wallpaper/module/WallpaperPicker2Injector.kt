@@ -31,7 +31,6 @@ import com.android.wallpaper.model.CategoryProvider
 import com.android.wallpaper.model.InlinePreviewIntentFactory
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
-import com.android.wallpaper.module.logging.NoOpUserEventLogger
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
@@ -65,6 +64,7 @@ open class WallpaperPicker2Injector
 internal constructor(
     @MainDispatcher private val mainScope: CoroutineScope,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
+    private val userEventLogger: UserEventLogger,
 ) : Injector {
     private var alarmManagerWrapper: AlarmManagerWrapper? = null
     private var bitmapCropper: BitmapCropper? = null
@@ -81,7 +81,6 @@ internal constructor(
     private var performanceMonitor: PerformanceMonitor? = null
     private var requester: Requester? = null
     private var systemFeatureChecker: SystemFeatureChecker? = null
-    private var userEventLogger: UserEventLogger? = null
     private var wallpaperPersister: WallpaperPersister? = null
     @Inject lateinit var prefs: WallpaperPreferences
     private var wallpaperRefresher: WallpaperRefresher? = null
@@ -239,7 +238,7 @@ internal constructor(
     }
 
     override fun getUserEventLogger(context: Context): UserEventLogger {
-        return userEventLogger ?: NoOpUserEventLogger().also { userEventLogger = it }
+        return userEventLogger
     }
 
     @Synchronized

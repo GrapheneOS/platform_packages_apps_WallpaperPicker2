@@ -16,6 +16,8 @@
 package com.android.wallpaper.module
 
 import android.content.Context
+import com.android.wallpaper.module.logging.NoOpUserEventLogger
+import com.android.wallpaper.module.logging.UserEventLogger
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -36,6 +38,12 @@ abstract class AppModule {
             @ApplicationContext context: Context
         ): WallpaperPreferences {
             return DefaultWallpaperPreferences(context)
+        }
+
+        @Provides
+        @Singleton
+        fun provideUserEventLogger(): UserEventLogger {
+            return NoOpUserEventLogger()
         }
     }
 }

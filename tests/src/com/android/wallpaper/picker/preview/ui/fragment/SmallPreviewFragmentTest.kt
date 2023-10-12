@@ -19,6 +19,7 @@ import androidx.test.filters.MediumTest
 import androidx.test.runner.AndroidJUnit4
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.InjectorProvider
+import com.android.wallpaper.module.logging.TestUserEventLogger
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestStaticWallpaperInfo
 import org.junit.Before
@@ -31,10 +32,11 @@ import org.junit.runner.RunWith
 class SmallPreviewFragmentTest {
     private val testStaticWallpaper =
         TestStaticWallpaperInfo(TestStaticWallpaperInfo.COLOR_DEFAULT).setWallpaperAttributions()
+    private val testUserEventLogger = TestUserEventLogger()
 
     @Before
     fun setUp() {
-        InjectorProvider.setInjector(TestInjector())
+        InjectorProvider.setInjector(TestInjector(testUserEventLogger))
     }
 
     @Test @Ignore("b/295958495") fun testWallpaperInfoIsNotNull() {}

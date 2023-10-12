@@ -45,7 +45,6 @@ import com.android.wallpaper.module.WallpaperPersister
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.WallpaperRefresher
 import com.android.wallpaper.module.WallpaperStatusChecker
-import com.android.wallpaper.module.logging.TestUserEventLogger
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
@@ -69,7 +68,8 @@ import kotlinx.coroutines.Dispatchers
 
 /** Test implementation of [Injector] */
 @Singleton
-open class TestInjector @Inject constructor() : Injector {
+open class TestInjector @Inject constructor(private val userEventLogger: UserEventLogger) :
+    Injector {
     private var appScope: CoroutineScope? = null
     private var alarmManagerWrapper: AlarmManagerWrapper? = null
     private var bitmapCropper: BitmapCropper? = null
@@ -84,7 +84,6 @@ open class TestInjector @Inject constructor() : Injector {
     private var performanceMonitor: PerformanceMonitor? = null
     private var requester: Requester? = null
     private var systemFeatureChecker: SystemFeatureChecker? = null
-    private var userEventLogger: UserEventLogger? = null
     private var wallpaperPersister: WallpaperPersister? = null
     @Inject lateinit var prefs: WallpaperPreferences
     private var wallpaperRefresher: WallpaperRefresher? = null
@@ -208,7 +207,7 @@ open class TestInjector @Inject constructor() : Injector {
     }
 
     override fun getUserEventLogger(context: Context): UserEventLogger {
-        return userEventLogger ?: TestUserEventLogger().also { userEventLogger = it }
+        return userEventLogger
     }
 
     override fun getWallpaperPersister(context: Context): WallpaperPersister {
