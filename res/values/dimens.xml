@@ -346,4 +346,6 @@
     <dimen name="touch_target_min_height">48dp</dimen>
     <dimen name="touch_target_min_width">48dp</dimen>
 
+    <!-- Dimensions for small "dual" previews screen. -->
+    <dimen name="small_dual_preview_edge_space">18dp</dimen>
 </resources>

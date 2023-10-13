@@ -14,10 +14,15 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License
   -->
+
+<!-- Used for foldable unfolded portrait and unfolded landscape.-->
 <resources>
     <!--
     Width of the screen preview. The height will be determined based on the aspect ratio of the
     display.
     -->
     <dimen name="screen_preview_width">450dp</dimen>
+
+    <!-- Dimensions for small "dual" previews screen. -->
+    <dimen name="small_dual_preview_edge_space">94dp</dimen>
 </resources>

@@ -47,9 +47,11 @@ constructor(context: Context, attrs: AttributeSet? = null /* attrs */) : ViewPag
                 ?.let { largeDisplaySize ->
                     val parentWidth =
                         this.measuredWidth -
-                            context.resources
-                                .getDimension(R.dimen.small_preview_inter_preview_margin)
-                                .toInt() * 3
+                            context.resources.getDimension(R.dimen.small_dual_preview_edge_space) *
+                                2 -
+                            context.resources.getDimension(
+                                R.dimen.small_preview_inter_preview_margin
+                            ) * 3
 
                     val smallDisplayAR = smallDisplaySize.x.toFloat() / smallDisplaySize.y
 
