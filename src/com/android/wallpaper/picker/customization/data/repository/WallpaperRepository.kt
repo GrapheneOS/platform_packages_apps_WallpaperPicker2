@@ -130,7 +130,7 @@ class WallpaperRepository(
     }
 
     companion object {
-        private const val DEFAULT_KEY = "default_missing_key"
+        const val DEFAULT_KEY = "default_missing_key"
         /** The maximum number of options to show, including the currently-selected one. */
         private const val MAX_OPTIONS = 5
     }
