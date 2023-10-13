@@ -22,7 +22,7 @@ import android.graphics.BitmapFactory
 import android.graphics.ColorSpace
 import android.graphics.Point
 import com.android.wallpaper.asset.Asset
-import com.android.wallpaper.asset.CurrentWallpaperAssetVN
+import com.android.wallpaper.asset.CurrentWallpaperAsset
 import com.android.wallpaper.dispatchers.BackgroundDispatcher
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.WallpaperPreferences
@@ -87,7 +87,7 @@ constructor(
                     FullResWallpaperViewModel(
                         bitmap,
                         dimensions,
-                        offsetToStart = it is CurrentWallpaperAssetVN,
+                        offsetToStart = it is CurrentWallpaperAsset,
                     )
                 } else {
                     null

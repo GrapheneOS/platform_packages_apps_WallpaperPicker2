@@ -58,7 +58,7 @@ import androidx.annotation.VisibleForTesting;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
-import com.android.wallpaper.asset.CurrentWallpaperAssetVN;
+import com.android.wallpaper.asset.CurrentWallpaperAsset;
 import com.android.wallpaper.model.SetWallpaperViewModel;
 import com.android.wallpaper.model.WallpaperInfo.ColorInfo;
 import com.android.wallpaper.module.BitmapCropper;
@@ -284,7 +284,7 @@ public class ImagePreviewFragment extends PreviewFragment {
 
                     mFullResImageView.setImage(ImageSource.bitmap(pageBitmap));
                     setDefaultWallpaperZoomAndScroll(
-                            mWallpaperAsset instanceof CurrentWallpaperAssetVN);
+                            mWallpaperAsset instanceof CurrentWallpaperAsset);
                     mFullResImageView.setOnStateChangedListener(
                             new OnFullResImageViewStateChangedListener() {
                                 @Override

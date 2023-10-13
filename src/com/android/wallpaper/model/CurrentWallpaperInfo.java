@@ -27,7 +27,7 @@ import androidx.annotation.StringRes;
 
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.BuiltInWallpaperAsset;
-import com.android.wallpaper.asset.CurrentWallpaperAssetVN;
+import com.android.wallpaper.asset.CurrentWallpaperAsset;
 import com.android.wallpaper.module.InjectorProvider;
 
 import java.util.ArrayList;
@@ -147,7 +147,7 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
 
         return (isSystemBuiltIn)
                 ? new BuiltInWallpaperAsset(context)
-                : new CurrentWallpaperAssetVN(context, mWallpaperManagerFlag);
+                : new CurrentWallpaperAsset(context, mWallpaperManagerFlag);
     }
 
     @Override
