@@ -247,7 +247,7 @@ internal constructor(
         return wallpaperPersister
             ?: DefaultWallpaperPersister(
                     context.applicationContext,
-                    WallpaperManager.getInstance(context),
+                    WallpaperManager.getInstance(context.applicationContext),
                     getPreferences(context),
                     WallpaperChangedNotifier.getInstance(),
                     getDisplayUtils(context),
