@@ -18,6 +18,7 @@
 package com.android.wallpaper.picker.customization.domain.interactor
 
 import android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_RESET
+import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository.Companion.DEFAULT_KEY
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotRestorer
 import com.android.wallpaper.picker.undo.domain.interactor.SnapshotStore
@@ -25,6 +26,8 @@ import com.android.wallpaper.picker.undo.shared.model.RestorableSnapshot
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /** Stores and restores undo snapshots for wallpaper state. */
@@ -84,27 +87,32 @@ class WallpaperSnapshotRestorer(
         }
     }
 
-    private fun snapshot(
-        homeWallpaperId: String = querySelectedWallpaperId(destination = WallpaperDestination.HOME),
-        lockWallpaperId: String = querySelectedWallpaperId(destination = WallpaperDestination.LOCK),
+    private suspend fun snapshot(
+        homeWallpaperId: String? = null,
+        lockWallpaperId: String? = null,
     ): RestorableSnapshot {
         return RestorableSnapshot(
             args =
                 buildMap {
                     put(
                         SELECTED_HOME_SCREEN_WALLPAPER_ID,
-                        homeWallpaperId,
+                        homeWallpaperId
+                            ?: querySelectedWallpaperId(destination = WallpaperDestination.HOME),
                     )
                     put(
                         SELECTED_LOCK_SCREEN_WALLPAPER_ID,
-                        lockWallpaperId,
+                        lockWallpaperId
+                            ?: querySelectedWallpaperId(destination = WallpaperDestination.LOCK),
                     )
                 }
         )
     }
 
-    private fun querySelectedWallpaperId(destination: WallpaperDestination): String {
-        return interactor.selectedWallpaperId(destination = destination).value
+    private suspend fun querySelectedWallpaperId(destination: WallpaperDestination): String {
+        return interactor
+            .selectedWallpaperId(destination = destination)
+            .filter { it != DEFAULT_KEY }
+            .first()
     }
 
     companion object {
