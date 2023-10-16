@@ -45,7 +45,7 @@ import com.android.systemui.monet.ColorScheme
 import com.android.wallpaper.R
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.asset.BitmapCachingAsset
-import com.android.wallpaper.asset.CurrentWallpaperAssetVN
+import com.android.wallpaper.asset.CurrentWallpaperAsset
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
@@ -597,7 +597,7 @@ object ScreenPreviewBinder {
                     activity,
                     imageView,
                     ResourceUtils.getColorAttr(activity, android.R.attr.colorSecondary),
-                    /* offsetToStart= */ thumbAsset !is CurrentWallpaperAssetVN || offsetToStart
+                    /* offsetToStart= */ thumbAsset !is CurrentWallpaperAsset || offsetToStart
                 )
             if (wallpaperInfo !is LiveWallpaperInfo) {
                 imageView.addOnLayoutChangeListener(
