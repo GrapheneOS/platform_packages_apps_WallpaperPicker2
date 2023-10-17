@@ -46,18 +46,18 @@ import java.security.MessageDigest;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Asset representing the currently-set image wallpaper on N+ devices, including when daily rotation
+ * Asset representing the currently-set image wallpaper, including when daily rotation
  * is set with a static wallpaper (but not when daily rotation uses a live wallpaper).
  */
-public class CurrentWallpaperAssetVN extends StreamableAsset {
+public class CurrentWallpaperAsset extends StreamableAsset {
 
-    private static final String TAG = "CurrentWallpaperAssetVN";
+    private static final String TAG = "CurrentWallpaperAsset";
     int mWallpaperId;
     private final WallpaperManager mWallpaperManager;
     @SetWallpaperFlags
     private final int mWallpaperManagerFlag;
 
-    public CurrentWallpaperAssetVN(Context context, @SetWallpaperFlags int wallpaperManagerFlag) {
+    public CurrentWallpaperAsset(Context context, @SetWallpaperFlags int wallpaperManagerFlag) {
         mWallpaperManager = WallpaperManager.getInstance(context.getApplicationContext());
         mWallpaperManagerFlag = wallpaperManagerFlag;
         mWallpaperId = mWallpaperManager.getWallpaperId(mWallpaperManagerFlag);
@@ -68,8 +68,8 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
         ParcelFileDescriptor pfd = getWallpaperPfd();
 
         if (pfd == null) {
-            Log.e(TAG, "ParcelFileDescriptor for wallpaper " + mWallpaperManagerFlag + " is null, unable "
-                    + "to open InputStream.");
+            Log.e(TAG, "ParcelFileDescriptor for wallpaper " + mWallpaperManagerFlag
+                    + " is null, unable to open InputStream.");
             return null;
         }
 
@@ -86,8 +86,8 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof CurrentWallpaperAssetVN) {
-            CurrentWallpaperAssetVN otherAsset = (CurrentWallpaperAssetVN) object;
+        if (object instanceof CurrentWallpaperAsset) {
+            CurrentWallpaperAsset otherAsset = (CurrentWallpaperAsset) object;
             return otherAsset.mWallpaperManagerFlag == mWallpaperManagerFlag
                     && otherAsset.mWallpaperId == mWallpaperId;
 
@@ -129,7 +129,7 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
                              int unusedPlaceholderColor) {
         Glide.with(context)
                 .asDrawable()
-                .load(CurrentWallpaperAssetVN.this)
+                .load(CurrentWallpaperAsset.this)
                 .apply(RequestOptions.centerCropTransform())
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView);
@@ -145,7 +145,7 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
     }
 
     public Key getKey() {
-        return new CurrentWallpaperVNKey(mWallpaperManager, mWallpaperManagerFlag);
+        return new CurrentWallpaperKey(mWallpaperManager, mWallpaperManagerFlag);
     }
 
     ParcelFileDescriptor getWallpaperPfd() {
@@ -153,15 +153,15 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
     }
 
     /**
-     * Glide caching key for currently-set wallpapers on Android N or later using wallpaper IDs
-     * provided by WallpaperManager.
+     * Glide caching key for currently-set wallpapers using wallpaper IDs provided by
+     * WallpaperManager.
      */
-    private static final class CurrentWallpaperVNKey implements Key {
+    private static final class CurrentWallpaperKey implements Key {
         private final WallpaperManager mWallpaperManager;
         @SetWallpaperFlags
         private final int mWallpaperFlag;
 
-        CurrentWallpaperVNKey(WallpaperManager wallpaperManager,
+        CurrentWallpaperKey(WallpaperManager wallpaperManager,
                 @SetWallpaperFlags int wallpaperFlag) {
             mWallpaperManager = wallpaperManager;
             mWallpaperFlag = wallpaperFlag;
@@ -179,8 +179,8 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
 
         @Override
         public boolean equals(Object object) {
-            if (object instanceof CurrentWallpaperVNKey) {
-                CurrentWallpaperVNKey otherKey = (CurrentWallpaperVNKey) object;
+            if (object instanceof CurrentWallpaperKey) {
+                CurrentWallpaperKey otherKey = (CurrentWallpaperKey) object;
                 return getCacheKey().equals(otherKey.getCacheKey());
 
             }
@@ -196,7 +196,7 @@ public class CurrentWallpaperAssetVN extends StreamableAsset {
          * Returns an inexpensively calculated {@link String} suitable for use as a disk cache key.
          */
         private String getCacheKey() {
-            return "CurrentWallpaperVNKey{"
+            return "CurrentWallpaperKey{"
                     + "flag=" + mWallpaperFlag
                     + ",id=" + mWallpaperManager.getWallpaperId(mWallpaperFlag)
                     + '}';

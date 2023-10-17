@@ -18,6 +18,8 @@ package com.android.wallpaper.asset;
 import android.os.ParcelFileDescriptor;
 import android.os.ParcelFileDescriptor.AutoCloseInputStream;
 
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.Options;
@@ -28,39 +30,37 @@ import com.bumptech.glide.load.model.MultiModelLoaderFactory;
 
 import java.io.InputStream;
 
-import androidx.annotation.Nullable;
-
 /**
- * Glide custom model loader for {@link CurrentWallpaperAssetVN}.
+ * Glide custom model loader for {@link CurrentWallpaperAsset}.
  */
-public class CurrentWallpaperAssetVNLoader implements
-        ModelLoader<CurrentWallpaperAssetVN, InputStream> {
+public class CurrentWallpaperAssetLoader implements
+        ModelLoader<CurrentWallpaperAsset, InputStream> {
 
     @Override
-    public boolean handles(CurrentWallpaperAssetVN currentWallpaperAssetVN) {
+    public boolean handles(CurrentWallpaperAsset currentWallpaperAsset) {
         return true;
     }
 
     @Nullable
     @Override
-    public LoadData<InputStream> buildLoadData(CurrentWallpaperAssetVN currentWallpaperAssetVN,
+    public LoadData<InputStream> buildLoadData(CurrentWallpaperAsset currentWallpaperAsset,
                                                int width, int height, Options options) {
-        return new LoadData<>(currentWallpaperAssetVN.getKey(),
-                new CurrentWallpaperAssetVNDataFetcher(currentWallpaperAssetVN));
+        return new LoadData<>(currentWallpaperAsset.getKey(),
+                new CurrentWallpaperAssetDataFetcher(currentWallpaperAsset));
     }
 
     /**
      * Factory that constructs {@link ResourceAssetLoader} instances.
      */
-    public static class CurrentWallpaperAssetVNLoaderFactory
-            implements ModelLoaderFactory<CurrentWallpaperAssetVN, InputStream> {
-        public CurrentWallpaperAssetVNLoaderFactory() {
+    public static class CurrentWallpaperAssetLoaderFactory
+            implements ModelLoaderFactory<CurrentWallpaperAsset, InputStream> {
+        public CurrentWallpaperAssetLoaderFactory() {
         }
 
         @Override
-        public ModelLoader<CurrentWallpaperAssetVN, InputStream> build(
+        public ModelLoader<CurrentWallpaperAsset, InputStream> build(
                 MultiModelLoaderFactory multiFactory) {
-            return new CurrentWallpaperAssetVNLoader();
+            return new CurrentWallpaperAssetLoader();
         }
 
         @Override
@@ -69,11 +69,11 @@ public class CurrentWallpaperAssetVNLoader implements
         }
     }
 
-    private static class CurrentWallpaperAssetVNDataFetcher implements DataFetcher<InputStream> {
+    private static class CurrentWallpaperAssetDataFetcher implements DataFetcher<InputStream> {
 
-        private CurrentWallpaperAssetVN mAsset;
+        private CurrentWallpaperAsset mAsset;
 
-        public CurrentWallpaperAssetVNDataFetcher(CurrentWallpaperAssetVN asset) {
+        CurrentWallpaperAssetDataFetcher(CurrentWallpaperAsset asset) {
             mAsset = asset;
         }
 
@@ -82,8 +82,8 @@ public class CurrentWallpaperAssetVNLoader implements
             ParcelFileDescriptor pfd = mAsset.getWallpaperPfd();
 
             if (pfd == null) {
-                callback.onLoadFailed(new Exception("ParcelFileDescriptor for wallpaper is null, unable "
-                        + "to open InputStream."));
+                callback.onLoadFailed(new Exception("ParcelFileDescriptor for wallpaper is null, "
+                        + "unable to open InputStream."));
                 return;
             }
 
