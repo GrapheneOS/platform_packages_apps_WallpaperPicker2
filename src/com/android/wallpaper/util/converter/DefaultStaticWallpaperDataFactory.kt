@@ -17,12 +17,8 @@
 package com.android.wallpaper.util.converter
 
 import android.content.Context
-import com.android.wallpaper.model.AppResourceWallpaperInfo
-import com.android.wallpaper.model.CurrentWallpaperInfo
-import com.android.wallpaper.model.DefaultWallpaperInfo
 import com.android.wallpaper.model.ImageWallpaperInfo
-import com.android.wallpaper.model.LegacyPartnerWallpaperInfo
-import com.android.wallpaper.model.SystemStaticWallpaperInfo
+import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.model.wallpaper.ImageWallpaperData
 import com.android.wallpaper.model.wallpaper.StaticWallpaperData
@@ -50,14 +46,7 @@ open class DefaultStaticWallpaperDataFactory {
         wallpaperInfo: WallpaperInfo,
         context: Context
     ): StaticWallpaperData {
-        return if (
-            wallpaperInfo is AppResourceWallpaperInfo ||
-                wallpaperInfo is LegacyPartnerWallpaperInfo ||
-                wallpaperInfo is SystemStaticWallpaperInfo ||
-                wallpaperInfo is DefaultWallpaperInfo ||
-                wallpaperInfo is CurrentWallpaperInfo ||
-                wallpaperInfo is ImageWallpaperInfo
-        ) {
+        return if (wallpaperInfo !is LiveWallpaperInfo) {
             StaticWallpaperData(asset = wallpaperInfo.getAsset(context))
         } else {
             throw IllegalArgumentException(

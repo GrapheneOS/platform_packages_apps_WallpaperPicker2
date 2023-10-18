@@ -25,15 +25,18 @@ import androidx.lifecycle.lifecycleScope
 import com.android.wallpaper.R
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.model.wallpaper.WallpaperModel
 import com.android.wallpaper.module.WallpaperPersister
 import com.android.wallpaper.picker.BasePreviewActivity
 import com.android.wallpaper.picker.preview.ui.binder.StaticWallpaperPreviewBinder
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.RtlUtils
+import com.android.wallpaper.util.converter.DefaultWallpaperModelFactory
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.setUpSurface
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 
@@ -42,7 +45,9 @@ import kotlinx.coroutines.launch
 class WallpaperPreviewDemoActivity : Hilt_WallpaperPreviewDemoActivity() {
 
     private val viewModel: WallpaperPreviewViewModel by viewModels()
+    @ApplicationContext @Inject lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
+    @Inject lateinit var wallpaperModelFactory: DefaultWallpaperModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +85,7 @@ class WallpaperPreviewDemoActivity : Hilt_WallpaperPreviewDemoActivity() {
             viewModel.initializeViewModel(
                 context = applicationContext,
                 wallpaper = wallpaper,
+                model = wallpaper.convertToWallpaperModel(),
             )
             StaticWallpaperPreviewBinder.bind(
                 fullResImageView = requireViewById(R.id.full_res_image),
@@ -90,6 +96,14 @@ class WallpaperPreviewDemoActivity : Hilt_WallpaperPreviewDemoActivity() {
                     displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(this),
                 isRtl = RtlUtils.isRtl(applicationContext),
             )
+        }
+    }
+
+    private fun WallpaperInfo.convertToWallpaperModel(): WallpaperModel {
+        return if (this is LiveWallpaperInfo) {
+            wallpaperModelFactory.getWallpaperModel(appContext, this)
+        } else {
+            wallpaperModelFactory.getWallpaperModel(appContext, this)
         }
     }
 

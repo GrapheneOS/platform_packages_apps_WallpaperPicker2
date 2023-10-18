@@ -24,13 +24,17 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import com.android.wallpaper.R
+import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.model.wallpaper.WallpaperModel
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.BasePreviewActivity
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.ActivityUtils
 import com.android.wallpaper.util.DisplayUtils
+import com.android.wallpaper.util.converter.DefaultWallpaperModelFactory
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 /** This activity holds the flow for the preview screen. */
@@ -38,7 +42,9 @@ import javax.inject.Inject
 class WallpaperPreviewActivity :
     Hilt_WallpaperPreviewActivity(), AppbarFragment.AppbarFragmentHost {
     private val viewModel: WallpaperPreviewViewModel by viewModels()
+    @ApplicationContext @Inject lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
+    @Inject lateinit var wallpaperModelFactory: DefaultWallpaperModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +53,12 @@ class WallpaperPreviewActivity :
         setContentView(R.layout.activity_wallpaper_preview)
         // Fits screen to navbar and statusbar
         WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
+        val wallpaper =
+            checkNotNull(intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java))
         viewModel.initializeViewModel(
-            context = applicationContext,
-            wallpaper =
-                checkNotNull(
-                    intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java)
-                ),
+            applicationContext,
+            wallpaper,
+            wallpaper.convertToWallpaperModel(),
         )
     }
 
@@ -72,6 +78,14 @@ class WallpaperPreviewActivity :
         if (isInMultiWindowMode) {
             Toast.makeText(this, R.string.wallpaper_exit_split_screen, Toast.LENGTH_SHORT).show()
             onBackPressedDispatcher.onBackPressed()
+        }
+    }
+
+    private fun WallpaperInfo.convertToWallpaperModel(): WallpaperModel {
+        return if (this is LiveWallpaperInfo) {
+            wallpaperModelFactory.getWallpaperModel(appContext, this)
+        } else {
+            wallpaperModelFactory.getWallpaperModel(appContext, this)
         }
     }
 
