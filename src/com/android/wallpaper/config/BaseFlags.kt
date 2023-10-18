@@ -113,6 +113,15 @@ abstract class BaseFlags {
             }
     }
 
+    fun isQuickAffordancesEnabled(context: Context): Boolean {
+        return getCachedFlags(context)
+            .firstOrNull { flag ->
+                flag.name ==
+                    Contract.FlagsTable.FLAG_NAME_CUSTOM_LOCK_SCREEN_QUICK_AFFORDANCES_ENABLED
+            }
+            ?.value == true
+    }
+
     open fun getCachedFlags(context: Context): List<CustomizationProviderClient.Flag> {
         return cachedFlags
             ?: runBlocking { getCustomizationProviderClient(context).queryFlags() }
