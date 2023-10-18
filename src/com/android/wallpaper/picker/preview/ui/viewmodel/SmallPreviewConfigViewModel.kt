@@ -16,14 +16,18 @@
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
 import android.graphics.Point
+import com.android.wallpaper.model.wallpaper.ScreenOrientation
 import com.android.wallpaper.module.CustomizationSections.Screen
 
-/** Defines transitional data on [SmallPreviewFragment] when navigating to [FullPreviewFragment]. */
-data class PreviewTransitionViewModel(
+/** Defines configuration associated with a single small preview. */
+data class SmallPreviewConfigViewModel(
 
-    /** [Screen] selected via preview tab to be rendered on next screen. */
+    /** The [Screen] the preview is rendering. */
     val previewTab: Screen,
 
-    /** The display size the full preview is targeting on next screen. */
-    val targetDisplaySize: Point,
+    /** The display size the preview is based on. */
+    val displaySize: Point,
+
+    /** The [ScreenOrientation] the preview is based on. */
+    val screenOrientation: ScreenOrientation,
 )

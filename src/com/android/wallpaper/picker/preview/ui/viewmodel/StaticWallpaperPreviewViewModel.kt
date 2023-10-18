@@ -21,10 +21,12 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ColorSpace
 import android.graphics.Point
+import android.graphics.Rect
 import com.android.wallpaper.asset.Asset
-import com.android.wallpaper.asset.CurrentWallpaperAsset
 import com.android.wallpaper.dispatchers.BackgroundDispatcher
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.model.wallpaper.ScreenOrientation
+import com.android.wallpaper.model.wallpaper.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import dagger.hilt.android.scopes.ViewModelScoped
@@ -55,6 +57,7 @@ constructor(
     private val _lowResBitmap: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     val lowResBitmap: Flow<Bitmap> = _lowResBitmap.filterNotNull()
 
+    private val _cropHints: MutableStateFlow<Map<ScreenOrientation, Rect>?> = MutableStateFlow(null)
     private val _cachedWallpaperColors: MutableStateFlow<WallpaperColors?> = MutableStateFlow(null)
     private val croppedBitmap: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     val wallpaperColors: Flow<WallpaperColors> =
@@ -70,13 +73,13 @@ constructor(
     // Wallpaper ID is required to cache the wallpaper colors to the preferences
     private var wallpaperId: String? = null
     private val wallpaperAsset: MutableStateFlow<Asset?> = MutableStateFlow(null)
+
     val subsamplingScaleImageViewModel: Flow<FullResWallpaperViewModel> =
         wallpaperAsset
             .filterNotNull()
             .map {
                 val dimensions = it.decodeRawDimensions()
-                val bitmap = it.decodeBitmap(dimensions)
-                if (bitmap != null) {
+                it.decodeBitmap(dimensions)?.let { bitmap ->
                     if (_cachedWallpaperColors.value == null && wallpaperId != null) {
                         // If no cached colors from the preferences, extra colors from the original
                         // bitmap and cache them to the preferences.
@@ -87,10 +90,8 @@ constructor(
                     FullResWallpaperViewModel(
                         bitmap,
                         dimensions,
-                        offsetToStart = it is CurrentWallpaperAsset,
+                        _cropHints.value,
                     )
-                } else {
-                    null
                 }
             }
             .filterNotNull()
@@ -100,9 +101,14 @@ constructor(
      * Init function for setting the wallpaper info that is retrieved from the intent bundle when
      * onCreate() in Activity or Fragment.
      */
-    suspend fun initializeViewModel(context: Context, wallpaper: WallpaperInfo) {
+    suspend fun initializeViewModel(
+        context: Context,
+        wallpaper: WallpaperInfo,
+        staticModel: StaticWallpaperModel
+    ) {
         val appContext = context.applicationContext
         if (!initialized) {
+            _cropHints.value = staticModel.staticWallpaperData.cropHints
             val asset: Asset? = wallpaper.getAsset(appContext)
             val id: String? = wallpaper.getStoredWallpaperId(appContext)
             wallpaperAsset.value = asset

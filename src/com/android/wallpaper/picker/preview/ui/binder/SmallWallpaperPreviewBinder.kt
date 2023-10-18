@@ -23,6 +23,7 @@ import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
+import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import kotlinx.coroutines.CoroutineScope
 
@@ -32,10 +33,9 @@ object SmallWallpaperPreviewBinder {
         applicationContext: Context,
         wallpaperSurface: SurfaceView,
         viewModel: WallpaperPreviewViewModel,
+        smallPreviewConfig: SmallPreviewConfigViewModel,
         viewLifecycleOwner: LifecycleOwner,
         @MainDispatcher mainScope: CoroutineScope,
-        isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
-        isRtl: Boolean,
         staticPreviewView: View? = null,
     ) {
         wallpaperSurface.setZOrderMediaOverlay(true)
@@ -62,11 +62,10 @@ object SmallWallpaperPreviewBinder {
                     }
                     WallpaperPreviewBinder.bind(
                         applicationContext,
-                        isSingleDisplayOrUnfoldedHorizontalHinge,
-                        isRtl,
                         mainScope,
                         viewLifecycleOwner,
                         viewModel,
+                        smallPreviewConfig,
                         wallpaperSurface,
                         staticPreviewView?.requireViewById(R.id.full_res_image),
                         staticPreviewView?.requireViewById(R.id.low_res_image),

@@ -33,9 +33,7 @@ object PreviewSelectorBinder {
         previewDisplaySize: Point,
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
         applicationContext: Context,
-        isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
         viewLifecycleOwner: LifecycleOwner,
-        isRtl: Boolean,
         mainScope: CoroutineScope,
         homePreviewUtils: PreviewUtils,
         lockPreviewUtils: PreviewUtils,
@@ -47,9 +45,7 @@ object PreviewSelectorBinder {
         // set up previews view pager
         PreviewPagerBinder.bind(
             applicationContext,
-            isSingleDisplayOrUnfoldedHorizontalHinge,
             viewLifecycleOwner,
-            isRtl,
             mainScope,
             previewsViewPager,
             wallpaperPreviewViewModel,

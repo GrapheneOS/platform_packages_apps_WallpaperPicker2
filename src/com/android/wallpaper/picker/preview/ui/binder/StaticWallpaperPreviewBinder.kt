@@ -17,6 +17,7 @@ package com.android.wallpaper.picker.preview.ui.binder
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.graphics.Point
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.view.View
@@ -27,8 +28,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.wallpaper.model.wallpaper.ScreenOrientation
 import com.android.wallpaper.picker.preview.ui.util.FullResImageViewUtil
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullResWallpaperViewModel
+import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.StaticWallpaperPreviewViewModel
 import com.android.wallpaper.util.WallpaperSurfaceCallback.LOW_RES_BITMAP_BLUR_RADIUS
 import com.davemorrissey.labs.subscaleview.ImageSource
@@ -44,9 +47,8 @@ object StaticWallpaperPreviewBinder {
         fullResImageView: SubsamplingScaleImageView,
         lowResImageView: ImageView,
         viewModel: StaticWallpaperPreviewViewModel,
+        smallPreviewConfig: SmallPreviewConfigViewModel,
         viewLifecycleOwner: LifecycleOwner,
-        isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
-        isRtl: Boolean,
     ) {
         lowResImageView.initLowResImageView()
         fullResImageView.initFullResImageView()
@@ -57,11 +59,7 @@ object StaticWallpaperPreviewBinder {
 
                 launch {
                     viewModel.subsamplingScaleImageViewModel.collect {
-                        fullResImageView.setFullResImage(
-                            it,
-                            isSingleDisplayOrUnfoldedHorizontalHinge,
-                            isRtl,
-                        )
+                        fullResImageView.setFullResImage(it, smallPreviewConfig.screenOrientation)
                         crossFadeInFullResImageView(lowResImageView, fullResImageView)
                     }
                 }
@@ -86,19 +84,15 @@ object StaticWallpaperPreviewBinder {
 
     private fun SubsamplingScaleImageView.setFullResImage(
         viewModel: FullResWallpaperViewModel,
-        isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
-        isRtl: Boolean,
+        orientation: ScreenOrientation
     ) {
         // Calculate the scale and the center point for the full res image
         FullResImageViewUtil.getScaleAndCenter(
-                measuredWidth,
-                measuredHeight,
-                viewModel.offsetToStart,
+                Point(measuredWidth, measuredHeight),
                 viewModel.rawWallpaperSize,
-                isSingleDisplayOrUnfoldedHorizontalHinge,
-                isRtl,
+                viewModel.cropHints?.get(orientation),
             )
-            .also { scaleAndCenter ->
+            .let { scaleAndCenter ->
                 minScale = scaleAndCenter.minScale
                 maxScale = scaleAndCenter.maxScale
                 setScaleAndCenter(scaleAndCenter.defaultScale, scaleAndCenter.center)

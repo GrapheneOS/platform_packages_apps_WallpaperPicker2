@@ -44,8 +44,6 @@ object FullWallpaperPreviewBinder {
         previewViewModel: WallpaperPreviewViewModel,
         viewLifecycleOwner: LifecycleOwner,
         @MainDispatcher mainScope: CoroutineScope,
-        isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
-        isRtl: Boolean,
         staticPreviewView: View? = null,
     ) {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -53,7 +51,7 @@ object FullWallpaperPreviewBinder {
                 surfaceView.let { surfaceView ->
                     surfaceView.setCurrentAndTargetDisplaySize(
                         currentSize = surfaceViewModel.currentDisplaySize,
-                        targetSize = surfaceViewModel.previewTransitionViewModel.targetDisplaySize,
+                        targetSize = surfaceViewModel.selectedSmallPreviewConfig.displaySize,
                     )
                     surfaceView.holder.addCallback(
                         object : SurfaceHolder.Callback {
@@ -85,11 +83,10 @@ object FullWallpaperPreviewBinder {
                                 }
                                 WallpaperPreviewBinder.bind(
                                     applicationContext,
-                                    isSingleDisplayOrUnfoldedHorizontalHinge,
-                                    isRtl,
                                     mainScope,
                                     viewLifecycleOwner,
                                     previewViewModel,
+                                    surfaceViewModel.selectedSmallPreviewConfig,
                                     surfaceView,
                                     staticPreviewView?.requireViewById(R.id.full_res_image),
                                     staticPreviewView?.requireViewById(R.id.low_res_image),

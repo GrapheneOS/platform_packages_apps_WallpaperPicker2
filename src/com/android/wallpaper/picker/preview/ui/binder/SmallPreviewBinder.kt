@@ -16,7 +16,6 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
-import android.graphics.Point
 import android.view.LayoutInflater
 import android.view.SurfaceView
 import android.view.View
@@ -24,40 +23,30 @@ import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.model.LiveWallpaperInfo
-import com.android.wallpaper.module.CustomizationSections
-import com.android.wallpaper.picker.preview.ui.viewmodel.PreviewTransitionViewModel
+import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.CoroutineScope
 
 object SmallPreviewBinder {
-
     fun bind(
         applicationContext: Context,
         view: View,
         viewModel: WallpaperPreviewViewModel,
+        smallPreviewConfig: SmallPreviewConfigViewModel,
         @MainDispatcher mainScope: CoroutineScope,
         viewLifecycleOwner: LifecycleOwner,
-        isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
-        isRtl: Boolean,
-        previewDisplaySize: Point,
         previewUtils: PreviewUtils,
         previewDisplayId: Int? = null,
         navigate: (() -> Unit)? = null,
     ) {
         view.setOnClickListener {
-            // TODO(b/291761856): update preview transition view model from
-            //                    [SmallPreviewFragment].
-            viewModel.previewTransitionViewModel =
-                PreviewTransitionViewModel(
-                    previewTab = CustomizationSections.Screen.HOME_SCREEN,
-                    targetDisplaySize = previewDisplaySize,
-                )
+            viewModel.selectedSmallPreviewConfig = smallPreviewConfig
             navigate?.invoke()
         }
 
         WorkspacePreviewBinder.bind(
-            view.requireViewById<SurfaceView>(R.id.workspace_surface),
+            view.requireViewById(R.id.workspace_surface),
             previewUtils,
             previewDisplayId,
         )
@@ -67,10 +56,9 @@ object SmallPreviewBinder {
             applicationContext,
             wallpaperSurface,
             viewModel,
+            smallPreviewConfig,
             viewLifecycleOwner,
             mainScope,
-            isSingleDisplayOrUnfoldedHorizontalHinge,
-            isRtl,
             staticPreviewView =
                 if (checkNotNull(viewModel.editingWallpaper) is LiveWallpaperInfo) {
                     null
