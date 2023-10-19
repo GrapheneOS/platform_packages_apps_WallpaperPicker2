@@ -20,7 +20,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <include
         android:id="@+id/toolbar_container"
@@ -30,6 +31,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/button_set_wallpaper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/wallpaper_preview_buttons_elevation"
+        android:layout_marginEnd="@dimen/set_wallpaper_button_margin_end"
+        android:background="@drawable/set_wallpaper_button_background"
+        android:text="@string/set_wallpaper_button_text"
+        android:textColor="@color/text_color_on_accent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/toolbar_container"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar_container"/>
 
     <com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
         android:id="@+id/dual_preview_pager"

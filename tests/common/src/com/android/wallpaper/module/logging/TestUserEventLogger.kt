@@ -19,9 +19,12 @@ import android.content.Intent
 import com.android.wallpaper.module.logging.UserEventLogger.EffectStatus
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.module.logging.UserEventLogger.WallpaperDestination
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /** Test implementation of [UserEventLogger]. */
-open class TestUserEventLogger : UserEventLogger {
+@Singleton
+open class TestUserEventLogger @Inject constructor() : UserEventLogger {
 
     val numWallpaperSetEvents = 0
     var numWallpaperSetResultEvents = 0
