@@ -17,10 +17,15 @@
     package="com.android.wallpaper">
 
     <uses-permission android:name="android.permission.CUSTOMIZE_SYSTEM_UI" />
-    <application>
+    <application
+        android:name="com.android.wallpaper.picker.WallpapersApplication">
         <uses-library android:name="android.test.runner" />
 
         <activity android:name="com.android.wallpaper.picker.PreviewActivity"
+            android:resizeableActivity="false">
+        </activity>
+
+        <activity android:name="com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity"
             android:resizeableActivity="false">
         </activity>
     </application>

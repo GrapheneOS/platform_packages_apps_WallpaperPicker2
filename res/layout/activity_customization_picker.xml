@@ -24,7 +24,7 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:colorBackground" />
+        android:background="@color/system_surface_container" />
 
     <include layout="@layout/bottom_action_bar" />
 

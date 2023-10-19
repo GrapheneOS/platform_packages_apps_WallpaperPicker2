@@ -25,7 +25,7 @@ import androidx.core.content.ContextCompat;
 
 /**
  * Factory for getting an intent to show the in-app (inline) preview activity for a given
- * wallpaper, if appropriate for that wallpaper.
+ * {@link WallpaperInfo}, if appropriate for that wallpaper.
  */
 public interface InlinePreviewIntentFactory {
 
@@ -37,12 +37,13 @@ public interface InlinePreviewIntentFactory {
         return ContextCompat.checkSelfPermission(context, BIND_WALLPAPER) == PERMISSION_GRANTED;
     }
 
+    /** Gets an intent to show the inline preview activity for the given wallpaper. */
+    Intent newIntent(Context ctx, WallpaperInfo wallpaper, boolean isAssetIdPresent);
+
     /**
-     * Gets an intent to show the preview activity for the given wallpaper.
+     * Sets rendering preview as home or lock screen.
      *
-     * @param ctx
-     * @param wallpaper
-     * @return Intent to show the inline preview activity.
+     * @param isViewAsHome true to render home preview, otherwise render lock preview.
      */
-    Intent newIntent(Context ctx, WallpaperInfo wallpaper);
+    void setViewAsHome(boolean isViewAsHome);
 }

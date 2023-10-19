@@ -32,6 +32,7 @@ import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker;
 import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
+import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity;
 import com.android.wallpaper.util.ActivityUtils;
 
 /**
@@ -44,9 +45,12 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
     /**
      * Returns a new Intent with the provided WallpaperInfo instance put as an extra.
      */
-    public static Intent newIntent(Context packageContext, WallpaperInfo wallpaperInfo) {
+    public static Intent newIntent(Context packageContext, WallpaperInfo wallpaperInfo,
+            boolean viewAsHome, boolean isAssetIdPresent) {
         Intent intent = new Intent(packageContext, PreviewActivity.class);
         intent.putExtra(EXTRA_WALLPAPER_INFO, wallpaperInfo);
+        intent.putExtra(IS_ASSET_ID_PRESENT, isAssetIdPresent);
+        intent.putExtra(EXTRA_VIEW_AS_HOME, viewAsHome);
         return intent;
     }
 
@@ -63,17 +67,15 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
         if (fragment == null) {
             Intent intent = getIntent();
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
-            BaseFlags flags = InjectorProvider.getInjector().getFlags();
-            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, !flags
-                    .isFullscreenWallpaperPreviewEnabled(this));
-            boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
+            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, false);
+            boolean isAssetIdPresent = intent.getBooleanExtra(IS_ASSET_ID_PRESENT,
+                    false);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context */ this,
                     wallpaper,
-                    PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
                     viewAsHome,
-                    /* viewFullScreen= */ false,
-                    testingModeEnabled);
+                    isAssetIdPresent,
+                    /* isNewTask= */ false);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();
@@ -102,10 +104,9 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
                 Fragment fragment = InjectorProvider.getInjector().getPreviewFragment(
                         /* context= */ this,
                         imageWallpaper,
-                        PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
-                        true,
-                        /* viewFullScreen= */ false,
-                        false);
+                        /* viewAsHome= */ true,
+                        /* isAssetIdPresent= */ true,
+                        /* isNewTask= */ false);
                 fm.beginTransaction()
                         .replace(R.id.fragment_container, fragment)
                         .commit();
@@ -115,19 +116,37 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
 
     /**
      * Implementation that provides an intent to start a PreviewActivity.
+     *
+     * <p>Get singleton instance from [Injector] instead of creating new instance directly.
      */
     public static class PreviewActivityIntentFactory implements InlinePreviewIntentFactory {
+        private boolean mIsViewAsHome = false;
+
         @Override
-        public Intent newIntent(Context context, WallpaperInfo wallpaper) {
+        public Intent newIntent(Context context, WallpaperInfo wallpaper,
+                boolean isAssetIdPresent) {
+            Context appContext = context.getApplicationContext();
+            final BaseFlags flags = InjectorProvider.getInjector().getFlags();
             LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
-            // Launch a full preview activity for devices supporting multipanel mode
-            if (multiPanesChecker.isMultiPanesEnabled(context)
-                    && InjectorProvider.getInjector().getFlags()
-                        .isFullscreenWallpaperPreviewEnabled(context)) {
-                return FullPreviewActivity.newIntent(context, wallpaper);
+            final boolean isMultiPanel = multiPanesChecker.isMultiPanesEnabled(appContext);
+
+            if (flags.isMultiCropPreviewUiEnabled() && flags.isMultiCropEnabled()) {
+                return WallpaperPreviewActivity.Companion.newIntent(appContext,
+                        wallpaper, /* isNewTask= */ isMultiPanel);
             }
 
-            return PreviewActivity.newIntent(context, wallpaper);
+            // Launch a full preview activity for devices supporting multipanel mode
+            if (isMultiPanel) {
+                return FullPreviewActivity.newIntent(appContext, wallpaper, mIsViewAsHome,
+                        isAssetIdPresent);
+            }
+            return PreviewActivity.newIntent(appContext, wallpaper, mIsViewAsHome,
+                    isAssetIdPresent);
+        }
+
+        @Override
+        public void setViewAsHome(boolean isViewAsHome) {
+            mIsViewAsHome = isViewAsHome;
         }
     }
 }

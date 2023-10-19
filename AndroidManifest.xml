@@ -10,6 +10,7 @@
        android:protectionLevel="signature"/>
 
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.CUSTOMIZE_SYSTEM_UI" />
   <uses-permission android:name="android.permission.LAUNCH_MULTI_PANE_SETTINGS_DEEP_LINK" />
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
@@ -127,6 +128,20 @@
          android:resizeableActivity="false"
          android:theme="@style/WallpaperTheme.Preview">
     </activity>
+
+      <activity
+          android:name="com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity"
+          android:excludeFromRecents="true"
+          android:taskAffinity="@string/multi_crop_task_affinity"
+          android:resizeableActivity="false"
+          android:theme="@style/WallpaperTheme.Preview">
+      </activity>
+
+      <activity
+          android:name="com.android.wallpaper.picker.preview.ui.WallpaperPreviewDemoActivity"
+          android:resizeableActivity="false"
+          android:theme="@style/WallpaperTheme.Preview">
+      </activity>
 
     <activity android:name="com.android.wallpaper.picker.StandalonePreviewActivity"
          android:resizeableActivity="false"

@@ -16,8 +16,6 @@
 package com.android.wallpaper.model
 
 import android.app.WallpaperColors
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,20 +26,6 @@ import kotlinx.coroutines.flow.asStateFlow
  * TODO (b/269451870): Rename to WallpaperColorsRepository
  */
 class WallpaperColorsViewModel {
-
-    /**
-     * WallpaperColors exposed as live data to allow Java integration
-     *
-     * TODO (b/262924584): Remove after ColorSectionController2 & ColorCustomizationManager refactor
-     */
-    private val _homeWallpaperColorsLiveData: MutableLiveData<WallpaperColors> by lazy {
-        MutableLiveData<WallpaperColors>()
-    }
-    val homeWallpaperColorsLiveData: LiveData<WallpaperColors> = _homeWallpaperColorsLiveData
-    private val _lockWallpaperColorsLiveData: MutableLiveData<WallpaperColors> by lazy {
-        MutableLiveData<WallpaperColors>()
-    }
-    val lockWallpaperColorsLiveData: LiveData<WallpaperColors> = _lockWallpaperColorsLiveData
 
     private val _homeWallpaperColors =
         MutableStateFlow<WallpaperColorsModel>(WallpaperColorsModel.Loading)
@@ -55,15 +39,9 @@ class WallpaperColorsViewModel {
 
     fun setHomeWallpaperColors(colors: WallpaperColors?) {
         _homeWallpaperColors.value = WallpaperColorsModel.Loaded(colors)
-        if (colors != _homeWallpaperColorsLiveData.value) {
-            _homeWallpaperColorsLiveData.value = colors
-        }
     }
 
     fun setLockWallpaperColors(colors: WallpaperColors?) {
         _lockWallpaperColors.value = WallpaperColorsModel.Loaded(colors)
-        if (colors != _lockWallpaperColorsLiveData.value) {
-            _lockWallpaperColorsLiveData.value = colors
-        }
     }
 }

@@ -20,27 +20,13 @@ package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
 
-android_library {
-    name: "WallpaperPicker2TestLib",
+filegroup {
+    name: "WallpaperPicker2Tests_srcs",
 
-    defaults: ["WallpaperPicker2_defaults"],
-    srcs: [
-        "src/com/android/wallpaper/testing/**/*.java",
-        "src/com/android/wallpaper/testing/**/*.kt",
-    ],
-    static_libs: [
-        "androidx.annotation_annotation",
-        "kotlinx_coroutines_test",
-        "truth",
+    visibility: [
+        "//visibility:public",
     ],
 
-    platform_apis: true,
-}
-
-android_test {
-    name: "WallpaperPicker2Tests",
-
-    defaults: ["WallpaperPicker2_defaults"],
     srcs: [
         "src/**/*.java",
         "src/**/*.kt",
@@ -49,11 +35,19 @@ android_test {
         "src/com/android/wallpaper/testing/**/*.java",
         "src/com/android/wallpaper/testing/**/*.kt",
     ],
+}
+
+android_test {
+    name: "WallpaperPicker2Tests",
+
+    defaults: ["WallpaperPicker2_defaults"],
+    srcs: [":WallpaperPicker2Tests_srcs"],
     static_libs: [
         "WallpaperPicker2TestLib",
         "androidx.test.espresso.core",
         "androidx.test.espresso.contrib",
         "androidx.test.espresso.intents",
+        "androidx.test.ext.junit",
         "androidx.test.rules",
         "hamcrest-library",
         "hamcrest",

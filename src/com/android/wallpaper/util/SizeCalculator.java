@@ -35,7 +35,12 @@ import com.android.wallpaper.R;
  * configuration.
  */
 public class SizeCalculator {
-    private static final int COLUMN_COUNT_THRESHOLD_DP = 732;
+
+    /**
+     * This parameter is used for comparing the threshold DP of the screen on whether we want a
+     * "fewer columns" configuration or a "more columns" configuration.
+     */
+    private static final int COLUMN_COUNT_THRESHOLD_DP = 820;
 
     /**
      * The number of columns for a "fewer columns" configuration of the category tiles grid.
@@ -145,7 +150,6 @@ public class SizeCalculator {
 
         // Columns should be based on the size of the window, not the size of the display.
         int windowWidthDp = (int) (windowWidthPx / metrics.density);
-
         if (windowWidthDp < COLUMN_COUNT_THRESHOLD_DP) {
             return fewerCount;
         } else {

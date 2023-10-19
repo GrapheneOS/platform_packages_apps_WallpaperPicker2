@@ -40,6 +40,10 @@ public abstract class EffectsController {
     public static final int RESULT_PROBE_ERROR = 32;
     public static final int RESULT_SUCCESS_REUSED = 64;
     public static final int RESULT_SUCCESS_WITH_GENERATION_ERROR = 128;
+    public static final int RESULT_ERROR_PROBE_SUPPORT_FOREGROUND = 256;
+    public static final int RESULT_FOREGROUND_DOWNLOAD_SUCCEEDED = 512;
+    public static final int RESULT_FOREGROUND_DOWNLOAD_FAILED = 1024;
+    public static final int RESULT_PROBE_FOREGROUND_DOWNLOADING = 2048;
     /**
      * Interface of the Effect enum.
      */

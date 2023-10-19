@@ -27,7 +27,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.android.wallpaper.R;
-import com.android.wallpaper.config.BaseFlags;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
@@ -55,8 +54,9 @@ public class FullPreviewActivity extends BasePreviewActivity implements AppbarFr
      * put as an extra.
      */
     public static Intent newIntent(Context packageContext, WallpaperInfo wallpaperInfo,
-            boolean viewAsHome) {
-        return newIntent(packageContext, wallpaperInfo).putExtra(EXTRA_VIEW_AS_HOME, viewAsHome);
+            boolean viewAsHome, boolean isAssetIdPresent) {
+        return newIntent(packageContext, wallpaperInfo).putExtra(EXTRA_VIEW_AS_HOME, viewAsHome)
+                .putExtra(IS_ASSET_ID_PRESENT, isAssetIdPresent);
     }
 
     @Override
@@ -76,17 +76,14 @@ public class FullPreviewActivity extends BasePreviewActivity implements AppbarFr
         if (fragment == null) {
             Intent intent = getIntent();
             WallpaperInfo wallpaper = intent.getParcelableExtra(EXTRA_WALLPAPER_INFO);
-            BaseFlags flags = InjectorProvider.getInjector().getFlags();
-            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, !flags
-                    .isFullscreenWallpaperPreviewEnabled(this));
-            boolean testingModeEnabled = intent.getBooleanExtra(EXTRA_TESTING_MODE_ENABLED, false);
+            boolean viewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, false);
+            boolean isAssetIDPresent = intent.getBooleanExtra(IS_ASSET_ID_PRESENT, false);
             fragment = InjectorProvider.getInjector().getPreviewFragment(
                     /* context= */ this,
                     wallpaper,
-                    PreviewFragment.MODE_CROP_AND_SET_WALLPAPER,
                     viewAsHome,
-                    /* viewFullScreen= */ true,
-                    testingModeEnabled);
+                    isAssetIDPresent,
+                    /* isNewTask= */ true);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();

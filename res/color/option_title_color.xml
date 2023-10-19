@@ -17,10 +17,10 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_activated="true"
-        android:color="?android:textColorPrimary" />
+        android:color="@color/system_on_surface" />
     <item
         android:state_activated="false"
-        android:color="?android:textColorSecondary" />
+        android:color="@color/system_on_surface_variant" />
     <item
-        android:color="?android:textColorSecondary"/>
+        android:color="@color/system_on_surface_variant"/>
 </selector>

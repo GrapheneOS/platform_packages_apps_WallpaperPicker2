@@ -24,7 +24,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.FrameLayout
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.LifecycleOwner
@@ -40,6 +39,7 @@ import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.FixedWidthDisplayRatioFrameLayout
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.ui.binder.ScreenPreviewBinder
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
@@ -62,6 +62,7 @@ open class ScreenPreviewSectionController(
     private val wallpaperInteractor: WallpaperInteractor,
     private val wallpaperManager: WallpaperManager,
     private val isTwoPaneAndSmallWidth: Boolean,
+    private val customizationPickerViewModel: CustomizationPickerViewModel,
 ) : CustomizationSectionController<ScreenPreviewView> {
 
     protected val isOnLockScreen: Boolean = screen == CustomizationSections.Screen.LOCK_SCREEN
@@ -81,8 +82,15 @@ open class ScreenPreviewSectionController(
         return true
     }
 
-    @SuppressLint("InflateParams")
     override fun createView(context: Context): ScreenPreviewView {
+        return createView(context, CustomizationSectionController.ViewCreationParams())
+    }
+
+    @SuppressLint("InflateParams")
+    override fun createView(
+        context: Context,
+        params: CustomizationSectionController.ViewCreationParams,
+    ): ScreenPreviewView {
         val view =
             LayoutInflater.from(context)
                 .inflate(
@@ -104,27 +112,30 @@ open class ScreenPreviewSectionController(
             previewHost.layoutParams = layoutParams
         }
 
-        val onClickListener =
-            View.OnClickListener {
+        view
+            .requireViewById<ScreenPreviewClickView>(R.id.screen_preview_click_view)
+            .setOnPreviewClickedListener {
                 lifecycleOwner.lifecycleScope.launch {
                     getWallpaperInfo()?.let { wallpaperInfo ->
                         wallpaperPreviewNavigator.showViewOnlyPreview(
                             wallpaperInfo,
-                            !isOnLockScreen
+                            /* isAssetIdPresent= */ false,
                         )
                     }
                 }
             }
-        view
-            .requireViewById<ScreenPreviewClickView>(R.id.screen_preview_click_view)
-            .setOnClickListener(onClickListener)
+
         val previewView: CardView = view.requireViewById(R.id.preview)
 
-        bindScreenPreview(previewView, context)
+        bindScreenPreview(previewView, context, !params.isWallpaperVisibilityControlledByTab)
         return view
     }
 
-    protected open fun bindScreenPreview(previewView: CardView, context: Context) {
+    protected open fun bindScreenPreview(
+        previewView: CardView,
+        context: Context,
+        isWallpaperAlwaysVisible: Boolean,
+    ) {
         previewViewBinding?.destroy()
         previewViewBinding =
             ScreenPreviewBinder.bind(
@@ -134,7 +145,11 @@ open class ScreenPreviewSectionController(
                 lifecycleOwner = lifecycleOwner,
                 offsetToStart = displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(activity),
                 onWallpaperPreviewDirty = { activity.recreate() },
-                onWorkspacePreviewDirty = { bindScreenPreview(previewView, context) }
+                animationStateViewModel = customizationPickerViewModel,
+                onWorkspacePreviewDirty = {
+                    bindScreenPreview(previewView, context, isWallpaperAlwaysVisible)
+                },
+                isWallpaperAlwaysVisible = isWallpaperAlwaysVisible,
             )
     }
 

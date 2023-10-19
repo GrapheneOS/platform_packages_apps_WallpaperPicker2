@@ -15,11 +15,9 @@
  */
 package com.android.wallpaper.module;
 
-import android.annotation.TargetApi;
 import android.app.WallpaperColors;
 import android.app.WallpaperManager.SetWallpaperFlags;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.text.TextUtils;
 
 import androidx.annotation.IntDef;
@@ -27,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.model.LiveWallpaperInfo;
+import com.android.wallpaper.model.StaticWallpaperMetadata;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 
@@ -132,6 +131,11 @@ public interface WallpaperPreferences {
     void clearHomeWallpaperMetadata();
 
     /**
+     * Set homescreen static image wallpaper metadata to SharedPreferences.
+     */
+    void setHomeStaticImageWallpaperMetadata(StaticWallpaperMetadata metadata);
+
+    /**
      * Returns the home wallpaper's bitmap hash code or 0 if there is none.
      */
     long getHomeWallpaperHashCode();
@@ -154,13 +158,11 @@ public interface WallpaperPreferences {
     /**
      * Gets the home wallpaper's ID, which is provided by WallpaperManager for static wallpapers.
      */
-    @TargetApi(Build.VERSION_CODES.N)
     int getHomeWallpaperManagerId();
 
     /**
      * Sets the home wallpaper's ID, which is provided by WallpaperManager for static wallpapers.
      */
-    @TargetApi(Build.VERSION_CODES.N)
     void setHomeWallpaperManagerId(int homeWallpaperId);
 
     /**
@@ -267,6 +269,11 @@ public interface WallpaperPreferences {
     void clearLockWallpaperMetadata();
 
     /**
+     * Set lockscreen static image wallpaper metadata to SharedPreferences.
+     */
+    void setLockStaticImageWallpaperMetadata(StaticWallpaperMetadata metadata);
+
+    /**
      * Returns the lock screen wallpaper's bitmap hash code or 0 if there is none.
      */
     long getLockWallpaperHashCode();
@@ -289,14 +296,12 @@ public interface WallpaperPreferences {
     /**
      * Gets the lock wallpaper's ID, which is provided by WallpaperManager for static wallpapers.
      */
-    @TargetApi(Build.VERSION_CODES.N)
-    int getLockWallpaperId();
+    int getLockWallpaperManagerId();
 
     /**
      * Sets the lock wallpaper's ID, which is provided by WallpaperManager for static wallpapers.
      */
-    @TargetApi(Build.VERSION_CODES.N)
-    void setLockWallpaperId(int lockWallpaperId);
+    void setLockWallpaperManagerId(int lockWallpaperId);
 
     /**
      * Gets the lock wallpaper's remote identifier.

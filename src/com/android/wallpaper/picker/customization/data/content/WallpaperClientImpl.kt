@@ -33,6 +33,7 @@ import com.android.wallpaper.module.CurrentWallpaperInfoFactory
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import java.io.IOException
+import java.util.EnumMap
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -46,6 +47,22 @@ class WallpaperClientImpl(
 ) : WallpaperClient {
 
     private var recentsContentProviderAvailable: Boolean? = null
+    private val cachedRecents: MutableMap<WallpaperDestination, List<WallpaperModel>> =
+        EnumMap(WallpaperDestination::class.java)
+
+    init {
+        if (areRecentsAvailable()) {
+            context.contentResolver.registerContentObserver(
+                LIST_RECENTS_URI,
+                /* notifyForDescendants= */ true,
+                object : ContentObserver(null) {
+                    override fun onChange(selfChange: Boolean) {
+                        cachedRecents.clear()
+                    }
+                },
+            )
+        }
+    }
 
     override fun recentWallpapers(
         destination: WallpaperDestination,
@@ -106,9 +123,21 @@ class WallpaperClientImpl(
         destination: WallpaperDestination,
         limit: Int,
     ): List<WallpaperModel> {
-        if (!areRecentsAvailable()) {
-            return listOf(getCurrentWallpaperFromFactory(destination))
-        }
+        val recentWallpapers =
+            cachedRecents[destination]
+                ?: if (!areRecentsAvailable()) {
+                    listOf(getCurrentWallpaperFromFactory(destination))
+                } else {
+                    queryAllRecentWallpapers(destination)
+                }
+
+        cachedRecents[destination] = recentWallpapers
+        return recentWallpapers.take(limit)
+    }
+
+    private suspend fun queryAllRecentWallpapers(
+        destination: WallpaperDestination
+    ): List<WallpaperModel> {
         context.contentResolver
             .query(
                 LIST_RECENTS_URI.buildUpon().appendPath(destination.asString()).build(),
@@ -125,7 +154,7 @@ class WallpaperClientImpl(
                     val idColumnIndex = cursor.getColumnIndex(KEY_ID)
                     val placeholderColorColumnIndex = cursor.getColumnIndex(KEY_PLACEHOLDER_COLOR)
                     val lastUpdatedColumnIndex = cursor.getColumnIndex(KEY_LAST_UPDATED)
-                    while (cursor.moveToNext() && size < limit) {
+                    while (cursor.moveToNext()) {
                         val wallpaperId = cursor.getString(idColumnIndex)
                         val placeholderColor = cursor.getInt(placeholderColorColumnIndex)
                         val lastUpdated = cursor.getLong(lastUpdatedColumnIndex)

@@ -25,15 +25,19 @@ android_library {
     name: "wallpaper-common-deps",
 
     static_libs: [
+        "androidx.activity_activity-ktx",
         "androidx.appcompat_appcompat",
         "androidx.cardview_cardview",
         "androidx-constraintlayout_constraintlayout",
         "androidx.exifinterface_exifinterface",
-	"androidx.lifecycle_lifecycle-livedata-ktx",
+        "androidx.lifecycle_lifecycle-livedata-ktx",
         "androidx.lifecycle_lifecycle-runtime-ktx",
         "androidx.recyclerview_recyclerview",
         "androidx.slice_slice-view",
+        "androidx.transition_transition-ktx-nodeps",
         "androidx.viewpager2_viewpager2",
+        "androidx.navigation_navigation-ui-ktx",
+        "androidx.navigation_navigation-fragment-ktx",
         "com.google.android.material_material",
         "glide-prebuilt",
         "glide-gifdecoder-prebuilt",
@@ -105,12 +109,41 @@ filegroup {
     ],
 }
 
+// Common defaults that doesn't have WallpaperPicker2 specifics.
+java_defaults {
+    name: "WallpaperPicker2_common_defaults",
+
+    static_libs: [
+        "wallpaper-common-deps",
+        "monet",
+        "hilt_android",
+    ],
+
+    srcs: [
+        ":WallpaperPicker2_srcs",
+    ],
+    resource_zips: [":WallpaperPicker2_res"],
+
+    certificate: "",
+
+    optimize: {
+        enabled: false,
+    },
+
+    kotlincflags: ["-Xjvm-default=all"],
+    privileged: true,
+    system_ext_specific: true,
+
+    use_embedded_native_libs: true,
+}
+
 java_defaults {
     name: "WallpaperPicker2_defaults",
 
     static_libs: [
         "wallpaper-common-deps",
         "monet",
+        "hilt_android",
     ],
 
     srcs: [

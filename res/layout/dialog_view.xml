@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Headline"
-        android:textColor="@color/text_color_primary"
+        android:textColor="@color/system_on_surface"
         android:maxLines="1"
         android:ellipsize="end" />
 
@@ -54,8 +54,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-        android:textColor="@color/text_color_secondary" />
+        android:textSize="16sp"
+        android:textColor="@color/system_on_surface_variant" />
 
     <LinearLayout
         android:id="@+id/button_container"
