@@ -77,6 +77,7 @@ class WallpaperRepositoryModule {
 
                     override suspend fun loadThumbnail(
                         wallpaperId: String,
+                        destination: WallpaperDestination
                     ): Bitmap? {
                         return null
                     }

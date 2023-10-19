@@ -63,7 +63,11 @@ open class ScreenPreviewViewModel(
 
     fun wallpaperThumbnail(): Flow<Bitmap?> {
         return wallpaperUpdateEvents().filterNotNull().map { wallpaper ->
-            wallpaperInteractor.loadThumbnail(wallpaper.wallpaperId, wallpaper.lastUpdated)
+            wallpaperInteractor.loadThumbnail(
+                wallpaper.wallpaperId,
+                wallpaper.lastUpdated,
+                getWallpaperDestination()
+            )
         }
     }
 
@@ -100,11 +104,13 @@ open class ScreenPreviewViewModel(
 
     open val isLoading: Flow<Boolean> =
         wallpaperInteractor.isSelectingWallpaper(
-            destination =
-                if (screen == Screen.LOCK_SCREEN) {
-                    WallpaperDestination.LOCK
-                } else {
-                    WallpaperDestination.HOME
-                },
+            destination = getWallpaperDestination(),
         )
+
+    private fun getWallpaperDestination() =
+        if (screen == Screen.LOCK_SCREEN) {
+            WallpaperDestination.LOCK
+        } else {
+            WallpaperDestination.HOME
+        }
 }

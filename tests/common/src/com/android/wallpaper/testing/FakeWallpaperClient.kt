@@ -115,7 +115,10 @@ class FakeWallpaperClient : WallpaperClient {
         }
     }
 
-    override suspend fun loadThumbnail(wallpaperId: String): Bitmap? {
+    override suspend fun loadThumbnail(
+        wallpaperId: String,
+        destination: WallpaperDestination
+    ): Bitmap? {
         return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
     }
 
