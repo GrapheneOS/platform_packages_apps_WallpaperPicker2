@@ -348,4 +348,12 @@
 
     <!-- Dimensions for small "dual" previews screen. -->
     <dimen name="small_dual_preview_edge_space">18dp</dimen>
+
+    <!-- Dimensions for small preview screens -->
+    <dimen name="small_preview_button_padding_vertical">10dp</dimen>
+    <dimen name="small_preview_button_padding_horizontal">16dp</dimen>
+    <dimen name="small_preview_button_radius">15dp</dimen>
+
+
+
 </resources>

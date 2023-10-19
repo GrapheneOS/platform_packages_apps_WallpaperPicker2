@@ -30,6 +30,7 @@ import com.android.wallpaper.picker.preview.ui.binder.DualPreviewSelectorBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewSelectorBinder
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
+import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.TabsPagerContainer
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
@@ -91,7 +92,10 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         if (displayUtils.hasMultiInternalDisplays()) {
             val dualPreviewView: DualPreviewViewPager =
                 view.requireViewById(R.id.dual_preview_pager)
+            val tabPager: TabsPagerContainer = view.requireViewById(R.id.pager_container)
+
             DualPreviewSelectorBinder.bind(
+                tabPager.getViewPager(),
                 dualPreviewView,
                 DualPreviewPagerAdapter.DualPreviewPagerViewModel(
                     wallpaperPreviewViewModel,
