@@ -24,14 +24,14 @@ package com.android.wallpaper.model.wallpaper
 sealed class WallpaperModel {
     data class LiveWallpaperModel(
         val commonWallpaperData: CommonWallpaperData,
-        val liveWallpaperData: LiveWallpaperData,
+        val liveWallpaperData: LiveWallpaperData?,
         val creativeWallpaperData: CreativeWallpaperData?,
         val internalLiveWallpaperData: InternalLiveWallpaperData?
     ) : WallpaperModel()
 
     data class StaticWallpaperModel(
         val commonWallpaperData: CommonWallpaperData,
-        val staticWallpaperData: StaticWallpaperData,
+        val staticWallpaperData: StaticWallpaperData?,
         val imageWallpaperData: ImageWallpaperData?,
         val networkWallpaperData: NetworkWallpaperData?
     ) : WallpaperModel()
