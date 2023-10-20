@@ -90,7 +90,8 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Radera"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"Redigera"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Vill du radera den här bakgrunden från enheten?"</string>
-    <string name="bottom_action_bar_back" msgid="8237013112999946725">"Tillbaka"</string>
+    <!-- no translation found for bottom_action_bar_back (2620581414970740784) -->
+    <skip />
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Redigera"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Ladda ned"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Bakgrund med bildspel"</string>
