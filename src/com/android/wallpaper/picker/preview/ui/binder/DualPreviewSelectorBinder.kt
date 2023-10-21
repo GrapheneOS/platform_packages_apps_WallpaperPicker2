@@ -17,10 +17,9 @@ package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
-import com.android.wallpaper.R
+import androidx.viewpager.widget.ViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
-import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout
 import com.android.wallpaper.util.DisplayUtils
 import kotlinx.coroutines.CoroutineScope
 
@@ -31,6 +30,7 @@ import kotlinx.coroutines.CoroutineScope
 object DualPreviewSelectorBinder {
 
     fun bind(
+        tabsViewPager: ViewPager,
         dualPreviewView: DualPreviewViewPager,
         homeScreenPreviewViewModel: DualPreviewPagerAdapter.DualPreviewPagerViewModel,
         lockScreenPreviewViewModel: DualPreviewPagerAdapter.DualPreviewPagerViewModel,
@@ -41,52 +41,61 @@ object DualPreviewSelectorBinder {
         mainScope: CoroutineScope,
         displayUtils: DisplayUtils
     ) {
-        dualPreviewView.adapter = DualPreviewPagerAdapter { view, position ->
-            val dualDisplayAspectRatioLayout: DualDisplayAspectRatioLayout =
-                view.requireViewById(R.id.dual_preview)
-            val previewDisplays =
-                mapOf(
-                    DualDisplayAspectRatioLayout.Companion.PreviewView.FOLDED to
-                        displayUtils.getSmallerDisplay(),
-                    DualDisplayAspectRatioLayout.Companion.PreviewView.UNFOLDED to
-                        displayUtils.getWallpaperDisplay(),
-                )
+        // set up tabs view pager
+        TabPagerBinder.bind(tabsViewPager)
 
-            previewDisplays
-                .mapValues { displayUtils.getRealSize(it.value) }
-                .let {
-                    dualDisplayAspectRatioLayout.setDisplaySizes(it)
-                    dualPreviewView.setDisplaySizes(it)
-                }
+        // synchronize both view and tabs pager
+        synchronizePreviewAndTabsPager(tabsViewPager, dualPreviewView)
 
-            val dualPreviewPagerViewModel =
-                if (position == LOCK_PREVIEW_POSITION) lockScreenPreviewViewModel
-                else homeScreenPreviewViewModel
-            DualDisplayAspectRatioLayout.Companion.PreviewView.entries.stream().forEach {
-                previewView ->
-                previewView.viewId.let { id ->
-                    SmallPreviewBinder.bind(
-                        applicationContext = applicationContext,
-                        view = dualDisplayAspectRatioLayout.requireViewById(id),
-                        viewModel = dualPreviewPagerViewModel.viewModel,
-                        mainScope = mainScope,
-                        viewLifecycleOwner = viewLifecycleOwner,
-                        isSingleDisplayOrUnfoldedHorizontalHinge =
-                            isSingleDisplayOrUnfoldedHorizontalHinge,
-                        isRtl = isRtl,
-                        previewDisplaySize =
-                            checkNotNull(
-                                dualDisplayAspectRatioLayout.getPreviewDisplaySize(previewView)
-                            ),
-                        previewDisplayId = checkNotNull(previewDisplays[previewView]).displayId,
-                        previewUtils = dualPreviewPagerViewModel.previewUtils,
-                        navigate = dualPreviewPagerViewModel.navigate,
-                    )
-                }
-            }
-        }
+        DualPreviewPagerBinder.bind(
+            dualPreviewView,
+            homeScreenPreviewViewModel,
+            lockScreenPreviewViewModel,
+            applicationContext,
+            isSingleDisplayOrUnfoldedHorizontalHinge,
+            viewLifecycleOwner,
+            isRtl,
+            mainScope,
+            displayUtils
+        )
     }
 
-    private const val LOCK_PREVIEW_POSITION = 0
-    private const val HOME_PREVIEW_POSITION = 1
+    private fun synchronizePreviewAndTabsPager(
+        tabsViewPager: ViewPager,
+        previewsViewPager: ViewPager,
+    ) {
+        val onPageChangeListenerTabs =
+            object : ViewPager.OnPageChangeListener {
+                override fun onPageSelected(position: Int) {
+                    previewsViewPager.setCurrentItem(position, true)
+                }
+
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {}
+
+                override fun onPageScrollStateChanged(state: Int) {}
+            }
+
+        tabsViewPager.addOnPageChangeListener(onPageChangeListenerTabs)
+
+        val onPageChangeListenerPreviews =
+            object : ViewPager.OnPageChangeListener {
+                override fun onPageSelected(position: Int) {
+                    tabsViewPager.setCurrentItem(position, true)
+                }
+
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {}
+
+                override fun onPageScrollStateChanged(state: Int) {}
+            }
+
+        previewsViewPager.addOnPageChangeListener(onPageChangeListenerPreviews)
+    }
 }

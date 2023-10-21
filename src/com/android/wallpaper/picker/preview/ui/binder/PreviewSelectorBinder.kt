@@ -41,7 +41,7 @@ object PreviewSelectorBinder {
         navigate: (() -> Unit)? = null,
     ) {
         // set up tabs view pager
-        TabPagerBinder.bind(tabsViewPager, previewDisplaySize)
+        TabPagerBinder.bind(tabsViewPager)
 
         // set up previews view pager
         PreviewPagerBinder.bind(

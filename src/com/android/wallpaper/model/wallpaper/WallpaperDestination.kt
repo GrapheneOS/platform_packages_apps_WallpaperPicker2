@@ -23,5 +23,5 @@ enum class Destination(val value: Int) {
      * Depicts when the current wallpaperModel object is equivalent to FLAG_LOCK+FLAG_SYSTEM and
      * wallpapermodel describes a wallpaper that's applied on both lockscreen and homescreen
      */
-    APPLIED_TO_SYSTEM_LOCK(FLAG_SYSTEM + FLAG_LOCK)
+    APPLIED_TO_SYSTEM_LOCK(FLAG_SYSTEM or FLAG_LOCK)
 }

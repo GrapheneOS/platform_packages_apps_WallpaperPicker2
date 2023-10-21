@@ -1,6 +1,5 @@
 package com.android.wallpaper.module;
 
-import static android.app.WallpaperManager.FLAG_LOCK;
 import static android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_RESTORE;
 
 import android.app.Activity;
@@ -168,12 +167,6 @@ public class WallpaperSetter {
             saveAndLockScreenOrientationIfNeeded(activity);
 
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(activity);
-            if (destination == WallpaperPersister.DEST_LOCK_SCREEN
-                    && !wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
-                throw new IllegalArgumentException(
-                        "Live wallpaper cannot be applied on lock screen only");
-            }
-
             LiveWallpaperInfo updatedWallpaperInfo = wallpaper.saveWallpaper(
                     activity.getApplicationContext(), destination);
             if (updatedWallpaperInfo != null) {
@@ -213,10 +206,6 @@ public class WallpaperSetter {
             wallpaperManager.setWallpaperComponent(
                     wallpaper.getWallpaperComponent().getComponent());
         }
-        if (!wallpaperManager.isLockscreenLiveWallpaperEnabled()
-                && destination == WallpaperPersister.DEST_BOTH) {
-            wallpaperManager.clear(FLAG_LOCK);
-        }
     }
 
     /**
@@ -233,11 +222,6 @@ public class WallpaperSetter {
             @Nullable SetWallpaperCallback callback) {
         try {
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
-            if (destination == WallpaperPersister.DEST_LOCK_SCREEN
-                    && !wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
-                throw new IllegalArgumentException(
-                        "Live wallpaper cannot be applied on lock screen only");
-            }
             setWallpaperComponent(wallpaperManager, wallpaper, destination);
             mPreferences.storeLatestWallpaper(WallpaperPersister.destinationToFlags(destination),
                     wallpaper.getWallpaperId(),
@@ -356,34 +340,6 @@ public class WallpaperSetter {
         if (isLiveWallpaper) {
             setWallpaperDialog.setHomeOptionAvailable(isHomeOption);
             setWallpaperDialog.setLockOptionAvailable(isLockOption);
-        }
-        if (wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
-            setWallpaperDialog.show(fragmentManager, TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
-            return;
-        }
-
-        WallpaperStatusChecker wallpaperStatusChecker = InjectorProvider.getInjector()
-                .getWallpaperStatusChecker(activity.getApplicationContext());
-        boolean isLiveWallpaperSet =
-                WallpaperManager.getInstance(activity).getWallpaperInfo() != null;
-        // Alternative of ag/15567276
-        boolean isBuiltIn = !isLiveWallpaperSet
-                && !wallpaperStatusChecker.isHomeStaticWallpaperSet();
-
-        if ((isLiveWallpaperSet || isBuiltIn)
-                && !wallpaperStatusChecker.isLockWallpaperSet()) {
-            if (isLiveWallpaper) {
-                // If lock wallpaper is live and we're setting a live wallpaper, we can only
-                // set it to both, so bypass the dialog.
-                listener.onSet(WallpaperPersister.DEST_BOTH);
-                restoreScreenOrientationIfNeeded(activity);
-                return;
-            }
-            // if the lock wallpaper is a live wallpaper, we cannot set a home-only static one
-            setWallpaperDialog.setHomeOptionAvailable(false);
-        }
-        if (isLiveWallpaper) {
-            setWallpaperDialog.setLockOptionAvailable(false);
         }
         setWallpaperDialog.show(fragmentManager, TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
     }
