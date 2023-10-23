@@ -137,12 +137,6 @@
           android:theme="@style/WallpaperTheme.Preview">
       </activity>
 
-      <activity
-          android:name="com.android.wallpaper.picker.preview.ui.WallpaperPreviewDemoActivity"
-          android:resizeableActivity="false"
-          android:theme="@style/WallpaperTheme.Preview">
-      </activity>
-
     <activity android:name="com.android.wallpaper.picker.StandalonePreviewActivity"
          android:resizeableActivity="false"
          android:relinquishTaskIdentity="true"
