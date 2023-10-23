@@ -302,7 +302,7 @@ class WallpaperClientImpl(
         /** Key for a parameter used to pass the screen to/from the content provider. */
         private const val KEY_SCREEN = "screen"
         /** Key for a parameter used to pass the screen to/from the content provider. */
-        private const val KEY_SET_WALLPAPER_ENTRY_POINT = "key_set_wallpaper_entry_point"
+        private const val KEY_SET_WALLPAPER_ENTRY_POINT = "set_wallpaper_entry_point"
         private const val KEY_LAST_UPDATED = "last_updated"
         private const val SCREEN_ALL = "all_screens"
         private const val SCREEN_HOME = "home_screen"
