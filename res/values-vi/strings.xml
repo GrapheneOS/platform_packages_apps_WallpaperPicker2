@@ -90,7 +90,8 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Xóa"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"Chỉnh sửa"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Xoá hình nền này khỏi thiết bị của bạn?"</string>
-    <string name="bottom_action_bar_back" msgid="8237013112999946725">"Quay lại"</string>
+    <!-- no translation found for bottom_action_bar_back (2620581414970740784) -->
+    <skip />
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Chỉnh sửa"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Tải xuống"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Hình nền theo kiểu trình chiếu"</string>

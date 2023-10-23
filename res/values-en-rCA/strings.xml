@@ -97,7 +97,8 @@
     <skip />
     <!-- no translation found for delete_wallpaper_confirmation (1905114562243802354) -->
     <skip />
-    <string name="bottom_action_bar_back" msgid="8237013112999946725">"Back"</string>
+    <!-- no translation found for bottom_action_bar_back (2620581414970740784) -->
+    <skip />
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Edit"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Download"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Slideshow wallpaper"</string>
