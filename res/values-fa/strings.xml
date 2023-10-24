@@ -90,7 +90,8 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"حذف"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"ویرایش"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"این کاغذدیواری از دستگاهتان حذف شود؟"</string>
-    <string name="bottom_action_bar_back" msgid="8237013112999946725">"برگشت"</string>
+    <!-- no translation found for bottom_action_bar_back (2620581414970740784) -->
+    <skip />
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"ویرایش"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"بارگیری"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"نمایش اسلاید کاغذدیواری"</string>
