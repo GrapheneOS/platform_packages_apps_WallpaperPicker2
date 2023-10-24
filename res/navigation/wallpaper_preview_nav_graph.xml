@@ -28,5 +28,8 @@
     <fragment
         android:id="@+id/fullPreviewFragment"
         android:name="com.android.wallpaper.picker.preview.ui.fragment.FullPreviewFragment">
+        <action
+            android:id="@+id/action_fullPreviewFragment_to_smallPreviewFragment"
+            app:destination="@+id/smallPreviewFragment" />
     </fragment>
 </navigation>
