@@ -21,8 +21,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.android.wallpaper.R
-import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
-import com.android.wallpaper.util.PreviewUtils
 
 /** This class provides the dual preview views for the small preview screen on foldable devices */
 class DualPreviewPagerAdapter(
@@ -53,13 +51,9 @@ class DualPreviewPagerAdapter(
         return PREVIEW_PAGER_ITEM_COUNT
     }
 
-    data class DualPreviewPagerViewModel(
-        val viewModel: WallpaperPreviewViewModel,
-        val previewUtils: PreviewUtils,
-        val navigate: (() -> Unit)? = null
-    )
-
     companion object {
         const val PREVIEW_PAGER_ITEM_COUNT = 2
+        const val LOCK_PREVIEW_POSITION = 0
+        const val HOME_PREVIEW_POSITION = 1
     }
 }
