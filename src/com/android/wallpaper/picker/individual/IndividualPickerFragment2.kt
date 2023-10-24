@@ -731,7 +731,7 @@ class IndividualPickerFragment2 :
     private fun isAppliedWallpaperChanged(): Boolean {
         // Reload wallpapers if the current wallpapers have changed
         getAppliedWallpaperIds().let {
-            if (appliedWallpaperIds.isEmpty() || appliedWallpaperIds != it) {
+            if (appliedWallpaperIds != it) {
                 return true
             }
         }
