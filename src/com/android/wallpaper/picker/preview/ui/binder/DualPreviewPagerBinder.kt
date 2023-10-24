@@ -20,8 +20,11 @@ import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
+import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter.Companion.LOCK_PREVIEW_POSITION
+import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout
 import com.android.wallpaper.util.DisplayUtils
+import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.CoroutineScope
 
 /** Binds dual preview home screen and lock screen view pager. */
@@ -29,14 +32,16 @@ object DualPreviewPagerBinder {
 
     fun bind(
         dualPreviewView: DualPreviewViewPager,
-        homeScreenPreviewViewModel: DualPreviewPagerAdapter.DualPreviewPagerViewModel,
-        lockScreenPreviewViewModel: DualPreviewPagerAdapter.DualPreviewPagerViewModel,
+        wallpaperPreviewViewModel: WallpaperPreviewViewModel,
+        homePreviewUtils: PreviewUtils,
+        lockPreviewUtils: PreviewUtils,
         applicationContext: Context,
         isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
         viewLifecycleOwner: LifecycleOwner,
         isRtl: Boolean,
         mainScope: CoroutineScope,
-        displayUtils: DisplayUtils
+        displayUtils: DisplayUtils,
+        navigate: () -> Unit,
     ) {
         // implement adapter for the dual preview pager
         dualPreviewView.adapter = DualPreviewPagerAdapter { view, position ->
@@ -57,17 +62,13 @@ object DualPreviewPagerBinder {
                     dualPreviewView.setDisplaySizes(it)
                 }
 
-            val dualPreviewPagerViewModel =
-                if (position == DualPreviewPagerBinder.LOCK_PREVIEW_POSITION)
-                    lockScreenPreviewViewModel
-                else homeScreenPreviewViewModel
             DualDisplayAspectRatioLayout.Companion.PreviewView.entries.stream().forEach {
                 previewView ->
                 previewView.viewId.let { id ->
                     SmallPreviewBinder.bind(
                         applicationContext = applicationContext,
                         view = dualDisplayAspectRatioLayout.requireViewById(id),
-                        viewModel = dualPreviewPagerViewModel.viewModel,
+                        viewModel = wallpaperPreviewViewModel,
                         mainScope = mainScope,
                         viewLifecycleOwner = viewLifecycleOwner,
                         isSingleDisplayOrUnfoldedHorizontalHinge =
@@ -78,14 +79,13 @@ object DualPreviewPagerBinder {
                                 dualDisplayAspectRatioLayout.getPreviewDisplaySize(previewView)
                             ),
                         previewDisplayId = checkNotNull(previewDisplays[previewView]).displayId,
-                        previewUtils = dualPreviewPagerViewModel.previewUtils,
-                        navigate = dualPreviewPagerViewModel.navigate,
+                        previewUtils =
+                            if (position == LOCK_PREVIEW_POSITION) lockPreviewUtils
+                            else homePreviewUtils,
+                        navigate = navigate,
                     )
                 }
             }
         }
     }
-
-    private const val LOCK_PREVIEW_POSITION = 0
-    private const val HOME_PREVIEW_POSITION = 1
 }

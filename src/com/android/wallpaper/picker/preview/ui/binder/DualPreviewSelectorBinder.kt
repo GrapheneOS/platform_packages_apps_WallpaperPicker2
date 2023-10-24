@@ -19,8 +19,9 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager.widget.ViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
+import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
+import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -32,14 +33,16 @@ object DualPreviewSelectorBinder {
     fun bind(
         tabsViewPager: ViewPager,
         dualPreviewView: DualPreviewViewPager,
-        homeScreenPreviewViewModel: DualPreviewPagerAdapter.DualPreviewPagerViewModel,
-        lockScreenPreviewViewModel: DualPreviewPagerAdapter.DualPreviewPagerViewModel,
+        wallpaperPreviewViewModel: WallpaperPreviewViewModel,
+        homePreviewUtils: PreviewUtils,
+        lockPreviewUtils: PreviewUtils,
         applicationContext: Context,
         isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
         viewLifecycleOwner: LifecycleOwner,
         isRtl: Boolean,
         mainScope: CoroutineScope,
-        displayUtils: DisplayUtils
+        displayUtils: DisplayUtils,
+        navigate: () -> Unit,
     ) {
         // set up tabs view pager
         TabPagerBinder.bind(tabsViewPager)
@@ -49,14 +52,16 @@ object DualPreviewSelectorBinder {
 
         DualPreviewPagerBinder.bind(
             dualPreviewView,
-            homeScreenPreviewViewModel,
-            lockScreenPreviewViewModel,
+            wallpaperPreviewViewModel,
+            homePreviewUtils,
+            lockPreviewUtils,
             applicationContext,
             isSingleDisplayOrUnfoldedHorizontalHinge,
             viewLifecycleOwner,
             isRtl,
             mainScope,
-            displayUtils
+            displayUtils,
+            navigate,
         )
     }
 

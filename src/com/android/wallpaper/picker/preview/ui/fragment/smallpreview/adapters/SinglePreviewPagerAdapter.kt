@@ -43,5 +43,7 @@ class SinglePreviewPagerAdapter(
 
     companion object {
         const val PREVIEW_PAGER_ITEM_COUNT = 2
+        const val LOCK_PREVIEW_POSITION = 0
+        const val HOME_PREVIEW_POSITION = 1
     }
 }
