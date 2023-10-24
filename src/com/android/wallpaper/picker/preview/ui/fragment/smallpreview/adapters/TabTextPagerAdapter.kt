@@ -26,7 +26,7 @@ import com.android.wallpaper.R
 class TabTextPagerAdapter : PagerAdapter() {
 
     // TODO: move to view model when ready
-    private val textPages = listOf(R.string.home_screen_message, R.string.lock_screen_message)
+    private val textPages = listOf(R.string.lock_screen_message, R.string.home_screen_message)
 
     override fun getCount(): Int {
         return textPages.size
