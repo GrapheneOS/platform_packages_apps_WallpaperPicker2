@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
 import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
@@ -41,11 +42,13 @@ constructor(
     undoInteractor: UndoInteractor,
     wallpaperInteractor: WallpaperInteractor,
     private val savedStateHandle: SavedStateHandle,
+    private val logger: UserEventLogger,
 ) : AnimationStateViewModel() {
 
     val undo: UndoViewModel =
         UndoViewModel(
             interactor = undoInteractor,
+            logger = logger,
         )
 
     private val homeWallpaperQuickSwitchViewModel: WallpaperQuickSwitchViewModel =
@@ -133,6 +136,7 @@ constructor(
             defaultArgs: Bundle? = null,
             undoInteractor: UndoInteractor,
             wallpaperInteractor: WallpaperInteractor,
+            logger: UserEventLogger,
         ): AbstractSavedStateViewModelFactory =
             object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
                 @Suppress("UNCHECKED_CAST")
@@ -145,6 +149,7 @@ constructor(
                         undoInteractor = undoInteractor,
                         wallpaperInteractor = wallpaperInteractor,
                         savedStateHandle = handle,
+                        logger = logger,
                     )
                         as T
                 }
