@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.filters.SmallTest
+import com.android.wallpaper.module.logging.TestUserEventLogger
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
@@ -48,6 +49,7 @@ class CustomizationPickerViewModelTest {
     private lateinit var testScope: TestScope
     private lateinit var undoInteractor: UndoInteractor
     private lateinit var wallpaperInteractor: WallpaperInteractor
+    private val logger = TestUserEventLogger()
 
     @Before
     fun setUp() {
@@ -76,6 +78,7 @@ class CustomizationPickerViewModelTest {
                 undoInteractor = undoInteractor,
                 wallpaperInteractor = wallpaperInteractor,
                 savedStateHandle = savedStateHandle,
+                logger = logger,
             )
     }
 
@@ -118,6 +121,7 @@ class CustomizationPickerViewModelTest {
                     undoInteractor = undoInteractor,
                     wallpaperInteractor = wallpaperInteractor,
                     savedStateHandle = savedStateHandle,
+                    logger = logger,
                 )
             val newIsOnLockScreen = collectLastValue(newUnderTest.isOnLockScreen)
 
@@ -169,6 +173,7 @@ class CustomizationPickerViewModelTest {
                     undoInteractor = undoInteractor,
                     wallpaperInteractor = wallpaperInteractor,
                     savedStateHandle = savedStateHandle,
+                    logger = logger,
                 )
             val newHomeScreenTab = collectLastValue(newUnderTest.homeScreenTab)
 
