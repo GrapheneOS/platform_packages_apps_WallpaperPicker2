@@ -25,6 +25,9 @@ import com.android.wallpaper.model.wallpaper.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /** Top level [ViewModel] for [WallpaperPreviewActivity] and its fragments */
@@ -34,6 +37,13 @@ class WallpaperPreviewViewModel
 constructor(
     private val staticWallpaperPreviewViewModel: StaticWallpaperPreviewViewModel,
 ) : ViewModel() {
+
+    /** User selected small preview configuration. */
+    private val _selectedSmallPreviewConfig: MutableStateFlow<SmallPreviewConfigViewModel?> =
+        MutableStateFlow(null)
+    val selectedSmallPreviewConfig: StateFlow<SmallPreviewConfigViewModel?> =
+        _selectedSmallPreviewConfig.asStateFlow()
+
     /**
      * User selected [WallpaperInfo] for editing.
      *
@@ -43,9 +53,6 @@ constructor(
 
     /** User selected [WallpaperModel] for editing. */
     var editingWallpaperModel: WallpaperModel? = null
-
-    /** User selected small preview configuration. */
-    var selectedSmallPreviewConfig: SmallPreviewConfigViewModel? = null
 
     /** Gets the view model for static wallpaper preview views. */
     fun getStaticWallpaperPreviewViewModel(): StaticWallpaperPreviewViewModel =
@@ -62,5 +69,9 @@ constructor(
                 }
             is LiveWallpaperModel -> {}
         }
+    }
+
+    fun selectSmallPreviewConfig(config: SmallPreviewConfigViewModel) {
+        _selectedSmallPreviewConfig.value = config
     }
 }

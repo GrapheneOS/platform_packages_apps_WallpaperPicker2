@@ -19,11 +19,10 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.FoldableDisplay
+import com.android.wallpaper.model.wallpaper.PreviewPagerPage
 import com.android.wallpaper.model.wallpaper.getScreenOrientation
-import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter.Companion.LOCK_PREVIEW_POSITION
 import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout
@@ -72,10 +71,7 @@ object DualPreviewPagerBinder {
                         viewModel = wallpaperPreviewViewModel,
                         smallPreviewConfig =
                             SmallPreviewConfigViewModel(
-                                previewTab =
-                                    if (position == LOCK_PREVIEW_POSITION)
-                                        CustomizationSections.Screen.LOCK_SCREEN
-                                    else CustomizationSections.Screen.HOME_SCREEN,
+                                previewTab = PreviewPagerPage.entries[position].screen,
                                 displaySize = it,
                                 screenOrientation = getScreenOrientation(it, display),
                             ),
@@ -83,7 +79,7 @@ object DualPreviewPagerBinder {
                         viewLifecycleOwner = viewLifecycleOwner,
                         previewDisplayId = checkNotNull(previewDisplays[display]).displayId,
                         previewUtils =
-                            if (position == LOCK_PREVIEW_POSITION) lockPreviewUtils
+                            if (position == PreviewPagerPage.LOCK_PREVIEW.ordinal) lockPreviewUtils
                             else homePreviewUtils,
                         navigate = navigate,
                     )
