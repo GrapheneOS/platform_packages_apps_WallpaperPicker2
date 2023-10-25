@@ -17,11 +17,15 @@ package com.android.wallpaper.model.wallpaper
 
 import android.graphics.Point
 
-/** Dimensions supported by wallpaper manager to set crop hints. */
+/** Orientation of the screen. */
 enum class ScreenOrientation {
+    /** For screen of handheld, tablet, and outer screen of foldable, in portrait mode */
     PORTRAIT,
+    /** For screen of handheld, tablet, and outer screen of foldable, in landscape mode */
     LANDSCAPE,
+    /** For inner screen of foldable, in portrait mode */
     UNFOLDED_PORTRAIT,
+    /** For inner screen of foldable, in landscape mode */
     UNFOLDED_LANDSCAPE,
 }
 

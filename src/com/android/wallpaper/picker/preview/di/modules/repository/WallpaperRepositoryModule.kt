@@ -16,8 +16,10 @@
 package com.android.wallpaper.picker.preview.di.modules.repository
 
 import android.graphics.Bitmap
+import android.graphics.Rect
 import com.android.wallpaper.dispatchers.BackgroundDispatcher
 import com.android.wallpaper.dispatchers.MainDispatcher
+import com.android.wallpaper.model.wallpaper.ScreenOrientation
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
@@ -61,6 +63,16 @@ class WallpaperRepositoryModule {
                         destination: WallpaperDestination,
                         wallpaperId: String,
                         onDone: () -> Unit,
+                    ) {}
+
+                    override suspend fun setStaticWallpaper(
+                        setWallpaperEntryPoint: Int,
+                        destination: WallpaperDestination,
+                        wallpaperModel:
+                            com.android.wallpaper.model.wallpaper.WallpaperModel.StaticWallpaperModel,
+                        bitmap: Bitmap,
+                        cropHints: Map<ScreenOrientation, Rect>,
+                        onDone: () -> Unit
                     ) {}
 
                     override suspend fun loadThumbnail(

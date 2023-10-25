@@ -307,7 +307,8 @@ internal constructor(
                                 WallpaperClientImpl(
                                     context = appContext,
                                     infoFactory = getCurrentWallpaperInfoFactory(appContext),
-                                    wallpaperManager = WallpaperManager.getInstance(appContext)
+                                    wallpaperManager = WallpaperManager.getInstance(appContext),
+                                    wallpaperPreferences = getPreferences(appContext),
                                 ),
                             wallpaperPreferences = getPreferences(context = appContext),
                             backgroundDispatcher = bgDispatcher,
