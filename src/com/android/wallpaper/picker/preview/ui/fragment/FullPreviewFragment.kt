@@ -21,13 +21,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.picker.AppbarFragment
-import com.android.wallpaper.picker.TouchForwardingLayout
+import com.android.wallpaper.picker.preview.ui.binder.CropWallpaperButtonBinder
 import com.android.wallpaper.picker.preview.ui.binder.FullWallpaperPreviewBinder
-import com.android.wallpaper.picker.preview.ui.view.FullPreviewSurfaceView
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewSurfaceViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
@@ -57,8 +57,8 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
         val appContext = requireContext().applicationContext
         FullWallpaperPreviewBinder.bind(
             appContext,
-            view.requireViewById<FullPreviewSurfaceView>(R.id.wallpaper_surface),
-            view.requireViewById<TouchForwardingLayout>(R.id.touch_forwarding_layout),
+            view.requireViewById(R.id.wallpaper_surface),
+            view.requireViewById(R.id.touch_forwarding_layout),
             FullPreviewSurfaceViewModel(
                 previewTransitionViewModel =
                     checkNotNull(wallpaperPreviewViewModel.previewTransitionViewModel),
@@ -77,6 +77,12 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
                         .inflate(R.layout.fullscreen_wallpaper_preview, null)
                 },
         )
+
+        CropWallpaperButtonBinder.bind(
+            view.requireViewById(R.id.crop_wallpaper_button),
+        ) {
+            findNavController().navigate(R.id.action_fullPreviewFragment_to_smallPreviewFragment)
+        }
 
         return view
     }

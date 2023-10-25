@@ -20,6 +20,7 @@ import android.graphics.Point
 import android.util.AttributeSet
 import androidx.viewpager.widget.ViewPager
 import com.android.wallpaper.R
+import com.android.wallpaper.model.wallpaper.FoldableDisplay
 import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout
 
 /**
@@ -31,9 +32,7 @@ import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout
 class DualPreviewViewPager
 @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null /* attrs */) : ViewPager(context, attrs) {
-    private var previewDisplaySizes:
-        Map<DualDisplayAspectRatioLayout.Companion.PreviewView, Point>? =
-        null
+    private var previewDisplaySizes: Map<FoldableDisplay, Point>? = null
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         if (previewDisplaySizes == null) {
@@ -41,44 +40,41 @@ constructor(context: Context, attrs: AttributeSet? = null /* attrs */) : ViewPag
             return
         }
 
-        getPreviewDisplaySize(DualDisplayAspectRatioLayout.Companion.PreviewView.FOLDED)?.let {
-            smallDisplaySize ->
-            getPreviewDisplaySize(DualDisplayAspectRatioLayout.Companion.PreviewView.UNFOLDED)
-                ?.let { largeDisplaySize ->
-                    val parentWidth =
-                        this.measuredWidth -
-                            context.resources.getDimension(R.dimen.small_dual_preview_edge_space) *
-                                2 -
-                            context.resources.getDimension(
-                                R.dimen.small_preview_inter_preview_margin
-                            ) * 3
-
-                    val smallDisplayAR = smallDisplaySize.x.toFloat() / smallDisplaySize.y
-
-                    val largeDisplayAR = largeDisplaySize.x.toFloat() / largeDisplaySize.y
-
-                    val viewPagerHeight = parentWidth / (largeDisplayAR + smallDisplayAR)
-
-                    super.onMeasure(
-                        widthMeasureSpec,
-                        MeasureSpec.makeMeasureSpec(
-                            viewPagerHeight.toInt(),
-                            MeasureSpec.EXACTLY,
-                        )
-                    )
+        val parentWidth =
+            this.measuredWidth -
+                context.resources.let {
+                    it.getDimension(R.dimen.small_dual_preview_edge_space) * 2 -
+                        it.getDimension(R.dimen.small_preview_inter_preview_margin) * 3
                 }
-        }
+
+        val smallDisplayAR =
+            getPreviewDisplaySize(FoldableDisplay.FOLDED).let { it.x.toFloat() / it.y }
+
+        val largeDisplayAR =
+            getPreviewDisplaySize(FoldableDisplay.UNFOLDED).let { it.x.toFloat() / it.y }
+
+        val viewPagerHeight = parentWidth / (largeDisplayAR + smallDisplayAR)
+
+        super.onMeasure(
+            widthMeasureSpec,
+            MeasureSpec.makeMeasureSpec(
+                viewPagerHeight.toInt(),
+                MeasureSpec.EXACTLY,
+            )
+        )
     }
 
-    fun setDisplaySizes(
-        displaySizes: Map<DualDisplayAspectRatioLayout.Companion.PreviewView, Point>
-    ) {
+    fun setDisplaySizes(displaySizes: Map<FoldableDisplay, Point>) {
         previewDisplaySizes = displaySizes
     }
 
-    fun getPreviewDisplaySize(
-        previewView: DualDisplayAspectRatioLayout.Companion.PreviewView
-    ): Point? {
-        return previewDisplaySizes?.get(previewView)
+    /**
+     * Gets the display size for a [DualDisplayAspectRatioLayout.Companion.PreviewView].
+     *
+     * Outside this class we should get display size via
+     * [DualDisplayAspectRatioLayout.getPreviewDisplaySize].
+     */
+    private fun getPreviewDisplaySize(display: FoldableDisplay): Point {
+        return checkNotNull(previewDisplaySizes?.get(display))
     }
 }
