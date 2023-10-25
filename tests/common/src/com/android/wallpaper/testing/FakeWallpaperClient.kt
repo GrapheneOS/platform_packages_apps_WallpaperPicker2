@@ -78,14 +78,16 @@ class FakeWallpaperClient : WallpaperClient {
             ?: error("No wallpapers for screen $destination")
     }
 
-    override suspend fun setWallpaper(
+    override suspend fun setRecentWallpaper(
         @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
         destination: WallpaperDestination,
         wallpaperId: String,
         onDone: () -> Unit
     ) {
         if (isPaused) {
-            deferred.add { setWallpaper(setWallpaperEntryPoint, destination, wallpaperId, onDone) }
+            deferred.add {
+                setRecentWallpaper(setWallpaperEntryPoint, destination, wallpaperId, onDone)
+            }
         } else {
             _recentWallpapers.value =
                 _recentWallpapers.value.toMutableMap().apply {
