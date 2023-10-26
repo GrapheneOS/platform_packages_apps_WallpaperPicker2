@@ -75,6 +75,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     private final DisplayUtils mDisplayUtils;
     private final BitmapCropper mBitmapCropper;
     private final WallpaperStatusChecker mWallpaperStatusChecker;
+    private final CurrentWallpaperInfoFactory mCurrentWallpaperInfoFactory;
     private final boolean mIsRefactorSettingWallpaper;
 
     private WallpaperInfo mWallpaperInfoInPreview;
@@ -88,6 +89,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             DisplayUtils displayUtils,
             BitmapCropper bitmapCropper,
             WallpaperStatusChecker wallpaperStatusChecker,
+            CurrentWallpaperInfoFactory wallpaperInfoFactory,
             boolean isRefactorSettingWallpaper
     ) {
         mAppContext = context.getApplicationContext();
@@ -97,6 +99,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         mDisplayUtils = displayUtils;
         mBitmapCropper = bitmapCropper;
         mWallpaperStatusChecker = wallpaperStatusChecker;
+        mCurrentWallpaperInfoFactory = wallpaperInfoFactory;
         mIsRefactorSettingWallpaper = isRefactorSettingWallpaper;
     }
 
@@ -361,6 +364,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                     String.valueOf(wallpaperId), attributions, actionUrl, collectionId,
                     wallpaperBitmap, WallpaperColors.fromBitmap(wallpaperBitmap));
         }
+        mCurrentWallpaperInfoFactory.clearCurrentWallpaperInfos();
         return wallpaperId;
     }
 

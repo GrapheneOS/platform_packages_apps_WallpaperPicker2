@@ -37,8 +37,11 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.DefaultWallpaperPersisterTest.TestSetWallpaperCallback.SetWallpaperStatus;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
+import com.android.wallpaper.module.logging.TestUserEventLogger;
 import com.android.wallpaper.testing.TestAsset;
 import com.android.wallpaper.testing.TestBitmapCropper;
+import com.android.wallpaper.testing.TestCurrentWallpaperInfoFactory;
+import com.android.wallpaper.testing.TestInjector;
 import com.android.wallpaper.testing.TestStaticWallpaperInfo;
 import com.android.wallpaper.testing.TestWallpaperPreferences;
 import com.android.wallpaper.testing.TestWallpaperStatusChecker;
@@ -71,6 +74,7 @@ public class DefaultWallpaperPersisterTest {
 
     @Before
     public void setUp() {
+        InjectorProvider.setInjector(new TestInjector(new TestUserEventLogger()));
         mContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         mManager = spy(WallpaperManager.getInstance(mContext));
         mPrefs = new TestWallpaperPreferences();
@@ -78,9 +82,11 @@ public class DefaultWallpaperPersisterTest {
         DisplayUtils displayUtils = new DisplayUtils(mContext);
         TestBitmapCropper cropper = new TestBitmapCropper();
         TestWallpaperStatusChecker statusChecker = new TestWallpaperStatusChecker();
+        TestCurrentWallpaperInfoFactory wallpaperInfoFactory =
+                new TestCurrentWallpaperInfoFactory(mContext);
 
         mPersister = new DefaultWallpaperPersister(mContext, mManager, mPrefs, changedNotifier,
-                displayUtils, cropper, statusChecker, false);
+                displayUtils, cropper, statusChecker, wallpaperInfoFactory, false);
     }
 
     @Test

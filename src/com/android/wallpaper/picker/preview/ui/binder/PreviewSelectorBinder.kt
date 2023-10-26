@@ -31,13 +31,14 @@ object PreviewSelectorBinder {
         tabsViewPager: ViewPager,
         previewsViewPager: ViewPager2,
         previewDisplaySize: Point,
-        wallpaperPreviewViewModels: List<WallpaperPreviewViewModel>,
+        wallpaperPreviewViewModel: WallpaperPreviewViewModel,
         applicationContext: Context,
         isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
         viewLifecycleOwner: LifecycleOwner,
         isRtl: Boolean,
         mainScope: CoroutineScope,
-        previewUtils: PreviewUtils,
+        homePreviewUtils: PreviewUtils,
+        lockPreviewUtils: PreviewUtils,
         navigate: (() -> Unit)? = null,
     ) {
         // set up tabs view pager
@@ -51,9 +52,10 @@ object PreviewSelectorBinder {
             isRtl,
             mainScope,
             previewsViewPager,
-            wallpaperPreviewViewModels,
+            wallpaperPreviewViewModel,
             previewDisplaySize,
-            previewUtils,
+            homePreviewUtils,
+            lockPreviewUtils,
             navigate,
         )
 

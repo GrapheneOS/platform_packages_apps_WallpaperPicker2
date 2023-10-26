@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 The Android Open Source Project
+ * Copyright 2023 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,14 @@
  */
 package com.android.wallpaper.picker.preview.ui.binder
 
-import android.view.View.OVER_SCROLL_NEVER
-import androidx.viewpager.widget.ViewPager
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.TabTextPagerAdapter
+import android.widget.Button
 
-/** Binds single preview home screen and lock screen tabs. */
-object TabPagerBinder {
-
+object CropWallpaperButtonBinder {
     fun bind(
-        tabsViewPager: ViewPager,
+        button: Button,
+        onClicked: () -> Unit,
     ) {
-        tabsViewPager.apply {
-            adapter = TabTextPagerAdapter()
-            offscreenPageLimit = 2
-            clipChildren = false
-            clipToPadding = false
-            overScrollMode = OVER_SCROLL_NEVER
-        }
+        // TODO(b/303317694): go back to previous small preview tab
+        button.setOnClickListener { onClicked.invoke() }
     }
 }

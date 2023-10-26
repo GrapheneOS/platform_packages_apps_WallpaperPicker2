@@ -18,10 +18,15 @@ package com.android.wallpaper.picker.preview.ui.binder
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
+import com.android.wallpaper.model.wallpaper.FoldableDisplay
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
+import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter.Companion.LOCK_PREVIEW_POSITION
+import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout
+import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout.Companion.getViewId
 import com.android.wallpaper.util.DisplayUtils
+import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.CoroutineScope
 
 /** Binds dual preview home screen and lock screen view pager. */
@@ -29,14 +34,16 @@ object DualPreviewPagerBinder {
 
     fun bind(
         dualPreviewView: DualPreviewViewPager,
-        homeScreenPreviewViewModel: DualPreviewPagerAdapter.DualPreviewPagerViewModel,
-        lockScreenPreviewViewModel: DualPreviewPagerAdapter.DualPreviewPagerViewModel,
+        wallpaperPreviewViewModel: WallpaperPreviewViewModel,
+        homePreviewUtils: PreviewUtils,
+        lockPreviewUtils: PreviewUtils,
         applicationContext: Context,
         isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
         viewLifecycleOwner: LifecycleOwner,
         isRtl: Boolean,
         mainScope: CoroutineScope,
-        displayUtils: DisplayUtils
+        displayUtils: DisplayUtils,
+        navigate: () -> Unit,
     ) {
         // implement adapter for the dual preview pager
         dualPreviewView.adapter = DualPreviewPagerAdapter { view, position ->
@@ -44,10 +51,8 @@ object DualPreviewPagerBinder {
                 view.requireViewById(R.id.dual_preview)
             val previewDisplays =
                 mapOf(
-                    DualDisplayAspectRatioLayout.Companion.PreviewView.FOLDED to
-                        displayUtils.getSmallerDisplay(),
-                    DualDisplayAspectRatioLayout.Companion.PreviewView.UNFOLDED to
-                        displayUtils.getWallpaperDisplay(),
+                    FoldableDisplay.FOLDED to displayUtils.getSmallerDisplay(),
+                    FoldableDisplay.UNFOLDED to displayUtils.getWallpaperDisplay(),
                 )
 
             previewDisplays
@@ -57,35 +62,25 @@ object DualPreviewPagerBinder {
                     dualPreviewView.setDisplaySizes(it)
                 }
 
-            val dualPreviewPagerViewModel =
-                if (position == DualPreviewPagerBinder.LOCK_PREVIEW_POSITION)
-                    lockScreenPreviewViewModel
-                else homeScreenPreviewViewModel
-            DualDisplayAspectRatioLayout.Companion.PreviewView.entries.stream().forEach {
-                previewView ->
-                previewView.viewId.let { id ->
-                    SmallPreviewBinder.bind(
-                        applicationContext = applicationContext,
-                        view = dualDisplayAspectRatioLayout.requireViewById(id),
-                        viewModel = dualPreviewPagerViewModel.viewModel,
-                        mainScope = mainScope,
-                        viewLifecycleOwner = viewLifecycleOwner,
-                        isSingleDisplayOrUnfoldedHorizontalHinge =
-                            isSingleDisplayOrUnfoldedHorizontalHinge,
-                        isRtl = isRtl,
-                        previewDisplaySize =
-                            checkNotNull(
-                                dualDisplayAspectRatioLayout.getPreviewDisplaySize(previewView)
-                            ),
-                        previewDisplayId = checkNotNull(previewDisplays[previewView]).displayId,
-                        previewUtils = dualPreviewPagerViewModel.previewUtils,
-                        navigate = dualPreviewPagerViewModel.navigate,
-                    )
-                }
+            FoldableDisplay.entries.forEach { display ->
+                SmallPreviewBinder.bind(
+                    applicationContext = applicationContext,
+                    view = dualDisplayAspectRatioLayout.requireViewById(display.getViewId()),
+                    viewModel = wallpaperPreviewViewModel,
+                    mainScope = mainScope,
+                    viewLifecycleOwner = viewLifecycleOwner,
+                    isSingleDisplayOrUnfoldedHorizontalHinge =
+                        isSingleDisplayOrUnfoldedHorizontalHinge,
+                    isRtl = isRtl,
+                    previewDisplaySize =
+                        checkNotNull(dualDisplayAspectRatioLayout.getPreviewDisplaySize(display)),
+                    previewDisplayId = checkNotNull(previewDisplays[display]).displayId,
+                    previewUtils =
+                        if (position == LOCK_PREVIEW_POSITION) lockPreviewUtils
+                        else homePreviewUtils,
+                    navigate = navigate,
+                )
             }
         }
     }
-
-    private const val LOCK_PREVIEW_POSITION = 0
-    private const val HOME_PREVIEW_POSITION = 1
 }
