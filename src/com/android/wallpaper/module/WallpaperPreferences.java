@@ -96,16 +96,6 @@ public interface WallpaperPreferences {
     void setHomeWallpaperActionIconRes(int resId);
 
     /**
-     * Returns the home wallpaper's base image URL or if there is none.
-     */
-    String getHomeWallpaperBaseImageUrl();
-
-    /**
-     * Sets the home wallpaper's base image URL.
-     */
-    void setHomeWallpaperBaseImageUrl(String baseImageUrl);
-
-    /**
      * Returns the home wallpaper's collection ID or null if there is none.
      */
     String getHomeWallpaperCollectionId();
@@ -114,16 +104,6 @@ public interface WallpaperPreferences {
      * Sets the home wallpaper's collection ID.
      */
     void setHomeWallpaperCollectionId(String collectionId);
-
-    /**
-     * Returns the home wallpaper's backing file name if there's one or null.
-     */
-    String getHomeWallpaperBackingFileName();
-
-    /**
-     * Sets the home wallpaper's backing file name
-     */
-    void setHomeWallpaperBackingFileName(String fileName);
 
     /**
      * Removes all home metadata from SharedPreferences.
@@ -241,16 +221,6 @@ public interface WallpaperPreferences {
     void setLockWallpaperCollectionId(String collectionId);
 
     /**
-     * Returns the home wallpaper's backing file name if there's one or null.
-     */
-    String getLockWallpaperBackingFileName();
-
-    /**
-     * Sets the home wallpaper's backing file name
-     */
-    void setLockWallpaperBackingFileName(String fileName);
-
-    /**
      * Returns the lock screen attributions as a list.
      */
     List<String> getLockWallpaperAttributions();
@@ -329,6 +299,7 @@ public interface WallpaperPreferences {
     /**
      * Gets the lock wallpaper's effects.
      */
+    // TODO (b/307939748): Log lock wallpaper effects. We need this function for snapshot logging
     String getLockWallpaperEffects();
 
     /**
@@ -348,23 +319,6 @@ public interface WallpaperPreferences {
      * daily wallpaper rotation on the user's device.
      */
     long getLastDailyRotationTimestamp();
-
-    /**
-     * Gets a list of the daily rotation timestamps that occurred in the last week, from least
-     * recent at the start of the list to most recent at the end of the list.
-     * The timestamps are in milliseconds since Unix epoch.
-     * If daily rotation has been enabled for less than one week, returns null instead.
-     */
-    @Nullable
-    List<Long> getDailyRotationsInLastWeek();
-
-    /**
-     * Gets a list of the daily rotation timestamps that occurred the previous day (midnight to
-     * midnight in the user's timezone). Timestamps are in milliseconds since Unix epoch. Returns null
-     * if daily rotation was enabled earlier than midnight yesterday.
-     */
-    @Nullable
-    List<Long> getDailyRotationsPreviousDay();
 
     /**
      * Returns the daily wallpaper enabled timestamp in milliseconds since Unix epoch, or -1 if
@@ -421,29 +375,6 @@ public interface WallpaperPreferences {
     void setDailyWallpaperRotationStatus(int status, long timestamp);
 
     /**
-     * Gets the last daily wallpapers rotation status or -1 if no rotation status has ever been
-     * persisted to preferences.
-     */
-    int getDailyWallpaperLastRotationStatus();
-
-    /**
-     * Gets the timestamp of the last set daily wallpapers rotation status in milliseconds since the
-     * Unix epoch or 0 if no rotation status has ever been persisted to preferences.
-     */
-    long getDailyWallpaperLastRotationStatusTimestamp();
-
-    /**
-     * Gets the timestamp of the last time a sync occurred of wallpaper data to or from this device.
-     * Returns 0 if a sync has never occurred before.
-     */
-    long getLastSyncTimestamp();
-
-    /**
-     * Sets the timestamp of the latest sync received or sent.
-     */
-    void setLastSyncTimestamp(long timestamp);
-
-    /**
      * Sets the status of whether a wallpaper is currently pending being set (i.e., user tapped the
      * UI to set a wallpaper but it has not yet been actually set on the device). Does so in a
      * synchronous manner so a caller may be assured that the underlying store has been updated when
@@ -483,36 +414,6 @@ public interface WallpaperPreferences {
      * disk after returning.
      */
     void setPendingDailyWallpaperUpdateStatus(@PendingDailyWallpaperUpdateStatus int updateStatus);
-
-    /**
-     * Increments the number of consecutive days daily rotation has failed.
-     */
-    void incrementNumDaysDailyRotationFailed();
-
-    /**
-     * Gets the number of days daily rotation failed.
-     */
-    int getNumDaysDailyRotationFailed();
-
-    /**
-     * Resets the consecutive number of days daily rotation failed to 0.
-     */
-    void resetNumDaysDailyRotationFailed();
-
-    /**
-     * Increments the number of consecutive days daily rotation was not attempted.
-     */
-    void incrementNumDaysDailyRotationNotAttempted();
-
-    /**
-     * Gets the number ofconsecutive days daily rotation was not attempted.
-     */
-    int getNumDaysDailyRotationNotAttempted();
-
-    /**
-     * Resets the consecutive number of days daily rotation was not attempted to 0.
-     */
-    void resetNumDaysDailyRotationNotAttempted();
 
     /**
      * Return the count of wallpaper picker launch.
