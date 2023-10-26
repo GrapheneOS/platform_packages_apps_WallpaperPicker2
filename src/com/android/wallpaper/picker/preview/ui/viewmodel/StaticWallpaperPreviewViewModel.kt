@@ -83,9 +83,13 @@ constructor(
                     if (_cachedWallpaperColors.value == null && wallpaperId != null) {
                         // If no cached colors from the preferences, extra colors from the original
                         // bitmap and cache them to the preferences.
-                        val colors = bitmap.extractColors()
-                        _cachedWallpaperColors.value = colors
-                        wallpaperPreferences.storeWallpaperColors(wallpaperId, colors)
+                        bitmap.extractColors()?.also { colors ->
+                            _cachedWallpaperColors.value = colors
+                            wallpaperPreferences.storeWallpaperColors(
+                                wallpaperId,
+                                colors,
+                            )
+                        }
                     }
                     FullResWallpaperViewModel(
                         bitmap,

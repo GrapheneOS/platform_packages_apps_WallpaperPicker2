@@ -68,8 +68,8 @@ class WallpaperRepository(
     ): String {
         val key =
             when (destination) {
-                WallpaperDestination.HOME -> wallpaperPreferences.homeWallpaperRecentsKey
-                WallpaperDestination.LOCK -> wallpaperPreferences.lockWallpaperRecentsKey
+                WallpaperDestination.HOME -> wallpaperPreferences.getHomeWallpaperRecentsKey()
+                WallpaperDestination.LOCK -> wallpaperPreferences.getLockWallpaperRecentsKey()
                 else -> error("Unsupported destination")
             }
         return key ?: previews?.firstOrNull()?.wallpaperId ?: DEFAULT_KEY

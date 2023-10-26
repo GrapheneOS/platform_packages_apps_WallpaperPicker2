@@ -37,6 +37,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.asset.Asset;
@@ -292,7 +293,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
 
     @Override
     public boolean saveStaticWallpaperToPreferences(@Destination int destination,
-            StaticWallpaperMetadata metadata) {
+            @NonNull StaticWallpaperMetadata metadata) {
         if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
             mWallpaperPreferences.clearHomeWallpaperMetadata();
             mWallpaperPreferences.setHomeStaticImageWallpaperMetadata(metadata);
