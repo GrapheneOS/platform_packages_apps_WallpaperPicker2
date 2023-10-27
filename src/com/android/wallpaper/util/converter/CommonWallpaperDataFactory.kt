@@ -42,7 +42,8 @@ class CommonWallpaperDataFactory {
         const val TAG = "CommonWallpaperDataFactory"
         private const val STATIC_WALLPAPER_PACKAGE = "StaticWallpaperPackage"
         private const val STATIC_WALLPAPER_CLASS = "StaticWallpaperClass"
-
+        private const val ACTION_URL = "actionURL"
+        private const val ATTRIBUTION = "attribution"
         fun getCommonWallpaperData(
             wallpaperInfo: WallpaperInfo,
             context: Context
@@ -85,11 +86,12 @@ class CommonWallpaperDataFactory {
 
             val attributions =
                 mutableListOf<Pair<String, String>>(
-                    Pair(
-                        DefaultLiveWallpaperDataFactory.ACTION_URL,
-                        wallpaperInfo.getActionUrl(context)
-                    ),
+                    Pair(ACTION_URL, wallpaperInfo.getActionUrl(context)),
                 )
+
+            for (attribution in wallpaperInfo.getAttributions(context)) {
+                attributions.add(Pair(ATTRIBUTION, attribution))
+            }
 
             val colorInfoOfWallpaper =
                 ColorInfo(

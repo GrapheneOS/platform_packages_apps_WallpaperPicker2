@@ -77,8 +77,4 @@ open class DefaultLiveWallpaperDataFactory {
             isApplied = wallpaperInfo.isApplied(wallpaperInfo.info)
         )
     }
-
-    companion object {
-        const val ACTION_URL = "actionURL"
-    }
 }
