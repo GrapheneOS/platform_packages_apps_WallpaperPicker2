@@ -33,14 +33,15 @@ interface WallpaperClient {
     ): Flow<List<WallpaperModel>>
 
     /**
-     * Asynchronously sets the wallpaper to the one with the given ID.
+     * Asynchronously sets a recent wallpaper selected from the wallpaper quick switcher. The recent
+     * wallpaper must have a wallpaper ID.
      *
      * @param setWallpaperEntryPoint The entry point where we set the wallpaper from.
      * @param destination The screen to set the wallpaper on.
      * @param wallpaperId The ID of the wallpaper to set.
      * @param onDone A callback to invoke when setting is done.
      */
-    suspend fun setWallpaper(
+    suspend fun setRecentWallpaper(
         @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
         destination: WallpaperDestination,
         wallpaperId: String,

@@ -118,7 +118,7 @@ class WallpaperRepository(
         _selectingWallpaperId.value =
             _selectingWallpaperId.value.toMutableMap().apply { this[destination] = wallpaperId }
         withContext(backgroundDispatcher) {
-            client.setWallpaper(
+            client.setRecentWallpaper(
                 setWallpaperEntryPoint = setWallpaperEntryPoint,
                 destination = destination,
                 wallpaperId = wallpaperId,
