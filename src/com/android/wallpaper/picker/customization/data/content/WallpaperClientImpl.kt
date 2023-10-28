@@ -105,7 +105,7 @@ class WallpaperClientImpl(
         }
     }
 
-    override suspend fun setWallpaper(
+    override suspend fun setRecentWallpaper(
         @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
         destination: WallpaperDestination,
         wallpaperId: String,

@@ -98,7 +98,7 @@ class WallpaperSnapshotRestorerTest {
             )
             underTest.setUpSnapshotRestorer(store)
             runCurrent()
-            wallpaperClient.setWallpaper(
+            wallpaperClient.setRecentWallpaper(
                 setWallpaperEntryPoint = SET_WALLPAPER_ENTRY_POINT_RESET,
                 destination = WallpaperDestination.HOME,
                 wallpaperId = INITIAL_HOME_WALLPAPERS[1].wallpaperId,
@@ -106,7 +106,7 @@ class WallpaperSnapshotRestorerTest {
             )
             runCurrent()
             assertThat(storedSnapshots).hasSize(2)
-            wallpaperClient.setWallpaper(
+            wallpaperClient.setRecentWallpaper(
                 setWallpaperEntryPoint = SET_WALLPAPER_ENTRY_POINT_RESET,
                 destination = WallpaperDestination.LOCK,
                 wallpaperId = INITIAL_LOCK_WALLPAPERS[4].wallpaperId,
