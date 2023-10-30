@@ -17,9 +17,11 @@ package com.android.wallpaper.picker.preview.ui.viewmodel
 
 import android.graphics.Bitmap
 import android.graphics.Point
+import android.graphics.Rect
+import com.android.wallpaper.model.wallpaper.ScreenOrientation
 
 data class FullResWallpaperViewModel(
     val rawWallpaperBitmap: Bitmap,
     val rawWallpaperSize: Point,
-    val offsetToStart: Boolean,
+    val cropHints: Map<ScreenOrientation, Rect>?,
 )

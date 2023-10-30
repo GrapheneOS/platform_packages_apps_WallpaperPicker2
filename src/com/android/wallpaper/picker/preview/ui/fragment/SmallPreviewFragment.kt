@@ -34,7 +34,6 @@ import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.TabsP
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
-import com.android.wallpaper.util.RtlUtils
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -85,11 +84,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
     }
 
     private fun bindScreenPreview(view: View) {
-        val activity = activity ?: return
-        val isSingleDisplayOrUnfoldedHorizontalHinge =
-            displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(activity)
-        val isRtl = RtlUtils.isRtl(appContext)
-
         if (displayUtils.hasMultiInternalDisplays()) {
             val dualPreviewView: DualPreviewViewPager =
                 view.requireViewById(R.id.dual_preview_pager)
@@ -102,9 +96,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 homePreviewUtils,
                 lockPreviewUtils,
                 appContext,
-                isSingleDisplayOrUnfoldedHorizontalHinge,
                 viewLifecycleOwner,
-                isRtl,
                 mainScope,
                 displayUtils,
             ) {
@@ -121,9 +113,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 // TODO: pass correct view models for the view pager
                 wallpaperPreviewViewModel,
                 appContext,
-                isSingleDisplayOrUnfoldedHorizontalHinge,
                 viewLifecycleOwner,
-                isRtl,
                 mainScope,
                 homePreviewUtils,
                 lockPreviewUtils,
