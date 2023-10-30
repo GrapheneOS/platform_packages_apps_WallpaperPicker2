@@ -22,5 +22,5 @@ import android.content.ComponentName
 data class WallpaperId(
     val componentName: ComponentName,
     val uniqueId: String,
-    val collectionId: String
+    val collectionId: String,
 )
