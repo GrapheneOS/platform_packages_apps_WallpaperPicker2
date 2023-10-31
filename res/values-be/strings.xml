@@ -90,8 +90,7 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Выдаліць"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"Змяніць"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Выдаліць шпалеры з вашай прылады?"</string>
-    <!-- no translation found for bottom_action_bar_back (2620581414970740784) -->
-    <skip />
+    <string name="bottom_action_bar_back" msgid="2620581414970740784">"Перайсці ўверх"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Змяніць"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Спампаваць"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Паказаць шпалеры як слайд-шоу"</string>

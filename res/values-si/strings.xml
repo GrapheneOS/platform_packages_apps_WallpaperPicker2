@@ -90,8 +90,7 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"මකන්න"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"සංස්කරණය කරන්න"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"ඔබේ උපාංගයෙන් මෙම බිතුපත මකන්න ද?"</string>
-    <!-- no translation found for bottom_action_bar_back (2620581414970740784) -->
-    <skip />
+    <string name="bottom_action_bar_back" msgid="2620581414970740784">"ඉහළට සංචාලනය කරන්න"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"සංස්කරණය කරන්න"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"බාගන්න"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"වෝල්පේපර ස්ලයිඩ දර්ශනය"</string>
