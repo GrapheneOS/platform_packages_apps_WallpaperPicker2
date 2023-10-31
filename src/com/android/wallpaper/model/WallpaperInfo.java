@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Parcel;
@@ -30,9 +31,12 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.IntDef;
 
 import com.android.wallpaper.asset.Asset;
+import com.android.wallpaper.model.wallpaper.ScreenOrientation;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -48,6 +52,8 @@ public abstract class WallpaperInfo implements Parcelable {
     private ColorInfo mColorInfo = new ColorInfo();
 
     private PriorityQueue<String> mEffectNames = new PriorityQueue<>();
+
+    protected final HashMap<Integer, String> mCropHints = new HashMap<>();
 
     public WallpaperInfo() {
     }
@@ -293,6 +299,30 @@ public abstract class WallpaperInfo implements Parcelable {
     @DrawableRes
     public int getBadgeDrawableRes() {
         return Resources.ID_NULL;
+    }
+
+    /** Sets the crop {@link Rect} of each {@link ScreenOrientation} for this wallpaper. */
+    public void setWallpaperCropHints(Map<ScreenOrientation, Rect> cropHints) {
+        if (cropHints == null) {
+            return;
+        }
+
+        cropHints.forEach((orientation, rect) -> {
+            if (rect != null) {
+                mCropHints.put(orientation.ordinal(),
+                        rect.flattenToString());
+            }
+        });
+    }
+
+    /** Returns the crop {@link Rect} of each {@link ScreenOrientation} for this wallpaper. */
+    public Map<ScreenOrientation, Rect> getWallpaperCropHints() {
+        Map<ScreenOrientation, Rect> cropHints = new HashMap<>();
+        mCropHints.forEach(
+                (orientation, rect) -> cropHints.put(
+                        ScreenOrientation.getEntries().get(orientation),
+                        Rect.unflattenFromString(rect)));
+        return cropHints;
     }
 
     /**

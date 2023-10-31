@@ -141,6 +141,7 @@ class WallpaperClientImpl(
                 wallpaperManagerId,
                 wallpaperModel.commonWallpaperData.id.uniqueId,
                 // TODO (b/309139122): Introduce crop hints to StaticWallpaperMetadata
+                cropHints = null,
             )
         if (destination == WallpaperDestination.HOME || destination == WallpaperDestination.BOTH) {
             wallpaperPreferences.clearHomeWallpaperMetadata()

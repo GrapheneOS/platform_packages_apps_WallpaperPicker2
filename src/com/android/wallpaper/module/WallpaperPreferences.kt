@@ -387,6 +387,12 @@ interface WallpaperPreferences {
         cropHints: Map<ScreenOrientation, Rect?>,
     )
 
+    /** Stores wallpaper crop hints for each dimensions. */
+    fun storeWallpaperCropHints(cropHints: Map<ScreenOrientation, Rect?>)
+
+    /** Gets wallpaper crop hints for each dimensions. */
+    fun getWallpaperCropHints(): Map<ScreenOrientation, Rect?>
+
     /** The possible wallpaper presentation modes, i.e., either "static" or "rotating". */
     @IntDef(PRESENTATION_MODE_STATIC, PRESENTATION_MODE_ROTATING) annotation class PresentationMode
 

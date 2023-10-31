@@ -25,6 +25,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Rect
 import android.util.Log
+import androidx.core.content.edit
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.StaticWallpaperMetadata
 import com.android.wallpaper.model.WallpaperInfo
@@ -279,6 +280,10 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
             .remove(NoBackupKeys.KEY_HOME_WALLPAPER_REMOTE_ID)
             .remove(NoBackupKeys.KEY_HOME_WALLPAPER_BASE_IMAGE_URL)
             .remove(NoBackupKeys.KEY_HOME_WALLPAPER_BACKING_FILE)
+            .remove(NoBackupKeys.KEY_CROP_HINT_PORTRAIT)
+            .remove(NoBackupKeys.KEY_CROP_HINT_LANDSCAPE)
+            .remove(NoBackupKeys.KEY_CROP_HINT_UNFOLDED_PORTRAIT)
+            .remove(NoBackupKeys.KEY_CROP_HINT_UNFOLDED_LANDSCAPE)
             .apply()
     }
 
@@ -459,6 +464,10 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
             .remove(NoBackupKeys.KEY_LOCK_WALLPAPER_MANAGER_ID)
             .remove(NoBackupKeys.KEY_LOCK_WALLPAPER_REMOTE_ID)
             .remove(NoBackupKeys.KEY_LOCK_WALLPAPER_BACKING_FILE)
+            .remove(NoBackupKeys.KEY_CROP_HINT_PORTRAIT)
+            .remove(NoBackupKeys.KEY_CROP_HINT_LANDSCAPE)
+            .remove(NoBackupKeys.KEY_CROP_HINT_UNFOLDED_PORTRAIT)
+            .remove(NoBackupKeys.KEY_CROP_HINT_UNFOLDED_LANDSCAPE)
             .apply()
     }
 
@@ -823,6 +832,29 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
         bitmap: Bitmap,
         cropHints: Map<ScreenOrientation, Rect?>,
     ) {}
+
+    override fun storeWallpaperCropHints(cropHints: Map<ScreenOrientation, Rect?>) {
+        noBackupPrefs.edit {
+            cropHints.forEach { (orientation, rect) ->
+                putString(getScreenOrientationPrefKey(orientation), rect?.flattenToString())
+            }
+        }
+    }
+
+    override fun getWallpaperCropHints(): Map<ScreenOrientation, Rect?> {
+        return ScreenOrientation.entries.associateWith {
+            Rect.unflattenFromString(noBackupPrefs.getString(getScreenOrientationPrefKey(it), null))
+        }
+    }
+
+    private fun getScreenOrientationPrefKey(orientation: ScreenOrientation): String {
+        return when (orientation) {
+            ScreenOrientation.PORTRAIT -> NoBackupKeys.KEY_CROP_HINT_PORTRAIT
+            ScreenOrientation.LANDSCAPE -> NoBackupKeys.KEY_CROP_HINT_LANDSCAPE
+            ScreenOrientation.UNFOLDED_LANDSCAPE -> NoBackupKeys.KEY_CROP_HINT_UNFOLDED_LANDSCAPE
+            ScreenOrientation.UNFOLDED_PORTRAIT -> NoBackupKeys.KEY_CROP_HINT_UNFOLDED_PORTRAIT
+        }
+    }
 
     private fun setFirstLaunchDateSinceSetup(firstLaunchDate: Int) {
         noBackupPrefs
