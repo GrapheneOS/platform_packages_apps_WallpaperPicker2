@@ -101,15 +101,17 @@ class WallpaperRepositoryTest {
                 WallpaperDestination.HOME,
                 FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[1].wallpaperId,
             )
-            prefs.homeWallpaperRecentsKey =
+            prefs.setHomeWallpaperRecentsKey(
                 FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[1].wallpaperId
+            )
             underTest.setWallpaper(
                 SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
                 WallpaperDestination.LOCK,
                 FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[2].wallpaperId,
             )
-            prefs.lockWallpaperRecentsKey =
+            prefs.setLockWallpaperRecentsKey(
                 FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS[2].wallpaperId
+            )
             assertThat(recentHomeWallpapers())
                 .isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS)
             assertThat(recentLockWallpapers())
