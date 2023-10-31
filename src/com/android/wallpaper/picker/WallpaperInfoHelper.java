@@ -18,6 +18,7 @@ package com.android.wallpaper.picker;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,6 +47,26 @@ public class WallpaperInfoHelper {
         CharSequence actionLabel = context.getString(R.string.explore);
         if (actionUrl != null && !actionUrl.isEmpty()) {
             Uri exploreUri = Uri.parse(wallpaperInfo.getActionUrl(context));
+            ExploreIntentChecker intentChecker =
+                    InjectorProvider.getInjector().getExploreIntentChecker(context);
+            intentChecker.fetchValidActionViewIntent(exploreUri,
+                    intent -> callback.onReceiveExploreIntent(actionLabel, intent));
+        } else {
+            callback.onReceiveExploreIntent(actionLabel, null);
+        }
+    }
+
+    /**
+     * Loads the explore Intent from the actionUrl
+     */
+    public static void loadExploreIntent(
+            Context context,
+            @Nullable String actionUrl,
+            @NonNull ExploreIntentReceiver callback) {
+        CharSequence actionLabel = context.getString(R.string.explore);
+
+        if (!TextUtils.isEmpty(actionUrl)) {
+            Uri exploreUri = Uri.parse(actionUrl);
             ExploreIntentChecker intentChecker =
                     InjectorProvider.getInjector().getExploreIntentChecker(context);
             intentChecker.fetchValidActionViewIntent(exploreUri,

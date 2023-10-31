@@ -29,6 +29,7 @@ import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.model.wallpaper.WallpaperModel
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.BasePreviewActivity
+import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.ActivityUtils
 import com.android.wallpaper.util.DisplayUtils
@@ -45,6 +46,7 @@ class WallpaperPreviewActivity :
     @ApplicationContext @Inject lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
     @Inject lateinit var wallpaperModelFactory: DefaultWallpaperModelFactory
+    @Inject lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +57,9 @@ class WallpaperPreviewActivity :
         WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
         val wallpaper =
             checkNotNull(intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java))
+        wallpaperPreviewRepository.setWallpaperModel(wallpaper.convertToWallpaperModel())
+        // TODO(b/310742189): WallpaperPreviewViewModel listen to WallpaperModel
+        //  changes from WallpaperPreviewRepository
         viewModel.initializeViewModel(
             applicationContext,
             wallpaper,
