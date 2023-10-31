@@ -21,8 +21,8 @@ import com.android.wallpaper.picker.preview.ui.view.FullPreviewSurfaceView
 /** View model for rendering [FullPreviewSurfaceView]. */
 data class FullPreviewSurfaceViewModel(
 
-    /** Data of user's selection on [SmallPreviewFragment]. */
-    val previewTransitionViewModel: PreviewTransitionViewModel,
+    /** Configuration of a user selected small preview on [SmallPreviewFragment]. */
+    val selectedSmallPreviewConfig: SmallPreviewConfigViewModel,
 
     /** Size of the current display rendering the view on screen. */
     val currentDisplaySize: Point,

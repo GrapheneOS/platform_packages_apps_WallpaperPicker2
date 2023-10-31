@@ -31,7 +31,6 @@ import com.android.wallpaper.picker.preview.ui.binder.FullWallpaperPreviewBinder
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewSurfaceViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
-import com.android.wallpaper.util.RtlUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -54,29 +53,32 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
 
         setUpToolbar(view)
 
-        val appContext = requireContext().applicationContext
-        FullWallpaperPreviewBinder.bind(
-            appContext,
-            view.requireViewById(R.id.wallpaper_surface),
-            view.requireViewById(R.id.touch_forwarding_layout),
-            FullPreviewSurfaceViewModel(
-                previewTransitionViewModel =
-                    checkNotNull(wallpaperPreviewViewModel.previewTransitionViewModel),
-                currentDisplaySize = displayUtils.getRealSize(checkNotNull(view.context.display))
-            ),
-            wallpaperPreviewViewModel,
-            viewLifecycleOwner,
-            mainScope,
-            displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(requireActivity()),
-            RtlUtils.isRtl(requireContext().applicationContext),
-            staticPreviewView =
-                if (checkNotNull(wallpaperPreviewViewModel.editingWallpaper) is LiveWallpaperInfo) {
-                    null
-                } else {
-                    LayoutInflater.from(appContext)
-                        .inflate(R.layout.fullscreen_wallpaper_preview, null)
-                },
-        )
+        wallpaperPreviewViewModel.selectedSmallPreviewConfig?.let {
+            val appContext = requireContext().applicationContext
+            FullWallpaperPreviewBinder.bind(
+                appContext,
+                view.requireViewById(R.id.wallpaper_surface),
+                view.requireViewById(R.id.touch_forwarding_layout),
+                FullPreviewSurfaceViewModel(
+                    selectedSmallPreviewConfig = it,
+                    currentDisplaySize =
+                        displayUtils.getRealSize(checkNotNull(view.context.display))
+                ),
+                wallpaperPreviewViewModel,
+                viewLifecycleOwner,
+                mainScope,
+                staticPreviewView =
+                    if (
+                        checkNotNull(wallpaperPreviewViewModel.editingWallpaper)
+                            is LiveWallpaperInfo
+                    ) {
+                        null
+                    } else {
+                        LayoutInflater.from(appContext)
+                            .inflate(R.layout.fullscreen_wallpaper_preview, null)
+                    },
+            )
+        }
 
         CropWallpaperButtonBinder.bind(
             view.requireViewById(R.id.crop_wallpaper_button),

@@ -16,7 +16,11 @@
 
 package com.android.wallpaper.model.wallpaper
 
+import android.graphics.Rect
 import com.android.wallpaper.asset.Asset
 
 /** Represents set of attributes that are needed for a static wallpaper. */
-data class StaticWallpaperData(val asset: Asset)
+data class StaticWallpaperData(
+    val asset: Asset,
+    val cropHints: Map<ScreenOrientation, Rect>? = null,
+)

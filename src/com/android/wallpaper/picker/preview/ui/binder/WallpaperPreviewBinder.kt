@@ -22,6 +22,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.module.WallpaperPersister
+import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
@@ -32,11 +33,10 @@ import kotlinx.coroutines.launch
 object WallpaperPreviewBinder {
     fun bind(
         applicationContext: Context,
-        isSingleDisplayOrUnfoldedHorizontalHinge: Boolean,
-        isRtl: Boolean,
         @MainDispatcher mainScope: CoroutineScope,
         viewLifecycleOwner: LifecycleOwner,
         viewModel: WallpaperPreviewViewModel,
+        smallPreviewConfig: SmallPreviewConfigViewModel,
         wallpaperSurface: SurfaceView,
         fullResImageView: SubsamplingScaleImageView? = null,
         lowResImageView: ImageView? = null,
@@ -47,9 +47,8 @@ object WallpaperPreviewBinder {
                 fullResImageView,
                 checkNotNull(lowResImageView),
                 viewModel.getStaticWallpaperPreviewViewModel(),
+                smallPreviewConfig,
                 viewLifecycleOwner,
-                isSingleDisplayOrUnfoldedHorizontalHinge,
-                isRtl,
             )
         }
         // Bind live wallpaper

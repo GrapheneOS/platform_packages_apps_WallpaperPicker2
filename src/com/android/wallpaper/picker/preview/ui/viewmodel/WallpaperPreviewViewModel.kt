@@ -20,6 +20,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.model.wallpaper.WallpaperModel
+import com.android.wallpaper.model.wallpaper.WallpaperModel.LiveWallpaperModel
+import com.android.wallpaper.model.wallpaper.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -42,8 +44,8 @@ constructor(
     /** User selected [WallpaperModel] for editing. */
     var editingWallpaperModel: WallpaperModel? = null
 
-    /** Data used during transition from small to full preview, based on duo preview view pager. */
-    var previewTransitionViewModel: PreviewTransitionViewModel? = null
+    /** User selected small preview configuration. */
+    var selectedSmallPreviewConfig: SmallPreviewConfigViewModel? = null
 
     /** Gets the view model for static wallpaper preview views. */
     fun getStaticWallpaperPreviewViewModel(): StaticWallpaperPreviewViewModel =
@@ -53,8 +55,12 @@ constructor(
     fun initializeViewModel(context: Context, wallpaper: WallpaperInfo, model: WallpaperModel) {
         editingWallpaper = wallpaper
         editingWallpaperModel = model
-        viewModelScope.launch {
-            staticWallpaperPreviewViewModel.initializeViewModel(context, wallpaper)
+        when (model) {
+            is StaticWallpaperModel ->
+                viewModelScope.launch {
+                    staticWallpaperPreviewViewModel.initializeViewModel(context, wallpaper, model)
+                }
+            is LiveWallpaperModel -> {}
         }
     }
 }
