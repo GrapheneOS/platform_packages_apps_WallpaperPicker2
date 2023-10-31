@@ -208,11 +208,10 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
 
     @Override
     public boolean setWallpaperInRotation(Bitmap wallpaperBitmap, List<String> attributions,
-            int actionLabelRes, int actionIconRes, String actionUrl, String collectionId,
-            String remoteId) {
+            String actionUrl, String collectionId, String remoteId) {
 
-        return setWallpaperInRotationStatic(wallpaperBitmap, attributions, actionUrl,
-                actionLabelRes, actionIconRes, collectionId, remoteId);
+        return setWallpaperInRotationStatic(wallpaperBitmap, attributions, actionUrl, collectionId,
+                remoteId);
     }
 
     @Override
@@ -224,10 +223,9 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
 
     @Override
     public boolean finalizeWallpaperForNextRotation(List<String> attributions, String actionUrl,
-            int actionLabelRes, int actionIconRes, String collectionId, int wallpaperId,
-            String remoteId) {
-        return saveStaticWallpaperMetadata(attributions, actionUrl, actionLabelRes,
-                actionIconRes, collectionId, wallpaperId, remoteId, DEST_HOME_SCREEN);
+            String collectionId, int wallpaperId, String remoteId) {
+        return saveStaticWallpaperMetadata(attributions, actionUrl, collectionId, wallpaperId,
+                remoteId, DEST_HOME_SCREEN);
     }
 
     /**
@@ -235,7 +233,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
      * the current "daily wallpaper".
      */
     private boolean setWallpaperInRotationStatic(Bitmap wallpaperBitmap, List<String> attributions,
-            String actionUrl, int actionLabelRes, int actionIconRes, String collectionId,
+            String actionUrl, String collectionId,
             String remoteId) {
         final int wallpaperId = cropAndSetWallpaperBitmapInRotationStatic(wallpaperBitmap,
                 attributions, actionUrl, collectionId);
@@ -244,15 +242,13 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             return false;
         }
 
-        return saveStaticWallpaperMetadata(attributions, actionUrl, actionLabelRes, actionIconRes,
-                collectionId, wallpaperId, remoteId, DEST_HOME_SCREEN);
+        return saveStaticWallpaperMetadata(attributions, actionUrl, collectionId, wallpaperId,
+                remoteId, DEST_HOME_SCREEN);
     }
 
     @Override
     public boolean saveStaticWallpaperMetadata(List<String> attributions,
             String actionUrl,
-            int actionLabelRes,
-            int actionIconRes,
             String collectionId,
             int wallpaperId,
             String remoteId,
@@ -268,8 +264,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
 
             mWallpaperPreferences.setHomeWallpaperAttributions(attributions);
             mWallpaperPreferences.setHomeWallpaperActionUrl(actionUrl);
-            mWallpaperPreferences.setHomeWallpaperActionLabelRes(actionLabelRes);
-            mWallpaperPreferences.setHomeWallpaperActionIconRes(actionIconRes);
             mWallpaperPreferences.setHomeWallpaperCollectionId(collectionId);
             mWallpaperPreferences.setHomeWallpaperRemoteId(remoteId);
         }
@@ -282,8 +276,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setLockWallpaperManagerId(wallpaperId);
             mWallpaperPreferences.setLockWallpaperAttributions(attributions);
             mWallpaperPreferences.setLockWallpaperActionUrl(actionUrl);
-            mWallpaperPreferences.setLockWallpaperActionLabelRes(actionLabelRes);
-            mWallpaperPreferences.setLockWallpaperActionIconRes(actionIconRes);
             mWallpaperPreferences.setLockWallpaperCollectionId(collectionId);
             mWallpaperPreferences.setLockWallpaperRemoteId(remoteId);
         }
@@ -646,10 +638,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                     mWallpaperPreferences.getHomeWallpaperAttributions());
             mWallpaperPreferences.setLockWallpaperActionUrl(
                     mWallpaperPreferences.getHomeWallpaperActionUrl());
-            mWallpaperPreferences.setLockWallpaperActionLabelRes(
-                    mWallpaperPreferences.getHomeWallpaperActionLabelRes());
-            mWallpaperPreferences.setLockWallpaperActionIconRes(
-                    mWallpaperPreferences.getHomeWallpaperActionIconRes());
             mWallpaperPreferences.setLockWallpaperCollectionId(
                     mWallpaperPreferences.getHomeWallpaperCollectionId());
 
@@ -708,10 +696,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setHomeWallpaperAttributions(
                     mWallpaper.getAttributions(mAppContext));
             mWallpaperPreferences.setHomeWallpaperActionUrl(mWallpaper.getActionUrl(mAppContext));
-            mWallpaperPreferences.setHomeWallpaperActionLabelRes(
-                    mWallpaper.getActionLabelRes(mAppContext));
-            mWallpaperPreferences.setHomeWallpaperActionIconRes(
-                    mWallpaper.getActionIconRes(mAppContext));
             mWallpaperPreferences.setHomeWallpaperCollectionId(
                     mWallpaper.getCollectionId(mAppContext));
             mWallpaperPreferences.setHomeWallpaperRemoteId(mWallpaper.getWallpaperId());
@@ -727,10 +711,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setLockWallpaperAttributions(
                     mWallpaper.getAttributions(mAppContext));
             mWallpaperPreferences.setLockWallpaperActionUrl(mWallpaper.getActionUrl(mAppContext));
-            mWallpaperPreferences.setLockWallpaperActionLabelRes(
-                    mWallpaper.getActionLabelRes(mAppContext));
-            mWallpaperPreferences.setLockWallpaperActionIconRes(
-                    mWallpaper.getActionIconRes(mAppContext));
             mWallpaperPreferences.setLockWallpaperCollectionId(
                     mWallpaper.getCollectionId(mAppContext));
             mWallpaperPreferences.setLockWallpaperRemoteId(mWallpaper.getWallpaperId());
@@ -769,8 +749,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                     new StaticWallpaperMetadata(
                             mWallpaper.getAttributions(mAppContext),
                             mWallpaper.getActionUrl(mAppContext),
-                            mWallpaper.getActionLabelRes(mAppContext),
-                            mWallpaper.getActionIconRes(mAppContext),
                             mWallpaper.getCollectionId(mAppContext),
                             bitmapHash,
                             wallpaperId,

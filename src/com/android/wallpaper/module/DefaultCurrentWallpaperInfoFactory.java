@@ -76,8 +76,6 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                         homeWallpaper = new CurrentWallpaperInfo(
                                 homeWallpaperMetadata.getAttributions(),
                                 homeWallpaperMetadata.getActionUrl(),
-                                homeWallpaperMetadata.getActionLabelRes(),
-                                homeWallpaperMetadata.getActionIconRes(),
                                 homeWallpaperMetadata.getCollectionId(),
                                 WallpaperManager.FLAG_SYSTEM);
                     }
@@ -93,8 +91,6 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                             lockWallpaper = new CurrentWallpaperInfo(
                                     lockWallpaperMetadata.getAttributions(),
                                     lockWallpaperMetadata.getActionUrl(),
-                                    lockWallpaperMetadata.getActionLabelRes(),
-                                    lockWallpaperMetadata.getActionIconRes(),
                                     lockWallpaperMetadata.getCollectionId(),
                                     WallpaperManager.FLAG_LOCK);
                         }

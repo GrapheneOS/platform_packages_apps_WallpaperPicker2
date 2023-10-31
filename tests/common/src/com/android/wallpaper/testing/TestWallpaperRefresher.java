@@ -49,15 +49,11 @@ public class TestWallpaperRefresher implements WallpaperRefresher {
                     new WallpaperMetadata(
                             prefs.getHomeWallpaperAttributions(),
                             prefs.getHomeWallpaperActionUrl(),
-                            prefs.getHomeWallpaperActionLabelRes(),
-                            prefs.getHomeWallpaperActionIconRes(),
                             prefs.getHomeWallpaperCollectionId(),
                             null /* wallpaperComponent */),
                     new WallpaperMetadata(
                             prefs.getLockWallpaperAttributions(),
                             prefs.getLockWallpaperActionUrl(),
-                            prefs.getLockWallpaperActionLabelRes(),
-                            prefs.getLockWallpaperActionIconRes(),
                             prefs.getLockWallpaperCollectionId(),
                             null /* wallpaperComponent */),
                     prefs.getWallpaperPresentationMode());
@@ -66,8 +62,6 @@ public class TestWallpaperRefresher implements WallpaperRefresher {
                     new WallpaperMetadata(
                             prefs.getHomeWallpaperAttributions(),
                             prefs.getHomeWallpaperActionUrl(),
-                            prefs.getHomeWallpaperActionLabelRes(),
-                            prefs.getHomeWallpaperActionIconRes(),
                             prefs.getHomeWallpaperCollectionId(),
                             null /* wallpaperComponent */),
                     null,

@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class LiveWallpaperMetadata extends WallpaperMetadata {
     public LiveWallpaperMetadata(android.app.WallpaperInfo wallpaperComponent) {
-        super(null, null, 0, 0, null, wallpaperComponent);
+        super(null, null, null, wallpaperComponent);
     }
 
     @Override
@@ -34,16 +34,6 @@ public class LiveWallpaperMetadata extends WallpaperMetadata {
 
     @Override
     public String getActionUrl() {
-        throw new UnsupportedOperationException("Not implemented for live wallpapers");
-    }
-
-    @Override
-    public int getActionLabelRes() {
-        throw new UnsupportedOperationException("Not implemented for live wallpapers");
-    }
-
-    @Override
-    public int getActionIconRes() {
         throw new UnsupportedOperationException("Not implemented for live wallpapers");
     }
 

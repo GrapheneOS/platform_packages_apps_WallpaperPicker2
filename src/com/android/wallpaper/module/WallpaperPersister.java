@@ -73,8 +73,7 @@ public interface WallpaperPersister {
      * @return Whether the set wallpaper operation was successful.
      */
     boolean setWallpaperInRotation(Bitmap wallpaperBitmap, List<String> attributions,
-                                   int actionLabelRes, int actionIconRes,
-                                   String actionUrl, String collectionId, String remoteId);
+            String actionUrl, String collectionId, String remoteId);
 
     /**
      * Sets only the bitmap of a rotating wallpaper of the next rotation to the system and stores
@@ -104,8 +103,7 @@ public interface WallpaperPersister {
      * @return Whether the operation succeeded.
      */
     boolean finalizeWallpaperForNextRotation(List<String> attributions, String actionUrl,
-                                             int actionLabelRes, int actionIconRes,
-                                             String collectionId, int wallpaperId, String remoteId);
+            String collectionId, int wallpaperId, String remoteId);
 
     /**
      * Finalizes wallpaper metadata by persisting them to SharedPreferences and finalizes the
@@ -114,8 +112,6 @@ public interface WallpaperPersister {
      *
      * @param attributions      List of attribution items.
      * @param actionUrl         The action or "explore" URL for the wallpaper.
-     * @param actionLabelRes    Resource ID of the action label
-     * @param actionIconRes     Resource ID of the action icon
      * @param collectionId      ID of this wallpaper's collection.
      * @param wallpaperId       ID that uniquely identifies a wallpaper set to the
      *                          {@link android.app.WallpaperManager}.
@@ -125,8 +121,6 @@ public interface WallpaperPersister {
      */
     boolean saveStaticWallpaperMetadata(List<String> attributions,
             String actionUrl,
-            int actionLabelRes,
-            int actionIconRes,
             String collectionId,
             int wallpaperId,
             String remoteId,
