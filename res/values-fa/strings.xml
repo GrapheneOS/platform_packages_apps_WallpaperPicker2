@@ -40,7 +40,7 @@
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"صفحه اصلی و صفحه قفل"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"کاغذ‌دیواری با تصویر چرخشی"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"برای نمایش کاغذدیواری فعلی در اینجا، <xliff:g id="APP_NAME">%1$s</xliff:g> باید به حافظه دستگاهتان دسترسی داشته باشد."</string>
-    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"‏برای اینکه کاغذدیواری کنونی اینجا نمایش داده شود، Wallpapers باید به حافظه دستگاهتان دسترسی داشته باشد.\n\nبرای تغییر این تنظیم، به بخش «مجوزها»ی اطلاعات برنامه Wallpapers بروید."</string>
+    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"‏برای اینکه کاغذدیواری کنونی اینجا نمایش داده شود، Wallpapers باید به حافظه دستگاهتان دسترسی داشته باشد.\n\nبرای تغییر این تنظیم، به بخش «اجازه‌ها»ی اطلاعات برنامه Wallpapers بروید."</string>
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"اجازه دسترسی"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"سرویس کاغذ‌دیواری پویا برای کاغذدیواری‌های چرخشی"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"کاغذ‌دیواری روزانه"</string>
