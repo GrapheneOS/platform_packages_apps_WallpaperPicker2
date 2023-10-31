@@ -40,7 +40,7 @@
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"صفحه اصلی و صفحه قفل"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"کاغذ‌دیواری با تصویر چرخشی"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"برای نمایش کاغذدیواری فعلی در اینجا، <xliff:g id="APP_NAME">%1$s</xliff:g> باید به حافظه دستگاهتان دسترسی داشته باشد."</string>
-    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"‏برای اینکه کاغذدیواری کنونی اینجا نمایش داده شود، Wallpapers باید به حافظه دستگاهتان دسترسی داشته باشد.\n\nبرای تغییر این تنظیم، به بخش «مجوزها»ی اطلاعات برنامه Wallpapers بروید."</string>
+    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"‏برای اینکه کاغذدیواری کنونی اینجا نمایش داده شود، Wallpapers باید به حافظه دستگاهتان دسترسی داشته باشد.\n\nبرای تغییر این تنظیم، به بخش «اجازه‌ها»ی اطلاعات برنامه Wallpapers بروید."</string>
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"اجازه دسترسی"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"سرویس کاغذ‌دیواری پویا برای کاغذدیواری‌های چرخشی"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"کاغذ‌دیواری روزانه"</string>
@@ -90,8 +90,7 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"حذف"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"ویرایش"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"این کاغذدیواری از دستگاهتان حذف شود؟"</string>
-    <!-- no translation found for bottom_action_bar_back (2620581414970740784) -->
-    <skip />
+    <string name="bottom_action_bar_back" msgid="2620581414970740784">"پیمایش به‌بالا"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"ویرایش"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"بارگیری"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"نمایش اسلاید کاغذدیواری"</string>

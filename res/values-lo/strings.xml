@@ -90,8 +90,7 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"ລຶບອອກ"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"ແກ້ໄຂ"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"ລຶບຮູບພື້ນຫຼັງນີ້ອອກຈາກອຸປະກອນຂອງທ່ານບໍ?"</string>
-    <!-- no translation found for bottom_action_bar_back (2620581414970740784) -->
-    <skip />
+    <string name="bottom_action_bar_back" msgid="2620581414970740784">"ເລື່ອນຂຶ້ນ"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"ແກ້ໄຂ"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"ດາວໂຫຼດ"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"ຮູບພື້ນຫຼັງສະໄລ້ໂຊ"</string>
