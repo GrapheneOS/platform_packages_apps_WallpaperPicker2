@@ -22,8 +22,6 @@ import static com.android.wallpaper.module.WallpaperPersister.DEST_LOCK_SCREEN;
 import android.app.WallpaperColors;
 import android.graphics.Color;
 
-import androidx.annotation.Nullable;
-
 import com.android.wallpaper.model.StaticWallpaperMetadata;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPreferences;
@@ -166,16 +164,6 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
-    public String getHomeWallpaperBaseImageUrl() {
-        return mHomeBaseImageUrl;
-    }
-
-    @Override
-    public void setHomeWallpaperBaseImageUrl(String baseImageUrl) {
-        mHomeBaseImageUrl = baseImageUrl;
-    }
-
-    @Override
     public String getHomeWallpaperCollectionId() {
         return mHomeCollectionId;
     }
@@ -183,16 +171,6 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     @Override
     public void setHomeWallpaperCollectionId(String collectionId) {
         mHomeCollectionId = collectionId;
-    }
-
-    @Override
-    public String getHomeWallpaperBackingFileName() {
-        return null;
-    }
-
-    @Override
-    public void setHomeWallpaperBackingFileName(String fileName) {
-
     }
 
     @Override
@@ -322,16 +300,6 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
-    public String getLockWallpaperBackingFileName() {
-        return null;
-    }
-
-    @Override
-    public void setLockWallpaperBackingFileName(String fileName) {
-
-    }
-
-    @Override
     public void clearLockWallpaperMetadata() {
         mLockScreenAttributions = null;
         mLockScreenBitmapHashCode = 0;
@@ -419,17 +387,6 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
-    public List<Long> getDailyRotationsInLastWeek() {
-        return mDailyRotations;
-    }
-
-    @Nullable
-    @Override
-    public List<Long> getDailyRotationsPreviousDay() {
-        return null;
-    }
-
-    @Override
     public long getDailyWallpaperEnabledTimestamp() {
         return mDailyWallpaperEnabledTimestamp;
     }
@@ -471,26 +428,6 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
-    public int getDailyWallpaperLastRotationStatus() {
-        return mLastDailyWallpaperRotationStatus;
-    }
-
-    @Override
-    public long getDailyWallpaperLastRotationStatusTimestamp() {
-        return mLastDailyWallpaperRotationStatusTimestamp;
-    }
-
-    @Override
-    public long getLastSyncTimestamp() {
-        return mLastSyncTimestamp;
-    }
-
-    @Override
-    public void setLastSyncTimestamp(long timestamp) {
-        mLastSyncTimestamp = timestamp;
-    }
-
-    @Override
     public void setPendingWallpaperSetStatusSync(@PendingWallpaperSetStatus int setStatus) {
         mPendingWallpaperSetStatus = setStatus;
     }
@@ -522,44 +459,13 @@ public class TestWallpaperPreferences implements WallpaperPreferences {
         mPendingDailyWallpaperUpdateStatus = updateStatus;
     }
 
-    @Override
-    public void incrementNumDaysDailyRotationFailed() {
-        mNumDaysDailyRotationFailed++;
-    }
-
-    @Override
-    public int getNumDaysDailyRotationFailed() {
-        return mNumDaysDailyRotationFailed;
-    }
-
     public void setNumDaysDailyRotationFailed(int days) {
         mNumDaysDailyRotationFailed = days;
-    }
-
-    @Override
-    public void resetNumDaysDailyRotationFailed() {
-        mNumDaysDailyRotationFailed = 0;
-    }
-
-    @Override
-    public void incrementNumDaysDailyRotationNotAttempted() {
-        mNumDaysDailyRotationNotAttempted++;
-    }
-
-    @Override
-    public int getNumDaysDailyRotationNotAttempted() {
-        return mNumDaysDailyRotationNotAttempted;
     }
 
     public void setNumDaysDailyRotationNotAttempted(int days) {
         mNumDaysDailyRotationNotAttempted = days;
     }
-
-    @Override
-    public void resetNumDaysDailyRotationNotAttempted() {
-        mNumDaysDailyRotationNotAttempted = 0;
-    }
-
 
     @Override
     public int getAppLaunchCount() {

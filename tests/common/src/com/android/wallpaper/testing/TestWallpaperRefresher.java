@@ -52,7 +52,6 @@ public class TestWallpaperRefresher implements WallpaperRefresher {
                             prefs.getHomeWallpaperActionLabelRes(),
                             prefs.getHomeWallpaperActionIconRes(),
                             prefs.getHomeWallpaperCollectionId(),
-                            prefs.getHomeWallpaperBackingFileName(),
                             null /* wallpaperComponent */),
                     new WallpaperMetadata(
                             prefs.getLockWallpaperAttributions(),
@@ -60,7 +59,6 @@ public class TestWallpaperRefresher implements WallpaperRefresher {
                             prefs.getLockWallpaperActionLabelRes(),
                             prefs.getLockWallpaperActionIconRes(),
                             prefs.getLockWallpaperCollectionId(),
-                            prefs.getLockWallpaperBackingFileName(),
                             null /* wallpaperComponent */),
                     prefs.getWallpaperPresentationMode());
         } else {
@@ -71,7 +69,6 @@ public class TestWallpaperRefresher implements WallpaperRefresher {
                             prefs.getHomeWallpaperActionLabelRes(),
                             prefs.getHomeWallpaperActionIconRes(),
                             prefs.getHomeWallpaperCollectionId(),
-                            prefs.getHomeWallpaperBackingFileName(),
                             null /* wallpaperComponent */),
                     null,
                     prefs.getWallpaperPresentationMode());

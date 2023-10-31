@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -34,12 +33,9 @@ import com.android.wallpaper.module.WallpaperPreferenceKeys.NoBackupKeys;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -260,19 +256,6 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
-    public String getHomeWallpaperBaseImageUrl() {
-        return mNoBackupPrefs.getString(
-                NoBackupKeys.KEY_HOME_WALLPAPER_BASE_IMAGE_URL, null);
-    }
-
-    @Override
-    public void setHomeWallpaperBaseImageUrl(String baseImageUrl) {
-        mNoBackupPrefs.edit().putString(
-                NoBackupKeys.KEY_HOME_WALLPAPER_BASE_IMAGE_URL, baseImageUrl)
-                .apply();
-    }
-
-    @Override
     @Nullable
     public String getHomeWallpaperCollectionId() {
         return mSharedPrefs.getString(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_COLLECTION_ID,
@@ -283,19 +266,6 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     public void setHomeWallpaperCollectionId(String collectionId) {
         mSharedPrefs.edit().putString(
                 WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_COLLECTION_ID, collectionId).apply();
-    }
-
-    @Override
-    @Nullable
-    public String getHomeWallpaperBackingFileName() {
-        return mNoBackupPrefs.getString(
-                NoBackupKeys.KEY_HOME_WALLPAPER_BACKING_FILE, null);
-    }
-
-    @Override
-    public void setHomeWallpaperBackingFileName(String fileName) {
-        mNoBackupPrefs.edit().putString(
-                NoBackupKeys.KEY_HOME_WALLPAPER_BACKING_FILE, fileName).apply();
     }
 
     @Override
@@ -311,10 +281,6 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
 
     @Override
     public void clearHomeWallpaperMetadata() {
-        String homeWallpaperBackingFileName = getHomeWallpaperBackingFileName();
-        if (!TextUtils.isEmpty(homeWallpaperBackingFileName)) {
-            new File(homeWallpaperBackingFileName).delete();
-        }
         mSharedPrefs.edit()
                 .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_1)
                 .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_2)
@@ -501,19 +467,6 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
-    @Nullable
-    public String getLockWallpaperBackingFileName() {
-        return mNoBackupPrefs.getString(
-                NoBackupKeys.KEY_LOCK_WALLPAPER_BACKING_FILE, null);
-    }
-
-    @Override
-    public void setLockWallpaperBackingFileName(String fileName) {
-        mNoBackupPrefs.edit().putString(
-                NoBackupKeys.KEY_LOCK_WALLPAPER_BACKING_FILE, fileName).apply();
-    }
-
-    @Override
     public int getLockWallpaperManagerId() {
         return mNoBackupPrefs.getInt(
                 NoBackupKeys.KEY_LOCK_WALLPAPER_MANAGER_ID, 0);
@@ -570,10 +523,6 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
 
     @Override
     public void clearLockWallpaperMetadata() {
-        String lockWallpaperBackingFileName = getLockWallpaperBackingFileName();
-        if (!TextUtils.isEmpty(lockWallpaperBackingFileName)) {
-            new File(lockWallpaperBackingFileName).delete();
-        }
         mSharedPrefs.edit()
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_1)
                 .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_2)
@@ -672,97 +621,6 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
     }
 
     @Override
-    @Nullable
-    public List<Long> getDailyRotationsInLastWeek() {
-        long enabledTimestamp = getDailyWallpaperEnabledTimestamp();
-
-        Calendar oneWeekAgo = Calendar.getInstance();
-        oneWeekAgo.setTime(new Date());
-        oneWeekAgo.add(Calendar.WEEK_OF_YEAR, -1);
-        long oneWeekAgoTimestamp = oneWeekAgo.getTimeInMillis();
-
-        // Return null if daily rotation wasn't enabled (timestamp value of -1) or was enabled
-        // less than one week ago.
-        if (enabledTimestamp == -1 || enabledTimestamp > oneWeekAgoTimestamp) {
-            return null;
-        }
-
-        List<Long> timestamps = new ArrayList<>();
-        String jsonString = mNoBackupPrefs.getString(
-                NoBackupKeys.KEY_DAILY_ROTATION_TIMESTAMPS, "[]");
-
-        try {
-            JSONArray jsonArray = new JSONArray(jsonString);
-
-            // Before recording the new daily rotation timestamp, filter out any that are older than
-            // 1 week old.
-            for (int i = 0; i < jsonArray.length(); i++) {
-                long existingTimestamp = jsonArray.getLong(i);
-                if (existingTimestamp >= oneWeekAgoTimestamp) {
-                    timestamps.add(existingTimestamp);
-                }
-            }
-
-            jsonArray = new JSONArray(timestamps);
-            mNoBackupPrefs.edit()
-                    .putString(NoBackupKeys.KEY_DAILY_ROTATION_TIMESTAMPS,
-                            jsonArray.toString())
-                    .apply();
-        } catch (JSONException e) {
-            Log.e(TAG, "Failed to get daily rotation timestamps due to a JSON parse exception");
-        }
-
-        return timestamps;
-    }
-
-    @Nullable
-    @Override
-    public List<Long> getDailyRotationsPreviousDay() {
-        long enabledTimestamp = getDailyWallpaperEnabledTimestamp();
-
-        Calendar midnightYesterday = Calendar.getInstance();
-        midnightYesterday.set(Calendar.AM_PM, Calendar.AM);
-        midnightYesterday.set(Calendar.HOUR, 0);
-        midnightYesterday.set(Calendar.MINUTE, 0);
-        midnightYesterday.add(Calendar.DATE, -1);
-        long midnightYesterdayTimestamp = midnightYesterday.getTimeInMillis();
-
-        Calendar midnightToday = Calendar.getInstance();
-        midnightToday.set(Calendar.AM_PM, Calendar.AM);
-        midnightToday.set(Calendar.HOUR, 0);
-        midnightToday.set(Calendar.MINUTE, 0);
-        long midnightTodayTimestamp = midnightToday.getTimeInMillis();
-
-        // Return null if daily rotation wasn't enabled (timestamp value of -1) or was enabled
-        // less than midnight yesterday.
-        if (enabledTimestamp == -1 || enabledTimestamp > midnightYesterdayTimestamp) {
-            return null;
-        }
-
-        List<Long> timestamps = new ArrayList<>();
-        String jsonString = mNoBackupPrefs.getString(
-                NoBackupKeys.KEY_DAILY_ROTATION_TIMESTAMPS, "[]");
-
-        try {
-            JSONArray jsonArray = new JSONArray(jsonString);
-
-            // Filter the timestamps (which cover up to one week of data) to only include those
-            // between midnight yesterday and midnight today.
-            for (int i = 0; i < jsonArray.length(); i++) {
-                long timestamp = jsonArray.getLong(i);
-                if (timestamp >= midnightYesterdayTimestamp && timestamp < midnightTodayTimestamp) {
-                    timestamps.add(timestamp);
-                }
-            }
-
-        } catch (JSONException e) {
-            Log.e(TAG, "Failed to get daily rotation timestamps due to a JSON parse exception");
-        }
-
-        return timestamps;
-    }
-
-    @Override
     public long getDailyWallpaperEnabledTimestamp() {
         return mNoBackupPrefs.getLong(
                 NoBackupKeys.KEY_DAILY_WALLPAPER_ENABLED_TIMESTAMP, -1);
@@ -799,8 +657,7 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
 
     @Override
     public long getLastAppActiveTimestamp() {
-        return mNoBackupPrefs.getLong(
-                NoBackupKeys.KEY_LAST_APP_ACTIVE_TIMESTAMP, 0);
+        return mNoBackupPrefs.getLong(NoBackupKeys.KEY_LAST_APP_ACTIVE_TIMESTAMP, 0);
     }
 
     @Override
@@ -817,31 +674,6 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
                 .putLong(NoBackupKeys.KEY_LAST_ROTATION_STATUS_TIMESTAMP,
                         timestamp)
                 .apply();
-    }
-
-    @Override
-    public int getDailyWallpaperLastRotationStatus() {
-        return mNoBackupPrefs.getInt(NoBackupKeys.KEY_LAST_ROTATION_STATUS, -1);
-    }
-
-    @Override
-    public long getDailyWallpaperLastRotationStatusTimestamp() {
-        return mNoBackupPrefs.getLong(
-                NoBackupKeys.KEY_LAST_ROTATION_STATUS_TIMESTAMP, 0);
-    }
-
-    @Override
-    public long getLastSyncTimestamp() {
-        return mNoBackupPrefs.getLong(NoBackupKeys.KEY_LAST_SYNC_TIMESTAMP, 0);
-    }
-
-    @Override
-    public void setLastSyncTimestamp(long timestamp) {
-        // Write synchronously via commit() to ensure this timetsamp gets written to disk
-        // immediately.
-        mNoBackupPrefs.edit()
-                .putLong(NoBackupKeys.KEY_LAST_SYNC_TIMESTAMP, timestamp)
-                .commit();
     }
 
     @Override
@@ -891,48 +723,6 @@ public class DefaultWallpaperPreferences implements WallpaperPreferences {
         mNoBackupPrefs.edit()
                 .putInt(NoBackupKeys.KEY_PENDING_DAILY_WALLPAPER_UPDATE_STATUS,
                         updateStatus)
-                .apply();
-    }
-
-    @Override
-    public void incrementNumDaysDailyRotationFailed() {
-        mNoBackupPrefs.edit()
-                .putInt(NoBackupKeys.KEY_NUM_DAYS_DAILY_ROTATION_FAILED,
-                        getNumDaysDailyRotationFailed() + 1)
-                .apply();
-    }
-
-    @Override
-    public int getNumDaysDailyRotationFailed() {
-        return mNoBackupPrefs.getInt(
-                NoBackupKeys.KEY_NUM_DAYS_DAILY_ROTATION_FAILED, 0);
-    }
-
-    @Override
-    public void resetNumDaysDailyRotationFailed() {
-        mNoBackupPrefs.edit()
-                .putInt(NoBackupKeys.KEY_NUM_DAYS_DAILY_ROTATION_FAILED, 0)
-                .apply();
-    }
-
-    @Override
-    public void incrementNumDaysDailyRotationNotAttempted() {
-        mNoBackupPrefs.edit()
-                .putInt(NoBackupKeys.KEY_NUM_DAYS_DAILY_ROTATION_NOT_ATTEMPTED,
-                        getNumDaysDailyRotationNotAttempted() + 1)
-                .apply();
-    }
-
-    @Override
-    public int getNumDaysDailyRotationNotAttempted() {
-        return mNoBackupPrefs.getInt(
-                NoBackupKeys.KEY_NUM_DAYS_DAILY_ROTATION_NOT_ATTEMPTED, 0);
-    }
-
-    @Override
-    public void resetNumDaysDailyRotationNotAttempted() {
-        mNoBackupPrefs.edit()
-                .putInt(NoBackupKeys.KEY_NUM_DAYS_DAILY_ROTATION_NOT_ATTEMPTED, 0)
                 .apply();
     }
 
