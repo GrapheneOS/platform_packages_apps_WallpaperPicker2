@@ -17,8 +17,6 @@ package com.android.wallpaper.model;
 
 import android.app.WallpaperInfo;
 
-import androidx.annotation.Nullable;
-
 import java.util.List;
 
 /**
@@ -26,7 +24,7 @@ import java.util.List;
  */
 public class LiveWallpaperMetadata extends WallpaperMetadata {
     public LiveWallpaperMetadata(android.app.WallpaperInfo wallpaperComponent) {
-        super(null, null, 0, 0, null, null, wallpaperComponent);
+        super(null, null, 0, 0, null, wallpaperComponent);
     }
 
     @Override
@@ -51,12 +49,6 @@ public class LiveWallpaperMetadata extends WallpaperMetadata {
 
     @Override
     public String getCollectionId() {
-        throw new UnsupportedOperationException("Not implemented for live wallpapers");
-    }
-
-    @Nullable
-    @Override
-    public String getBackingFileName() {
         throw new UnsupportedOperationException("Not implemented for live wallpapers");
     }
 

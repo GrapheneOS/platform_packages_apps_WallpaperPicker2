@@ -90,8 +90,7 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"ଡିଲିଟ୍ କରନ୍ତୁ"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"ଏଡିଟ କରନ୍ତୁ"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"ଆପଣଙ୍କ ଡିଭାଇସରୁ ଏହି ୱାଲପେପରକୁ ଡିଲିଟ କରିବେ?"</string>
-    <!-- no translation found for bottom_action_bar_back (2620581414970740784) -->
-    <skip />
+    <string name="bottom_action_bar_back" msgid="2620581414970740784">"ଉପରକୁ ନାଭିଗେଟ କରନ୍ତୁ"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"ଏଡିଟ କରନ୍ତୁ"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"ଡାଉନଲୋଡ୍ କରନ୍ତୁ"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"ୱାଲପେପରର ସ୍ଲାଇଡଶୋ"</string>

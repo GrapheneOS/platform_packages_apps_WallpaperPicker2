@@ -90,8 +90,7 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Usuń"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"Edytuj"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Usunąć tę tapetę z urządzenia?"</string>
-    <!-- no translation found for bottom_action_bar_back (2620581414970740784) -->
-    <skip />
+    <string name="bottom_action_bar_back" msgid="2620581414970740784">"Przejdź wyżej"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Edytuj"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Pobierz"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Tapeta z pokazem slajdów"</string>

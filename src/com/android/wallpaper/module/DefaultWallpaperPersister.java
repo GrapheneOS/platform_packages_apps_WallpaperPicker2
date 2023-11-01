@@ -37,6 +37,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.asset.Asset;
@@ -269,8 +270,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             mWallpaperPreferences.setHomeWallpaperActionUrl(actionUrl);
             mWallpaperPreferences.setHomeWallpaperActionLabelRes(actionLabelRes);
             mWallpaperPreferences.setHomeWallpaperActionIconRes(actionIconRes);
-            // Only set base image URL for static Backdrop images, not for rotation.
-            mWallpaperPreferences.setHomeWallpaperBaseImageUrl(null);
             mWallpaperPreferences.setHomeWallpaperCollectionId(collectionId);
             mWallpaperPreferences.setHomeWallpaperRemoteId(remoteId);
         }
@@ -294,7 +293,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
 
     @Override
     public boolean saveStaticWallpaperToPreferences(@Destination int destination,
-            StaticWallpaperMetadata metadata) {
+            @NonNull StaticWallpaperMetadata metadata) {
         if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
             mWallpaperPreferences.clearHomeWallpaperMetadata();
             mWallpaperPreferences.setHomeStaticImageWallpaperMetadata(metadata);
@@ -708,7 +707,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
 
             mWallpaperPreferences.setHomeWallpaperAttributions(
                     mWallpaper.getAttributions(mAppContext));
-            mWallpaperPreferences.setHomeWallpaperBaseImageUrl(mWallpaper.getBaseImageUrl());
             mWallpaperPreferences.setHomeWallpaperActionUrl(mWallpaper.getActionUrl(mAppContext));
             mWallpaperPreferences.setHomeWallpaperActionLabelRes(
                     mWallpaper.getActionLabelRes(mAppContext));
