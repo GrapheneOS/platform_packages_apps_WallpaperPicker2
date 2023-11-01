@@ -98,7 +98,6 @@ object ScreenPreviewBinder {
         offsetToStart: Boolean,
         dimWallpaper: Boolean = false,
         onWallpaperPreviewDirty: () -> Unit,
-        onWorkspacePreviewDirty: () -> Unit = {},
         animationStateViewModel: AnimationStateViewModel? = null,
         isWallpaperAlwaysVisible: Boolean = true,
         mirrorSurface: SurfaceView? = null,
@@ -376,8 +375,6 @@ object ScreenPreviewBinder {
                         viewModel.workspaceUpdateEvents()?.collect {
                             if (initialWorkspaceUpdate) {
                                 initialWorkspaceUpdate = false
-                            } else {
-                                onWorkspacePreviewDirty()
                             }
                         }
                     }
