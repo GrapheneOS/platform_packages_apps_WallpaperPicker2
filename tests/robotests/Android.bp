@@ -23,6 +23,8 @@ android_robolectric_test {
 
     java_resource_dirs: ["config"],
 
+    // Do not add picker-related dependencies here. Add them to
+    // WallpaperPicker2Shell instead.
     static_libs: [
         "hilt_android_testing",
     ],
