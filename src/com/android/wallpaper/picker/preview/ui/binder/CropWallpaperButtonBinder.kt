@@ -22,7 +22,6 @@ object CropWallpaperButtonBinder {
         button: Button,
         onClicked: () -> Unit,
     ) {
-        // TODO(b/303317694): go back to previous small preview tab
         button.setOnClickListener { onClicked.invoke() }
     }
 }

@@ -16,6 +16,7 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
+import android.graphics.Point
 import android.view.SurfaceControlViewHost
 import android.view.SurfaceHolder
 import android.view.View
@@ -27,7 +28,7 @@ import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.picker.TouchForwardingLayout
 import com.android.wallpaper.picker.preview.ui.view.FullPreviewSurfaceView
-import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewSurfaceViewModel
+import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import kotlinx.coroutines.CoroutineScope
@@ -40,8 +41,9 @@ object FullWallpaperPreviewBinder {
         applicationContext: Context,
         surfaceView: FullPreviewSurfaceView,
         surfaceTouchForwardingLayout: TouchForwardingLayout,
-        surfaceViewModel: FullPreviewSurfaceViewModel,
         previewViewModel: WallpaperPreviewViewModel,
+        selectedSmallPreviewConfig: SmallPreviewConfigViewModel,
+        currentDisplaySize: Point,
         viewLifecycleOwner: LifecycleOwner,
         @MainDispatcher mainScope: CoroutineScope,
         staticPreviewView: View? = null,
@@ -50,8 +52,8 @@ object FullWallpaperPreviewBinder {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 surfaceView.let { surfaceView ->
                     surfaceView.setCurrentAndTargetDisplaySize(
-                        currentSize = surfaceViewModel.currentDisplaySize,
-                        targetSize = surfaceViewModel.selectedSmallPreviewConfig.displaySize,
+                        currentSize = currentDisplaySize,
+                        targetSize = selectedSmallPreviewConfig.displaySize,
                     )
                     surfaceView.holder.addCallback(
                         object : SurfaceHolder.Callback {
@@ -86,7 +88,7 @@ object FullWallpaperPreviewBinder {
                                     mainScope,
                                     viewLifecycleOwner,
                                     previewViewModel,
-                                    surfaceViewModel.selectedSmallPreviewConfig,
+                                    selectedSmallPreviewConfig,
                                     surfaceView,
                                     staticPreviewView?.requireViewById(R.id.full_res_image),
                                     staticPreviewView?.requireViewById(R.id.low_res_image),

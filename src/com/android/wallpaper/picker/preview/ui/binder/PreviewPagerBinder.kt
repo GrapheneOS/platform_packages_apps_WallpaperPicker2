@@ -21,10 +21,9 @@ import android.graphics.Point
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
+import com.android.wallpaper.model.wallpaper.PreviewPagerPage
 import com.android.wallpaper.model.wallpaper.getScreenOrientation
-import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.SinglePreviewPagerAdapter
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.SinglePreviewPagerAdapter.Companion.LOCK_PREVIEW_POSITION
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.pagetransformers.PreviewCardPageTransformer
 import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
@@ -54,16 +53,14 @@ object PreviewPagerBinder {
                     viewModel = wallpaperPreviewViewModel,
                     smallPreviewConfig =
                         SmallPreviewConfigViewModel(
-                            previewTab =
-                                if (position == LOCK_PREVIEW_POSITION) Screen.LOCK_SCREEN
-                                else Screen.HOME_SCREEN,
+                            previewTab = PreviewPagerPage.entries[position].screen,
                             displaySize = previewDisplaySize,
                             screenOrientation = getScreenOrientation(previewDisplaySize),
                         ),
                     mainScope = mainScope,
                     viewLifecycleOwner = viewLifecycleOwner,
                     previewUtils =
-                        if (position == LOCK_PREVIEW_POSITION) lockPreviewUtils
+                        if (position == PreviewPagerPage.LOCK_PREVIEW.ordinal) lockPreviewUtils
                         else homePreviewUtils,
                     navigate = navigate,
                 )

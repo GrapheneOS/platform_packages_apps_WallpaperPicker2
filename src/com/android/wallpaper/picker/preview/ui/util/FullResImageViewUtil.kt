@@ -19,6 +19,7 @@ import android.graphics.Point
 import android.graphics.PointF
 import android.graphics.Rect
 import com.android.wallpaper.util.WallpaperCropUtils
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 
 object FullResImageViewUtil {
 
@@ -38,12 +39,10 @@ object FullResImageViewUtil {
                 visibleRawWallpaperRect.centerY().toFloat()
             )
         val defaultWallpaperZoom =
-            if (cropRect != null) 1f
-            else
-                WallpaperCropUtils.calculateMinZoom(
-                    Point(visibleRawWallpaperRect.width(), visibleRawWallpaperRect.height()),
-                    viewSize
-                )
+            WallpaperCropUtils.calculateMinZoom(
+                Point(visibleRawWallpaperRect.width(), visibleRawWallpaperRect.height()),
+                viewSize
+            )
 
         return ScaleAndCenter(
             defaultWallpaperZoom,
@@ -52,6 +51,8 @@ object FullResImageViewUtil {
             centerPosition,
         )
     }
+
+    fun SubsamplingScaleImageView.getCropRect() = Rect().apply { visibleFileRect(this) }
 
     data class ScaleAndCenter(
         val minScale: Float,
