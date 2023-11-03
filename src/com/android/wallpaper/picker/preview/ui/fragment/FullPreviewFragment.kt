@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.picker.preview.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,14 +25,16 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
-import com.android.wallpaper.model.LiveWallpaperInfo
+import com.android.wallpaper.model.wallpaper.WallpaperModel.LiveWallpaperModel
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.preview.ui.binder.CropWallpaperButtonBinder
 import com.android.wallpaper.picker.preview.ui.binder.FullWallpaperPreviewBinder
-import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewSurfaceViewModel
+import com.android.wallpaper.picker.preview.ui.util.FullResImageViewUtil.getCropRect
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 
@@ -39,6 +42,7 @@ import kotlinx.coroutines.CoroutineScope
 @AndroidEntryPoint(AppbarFragment::class)
 class FullPreviewFragment : Hilt_FullPreviewFragment() {
 
+    @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
     @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
 
@@ -50,40 +54,48 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_full_preview, container, false)
-
         setUpToolbar(view)
 
-        wallpaperPreviewViewModel.selectedSmallPreviewConfig?.let {
-            val appContext = requireContext().applicationContext
+        val staticPreviewView =
+            if (
+                checkNotNull(wallpaperPreviewViewModel.editingWallpaperModel) is LiveWallpaperModel
+            ) {
+                null
+            } else {
+                LayoutInflater.from(appContext).inflate(R.layout.fullscreen_wallpaper_preview, null)
+            }
+
+        wallpaperPreviewViewModel.selectedSmallPreviewConfig.value?.let { selectedSmallPreviewConfig
+            ->
             FullWallpaperPreviewBinder.bind(
                 appContext,
                 view.requireViewById(R.id.wallpaper_surface),
                 view.requireViewById(R.id.touch_forwarding_layout),
-                FullPreviewSurfaceViewModel(
-                    selectedSmallPreviewConfig = it,
-                    currentDisplaySize =
-                        displayUtils.getRealSize(checkNotNull(view.context.display))
-                ),
                 wallpaperPreviewViewModel,
+                selectedSmallPreviewConfig,
+                displayUtils.getRealSize(checkNotNull(view.context.display)),
                 viewLifecycleOwner,
                 mainScope,
-                staticPreviewView =
-                    if (
-                        checkNotNull(wallpaperPreviewViewModel.editingWallpaper)
-                            is LiveWallpaperInfo
-                    ) {
-                        null
-                    } else {
-                        LayoutInflater.from(appContext)
-                            .inflate(R.layout.fullscreen_wallpaper_preview, null)
-                    },
+                staticPreviewView,
             )
-        }
 
-        CropWallpaperButtonBinder.bind(
-            view.requireViewById(R.id.crop_wallpaper_button),
-        ) {
-            findNavController().navigate(R.id.action_fullPreviewFragment_to_smallPreviewFragment)
+            CropWallpaperButtonBinder.bind(view.requireViewById(R.id.crop_wallpaper_button)) {
+                if (staticPreviewView != null) {
+                    wallpaperPreviewViewModel
+                        .getStaticWallpaperPreviewViewModel()
+                        .updateCropHints(
+                            mapOf(
+                                selectedSmallPreviewConfig.screenOrientation to
+                                    staticPreviewView
+                                        .requireViewById<SubsamplingScaleImageView>(
+                                            R.id.full_res_image
+                                        )
+                                        .getCropRect()
+                            )
+                        )
+                }
+                findNavController().popBackStack()
+            }
         }
 
         return view

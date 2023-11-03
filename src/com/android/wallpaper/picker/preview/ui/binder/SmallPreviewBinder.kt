@@ -41,7 +41,7 @@ object SmallPreviewBinder {
         navigate: (() -> Unit)? = null,
     ) {
         view.setOnClickListener {
-            viewModel.selectedSmallPreviewConfig = smallPreviewConfig
+            viewModel.selectSmallPreviewConfig(smallPreviewConfig)
             navigate?.invoke()
         }
 

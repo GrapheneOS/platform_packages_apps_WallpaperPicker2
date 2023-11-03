@@ -22,9 +22,9 @@ import com.android.wallpaper.asset.Asset
 data class CommonWallpaperData(
     val id: WallpaperId,
     val title: String?,
-    val collectionId: String,
-    val attributions: List<Pair<String, String>>,
+    val attributions: List<String>?,
+    val exploreActionUrl: String?,
     val thumbAsset: Asset,
     val placeholderColorInfo: ColorInfo,
-    var destination: Destination
+    var destination: Destination,
 )

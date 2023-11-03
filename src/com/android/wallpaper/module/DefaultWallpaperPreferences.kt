@@ -64,87 +64,87 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
      * of the app into mNoBackupPrefs.
      */
     private fun upgradePrefs() {
-        val editor = noBackupPrefs.edit()
+        val noBackupEditor = noBackupPrefs.edit()
         if (sharedPrefs.contains(NoBackupKeys.KEY_HOME_WALLPAPER_BASE_IMAGE_URL)) {
-            editor.putString(
+            noBackupEditor.putString(
                 NoBackupKeys.KEY_HOME_WALLPAPER_BASE_IMAGE_URL,
                 sharedPrefs.getString(NoBackupKeys.KEY_HOME_WALLPAPER_BASE_IMAGE_URL, null)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_HOME_WALLPAPER_MANAGER_ID)) {
-            editor.putInt(
+            noBackupEditor.putInt(
                 NoBackupKeys.KEY_HOME_WALLPAPER_MANAGER_ID,
                 sharedPrefs.getInt(NoBackupKeys.KEY_HOME_WALLPAPER_MANAGER_ID, 0)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_HOME_WALLPAPER_REMOTE_ID)) {
-            editor.putString(
+            noBackupEditor.putString(
                 NoBackupKeys.KEY_HOME_WALLPAPER_REMOTE_ID,
                 sharedPrefs.getString(NoBackupKeys.KEY_HOME_WALLPAPER_REMOTE_ID, null)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_HOME_WALLPAPER_BACKING_FILE)) {
-            editor.putString(
+            noBackupEditor.putString(
                 NoBackupKeys.KEY_HOME_WALLPAPER_BACKING_FILE,
                 sharedPrefs.getString(NoBackupKeys.KEY_HOME_WALLPAPER_BACKING_FILE, null)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_LOCK_WALLPAPER_MANAGER_ID)) {
-            editor.putInt(
+            noBackupEditor.putInt(
                 NoBackupKeys.KEY_LOCK_WALLPAPER_MANAGER_ID,
                 sharedPrefs.getInt(NoBackupKeys.KEY_LOCK_WALLPAPER_MANAGER_ID, 0)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_LOCK_WALLPAPER_BACKING_FILE)) {
-            editor.putString(
+            noBackupEditor.putString(
                 NoBackupKeys.KEY_LOCK_WALLPAPER_BACKING_FILE,
                 sharedPrefs.getString(NoBackupKeys.KEY_LOCK_WALLPAPER_BACKING_FILE, null)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_DAILY_ROTATION_TIMESTAMPS)) {
-            editor.putString(
+            noBackupEditor.putString(
                 NoBackupKeys.KEY_DAILY_ROTATION_TIMESTAMPS,
                 sharedPrefs.getString(NoBackupKeys.KEY_DAILY_ROTATION_TIMESTAMPS, null)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_DAILY_WALLPAPER_ENABLED_TIMESTAMP)) {
-            editor.putLong(
+            noBackupEditor.putLong(
                 NoBackupKeys.KEY_DAILY_WALLPAPER_ENABLED_TIMESTAMP,
                 sharedPrefs.getLong(NoBackupKeys.KEY_DAILY_WALLPAPER_ENABLED_TIMESTAMP, -1)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_LAST_DAILY_LOG_TIMESTAMP)) {
-            editor.putLong(
+            noBackupEditor.putLong(
                 NoBackupKeys.KEY_LAST_DAILY_LOG_TIMESTAMP,
                 sharedPrefs.getLong(NoBackupKeys.KEY_LAST_DAILY_LOG_TIMESTAMP, 0)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_LAST_APP_ACTIVE_TIMESTAMP)) {
-            editor.putLong(
+            noBackupEditor.putLong(
                 NoBackupKeys.KEY_LAST_APP_ACTIVE_TIMESTAMP,
                 sharedPrefs.getLong(NoBackupKeys.KEY_LAST_APP_ACTIVE_TIMESTAMP, 0)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_LAST_ROTATION_STATUS)) {
-            editor.putInt(
+            noBackupEditor.putInt(
                 NoBackupKeys.KEY_LAST_ROTATION_STATUS,
                 sharedPrefs.getInt(NoBackupKeys.KEY_LAST_ROTATION_STATUS, -1)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_LAST_ROTATION_STATUS_TIMESTAMP)) {
-            editor.putLong(
+            noBackupEditor.putLong(
                 NoBackupKeys.KEY_LAST_ROTATION_STATUS_TIMESTAMP,
                 sharedPrefs.getLong(NoBackupKeys.KEY_LAST_ROTATION_STATUS_TIMESTAMP, 0)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_LAST_SYNC_TIMESTAMP)) {
-            editor.putLong(
+            noBackupEditor.putLong(
                 NoBackupKeys.KEY_LAST_SYNC_TIMESTAMP,
                 sharedPrefs.getLong(NoBackupKeys.KEY_LAST_SYNC_TIMESTAMP, 0)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_PENDING_WALLPAPER_SET_STATUS)) {
-            editor.putInt(
+            noBackupEditor.putInt(
                 NoBackupKeys.KEY_PENDING_WALLPAPER_SET_STATUS,
                 sharedPrefs.getInt(
                     NoBackupKeys.KEY_PENDING_WALLPAPER_SET_STATUS,
@@ -153,7 +153,7 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_PENDING_DAILY_WALLPAPER_UPDATE_STATUS)) {
-            editor.putInt(
+            noBackupEditor.putInt(
                 NoBackupKeys.KEY_PENDING_DAILY_WALLPAPER_UPDATE_STATUS,
                 sharedPrefs.getInt(
                     NoBackupKeys.KEY_PENDING_DAILY_WALLPAPER_UPDATE_STATUS,
@@ -162,24 +162,24 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_NUM_DAYS_DAILY_ROTATION_FAILED)) {
-            editor.putInt(
+            noBackupEditor.putInt(
                 NoBackupKeys.KEY_NUM_DAYS_DAILY_ROTATION_FAILED,
                 sharedPrefs.getInt(NoBackupKeys.KEY_NUM_DAYS_DAILY_ROTATION_FAILED, 0)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_NUM_DAYS_DAILY_ROTATION_NOT_ATTEMPTED)) {
-            editor.putInt(
+            noBackupEditor.putInt(
                 NoBackupKeys.KEY_NUM_DAYS_DAILY_ROTATION_NOT_ATTEMPTED,
                 sharedPrefs.getInt(NoBackupKeys.KEY_NUM_DAYS_DAILY_ROTATION_NOT_ATTEMPTED, 0)
             )
         }
         if (sharedPrefs.contains(NoBackupKeys.KEY_HOME_WALLPAPER_SERVICE_NAME)) {
-            editor.putString(
+            noBackupEditor.putString(
                 NoBackupKeys.KEY_HOME_WALLPAPER_SERVICE_NAME,
                 sharedPrefs.getString(NoBackupKeys.KEY_HOME_WALLPAPER_SERVICE_NAME, null)
             )
         }
-        editor.apply()
+        noBackupEditor.apply()
     }
 
     private fun getResIdPersistedByName(key: String, type: String): Int {
@@ -305,37 +305,55 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
     }
 
     override fun setHomeStaticImageWallpaperMetadata(metadata: StaticWallpaperMetadata) {
-        val editor = sharedPrefs.edit()
+        val sharedEditor = sharedPrefs.edit()
         val attributions = metadata.attributions
         if (!attributions.isNullOrEmpty()) {
             attributions.take(3).forEachIndexed { index, attr ->
                 when (index) {
-                    0 -> editor.putString(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_1, attr)
-                    1 -> editor.putString(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_2, attr)
-                    2 -> editor.putString(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_3, attr)
+                    0 ->
+                        sharedEditor.putString(
+                            WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_1,
+                            attr
+                        )
+                    1 ->
+                        sharedEditor.putString(
+                            WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_2,
+                            attr
+                        )
+                    2 ->
+                        sharedEditor.putString(
+                            WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_3,
+                            attr
+                        )
                 }
             }
         }
-        editor.putString(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_URL, metadata.actionUrl)
-        editor.putString(
+        sharedEditor.putString(
+            WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_URL,
+            metadata.actionUrl
+        )
+        sharedEditor.putString(
             WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_LABEL_RES,
             getResName(metadata.actionLabelRes)
         )
-        editor.putString(
+        sharedEditor.putString(
             WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_ICON_RES,
             getResName(metadata.actionIconRes)
         )
-        editor.putString(
+        sharedEditor.putString(
             WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_COLLECTION_ID,
             metadata.collectionId
         )
         val hashCode = metadata.hashCode
         if (hashCode != null) {
-            editor.putLong(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_HASH_CODE, hashCode)
+            sharedEditor.putLong(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_HASH_CODE, hashCode)
         }
-        editor.putInt(NoBackupKeys.KEY_HOME_WALLPAPER_MANAGER_ID, metadata.managerId)
-        editor.putString(NoBackupKeys.KEY_HOME_WALLPAPER_REMOTE_ID, metadata.remoteId)
-        editor.apply()
+        sharedEditor.apply()
+
+        val noBackupEditor = noBackupPrefs.edit()
+        noBackupEditor.putInt(NoBackupKeys.KEY_HOME_WALLPAPER_MANAGER_ID, metadata.managerId)
+        noBackupEditor.putString(NoBackupKeys.KEY_HOME_WALLPAPER_REMOTE_ID, metadata.remoteId)
+        noBackupEditor.apply()
     }
 
     override fun getHomeWallpaperHashCode(): Long {
@@ -501,37 +519,55 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
     }
 
     override fun setLockStaticImageWallpaperMetadata(metadata: StaticWallpaperMetadata) {
-        val editor = sharedPrefs.edit()
+        val sharedEditor = sharedPrefs.edit()
         val attributions = metadata.attributions
         if (!attributions.isNullOrEmpty()) {
             attributions.take(3).forEachIndexed { index, attr ->
                 when (index) {
-                    0 -> editor.putString(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_1, attr)
-                    1 -> editor.putString(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_2, attr)
-                    2 -> editor.putString(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_3, attr)
+                    0 ->
+                        sharedEditor.putString(
+                            WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_1,
+                            attr
+                        )
+                    1 ->
+                        sharedEditor.putString(
+                            WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_2,
+                            attr
+                        )
+                    2 ->
+                        sharedEditor.putString(
+                            WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_3,
+                            attr
+                        )
                 }
             }
         }
-        editor.putString(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_URL, metadata.actionUrl)
-        editor.putString(
+        sharedEditor.putString(
+            WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_URL,
+            metadata.actionUrl
+        )
+        sharedEditor.putString(
             WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_LABEL_RES,
             getResName(metadata.actionLabelRes)
         )
-        editor.putString(
+        sharedEditor.putString(
             WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_ICON_RES,
             getResName(metadata.actionIconRes)
         )
-        editor.putString(
+        sharedEditor.putString(
             WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_COLLECTION_ID,
             metadata.collectionId
         )
         val hashCode = metadata.hashCode
         if (hashCode != null) {
-            editor.putLong(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_HASH_CODE, hashCode)
+            sharedEditor.putLong(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_HASH_CODE, hashCode)
         }
-        editor.putInt(NoBackupKeys.KEY_LOCK_WALLPAPER_MANAGER_ID, metadata.managerId)
-        editor.putString(NoBackupKeys.KEY_LOCK_WALLPAPER_REMOTE_ID, metadata.remoteId)
-        editor.apply()
+        sharedEditor.apply()
+
+        val noBackupEditor = noBackupPrefs.edit()
+        noBackupEditor.putInt(NoBackupKeys.KEY_LOCK_WALLPAPER_MANAGER_ID, metadata.managerId)
+        noBackupEditor.putString(NoBackupKeys.KEY_LOCK_WALLPAPER_REMOTE_ID, metadata.remoteId)
+        noBackupEditor.apply()
     }
 
     override fun getLockWallpaperHashCode(): Long {
@@ -877,7 +913,7 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
 
     companion object {
         const val PREFS_NAME = "wallpaper"
-        private const val NO_BACKUP_PREFS_NAME = "wallpaper-nobackup"
+        const val NO_BACKUP_PREFS_NAME = "wallpaper-nobackup"
         private const val TAG = "DefaultWallpaperPreferences"
     }
 }

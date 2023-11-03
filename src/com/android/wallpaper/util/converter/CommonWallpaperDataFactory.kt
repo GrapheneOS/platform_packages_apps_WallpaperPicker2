@@ -39,11 +39,12 @@ import com.android.wallpaper.model.wallpaper.WallpaperId
 class CommonWallpaperDataFactory {
 
     companion object {
-        const val TAG = "CommonWallpaperDataFactory"
+        private const val TAG = "CommonWallpaperDataFactory"
+
         private const val STATIC_WALLPAPER_PACKAGE = "StaticWallpaperPackage"
         private const val STATIC_WALLPAPER_CLASS = "StaticWallpaperClass"
-        private const val ACTION_URL = "actionURL"
-        private const val ATTRIBUTION = "attribution"
+        private const val UNKNOWN_COLLECTION_ID = "unknown_collection_id"
+
         fun getCommonWallpaperData(
             wallpaperInfo: WallpaperInfo,
             context: Context
@@ -70,28 +71,20 @@ class CommonWallpaperDataFactory {
 
             // componentName is a valid value for liveWallpapers, for other types of wallpapers
             // (which are static) we can have a constant value
-            val componentNameForWallpaper =
+            val componentName =
                 if (wallpaperInfo is LiveWallpaperInfo) {
                     wallpaperInfo.wallpaperComponent.component
                 } else {
                     ComponentName(STATIC_WALLPAPER_PACKAGE, STATIC_WALLPAPER_CLASS)
                 }
 
-            val uniqueWallpaperId =
+            val wallpaperId =
                 WallpaperId(
-                    componentName = componentNameForWallpaper,
+                    componentName = componentName,
                     uniqueId = wallpaperInfo.wallpaperId,
-                    collectionId = wallpaperInfo.getCollectionId(context)
+                    // TODO(b/308800470): Figure out the use of collection ID
+                    collectionId = wallpaperInfo.getCollectionId(context) ?: UNKNOWN_COLLECTION_ID,
                 )
-
-            val attributions =
-                mutableListOf<Pair<String, String>>(
-                    Pair(ACTION_URL, wallpaperInfo.getActionUrl(context)),
-                )
-
-            for (attribution in wallpaperInfo.getAttributions(context)) {
-                attributions.add(Pair(ATTRIBUTION, attribution))
-            }
 
             val colorInfoOfWallpaper =
                 ColorInfo(
@@ -100,13 +93,13 @@ class CommonWallpaperDataFactory {
                 )
 
             return CommonWallpaperData(
-                id = uniqueWallpaperId,
+                id = wallpaperId,
                 title = wallpaperInfo.getTitle(context),
-                collectionId = wallpaperInfo.getCollectionId(context),
-                attributions = attributions,
+                attributions = wallpaperInfo.getAttributions(context),
+                exploreActionUrl = wallpaperInfo.getActionUrl(context),
                 thumbAsset = wallpaperInfo.getThumbAsset(context),
                 placeholderColorInfo = colorInfoOfWallpaper,
-                destination = wallpaperDestination
+                destination = wallpaperDestination,
             )
         }
     }

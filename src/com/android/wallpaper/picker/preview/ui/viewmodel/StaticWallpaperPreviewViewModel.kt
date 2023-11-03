@@ -36,6 +36,7 @@ import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -77,9 +78,9 @@ constructor(
     val subsamplingScaleImageViewModel: Flow<FullResWallpaperViewModel> =
         wallpaperAsset
             .filterNotNull()
-            .map {
-                val dimensions = it.decodeRawDimensions()
-                it.decodeBitmap(dimensions)?.let { bitmap ->
+            .combine(_cropHints) { asset, cropHints ->
+                val dimensions = asset.decodeRawDimensions()
+                asset.decodeBitmap(dimensions)?.let { bitmap ->
                     if (_cachedWallpaperColors.value == null && wallpaperId != null) {
                         // If no cached colors from the preferences, extra colors from the original
                         // bitmap and cache them to the preferences.
@@ -91,11 +92,7 @@ constructor(
                             )
                         }
                     }
-                    FullResWallpaperViewModel(
-                        bitmap,
-                        dimensions,
-                        _cropHints.value,
-                    )
+                    FullResWallpaperViewModel(bitmap, dimensions, cropHints)
                 }
             }
             .filterNotNull()
@@ -122,6 +119,10 @@ constructor(
             withContext(bgDispatcher) { _lowResBitmap.value = asset?.getLowResBitmap(appContext) }
             initialized = true
         }
+    }
+
+    fun updateCropHints(cropHints: Map<ScreenOrientation, Rect>) {
+        _cropHints.value = _cropHints.value?.plus(cropHints) ?: cropHints
     }
 
     // TODO b/296288298 Create a util class for Bitmap and Asset

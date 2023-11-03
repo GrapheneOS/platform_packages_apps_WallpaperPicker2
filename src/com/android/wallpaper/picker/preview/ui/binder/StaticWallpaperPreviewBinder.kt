@@ -86,6 +86,8 @@ object StaticWallpaperPreviewBinder {
         viewModel: FullResWallpaperViewModel,
         orientation: ScreenOrientation
     ) {
+        // Set the full res image
+        setImage(ImageSource.bitmap(viewModel.rawWallpaperBitmap))
         // Calculate the scale and the center point for the full res image
         FullResImageViewUtil.getScaleAndCenter(
                 Point(measuredWidth, measuredHeight),
@@ -97,8 +99,6 @@ object StaticWallpaperPreviewBinder {
                 maxScale = scaleAndCenter.maxScale
                 setScaleAndCenter(scaleAndCenter.defaultScale, scaleAndCenter.center)
             }
-        // Set the full res image
-        setImage(ImageSource.bitmap(viewModel.rawWallpaperBitmap))
     }
 
     private fun crossFadeInFullResImageView(lowResImageView: ImageView, fullResImageView: View) {
