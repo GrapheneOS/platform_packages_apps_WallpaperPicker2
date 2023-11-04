@@ -96,8 +96,6 @@ public class RotationWallpaperUpdateReceiver extends BroadcastReceiver {
 
             injector.getWallpaperPersister(appContext).setWallpaperInRotation(bitmap,
                     wallpaperPreferences.getHomeWallpaperAttributions(),
-                    wallpaperPreferences.getHomeWallpaperActionLabelRes(),
-                    wallpaperPreferences.getHomeWallpaperActionIconRes(),
                     wallpaperPreferences.getHomeWallpaperActionUrl(),
                     wallpaperPreferences.getHomeWallpaperCollectionId(),
                     wallpaperPreferences.getHomeWallpaperRemoteId());

@@ -22,9 +22,6 @@ import android.app.WallpaperManager;
 import android.content.Context;
 import android.os.Parcel;
 
-import androidx.annotation.DrawableRes;
-import androidx.annotation.StringRes;
-
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.BuiltInWallpaperAsset;
 import com.android.wallpaper.asset.CurrentWallpaperAsset;
@@ -54,10 +51,6 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
     private final List<String> mAttributions;
     private Asset mAsset;
     private final String mActionUrl;
-    @StringRes
-    private int mActionLabelRes;
-    @DrawableRes
-    private int mActionIconRes;
     private final String mCollectionId;
     @SetWallpaperFlags
     private final int mWallpaperManagerFlag;
@@ -70,14 +63,11 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
      *                             represents.
      */
     public CurrentWallpaperInfo(List<String> attributions, String actionUrl,
-                                  @StringRes int actionLabelRes, @DrawableRes int actionIconRes,
                                   String collectionId,
                                   @SetWallpaperFlags int wallpaperManagerFlag) {
         mAttributions = attributions;
         mWallpaperManagerFlag = wallpaperManagerFlag;
         mActionUrl = actionUrl;
-        mActionLabelRes = actionLabelRes;
-        mActionIconRes = actionIconRes;
         mCollectionId = collectionId;
     }
 
@@ -89,8 +79,6 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
         mWallpaperManagerFlag = in.readInt();
         mActionUrl = in.readString();
         mCollectionId = in.readString();
-        mActionLabelRes = in.readInt();
-        mActionIconRes = in.readInt();
     }
 
     @Override
@@ -126,16 +114,6 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
         return mCollectionId;
     }
 
-    @Override
-    public int getActionIconRes(Context unused) {
-        return mActionIconRes != 0 ? mActionIconRes : WallpaperInfo.getDefaultActionIcon();
-    }
-
-    @Override
-    public int getActionLabelRes(Context unused) {
-        return mActionLabelRes != 0 ? mActionLabelRes : WallpaperInfo.getDefaultActionLabel();
-    }
-
     /**
      * Constructs and returns an Asset instance representing the currently-set wallpaper asset.
      */
@@ -157,8 +135,6 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
         parcel.writeInt(mWallpaperManagerFlag);
         parcel.writeString(mActionUrl);
         parcel.writeString(mCollectionId);
-        parcel.writeInt(mActionLabelRes);
-        parcel.writeInt(mActionIconRes);
     }
 
     @Override

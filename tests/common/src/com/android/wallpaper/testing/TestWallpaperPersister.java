@@ -97,8 +97,7 @@ public class TestWallpaperPersister implements WallpaperPersister {
 
     @Override
     public boolean setWallpaperInRotation(Bitmap wallpaperBitmap, List<String> attributions,
-            int actionLabelRes, int actionIconRes, String actionUrl, String collectionId,
-            String remoteId) {
+            String actionUrl, String collectionId, String remoteId) {
         if (mFailNextCall) {
             return false;
         }
@@ -122,8 +121,7 @@ public class TestWallpaperPersister implements WallpaperPersister {
 
     @Override
     public boolean finalizeWallpaperForNextRotation(List<String> attributions, String actionUrl,
-            int actionLabelRes, int actionIconRes, String collectionId, int wallpaperId,
-            String remoteId) {
+            String collectionId, int wallpaperId, String remoteId) {
         mHomeAttributions = attributions;
         mHomeActionUrl = actionUrl;
         return true;
@@ -208,8 +206,7 @@ public class TestWallpaperPersister implements WallpaperPersister {
 
     @Override
     public boolean saveStaticWallpaperMetadata(List<String> attributions, String actionUrl,
-            int actionLabelRes, int actionIconRes, String collectionId, int wallpaperId,
-            String remoteId, @Destination int destination) {
+            String collectionId, int wallpaperId, String remoteId, @Destination int destination) {
         return false;
     }
 

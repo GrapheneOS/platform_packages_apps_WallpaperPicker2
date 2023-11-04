@@ -15,15 +15,10 @@
  */
 package com.android.wallpaper.model
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-
 /** Metadata for the static image wallpaper to be saved to the system preferences. */
 data class StaticWallpaperMetadata(
     val attributions: List<String>?,
     val actionUrl: String?,
-    @StringRes val actionLabelRes: Int,
-    @DrawableRes val actionIconRes: Int,
     val collectionId: String?,
     val hashCode: Long?,
     val managerId: Int,

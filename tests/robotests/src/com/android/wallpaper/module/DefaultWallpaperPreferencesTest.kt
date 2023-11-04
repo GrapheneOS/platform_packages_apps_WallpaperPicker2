@@ -17,7 +17,6 @@ package com.android.wallpaper.module
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.android.wallpaper.R
 import com.android.wallpaper.model.StaticWallpaperMetadata
 import com.android.wallpaper.module.WallpaperPreferenceKeys.NoBackupKeys
 import com.google.common.truth.Truth.assertThat
@@ -37,8 +36,6 @@ class DefaultWallpaperPreferencesTest {
             StaticWallpaperMetadata(
                 attributions = listOf("attr1", "attr2"),
                 actionUrl = "http://www.google.com/",
-                actionLabelRes = R.string.explore,
-                actionIconRes = R.drawable.ic_explore_24px,
                 collectionId = "cultural_events",
                 hashCode = 10013L,
                 managerId = 3,
@@ -59,20 +56,6 @@ class DefaultWallpaperPreferencesTest {
                 sharedPref.getString(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_URL, null)
             )
             .isEqualTo("http://www.google.com/")
-        assertThat(
-                sharedPref.getString(
-                    WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_LABEL_RES,
-                    null
-                )
-            )
-            .isEqualTo("com.android.wallpaper:string/explore")
-        assertThat(
-                sharedPref.getString(
-                    WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_ICON_RES,
-                    null
-                )
-            )
-            .isEqualTo("com.android.wallpaper:drawable/ic_explore_24px")
         assertThat(
                 sharedPref.getString(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_COLLECTION_ID, null)
             )
@@ -95,8 +78,6 @@ class DefaultWallpaperPreferencesTest {
             StaticWallpaperMetadata(
                 attributions = listOf("attr1", "attr2"),
                 actionUrl = "http://www.google.com/",
-                actionLabelRes = R.string.explore,
-                actionIconRes = R.drawable.ic_explore_24px,
                 collectionId = "cultural_events",
                 hashCode = 10013L,
                 managerId = 3,
@@ -117,20 +98,6 @@ class DefaultWallpaperPreferencesTest {
                 sharedPref.getString(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_URL, null)
             )
             .isEqualTo("http://www.google.com/")
-        assertThat(
-                sharedPref.getString(
-                    WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_LABEL_RES,
-                    null
-                )
-            )
-            .isEqualTo("com.android.wallpaper:string/explore")
-        assertThat(
-                sharedPref.getString(
-                    WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_ICON_RES,
-                    null
-                )
-            )
-            .isEqualTo("com.android.wallpaper:drawable/ic_explore_24px")
         assertThat(
                 sharedPref.getString(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_COLLECTION_ID, null)
             )

@@ -246,30 +246,6 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
             .apply()
     }
 
-    override fun getHomeWallpaperActionLabelRes(): Int {
-        // We need to store and read the resource names as their ids could change from build to
-        // build and we might end up reading the wrong id
-        return getResIdPersistedByName(
-            WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_LABEL_RES,
-            "string"
-        )
-    }
-
-    override fun setHomeWallpaperActionLabelRes(resId: Int) {
-        persistResIdByName(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_LABEL_RES, resId)
-    }
-
-    override fun getHomeWallpaperActionIconRes(): Int {
-        return getResIdPersistedByName(
-            WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_ICON_RES,
-            "drawable"
-        )
-    }
-
-    override fun setHomeWallpaperActionIconRes(resId: Int) {
-        persistResIdByName(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_ICON_RES, resId)
-    }
-
     override fun getHomeWallpaperCollectionId(): String? {
         return sharedPrefs.getString(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_COLLECTION_ID, null)
     }
@@ -288,8 +264,6 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
             .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_2)
             .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_3)
             .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_URL)
-            .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_LABEL_RES)
-            .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_ICON_RES)
             .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_COLLECTION_ID)
             .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_HASH_CODE)
             .apply()
@@ -331,14 +305,6 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
         sharedEditor.putString(
             WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_URL,
             metadata.actionUrl
-        )
-        sharedEditor.putString(
-            WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_LABEL_RES,
-            getResName(metadata.actionLabelRes)
-        )
-        sharedEditor.putString(
-            WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_ICON_RES,
-            getResName(metadata.actionIconRes)
         )
         sharedEditor.putString(
             WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_COLLECTION_ID,
@@ -461,30 +427,6 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
             .apply()
     }
 
-    override fun getLockWallpaperActionLabelRes(): Int {
-        // We need to store and read the resource names as their ids could change from build to
-        // build and we might end up reading the wrong id
-        return getResIdPersistedByName(
-            WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_LABEL_RES,
-            "string"
-        )
-    }
-
-    override fun setLockWallpaperActionLabelRes(resId: Int) {
-        persistResIdByName(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_LABEL_RES, resId)
-    }
-
-    override fun getLockWallpaperActionIconRes(): Int {
-        return getResIdPersistedByName(
-            WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_ICON_RES,
-            "drawable"
-        )
-    }
-
-    override fun setLockWallpaperActionIconRes(resId: Int) {
-        persistResIdByName(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_ICON_RES, resId)
-    }
-
     override fun getLockWallpaperCollectionId(): String? {
         return sharedPrefs.getString(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_COLLECTION_ID, null)
     }
@@ -503,8 +445,6 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
             .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_2)
             .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_3)
             .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_URL)
-            .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_LABEL_RES)
-            .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_ICON_RES)
             .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_COLLECTION_ID)
             .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_HASH_CODE)
             .apply()
@@ -545,14 +485,6 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
         sharedEditor.putString(
             WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_URL,
             metadata.actionUrl
-        )
-        sharedEditor.putString(
-            WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_LABEL_RES,
-            getResName(metadata.actionLabelRes)
-        )
-        sharedEditor.putString(
-            WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_ICON_RES,
-            getResName(metadata.actionIconRes)
         )
         sharedEditor.putString(
             WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_COLLECTION_ID,

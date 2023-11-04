@@ -257,16 +257,6 @@ public class SystemStaticWallpaperInfo extends WallpaperInfo {
     }
 
     @Override
-    public int getActionLabelRes(Context context) {
-        return WallpaperInfo.getDefaultActionLabel();
-    }
-
-    @Override
-    public int getActionIconRes(Context context) {
-        return WallpaperInfo.getDefaultActionIcon();
-    }
-
-    @Override
     public void showPreview(Activity srcActivity, InlinePreviewIntentFactory factory,
                             int requestCode, boolean isAssetIdPresent) {
         srcActivity.startActivityForResult(factory.newIntent(srcActivity, this,

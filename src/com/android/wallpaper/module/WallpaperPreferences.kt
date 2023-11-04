@@ -48,18 +48,6 @@ interface WallpaperPreferences {
     /** Sets the home wallpaper's action URL. */
     fun setHomeWallpaperActionUrl(actionUrl: String?)
 
-    /** Returns the resource id for the home wallpaper's action label. */
-    fun getHomeWallpaperActionLabelRes(): Int
-
-    /** Sets the resource id for the home wallpaper's action label. */
-    fun setHomeWallpaperActionLabelRes(resId: Int)
-
-    /** Returns the resource id for the home wallpaper's action icon. */
-    fun getHomeWallpaperActionIconRes(): Int
-
-    /** Sets the resource id for the home wallpaper's action icon. */
-    fun setHomeWallpaperActionIconRes(resId: Int)
-
     /** Returns the home wallpaper's collection ID or null if there is none. */
     fun getHomeWallpaperCollectionId(): String?
 
@@ -130,18 +118,6 @@ interface WallpaperPreferences {
 
     /** Sets the lock wallpaper's action URL. */
     fun setLockWallpaperActionUrl(actionUrl: String?)
-
-    /** Returns the resource id for the lock wallpaper's action label. */
-    fun getLockWallpaperActionLabelRes(): Int
-
-    /** Sets the resource id for the lock wallpaper's action label. */
-    fun setLockWallpaperActionLabelRes(resId: Int)
-
-    /** Returns the resource id for the lock wallpaper's action icon. */
-    fun getLockWallpaperActionIconRes(): Int
-
-    /** Sets the resource id for the lock wallpaper's action icon. */
-    fun setLockWallpaperActionIconRes(resId: Int)
 
     /** Returns the lock wallpaper's collection ID or null if there is none. */
     fun getLockWallpaperCollectionId(): String?
