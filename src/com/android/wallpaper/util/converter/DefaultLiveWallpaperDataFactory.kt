@@ -74,7 +74,8 @@ open class DefaultLiveWallpaperDataFactory {
             isDownloadable = false,
             systemWallpaperInfo = wallpaperInfo.info,
             isTitleVisible = wallpaperInfo.isVisibleTitle,
-            isApplied = wallpaperInfo.isApplied(wallpaperInfo.info)
+            isApplied = wallpaperInfo.isApplied(wallpaperInfo.info),
+            effectNames = wallpaperInfo.effectNames,
         )
     }
 }
