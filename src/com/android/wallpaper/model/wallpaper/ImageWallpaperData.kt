@@ -22,4 +22,4 @@ import android.net.Uri
  * Represents data that is specific only for image wallpapers (i.e. wallpapers that are fetched from
  * local storage through the MyPhotos block in WallpaperPicker)
  */
-data class ImageWallpaperData(val mUri: Uri)
+data class ImageWallpaperData(val uri: Uri)

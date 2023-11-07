@@ -25,11 +25,17 @@ import android.database.ContentObserver
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Looper
 import android.util.Log
+import com.android.wallpaper.asset.BitmapUtils
+import com.android.wallpaper.model.StaticWallpaperMetadata
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.model.wallpaper.ScreenOrientation
+import com.android.wallpaper.model.wallpaper.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory
+import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -45,6 +51,7 @@ class WallpaperClientImpl(
     private val context: Context,
     private val infoFactory: CurrentWallpaperInfoFactory,
     private val wallpaperManager: WallpaperManager,
+    private val wallpaperPreferences: WallpaperPreferences,
 ) : WallpaperClient {
 
     private var recentsContentProviderAvailable: Boolean? = null
@@ -103,6 +110,54 @@ class WallpaperClientImpl(
                 }
             }
         }
+    }
+
+    override suspend fun setStaticWallpaper(
+        @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
+        destination: WallpaperDestination,
+        wallpaperModel: StaticWallpaperModel,
+        bitmap: Bitmap,
+        cropHints: Map<ScreenOrientation, Rect>,
+        onDone: () -> Unit
+    ) {
+        // TODO (b/309138446): Use the new multi-crop API from WallpaperManager
+        val wallpaperManagerId =
+            wallpaperManager.setBitmap(
+                bitmap,
+                cropHints[ScreenOrientation.PORTRAIT],
+                true,
+                destination.toFlags()
+            )
+        // Save wallpaper metadata in the preference for two purposes
+        // 1. Quickly reconstruct the currently-selected wallpaper when opening the app
+        // 2. Snapshot logging
+        val bitmapHash = BitmapUtils.generateHashCode(bitmap)
+        val metadata =
+            StaticWallpaperMetadata(
+                wallpaperModel.commonWallpaperData.attributions,
+                wallpaperModel.commonWallpaperData.exploreActionUrl,
+                wallpaperModel.commonWallpaperData.id.collectionId,
+                bitmapHash,
+                wallpaperManagerId,
+                wallpaperModel.commonWallpaperData.id.uniqueId,
+                // TODO (b/309139122): Introduce crop hints to StaticWallpaperMetadata
+            )
+        if (destination == WallpaperDestination.HOME || destination == WallpaperDestination.BOTH) {
+            wallpaperPreferences.clearHomeWallpaperMetadata()
+            wallpaperPreferences.setHomeStaticImageWallpaperMetadata(metadata)
+        }
+        if (destination == WallpaperDestination.LOCK || destination == WallpaperDestination.BOTH) {
+            wallpaperPreferences.clearLockWallpaperMetadata()
+            wallpaperPreferences.setLockStaticImageWallpaperMetadata(metadata)
+        }
+        // Save the static wallpaper to recent wallpapers
+        wallpaperPreferences.addStaticWallpaperToRecentWallpapers(
+            destination,
+            wallpaperModel,
+            bitmap,
+            // TODO (b/309139122): Introduce crop hints to recent wallpapers
+            emptyMap(),
+        )
     }
 
     override suspend fun setRecentWallpaper(

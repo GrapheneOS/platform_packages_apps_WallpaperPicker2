@@ -18,6 +18,9 @@
 package com.android.wallpaper.testing
 
 import android.graphics.Bitmap
+import android.graphics.Rect
+import com.android.wallpaper.model.wallpaper.ScreenOrientation
+import com.android.wallpaper.model.wallpaper.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -76,6 +79,17 @@ class FakeWallpaperClient : WallpaperClient {
     ): WallpaperModel {
         return _recentWallpapers.value[destination]?.get(0)
             ?: error("No wallpapers for screen $destination")
+    }
+
+    override suspend fun setStaticWallpaper(
+        setWallpaperEntryPoint: Int,
+        destination: WallpaperDestination,
+        wallpaperModel: StaticWallpaperModel,
+        bitmap: Bitmap,
+        cropHints: Map<ScreenOrientation, Rect>,
+        onDone: () -> Unit
+    ) {
+        TODO("Not yet implemented")
     }
 
     override suspend fun setRecentWallpaper(

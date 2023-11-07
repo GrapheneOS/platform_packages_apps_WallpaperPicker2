@@ -18,6 +18,9 @@
 package com.android.wallpaper.picker.customization.data.content
 
 import android.graphics.Bitmap
+import android.graphics.Rect
+import com.android.wallpaper.model.wallpaper.ScreenOrientation
+import com.android.wallpaper.model.wallpaper.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -31,6 +34,27 @@ interface WallpaperClient {
         destination: WallpaperDestination,
         limit: Int,
     ): Flow<List<WallpaperModel>>
+
+    /**
+     * Asynchronously sets a static wallpaper.
+     *
+     * @param setWallpaperEntryPoint The entry point where we set the wallpaper from.
+     * @param destination The screen to set the wallpaper on.
+     * @param wallpaperModel The wallpaper model of the wallpaper.
+     * @param bitmap The bitmap of the static wallpaper. Note that the bitmap should be the
+     *   original, full-size bitmap.
+     * @param cropHints The crop hints that indicate how the wallpaper should be cropped and render
+     *   on the designated screen and orientation.
+     * @param onDone A callback to invoke when setting is done.
+     */
+    suspend fun setStaticWallpaper(
+        @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
+        destination: WallpaperDestination,
+        wallpaperModel: StaticWallpaperModel,
+        bitmap: Bitmap,
+        cropHints: Map<ScreenOrientation, Rect>,
+        onDone: () -> Unit,
+    )
 
     /**
      * Asynchronously sets a recent wallpaper selected from the wallpaper quick switcher. The recent

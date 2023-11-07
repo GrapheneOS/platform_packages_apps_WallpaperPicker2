@@ -41,8 +41,8 @@ class CommonWallpaperDataFactory {
     companion object {
         private const val TAG = "CommonWallpaperDataFactory"
 
-        private const val STATIC_WALLPAPER_PACKAGE = "StaticWallpaperPackage"
-        private const val STATIC_WALLPAPER_CLASS = "StaticWallpaperClass"
+        const val STATIC_WALLPAPER_PACKAGE = "StaticWallpaperPackage"
+        const val STATIC_WALLPAPER_CLASS = "StaticWallpaperClass"
         private const val UNKNOWN_COLLECTION_ID = "unknown_collection_id"
 
         fun getCommonWallpaperData(
