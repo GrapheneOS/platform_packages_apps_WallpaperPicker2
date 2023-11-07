@@ -13,29 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.wallpaper.picker.preview.di.modules.interactor
 
-import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
-import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
+package com.android.wallpaper.picker.di.modules
+
+import android.app.WallpaperManager
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-/**
- * This class provides the singleton scoped interactors that will be used for the wallpaper preview
- * flow
- */
-@InstallIn(SingletonComponent::class)
 @Module
-class WallpaperInteractorsModule {
-
+@InstallIn(SingletonComponent::class)
+internal object AppModule {
     @Provides
     @Singleton
-    fun provideWallpaperInteractor(wallpaperRepository: WallpaperRepository): WallpaperInteractor {
-        return WallpaperInteractor(
-            repository = wallpaperRepository,
-        )
+    fun provideWallpaperManager(@ApplicationContext appContext: Context): WallpaperManager {
+        return WallpaperManager.getInstance(appContext)
     }
 }
