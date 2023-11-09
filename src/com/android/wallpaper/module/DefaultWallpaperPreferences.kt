@@ -23,15 +23,19 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Rect
 import android.util.Log
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.StaticWallpaperMetadata
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.model.wallpaper.ScreenOrientation
+import com.android.wallpaper.model.wallpaper.WallpaperModel
 import com.android.wallpaper.module.WallpaperPreferenceKeys.NoBackupKeys
 import com.android.wallpaper.module.WallpaperPreferences.Companion.generateRecentsKey
 import com.android.wallpaper.module.WallpaperPreferences.PendingDailyWallpaperUpdateStatus
 import com.android.wallpaper.module.WallpaperPreferences.PendingWallpaperSetStatus
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -811,6 +815,13 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
         collectionId: String?,
         croppedWallpaperBitmap: Bitmap,
         colors: WallpaperColors,
+    ) {}
+
+    override suspend fun addStaticWallpaperToRecentWallpapers(
+        destination: WallpaperDestination,
+        wallpaperModel: WallpaperModel.StaticWallpaperModel,
+        bitmap: Bitmap,
+        cropHints: Map<ScreenOrientation, Rect?>,
     ) {}
 
     private fun setFirstLaunchDateSinceSetup(firstLaunchDate: Int) {

@@ -18,11 +18,15 @@ package com.android.wallpaper.module
 import android.app.WallpaperColors
 import android.app.WallpaperManager.SetWallpaperFlags
 import android.graphics.Bitmap
+import android.graphics.Rect
 import android.text.TextUtils
 import androidx.annotation.IntDef
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.StaticWallpaperMetadata
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.model.wallpaper.ScreenOrientation
+import com.android.wallpaper.model.wallpaper.WallpaperModel
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 
 /** Interface for persisting and retrieving wallpaper specific preferences. */
 interface WallpaperPreferences {
@@ -366,6 +370,21 @@ interface WallpaperPreferences {
         collectionId: String?,
         croppedWallpaperBitmap: Bitmap,
         colors: WallpaperColors,
+    )
+
+    /**
+     * Add a static wallpaper to recent wallpapers as jason array, saved in preferences.
+     *
+     * @param destination destination where the wallpaper is set to
+     * @param wallpaperModel static wallpaper model
+     * @param bitmap full sie bitmap of the static wallpaper
+     * @param cropHints crop hints of the static wallpaper
+     */
+    suspend fun addStaticWallpaperToRecentWallpapers(
+        destination: WallpaperDestination,
+        wallpaperModel: WallpaperModel.StaticWallpaperModel,
+        bitmap: Bitmap,
+        cropHints: Map<ScreenOrientation, Rect?>,
     )
 
     /** The possible wallpaper presentation modes, i.e., either "static" or "rotating". */

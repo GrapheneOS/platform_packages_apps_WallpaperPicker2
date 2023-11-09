@@ -18,14 +18,18 @@ package com.android.wallpaper.testing
 import android.app.WallpaperColors
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Rect
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.StaticWallpaperMetadata
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.model.wallpaper.ScreenOrientation
+import com.android.wallpaper.model.wallpaper.WallpaperModel
 import com.android.wallpaper.module.WallpaperPersister
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.WallpaperPreferences.PendingDailyWallpaperUpdateStatus
 import com.android.wallpaper.module.WallpaperPreferences.PendingWallpaperSetStatus
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -454,6 +458,13 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
         collectionId: String?,
         croppedWallpaperBitmap: Bitmap,
         colors: WallpaperColors
+    ) {}
+
+    override suspend fun addStaticWallpaperToRecentWallpapers(
+        destination: WallpaperDestination,
+        wallpaperModel: WallpaperModel.StaticWallpaperModel,
+        bitmap: Bitmap,
+        cropHints: Map<ScreenOrientation, Rect?>
     ) {}
 
     private fun setAppLaunchCount(count: Int) {
