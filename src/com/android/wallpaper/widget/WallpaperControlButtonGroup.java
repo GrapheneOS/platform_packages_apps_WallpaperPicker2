@@ -16,10 +16,12 @@
 package com.android.wallpaper.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 
 import androidx.annotation.IntDef;
@@ -40,16 +42,7 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
     public static final int EFFECTS = 3;
     public static final int INFORMATION = 4;
     public static final int SHARE = 5;
-
-    /**
-     * Overlay tab
-     */
-    @IntDef({DELETE, EDIT, CUSTOMIZE, EFFECTS, SHARE, INFORMATION})
-    public @interface WallpaperControlType {
-    }
-
-    final int[] mFloatingSheetControlButtonTypes = { CUSTOMIZE, EFFECTS, SHARE, INFORMATION };
-
+    final int[] mFloatingSheetControlButtonTypes = {CUSTOMIZE, EFFECTS, SHARE, INFORMATION};
     ToggleButton mDeleteButton;
     ToggleButton mEditButton;
     ToggleButton mCustomizeButton;
@@ -58,17 +51,52 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
     ToggleButton mInformationButton;
 
     /**
+     * The default orientation is vertical
+     */
+    private int mOrientation = LinearLayout.VERTICAL;
+
+    /**
      * Constructor
      */
     public WallpaperControlButtonGroup(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.wallpaper_control_button_group, this, true);
+        initAttributes(attrs);
+        LayoutInflater.from(context).inflate(R.layout.wallpaper_control_button_group, this,
+                true);
+        LinearLayout buttonGroupContainer = findViewById(R.id.wallpaper_control_container);
+        if (mOrientation == LinearLayout.HORIZONTAL) {
+            buttonGroupContainer.setOrientation(LinearLayout.HORIZONTAL);
+            buttonGroupContainer.setDividerDrawable(context.getDrawable(
+                    R.drawable.wallpaper_control_button_group_divider_horizontal));
+        } else {
+            buttonGroupContainer.setOrientation(LinearLayout.VERTICAL);
+            buttonGroupContainer.setDividerDrawable(
+                    context.getDrawable(
+                            R.drawable.wallpaper_control_button_group_divider_vertical));
+        }
+
         mDeleteButton = findViewById(R.id.delete_button);
         mEditButton = findViewById(R.id.edit_button);
         mCustomizeButton = findViewById(R.id.customize_button);
         mEffectsButton = findViewById(R.id.effects_button);
         mShareButton = findViewById(R.id.share_button);
         mInformationButton = findViewById(R.id.information_button);
+    }
+
+    /**
+     * @param attrs sets the local attribute properties for [WallpaperControlButtonGroup]
+     */
+    private void initAttributes(AttributeSet attrs) {
+        if (attrs != null) {
+            TypedArray typeArray = getContext().obtainStyledAttributes(attrs,
+                    R.styleable.WallpaperControlButtonGroup);
+
+            // default to vertical
+            mOrientation = typeArray.getInt(R.styleable.WallpaperControlButtonGroup_orientation,
+                    LinearLayout.VERTICAL);
+
+            typeArray.recycle();
+        }
     }
 
     /**
@@ -174,5 +202,12 @@ public final class WallpaperControlButtonGroup extends FrameLayout {
         for (int type : mFloatingSheetControlButtonTypes) {
             getActionButton(type).setChecked(false);
         }
+    }
+
+    /**
+     * Overlay tab
+     */
+    @IntDef({DELETE, EDIT, CUSTOMIZE, EFFECTS, SHARE, INFORMATION})
+    public @interface WallpaperControlType {
     }
 }

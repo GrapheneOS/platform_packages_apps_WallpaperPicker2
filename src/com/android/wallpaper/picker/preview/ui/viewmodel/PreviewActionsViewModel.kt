@@ -32,14 +32,13 @@ constructor(
     private val previewActionsInteractor: PreviewActionsInteractor,
 ) {
 
-    /**
-     * The info button is always visible unless in the anomalous case the wallpaper model is null
-     */
+    /** This flow emits the view data for the info button bottom sheet */
     val infoButtonAndFloatingSheetViewModel: Flow<InfoFloatingSheetViewModel> =
         previewActionsInteractor.wallpaperModel.filterNotNull().map { wallpaperModel ->
             InfoFloatingSheetViewModel(wallpaperModel)
         }
 
+    /** This flow expresses the visibility state of the info button */
     val showInfoButton: Flow<Boolean> =
-        previewActionsInteractor.wallpaperModel.map { wallpaperModel -> wallpaperModel == null }
+        previewActionsInteractor.wallpaperModel.map { wallpaperModel -> wallpaperModel != null }
 }

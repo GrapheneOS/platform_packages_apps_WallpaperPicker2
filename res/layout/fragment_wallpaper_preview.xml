@@ -127,7 +127,7 @@
             android:layout_marginTop="@dimen/wallpaper_control_button_group_margin_top"
             android:layout_marginEnd="@dimen/wallpaper_control_button_group_margin_end"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/barrier_bottom" />
+            app:layout_constraintTop_toBottomOf="@+id/barrier_bottom"/>
 
         <com.android.wallpaper.widget.DuoTabs
             android:id="@+id/overlay_tabs"
