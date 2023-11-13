@@ -209,39 +209,32 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     @Override
     public boolean setWallpaperInRotation(Bitmap wallpaperBitmap, List<String> attributions,
             String actionUrl, String collectionId, String remoteId) {
-
-        return setWallpaperInRotationStatic(wallpaperBitmap, attributions, actionUrl, collectionId,
-                remoteId);
-    }
-
-    @Override
-    public int setWallpaperBitmapInNextRotation(Bitmap wallpaperBitmap, List<String> attributions,
-            String actionUrl, String collectionId) {
-        return cropAndSetWallpaperBitmapInRotationStatic(wallpaperBitmap,
-                attributions, actionUrl, collectionId);
-    }
-
-    @Override
-    public boolean finalizeWallpaperForNextRotation(List<String> attributions, String actionUrl,
-            String collectionId, int wallpaperId, String remoteId) {
-        return saveStaticWallpaperMetadata(attributions, actionUrl, collectionId, wallpaperId,
-                remoteId, DEST_HOME_SCREEN);
-    }
-
-    /**
-     * Sets wallpaper image and attributions when a static wallpaper is responsible for presenting
-     * the current "daily wallpaper".
-     */
-    private boolean setWallpaperInRotationStatic(Bitmap wallpaperBitmap, List<String> attributions,
-            String actionUrl, String collectionId,
-            String remoteId) {
         final int wallpaperId = cropAndSetWallpaperBitmapInRotationStatic(wallpaperBitmap,
-                attributions, actionUrl, collectionId);
+                attributions, actionUrl, collectionId, getDefaultWhichWallpaper());
 
         if (wallpaperId == 0) {
             return false;
         }
 
+        return saveStaticWallpaperMetadata(attributions, actionUrl, collectionId, wallpaperId,
+                remoteId, DEST_HOME_SCREEN);
+    }
+
+    @Override
+    public int setWallpaperBitmapInNextRotation(Bitmap wallpaperBitmap, List<String> attributions,
+            String actionUrl, String collectionId) {
+        // The very first time setting the rotation wallpaper, make sure we set for both so that:
+        // 1. The lock and home screen wallpaper become the same
+        // 2. Lock screen wallpaper becomes "unset" until the next time user set wallpaper solely
+        //    for the lock screen
+        int whichWallpaper = WallpaperManager.FLAG_SYSTEM | WallpaperManager.FLAG_LOCK;
+        return cropAndSetWallpaperBitmapInRotationStatic(wallpaperBitmap, attributions, actionUrl,
+                collectionId, whichWallpaper);
+    }
+
+    @Override
+    public boolean finalizeWallpaperForNextRotation(List<String> attributions, String actionUrl,
+            String collectionId, int wallpaperId, String remoteId) {
         return saveStaticWallpaperMetadata(attributions, actionUrl, collectionId, wallpaperId,
                 remoteId, DEST_HOME_SCREEN);
     }
@@ -305,7 +298,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
      * @return wallpaper ID for the wallpaper bitmap.
      */
     private int cropAndSetWallpaperBitmapInRotationStatic(Bitmap wallpaperBitmap,
-            List<String> attributions, String actionUrl, String collectionId) {
+            List<String> attributions, String actionUrl, String collectionId,
+            int whichWallpaper) {
         // Calculate crop and scale of the wallpaper to match the default one used in preview
         Point wallpaperSize = new Point(wallpaperBitmap.getWidth(), wallpaperBitmap.getHeight());
         Resources resources = mAppContext.getResources();
@@ -345,7 +339,6 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                     scaledCropRect.width(),
                     scaledCropRect.height());
         }
-        int whichWallpaper = getDefaultWhichWallpaper();
         scaledCropRect = mWallpaperManager.isMultiCropEnabled() ? scaledCropRect : null;
 
         int wallpaperId = setBitmapToWallpaperManager(wallpaperBitmap, scaledCropRect,
