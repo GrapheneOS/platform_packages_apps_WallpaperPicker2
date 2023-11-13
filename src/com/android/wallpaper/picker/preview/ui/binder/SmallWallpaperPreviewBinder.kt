@@ -16,60 +16,72 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
-import android.view.SurfaceControlViewHost
+import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import android.view.View
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
-import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
+import com.android.wallpaper.model.wallpaper.ScreenOrientation
+import com.android.wallpaper.model.wallpaper.WallpaperModel
+import com.android.wallpaper.module.WallpaperPersister
+import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil.attachView
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
-/** Binds wallpaper [SurfaceView] for small preview. */
+/**
+ * Bind the [SurfaceView] with [WallpaperPreviewViewModel] for rendering static or live wallpaper
+ * preview, with regard to its underlying [WallpaperModel].
+ */
 object SmallWallpaperPreviewBinder {
+    /**
+     * @param onFullResImageViewCreated This callback is only used when the wallpaperModel is a
+     *   [WallpaperModel.StaticWallpaperModel]. [FullWallpaperPreviewBinder] needs the callback to
+     *   further delegate the touch events and set the state change listener.
+     */
     fun bind(
-        applicationContext: Context,
-        wallpaperSurface: SurfaceView,
+        surface: SurfaceView,
         viewModel: WallpaperPreviewViewModel,
-        smallPreviewConfig: SmallPreviewConfigViewModel,
-        viewLifecycleOwner: LifecycleOwner,
+        screenOrientation: ScreenOrientation,
+        applicationContext: Context,
         @MainDispatcher mainScope: CoroutineScope,
-        staticPreviewView: View? = null,
+        viewLifecycleOwner: LifecycleOwner,
     ) {
-        wallpaperSurface.setZOrderMediaOverlay(true)
-        wallpaperSurface.holder.addCallback(
+        surface.setZOrderMediaOverlay(true)
+        surface.holder.addCallback(
             object : SurfaceHolder.Callback {
                 override fun surfaceCreated(holder: SurfaceHolder) {
-                    staticPreviewView?.let {
-                        val host =
-                            SurfaceControlViewHost(
-                                wallpaperSurface.context,
-                                wallpaperSurface.display,
-                                wallpaperSurface.hostToken,
-                            )
-                        if (it.parent == null) {
-                            host.setView(
-                                it,
-                                wallpaperSurface.width,
-                                wallpaperSurface.height,
-                            )
-                            wallpaperSurface.setChildSurfacePackage(
-                                checkNotNull(host.surfacePackage)
+                    val wallpaper = viewModel.editingWallpaperModel ?: return
+                    if (wallpaper is WallpaperModel.LiveWallpaperModel) {
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            WallpaperConnectionUtils.connect(
+                                applicationContext,
+                                mainScope,
+                                checkNotNull(viewModel.editingWallpaper).wallpaperComponent,
+                                // TODO b/301088528(giolin): Pass correspondent
+                                //                           destination for live
+                                //                           wallpaper preview
+                                WallpaperPersister.DEST_LOCK_SCREEN,
+                                surface,
                             )
                         }
+                    } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
+                        val staticPreviewView =
+                            LayoutInflater.from(applicationContext)
+                                .inflate(R.layout.fullscreen_wallpaper_preview, null)
+                        surface.attachView(staticPreviewView)
+                        // Bind static wallpaper
+                        StaticWallpaperPreviewBinder.bind(
+                            staticPreviewView.requireViewById(R.id.low_res_image),
+                            staticPreviewView.requireViewById(R.id.full_res_image),
+                            viewModel.getStaticWallpaperPreviewViewModel(),
+                            screenOrientation,
+                            viewLifecycleOwner,
+                        )
                     }
-                    WallpaperPreviewBinder.bind(
-                        applicationContext,
-                        mainScope,
-                        viewLifecycleOwner,
-                        viewModel,
-                        smallPreviewConfig,
-                        wallpaperSurface,
-                        staticPreviewView?.requireViewById(R.id.full_res_image),
-                        staticPreviewView?.requireViewById(R.id.low_res_image),
-                    )
                 }
 
                 override fun surfaceChanged(

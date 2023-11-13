@@ -52,6 +52,8 @@ constructor(
     private val wallpaperPreferences: WallpaperPreferences,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
 ) {
+    /** The state of static wallpaper crop in full preview, before user confirmation. */
+    var fullPreviewCrop: Rect? = null
 
     private var initialized = false
 
