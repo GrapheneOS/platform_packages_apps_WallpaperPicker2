@@ -25,6 +25,7 @@ import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreview
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
 import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import com.android.wallpaper.picker.preview.ui.viewmodel.WorkspacePreviewConfigViewModel
 import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout
 import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout.Companion.getViewId
 import com.android.wallpaper.util.DisplayUtils
@@ -77,10 +78,14 @@ object DualPreviewPagerBinder {
                             ),
                         mainScope = mainScope,
                         viewLifecycleOwner = viewLifecycleOwner,
-                        previewDisplayId = checkNotNull(previewDisplays[display]).displayId,
-                        previewUtils =
-                            if (position == PreviewPagerPage.LOCK_PREVIEW.ordinal) lockPreviewUtils
-                            else homePreviewUtils,
+                        workspaceConfig =
+                            WorkspacePreviewConfigViewModel(
+                                previewUtils =
+                                    if (position == PreviewPagerPage.LOCK_PREVIEW.ordinal)
+                                        lockPreviewUtils
+                                    else homePreviewUtils,
+                                displayId = checkNotNull(previewDisplays[display]).displayId,
+                            ),
                         navigate = navigate,
                     )
                 }

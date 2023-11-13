@@ -37,6 +37,7 @@ object PreviewSelectorBinder {
         mainScope: CoroutineScope,
         homePreviewUtils: PreviewUtils,
         lockPreviewUtils: PreviewUtils,
+        displayId: Int,
         navigate: (() -> Unit)? = null,
     ) {
         // set up tabs view pager
@@ -52,6 +53,7 @@ object PreviewSelectorBinder {
             previewDisplaySize,
             homePreviewUtils,
             lockPreviewUtils,
+            displayId,
             navigate,
         )
 

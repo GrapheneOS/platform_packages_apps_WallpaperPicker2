@@ -37,6 +37,8 @@ constructor(
 
     /** User selected small preview configuration. */
     var selectedSmallPreviewConfig: SmallPreviewConfigViewModel? = null
+    /** User selected workspace configuration. */
+    var selectedWorkspacePreviewConfig: WorkspacePreviewConfigViewModel? = null
 
     /**
      * User selected [WallpaperInfo] for editing.
