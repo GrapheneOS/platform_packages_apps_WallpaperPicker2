@@ -16,13 +16,10 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
-import android.view.LayoutInflater
-import android.view.SurfaceView
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
-import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.PreviewUtils
@@ -41,7 +38,7 @@ object SmallPreviewBinder {
         navigate: (() -> Unit)? = null,
     ) {
         view.setOnClickListener {
-            viewModel.selectSmallPreviewConfig(smallPreviewConfig)
+            viewModel.selectedSmallPreviewConfig = smallPreviewConfig
             navigate?.invoke()
         }
 
@@ -51,21 +48,13 @@ object SmallPreviewBinder {
             previewDisplayId,
         )
 
-        val wallpaperSurface = view.requireViewById<SurfaceView>(R.id.wallpaper_surface)
         SmallWallpaperPreviewBinder.bind(
-            applicationContext,
-            wallpaperSurface,
-            viewModel,
-            smallPreviewConfig,
-            viewLifecycleOwner,
-            mainScope,
-            staticPreviewView =
-                if (checkNotNull(viewModel.editingWallpaper) is LiveWallpaperInfo) {
-                    null
-                } else {
-                    LayoutInflater.from(applicationContext)
-                        .inflate(R.layout.fullscreen_wallpaper_preview, null)
-                },
+            surface = view.requireViewById(R.id.wallpaper_surface),
+            viewModel = viewModel,
+            screenOrientation = smallPreviewConfig.screenOrientation,
+            applicationContext = applicationContext,
+            mainScope = mainScope,
+            viewLifecycleOwner = viewLifecycleOwner,
         )
     }
 }

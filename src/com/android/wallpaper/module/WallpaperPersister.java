@@ -78,6 +78,8 @@ public interface WallpaperPersister {
     /**
      * Sets only the bitmap of a rotating wallpaper of the next rotation to the system and stores
      * the given static wallpaper data in the recent wallpapers list (and not metadata).
+     * This function is used for the very first time setting the rotation wallpaper. It is called
+     * after the user initiates rotation wallpaper and the first wallpaper is downloaded.
      *
      * @param wallpaperBitmap The rotating wallpaper's bitmap.
      * @param attributions List of attribution items.

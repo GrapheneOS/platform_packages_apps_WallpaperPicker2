@@ -16,12 +16,36 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.widget.Button
+import com.android.wallpaper.model.wallpaper.WallpaperModel
+import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 
 object CropWallpaperButtonBinder {
     fun bind(
         button: Button,
-        onClicked: () -> Unit,
+        wallpaperPreviewViewModel: WallpaperPreviewViewModel,
+        navigate: () -> Unit,
     ) {
-        button.setOnClickListener { onClicked.invoke() }
+        val wallpaperModel = wallpaperPreviewViewModel.editingWallpaperModel ?: return
+        button.setOnClickListener {
+            val screenOrientation =
+                wallpaperPreviewViewModel.selectedSmallPreviewConfig?.screenOrientation
+            if (
+                wallpaperModel is WallpaperModel.StaticWallpaperModel && screenOrientation != null
+            ) {
+                wallpaperPreviewViewModel
+                    .getStaticWallpaperPreviewViewModel()
+                    .fullPreviewCrop
+                    ?.let {
+                        wallpaperPreviewViewModel
+                            .getStaticWallpaperPreviewViewModel()
+                            .updateCropHints(mapOf(screenOrientation to it))
+                    }
+                // TODO (b/310631085): Make fullPreviewCrop null when navigating from full to small
+                //                     preview
+                wallpaperPreviewViewModel.getStaticWallpaperPreviewViewModel().fullPreviewCrop =
+                    null
+            }
+            navigate.invoke()
+        }
     }
 }

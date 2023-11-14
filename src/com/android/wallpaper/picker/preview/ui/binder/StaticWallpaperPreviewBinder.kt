@@ -30,8 +30,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.model.wallpaper.ScreenOrientation
 import com.android.wallpaper.picker.preview.ui.util.FullResImageViewUtil
+import com.android.wallpaper.picker.preview.ui.util.FullResImageViewUtil.getCropRect
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullResWallpaperViewModel
-import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.StaticWallpaperPreviewViewModel
 import com.android.wallpaper.util.WallpaperSurfaceCallback.LOW_RES_BITMAP_BLUR_RADIUS
 import com.davemorrissey.labs.subscaleview.ImageSource
@@ -44,10 +44,10 @@ object StaticWallpaperPreviewBinder {
     private const val CROSS_FADE_DURATION: Long = 200
 
     fun bind(
-        fullResImageView: SubsamplingScaleImageView,
         lowResImageView: ImageView,
+        fullResImageView: SubsamplingScaleImageView,
         viewModel: StaticWallpaperPreviewViewModel,
-        smallPreviewConfig: SmallPreviewConfigViewModel,
+        screenOrientation: ScreenOrientation,
         viewLifecycleOwner: LifecycleOwner,
     ) {
         lowResImageView.initLowResImageView()
@@ -59,7 +59,8 @@ object StaticWallpaperPreviewBinder {
 
                 launch {
                     viewModel.subsamplingScaleImageViewModel.collect {
-                        fullResImageView.setFullResImage(it, smallPreviewConfig.screenOrientation)
+                        fullResImageView.setFullResImage(it, screenOrientation)
+                        viewModel.fullPreviewCrop = fullResImageView.getCropRect()
                         crossFadeInFullResImageView(lowResImageView, fullResImageView)
                     }
                 }
