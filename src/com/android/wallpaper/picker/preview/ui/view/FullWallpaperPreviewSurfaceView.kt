@@ -18,13 +18,13 @@ package com.android.wallpaper.picker.preview.ui.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.SurfaceView
+import android.view.ViewGroup
 import com.android.wallpaper.util.WallpaperCropUtils
 
 /**
- * A [SurfaceView] for wallpaper preview that scales the surface up according to
- * [WallpaperCropUtils.getSystemWallpaperMaximumScale]
+ * A [SurfaceView] for wallpaper preview that scales and centers the surface to simulate the actual
+ * wallpaper surface's default system zoom
  */
-// TODO(b/303317694): current preview crop is inaccurate, fix to respect wallpaper parallax zoom
 class FullWallpaperPreviewSurfaceView(context: Context, attrs: AttributeSet? = null) :
     SurfaceView(context, attrs) {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -32,5 +32,23 @@ class FullWallpaperPreviewSurfaceView(context: Context, attrs: AttributeSet? = n
 
         val scale = WallpaperCropUtils.getSystemWallpaperMaximumScale(context)
         setMeasuredDimension((measuredWidth * scale).toInt(), (measuredHeight * scale).toInt())
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        // Calculate the size of wallpaper surface based on the system zoom
+        // and scale & center the wallpaper preview to respect the zoom.
+        val scale = WallpaperCropUtils.getSystemWallpaperMaximumScale(context)
+
+        val scaledWidth = (measuredWidth * scale).toInt()
+        val scaledHeight = (measuredHeight * scale).toInt()
+        var xCentered = (measuredWidth - scaledWidth) / 2
+        val yCentered = (measuredHeight - scaledHeight) / 2
+
+        val params: ViewGroup.LayoutParams = layoutParams
+        params.width = scaledWidth
+        params.height = scaledHeight
+        x = xCentered.toFloat()
+        y = yCentered.toFloat()
+        layoutParams = params
     }
 }
