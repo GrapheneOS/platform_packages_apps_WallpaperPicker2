@@ -40,6 +40,7 @@ class DefaultWallpaperPreferencesTest {
                 hashCode = 10013L,
                 managerId = 3,
                 remoteId = "ocean",
+                cropHints = null,
             )
         )
 
@@ -82,6 +83,7 @@ class DefaultWallpaperPreferencesTest {
                 hashCode = 10013L,
                 managerId = 3,
                 remoteId = "ocean",
+                cropHints = null,
             )
         )
 
