@@ -192,9 +192,8 @@ class WallpaperQuickSwitchViewModelTest {
                 wallpaperId = model.wallpaperId,
                 placeholderColor = model.placeholderColor,
                 isLarge = isBeingSelected || (nothingBeingSelected && isSelected),
-                isSelectionIconVisible = nothingBeingSelected && isSelected,
-                isSelectionBorderVisible = isBeingSelected || (nothingBeingSelected && isSelected),
-                isProgressIndicatorVisible = isBeingSelected,
+                isSelectionIndicatorVisible =
+                    isBeingSelected || (nothingBeingSelected && isSelected),
                 isSelectable =
                     (!nothingBeingSelected && !isBeingSelected) ||
                         (nothingBeingSelected && !isSelected),
@@ -218,15 +217,9 @@ class WallpaperQuickSwitchViewModelTest {
             assertWithMessage("mismatching placeholderColor for index $index.")
                 .that(option.placeholderColor)
                 .isEqualTo(expected[index].placeholderColor)
-            assertWithMessage("mismatching isProgressIndicatorVisible for index $index.")
-                .that(collectLastValue(option.isProgressIndicatorVisible)())
-                .isEqualTo(expected[index].isProgressIndicatorVisible)
-            assertWithMessage("mismatching isSelectionIconVisible for index $index.")
-                .that(collectLastValue(option.isSelectionIconVisible)())
-                .isEqualTo(expected[index].isSelectionIconVisible)
             assertWithMessage("mismatching isSelectionBorderVisible for index $index.")
-                .that(collectLastValue(option.isSelectionBorderVisible)())
-                .isEqualTo(expected[index].isSelectionBorderVisible)
+                .that(collectLastValue(option.isSelectionIndicatorVisible)())
+                .isEqualTo(expected[index].isSelectionIndicatorVisible)
             assertWithMessage("mismatching isSelectable for index $index.")
                 .that(collectLastValue(option.onSelected)() != null)
                 .isEqualTo(expected[index].isSelectable)
@@ -237,9 +230,7 @@ class WallpaperQuickSwitchViewModelTest {
         val wallpaperId: String,
         val placeholderColor: Int,
         val isLarge: Boolean = false,
-        val isProgressIndicatorVisible: Boolean = false,
-        val isSelectionIconVisible: Boolean = false,
-        val isSelectionBorderVisible: Boolean = false,
+        val isSelectionIndicatorVisible: Boolean = false,
         val isSelectable: Boolean = true,
     )
 }

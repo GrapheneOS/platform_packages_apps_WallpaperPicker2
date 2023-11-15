@@ -48,11 +48,4 @@
         android:src="@drawable/check_circle_secondary_24dp"
         android:visibility="gone" />
 
-    <ProgressBar
-        android:id="@+id/progress_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
-
 </FrameLayout>

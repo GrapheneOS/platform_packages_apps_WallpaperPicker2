@@ -47,7 +47,6 @@ object WallpaperQuickSwitchOptionBinder {
     ) {
         val selectionBorder: View = view.requireViewById(R.id.selection_border)
         val selectionIcon: View = view.requireViewById(R.id.selection_icon)
-        val progressIndicator: View = view.requireViewById(R.id.progress_indicator)
         val thumbnailView: ImageView = view.requireViewById(R.id.thumbnail)
         val placeholder: ImageView = view.requireViewById(R.id.placeholder)
 
@@ -83,34 +82,16 @@ object WallpaperQuickSwitchOptionBinder {
                 // We want to skip animating the first update so it doesn't "blink" when the
                 // activity is recreated.
                 var isFirstValue = true
-                viewModel.isSelectionBorderVisible.collect {
+                viewModel.isSelectionIndicatorVisible.collect {
                     if (!isFirstValue) {
                         selectionBorder.animatedVisibility(isVisible = it)
-                    } else {
-                        selectionBorder.isVisible = it
-                    }
-                    isFirstValue = false
-                }
-            }
-
-            launch {
-                // We want to skip animating the first update so it doesn't "blink" when the
-                // activity is recreated.
-                var isFirstValue = true
-                viewModel.isSelectionIconVisible.collect {
-                    if (!isFirstValue) {
                         selectionIcon.animatedVisibility(isVisible = it)
                     } else {
+                        selectionBorder.isVisible = it
                         selectionIcon.isVisible = it
                     }
                     isFirstValue = false
                     selectionIcon.animatedVisibility(isVisible = it)
-                }
-            }
-
-            launch {
-                viewModel.isProgressIndicatorVisible.collect {
-                    progressIndicator.animatedVisibility(isVisible = it)
                 }
             }
 

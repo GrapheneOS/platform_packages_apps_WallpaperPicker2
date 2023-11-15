@@ -33,12 +33,8 @@ data class WallpaperQuickSwitchOptionViewModel(
      * smaller.
      */
     val isLarge: Flow<Boolean>,
-    /** Whether the progress indicator should be visible. */
-    val isProgressIndicatorVisible: Flow<Boolean>,
     /** Whether the selection border should be visible. */
-    val isSelectionBorderVisible: Flow<Boolean>,
-    /** Whether the selection icon should be visible. */
-    val isSelectionIconVisible: Flow<Boolean>,
+    val isSelectionIndicatorVisible: Flow<Boolean>,
     /**
      * A function to invoke when the option is clicked by the user. If `null`, the option is not
      * clickable.
