@@ -21,6 +21,7 @@ import com.android.systemui.shared.customization.data.content.CustomizationProvi
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
 import com.android.systemui.shared.customization.data.content.CustomizationProviderContract as Contract
 import com.android.wallpaper.Flags.multiCropPreviewUiFlag
+import com.android.wallpaper.Flags.wallpaperRestorerFlag
 import com.android.wallpaper.module.InjectorProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -32,9 +33,7 @@ abstract class BaseFlags {
     open fun isWallpaperEffectEnabled() = false
     open fun isWallpaperEffectModelDownloadEnabled() = true
     open fun isInterruptModelDownloadEnabled() = false
-
-    // TODO(b/285047815): Remove flag after adding wallpaper id for default static wallpaper
-    open fun isWallpaperRestorerEnabled() = false
+    open fun isWallpaperRestorerEnabled() = wallpaperRestorerFlag()
 
     /** Enables new preview UI if both [isMultiCropEnabled] and this flag are true. */
     open fun isMultiCropPreviewUiEnabled() = multiCropPreviewUiFlag()
