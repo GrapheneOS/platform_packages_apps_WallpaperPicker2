@@ -110,10 +110,7 @@ constructor(
                                 // click.
                                 (isSelected && !isSomethingBecomingSelected) || isBecomingSelected
                             },
-                        // We show the progress indicator if the option is in the process of
-                        // becoming the selected one following user click.
-                        isProgressIndicatorVisible = isBecomingSelectedFlow,
-                        isSelectionBorderVisible =
+                        isSelectionIndicatorVisible =
                             combine(
                                 isSelectedFlow,
                                 isBecomingSelectedFlow,
@@ -123,17 +120,6 @@ constructor(
                                 // one that's currently selected or the one that is becoming
                                 // the selected one following user click.
                                 (isSelected && !isSomethingBecomingSelected) || isBeingSelected
-                            },
-                        isSelectionIconVisible =
-                            combine(
-                                isSelectedFlow,
-                                isSomethingBecomingSelectedFlow,
-                            ) { isSelected, isSomethingBecomingSelected ->
-                                // The selection icon is shown for the option that is
-                                // currently selected but only if nothing else is becoming
-                                // selected. If anything is being selected following user
-                                // click, the selection icon is not shown on any option.
-                                isSelected && !isSomethingBecomingSelected
                             },
                         onSelected =
                             combine(

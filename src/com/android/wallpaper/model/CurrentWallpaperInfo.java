@@ -28,6 +28,7 @@ import com.android.wallpaper.asset.CurrentWallpaperAsset;
 import com.android.wallpaper.module.InjectorProvider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -62,9 +63,8 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
      * @param wallpaperManagerFlag Either SYSTEM or LOCK--the source of image data which this object
      *                             represents.
      */
-    public CurrentWallpaperInfo(List<String> attributions, String actionUrl,
-                                  String collectionId,
-                                  @SetWallpaperFlags int wallpaperManagerFlag) {
+    public CurrentWallpaperInfo(List<String> attributions, String actionUrl, String collectionId,
+            @SetWallpaperFlags int wallpaperManagerFlag) {
         mAttributions = attributions;
         mWallpaperManagerFlag = wallpaperManagerFlag;
         mActionUrl = actionUrl;
@@ -79,6 +79,7 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
         mWallpaperManagerFlag = in.readInt();
         mActionUrl = in.readString();
         mCollectionId = in.readString();
+        mCropHints.putAll(in.readSerializable(HashMap.class.getClassLoader(), HashMap.class));
     }
 
     @Override
@@ -135,6 +136,7 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
         parcel.writeInt(mWallpaperManagerFlag);
         parcel.writeString(mActionUrl);
         parcel.writeString(mCollectionId);
+        parcel.writeSerializable(mCropHints);
     }
 
     @Override

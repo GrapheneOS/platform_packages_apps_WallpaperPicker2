@@ -30,6 +30,7 @@ import com.android.wallpaper.module.WallpaperPreferences.PendingDailyWallpaperUp
 import com.android.wallpaper.module.WallpaperPreferences.PendingWallpaperSetStatus
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
+import com.google.common.collect.ImmutableMap
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -81,6 +82,8 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
     private var mLockStaticWallpaperMetadata: StaticWallpaperMetadata? = null
     private val mWallStoredColor: HashMap<String, String> = HashMap()
 
+    private val wallpaperCropHints: MutableMap<ScreenOrientation, Rect?>
+
     init {
         wallpaperPresentationMode = WallpaperPreferences.PRESENTATION_MODE_STATIC
         homeScreenAttributions = mutableListOf<String?>("Android wallpaper")
@@ -90,6 +93,7 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
         lastDailyLogTimestamp = -1
         lastDailyWallpaperRotationStatus = -1
         mPendingWallpaperSetStatus = WallpaperPreferences.WALLPAPER_SET_NOT_PENDING
+        wallpaperCropHints = mutableMapOf()
     }
 
     override fun getWallpaperPresentationMode(): Int {
@@ -466,6 +470,14 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
         bitmap: Bitmap,
         cropHints: Map<ScreenOrientation, Rect?>
     ) {}
+
+    override fun getWallpaperCropHints(): Map<ScreenOrientation, Rect?> {
+        return ImmutableMap.copyOf(wallpaperCropHints)
+    }
+
+    override fun storeWallpaperCropHints(cropHints: Map<ScreenOrientation, Rect?>) {
+        wallpaperCropHints.putAll(cropHints)
+    }
 
     private fun setAppLaunchCount(count: Int) {
         appLaunchCount = count

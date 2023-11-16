@@ -50,12 +50,14 @@ public class TestWallpaperRefresher implements WallpaperRefresher {
                             prefs.getHomeWallpaperAttributions(),
                             prefs.getHomeWallpaperActionUrl(),
                             prefs.getHomeWallpaperCollectionId(),
-                            null /* wallpaperComponent */),
+                            /* wallpaperComponent */ null,
+                            /* cropHints= */ null),
                     new WallpaperMetadata(
                             prefs.getLockWallpaperAttributions(),
                             prefs.getLockWallpaperActionUrl(),
                             prefs.getLockWallpaperCollectionId(),
-                            null /* wallpaperComponent */),
+                            /* wallpaperComponent */ null,
+                            /* cropHints= */ null),
                     prefs.getWallpaperPresentationMode());
         } else {
             listener.onRefreshed(
@@ -63,7 +65,8 @@ public class TestWallpaperRefresher implements WallpaperRefresher {
                             prefs.getHomeWallpaperAttributions(),
                             prefs.getHomeWallpaperActionUrl(),
                             prefs.getHomeWallpaperCollectionId(),
-                            null /* wallpaperComponent */),
+                            /* wallpaperComponent */ null,
+                            /* cropHints= */ null),
                     null,
                     prefs.getWallpaperPresentationMode());
         }
