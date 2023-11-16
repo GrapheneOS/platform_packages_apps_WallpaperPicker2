@@ -72,8 +72,8 @@ interface WallpaperClient {
         onDone: () -> Unit,
     )
 
-    /** Returns a thumbnail for the wallpaper with the given ID. */
-    suspend fun loadThumbnail(wallpaperId: String): Bitmap?
+    /** Returns a thumbnail for the wallpaper with the given ID and destination. */
+    suspend fun loadThumbnail(wallpaperId: String, destination: WallpaperDestination): Bitmap?
 
     /** Returns whether the recent wallpapers provider is available. */
     fun areRecentsAvailable(): Boolean
