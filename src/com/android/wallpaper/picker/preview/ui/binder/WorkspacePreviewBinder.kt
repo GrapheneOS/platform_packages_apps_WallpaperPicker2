@@ -16,41 +16,33 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.os.Bundle
-import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import androidx.core.os.bundleOf
+import com.android.wallpaper.picker.preview.ui.viewmodel.WorkspacePreviewConfigViewModel
 import com.android.wallpaper.util.PreviewUtils
 import com.android.wallpaper.util.SurfaceViewUtils
 
 object WorkspacePreviewBinder {
-    fun bind(workspaceSurface: SurfaceView, previewUtils: PreviewUtils, displayId: Int? = null) {
-        workspaceSurface.visibility = View.VISIBLE
-        workspaceSurface.setZOrderMediaOverlay(true)
-        workspaceSurface.holder.addCallback(
+    fun bind(surface: SurfaceView, config: WorkspacePreviewConfigViewModel) {
+        surface.visibility = View.VISIBLE
+        surface.setZOrderMediaOverlay(true)
+        surface.holder.addCallback(
             object : SurfaceHolder.Callback {
                 override fun surfaceCreated(holder: SurfaceHolder) {
-                    if (previewUtils.supportsPreview()) {
-                        if (displayId == null && workspaceSurface.display == null) {
-                            Log.w(
-                                "WorkspacePreviewBinder",
-                                "No display ID, avoiding asking for workspace preview, lest WallpaperPicker " +
-                                    "crash"
-                            )
-                            return
-                        }
+                    if (config.previewUtils.supportsPreview()) {
                         val request =
                             SurfaceViewUtils.createSurfaceViewRequest(
-                                workspaceSurface,
-                                bundleOf(Pair(SurfaceViewUtils.KEY_DISPLAY_ID, displayId)),
+                                surface,
+                                bundleOf(Pair(SurfaceViewUtils.KEY_DISPLAY_ID, config.displayId)),
                             )
-                        previewUtils.renderPreview(
+                        config.previewUtils.renderPreview(
                             request,
                             object : PreviewUtils.WorkspacePreviewCallback {
                                 override fun onPreviewRendered(resultBundle: Bundle?) {
                                     if (resultBundle != null) {
-                                        workspaceSurface.setChildSurfacePackage(
+                                        surface.setChildSurfacePackage(
                                             SurfaceViewUtils.getSurfacePackage(resultBundle)
                                         )
                                     }

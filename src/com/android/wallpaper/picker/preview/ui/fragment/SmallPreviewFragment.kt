@@ -44,6 +44,7 @@ import kotlinx.coroutines.CoroutineScope
  * This fragment displays the preview of the selected wallpaper on all available workspaces and
  * device displays.
  */
+// TODO(b/303317694): fix small preview to reflect wallpaper parallax zoom
 @AndroidEntryPoint(AppbarFragment::class)
 class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
@@ -122,6 +123,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 mainScope,
                 homePreviewUtils,
                 lockPreviewUtils,
+                displayUtils.getWallpaperDisplay().displayId
             ) {
                 findNavController()
                     .navigate(R.id.action_smallPreviewFragment_to_fullPreviewFragment)

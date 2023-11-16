@@ -14,12 +14,19 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center">
-    <com.android.wallpaper.picker.preview.ui.view.FullPreviewSurfaceView
+<com.android.wallpaper.picker.preview.ui.view.FullPreviewFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/wallpaper_preview_crop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+    <com.android.wallpaper.picker.preview.ui.view.FullWallpaperPreviewSurfaceView
         android:id="@+id/wallpaper_surface"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-</FrameLayout>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <SurfaceView
+        android:id="@+id/workspace_surface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</com.android.wallpaper.picker.preview.ui.view.FullPreviewFrameLayout>

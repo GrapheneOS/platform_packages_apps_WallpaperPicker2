@@ -27,6 +27,7 @@ import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.Si
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.pagetransformers.PreviewCardPageTransformer
 import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import com.android.wallpaper.picker.preview.ui.viewmodel.WorkspacePreviewConfigViewModel
 import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.CoroutineScope
 
@@ -43,6 +44,7 @@ object PreviewPagerBinder {
         previewDisplaySize: Point,
         homePreviewUtils: PreviewUtils,
         lockPreviewUtils: PreviewUtils,
+        displayId: Int,
         navigate: (() -> Unit)? = null,
     ) {
         previewsViewPager.apply {
@@ -59,9 +61,14 @@ object PreviewPagerBinder {
                         ),
                     mainScope = mainScope,
                     viewLifecycleOwner = viewLifecycleOwner,
-                    previewUtils =
-                        if (position == PreviewPagerPage.LOCK_PREVIEW.ordinal) lockPreviewUtils
-                        else homePreviewUtils,
+                    workspaceConfig =
+                        WorkspacePreviewConfigViewModel(
+                            previewUtils =
+                                if (position == PreviewPagerPage.LOCK_PREVIEW.ordinal)
+                                    lockPreviewUtils
+                                else homePreviewUtils,
+                            displayId = displayId,
+                        ),
                     navigate = navigate,
                 )
             }
