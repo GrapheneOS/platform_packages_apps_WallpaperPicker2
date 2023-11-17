@@ -28,6 +28,8 @@ import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.preview.ui.binder.CropWallpaperButtonBinder
 import com.android.wallpaper.picker.preview.ui.binder.FullWallpaperPreviewBinder
+import com.android.wallpaper.picker.preview.ui.binder.WorkspacePreviewBinder
+import com.android.wallpaper.picker.preview.ui.view.FullPreviewFrameLayout
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,12 +55,20 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
         val view = inflater.inflate(R.layout.fragment_full_preview, container, false)
         setUpToolbar(view)
 
+        val wallpaperPreviewCrop: FullPreviewFrameLayout =
+            view.requireViewById(R.id.wallpaper_preview_crop)
+        wallpaperPreviewViewModel.selectedSmallPreviewConfig?.let {
+            wallpaperPreviewCrop.setCurrentAndTargetDisplaySize(
+                displayUtils.getRealSize(checkNotNull(view.context.display)),
+                it.displaySize
+            )
+        }
+
         FullWallpaperPreviewBinder.bind(
             appContext,
             view.requireViewById(R.id.wallpaper_surface),
             view.requireViewById(R.id.touch_forwarding_layout),
             wallpaperPreviewViewModel,
-            displayUtils.getRealSize(checkNotNull(view.context.display)),
             viewLifecycleOwner,
             mainScope,
         )
@@ -68,6 +78,10 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
             wallpaperPreviewViewModel,
         ) {
             findNavController().popBackStack()
+        }
+
+        wallpaperPreviewViewModel.selectedWorkspacePreviewConfig?.let { config ->
+            WorkspacePreviewBinder.bind(view.requireViewById(R.id.workspace_surface), config)
         }
 
         return view

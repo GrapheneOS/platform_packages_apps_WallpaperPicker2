@@ -22,15 +22,22 @@ package com.android.wallpaper.model.wallpaper
  * the specific type of wallpaper, the individual fields could be null or not null.
  */
 sealed class WallpaperModel {
+
+    /**
+     * All [WallpaperModel] data classes contain commonWallpaperData property which contains common
+     * data amongst all [WallpaperModel] classes.
+     */
+    abstract val commonWallpaperData: CommonWallpaperData
+
     data class LiveWallpaperModel(
-        val commonWallpaperData: CommonWallpaperData,
+        override val commonWallpaperData: CommonWallpaperData,
         val liveWallpaperData: LiveWallpaperData,
         val creativeWallpaperData: CreativeWallpaperData?,
         val internalLiveWallpaperData: InternalLiveWallpaperData?
     ) : WallpaperModel()
 
     data class StaticWallpaperModel(
-        val commonWallpaperData: CommonWallpaperData,
+        override val commonWallpaperData: CommonWallpaperData,
         val staticWallpaperData: StaticWallpaperData,
         val imageWallpaperData: ImageWallpaperData?,
         val networkWallpaperData: NetworkWallpaperData?

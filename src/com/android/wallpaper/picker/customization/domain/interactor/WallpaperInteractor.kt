@@ -111,11 +111,16 @@ class WallpaperInteractor(
         )
     }
 
-    /** Returns a thumbnail for the wallpaper with the given ID. */
-    suspend fun loadThumbnail(wallpaperId: String, lastUpdatedTimestamp: Long): Bitmap? {
+    /** Returns a thumbnail for the wallpaper with the given ID and destination. */
+    suspend fun loadThumbnail(
+        wallpaperId: String,
+        lastUpdatedTimestamp: Long,
+        destination: WallpaperDestination
+    ): Bitmap? {
         return repository.loadThumbnail(
             wallpaperId = wallpaperId,
-            lastUpdatedTimestamp = lastUpdatedTimestamp
+            lastUpdatedTimestamp = lastUpdatedTimestamp,
+            destination = destination
         )
     }
 }

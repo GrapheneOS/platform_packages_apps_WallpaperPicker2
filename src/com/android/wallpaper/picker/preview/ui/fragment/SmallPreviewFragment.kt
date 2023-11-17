@@ -28,6 +28,7 @@ import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.preview.di.modules.preview.utils.PreviewUtilsModule
 import com.android.wallpaper.picker.preview.ui.binder.DualPreviewSelectorBinder
+import com.android.wallpaper.picker.preview.ui.binder.PreviewActionsBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewSelectorBinder
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.TabsPagerContainer
@@ -43,6 +44,7 @@ import kotlinx.coroutines.CoroutineScope
  * This fragment displays the preview of the selected wallpaper on all available workspaces and
  * device displays.
  */
+// TODO(b/303317694): fix small preview to reflect wallpaper parallax zoom
 @AndroidEntryPoint(AppbarFragment::class)
 class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
@@ -84,6 +86,10 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
     }
 
     private fun bindScreenPreview(view: View) {
+        PreviewActionsBinder.bind(
+            wallpaperPreviewViewModel.getPreviewActionsViewModel(),
+            viewLifecycleOwner,
+        )
         if (displayUtils.hasMultiInternalDisplays()) {
             val dualPreviewView: DualPreviewViewPager =
                 view.requireViewById(R.id.dual_preview_pager)
@@ -117,6 +123,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 mainScope,
                 homePreviewUtils,
                 lockPreviewUtils,
+                displayUtils.getWallpaperDisplay().displayId
             ) {
                 findNavController()
                     .navigate(R.id.action_smallPreviewFragment_to_fullPreviewFragment)

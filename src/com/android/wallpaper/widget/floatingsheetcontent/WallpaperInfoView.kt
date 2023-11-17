@@ -24,6 +24,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.android.wallpaper.R
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.InfoFloatingSheetViewModel
 import java.util.concurrent.Executors
 
 /** A view for displaying wallpaper info. */
@@ -50,8 +51,40 @@ class WallpaperInfoView(context: Context?, attrs: AttributeSet?) : LinearLayout(
         shouldShowExploreButton: Boolean,
         exploreButtonClickListener: OnClickListener?
     ) {
+        loadWallpaperInfoData(
+            wallpaperInfo.getAttributions(context),
+            actionLabel,
+            shouldShowExploreButton,
+            exploreButtonClickListener,
+            shouldShowMetadata(wallpaperInfo)
+        )
+    }
+
+    fun populateWallpaperInfo(
+        infoFloatingSheetViewModel: InfoFloatingSheetViewModel,
+        actionLabel: CharSequence?,
+        shouldShowExploreButton: Boolean,
+        exploreButtonClickListener: OnClickListener?,
+    ) {
+
+        loadWallpaperInfoData(
+            infoFloatingSheetViewModel.attributions,
+            actionLabel,
+            shouldShowExploreButton,
+            exploreButtonClickListener,
+            infoFloatingSheetViewModel.showMetadata
+        )
+    }
+
+    private fun loadWallpaperInfoData(
+        attributions: List<String?>?,
+        actionLabel: CharSequence?,
+        shouldShowExploreButton: Boolean,
+        exploreButtonClickListener: OnClickListener?,
+        shouldShowMetadata: Boolean,
+    ) {
+
         executorService.execute {
-            val attributions = wallpaperInfo.getAttributions(context)
             Handler(Looper.getMainLooper()).post {
 
                 // Reset wallpaper information UI
@@ -63,15 +96,16 @@ class WallpaperInfoView(context: Context?, attrs: AttributeSet?) : LinearLayout(
                 exploreButton?.text = ""
                 exploreButton?.setOnClickListener(null)
                 exploreButton?.visibility = GONE
-                if (attributions.size > 0 && attributions[0] != null) {
+
+                if (attributions != null && attributions.size > 0 && attributions[0] != null) {
                     title?.text = attributions[0]
                 }
-                if (shouldShowMetadata(wallpaperInfo)) {
-                    if (attributions.size > 1 && attributions[1] != null) {
+                if (shouldShowMetadata) {
+                    if (attributions != null && attributions.size > 1 && attributions[1] != null) {
                         subtitle1?.visibility = VISIBLE
                         subtitle1?.text = attributions[1]
                     }
-                    if (attributions.size > 2 && attributions[2] != null) {
+                    if (attributions != null && attributions.size > 2 && attributions[2] != null) {
                         subtitle2?.visibility = VISIBLE
                         subtitle2?.text = attributions[2]
                     }

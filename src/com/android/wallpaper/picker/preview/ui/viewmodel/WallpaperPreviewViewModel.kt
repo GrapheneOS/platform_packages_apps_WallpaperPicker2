@@ -33,10 +33,13 @@ class WallpaperPreviewViewModel
 @Inject
 constructor(
     private val staticWallpaperPreviewViewModel: StaticWallpaperPreviewViewModel,
+    private val previewActionsViewModel: PreviewActionsViewModel,
 ) : ViewModel() {
 
     /** User selected small preview configuration. */
     var selectedSmallPreviewConfig: SmallPreviewConfigViewModel? = null
+    /** User selected workspace configuration. */
+    var selectedWorkspacePreviewConfig: WorkspacePreviewConfigViewModel? = null
 
     /**
      * User selected [WallpaperInfo] for editing.
@@ -51,6 +54,9 @@ constructor(
     /** Gets the view model for static wallpaper preview views. */
     fun getStaticWallpaperPreviewViewModel(): StaticWallpaperPreviewViewModel =
         staticWallpaperPreviewViewModel
+
+    /** Gets the view model for action buttons and action sheet for small preview */
+    fun getPreviewActionsViewModel(): PreviewActionsViewModel = previewActionsViewModel
 
     /** Initializes [WallpaperPreviewViewModel] and all its children view models. */
     fun initializeViewModel(context: Context, wallpaper: WallpaperInfo, model: WallpaperModel) {

@@ -16,11 +16,11 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
-import android.graphics.Point
 import android.graphics.PointF
 import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
+import android.view.SurfaceView
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -33,7 +33,6 @@ import com.android.wallpaper.module.WallpaperPersister
 import com.android.wallpaper.picker.TouchForwardingLayout
 import com.android.wallpaper.picker.preview.ui.util.FullResImageViewUtil.getCropRect
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil.attachView
-import com.android.wallpaper.picker.preview.ui.view.FullPreviewSurfaceView
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
@@ -46,20 +45,15 @@ object FullWallpaperPreviewBinder {
 
     fun bind(
         applicationContext: Context,
-        surfaceView: FullPreviewSurfaceView,
+        surfaceView: SurfaceView,
         surfaceTouchForwardingLayout: TouchForwardingLayout,
         viewModel: WallpaperPreviewViewModel,
-        currentDisplaySize: Point,
         viewLifecycleOwner: LifecycleOwner,
         @MainDispatcher mainScope: CoroutineScope,
     ) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 val previewConfig = viewModel.selectedSmallPreviewConfig ?: return@repeatOnLifecycle
-                surfaceView.setCurrentAndTargetDisplaySize(
-                    currentSize = currentDisplaySize,
-                    targetSize = previewConfig.displaySize,
-                )
                 surfaceView.setZOrderMediaOverlay(true)
                 surfaceView.holder.addCallback(
                     object : SurfaceHolder.Callback {

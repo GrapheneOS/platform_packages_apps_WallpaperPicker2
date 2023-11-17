@@ -95,7 +95,8 @@ constructor(
                         thumbnail = {
                             interactor.loadThumbnail(
                                 wallpaperId = preview.wallpaperId,
-                                lastUpdatedTimestamp = preview.lastUpdated
+                                lastUpdatedTimestamp = preview.lastUpdated,
+                                destination = destination
                             )
                         },
                         isLarge =

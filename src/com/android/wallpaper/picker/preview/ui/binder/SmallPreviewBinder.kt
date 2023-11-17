@@ -22,7 +22,7 @@ import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
-import com.android.wallpaper.util.PreviewUtils
+import com.android.wallpaper.picker.preview.ui.viewmodel.WorkspacePreviewConfigViewModel
 import kotlinx.coroutines.CoroutineScope
 
 object SmallPreviewBinder {
@@ -33,20 +33,16 @@ object SmallPreviewBinder {
         smallPreviewConfig: SmallPreviewConfigViewModel,
         @MainDispatcher mainScope: CoroutineScope,
         viewLifecycleOwner: LifecycleOwner,
-        previewUtils: PreviewUtils,
-        previewDisplayId: Int? = null,
+        workspaceConfig: WorkspacePreviewConfigViewModel,
         navigate: (() -> Unit)? = null,
     ) {
         view.setOnClickListener {
             viewModel.selectedSmallPreviewConfig = smallPreviewConfig
+            viewModel.selectedWorkspacePreviewConfig = workspaceConfig
             navigate?.invoke()
         }
 
-        WorkspacePreviewBinder.bind(
-            view.requireViewById(R.id.workspace_surface),
-            previewUtils,
-            previewDisplayId,
-        )
+        WorkspacePreviewBinder.bind(view.requireViewById(R.id.workspace_surface), workspaceConfig)
 
         SmallWallpaperPreviewBinder.bind(
             surface = view.requireViewById(R.id.wallpaper_surface),
