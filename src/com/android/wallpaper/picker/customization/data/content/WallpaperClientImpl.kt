@@ -34,7 +34,7 @@ import com.android.wallpaper.model.StaticWallpaperMetadata
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.model.wallpaper.ScreenOrientation
 import com.android.wallpaper.model.wallpaper.WallpaperModel.StaticWallpaperModel
-import com.android.wallpaper.module.CurrentWallpaperInfoFactory
+import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -49,7 +49,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 
 class WallpaperClientImpl(
     private val context: Context,
-    private val infoFactory: CurrentWallpaperInfoFactory,
     private val wallpaperManager: WallpaperManager,
     private val wallpaperPreferences: WallpaperPreferences,
 ) : WallpaperClient {
@@ -249,12 +248,14 @@ class WallpaperClientImpl(
 
     private suspend fun getCurrentWallpapers(): Pair<WallpaperInfo, WallpaperInfo?> =
         suspendCancellableCoroutine { continuation ->
-            infoFactory.createCurrentWallpaperInfos(
-                context,
-                false,
-            ) { homeWallpaper, lockWallpaper, _ ->
-                continuation.resume(Pair(homeWallpaper, lockWallpaper), null)
-            }
+            InjectorProvider.getInjector()
+                .getCurrentWallpaperInfoFactory(context)
+                .createCurrentWallpaperInfos(
+                    context,
+                    /* forceRefresh= */ false,
+                ) { homeWallpaper, lockWallpaper, _ ->
+                    continuation.resume(Pair(homeWallpaper, lockWallpaper), null)
+                }
         }
 
     override suspend fun loadThumbnail(

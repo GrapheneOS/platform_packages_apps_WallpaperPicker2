@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.wallpaper.picker.preview.di.modules.preview.utils
+package com.android.wallpaper.picker.di.modules
 
 import android.content.Context
 import com.android.wallpaper.R
@@ -31,7 +31,7 @@ import javax.inject.Qualifier
  */
 @InstallIn(ActivityComponent::class)
 @Module
-class PreviewUtilsModule {
+internal object PreviewUtilsModule {
 
     @Qualifier @Retention(AnnotationRetention.BINARY) annotation class LockScreenPreviewUtils
 

@@ -26,7 +26,8 @@ import androidx.navigation.fragment.findNavController
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.picker.AppbarFragment
-import com.android.wallpaper.picker.preview.di.modules.preview.utils.PreviewUtilsModule
+import com.android.wallpaper.picker.di.modules.PreviewUtilsModule.HomeScreenPreviewUtils
+import com.android.wallpaper.picker.di.modules.PreviewUtilsModule.LockScreenPreviewUtils
 import com.android.wallpaper.picker.preview.ui.binder.DualPreviewSelectorBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewActionsBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewSelectorBinder
@@ -50,8 +51,8 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
     @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
-    @PreviewUtilsModule.HomeScreenPreviewUtils @Inject lateinit var homePreviewUtils: PreviewUtils
-    @PreviewUtilsModule.LockScreenPreviewUtils @Inject lateinit var lockPreviewUtils: PreviewUtils
+    @HomeScreenPreviewUtils @Inject lateinit var homePreviewUtils: PreviewUtils
+    @LockScreenPreviewUtils @Inject lateinit var lockPreviewUtils: PreviewUtils
     @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
 
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
