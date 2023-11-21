@@ -18,7 +18,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout
+    <com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout
         android:id="@+id/dual_preview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

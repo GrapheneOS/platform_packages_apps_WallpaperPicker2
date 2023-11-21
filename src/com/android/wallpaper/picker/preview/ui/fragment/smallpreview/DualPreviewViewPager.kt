@@ -21,7 +21,7 @@ import android.util.AttributeSet
 import androidx.viewpager.widget.ViewPager
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.FoldableDisplay
-import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout
+import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout
 
 /**
  * This view pager sizes itself to be the exact height required by its content views:

@@ -27,7 +27,7 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/preview_screen_description"/>
 
-    <include layout="@layout/wallpaper_preview_crop"/>
+    <include layout="@layout/wallpaper_preview_full"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
