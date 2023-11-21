@@ -18,11 +18,14 @@ package com.android.wallpaper.picker.preview.ui.fragment
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.transition.TransitionInflater
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.picker.AppbarFragment
@@ -47,6 +50,12 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
 
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition =
+            TransitionInflater.from(appContext).inflateTransition(R.transition.shared_view)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,6 +63,9 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_full_preview, container, false)
         setUpToolbar(view)
+
+        val wallpaperSurface: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
+        ViewCompat.setTransitionName(wallpaperSurface, "full_preview_shared_element")
 
         val wallpaperPreviewCrop: FullPreviewFrameLayout =
             view.requireViewById(R.id.wallpaper_preview_crop)

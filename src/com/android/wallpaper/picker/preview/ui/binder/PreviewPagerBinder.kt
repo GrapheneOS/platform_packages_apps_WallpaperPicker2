@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.preview.ui.binder
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
@@ -45,7 +46,7 @@ object PreviewPagerBinder {
         homePreviewUtils: PreviewUtils,
         lockPreviewUtils: PreviewUtils,
         displayId: Int,
-        navigate: (() -> Unit)? = null,
+        navigate: (View) -> Unit,
     ) {
         previewsViewPager.apply {
             adapter = SinglePreviewPagerAdapter { viewHolder, position ->

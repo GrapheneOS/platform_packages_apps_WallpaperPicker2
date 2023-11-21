@@ -21,7 +21,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
@@ -110,9 +112,17 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 viewLifecycleOwner,
                 mainScope,
                 displayUtils,
-            ) {
+            ) { sharedElement ->
+                ViewCompat.setTransitionName(sharedElement, SMALL_PREVIEW_SHARED_ELEMENT_ID)
+                val extras =
+                    FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)
                 findNavController()
-                    .navigate(R.id.action_smallPreviewFragment_to_fullPreviewFragment)
+                    .navigate(
+                        resId = R.id.action_smallPreviewFragment_to_fullPreviewFragment,
+                        args = null,
+                        navOptions = null,
+                        navigatorExtras = extras
+                    )
             }
         } else {
             val tabPager: TabsPagerContainer = view.requireViewById(R.id.pager_container)
@@ -128,11 +138,24 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 mainScope,
                 homePreviewUtils,
                 lockPreviewUtils,
-                displayUtils.getWallpaperDisplay().displayId
-            ) {
+                displayUtils.getWallpaperDisplay().displayId,
+            ) { sharedElement ->
+                ViewCompat.setTransitionName(sharedElement, SMALL_PREVIEW_SHARED_ELEMENT_ID)
+                val extras =
+                    FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)
                 findNavController()
-                    .navigate(R.id.action_smallPreviewFragment_to_fullPreviewFragment)
+                    .navigate(
+                        resId = R.id.action_smallPreviewFragment_to_fullPreviewFragment,
+                        args = null,
+                        navOptions = null,
+                        navigatorExtras = extras
+                    )
             }
         }
+    }
+
+    companion object {
+        const val SMALL_PREVIEW_SHARED_ELEMENT_ID = "small_preview_shared_element"
+        const val FULL_PREVIEW_SHARED_ELEMENT_ID = "full_preview_shared_element"
     }
 }

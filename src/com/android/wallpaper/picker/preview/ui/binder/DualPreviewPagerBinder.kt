@@ -16,6 +16,7 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.FoldableDisplay
@@ -44,7 +45,7 @@ object DualPreviewPagerBinder {
         viewLifecycleOwner: LifecycleOwner,
         mainScope: CoroutineScope,
         displayUtils: DisplayUtils,
-        navigate: () -> Unit,
+        navigate: (View) -> Unit,
     ) {
         // implement adapter for the dual preview pager
         dualPreviewView.adapter = DualPreviewPagerAdapter { view, position ->

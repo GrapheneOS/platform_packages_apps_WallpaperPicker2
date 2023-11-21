@@ -17,6 +17,7 @@ package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
 import android.graphics.Point
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
@@ -38,7 +39,7 @@ object PreviewSelectorBinder {
         homePreviewUtils: PreviewUtils,
         lockPreviewUtils: PreviewUtils,
         displayId: Int,
-        navigate: (() -> Unit)? = null,
+        navigate: (View) -> Unit,
     ) {
         // set up tabs view pager
         TabPagerBinder.bind(tabsViewPager)

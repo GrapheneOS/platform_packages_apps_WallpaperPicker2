@@ -16,6 +16,7 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager.widget.ViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
@@ -40,7 +41,7 @@ object DualPreviewSelectorBinder {
         viewLifecycleOwner: LifecycleOwner,
         mainScope: CoroutineScope,
         displayUtils: DisplayUtils,
-        navigate: () -> Unit,
+        navigate: (View) -> Unit,
     ) {
         // set up tabs view pager
         TabPagerBinder.bind(tabsViewPager)

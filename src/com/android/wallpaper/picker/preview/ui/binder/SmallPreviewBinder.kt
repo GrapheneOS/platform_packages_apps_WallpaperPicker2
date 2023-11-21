@@ -16,6 +16,7 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
+import android.view.SurfaceView
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
@@ -34,18 +35,21 @@ object SmallPreviewBinder {
         @MainDispatcher mainScope: CoroutineScope,
         viewLifecycleOwner: LifecycleOwner,
         workspaceConfig: WorkspacePreviewConfigViewModel,
-        navigate: (() -> Unit)? = null,
+        navigate: ((View) -> Unit)? = null,
     ) {
+        val wallpaperSurface: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
+        val workspaceSurface: SurfaceView = view.requireViewById(R.id.workspace_surface)
+
         view.setOnClickListener {
             viewModel.selectedSmallPreviewConfig = smallPreviewConfig
             viewModel.selectedWorkspacePreviewConfig = workspaceConfig
-            navigate?.invoke()
+            navigate?.invoke(wallpaperSurface)
         }
 
-        WorkspacePreviewBinder.bind(view.requireViewById(R.id.workspace_surface), workspaceConfig)
+        WorkspacePreviewBinder.bind(workspaceSurface, workspaceConfig)
 
         SmallWallpaperPreviewBinder.bind(
-            surface = view.requireViewById(R.id.wallpaper_surface),
+            surface = wallpaperSurface,
             viewModel = viewModel,
             screen = smallPreviewConfig.previewTab,
             screenOrientation = smallPreviewConfig.screenOrientation,
