@@ -13,3 +13,10 @@ flag {
     description: "Enables wallpaper restorer when the flag is turned on."
     bug: "285047815"
 }
+
+flag {
+    name: "refactor_wallpaper_category_flag"
+    namespace: "customization_picker"
+    description: "Enables wallpaper category selection according to recommended architecture when flag is turned on."
+    bug: "290840060"
+}
