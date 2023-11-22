@@ -74,8 +74,9 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
         )
 
         CropWallpaperButtonBinder.bind(
-            view.requireViewById(R.id.crop_wallpaper_button),
-            wallpaperPreviewViewModel,
+            button = view.requireViewById(R.id.crop_wallpaper_button),
+            viewModel = wallpaperPreviewViewModel,
+            lifecycleOwner = viewLifecycleOwner,
         ) {
             findNavController().popBackStack()
         }

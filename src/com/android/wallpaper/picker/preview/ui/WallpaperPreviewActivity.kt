@@ -58,13 +58,6 @@ class WallpaperPreviewActivity :
         val wallpaper =
             checkNotNull(intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java))
         wallpaperPreviewRepository.setWallpaperModel(wallpaper.convertToWallpaperModel())
-        // TODO(b/310742189): WallpaperPreviewViewModel listen to WallpaperModel
-        //  changes from WallpaperPreviewRepository
-        viewModel.initializeViewModel(
-            applicationContext,
-            wallpaper,
-            wallpaper.convertToWallpaperModel(),
-        )
     }
 
     override fun onUpArrowPressed() {
