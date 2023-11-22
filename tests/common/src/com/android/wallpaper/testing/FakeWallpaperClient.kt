@@ -129,18 +129,9 @@ class FakeWallpaperClient : WallpaperClient {
     companion object {
         val INITIAL_RECENT_WALLPAPERS =
             listOf(
-                WallpaperModel(
-                    wallpaperId = "zero",
-                    placeholderColor = 0,
-                ),
-                WallpaperModel(
-                    wallpaperId = "one",
-                    placeholderColor = 1,
-                ),
-                WallpaperModel(
-                    wallpaperId = "two",
-                    placeholderColor = 2,
-                ),
+                WallpaperModel(wallpaperId = "zero", placeholderColor = 0, title = "title1"),
+                WallpaperModel(wallpaperId = "one", placeholderColor = 1, title = "title2"),
+                WallpaperModel(wallpaperId = "two", placeholderColor = 2, title = "title3"),
             )
     }
 }

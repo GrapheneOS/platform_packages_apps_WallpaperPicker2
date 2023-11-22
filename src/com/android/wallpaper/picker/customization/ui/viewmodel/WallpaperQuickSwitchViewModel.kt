@@ -122,6 +122,7 @@ constructor(
                                 // the selected one following user click.
                                 (isSelected && !isSomethingBecomingSelected) || isBeingSelected
                             },
+                        title = preview.title,
                         onSelected =
                             combine(
                                     isSelectedFlow,
