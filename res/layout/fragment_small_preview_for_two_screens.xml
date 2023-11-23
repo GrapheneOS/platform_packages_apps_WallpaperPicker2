@@ -66,4 +66,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <com.android.wallpaper.widget.WallpaperControlButtonGroup
+        android:id="@+id/action_button_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/wallpaper_control_button_group_margin_end"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <com.android.wallpaper.widget.FloatingSheet
+        android:id="@+id/floating_sheet"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

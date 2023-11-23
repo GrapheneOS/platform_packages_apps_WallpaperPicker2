@@ -34,4 +34,12 @@
         <attr name="non_selected_tab_drawable" format="reference" />
         <attr name="non_selected_tab_text_color" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="WallpaperControlButtonGroup">
+        <attr name="orientation">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+    </declare-styleable>
+
 </resources>

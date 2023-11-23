@@ -19,7 +19,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:divider="@drawable/wallpaper_control_button_group_divider"
+    android:divider="@drawable/wallpaper_control_button_group_divider_vertical"
     android:showDividers="middle">
     <ToggleButton
         android:id="@+id/delete_button"
