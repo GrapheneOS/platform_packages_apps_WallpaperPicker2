@@ -88,6 +88,7 @@ internal constructor(
     private var flags: BaseFlags? = null
     private var undoInteractor: UndoInteractor? = null
     private var wallpaperInteractor: WallpaperInteractor? = null
+    @Inject lateinit var injectedWallpaperInteractor: WallpaperInteractor
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
     private var secureSettingsRepository: SecureSettingsRepository? = null
     private var wallpaperColorsRepository: WallpaperColorsRepository? = null
@@ -297,6 +298,10 @@ internal constructor(
     }
 
     override fun getWallpaperInteractor(context: Context): WallpaperInteractor {
+        if (getFlags().isMultiCropEnabled() && getFlags().isMultiCropPreviewUiEnabled()) {
+            return injectedWallpaperInteractor
+        }
+
         val appContext = context.applicationContext
         return wallpaperInteractor
             ?: WallpaperInteractor(
@@ -306,7 +311,6 @@ internal constructor(
                             client =
                                 WallpaperClientImpl(
                                     context = appContext,
-                                    infoFactory = getCurrentWallpaperInfoFactory(appContext),
                                     wallpaperManager = WallpaperManager.getInstance(appContext),
                                     wallpaperPreferences = getPreferences(appContext),
                                 ),
