@@ -212,15 +212,20 @@ class WallpaperClientImpl(
                     val idColumnIndex = cursor.getColumnIndex(KEY_ID)
                     val placeholderColorColumnIndex = cursor.getColumnIndex(KEY_PLACEHOLDER_COLOR)
                     val lastUpdatedColumnIndex = cursor.getColumnIndex(KEY_LAST_UPDATED)
+                    val titleColumnIndex = cursor.getColumnIndex(TITLE)
                     while (cursor.moveToNext()) {
                         val wallpaperId = cursor.getString(idColumnIndex)
                         val placeholderColor = cursor.getInt(placeholderColorColumnIndex)
                         val lastUpdated = cursor.getLong(lastUpdatedColumnIndex)
+                        val title =
+                            if (titleColumnIndex > -1) cursor.getString(titleColumnIndex) else null
+
                         add(
                             WallpaperModel(
                                 wallpaperId = wallpaperId,
                                 placeholderColor = placeholderColor,
-                                lastUpdated = lastUpdated
+                                lastUpdated = lastUpdated,
+                                title = title,
                             )
                         )
                     }
@@ -241,8 +246,9 @@ class WallpaperClientImpl(
         val colors = wallpaperManager.getWallpaperColors(destination.toFlags())
 
         return WallpaperModel(
-            wallpaper.wallpaperId,
-            colors?.primaryColor?.toArgb() ?: Color.TRANSPARENT
+            wallpaperId = wallpaper.wallpaperId,
+            placeholderColor = colors?.primaryColor?.toArgb() ?: Color.TRANSPARENT,
+            title = wallpaper.getTitle(context)
         )
     }
 
@@ -370,6 +376,8 @@ class WallpaperClientImpl(
         private const val SCREEN_ALL = "all_screens"
         private const val SCREEN_HOME = "home_screen"
         private const val SCREEN_LOCK = "lock_screen"
+
+        private const val TITLE = "title"
         /**
          * Key for a parameter used to get the placeholder color for a wallpaper from the content
          * provider.

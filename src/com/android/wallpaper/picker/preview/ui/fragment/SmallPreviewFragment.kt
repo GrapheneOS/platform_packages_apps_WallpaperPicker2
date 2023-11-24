@@ -36,6 +36,7 @@ import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.TabsP
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
+import com.android.wallpaper.widget.FloatingSheet
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -88,8 +89,11 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
     private fun bindScreenPreview(view: View) {
         PreviewActionsBinder.bind(
+            appContext,
             wallpaperPreviewViewModel.getPreviewActionsViewModel(),
             viewLifecycleOwner,
+            view.requireViewById(R.id.action_button_group),
+            view.requireViewById<FloatingSheet>(R.id.floating_sheet),
         )
         if (displayUtils.hasMultiInternalDisplays()) {
             val dualPreviewView: DualPreviewViewPager =

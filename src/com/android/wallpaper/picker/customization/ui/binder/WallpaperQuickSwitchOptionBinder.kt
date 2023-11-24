@@ -44,11 +44,16 @@ object WallpaperQuickSwitchOptionBinder {
         smallOptionWidthPx: Int,
         largeOptionWidthPx: Int,
         isThumbnailFadeAnimationEnabled: Boolean,
+        position: Int,
     ) {
         val selectionBorder: View = view.requireViewById(R.id.selection_border)
         val selectionIcon: View = view.requireViewById(R.id.selection_icon)
         val thumbnailView: ImageView = view.requireViewById(R.id.thumbnail)
         val placeholder: ImageView = view.requireViewById(R.id.placeholder)
+
+        view.contentDescription =
+            viewModel.title
+                ?: view.resources.getString(R.string.recent_wallpaper_label, "$position")
 
         placeholder.setBackgroundColor(viewModel.placeholderColor)
 

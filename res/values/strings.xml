@@ -496,4 +496,12 @@
     [CHAR LIMIT=128].
     -->
     <string name="more_wallpapers">More wallpapers</string>
+
+    <!--
+     Accessibility label for recent wallpaper collection items
+
+    [CHAR LIMIT=128].
+    -->
+    <string name="recent_wallpaper_label">Wallpaper %1$s</string>
+
 </resources>

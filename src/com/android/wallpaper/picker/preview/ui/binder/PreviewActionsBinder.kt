@@ -15,34 +15,101 @@
  */
 package com.android.wallpaper.picker.preview.ui.binder
 
+import android.content.Context
+import android.widget.CompoundButton
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.picker.preview.ui.viewmodel.PreviewActionsViewModel
+import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.InfoFloatingSheetViewModel
+import com.android.wallpaper.widget.FloatingSheet
+import com.android.wallpaper.widget.WallpaperControlButtonGroup
+import com.android.wallpaper.widget.floatingsheetcontent.WallpaperModelInfoContent
 import kotlinx.coroutines.launch
 
 /** Binds the action buttons and bottom sheet to [PreviewActionsViewModel] */
 object PreviewActionsBinder {
     fun bind(
+        applicationContext: Context,
         previewActionsViewModel: PreviewActionsViewModel,
         lifecycleOwner: LifecycleOwner,
+        wallpaperControlButtonGroup: WallpaperControlButtonGroup,
+        floatingSheet: FloatingSheet,
     ) {
 
         lifecycleOwner.lifecycleScope.launch {
-            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     previewActionsViewModel.infoButtonAndFloatingSheetViewModel.collect {
-                        // TODO(b/309834720): Instantiate the button and bottom sheet views
+                        instantiateInfoBottomSheet(applicationContext, it, floatingSheet)
                     }
                 }
 
                 launch {
-                    previewActionsViewModel.showInfoButton.collect {
-                        // TODO(b/309834720): Instantiate the button and bottom sheet views
+                    previewActionsViewModel.showInfoButton.collect { shouldShowInfoButton ->
+                        instantiateInfoButton(
+                            floatingSheet,
+                            wallpaperControlButtonGroup,
+                            shouldShowInfoButton
+                        )
                     }
                 }
             }
+        }
+    }
+
+    private fun instantiateInfoButton(
+        floatingSheet: FloatingSheet,
+        wallpaperControlButtonGroup: WallpaperControlButtonGroup,
+        shouldShowInfoButton: Boolean
+    ) {
+        if (!shouldShowInfoButton) {
+            return
+        }
+        wallpaperControlButtonGroup.showButton(
+            WallpaperControlButtonGroup.INFORMATION,
+            CompoundButton.OnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean
+                ->
+                handleInformationControlButtonCheckedChange(
+                    floatingSheet,
+                    wallpaperControlButtonGroup,
+                    isChecked
+                )
+            }
+        )
+    }
+
+    private fun handleInformationControlButtonCheckedChange(
+        floatingSheet: FloatingSheet,
+        wallpaperControlButtonGroup: WallpaperControlButtonGroup,
+        isChecked: Boolean
+    ) {
+        if (isChecked) {
+            wallpaperControlButtonGroup.deselectOtherFloatingSheetControlButtons(
+                WallpaperControlButtonGroup.INFORMATION
+            )
+            if (floatingSheet.isFloatingSheetCollapsed) {
+                floatingSheet.updateContentView(FloatingSheet.INFORMATION)
+                floatingSheet.expand()
+            } else {
+                floatingSheet.updateContentViewWithAnimation(FloatingSheet.INFORMATION)
+            }
+        } else if (!wallpaperControlButtonGroup.isFloatingSheetControlButtonSelected()) {
+            floatingSheet.collapse()
+        }
+    }
+
+    private fun instantiateInfoBottomSheet(
+        applicationContext: Context,
+        infoFloatingSheetViewModel: InfoFloatingSheetViewModel?,
+        floatingSheet: FloatingSheet,
+    ) {
+        infoFloatingSheetViewModel.let { infoFloatingSheetViewModel ->
+            floatingSheet.putFloatingSheetContent(
+                FloatingSheet.INFORMATION,
+                WallpaperModelInfoContent(applicationContext, infoFloatingSheetViewModel)
+            )
         }
     }
 }

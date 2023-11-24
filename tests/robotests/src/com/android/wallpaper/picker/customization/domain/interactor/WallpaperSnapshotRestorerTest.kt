@@ -136,8 +136,12 @@ class WallpaperSnapshotRestorerTest {
 
     companion object {
         private val INITIAL_HOME_WALLPAPERS =
-            (0..5).map { index -> WallpaperModel(wallpaperId = "H$index", placeholderColor = 0) }
+            (0..5).map { index ->
+                WallpaperModel(wallpaperId = "H$index", placeholderColor = 0, title = "title1")
+            }
         private val INITIAL_LOCK_WALLPAPERS =
-            (0..5).map { index -> WallpaperModel(wallpaperId = "L$index", placeholderColor = 0) }
+            (0..5).map { index ->
+                WallpaperModel(wallpaperId = "L$index", placeholderColor = 0, title = "title2")
+            }
     }
 }

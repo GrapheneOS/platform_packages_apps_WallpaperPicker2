@@ -28,6 +28,8 @@ data class WallpaperQuickSwitchOptionViewModel(
     val placeholderColor: Int,
     /** A function to invoke to get the preview thumbnail for the option. */
     val thumbnail: suspend () -> Bitmap?,
+    /** The title of the wallpaper or wallpaper category */
+    val title: String?,
     /**
      * Whether the option should be rendered as large. If `false`, the option should be rendered
      * smaller.

@@ -87,7 +87,7 @@ object WallpaperQuickSwitchSectionBinder {
             val (largeOptionWidth, smallOptionWidth) = calculateSizes(parent, options.size)
 
             // Create, add, and bind a view for each option.
-            options.forEach { option ->
+            options.forEachIndexed { index, option ->
                 val optionView =
                     createOptionView(
                         parent = parent,
@@ -100,6 +100,7 @@ object WallpaperQuickSwitchSectionBinder {
                     smallOptionWidthPx = smallOptionWidth,
                     largeOptionWidthPx = largeOptionWidth,
                     isThumbnailFadeAnimationEnabled = isThumbnailFadeAnimationEnabled,
+                    position = index
                 )
             }
         }

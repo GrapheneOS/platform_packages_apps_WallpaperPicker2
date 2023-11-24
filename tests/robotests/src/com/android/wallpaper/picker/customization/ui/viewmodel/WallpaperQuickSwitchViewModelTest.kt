@@ -102,14 +102,17 @@ class WallpaperQuickSwitchViewModelTest {
                     WallpaperModel(
                         wallpaperId = "aaa",
                         placeholderColor = 1200,
+                        title = "title1",
                     ),
                     WallpaperModel(
                         wallpaperId = "bbb",
                         placeholderColor = 1300,
+                        title = "title2",
                     ),
                     WallpaperModel(
                         wallpaperId = "ccc",
                         placeholderColor = 1400,
+                        title = "title3",
                     ),
                 )
             client.setRecentWallpapers(buildMap { put(WallpaperDestination.HOME, models) })
@@ -131,9 +134,10 @@ class WallpaperQuickSwitchViewModelTest {
             val models =
                 FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.mapIndexed { idx, wp ->
                     WallpaperModel(
-                        wp.wallpaperId,
-                        wp.placeholderColor,
-                        if (idx == 0) 100 else wp.lastUpdated
+                        wallpaperId = wp.wallpaperId,
+                        placeholderColor = wp.placeholderColor,
+                        lastUpdated = if (idx == 0) 100 else wp.lastUpdated,
+                        title = "title1"
                     )
                 }
             client.setRecentWallpapers(buildMap { put(WallpaperDestination.HOME, models) })
