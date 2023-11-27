@@ -26,7 +26,7 @@
         android:paddingBottom="@dimen/small_preview_preview_bottom_padding">
         <include
             android:id="@+id/preview"
-            layout="@layout/wallpaper_preview_card"
+            layout="@layout/wallpaper_preview_small"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"/>

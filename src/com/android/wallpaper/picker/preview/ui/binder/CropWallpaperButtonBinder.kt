@@ -40,10 +40,6 @@ object CropWallpaperButtonBinder {
                             .getStaticWallpaperPreviewViewModel()
                             .updateCropHints(mapOf(screenOrientation to it))
                     }
-                // TODO (b/310631085): Make fullPreviewCrop null when navigating from full to small
-                //                     preview
-                wallpaperPreviewViewModel.getStaticWallpaperPreviewViewModel().fullPreviewCrop =
-                    null
             }
             navigate.invoke()
         }

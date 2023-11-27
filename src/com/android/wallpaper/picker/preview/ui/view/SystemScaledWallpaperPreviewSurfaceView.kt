@@ -23,9 +23,9 @@ import com.android.wallpaper.util.WallpaperCropUtils
 
 /**
  * A [SurfaceView] for wallpaper preview that scales and centers the surface to simulate the actual
- * wallpaper surface's default system zoom
+ * wallpaper surface's default system zoom.
  */
-class FullWallpaperPreviewSurfaceView(context: Context, attrs: AttributeSet? = null) :
+class SystemScaledWallpaperPreviewSurfaceView(context: Context, attrs: AttributeSet? = null) :
     SurfaceView(context, attrs) {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -41,7 +41,7 @@ class FullWallpaperPreviewSurfaceView(context: Context, attrs: AttributeSet? = n
 
         val scaledWidth = (measuredWidth * scale).toInt()
         val scaledHeight = (measuredHeight * scale).toInt()
-        var xCentered = (measuredWidth - scaledWidth) / 2
+        val xCentered = (measuredWidth - scaledWidth) / 2
         val yCentered = (measuredHeight - scaledHeight) / 2
 
         val params: ViewGroup.LayoutParams = layoutParams

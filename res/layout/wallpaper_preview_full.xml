@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center">
-    <com.android.wallpaper.picker.preview.ui.view.FullWallpaperPreviewSurfaceView
+    <com.android.wallpaper.picker.preview.ui.view.SystemScaledWallpaperPreviewSurfaceView
         android:id="@+id/wallpaper_surface"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

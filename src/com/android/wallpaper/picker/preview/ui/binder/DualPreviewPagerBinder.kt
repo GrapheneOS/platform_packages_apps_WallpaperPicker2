@@ -23,11 +23,11 @@ import com.android.wallpaper.model.wallpaper.PreviewPagerPage
 import com.android.wallpaper.model.wallpaper.getScreenOrientation
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
+import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout
+import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout.Companion.getViewId
 import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WorkspacePreviewConfigViewModel
-import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout
-import com.android.wallpaper.picker.wallpaper.utils.DualDisplayAspectRatioLayout.Companion.getViewId
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.CoroutineScope

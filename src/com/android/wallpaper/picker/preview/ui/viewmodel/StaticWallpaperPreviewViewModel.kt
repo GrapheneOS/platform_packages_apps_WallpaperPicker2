@@ -52,15 +52,11 @@ constructor(
     private val wallpaperPreferences: WallpaperPreferences,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
 ) {
-    /** The state of static wallpaper crop in full preview, before user confirmation. */
-    var fullPreviewCrop: Rect? = null
-
     private var initialized = false
 
     private val _lowResBitmap: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     val lowResBitmap: Flow<Bitmap> = _lowResBitmap.filterNotNull()
 
-    private val _cropHints: MutableStateFlow<Map<ScreenOrientation, Rect>?> = MutableStateFlow(null)
     private val _cachedWallpaperColors: MutableStateFlow<WallpaperColors?> = MutableStateFlow(null)
     private val croppedBitmap: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     val wallpaperColors: Flow<WallpaperColors> =
@@ -73,10 +69,14 @@ constructor(
                 .flowOn(bgDispatcher),
         )
 
+    /** The state of static wallpaper crop in full preview, without user confirmation. */
+    var fullPreviewCrop: Rect? = null
+    /** User confirmed crop per orientation. */
+    private val _cropHints: MutableStateFlow<Map<ScreenOrientation, Rect>?> = MutableStateFlow(null)
+
     // Wallpaper ID is required to cache the wallpaper colors to the preferences
     private var wallpaperId: String? = null
     private val wallpaperAsset: MutableStateFlow<Asset?> = MutableStateFlow(null)
-
     val subsamplingScaleImageViewModel: Flow<FullResWallpaperViewModel> =
         wallpaperAsset
             .filterNotNull()
