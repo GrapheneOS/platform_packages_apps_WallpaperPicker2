@@ -19,6 +19,8 @@ import CreativeCategoryHolder
 import android.app.Activity
 import android.app.ProgressDialog
 import android.app.WallpaperManager
+import android.app.WallpaperManager.FLAG_LOCK
+import android.app.WallpaperManager.FLAG_SYSTEM
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -236,8 +238,10 @@ class IndividualPickerFragment2 :
                 val appliedWallpaperIds =
                     getAppliedWallpaperIds().also { this.appliedWallpaperIds = it }
                 val firstEntry = byGroup.keys.firstOrNull()
-                val currentWallpaper: android.app.WallpaperInfo? =
-                    WallpaperManager.getInstance(context).wallpaperInfo
+                val currentHomeWallpaper: android.app.WallpaperInfo? =
+                    WallpaperManager.getInstance(context).getWallpaperInfo(FLAG_SYSTEM)
+                val currentLockWallpaper: android.app.WallpaperInfo? =
+                    WallpaperManager.getInstance(context).getWallpaperInfo(FLAG_LOCK)
 
                 // Handle first group (templates/items that allow to create a new wallpaper)
                 if (mIsCreativeWallpaperEnabled && firstEntry != null && supportsUserCreated) {
@@ -257,7 +261,12 @@ class IndividualPickerFragment2 :
                         if (!TextUtils.isEmpty(groupName)) {
                             addItemHeader(groupName, items.isEmpty())
                         }
-                        addWallpaperItems(wallpapers, currentWallpaper, appliedWallpaperIds)
+                        addWallpaperItems(
+                            wallpapers,
+                            currentHomeWallpaper,
+                            currentLockWallpaper,
+                            appliedWallpaperIds
+                        )
                     }
                 }
                 maybeSetUpImageGrid()
@@ -309,13 +318,15 @@ class IndividualPickerFragment2 :
      */
     private fun addWallpaperItems(
         wallpapers: List<WallpaperInfo>,
-        currentWallpaper: android.app.WallpaperInfo?,
-        appliedWallpaperIds: Set<String>
+        currentHomeWallpaper: android.app.WallpaperInfo?,
+        currentLockWallpaper: android.app.WallpaperInfo?,
+        appliedWallpaperIds: Set<String>,
     ) {
         items.addAll(
             wallpapers.map {
                 val isApplied =
-                    if (it is LiveWallpaperInfo) it.isApplied(currentWallpaper)
+                    if (it is LiveWallpaperInfo)
+                        (it.isApplied(currentHomeWallpaper, currentLockWallpaper))
                     else appliedWallpaperIds.contains(it.wallpaperId)
                 PickerItem.WallpaperItem(it, isApplied)
             }
