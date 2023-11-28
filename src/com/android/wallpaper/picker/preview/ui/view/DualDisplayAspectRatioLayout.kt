@@ -12,9 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
-package com.android.wallpaper.picker.wallpaper.utils
+package com.android.wallpaper.picker.preview.ui.view
 
 import android.content.Context
 import android.graphics.Point
@@ -38,12 +37,12 @@ class DualDisplayAspectRatioLayout(
     init {
         val inflater =
             getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val foldedPreview = inflater.inflate(R.layout.wallpaper_preview_card, null)
+        val foldedPreview = inflater.inflate(R.layout.wallpaper_preview_small, null)
 
         foldedPreview.id = FoldableDisplay.FOLDED.getViewId()
         addView(foldedPreview)
 
-        val unfoldedPreview = inflater.inflate(R.layout.wallpaper_preview_card, null)
+        val unfoldedPreview = inflater.inflate(R.layout.wallpaper_preview_small, null)
         unfoldedPreview.id = FoldableDisplay.UNFOLDED.getViewId()
         addView(unfoldedPreview)
     }

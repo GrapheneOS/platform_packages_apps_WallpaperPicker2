@@ -82,11 +82,6 @@ object FullWallpaperPreviewBinder {
                                         R.id.full_res_image
                                     )
                                 surfaceTouchForwardingLayout.initTouchForwarding(fullResImageView)
-
-                                // Initially assign the current crop to view model and listen to
-                                // any new crops created by user gesture scaling and translation.
-                                viewModel.getStaticWallpaperPreviewViewModel().fullPreviewCrop =
-                                    fullResImageView.getCropRect()
                                 fullResImageView.setOnNewCropListener {
                                     viewModel.getStaticWallpaperPreviewViewModel().fullPreviewCrop =
                                         it
