@@ -47,6 +47,7 @@ object SmallPreviewBinder {
         SmallWallpaperPreviewBinder.bind(
             surface = view.requireViewById(R.id.wallpaper_surface),
             viewModel = viewModel,
+            screen = smallPreviewConfig.previewTab,
             screenOrientation = smallPreviewConfig.screenOrientation,
             applicationContext = applicationContext,
             mainScope = mainScope,
