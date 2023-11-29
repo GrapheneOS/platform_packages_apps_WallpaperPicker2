@@ -130,4 +130,5 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Tetapkan semula perubahan?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Perubahan anda tidak akan disimpan"</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"Lagi hiasan latar"</string>
+    <string name="recent_wallpaper_label" msgid="3996353584371118367">"Hiasan latar %1$s"</string>
 </resources>
