@@ -26,11 +26,7 @@ import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreview
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout.Companion.getViewId
-import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
-import com.android.wallpaper.picker.preview.ui.viewmodel.WorkspacePreviewConfigViewModel
-import com.android.wallpaper.util.DisplayUtils
-import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.CoroutineScope
 
 /** Binds dual preview home screen and lock screen view pager. */
@@ -39,30 +35,23 @@ object DualPreviewPagerBinder {
     fun bind(
         dualPreviewView: DualPreviewViewPager,
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
-        homePreviewUtils: PreviewUtils,
-        lockPreviewUtils: PreviewUtils,
         applicationContext: Context,
         viewLifecycleOwner: LifecycleOwner,
         mainScope: CoroutineScope,
-        displayUtils: DisplayUtils,
         navigate: (View) -> Unit,
     ) {
         // implement adapter for the dual preview pager
         dualPreviewView.adapter = DualPreviewPagerAdapter { view, position ->
             val dualDisplayAspectRatioLayout: DualDisplayAspectRatioLayout =
                 view.requireViewById(R.id.dual_preview)
-            val previewDisplays =
-                mapOf(
-                    FoldableDisplay.FOLDED to displayUtils.getSmallerDisplay(),
-                    FoldableDisplay.UNFOLDED to displayUtils.getWallpaperDisplay(),
-                )
 
-            previewDisplays
-                .mapValues { displayUtils.getRealSize(it.value) }
-                .let {
-                    dualDisplayAspectRatioLayout.setDisplaySizes(it)
-                    dualPreviewView.setDisplaySizes(it)
-                }
+            val displaySizes =
+                mapOf(
+                    FoldableDisplay.FOLDED to wallpaperPreviewViewModel.smallerDisplaySize,
+                    FoldableDisplay.UNFOLDED to wallpaperPreviewViewModel.wallpaperDisplaySize,
+                )
+            dualDisplayAspectRatioLayout.setDisplaySizes(displaySizes)
+            dualPreviewView.setDisplaySizes(displaySizes)
 
             FoldableDisplay.entries.forEach { display ->
                 val previewDisplaySize = dualDisplayAspectRatioLayout.getPreviewDisplaySize(display)
@@ -71,22 +60,11 @@ object DualPreviewPagerBinder {
                         applicationContext = applicationContext,
                         view = dualDisplayAspectRatioLayout.requireViewById(display.getViewId()),
                         viewModel = wallpaperPreviewViewModel,
-                        smallPreviewConfig =
-                            SmallPreviewConfigViewModel(
-                                previewTab = PreviewPagerPage.entries[position].screen,
-                                displaySize = it,
-                                screenOrientation = getScreenOrientation(it, display),
-                            ),
                         mainScope = mainScope,
                         viewLifecycleOwner = viewLifecycleOwner,
-                        workspaceConfig =
-                            WorkspacePreviewConfigViewModel(
-                                previewUtils =
-                                    if (position == PreviewPagerPage.LOCK_PREVIEW.ordinal)
-                                        lockPreviewUtils
-                                    else homePreviewUtils,
-                                displayId = checkNotNull(previewDisplays[display]).displayId,
-                            ),
+                        screen = PreviewPagerPage.entries[position].screen,
+                        orientation = getScreenOrientation(it, display),
+                        foldableDisplay = display,
                         navigate = navigate,
                     )
                 }

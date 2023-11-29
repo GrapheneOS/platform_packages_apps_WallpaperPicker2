@@ -19,11 +19,11 @@ import android.graphics.Point
 import com.android.wallpaper.model.wallpaper.ScreenOrientation
 import com.android.wallpaper.module.CustomizationSections.Screen
 
-/** Defines configuration associated with a single small preview. */
-data class SmallPreviewConfigViewModel(
+/** Configuration for a wallpaper preview. */
+data class WallpaperPreviewConfigViewModel(
 
     /** The [Screen] the preview is rendering. */
-    val previewTab: Screen,
+    val screen: Screen,
 
     /** The display size the preview is based on. */
     val displaySize: Point,

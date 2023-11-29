@@ -32,7 +32,9 @@ import com.android.wallpaper.picker.TouchForwardingLayout
 import com.android.wallpaper.picker.preview.ui.util.FullResImageViewUtil.getCropRect
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil.attachView
+import com.android.wallpaper.picker.preview.ui.view.FullPreviewFrameLayout
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.OnStateChangedListener
@@ -45,27 +47,35 @@ object FullWallpaperPreviewBinder {
 
     fun bind(
         applicationContext: Context,
-        surfaceView: SurfaceView,
-        surfaceTouchForwardingLayout: TouchForwardingLayout,
+        view: View,
         viewModel: WallpaperPreviewViewModel,
-        viewLifecycleOwner: LifecycleOwner,
+        displayUtils: DisplayUtils,
+        lifecycleOwner: LifecycleOwner,
         @MainDispatcher mainScope: CoroutineScope,
     ) {
-        val previewConfig = viewModel.selectedSmallPreviewConfig ?: return
+        val surfaceView: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
+        val wallpaperPreviewCrop: FullPreviewFrameLayout =
+            view.requireViewById(R.id.wallpaper_preview_crop)
+        val surfaceTouchForwardingLayout: TouchForwardingLayout =
+            view.requireViewById(R.id.touch_forwarding_layout)
         var job: Job? = null
         surfaceView.setZOrderMediaOverlay(true)
         surfaceView.holder.addCallback(
             object : SurfaceViewUtil.SurfaceCallback {
                 override fun surfaceCreated(holder: SurfaceHolder) {
                     job =
-                        viewLifecycleOwner.lifecycleScope.launch {
-                            viewModel.wallpaper.collect { wallpaper ->
+                        lifecycleOwner.lifecycleScope.launch {
+                            viewModel.fullWallpaper.collect { (wallpaper, config) ->
+                                wallpaperPreviewCrop.setCurrentAndTargetDisplaySize(
+                                    displayUtils.getRealSize(checkNotNull(view.context.display)),
+                                    config.displaySize,
+                                )
                                 if (wallpaper is WallpaperModel.LiveWallpaperModel) {
                                     WallpaperConnectionUtils.connect(
                                         applicationContext,
                                         mainScope,
                                         wallpaper.liveWallpaperData.systemWallpaperInfo,
-                                        previewConfig.previewTab.toFlag(),
+                                        config.screen.toFlag(),
                                         surfaceView,
                                     )
                                 } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
@@ -75,17 +85,16 @@ object FullWallpaperPreviewBinder {
                                             surfaceView,
                                             surfaceTouchForwardingLayout,
                                         ) { rect ->
-                                            viewModel
-                                                .getStaticWallpaperPreviewViewModel()
+                                            viewModel.staticWallpaperPreviewViewModel
                                                 .fullPreviewCrop = rect
                                         }
                                     // Bind static wallpaper
                                     StaticWallpaperPreviewBinder.bind(
                                         lowResImageView,
                                         fullResImageView,
-                                        viewModel.getStaticWallpaperPreviewViewModel(),
-                                        previewConfig.screenOrientation,
-                                        viewLifecycleOwner,
+                                        viewModel.staticWallpaperPreviewViewModel,
+                                        config.screenOrientation,
+                                        lifecycleOwner,
                                     )
                                 }
                             }

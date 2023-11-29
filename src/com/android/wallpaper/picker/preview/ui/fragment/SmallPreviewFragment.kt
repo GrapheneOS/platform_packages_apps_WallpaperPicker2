@@ -28,8 +28,6 @@ import androidx.navigation.fragment.findNavController
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.picker.AppbarFragment
-import com.android.wallpaper.picker.di.modules.PreviewUtilsModule.HomeScreenPreviewUtils
-import com.android.wallpaper.picker.di.modules.PreviewUtilsModule.LockScreenPreviewUtils
 import com.android.wallpaper.picker.preview.ui.binder.DualPreviewSelectorBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewActionsBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewSelectorBinder
@@ -38,7 +36,6 @@ import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreview
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.TabsPagerContainer
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
-import com.android.wallpaper.util.PreviewUtils
 import com.android.wallpaper.widget.FloatingSheet
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -54,8 +51,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
     @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
-    @HomeScreenPreviewUtils @Inject lateinit var homePreviewUtils: PreviewUtils
-    @LockScreenPreviewUtils @Inject lateinit var lockPreviewUtils: PreviewUtils
     @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
 
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
@@ -114,12 +109,9 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 tabPager.getViewPager(),
                 dualPreviewView,
                 wallpaperPreviewViewModel,
-                homePreviewUtils,
-                lockPreviewUtils,
                 appContext,
                 viewLifecycleOwner,
                 mainScope,
-                displayUtils,
             ) { sharedElement ->
                 ViewCompat.setTransitionName(sharedElement, SMALL_PREVIEW_SHARED_ELEMENT_ID)
                 val extras =
@@ -144,9 +136,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 appContext,
                 viewLifecycleOwner,
                 mainScope,
-                homePreviewUtils,
-                lockPreviewUtils,
-                displayUtils.getWallpaperDisplay().displayId,
             ) { sharedElement ->
                 ViewCompat.setTransitionName(sharedElement, SMALL_PREVIEW_SHARED_ELEMENT_ID)
                 val extras =

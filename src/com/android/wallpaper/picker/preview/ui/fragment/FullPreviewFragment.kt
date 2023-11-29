@@ -32,7 +32,6 @@ import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.preview.ui.binder.CropWallpaperButtonBinder
 import com.android.wallpaper.picker.preview.ui.binder.FullWallpaperPreviewBinder
 import com.android.wallpaper.picker.preview.ui.binder.WorkspacePreviewBinder
-import com.android.wallpaper.picker.preview.ui.view.FullPreviewFrameLayout
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -67,22 +66,13 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
         val wallpaperSurface: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
         ViewCompat.setTransitionName(wallpaperSurface, "full_preview_shared_element")
 
-        val wallpaperPreviewCrop: FullPreviewFrameLayout =
-            view.requireViewById(R.id.wallpaper_preview_crop)
-        wallpaperPreviewViewModel.selectedSmallPreviewConfig?.let {
-            wallpaperPreviewCrop.setCurrentAndTargetDisplaySize(
-                displayUtils.getRealSize(checkNotNull(view.context.display)),
-                it.displaySize
-            )
-        }
-
         FullWallpaperPreviewBinder.bind(
-            appContext,
-            view.requireViewById(R.id.wallpaper_surface),
-            view.requireViewById(R.id.touch_forwarding_layout),
-            wallpaperPreviewViewModel,
-            viewLifecycleOwner,
-            mainScope,
+            applicationContext = appContext,
+            view = view,
+            viewModel = wallpaperPreviewViewModel,
+            displayUtils = displayUtils,
+            lifecycleOwner = viewLifecycleOwner,
+            mainScope = mainScope,
         )
 
         CropWallpaperButtonBinder.bind(
@@ -93,9 +83,11 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
             findNavController().popBackStack()
         }
 
-        wallpaperPreviewViewModel.selectedWorkspacePreviewConfig?.let { config ->
-            WorkspacePreviewBinder.bind(view.requireViewById(R.id.workspace_surface), config)
-        }
+        WorkspacePreviewBinder.bindFullWorkspacePreview(
+            surface = view.requireViewById(R.id.workspace_surface),
+            viewModel = wallpaperPreviewViewModel,
+            lifecycleOwner = viewLifecycleOwner,
+        )
 
         return view
     }
