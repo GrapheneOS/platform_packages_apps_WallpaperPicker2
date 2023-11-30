@@ -16,6 +16,9 @@
 
 package com.android.wallpaper.util.converter
 
+import android.app.WallpaperManager
+import android.app.WallpaperManager.FLAG_LOCK
+import android.app.WallpaperManager.FLAG_SYSTEM
 import android.content.Context
 import com.android.wallpaper.model.CreativeWallpaperInfo
 import com.android.wallpaper.model.LiveWallpaperInfo
@@ -68,13 +71,15 @@ open class DefaultLiveWallpaperDataFactory {
         context: Context
     ): LiveWallpaperData {
         val groupNameOfWallpaper = (wallpaperInfo as? CreativeWallpaperInfo)?.groupName ?: ""
-
+        val wallpaperManager = WallpaperManager.getInstance(context)
+        val currentHomeWallpaper = wallpaperManager.getWallpaperInfo(FLAG_SYSTEM)
+        val currentLockWallpaper = wallpaperManager.getWallpaperInfo(FLAG_LOCK)
         return LiveWallpaperData(
             groupName = groupNameOfWallpaper,
             isDownloadable = false,
             systemWallpaperInfo = wallpaperInfo.info,
             isTitleVisible = wallpaperInfo.isVisibleTitle,
-            isApplied = wallpaperInfo.isApplied(wallpaperInfo.info),
+            isApplied = wallpaperInfo.isApplied(currentHomeWallpaper, currentLockWallpaper),
             effectNames = wallpaperInfo.effectNames,
         )
     }
