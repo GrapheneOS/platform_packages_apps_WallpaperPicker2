@@ -19,13 +19,16 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.model.wallpaper.ScreenOrientation
 import com.android.wallpaper.model.wallpaper.WallpaperModel
 import com.android.wallpaper.module.WallpaperPersister
+import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil.attachView
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
@@ -52,46 +55,42 @@ object SmallWallpaperPreviewBinder {
     ) {
         surface.setZOrderMediaOverlay(true)
         surface.holder.addCallback(
-            object : SurfaceHolder.Callback {
+            object : SurfaceViewUtil.SurfaceCallback {
                 override fun surfaceCreated(holder: SurfaceHolder) {
-                    val wallpaper = viewModel.editingWallpaperModel ?: return
-                    if (wallpaper is WallpaperModel.LiveWallpaperModel) {
-                        viewLifecycleOwner.lifecycleScope.launch {
-                            WallpaperConnectionUtils.connect(
-                                applicationContext,
-                                mainScope,
-                                checkNotNull(viewModel.editingWallpaper).wallpaperComponent,
-                                // TODO b/301088528(giolin): Pass correspondent
-                                //                           destination for live
-                                //                           wallpaper preview
-                                WallpaperPersister.DEST_LOCK_SCREEN,
-                                surface,
-                            )
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                            viewModel.wallpaper.collect { wallpaper ->
+                                if (wallpaper is WallpaperModel.LiveWallpaperModel) {
+                                    viewLifecycleOwner.lifecycleScope.launch {
+                                        WallpaperConnectionUtils.connect(
+                                            applicationContext,
+                                            mainScope,
+                                            wallpaper.liveWallpaperData.systemWallpaperInfo,
+                                            // TODO b/301088528(giolin): Pass correspondent
+                                            //                           destination for live
+                                            //                           wallpaper preview
+                                            WallpaperPersister.DEST_LOCK_SCREEN,
+                                            surface,
+                                        )
+                                    }
+                                } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
+                                    val staticPreviewView =
+                                        LayoutInflater.from(applicationContext)
+                                            .inflate(R.layout.fullscreen_wallpaper_preview, null)
+                                    surface.attachView(staticPreviewView)
+                                    // Bind static wallpaper
+                                    StaticWallpaperPreviewBinder.bind(
+                                        staticPreviewView.requireViewById(R.id.low_res_image),
+                                        staticPreviewView.requireViewById(R.id.full_res_image),
+                                        viewModel.getStaticWallpaperPreviewViewModel(),
+                                        screenOrientation,
+                                        viewLifecycleOwner,
+                                    )
+                                }
+                            }
                         }
-                    } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
-                        val staticPreviewView =
-                            LayoutInflater.from(applicationContext)
-                                .inflate(R.layout.fullscreen_wallpaper_preview, null)
-                        surface.attachView(staticPreviewView)
-                        // Bind static wallpaper
-                        StaticWallpaperPreviewBinder.bind(
-                            staticPreviewView.requireViewById(R.id.low_res_image),
-                            staticPreviewView.requireViewById(R.id.full_res_image),
-                            viewModel.getStaticWallpaperPreviewViewModel(),
-                            screenOrientation,
-                            viewLifecycleOwner,
-                        )
                     }
                 }
-
-                override fun surfaceChanged(
-                    holder: SurfaceHolder,
-                    format: Int,
-                    width: Int,
-                    height: Int
-                ) {}
-
-                override fun surfaceDestroyed(holder: SurfaceHolder) {}
             }
         )
         // TODO (b/300979155): Clean up surface when no longer needed, e.g. onDestroyed

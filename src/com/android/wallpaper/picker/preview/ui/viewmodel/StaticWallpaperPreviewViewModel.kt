@@ -24,11 +24,12 @@ import android.graphics.Point
 import android.graphics.Rect
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.dispatchers.BackgroundDispatcher
-import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.model.wallpaper.ScreenOrientation
 import com.android.wallpaper.model.wallpaper.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.module.WallpaperPreferences
+import com.android.wallpaper.picker.preview.domain.interactor.WallpaperPreviewInteractor
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
@@ -40,88 +41,45 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
 
 /** View model for static wallpaper preview used in [WallpaperPreviewActivity] and its fragments */
 @ViewModelScoped
 class StaticWallpaperPreviewViewModel
 @Inject
 constructor(
+    interactor: WallpaperPreviewInteractor,
+    @ApplicationContext private val context: Context,
     private val wallpaperPreferences: WallpaperPreferences,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
 ) {
-    private var initialized = false
-
-    private val _lowResBitmap: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
-    val lowResBitmap: Flow<Bitmap> = _lowResBitmap.filterNotNull()
-
-    private val _cachedWallpaperColors: MutableStateFlow<WallpaperColors?> = MutableStateFlow(null)
-    private val croppedBitmap: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
-    val wallpaperColors: Flow<WallpaperColors> =
-        merge(
-            _cachedWallpaperColors.filterNotNull(),
-            croppedBitmap
-                .filterNotNull()
-                .map { it.extractColors() }
-                .filterNotNull()
-                .flowOn(bgDispatcher),
-        )
-
-    /** The state of static wallpaper crop in full preview, without user confirmation. */
+    /** The state of static wallpaper crop in full preview, before user confirmation. */
     var fullPreviewCrop: Rect? = null
-    /** User confirmed crop per orientation. */
+
     private val _cropHints: MutableStateFlow<Map<ScreenOrientation, Rect>?> = MutableStateFlow(null)
 
-    // Wallpaper ID is required to cache the wallpaper colors to the preferences
-    private var wallpaperId: String? = null
-    private val wallpaperAsset: MutableStateFlow<Asset?> = MutableStateFlow(null)
-    val subsamplingScaleImageViewModel: Flow<FullResWallpaperViewModel> =
-        wallpaperAsset
+    private val staticWallpaperModel: Flow<StaticWallpaperModel> =
+        interactor.wallpaperModel.map { it as? StaticWallpaperModel }.filterNotNull()
+    val lowResBitmap: Flow<Bitmap> =
+        staticWallpaperModel
+            .map { it.staticWallpaperData.asset.getLowResBitmap(context) }
             .filterNotNull()
+            .flowOn(bgDispatcher)
+    val subsamplingScaleImageViewModel: Flow<FullResWallpaperViewModel> =
+        staticWallpaperModel
+            .map { it.staticWallpaperData.asset }
             .combine(_cropHints) { asset, cropHints ->
                 val dimensions = asset.decodeRawDimensions()
                 asset.decodeBitmap(dimensions)?.let { bitmap ->
-                    if (_cachedWallpaperColors.value == null && wallpaperId != null) {
-                        // If no cached colors from the preferences, extra colors from the original
-                        // bitmap and cache them to the preferences.
-                        bitmap.extractColors()?.also { colors ->
-                            _cachedWallpaperColors.value = colors
-                            wallpaperPreferences.storeWallpaperColors(
-                                wallpaperId,
-                                colors,
-                            )
-                        }
-                    }
                     FullResWallpaperViewModel(bitmap, dimensions, cropHints)
                 }
             }
             .filterNotNull()
             .flowOn(bgDispatcher)
-
-    /**
-     * Init function for setting the wallpaper info that is retrieved from the intent bundle when
-     * onCreate() in Activity or Fragment.
-     */
-    suspend fun initializeViewModel(
-        context: Context,
-        wallpaper: WallpaperInfo,
-        staticModel: StaticWallpaperModel
-    ) {
-        val appContext = context.applicationContext
-        if (!initialized) {
-            _cropHints.value = staticModel.staticWallpaperData.cropHints
-            val asset: Asset? = wallpaper.getAsset(appContext)
-            val id: String? = wallpaper.getStoredWallpaperId(appContext)
-            wallpaperAsset.value = asset
-            wallpaperId = id
-            id?.let { wallpaperPreferences.getWallpaperColors(it) }
-                ?.run { _cachedWallpaperColors.value = this }
-            withContext(bgDispatcher) { _lowResBitmap.value = asset?.getLowResBitmap(appContext) }
-            initialized = true
-        }
-    }
+    val wallpaperColors: Flow<WallpaperColors> =
+        staticWallpaperModel
+            .map { wallpaperPreferences.getWallpaperColors(it.commonWallpaperData.id.uniqueId) }
+            .filterNotNull()
 
     fun updateCropHints(cropHints: Map<ScreenOrientation, Rect>) {
         _cropHints.value = _cropHints.value?.plus(cropHints) ?: cropHints

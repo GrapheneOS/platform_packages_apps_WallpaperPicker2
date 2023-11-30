@@ -17,6 +17,7 @@
 package com.android.wallpaper.picker.preview.ui.util
 
 import android.view.SurfaceControlViewHost
+import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
@@ -29,5 +30,13 @@ object SurfaceViewUtil {
         val host = SurfaceControlViewHost(context, display, hostToken)
         host.setView(view, width, height)
         setChildSurfacePackage(checkNotNull(host.surfacePackage))
+    }
+
+    interface SurfaceCallback : SurfaceHolder.Callback {
+        override fun surfaceCreated(holder: SurfaceHolder) {}
+
+        override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
+
+        override fun surfaceDestroyed(holder: SurfaceHolder) {}
     }
 }

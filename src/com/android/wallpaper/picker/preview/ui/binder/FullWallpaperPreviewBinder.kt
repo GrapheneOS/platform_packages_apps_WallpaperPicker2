@@ -22,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
+import android.widget.ImageView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -32,6 +33,7 @@ import com.android.wallpaper.model.wallpaper.WallpaperModel
 import com.android.wallpaper.module.WallpaperPersister
 import com.android.wallpaper.picker.TouchForwardingLayout
 import com.android.wallpaper.picker.preview.ui.util.FullResImageViewUtil.getCropRect
+import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil.attachView
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
@@ -51,66 +53,71 @@ object FullWallpaperPreviewBinder {
         viewLifecycleOwner: LifecycleOwner,
         @MainDispatcher mainScope: CoroutineScope,
     ) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                val previewConfig = viewModel.selectedSmallPreviewConfig ?: return@repeatOnLifecycle
-                surfaceView.setZOrderMediaOverlay(true)
-                surfaceView.holder.addCallback(
-                    object : SurfaceHolder.Callback {
-                        override fun surfaceCreated(holder: SurfaceHolder) {
-                            val wallpaper = viewModel.editingWallpaperModel ?: return
-                            if (wallpaper is WallpaperModel.LiveWallpaperModel) {
-                                viewLifecycleOwner.lifecycleScope.launch {
-                                    WallpaperConnectionUtils.connect(
-                                        applicationContext,
-                                        mainScope,
-                                        checkNotNull(viewModel.editingWallpaper).wallpaperComponent,
-                                        // TODO b/301088528(giolin): Pass correspondent
-                                        //                           destination for live
-                                        //                           wallpaper preview
-                                        WallpaperPersister.DEST_LOCK_SCREEN,
-                                        surfaceView,
+        val previewConfig = viewModel.selectedSmallPreviewConfig ?: return
+        surfaceView.setZOrderMediaOverlay(true)
+        surfaceView.holder.addCallback(
+            object : SurfaceViewUtil.SurfaceCallback {
+                override fun surfaceCreated(holder: SurfaceHolder) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                            viewModel.wallpaper.collect { wallpaper ->
+                                if (wallpaper is WallpaperModel.LiveWallpaperModel) {
+                                    viewLifecycleOwner.lifecycleScope.launch {
+                                        WallpaperConnectionUtils.connect(
+                                            applicationContext,
+                                            mainScope,
+                                            wallpaper.liveWallpaperData.systemWallpaperInfo,
+                                            // TODO b/301088528(giolin): Pass correspondent
+                                            //                           destination for live
+                                            //                           wallpaper preview
+                                            WallpaperPersister.DEST_LOCK_SCREEN,
+                                            surfaceView,
+                                        )
+                                    }
+                                } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
+                                    val (lowResImageView, fullResImageView) =
+                                        initStaticPreviewSurface(
+                                            applicationContext,
+                                            surfaceView,
+                                            surfaceTouchForwardingLayout,
+                                        ) { rect ->
+                                            viewModel
+                                                .getStaticWallpaperPreviewViewModel()
+                                                .fullPreviewCrop = rect
+                                        }
+                                    // Bind static wallpaper
+                                    StaticWallpaperPreviewBinder.bind(
+                                        lowResImageView,
+                                        fullResImageView,
+                                        viewModel.getStaticWallpaperPreviewViewModel(),
+                                        previewConfig.screenOrientation,
+                                        viewLifecycleOwner,
                                     )
                                 }
-                            } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
-                                val preview =
-                                    LayoutInflater.from(applicationContext)
-                                        .inflate(R.layout.fullscreen_wallpaper_preview, null)
-                                surfaceView.attachView(preview)
-                                val fullResImageView =
-                                    preview.requireViewById<SubsamplingScaleImageView>(
-                                        R.id.full_res_image
-                                    )
-                                surfaceTouchForwardingLayout.initTouchForwarding(fullResImageView)
-                                fullResImageView.setOnNewCropListener {
-                                    viewModel.getStaticWallpaperPreviewViewModel().fullPreviewCrop =
-                                        it
-                                }
-
-                                // Bind static wallpaper
-                                StaticWallpaperPreviewBinder.bind(
-                                    preview.requireViewById(R.id.low_res_image),
-                                    fullResImageView,
-                                    viewModel.getStaticWallpaperPreviewViewModel(),
-                                    previewConfig.screenOrientation,
-                                    viewLifecycleOwner,
-                                )
                             }
                         }
-
-                        override fun surfaceChanged(
-                            holder: SurfaceHolder,
-                            format: Int,
-                            width: Int,
-                            height: Int
-                        ) {}
-
-                        override fun surfaceDestroyed(holder: SurfaceHolder) {}
                     }
-                )
-                // TODO (b/300979155): Clean up surface when no longer needed, e.g. onDestroyed
+                }
             }
-        }
+        )
+        // TODO (b/300979155): Clean up surface when no longer needed, e.g. onDestroyed
+    }
+
+    private fun initStaticPreviewSurface(
+        applicationContext: Context,
+        surfaceView: SurfaceView,
+        surfaceTouchForwardingLayout: TouchForwardingLayout,
+        onNewCrop: (crop: Rect) -> Unit
+    ): Pair<ImageView, SubsamplingScaleImageView> {
+        val preview =
+            LayoutInflater.from(applicationContext)
+                .inflate(R.layout.fullscreen_wallpaper_preview, null)
+        surfaceView.attachView(preview)
+        val fullResImageView =
+            preview.requireViewById<SubsamplingScaleImageView>(R.id.full_res_image)
+        surfaceTouchForwardingLayout.initTouchForwarding(fullResImageView)
+        fullResImageView.setOnNewCropListener { onNewCrop.invoke(it) }
+        return Pair(preview.requireViewById(R.id.low_res_image), fullResImageView)
     }
 
     private fun TouchForwardingLayout.initTouchForwarding(targetView: View) {
