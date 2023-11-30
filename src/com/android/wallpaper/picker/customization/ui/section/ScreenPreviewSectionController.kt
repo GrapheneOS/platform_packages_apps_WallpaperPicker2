@@ -146,9 +146,6 @@ open class ScreenPreviewSectionController(
                 offsetToStart = displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(activity),
                 onWallpaperPreviewDirty = { activity.recreate() },
                 animationStateViewModel = customizationPickerViewModel,
-                onWorkspacePreviewDirty = {
-                    bindScreenPreview(previewView, context, isWallpaperAlwaysVisible)
-                },
                 isWallpaperAlwaysVisible = isWallpaperAlwaysVisible,
             )
     }
