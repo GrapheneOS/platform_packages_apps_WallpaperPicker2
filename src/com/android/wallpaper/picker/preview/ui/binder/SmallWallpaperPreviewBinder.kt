@@ -15,8 +15,6 @@
  */
 package com.android.wallpaper.picker.preview.ui.binder
 
-import android.app.WallpaperManager.FLAG_LOCK
-import android.app.WallpaperManager.FLAG_SYSTEM
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
@@ -28,7 +26,6 @@ import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.model.wallpaper.ScreenOrientation
 import com.android.wallpaper.model.wallpaper.WallpaperModel
 import com.android.wallpaper.module.CustomizationSections.Screen
-import com.android.wallpaper.module.CustomizationSections.Screen.LOCK_SCREEN
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil.attachView
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
@@ -65,13 +62,11 @@ object SmallWallpaperPreviewBinder {
                         viewLifecycleOwner.lifecycleScope.launch {
                             viewModel.wallpaper.collect { wallpaper ->
                                 if (wallpaper is WallpaperModel.LiveWallpaperModel) {
-                                    val destinationFlag =
-                                        if (screen == LOCK_SCREEN) FLAG_LOCK else FLAG_SYSTEM
                                     WallpaperConnectionUtils.connect(
                                         applicationContext,
                                         mainScope,
                                         wallpaper.liveWallpaperData.systemWallpaperInfo,
-                                        destinationFlag,
+                                        screen.toFlag(),
                                         surface,
                                     )
                                 } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {

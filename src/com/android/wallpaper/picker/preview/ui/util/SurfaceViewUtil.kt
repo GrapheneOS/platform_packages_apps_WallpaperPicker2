@@ -16,7 +16,6 @@
 
 package com.android.wallpaper.picker.preview.ui.util
 
-import android.util.Log
 import android.view.SurfaceControlViewHost
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -36,12 +35,8 @@ object SurfaceViewUtil {
     interface SurfaceCallback : SurfaceHolder.Callback {
         override fun surfaceCreated(holder: SurfaceHolder) {}
 
-        override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-            Log.d("mmpud", "surfaceChanged")
-        }
+        override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
 
-        override fun surfaceDestroyed(holder: SurfaceHolder) {
-            Log.d("mmpud", "surfaceDestroyed")
-        }
+        override fun surfaceDestroyed(holder: SurfaceHolder) {}
     }
 }
