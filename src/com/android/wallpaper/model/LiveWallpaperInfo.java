@@ -463,13 +463,20 @@ public class LiveWallpaperInfo extends WallpaperInfo {
     }
 
     /**
-     * Returns true if this wallpaper is currently applied.
+     * Returns true if this wallpaper is currently applied to either home or lock screen.
      */
-    public boolean isApplied(android.app.WallpaperInfo currentWallpaper) {
-        return getWallpaperComponent() != null
-                && currentWallpaper != null
-                && TextUtils.equals(getWallpaperComponent().getServiceName(),
-                currentWallpaper.getServiceName());
+    public boolean isApplied(@Nullable android.app.WallpaperInfo currentHomeWallpaper,
+            @Nullable android.app.WallpaperInfo currentLockWallpaper) {
+        android.app.WallpaperInfo component = getWallpaperComponent();
+        if (component == null) {
+            return false;
+        }
+        String serviceName = component.getServiceName();
+        boolean isAppliedToHome = currentHomeWallpaper != null
+                && TextUtils.equals(currentHomeWallpaper.getServiceName(), serviceName);
+        boolean isAppliedToLock = currentLockWallpaper != null
+                && TextUtils.equals(currentLockWallpaper.getServiceName(), serviceName);
+        return isAppliedToHome || isAppliedToLock;
     }
 
     /**

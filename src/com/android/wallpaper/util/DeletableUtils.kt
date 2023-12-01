@@ -17,6 +17,8 @@ package com.android.wallpaper.util
 
 import android.app.WallpaperInfo
 import android.app.WallpaperManager
+import android.app.WallpaperManager.FLAG_LOCK
+import android.app.WallpaperManager.FLAG_SYSTEM
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -58,7 +60,8 @@ object DeletableUtils {
     }
 
     private fun getDeleteAction(context: Context, wallpaperInfo: WallpaperInfo): String? {
-        val currentInfo = WallpaperManager.getInstance(context).wallpaperInfo
+        val currentInfo = WallpaperManager.getInstance(context).getWallpaperInfo(FLAG_SYSTEM)
+        val currentLockInfo = WallpaperManager.getInstance(context).getWallpaperInfo(FLAG_LOCK)
         val serviceInfo = wallpaperInfo.serviceInfo
         val appInfo = serviceInfo.applicationInfo
         val isPackagePreInstalled =
@@ -68,9 +71,17 @@ object DeletableUtils {
             Log.d(TAG, "This wallpaper is not pre-installed: " + serviceInfo.name)
             return null
         }
-        val currentService = currentInfo?.serviceInfo
+
         // A currently set Live wallpaper should not be deleted.
+        val currentService = currentInfo?.serviceInfo
         if (currentService != null && TextUtils.equals(serviceInfo.name, currentService.name)) {
+            return null
+        }
+        val currentLockService = currentLockInfo?.serviceInfo
+        if (
+            currentLockService != null &&
+                TextUtils.equals(serviceInfo.name, currentLockService.name)
+        ) {
             return null
         }
         val metaData = serviceInfo.metaData

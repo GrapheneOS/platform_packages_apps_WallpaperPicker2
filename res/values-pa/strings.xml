@@ -130,4 +130,5 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"ਕੀ ਤਬਦੀਲੀਆਂ ਨੂੰ ਰੀਸੈੱਟ ਕਰਨਾ ਹੈ?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"ਤੁਹਾਡੀਆਂ ਤਬਦੀਲੀਆਂ ਨੂੰ ਰੱਖਿਅਤ ਨਹੀਂ ਕੀਤਾ ਜਾਵੇਗਾ"</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"ਹੋਰ ਵਾਲਪੇਪਰ"</string>
+    <string name="recent_wallpaper_label" msgid="3996353584371118367">"ਵਾਲਪੇਪਰ %1$s"</string>
 </resources>
