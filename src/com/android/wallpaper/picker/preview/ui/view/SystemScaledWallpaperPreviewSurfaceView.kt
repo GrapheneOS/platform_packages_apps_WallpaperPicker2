@@ -18,7 +18,6 @@ package com.android.wallpaper.picker.preview.ui.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.SurfaceView
-import android.view.ViewGroup
 import com.android.wallpaper.util.WallpaperCropUtils
 
 /**
@@ -44,11 +43,7 @@ class SystemScaledWallpaperPreviewSurfaceView(context: Context, attrs: Attribute
         val xCentered = (measuredWidth - scaledWidth) / 2
         val yCentered = (measuredHeight - scaledHeight) / 2
 
-        val params: ViewGroup.LayoutParams = layoutParams
-        params.width = scaledWidth
-        params.height = scaledHeight
         x = xCentered.toFloat()
         y = yCentered.toFloat()
-        layoutParams = params
     }
 }
