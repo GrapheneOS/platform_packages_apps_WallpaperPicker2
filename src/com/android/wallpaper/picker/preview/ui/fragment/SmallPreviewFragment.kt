@@ -27,6 +27,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.preview.ui.binder.DualPreviewSelectorBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewActionsBinder
@@ -51,6 +52,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
     @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
     @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
+    @Inject lateinit var logger: UserEventLogger
 
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
 
@@ -94,8 +96,10 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
     private fun bindScreenPreview(view: View) {
         PreviewActionsBinder.bind(
             view.requireViewById(R.id.action_button_group),
+            view.requireViewById(R.id.floating_sheet),
             wallpaperPreviewViewModel.previewActionsViewModel,
             viewLifecycleOwner,
+            logger,
         )
         if (displayUtils.hasMultiInternalDisplays()) {
             val dualPreviewView: DualPreviewViewPager =

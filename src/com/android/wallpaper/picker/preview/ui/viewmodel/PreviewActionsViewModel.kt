@@ -16,6 +16,8 @@
 
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
+import com.android.wallpaper.dispatchers.MainDispatcher
+import com.android.wallpaper.model.wallpaper.WallpaperModel
 import com.android.wallpaper.picker.preview.domain.interactor.PreviewActionsInteractor
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.CUSTOMIZE
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.DELETE
@@ -24,14 +26,15 @@ import com.android.wallpaper.picker.preview.ui.viewmodel.Action.EDIT
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.EFFECTS
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.INFORMATION
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.SHARE
-import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.InfoFloatingSheetViewModel
+import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.InformationFloatingSheetViewModel
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 /** View model for the preview action buttons */
@@ -40,10 +43,22 @@ class PreviewActionsViewModel
 @Inject
 constructor(
     interactor: PreviewActionsInteractor,
+    @MainDispatcher private val scope: CoroutineScope,
 ) {
+    private val _informationFloatingSheetViewModel: Flow<InformationFloatingSheetViewModel?> =
+        interactor.wallpaperModel.map { wallpaperModel ->
+            if (wallpaperModel == null || !wallpaperModel.shouldShowInformationFloatingSheet()) {
+                null
+            } else {
+                InformationFloatingSheetViewModel(
+                    wallpaperModel.commonWallpaperData.attributions,
+                    wallpaperModel.commonWallpaperData.exploreActionUrl,
+                )
+            }
+        }
+
     /** Action's isVisible state */
-    private val _isInformationVisible: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isInformationVisible: Flow<Boolean> = _isInformationVisible.asStateFlow()
+    val isInformationVisible: Flow<Boolean> = _informationFloatingSheetViewModel.map { it != null }
 
     private val _isDownloadVisible: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isDownloadVisible: Flow<Boolean> = _isDownloadVisible.asStateFlow()
@@ -84,6 +99,20 @@ constructor(
 
     private val _isShareChecked: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isShareChecked: Flow<Boolean> = _isShareChecked.asStateFlow()
+
+    /**
+     * Floating sheet contents for the bottom sheet dialog. If content is null, the bottom sheet
+     * should collapse, otherwise, expended.
+     */
+    val informationFloatingSheetViewModel: Flow<InformationFloatingSheetViewModel?> =
+        combine(isInformationChecked, _informationFloatingSheetViewModel) { checked, viewModel ->
+                if (checked && viewModel != null) {
+                    viewModel
+                } else {
+                    null
+                }
+            }
+            .distinctUntilChanged()
 
     /** Action listeners */
     val onInformationClicked: Flow<(() -> Unit)?> =
@@ -208,15 +237,33 @@ constructor(
         }
     }
 
-    /** This flow emits the view data for the info button bottom sheet */
-    val infoButtonAndFloatingSheetViewModel: Flow<InfoFloatingSheetViewModel> =
-        interactor.wallpaperModel.filterNotNull().map { wallpaperModel ->
-            InfoFloatingSheetViewModel(wallpaperModel)
+    fun onDialogCollapsed() {
+        if (_isInformationChecked.value) {
+            _isInformationChecked.value = false
         }
+    }
 
-    /** This flow expresses the visibility state of the info button */
-    val showInfoButton: Flow<Boolean> =
-        interactor.wallpaperModel.map { wallpaperModel -> wallpaperModel != null }
+    companion object {
+        private fun WallpaperModel.shouldShowInformationFloatingSheet(): Boolean {
+            return if (
+                commonWallpaperData.attributions.isNullOrEmpty() &&
+                    commonWallpaperData.exploreActionUrl.isNullOrEmpty()
+            ) {
+                // If neither of the attributes nor the action url exists, do not show the
+                // information floating sheet.
+                false
+            } else if (
+                this is WallpaperModel.LiveWallpaperModel &&
+                    !liveWallpaperData.systemWallpaperInfo.showMetadataInPreview
+            ) {
+                // If the live wallpaper's flag of showMetadataInPreview is false, do not show the
+                // information floating sheet.
+                false
+            } else {
+                true
+            }
+        }
+    }
 }
 
 enum class Action {
