@@ -12,10 +12,8 @@ import android.service.wallpaper.WallpaperService
 import android.util.Log
 import android.view.Display
 import android.view.SurfaceControl
-import android.view.SurfaceControlViewHost
 import android.view.SurfaceView
 import android.view.View
-import android.widget.ImageView
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.util.ScreenSizeCalculator
 import com.android.wallpaper.util.WallpaperConnection
@@ -75,19 +73,6 @@ object WallpaperConnectionUtils {
         // Attach wallpaper connection to service and get wallpaper engine
         return WallpaperEngineConnection(displayMetrics)
             .getEngine(wallpaperService, destinationFlag, surfaceView)
-    }
-
-    fun SurfaceView.setUpSurface(context: Context) {
-        val imageView = ImageView(context)
-        imageView.measure(
-            View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY),
-        )
-        imageView.layout(0, 0, width, height)
-
-        val host = SurfaceControlViewHost(context, display, hostToken)
-        host.setView(imageView, imageView.width, imageView.height)
-        host.surfacePackage?.let { setChildSurfacePackage(it) }
     }
 
     private fun WallpaperInfo.getWallpaperIntent(): Intent {

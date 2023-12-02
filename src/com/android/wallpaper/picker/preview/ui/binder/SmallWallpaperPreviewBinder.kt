@@ -19,20 +19,19 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.model.wallpaper.ScreenOrientation
 import com.android.wallpaper.model.wallpaper.WallpaperModel
-import com.android.wallpaper.module.WallpaperPersister
+import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil.attachView
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
@@ -48,31 +47,28 @@ object SmallWallpaperPreviewBinder {
     fun bind(
         surface: SurfaceView,
         viewModel: WallpaperPreviewViewModel,
+        screen: Screen,
         screenOrientation: ScreenOrientation,
         applicationContext: Context,
         @MainDispatcher mainScope: CoroutineScope,
         viewLifecycleOwner: LifecycleOwner,
     ) {
+        var job: Job? = null
         surface.setZOrderMediaOverlay(true)
         surface.holder.addCallback(
             object : SurfaceViewUtil.SurfaceCallback {
                 override fun surfaceCreated(holder: SurfaceHolder) {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                    job =
+                        viewLifecycleOwner.lifecycleScope.launch {
                             viewModel.wallpaper.collect { wallpaper ->
                                 if (wallpaper is WallpaperModel.LiveWallpaperModel) {
-                                    viewLifecycleOwner.lifecycleScope.launch {
-                                        WallpaperConnectionUtils.connect(
-                                            applicationContext,
-                                            mainScope,
-                                            wallpaper.liveWallpaperData.systemWallpaperInfo,
-                                            // TODO b/301088528(giolin): Pass correspondent
-                                            //                           destination for live
-                                            //                           wallpaper preview
-                                            WallpaperPersister.DEST_LOCK_SCREEN,
-                                            surface,
-                                        )
-                                    }
+                                    WallpaperConnectionUtils.connect(
+                                        applicationContext,
+                                        mainScope,
+                                        wallpaper.liveWallpaperData.systemWallpaperInfo,
+                                        screen.toFlag(),
+                                        surface,
+                                    )
                                 } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
                                     val staticPreviewView =
                                         LayoutInflater.from(applicationContext)
@@ -89,7 +85,10 @@ object SmallWallpaperPreviewBinder {
                                 }
                             }
                         }
-                    }
+                }
+
+                override fun surfaceDestroyed(holder: SurfaceHolder) {
+                    job?.cancel()
                 }
             }
         )
