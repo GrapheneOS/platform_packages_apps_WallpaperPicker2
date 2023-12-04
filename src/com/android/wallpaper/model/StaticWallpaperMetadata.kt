@@ -20,7 +20,7 @@ import com.android.wallpaper.model.wallpaper.ScreenOrientation
 
 /** Metadata for the static image wallpaper to be saved to the system preferences. */
 data class StaticWallpaperMetadata(
-    val attributions: List<String>?,
+    val attributions: List<String?>?,
     val actionUrl: String?,
     val collectionId: String?,
     val hashCode: Long?,
