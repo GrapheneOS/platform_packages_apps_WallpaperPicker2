@@ -31,14 +31,21 @@ object FullResImageViewUtil {
         cropRect: Rect?,
     ): ScaleAndCenter {
         // Determine minimum zoom to fit maximum visible area of wallpaper on crop surface.
-        val visibleRawWallpaperRect =
-            cropRect ?: WallpaperCropUtils.calculateVisibleRect(rawWallpaperSize, viewSize)
+        // defaultRawWallpaperRect represents a brand new wallpaper preview with no crop hints.
+        val defaultRawWallpaperRect =
+            WallpaperCropUtils.calculateVisibleRect(rawWallpaperSize, viewSize)
+        val visibleRawWallpaperRect = cropRect ?: defaultRawWallpaperRect
         val centerPosition =
             PointF(
                 visibleRawWallpaperRect.centerX().toFloat(),
                 visibleRawWallpaperRect.centerY().toFloat()
             )
         val defaultWallpaperZoom =
+            WallpaperCropUtils.calculateMinZoom(
+                Point(defaultRawWallpaperRect.width(), defaultRawWallpaperRect.height()),
+                viewSize
+            )
+        val visibleWallpaperZoom =
             WallpaperCropUtils.calculateMinZoom(
                 Point(visibleRawWallpaperRect.width(), visibleRawWallpaperRect.height()),
                 viewSize
@@ -47,7 +54,7 @@ object FullResImageViewUtil {
         return ScaleAndCenter(
             defaultWallpaperZoom,
             defaultWallpaperZoom.coerceAtLeast(DEFAULT_WALLPAPER_MAX_ZOOM),
-            defaultWallpaperZoom,
+            visibleWallpaperZoom,
             centerPosition,
         )
     }
