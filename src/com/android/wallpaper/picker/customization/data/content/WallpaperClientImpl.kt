@@ -289,7 +289,11 @@ class WallpaperClientImpl(
                         }
                     }
             } catch (e: IOException) {
-                Log.e(TAG, "Error getting wallpaper preview: $wallpaperId", e)
+                Log.e(
+                    TAG,
+                    "Error getting wallpaper preview: $wallpaperId, destination: ${destination.asString()}",
+                    e
+                )
             }
         } else {
             val currentWallpapers = getCurrentWallpapers()
