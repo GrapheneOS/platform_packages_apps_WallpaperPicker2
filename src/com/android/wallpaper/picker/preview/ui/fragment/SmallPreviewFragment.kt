@@ -33,6 +33,7 @@ import com.android.wallpaper.picker.di.modules.PreviewUtilsModule.LockScreenPrev
 import com.android.wallpaper.picker.preview.ui.binder.DualPreviewSelectorBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewActionsBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewSelectorBinder
+import com.android.wallpaper.picker.preview.ui.binder.SetWallpaperButtonBinder
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.TabsPagerContainer
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
@@ -48,7 +49,6 @@ import kotlinx.coroutines.CoroutineScope
  * This fragment displays the preview of the selected wallpaper on all available workspaces and
  * device displays.
  */
-// TODO(b/303317694): fix small preview to reflect wallpaper parallax zoom
 @AndroidEntryPoint(AppbarFragment::class)
 class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
@@ -63,16 +63,24 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val view =
-            if (displayUtils.hasMultiInternalDisplays()) {
-                inflater.inflate(R.layout.fragment_small_preview_for_two_screens, container, false)
-            } else {
-                inflater.inflate(R.layout.fragment_small_preview_handheld, container, false)
-            }
+            inflater.inflate(
+                if (displayUtils.hasMultiInternalDisplays())
+                    R.layout.fragment_small_preview_foldable
+                else R.layout.fragment_small_preview_handheld,
+                container,
+                false,
+            )
         setUpToolbar(view)
         bindScreenPreview(view)
+
+        SetWallpaperButtonBinder.bind(
+            view.requireViewById(R.id.button_set_wallpaper),
+        ) {
+            findNavController().navigate(R.id.action_smallPreviewFragment_to_setWallpaperDialog)
+        }
 
         return view
     }
