@@ -62,7 +62,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.android.customization.model.color.WallpaperColorResources;
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.SetWallpaperViewModel;
@@ -441,7 +440,7 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
         }
         // Apply the wallpaper color resources to the fragment context. So the views created by
         // the context will apply the given wallpaper color.
-        new WallpaperColorResources(colors).apply(context);
+        InjectorProvider.getInjector().getWallpaperColorResources(colors, context).apply(context);
         mSetWallpaperButton.setBackground(null);
         mSetWallpaperButton.setBackgroundResource(R.drawable.set_wallpaper_button_background);
         mExitFullPreviewButton.setForeground(

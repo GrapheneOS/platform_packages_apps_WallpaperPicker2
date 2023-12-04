@@ -43,7 +43,7 @@ open class WallpaperColorResources(wallpaperColors: WallpaperColors) {
         ColorResources.create(context, colorOverlay)?.apply(context)
     }
 
-    private fun addOverlayColor(colorSchemeHue: TonalPalette, firstResourceColorId: Int) {
+    fun addOverlayColor(colorSchemeHue: TonalPalette, firstResourceColorId: Int) {
         colorSchemeHue.allShades.forEachIndexed { index, color ->
             colorOverlay.put(firstResourceColorId + index, color)
         }
