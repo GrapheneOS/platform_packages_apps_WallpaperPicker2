@@ -23,8 +23,10 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import android.widget.ImageView
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
 import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.model.wallpaper.WallpaperModel
@@ -53,9 +55,19 @@ object FullWallpaperPreviewBinder {
         lifecycleOwner: LifecycleOwner,
         @MainDispatcher mainScope: CoroutineScope,
     ) {
-        val surfaceView: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
         val wallpaperPreviewCrop: FullPreviewFrameLayout =
             view.requireViewById(R.id.wallpaper_preview_crop)
+        lifecycleOwner.lifecycleScope.launch {
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.fullWallpaper.collect { (_, config) ->
+                    wallpaperPreviewCrop.setCurrentAndTargetDisplaySize(
+                        displayUtils.getRealSize(checkNotNull(view.context.display)),
+                        config.displaySize,
+                    )
+                }
+            }
+        }
+        val surfaceView: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
         val surfaceTouchForwardingLayout: TouchForwardingLayout =
             view.requireViewById(R.id.touch_forwarding_layout)
         var job: Job? = null
@@ -66,10 +78,6 @@ object FullWallpaperPreviewBinder {
                     job =
                         lifecycleOwner.lifecycleScope.launch {
                             viewModel.fullWallpaper.collect { (wallpaper, config) ->
-                                wallpaperPreviewCrop.setCurrentAndTargetDisplaySize(
-                                    displayUtils.getRealSize(checkNotNull(view.context.display)),
-                                    config.displaySize,
-                                )
                                 if (wallpaper is WallpaperModel.LiveWallpaperModel) {
                                     WallpaperConnectionUtils.connect(
                                         applicationContext,
