@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.module
 
+import android.app.WallpaperColors
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.Intent
@@ -23,6 +24,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
+import com.android.customization.model.color.WallpaperColorResources
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.dispatchers.BackgroundDispatcher
 import com.android.wallpaper.dispatchers.MainDispatcher
@@ -342,6 +344,13 @@ internal constructor(
     override fun getWallpaperColorsRepository(): WallpaperColorsRepository {
         return wallpaperColorsRepository
             ?: WallpaperColorsRepository().also { wallpaperColorsRepository = it }
+    }
+
+    override fun getWallpaperColorResources(
+        wallpaperColors: WallpaperColors,
+        context: Context
+    ): WallpaperColorResources {
+        return WallpaperColorResources(wallpaperColors)
     }
 
     override fun getMyPhotosIntentProvider(): MyPhotosStarter.MyPhotosIntentProvider {
