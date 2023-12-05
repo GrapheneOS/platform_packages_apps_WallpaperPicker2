@@ -21,6 +21,7 @@ import com.android.systemui.shared.customization.data.content.CustomizationProvi
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
 import com.android.systemui.shared.customization.data.content.CustomizationProviderContract as Contract
 import com.android.wallpaper.Flags.multiCropPreviewUiFlag
+import com.android.wallpaper.Flags.refactorWallpaperCategoryFlag
 import com.android.wallpaper.Flags.wallpaperRestorerFlag
 import com.android.wallpaper.module.InjectorProvider
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +35,7 @@ abstract class BaseFlags {
     open fun isWallpaperEffectModelDownloadEnabled() = true
     open fun isInterruptModelDownloadEnabled() = false
     open fun isWallpaperRestorerEnabled() = wallpaperRestorerFlag()
+    open fun isWallpaperCategoryRefactoringEnabled() = refactorWallpaperCategoryFlag()
 
     /** Enables new preview UI if both [isMultiCropEnabled] and this flag are true. */
     open fun isMultiCropPreviewUiEnabled() = multiCropPreviewUiFlag()
