@@ -78,7 +78,7 @@ object SmallWallpaperPreviewBinder {
                                     StaticWallpaperPreviewBinder.bind(
                                         staticPreviewView.requireViewById(R.id.low_res_image),
                                         staticPreviewView.requireViewById(R.id.full_res_image),
-                                        viewModel.getStaticWallpaperPreviewViewModel(),
+                                        viewModel.staticWallpaperPreviewViewModel,
                                         screenOrientation,
                                         viewLifecycleOwner,
                                     )

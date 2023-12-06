@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.wallpaper.picker.preview.ui.viewmodel
 
-import android.graphics.Point
-import com.android.wallpaper.model.wallpaper.ScreenOrientation
-import com.android.wallpaper.module.CustomizationSections.Screen
+package com.android.wallpaper.picker.preview.ui.binder
 
-/** Defines configuration associated with a single small preview. */
-data class SmallPreviewConfigViewModel(
+import android.widget.Button
 
-    /** The [Screen] the preview is rendering. */
-    val previewTab: Screen,
+/** Binds the set wallpaper button on small preview. */
+object SetWallpaperButtonBinder {
 
-    /** The display size the preview is based on. */
-    val displaySize: Point,
-
-    /** The [ScreenOrientation] the preview is based on. */
-    val screenOrientation: ScreenOrientation,
-)
+    fun bind(
+        button: Button,
+        navigate: () -> Unit,
+    ) {
+        button.setOnClickListener { navigate.invoke() }
+    }
+}

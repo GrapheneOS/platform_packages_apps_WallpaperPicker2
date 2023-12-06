@@ -16,12 +16,11 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager.widget.ViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
-import com.android.wallpaper.util.DisplayUtils
-import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -34,13 +33,10 @@ object DualPreviewSelectorBinder {
         tabsViewPager: ViewPager,
         dualPreviewView: DualPreviewViewPager,
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
-        homePreviewUtils: PreviewUtils,
-        lockPreviewUtils: PreviewUtils,
         applicationContext: Context,
         viewLifecycleOwner: LifecycleOwner,
         mainScope: CoroutineScope,
-        displayUtils: DisplayUtils,
-        navigate: () -> Unit,
+        navigate: (View) -> Unit,
     ) {
         // set up tabs view pager
         TabPagerBinder.bind(tabsViewPager)
@@ -51,12 +47,9 @@ object DualPreviewSelectorBinder {
         DualPreviewPagerBinder.bind(
             dualPreviewView,
             wallpaperPreviewViewModel,
-            homePreviewUtils,
-            lockPreviewUtils,
             applicationContext,
             viewLifecycleOwner,
             mainScope,
-            displayUtils,
             navigate,
         )
     }

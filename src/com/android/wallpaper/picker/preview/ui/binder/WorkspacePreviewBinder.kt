@@ -20,47 +20,86 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil
+import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WorkspacePreviewConfigViewModel
 import com.android.wallpaper.util.PreviewUtils
 import com.android.wallpaper.util.SurfaceViewUtils
+import kotlinx.coroutines.launch
 
 object WorkspacePreviewBinder {
-    fun bind(surface: SurfaceView, config: WorkspacePreviewConfigViewModel) {
+    fun bind(
+        surface: SurfaceView,
+        config: WorkspacePreviewConfigViewModel,
+    ) {
         surface.visibility = View.VISIBLE
         surface.setZOrderMediaOverlay(true)
         surface.holder.addCallback(
-            object : SurfaceHolder.Callback {
+            object : SurfaceViewUtil.SurfaceCallback {
                 override fun surfaceCreated(holder: SurfaceHolder) {
-                    if (config.previewUtils.supportsPreview()) {
-                        val request =
-                            SurfaceViewUtils.createSurfaceViewRequest(
-                                surface,
-                                bundleOf(Pair(SurfaceViewUtils.KEY_DISPLAY_ID, config.displayId)),
-                            )
-                        config.previewUtils.renderPreview(
-                            request,
-                            object : PreviewUtils.WorkspacePreviewCallback {
-                                override fun onPreviewRendered(resultBundle: Bundle?) {
-                                    if (resultBundle != null) {
-                                        surface.setChildSurfacePackage(
-                                            SurfaceViewUtils.getSurfacePackage(resultBundle)
-                                        )
-                                    }
-                                }
-                            }
-                        )
-                    }
+                    renderWorkspacePreview(
+                        surface = surface,
+                        previewUtils = config.previewUtils,
+                        displayId = config.displayId,
+                    )
                 }
-
-                override fun surfaceChanged(
-                    holder: SurfaceHolder,
-                    format: Int,
-                    width: Int,
-                    height: Int
-                ) {}
-
-                override fun surfaceDestroyed(holder: SurfaceHolder) {}
             }
         )
+    }
+
+    /**
+     * Binds the workspace preview in the full screen, where we need to listen to the changes of the
+     * [WorkspacePreviewConfigViewModel] according to which small preview the user clicks on.
+     */
+    fun bindFullWorkspacePreview(
+        surface: SurfaceView,
+        viewModel: WallpaperPreviewViewModel,
+        lifecycleOwner: LifecycleOwner
+    ) {
+        surface.visibility = View.VISIBLE
+        surface.setZOrderMediaOverlay(true)
+        surface.holder.addCallback(
+            object : SurfaceViewUtil.SurfaceCallback {
+                override fun surfaceCreated(holder: SurfaceHolder) {
+                    lifecycleOwner.lifecycleScope.launch {
+                        viewModel.fullWorkspacePreviewConfigViewModel.collect {
+                            renderWorkspacePreview(
+                                surface = surface,
+                                previewUtils = it.previewUtils,
+                                displayId = it.displayId,
+                            )
+                        }
+                    }
+                }
+            }
+        )
+    }
+
+    private fun renderWorkspacePreview(
+        surface: SurfaceView,
+        previewUtils: PreviewUtils,
+        displayId: Int,
+    ) {
+        if (previewUtils.supportsPreview()) {
+            val request =
+                SurfaceViewUtils.createSurfaceViewRequest(
+                    surface,
+                    bundleOf(Pair(SurfaceViewUtils.KEY_DISPLAY_ID, displayId)),
+                )
+            previewUtils.renderPreview(
+                request,
+                object : PreviewUtils.WorkspacePreviewCallback {
+                    override fun onPreviewRendered(resultBundle: Bundle?) {
+                        if (resultBundle != null) {
+                            surface.setChildSurfacePackage(
+                                SurfaceViewUtils.getSurfacePackage(resultBundle)
+                            )
+                        }
+                    }
+                }
+            )
+        }
     }
 }

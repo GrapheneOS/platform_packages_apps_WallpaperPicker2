@@ -21,15 +21,15 @@ import com.android.wallpaper.util.PreviewUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.android.scopes.ActivityScoped
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Qualifier
 
 /*
  * This class provides the preview utils instances required for a specific screen type
  */
-@InstallIn(ActivityComponent::class)
+@InstallIn(ActivityRetainedComponent::class)
 @Module
 internal object PreviewUtilsModule {
 
@@ -38,7 +38,7 @@ internal object PreviewUtilsModule {
     @Qualifier @Retention(AnnotationRetention.BINARY) annotation class HomeScreenPreviewUtils
 
     @LockScreenPreviewUtils
-    @ActivityScoped
+    @ActivityRetainedScoped
     @Provides
     fun provideLockScreenPreviewUtils(
         @ApplicationContext appContext: Context,
@@ -53,7 +53,7 @@ internal object PreviewUtilsModule {
     }
 
     @HomeScreenPreviewUtils
-    @ActivityScoped
+    @ActivityRetainedScoped
     @Provides
     fun provideHomeScreenPreviewUtils(
         @ApplicationContext appContext: Context,

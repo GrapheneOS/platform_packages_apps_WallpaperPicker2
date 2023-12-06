@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.preview.ui.binder
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
@@ -25,10 +26,7 @@ import com.android.wallpaper.model.wallpaper.PreviewPagerPage
 import com.android.wallpaper.model.wallpaper.getScreenOrientation
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.SinglePreviewPagerAdapter
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.pagetransformers.PreviewCardPageTransformer
-import com.android.wallpaper.picker.preview.ui.viewmodel.SmallPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
-import com.android.wallpaper.picker.preview.ui.viewmodel.WorkspacePreviewConfigViewModel
-import com.android.wallpaper.util.PreviewUtils
 import kotlinx.coroutines.CoroutineScope
 
 /** Binds single preview home screen and lock screen tabs view pager. */
@@ -42,10 +40,7 @@ object PreviewPagerBinder {
         previewsViewPager: ViewPager2,
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
         previewDisplaySize: Point,
-        homePreviewUtils: PreviewUtils,
-        lockPreviewUtils: PreviewUtils,
-        displayId: Int,
-        navigate: (() -> Unit)? = null,
+        navigate: (View) -> Unit,
     ) {
         previewsViewPager.apply {
             adapter = SinglePreviewPagerAdapter { viewHolder, position ->
@@ -53,22 +48,11 @@ object PreviewPagerBinder {
                     applicationContext = applicationContext,
                     view = viewHolder.itemView.requireViewById(R.id.preview),
                     viewModel = wallpaperPreviewViewModel,
-                    smallPreviewConfig =
-                        SmallPreviewConfigViewModel(
-                            previewTab = PreviewPagerPage.entries[position].screen,
-                            displaySize = previewDisplaySize,
-                            screenOrientation = getScreenOrientation(previewDisplaySize),
-                        ),
+                    screen = PreviewPagerPage.entries[position].screen,
+                    orientation = getScreenOrientation(previewDisplaySize),
+                    foldableDisplay = null,
                     mainScope = mainScope,
                     viewLifecycleOwner = viewLifecycleOwner,
-                    workspaceConfig =
-                        WorkspacePreviewConfigViewModel(
-                            previewUtils =
-                                if (position == PreviewPagerPage.LOCK_PREVIEW.ordinal)
-                                    lockPreviewUtils
-                                else homePreviewUtils,
-                            displayId = displayId,
-                        ),
                     navigate = navigate,
                 )
             }
