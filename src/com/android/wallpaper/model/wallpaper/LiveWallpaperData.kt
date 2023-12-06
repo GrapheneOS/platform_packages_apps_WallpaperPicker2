@@ -21,7 +21,6 @@ import android.app.WallpaperInfo
 /** Represents set of attributes that are specific to live wallpapers. */
 data class LiveWallpaperData(
     val groupName: String,
-    val isDownloadable: Boolean,
     val systemWallpaperInfo: WallpaperInfo,
     val isTitleVisible: Boolean,
     val isApplied: Boolean,

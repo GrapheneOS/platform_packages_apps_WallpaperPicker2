@@ -24,7 +24,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import com.android.wallpaper.R
-import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.model.wallpaper.WallpaperModel
 import com.android.wallpaper.picker.AppbarFragment
@@ -33,7 +32,7 @@ import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepo
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.ActivityUtils
 import com.android.wallpaper.util.DisplayUtils
-import com.android.wallpaper.util.converter.DefaultWallpaperModelFactory
+import com.android.wallpaper.util.converter.WallpaperModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -45,7 +44,7 @@ class WallpaperPreviewActivity :
     private val viewModel: WallpaperPreviewViewModel by viewModels()
     @ApplicationContext @Inject lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
-    @Inject lateinit var wallpaperModelFactory: DefaultWallpaperModelFactory
+    @Inject lateinit var wallpaperModelFactory: WallpaperModelFactory
     @Inject lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +56,8 @@ class WallpaperPreviewActivity :
         WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
         val wallpaper =
             checkNotNull(intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java))
-        wallpaperPreviewRepository.setWallpaperModel(wallpaper.convertToWallpaperModel())
+                .convertToWallpaperModel()
+        wallpaperPreviewRepository.setWallpaperModel(wallpaper)
     }
 
     override fun onUpArrowPressed() {
@@ -80,11 +80,7 @@ class WallpaperPreviewActivity :
     }
 
     private fun WallpaperInfo.convertToWallpaperModel(): WallpaperModel {
-        return if (this is LiveWallpaperInfo) {
-            wallpaperModelFactory.getWallpaperModel(appContext, this)
-        } else {
-            wallpaperModelFactory.getWallpaperModel(appContext, this)
-        }
+        return wallpaperModelFactory.getWallpaperModel(appContext, this)
     }
 
     companion object {
