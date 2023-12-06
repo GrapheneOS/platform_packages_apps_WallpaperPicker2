@@ -60,8 +60,10 @@ constructor(
     /** Action's isVisible state */
     val isInformationVisible: Flow<Boolean> = _informationFloatingSheetViewModel.map { it != null }
 
-    private val _isDownloadVisible: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isDownloadVisible: Flow<Boolean> = _isDownloadVisible.asStateFlow()
+    val isDownloadVisible: Flow<Boolean> =
+        interactor.wallpaperModel.map {
+            (it as? WallpaperModel.StaticWallpaperModel)?.downloadableWallpaperData != null
+        }
 
     private val _isDeleteVisible: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isDeleteVisible: Flow<Boolean> = _isDeleteVisible.asStateFlow()
