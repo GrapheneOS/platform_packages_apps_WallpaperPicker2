@@ -17,8 +17,8 @@ package com.android.wallpaper.picker.preview.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.android.wallpaper.model.wallpaper.FoldableDisplay
+import com.android.wallpaper.model.wallpaper.ScreenOrientation
 import com.android.wallpaper.model.wallpaper.WallpaperModel
-import com.android.wallpaper.model.wallpaper.getScreenOrientation
 import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.di.modules.PreviewUtilsModule.HomeScreenPreviewUtils
 import com.android.wallpaper.picker.di.modules.PreviewUtilsModule.LockScreenPreviewUtils
@@ -119,15 +119,20 @@ constructor(
         )
     }
 
-    fun onSmallPreviewClicked(screen: Screen, foldableDisplay: FoldableDisplay?) {
+    fun onSmallPreviewClicked(
+        screen: Screen,
+        orientation: ScreenOrientation,
+        foldableDisplay: FoldableDisplay?,
+    ) {
         fullWallpaperPreviewConfigViewModel.value =
-            getWallpaperPreviewConfig(screen, foldableDisplay)
+            getWallpaperPreviewConfig(screen, orientation, foldableDisplay)
         _fullWorkspacePreviewConfigViewModel.value =
             getWorkspacePreviewConfig(screen, foldableDisplay)
     }
 
     private fun getWallpaperPreviewConfig(
         screen: Screen,
+        orientation: ScreenOrientation,
         foldableDisplay: FoldableDisplay?,
     ): WallpaperPreviewConfigViewModel {
         val displaySize =
@@ -145,7 +150,7 @@ constructor(
         return WallpaperPreviewConfigViewModel(
             screen = screen,
             displaySize = displaySize,
-            screenOrientation = getScreenOrientation(displaySize),
+            screenOrientation = orientation,
         )
     }
 }
