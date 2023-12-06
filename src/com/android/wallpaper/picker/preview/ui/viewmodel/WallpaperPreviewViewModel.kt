@@ -40,7 +40,7 @@ class WallpaperPreviewViewModel
 constructor(
     interactor: WallpaperPreviewInteractor,
     val staticWallpaperPreviewViewModel: StaticWallpaperPreviewViewModel,
-    private val previewActionsViewModel: PreviewActionsViewModel,
+    val previewActionsViewModel: PreviewActionsViewModel,
     private val displayUtils: DisplayUtils,
     @HomeScreenPreviewUtils private val homePreviewUtils: PreviewUtils,
     @LockScreenPreviewUtils private val lockPreviewUtils: PreviewUtils,
@@ -148,7 +148,4 @@ constructor(
             screenOrientation = getScreenOrientation(displaySize),
         )
     }
-
-    /** Gets the view model for action buttons and action sheet for small preview */
-    fun getPreviewActionsViewModel(): PreviewActionsViewModel = previewActionsViewModel
 }

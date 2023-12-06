@@ -15,101 +15,84 @@
  */
 package com.android.wallpaper.picker.preview.ui.binder
 
-import android.content.Context
-import android.widget.CompoundButton
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.wallpaper.picker.preview.ui.view.PreviewActionGroup
+import com.android.wallpaper.picker.preview.ui.viewmodel.Action.CUSTOMIZE
+import com.android.wallpaper.picker.preview.ui.viewmodel.Action.DELETE
+import com.android.wallpaper.picker.preview.ui.viewmodel.Action.DOWNLOAD
+import com.android.wallpaper.picker.preview.ui.viewmodel.Action.EDIT
+import com.android.wallpaper.picker.preview.ui.viewmodel.Action.EFFECTS
+import com.android.wallpaper.picker.preview.ui.viewmodel.Action.INFORMATION
+import com.android.wallpaper.picker.preview.ui.viewmodel.Action.SHARE
 import com.android.wallpaper.picker.preview.ui.viewmodel.PreviewActionsViewModel
-import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.InfoFloatingSheetViewModel
-import com.android.wallpaper.widget.FloatingSheet
-import com.android.wallpaper.widget.WallpaperControlButtonGroup
-import com.android.wallpaper.widget.floatingsheetcontent.WallpaperModelInfoContent
 import kotlinx.coroutines.launch
 
 /** Binds the action buttons and bottom sheet to [PreviewActionsViewModel] */
 object PreviewActionsBinder {
     fun bind(
-        applicationContext: Context,
-        previewActionsViewModel: PreviewActionsViewModel,
+        view: PreviewActionGroup,
+        viewModel: PreviewActionsViewModel,
         lifecycleOwner: LifecycleOwner,
-        wallpaperControlButtonGroup: WallpaperControlButtonGroup,
-        floatingSheet: FloatingSheet,
     ) {
-
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    previewActionsViewModel.infoButtonAndFloatingSheetViewModel.collect {
-                        instantiateInfoBottomSheet(applicationContext, it, floatingSheet)
-                    }
+                    viewModel.isInformationChecked.collect { view.setIsChecked(INFORMATION, it) }
                 }
 
                 launch {
-                    previewActionsViewModel.showInfoButton.collect { shouldShowInfoButton ->
-                        instantiateInfoButton(
-                            floatingSheet,
-                            wallpaperControlButtonGroup,
-                            shouldShowInfoButton
-                        )
+                    viewModel.isInformationVisible.collect { view.setIsVisible(INFORMATION, it) }
+                }
+
+                launch {
+                    viewModel.onInformationClicked.collect {
+                        view.setClickListener(INFORMATION, it)
                     }
                 }
-            }
-        }
-    }
 
-    private fun instantiateInfoButton(
-        floatingSheet: FloatingSheet,
-        wallpaperControlButtonGroup: WallpaperControlButtonGroup,
-        shouldShowInfoButton: Boolean
-    ) {
-        if (!shouldShowInfoButton) {
-            return
-        }
-        wallpaperControlButtonGroup.showButton(
-            WallpaperControlButtonGroup.INFORMATION,
-            CompoundButton.OnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean
-                ->
-                handleInformationControlButtonCheckedChange(
-                    floatingSheet,
-                    wallpaperControlButtonGroup,
-                    isChecked
-                )
-            }
-        )
-    }
+                launch { viewModel.isDownloadChecked.collect { view.setIsChecked(DOWNLOAD, it) } }
 
-    private fun handleInformationControlButtonCheckedChange(
-        floatingSheet: FloatingSheet,
-        wallpaperControlButtonGroup: WallpaperControlButtonGroup,
-        isChecked: Boolean
-    ) {
-        if (isChecked) {
-            wallpaperControlButtonGroup.deselectOtherFloatingSheetControlButtons(
-                WallpaperControlButtonGroup.INFORMATION
-            )
-            if (floatingSheet.isFloatingSheetCollapsed) {
-                floatingSheet.updateContentView(FloatingSheet.INFORMATION)
-                floatingSheet.expand()
-            } else {
-                floatingSheet.updateContentViewWithAnimation(FloatingSheet.INFORMATION)
-            }
-        } else if (!wallpaperControlButtonGroup.isFloatingSheetControlButtonSelected()) {
-            floatingSheet.collapse()
-        }
-    }
+                launch { viewModel.isDownloadVisible.collect { view.setIsVisible(DOWNLOAD, it) } }
 
-    private fun instantiateInfoBottomSheet(
-        applicationContext: Context,
-        infoFloatingSheetViewModel: InfoFloatingSheetViewModel?,
-        floatingSheet: FloatingSheet,
-    ) {
-        infoFloatingSheetViewModel.let { infoFloatingSheetViewModel ->
-            floatingSheet.putFloatingSheetContent(
-                FloatingSheet.INFORMATION,
-                WallpaperModelInfoContent(applicationContext, infoFloatingSheetViewModel)
-            )
+                launch {
+                    viewModel.onDownloadClicked.collect { view.setClickListener(DOWNLOAD, it) }
+                }
+
+                launch { viewModel.isDeleteChecked.collect { view.setIsChecked(DELETE, it) } }
+
+                launch { viewModel.isDeleteVisible.collect { view.setIsVisible(DELETE, it) } }
+
+                launch { viewModel.onDeleteClicked.collect { view.setClickListener(DELETE, it) } }
+
+                launch { viewModel.isEditChecked.collect { view.setIsChecked(EDIT, it) } }
+
+                launch { viewModel.isEditVisible.collect { view.setIsVisible(EDIT, it) } }
+
+                launch { viewModel.onEditClicked.collect { view.setClickListener(EDIT, it) } }
+
+                launch { viewModel.isCustomizeChecked.collect { view.setIsChecked(CUSTOMIZE, it) } }
+
+                launch { viewModel.isCustomizeVisible.collect { view.setIsVisible(CUSTOMIZE, it) } }
+
+                launch {
+                    viewModel.onCustomizeClicked.collect { view.setClickListener(CUSTOMIZE, it) }
+                }
+
+                launch { viewModel.isEffectsChecked.collect { view.setIsChecked(EFFECTS, it) } }
+
+                launch { viewModel.isEffectsVisible.collect { view.setIsVisible(EFFECTS, it) } }
+
+                launch { viewModel.onEffectsClicked.collect { view.setClickListener(EFFECTS, it) } }
+
+                launch { viewModel.isShareChecked.collect { view.setIsChecked(SHARE, it) } }
+
+                launch { viewModel.isShareVisible.collect { view.setIsVisible(SHARE, it) } }
+
+                launch { viewModel.onShareClicked.collect { view.setClickListener(SHARE, it) } }
+            }
         }
     }
 }
