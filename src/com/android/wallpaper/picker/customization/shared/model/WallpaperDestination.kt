@@ -17,6 +17,10 @@
 
 package com.android.wallpaper.picker.customization.shared.model
 
+import android.app.WallpaperManager.FLAG_LOCK
+import android.app.WallpaperManager.FLAG_SYSTEM
+import android.app.WallpaperManager.SetWallpaperFlags
+
 /** Enumerates all known wallpaper destinations. */
 enum class WallpaperDestination {
     /** Both [HOME] and [LOCK] destinations. */
@@ -24,5 +28,16 @@ enum class WallpaperDestination {
     /** The home screen wallpaper. */
     HOME,
     /** The lock screen wallpaper. */
-    LOCK,
+    LOCK;
+
+    companion object {
+        fun fromFlags(@SetWallpaperFlags flags: Int): WallpaperDestination {
+            return when (flags) {
+                FLAG_SYSTEM or FLAG_LOCK -> BOTH
+                FLAG_SYSTEM -> HOME
+                FLAG_LOCK -> LOCK
+                else -> throw IllegalArgumentException("Bad @SetWallpaperFlags value $flags")
+            }
+        }
+    }
 }
