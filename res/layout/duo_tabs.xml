@@ -20,22 +20,25 @@
     android:divider="@drawable/duo_tabs_divider"
     android:orientation="horizontal"
     android:showDividers="middle">
-
     <TextView
         android:id="@+id/tab_primary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/separated_tabs_height"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/duo_tabs_preview_button_background"
-        android:gravity="center" />
+        android:minHeight="@dimen/separated_tabs_height"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@drawable/duo_tabs_preview_button_background" />
 
     <TextView
         android:id="@+id/tab_secondary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/separated_tabs_height"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/duo_tabs_preview_button_background"
-        android:gravity="center" />
+        android:minHeight="@dimen/separated_tabs_height"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@drawable/duo_tabs_preview_button_background" />
 </LinearLayout>

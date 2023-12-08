@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.os.FileUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -27,6 +28,12 @@ import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestOptions;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Image asset representing a Partner stub APK resource.
@@ -37,9 +44,10 @@ public final class SystemStaticAsset extends ResourceAsset {
     /**
      * @param res   Resources containing the asset.
      * @param resId Resource ID referencing the asset.
+     * @param isThumbnail Indicates this resource is specific for thumbnail.
      */
-    public SystemStaticAsset(Resources res, int resId, String resName) {
-        super(res, resId);
+    public SystemStaticAsset(Resources res, int resId, String resName, boolean isThumbnail) {
+        super(res, resId, isThumbnail);
         mResName = resName;
     }
 
@@ -62,6 +70,18 @@ public final class SystemStaticAsset extends ResourceAsset {
                 .apply(RequestOptions.bitmapTransform(multiTransformation)
                         .placeholder(new ColorDrawable(placeholderColor)))
                 .into(imageView);
+    }
+
+
+    @Override
+    public void copy(File dest) {
+        super.copy(dest);
+        try (InputStream inputStream = openInputStream();
+                OutputStream outputStream = new FileOutputStream(dest)) {
+            FileUtils.copy(inputStream, outputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

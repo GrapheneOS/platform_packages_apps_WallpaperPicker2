@@ -45,7 +45,7 @@ class OptionItemAdapter<T>(
 
     private val items = mutableListOf<OptionItemViewModel<T>>()
 
-    fun setItems(items: List<OptionItemViewModel<T>>) {
+    fun setItems(items: List<OptionItemViewModel<T>>, callback: (() -> Unit)? = null) {
         lifecycleOwner.lifecycleScope.launch {
             val oldItems = this@OptionItemAdapter.items
             val newItems = items
@@ -86,6 +86,9 @@ class OptionItemAdapter<T>(
             oldItems.clear()
             oldItems.addAll(items)
             diffResult.dispatchUpdatesTo(this@OptionItemAdapter)
+            if (callback != null) {
+                callback()
+            }
         }
     }
 

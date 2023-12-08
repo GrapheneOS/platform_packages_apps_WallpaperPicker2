@@ -22,5 +22,5 @@
     android:gravity="center_vertical"
     android:lineHeight="@dimen/wallpaper_header_line_height"
     android:textAppearance="@android:style/TextAppearance.DeviceDefault.DialogWindowTitle"
-    android:textColor="?android:textColorPrimary"
+    android:textColor="@color/system_on_surface"
     android:textSize="@dimen/wallpaper_header_text_size" />

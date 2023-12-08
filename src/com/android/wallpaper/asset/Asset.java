@@ -37,11 +37,13 @@ import androidx.annotation.WorkerThread;
 
 import com.android.wallpaper.module.BitmapCropper;
 import com.android.wallpaper.module.InjectorProvider;
+import com.android.wallpaper.util.RtlUtils;
 import com.android.wallpaper.util.ScreenSizeCalculator;
 import com.android.wallpaper.util.WallpaperCropUtils;
 
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -83,7 +85,39 @@ public abstract class Asset {
      * @param receiver     Called with the decoded bitmap or null if there was an error decoding the
      *                     bitmap.
      */
-    public abstract void decodeBitmap(int targetWidth, int targetHeight, BitmapReceiver receiver);
+    public final void decodeBitmap(int targetWidth, int targetHeight, BitmapReceiver receiver) {
+        decodeBitmap(targetWidth, targetHeight, true, receiver);
+    }
+
+
+    /**
+     * Decodes a bitmap sized for the destination view's dimensions off the main UI thread.
+     *
+     * @param targetWidth  Width of target view in physical pixels.
+     * @param targetHeight Height of target view in physical pixels.
+     * @param hardwareBitmapAllowed if true and it's possible, we'll try to decode into a HARDWARE
+     *                              bitmap
+     * @param receiver     Called with the decoded bitmap or null if there was an error decoding the
+     *                     bitmap.
+     */
+    public abstract void decodeBitmap(int targetWidth, int targetHeight,
+            boolean hardwareBitmapAllowed, BitmapReceiver receiver);
+
+    /**
+     * Copies the asset file to another place.
+     * @param dest  The destination file.
+     */
+    public void copy(File dest) {
+        // no op
+    }
+
+    /**
+     * Decodes a full bitmap.
+     *
+     * @param receiver     Called with the decoded bitmap or null if there was an error decoding the
+     *                     bitmap.
+     */
+    public abstract void decodeBitmap(BitmapReceiver receiver);
 
     /**
      * For {@link #decodeBitmap(int, int, BitmapReceiver)} to use when it is done. It then call
@@ -320,7 +354,7 @@ public abstract class Asset {
 
             BitmapCropper bitmapCropper = InjectorProvider.getInjector().getBitmapCropper();
             bitmapCropper.cropAndScaleBitmap(this, /* scale= */ 1f, visibleRawWallpaperRect,
-                    WallpaperCropUtils.isRtl(activity),
+                    RtlUtils.isRtl(activity),
                     new BitmapCropper.Callback() {
                         @Override
                         public void onBitmapCropped(Bitmap croppedBitmap) {

@@ -116,6 +116,9 @@ class FloatingSheet(context: Context, attrs: AttributeSet?) : FrameLayout(contex
     fun collapse() {
         floatingSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         endContentViewAnimation()
+        contentViewMap.forEach { (i: Int, content: FloatingSheetContent<*>?) ->
+            content?.collapse()
+        }
     }
 
     /**

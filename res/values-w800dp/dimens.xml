@@ -32,7 +32,7 @@
     <dimen name="category_grid_padding_top">48dp</dimen>
 
     <!-- Dimensions for IndividualPickerFragment. -->
-    <dimen name="wallpaper_grid_edge_space">127dp</dimen>
+    <dimen name="wallpaper_grid_edge_space">54dp</dimen>
     <dimen name="grid_item_featured_individual_padding_horizontal">12dp</dimen>
     <dimen name="grid_item_individual_padding_horizontal">8dp</dimen>
     <dimen name="grid_item_individual_padding_bottom">16dp</dimen>

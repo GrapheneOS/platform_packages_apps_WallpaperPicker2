@@ -44,8 +44,8 @@ import android.graphics.Rect;
 import android.widget.TextView;
 
 import androidx.test.espresso.intent.Intents;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
@@ -82,7 +82,7 @@ import java.util.List;
 /**
  * Tests for {@link PreviewActivity}.
  */
-@RunWith(AndroidJUnit4ClassRunner.class)
+@RunWith(AndroidJUnit4.class)
 @MediumTest
 public class PreviewActivityTest {
 
@@ -132,7 +132,7 @@ public class PreviewActivityTest {
         mExploreIntentChecker = (TestExploreIntentChecker)
                 mInjector.getExploreIntentChecker(context);
         mWallpaperStatusChecker = (TestWallpaperStatusChecker)
-                mInjector.getWallpaperStatusChecker();
+                mInjector.getWallpaperStatusChecker(context);
         mWallpaperManager = WallpaperManager.getInstance(context);
     }
 
@@ -144,8 +144,8 @@ public class PreviewActivityTest {
 
     private void launchActivityIntentWithWallpaper(WallpaperInfo wallpaperInfo) {
         Intent intent = PreviewActivity.newIntent(
-                InstrumentationRegistry.getInstrumentation().getTargetContext(), wallpaperInfo);
-        intent.putExtra(BasePreviewActivity.EXTRA_TESTING_MODE_ENABLED, true);
+                InstrumentationRegistry.getInstrumentation().getTargetContext(),
+                wallpaperInfo, /* viewAsHome= */ false, /* isAssetIdPresent= */ true);
 
         mActivityRule.launchActivity(intent);
     }
@@ -191,7 +191,7 @@ public class PreviewActivityTest {
         launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         assertNull(mWallpaperPersister.getCurrentHomeWallpaper());
 
-        onView(withId(R.id.action_apply)).perform(click());
+        onView(withId(R.id.button_set_wallpaper)).perform(click());
 
         // Destination dialog is shown; click "Home screen".
         onView(withText(R.string.set_wallpaper_home_screen_destination)).perform(click());
@@ -220,7 +220,7 @@ public class PreviewActivityTest {
         launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         assertNull(mWallpaperPersister.getCurrentLockWallpaper());
 
-        onView(withId(R.id.action_apply)).perform(click());
+        onView(withId(R.id.button_set_wallpaper)).perform(click());
 
         // Destination dialog is shown; click "Lock screen."
         onView(withText(R.string.set_wallpaper_lock_screen_destination)).perform(click());
@@ -250,7 +250,7 @@ public class PreviewActivityTest {
         assertNull(mWallpaperPersister.getCurrentHomeWallpaper());
         assertNull(mWallpaperPersister.getCurrentLockWallpaper());
 
-        onView(withId(R.id.action_apply)).perform(click());
+        onView(withId(R.id.button_set_wallpaper)).perform(click());
 
         // Destination dialog is shown; click "Both."
         onView(withText(R.string.set_wallpaper_both_destination)).perform(click());
@@ -282,7 +282,7 @@ public class PreviewActivityTest {
 
         mWallpaperPersister.setFailNextCall(true);
 
-        onView(withId(R.id.action_apply)).perform(click());
+        onView(withId(R.id.button_set_wallpaper)).perform(click());
 
         // Destination dialog is shown; click "Home screen."
         onView(withText(R.string.set_wallpaper_home_screen_destination)).perform(click());
@@ -320,7 +320,7 @@ public class PreviewActivityTest {
 
         mWallpaperPersister.setFailNextCall(true);
 
-        onView(withId(R.id.action_apply)).perform(click());
+        onView(withId(R.id.button_set_wallpaper)).perform(click());
 
         // Destination dialog is shown; click "Lock screen."
         onView(withText(R.string.set_wallpaper_lock_screen_destination)).perform(click());
@@ -363,7 +363,7 @@ public class PreviewActivityTest {
 
         mWallpaperPersister.setFailNextCall(true);
 
-        onView(withId(R.id.action_apply)).perform(click());
+        onView(withId(R.id.button_set_wallpaper)).perform(click());
 
         // Destination dialog is shown; click "Both."
         onView(withText(R.string.set_wallpaper_both_destination)).perform(click());
@@ -404,7 +404,7 @@ public class PreviewActivityTest {
         // Scale should not have a meaningful value before clicking "set wallpaper".
         assertTrue(mWallpaperPersister.getScale() < 0);
 
-        onView(withId(R.id.action_apply)).perform(click());
+        onView(withId(R.id.button_set_wallpaper)).perform(click());
 
         // Destination dialog is shown; click "Home screen".
         onView(withText(R.string.set_wallpaper_home_screen_destination)).perform(click());
@@ -430,7 +430,7 @@ public class PreviewActivityTest {
     public void testClickSetWallpaper_FailsCroppingAndScalingWallpaper_ShowsErrorDialog() {
         launchActivityIntentWithWallpaper(mTestStaticWallpaper);
         mWallpaperPersister.setFailNextCall(true);
-        onView(withId(R.id.action_apply)).perform(click());
+        onView(withId(R.id.button_set_wallpaper)).perform(click());
         // Destination dialog is shown; click "Home screen".
         onView(withText(R.string.set_wallpaper_home_screen_destination)).perform(click());
 
@@ -446,7 +446,7 @@ public class PreviewActivityTest {
     @Test
     public void testClickSetWallpaper_ShowsDestinationDialog() {
         launchActivityIntentWithWallpaper(mTestStaticWallpaper);
-        onView(withId(R.id.action_apply)).perform(click());
+        onView(withId(R.id.button_set_wallpaper)).perform(click());
         onView(withText(R.string.set_wallpaper_dialog_message)).check(matches(isDisplayed()));
     }
 
@@ -457,7 +457,7 @@ public class PreviewActivityTest {
         mWallpaperStatusChecker.setHomeStaticWallpaperSet(true);
         mWallpaperStatusChecker.setLockWallpaperSet(false);
 
-        onView(withId(R.id.action_apply)).perform(click());
+        onView(withId(R.id.button_set_wallpaper)).perform(click());
 
         onView(withText(R.string.set_wallpaper_lock_screen_destination)).inRoot(isDialog())
                 .check(matches(not(isDisplayed())));
@@ -470,7 +470,7 @@ public class PreviewActivityTest {
         mWallpaperStatusChecker.setHomeStaticWallpaperSet(true);
         mWallpaperStatusChecker.setLockWallpaperSet(false);
 
-        onView(withId(R.id.action_apply)).perform(click());
+        onView(withId(R.id.button_set_wallpaper)).perform(click());
 
         onView(withText(R.string.set_wallpaper_lock_screen_destination)).inRoot(isDialog())
                 .check(matches(isDisplayed()));
@@ -528,7 +528,7 @@ public class PreviewActivityTest {
         assertNotEquals(ActivityInfo.SCREEN_ORIENTATION_LOCKED, activity.getRequestedOrientation());
 
         // Show SetWallpaperDialog.
-        onView(withId(R.id.action_apply)).perform(click());
+        onView(withId(R.id.button_set_wallpaper)).perform(click());
 
         assertEquals(ActivityInfo.SCREEN_ORIENTATION_LOCKED, activity.getRequestedOrientation());
 
@@ -545,7 +545,7 @@ public class PreviewActivityTest {
         assertNotEquals(ActivityInfo.SCREEN_ORIENTATION_LOCKED, activity.getRequestedOrientation());
 
         // Show SetWallpaperDialog.
-        onView(withId(R.id.action_apply)).perform(click());
+        onView(withId(R.id.button_set_wallpaper)).perform(click());
 
         // Destination dialog is shown; click "Home screen".
         onView(withText(R.string.set_wallpaper_home_screen_destination)).perform(click());

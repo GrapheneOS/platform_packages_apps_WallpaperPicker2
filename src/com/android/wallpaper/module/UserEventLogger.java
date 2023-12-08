@@ -15,9 +15,11 @@
  */
 package com.android.wallpaper.module;
 
+import static android.stats.style.StyleEnums.EFFECT_APPLIED_ABORTED;
 import static android.stats.style.StyleEnums.EFFECT_APPLIED_OFF;
 import static android.stats.style.StyleEnums.EFFECT_APPLIED_ON_FAILED;
 import static android.stats.style.StyleEnums.EFFECT_APPLIED_ON_SUCCESS;
+import static android.stats.style.StyleEnums.EFFECT_APPLIED_STARTED;
 import static android.stats.style.StyleEnums.EFFECT_PREFERENCE_UNSPECIFIED;
 
 import android.content.Intent;
@@ -64,22 +66,6 @@ public interface UserEventLogger {
     void logIndividualWallpaperSelected(String collectionId);
 
     void logCategorySelected(String collectionId);
-
-    /**
-     * Logs the behavior of tapping live wallpaper info page.
-     *
-     * @param collectionId wallpaper category.
-     * @param wallpaperId wallpaper id.
-     */
-    void logLiveWallpaperInfoSelected(String collectionId, String wallpaperId);
-
-    /**
-     * Logs the behavior of tapping live wallpaper customize page.
-     *
-     * @param collectionId wallpaper category.
-     * @param wallpaperId wallpaper id.
-     */
-    void logLiveWallpaperCustomizeSelected(String collectionId, String wallpaperId);
 
     /**
      * Log current existing snapshot data.
@@ -206,6 +192,12 @@ public interface UserEventLogger {
     void logEffectProbe(String effect, @EffectStatus int status);
 
     /**
+     * Logs the effect foreground download event.
+     */
+    void logEffectForegroundDownload(String effect, @EffectStatus int status,
+            long timeElapsedMillis);
+
+    /**
      * Possible results of a "set wallpaper" operation.
      */
     @IntDef({
@@ -258,13 +250,16 @@ public interface UserEventLogger {
     }
 
     /**
-     * Possible actions for cinematic effect.
+     * Possible actions for cinematic effect. These actions would be used for effect apply,
+     * effect probe, effect download.
      */
     @IntDef({
             EFFECT_PREFERENCE_UNSPECIFIED,
             EFFECT_APPLIED_ON_SUCCESS,
             EFFECT_APPLIED_ON_FAILED,
-            EFFECT_APPLIED_OFF
+            EFFECT_APPLIED_OFF,
+            EFFECT_APPLIED_ABORTED,
+            EFFECT_APPLIED_STARTED
             })
     @interface EffectStatus {
     }

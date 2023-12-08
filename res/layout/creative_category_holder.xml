@@ -14,23 +14,17 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.recyclerview.widget.RecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recyclerview_container"
     android:layout_width="match_parent"
-    android:clipChildren="false"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/grid_padding"
-    android:orientation="vertical">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:nestedScrollingEnabled="false"
-        android:clipChildren="false"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="@integer/rows_creative_category"
-        tools:listitem="@layout/grid_item_image" />
-</LinearLayout>
+    android:clipToPadding="false"
+    android:clipChildren="false"
+    android:orientation="horizontal"
+    android:nestedScrollingEnabled="false"
+    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+    app:spanCount="@integer/rows_creative_category"
+    tools:listitem="@layout/grid_item_image" />

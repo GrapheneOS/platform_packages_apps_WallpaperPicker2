@@ -49,6 +49,7 @@ object RevertToolbarButtonBinder {
                 DialogViewBinder.show(
                     context = view.context,
                     viewModel = viewModel,
+                    dialogStyleResourceId = R.style.ResetDialogTheme,
                 )
             dialog?.show()
         }

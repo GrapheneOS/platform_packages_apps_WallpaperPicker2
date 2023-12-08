@@ -46,6 +46,11 @@ interface CustomizationSectionController<T : SectionView> {
          * are laid out side-by-side in a horizontal layout.
          */
         val isConnectedHorizontallyToOtherSections: Boolean = false,
+        /**
+         * Whether the Wallpaper's engine visibility is determined by which tab is currently
+         * selected
+         */
+        val isWallpaperVisibilityControlledByTab: Boolean = false,
     )
 
     /**

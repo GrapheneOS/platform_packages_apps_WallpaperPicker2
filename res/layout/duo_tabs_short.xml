@@ -19,38 +19,41 @@
     android:divider="@drawable/duo_tabs_divider"
     android:orientation="horizontal"
     android:showDividers="middle">
-
+    <!-- The container here is to increase the click area for a11y -->
     <FrameLayout
         android:id="@+id/tab_primary_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:paddingTop="@dimen/tab_container_top_margin"
-        android:paddingBottom="@dimen/tab_container_bottom_margin"
-        android:layout_weight="1">
-
+        android:paddingBottom="@dimen/tab_container_bottom_margin">
         <TextView
             android:id="@+id/tab_primary"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:minHeight="@dimen/separated_tabs_height_short"
-            android:background="@drawable/duo_tabs_preview_button_background"
-            android:gravity="center" />
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/duo_tabs_preview_button_background" />
     </FrameLayout>
 
+    <!-- The container here is to increase the click area for a11y -->
     <FrameLayout
         android:id="@+id/tab_secondary_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:paddingTop="@dimen/tab_container_top_margin"
-        android:paddingBottom="@dimen/tab_container_bottom_margin"
-        android:layout_weight="1">
-
+        android:paddingBottom="@dimen/tab_container_bottom_margin">
         <TextView
             android:id="@+id/tab_secondary"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:minHeight="@dimen/separated_tabs_height_short"
-            android:background="@drawable/duo_tabs_preview_button_background"
-            android:gravity="center" />
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/duo_tabs_preview_button_background" />
     </FrameLayout>
 </LinearLayout>

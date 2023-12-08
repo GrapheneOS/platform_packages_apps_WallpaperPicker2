@@ -23,10 +23,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
-import com.android.wallpaper.compat.WallpaperManagerCompat
 import com.android.wallpaper.config.BaseFlags
+import com.android.wallpaper.dispatchers.BackgroundDispatcher
+import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.CategoryProvider
+import com.android.wallpaper.model.InlinePreviewIntentFactory
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperColorsViewModel
 import com.android.wallpaper.model.WallpaperInfo
@@ -37,7 +39,9 @@ import com.android.wallpaper.picker.CustomizationPickerActivity
 import com.android.wallpaper.picker.ImagePreviewFragment
 import com.android.wallpaper.picker.LivePreviewFragment
 import com.android.wallpaper.picker.MyPhotosStarter
+import com.android.wallpaper.picker.PreviewActivity
 import com.android.wallpaper.picker.PreviewFragment
+import com.android.wallpaper.picker.ViewOnlyPreviewActivity
 import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
@@ -48,11 +52,18 @@ import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import com.android.wallpaper.settings.data.repository.SecureSettingsRepository
 import com.android.wallpaper.settings.data.repository.SecureSettingsRepositoryImpl
 import com.android.wallpaper.util.DisplayUtils
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 
-open class WallpaperPicker2Injector : Injector {
-    private var appScope: CoroutineScope? = null
+@Singleton
+open class WallpaperPicker2Injector
+@Inject
+internal constructor(
+    @MainDispatcher private val mainScope: CoroutineScope,
+    @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
+) : Injector {
     private var alarmManagerWrapper: AlarmManagerWrapper? = null
     private var bitmapCropper: BitmapCropper? = null
     private var categoryProvider: CategoryProvider? = null
@@ -69,10 +80,8 @@ open class WallpaperPicker2Injector : Injector {
     private var requester: Requester? = null
     private var systemFeatureChecker: SystemFeatureChecker? = null
     private var userEventLogger: UserEventLogger? = null
-    private var wallpaperManagerCompat: WallpaperManagerCompat? = null
     private var wallpaperPersister: WallpaperPersister? = null
-    private var prefs: WallpaperPreferences? = null
-    private var wallpaperPreviewFragmentManager: WallpaperPreviewFragmentManager? = null
+    @Inject lateinit var prefs: WallpaperPreferences
     private var wallpaperRefresher: WallpaperRefresher? = null
     private var wallpaperRotationRefresher: WallpaperRotationRefresher? = null
     private var wallpaperStatusChecker: WallpaperStatusChecker? = null
@@ -82,9 +91,11 @@ open class WallpaperPicker2Injector : Injector {
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
     private var secureSettingsRepository: SecureSettingsRepository? = null
     private var wallpaperColorsViewModel: WallpaperColorsViewModel? = null
+    private var previewActivityIntentFactory: InlinePreviewIntentFactory? = null
+    private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
 
     override fun getApplicationCoroutineScope(): CoroutineScope {
-        return appScope ?: CoroutineScope(Dispatchers.Main).also { appScope = it }
+        return mainScope
     }
 
     @Synchronized
@@ -108,9 +119,11 @@ open class WallpaperPicker2Injector : Injector {
     @Synchronized
     override fun getCurrentWallpaperInfoFactory(context: Context): CurrentWallpaperInfoFactory {
         return currentWallpaperFactory
-            ?: DefaultCurrentWallpaperInfoFactory(context.applicationContext).also {
-                currentWallpaperFactory = it
-            }
+            ?: DefaultCurrentWallpaperInfoFactory(
+                    getWallpaperRefresher(context.applicationContext),
+                    getLiveWallpaperInfoFactory(context.applicationContext),
+                )
+                .also { currentWallpaperFactory = it }
     }
 
     override fun getCustomizationSections(activity: ComponentActivity): CustomizationSections {
@@ -197,22 +210,20 @@ open class WallpaperPicker2Injector : Injector {
     override fun getPreviewFragment(
         context: Context,
         wallpaperInfo: WallpaperInfo,
-        mode: Int,
         viewAsHome: Boolean,
-        viewFullScreen: Boolean,
-        testingModeEnabled: Boolean
+        isAssetIdPresent: Boolean,
+        isNewTask: Boolean,
     ): Fragment {
-        val args = Bundle()
-        args.putParcelable(PreviewFragment.ARG_WALLPAPER, wallpaperInfo)
-        args.putInt(PreviewFragment.ARG_PREVIEW_MODE, mode)
-        args.putBoolean(PreviewFragment.ARG_VIEW_AS_HOME, viewAsHome)
-        args.putBoolean(PreviewFragment.ARG_FULL_SCREEN, viewFullScreen)
-        args.putBoolean(PreviewFragment.ARG_TESTING_MODE_ENABLED, testingModeEnabled)
-        val fragment =
-            if (wallpaperInfo is LiveWallpaperInfo) LivePreviewFragment()
-            else ImagePreviewFragment()
-        fragment.arguments = args
-        return fragment
+        val isLiveWallpaper = wallpaperInfo is LiveWallpaperInfo
+        return (if (isLiveWallpaper) LivePreviewFragment() else ImagePreviewFragment()).apply {
+            arguments =
+                Bundle().apply {
+                    putParcelable(PreviewFragment.ARG_WALLPAPER, wallpaperInfo)
+                    putBoolean(PreviewFragment.ARG_VIEW_AS_HOME, viewAsHome)
+                    putBoolean(PreviewFragment.ARG_IS_ASSET_ID_PRESENT, isAssetIdPresent)
+                    putBoolean(PreviewFragment.ARG_IS_NEW_TASK, isNewTask)
+                }
+        }
     }
 
     @Synchronized
@@ -231,30 +242,24 @@ open class WallpaperPicker2Injector : Injector {
     }
 
     @Synchronized
-    override fun getWallpaperManagerCompat(context: Context): WallpaperManagerCompat {
-        return wallpaperManagerCompat
-            ?: WallpaperManagerCompat.getInstance(context).also { wallpaperManagerCompat = it }
-    }
-
-    @Synchronized
     override fun getWallpaperPersister(context: Context): WallpaperPersister {
         return wallpaperPersister
-            ?: DefaultWallpaperPersister(context.applicationContext).also {
-                wallpaperPersister = it
-            }
+            ?: DefaultWallpaperPersister(
+                    context.applicationContext,
+                    WallpaperManager.getInstance(context),
+                    getPreferences(context),
+                    WallpaperChangedNotifier.getInstance(),
+                    getDisplayUtils(context),
+                    getBitmapCropper(),
+                    getWallpaperStatusChecker(context),
+                    getFlags().isRefactorSettingWallpaper(),
+                )
+                .also { wallpaperPersister = it }
     }
 
     @Synchronized
     override fun getPreferences(context: Context): WallpaperPreferences {
-        return prefs ?: DefaultWallpaperPreferences(context.applicationContext).also { prefs = it }
-    }
-
-    @Synchronized
-    override fun getWallpaperPreviewFragmentManager(): WallpaperPreviewFragmentManager {
-        return wallpaperPreviewFragmentManager
-            ?: DefaultWallpaperPreviewFragmentManager().also {
-                wallpaperPreviewFragmentManager = it
-            }
+        return prefs
     }
 
     @Synchronized
@@ -275,9 +280,12 @@ open class WallpaperPicker2Injector : Injector {
                 .also { wallpaperRotationRefresher = it }
     }
 
-    override fun getWallpaperStatusChecker(): WallpaperStatusChecker {
+    override fun getWallpaperStatusChecker(context: Context): WallpaperStatusChecker {
         return wallpaperStatusChecker
-            ?: DefaultWallpaperStatusChecker().also { wallpaperStatusChecker = it }
+            ?: DefaultWallpaperStatusChecker(
+                    wallpaperManager = WallpaperManager.getInstance(context.applicationContext),
+                )
+                .also { wallpaperStatusChecker = it }
     }
 
     override fun getFlags(): BaseFlags {
@@ -311,7 +319,7 @@ open class WallpaperPicker2Injector : Injector {
                                     wallpaperManager = WallpaperManager.getInstance(appContext)
                                 ),
                             wallpaperPreferences = getPreferences(context = appContext),
-                            backgroundDispatcher = Dispatchers.IO,
+                            backgroundDispatcher = bgDispatcher,
                         ),
                 )
                 .also { wallpaperInteractor = it }
@@ -330,7 +338,7 @@ open class WallpaperPicker2Injector : Injector {
         return secureSettingsRepository
             ?: SecureSettingsRepositoryImpl(
                     contentResolver = context.applicationContext.contentResolver,
-                    backgroundDispatcher = Dispatchers.IO,
+                    backgroundDispatcher = bgDispatcher,
                 )
                 .also { secureSettingsRepository = it }
     }
@@ -342,6 +350,24 @@ open class WallpaperPicker2Injector : Injector {
 
     override fun getMyPhotosIntentProvider(): MyPhotosStarter.MyPhotosIntentProvider {
         return object : MyPhotosStarter.MyPhotosIntentProvider {}
+    }
+
+    override fun isCurrentSelectedColorPreset(context: Context): Boolean {
+        return false
+    }
+
+    override fun getPreviewActivityIntentFactory(): InlinePreviewIntentFactory {
+        return previewActivityIntentFactory
+            ?: PreviewActivity.PreviewActivityIntentFactory().also {
+                previewActivityIntentFactory = it
+            }
+    }
+
+    override fun getViewOnlyPreviewActivityIntentFactory(): InlinePreviewIntentFactory {
+        return viewOnlyPreviewActivityIntentFactory
+            ?: ViewOnlyPreviewActivity.ViewOnlyPreviewActivityIntentFactory().also {
+                viewOnlyPreviewActivityIntentFactory = it
+            }
     }
 
     companion object {

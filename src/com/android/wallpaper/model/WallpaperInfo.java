@@ -225,7 +225,7 @@ public abstract class WallpaperInfo implements Parcelable {
      * @param requestCode Request code to pass in when starting the inline preview activity.
      */
     public abstract void showPreview(Activity srcActivity, InlinePreviewIntentFactory factory,
-                                     int requestCode);
+                                     int requestCode, boolean isAssetIdPresent);
 
     /**
      * Returns a Future to obtain a wallpaper color and a placeholder color calculated in a

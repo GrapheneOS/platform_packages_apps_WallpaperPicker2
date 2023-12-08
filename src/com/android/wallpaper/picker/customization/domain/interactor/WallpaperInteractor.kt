@@ -24,6 +24,7 @@ import com.android.wallpaper.picker.customization.shared.model.WallpaperDestinat
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 /** Handles business logic for wallpaper-related use-cases. */
@@ -64,6 +65,13 @@ class WallpaperInteractor(
         destination: WallpaperDestination,
     ): Flow<String?> {
         return repository.selectingWallpaperId.map { it[destination] }
+    }
+
+    /** This is true when a wallpaper is selected but not yet set to the System. */
+    fun isSelectingWallpaper(
+        destination: WallpaperDestination,
+    ): Flow<Boolean> {
+        return selectingWallpaperId(destination).distinctUntilChanged().map { it != null }
     }
 
     /**

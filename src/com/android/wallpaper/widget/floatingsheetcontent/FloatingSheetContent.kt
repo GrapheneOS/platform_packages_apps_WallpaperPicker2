@@ -44,6 +44,8 @@ abstract class FloatingSheetContent<T : View>(private val context: Context) {
     /** Gets called when the current content view is going to recreate. */
     open fun onRecreateView(oldView: T) {}
 
+    open fun collapse() {}
+
     fun initView() {
         contentView = createView()
         setVisibility(true)

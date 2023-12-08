@@ -100,17 +100,19 @@ public final class BuiltInWallpaperAsset extends Asset {
     }
 
     @Override
-    public void decodeBitmap(int targetWidth, int targetHeight,
+    public void decodeBitmap(int targetWidth, int targetHeight, boolean useHardwareBitmapIfPossible,
                              BitmapReceiver receiver) {
         sExecutorService.execute(() -> {
             final WallpaperManager wallpaperManager = WallpaperManager.getInstance(mContext);
 
-            Drawable drawable = wallpaperManager.getBuiltInDrawable(
-                    targetWidth,
-                    targetHeight,
-                    SCALE_TO_FIT,
-                    HORIZONTAL_CENTER_ALIGNED,
-                    VERTICAL_CENTER_ALIGNED);
+            Drawable drawable = (targetWidth <= 0 || targetHeight <= 0)
+                    ? wallpaperManager.getBuiltInDrawable()
+                    : wallpaperManager.getBuiltInDrawable(
+                        targetWidth,
+                        targetHeight,
+                        SCALE_TO_FIT,
+                        HORIZONTAL_CENTER_ALIGNED,
+                        VERTICAL_CENTER_ALIGNED);
 
             // Manually request that WallpaperManager loses its reference to the built-in wallpaper
             // bitmap, which can occupy a large memory allocation for the lifetime of the app.
@@ -119,6 +121,11 @@ public final class BuiltInWallpaperAsset extends Asset {
             Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
             decodeBitmapCompleted(receiver, bitmap);
         });
+    }
+
+    @Override
+    public void decodeBitmap(BitmapReceiver receiver) {
+        decodeBitmap(0, 0, receiver);
     }
 
     @Override

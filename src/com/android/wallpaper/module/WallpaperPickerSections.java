@@ -12,7 +12,6 @@ import com.android.wallpaper.model.CustomizationSectionController.CustomizationS
 import com.android.wallpaper.model.PermissionRequester;
 import com.android.wallpaper.model.WallpaperColorsViewModel;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
-import com.android.wallpaper.model.WallpaperSectionController;
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor;
 import com.android.wallpaper.picker.customization.ui.section.ScreenPreviewSectionController;
 import com.android.wallpaper.picker.customization.ui.section.WallpaperQuickSwitchSectionController;
@@ -26,7 +25,7 @@ import java.util.List;
 public final class WallpaperPickerSections implements CustomizationSections {
 
     @Override
-    public List<CustomizationSectionController<?>> getRevampedUISectionControllersForScreen(
+    public List<CustomizationSectionController<?>> getSectionControllersForScreen(
             Screen screen,
             FragmentActivity activity,
             LifecycleOwner lifecycleOwner,
@@ -54,40 +53,14 @@ public final class WallpaperPickerSections implements CustomizationSections {
                         wallpaperPreviewNavigator,
                         wallpaperInteractor,
                         wallpaperManager,
-                        isTwoPaneAndSmallWidth));
+                        isTwoPaneAndSmallWidth,
+                        customizationPickerViewModel));
         sectionControllers.add(
                 new WallpaperQuickSwitchSectionController(
                         customizationPickerViewModel.getWallpaperQuickSwitchViewModel(screen),
                         lifecycleOwner,
                         sectionNavigationController,
                         savedInstanceState == null));
-
-        return sectionControllers;
-    }
-
-    @Override
-    public List<CustomizationSectionController<?>> getAllSectionControllers(
-            FragmentActivity activity,
-            LifecycleOwner lifecycleOwner,
-            WallpaperColorsViewModel wallpaperColorsViewModel,
-            PermissionRequester permissionRequester,
-            WallpaperPreviewNavigator wallpaperPreviewNavigator,
-            CustomizationSectionNavigationController sectionNavigationController,
-            @Nullable Bundle savedInstanceState,
-            DisplayUtils displayUtils) {
-        List<CustomizationSectionController<?>> sectionControllers = new ArrayList<>();
-
-        sectionControllers.add(
-                new WallpaperSectionController(
-                        activity,
-                        lifecycleOwner,
-                        permissionRequester,
-                        wallpaperColorsViewModel,
-                        null,
-                        sectionNavigationController,
-                        wallpaperPreviewNavigator,
-                        savedInstanceState,
-                        displayUtils));
 
         return sectionControllers;
     }

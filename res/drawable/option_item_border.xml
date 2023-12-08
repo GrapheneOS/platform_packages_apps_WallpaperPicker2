@@ -20,6 +20,6 @@
     android:shape="rectangle" >
     <stroke
         android:width="2dp"
-        android:color="@color/text_color_primary" />
+        android:color="@color/system_secondary" />
     <corners android:radius="20dp" />
 </shape>

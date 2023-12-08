@@ -30,7 +30,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.common.text.ui.viewbinder.TextViewBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperQuickSwitchViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /** Binds between the view and view-model for the wallpaper quick switch section. */

@@ -25,8 +25,8 @@ public interface WallpaperPreviewNavigator {
      * Navigates full screen wallpaper preview
      *
      * @param wallpaperInfo the wallpaper to preview
-     * @param isViewAsHome  {@code true} if it's home wallpaper preview, {@code false} if it's
-     *                      lock screen wallpaper preview
+     * @param isAssetIdPresent depicts whether assetId is present or not when showing the preview
+     *                         of the wallpaper
      */
-    void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isViewAsHome);
+    void showViewOnlyPreview(WallpaperInfo wallpaperInfo, boolean isAssetIdPresent);
 }

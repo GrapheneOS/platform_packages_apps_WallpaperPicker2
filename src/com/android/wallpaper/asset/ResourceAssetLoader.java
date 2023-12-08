@@ -81,13 +81,18 @@ public class ResourceAssetLoader implements ModelLoader<ResourceAsset, InputStre
 
         @Override
         public void loadData(Priority priority, final DataCallback<? super InputStream> callback) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 8;
-            Bitmap bitmap = BitmapFactory.decodeResource(mResourceAsset.getResources(),
-                    mResourceAsset.getResId(), options);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            callback.onDataReady(new ByteArrayInputStream(baos.toByteArray()));
+            if (mResourceAsset.mIsThumbnail) {
+                callback.onDataReady(
+                        mResourceAsset.getResources().openRawResource(mResourceAsset.getResId()));
+            } else {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 8;
+                Bitmap bitmap = BitmapFactory.decodeResource(mResourceAsset.getResources(),
+                        mResourceAsset.getResId(), options);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                callback.onDataReady(new ByteArrayInputStream(baos.toByteArray()));
+            }
         }
 
         @Override

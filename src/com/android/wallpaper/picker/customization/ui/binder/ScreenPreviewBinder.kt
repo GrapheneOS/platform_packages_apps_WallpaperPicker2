@@ -19,15 +19,21 @@ package com.android.wallpaper.picker.customization.ui.binder
 
 import android.app.Activity
 import android.app.WallpaperColors
-import android.app.WallpaperManager
 import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceView
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -35,27 +41,31 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.systemui.monet.ColorScheme
 import com.android.wallpaper.R
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.asset.BitmapCachingAsset
 import com.android.wallpaper.asset.CurrentWallpaperAssetVN
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.WorkspaceSurfaceHolderCallback
+import com.android.wallpaper.picker.customization.animation.view.LoadingAnimation
+import com.android.wallpaper.picker.customization.ui.view.WallpaperSurfaceView
+import com.android.wallpaper.picker.customization.ui.viewmodel.AnimationStateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.ScreenPreviewViewModel
 import com.android.wallpaper.util.ResourceUtils
 import com.android.wallpaper.util.WallpaperConnection
 import com.android.wallpaper.util.WallpaperSurfaceCallback
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
 /**
  * Binds between view and view-model for rendering the preview of the home screen or the lock
  * screen.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
 object ScreenPreviewBinder {
     interface Binding {
         fun sendMessage(
@@ -63,6 +73,7 @@ object ScreenPreviewBinder {
             args: Bundle = Bundle.EMPTY,
         )
         fun destroy()
+        fun surface(): SurfaceView
     }
 
     /**
@@ -72,6 +83,9 @@ object ScreenPreviewBinder {
      * something that is changing on top of the wallpaper, for example, the lock screen shortcuts or
      * the clock).
      */
+    // TODO (b/274443705): incorporate color picker to allow preview loading on color change
+    // TODO (b/274443705): make loading animation more continuous on reveal
+    // TODO (b/274443705): adjust for better timing on animation reveal
     @JvmStatic
     fun bind(
         activity: Activity,
@@ -82,11 +96,18 @@ object ScreenPreviewBinder {
         dimWallpaper: Boolean = false,
         onWallpaperPreviewDirty: () -> Unit,
         onWorkspacePreviewDirty: () -> Unit = {},
+        animationStateViewModel: AnimationStateViewModel? = null,
+        isWallpaperAlwaysVisible: Boolean = true,
+        mirrorSurface: SurfaceView? = null,
     ): Binding {
         val workspaceSurface: SurfaceView = previewView.requireViewById(R.id.workspace_surface)
-        val wallpaperSurface: SurfaceView = previewView.requireViewById(R.id.wallpaper_surface)
+        val wallpaperSurface: WallpaperSurfaceView =
+            previewView.requireViewById(R.id.wallpaper_surface)
         val thumbnailRequested = AtomicBoolean(false)
-
+        // Tracks whether the live preview should be shown, since a) visibility updates may arrive
+        // before the engine is ready, and b) we need this state for onResume
+        // TODO(b/287618705) Remove this
+        val showLivePreview = AtomicBoolean(isWallpaperAlwaysVisible)
         val fixedWidthDisplayFrameLayout = previewView.parent as? View
         val screenPreviewClickView = fixedWidthDisplayFrameLayout?.parent as? View
         // Set the content description on the parent view
@@ -97,12 +118,20 @@ object ScreenPreviewBinder {
 
         // This ensures that we do not announce the time multiple times
         previewView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+        var wallpaperIsReadyForReveal = false
         val surfaceViewsReady = {
             wallpaperSurface.setBackgroundColor(Color.TRANSPARENT)
             workspaceSurface.visibility = View.VISIBLE
         }
         wallpaperSurface.setZOrderOnTop(false)
-        val wallpaperManager = WallpaperManager.getInstance(activity)
+
+        val flags = BaseFlags.get()
+        val isPageTransitionsFeatureEnabled = flags.isPageTransitionsFeatureEnabled(activity)
+
+        val showLoadingAnimation =
+            flags.isPreviewLoadingAnimationEnabled(activity.applicationContext)
+        var loadingAnimation: LoadingAnimation? = null
+        val loadingView: ImageView = previewView.requireViewById(R.id.loading_view)
 
         if (dimWallpaper) {
             previewView.requireViewById<View>(R.id.wallpaper_dimming_scrim).isVisible = true
@@ -112,20 +141,105 @@ object ScreenPreviewBinder {
         previewView.radius =
             previewView.resources.getDimension(R.dimen.wallpaper_picker_entry_card_corner_radius)
 
+        previewView.setOnClickListener { viewModel.onPreviewClicked?.invoke() }
+
         var previewSurfaceCallback: WorkspaceSurfaceHolderCallback? = null
         var wallpaperSurfaceCallback: WallpaperSurfaceCallback? = null
         var wallpaperConnection: WallpaperConnection? = null
         var wallpaperInfo: WallpaperInfo? = null
+        var animationState: AnimationStateViewModel.AnimationState? = null
+        var loadingImageDrawable: Drawable? = null
+        var animationTimeToRestore: Long? = null
+        var animationTransitionProgress: Float? = null
+        var animationColorToRestore: Int? = null
+        var currentWallpaperThumbnail: Bitmap? = null
 
         val job =
             lifecycleOwner.lifecycleScope.launch {
                 launch {
                     val lifecycleObserver =
                         object : DefaultLifecycleObserver {
+                            override fun onStart(owner: LifecycleOwner) {
+                                super.onStart(owner)
+                                if (showLoadingAnimation) {
+                                    if (loadingAnimation == null) {
+                                        animationState =
+                                            animationStateViewModel?.getAnimationState(
+                                                viewModel.screen
+                                            )
+                                        loadingImageDrawable = animationState?.drawable
+                                        // TODO (b/290054874): investigate why app restarts twice
+                                        // The lines below are a workaround for the issue of
+                                        // wallpaper picker lifecycle restarting twice after a
+                                        // config change; because of this, on second start, saved
+                                        // instance state would always return null. Instead we would
+                                        // like the saved instance state on the first restart to
+                                        // pass through to the second.
+                                        animationTimeToRestore = animationState?.time
+                                        animationTransitionProgress =
+                                            animationState?.transitionProgress
+                                        animationColorToRestore = animationState?.color
+                                        // a null drawable means the loading animation should not
+                                        // be played
+                                        loadingImageDrawable?.let {
+                                            loadingView.setImageDrawable(it)
+                                            loadingAnimation =
+                                                LoadingAnimation(
+                                                    loadingView,
+                                                    LoadingAnimation.RevealType.CIRCULAR,
+                                                    LoadingAnimation.TIME_OUT_DURATION_MS
+                                                )
+                                        }
+                                    }
+                                }
+                            }
+
+                            override fun onDestroy(owner: LifecycleOwner) {
+                                super.onDestroy(owner)
+                                if (isPageTransitionsFeatureEnabled) {
+                                    wallpaperConnection?.destroy()
+                                    wallpaperConnection = null
+                                }
+                            }
+
                             override fun onStop(owner: LifecycleOwner) {
                                 super.onStop(owner)
-                                wallpaperConnection?.destroy()
-                                wallpaperConnection = null
+                                animationTimeToRestore =
+                                    loadingAnimation?.getElapsedTime() ?: animationTimeToRestore
+                                animationTransitionProgress =
+                                    loadingAnimation?.getTransitionProgress()
+                                        ?: animationTransitionProgress
+                                loadingAnimation?.end()
+                                loadingAnimation = null
+                                // To ensure reveal animation is only played after a theme config
+                                // change from wallpaper/color switch, only save the current loading
+                                // image if this is a configuration change restart and reset to
+                                // null otherwise
+                                animationStateViewModel?.saveAnimationState(
+                                    viewModel.screen,
+                                    // Check if activity is changing configurations, and check that
+                                    // the set of changing configurations does not include screen
+                                    // size changes (such as rotation and folding/unfolding device)
+                                    // Note: activity.changingConfigurations is not 100% accurate
+                                    if (
+                                        activity.isChangingConfigurations &&
+                                            (activity.changingConfigurations.and(
+                                                ActivityInfo.CONFIG_SCREEN_SIZE
+                                            ) == 0)
+                                    ) {
+                                        AnimationStateViewModel.AnimationState(
+                                            loadingImageDrawable,
+                                            animationTimeToRestore,
+                                            animationTransitionProgress,
+                                            animationColorToRestore,
+                                        )
+                                    } else null
+                                )
+                                wallpaperIsReadyForReveal = false
+                                if (!isPageTransitionsFeatureEnabled) {
+                                    wallpaperConnection?.destroy()
+                                    wallpaperConnection = null
+                                }
                             }
 
                             override fun onPause(owner: LifecycleOwner) {
@@ -169,10 +283,43 @@ object ScreenPreviewBinder {
                                     onSurfaceViewsReady = surfaceViewsReady,
                                     thumbnailRequested = thumbnailRequested
                                 )
+                                if (showLoadingAnimation) {
+                                    val colorAccent =
+                                        animationColorToRestore
+                                            ?: ResourceUtils.getColorAttr(
+                                                activity,
+                                                android.R.attr.colorAccent
+                                            )
+                                    val night =
+                                        (previewView.resources.configuration.uiMode and
+                                            Configuration.UI_MODE_NIGHT_MASK ==
+                                            Configuration.UI_MODE_NIGHT_YES)
+                                    loadingAnimation?.updateColor(
+                                        ColorScheme(seed = colorAccent, darkTheme = night)
+                                    )
+                                    loadingAnimation?.setupRevealAnimation(
+                                        animationTimeToRestore,
+                                        animationTransitionProgress
+                                    )
+                                    val isStaticWallpaper =
+                                        wallpaperInfo != null && wallpaperInfo !is LiveWallpaperInfo
+                                    wallpaperIsReadyForReveal =
+                                        isStaticWallpaper || wallpaperIsReadyForReveal
+                                    if (wallpaperIsReadyForReveal) {
+                                        loadingAnimation?.playRevealAnimation()
+                                    }
+                                }
                             }
                         wallpaperSurface.holder.addCallback(wallpaperSurfaceCallback)
                         if (!dimWallpaper) {
                             wallpaperSurface.setZOrderMediaOverlay(true)
+                        }
+
+                        if (!isWallpaperAlwaysVisible) {
+                            wallpaperSurface.visibilityCallback = { visible: Boolean ->
+                                showLivePreview.set(visible)
+                                wallpaperConnection?.setVisibility(showLivePreview.get())
+                            }
                         }
 
                         lifecycleOwner.lifecycle.addObserver(lifecycleObserver)
@@ -205,6 +352,14 @@ object ScreenPreviewBinder {
 
                 launch {
                     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        viewModel.wallpaperThumbnail().collect { thumbnail ->
+                            currentWallpaperThumbnail = thumbnail
+                        }
+                    }
+                }
+
+                launch {
+                    lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                         var initialWorkspaceUpdate = true
                         viewModel.workspaceUpdateEvents()?.collect {
                             if (initialWorkspaceUpdate) {
@@ -216,8 +371,68 @@ object ScreenPreviewBinder {
                     }
                 }
 
+                if (showLoadingAnimation) {
+                    launch {
+                        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                            viewModel.isLoading.collect { isLoading ->
+                                if (isLoading) {
+                                    loadingAnimation?.cancel()
+
+                                    // Loading is started, create a new loading animation
+                                    // with the current wallpaper as background.
+                                    // First, try to get the wallpaper image from
+                                    // wallpaperSurfaceCallback, this is the best solution for
+                                    // static and live wallpapers but not for creative wallpapers
+                                    val wallpaperPreviewImage =
+                                        wallpaperSurfaceCallback?.homeImageWallpaper
+                                    // If wallpaper drawable was not loaded, and the preview
+                                    // drawable is the placeholder color drawable, use the wallpaper
+                                    // thumbnail instead: the best solution for creative wallpapers
+                                    val animationBackground: Drawable? =
+                                        if (wallpaperPreviewImage?.drawable is ColorDrawable) {
+                                            currentWallpaperThumbnail?.let { thumbnail ->
+                                                BitmapDrawable(activity.resources, thumbnail)
+                                            }
+                                                ?: wallpaperPreviewImage.drawable
+                                        } else wallpaperPreviewImage?.drawable
+                                    animationBackground?.let {
+                                        loadingView.setImageDrawable(animationBackground)
+                                        loadingAnimation =
+                                            LoadingAnimation(
+                                                loadingView,
+                                                LoadingAnimation.RevealType.CIRCULAR,
+                                                LoadingAnimation.TIME_OUT_DURATION_MS
+                                            )
+                                    }
+                                    loadingImageDrawable = animationBackground
+                                    val colorAccent =
+                                        ResourceUtils.getColorAttr(
+                                            activity,
+                                            android.R.attr.colorAccent
+                                        )
+                                    val night =
+                                        (previewView.resources.configuration.uiMode and
+                                            Configuration.UI_MODE_NIGHT_MASK ==
+                                            Configuration.UI_MODE_NIGHT_YES)
+                                    animationColorToRestore = colorAccent
+                                    loadingAnimation?.updateColor(
+                                        ColorScheme(seed = colorAccent, darkTheme = night)
+                                    )
+                                    loadingAnimation?.playLoadingAnimation()
+                                }
+                            }
+                        }
+                    }
+                }
+
                 launch {
-                    lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                    lifecycleOwner.repeatOnLifecycle(
+                        if (isPageTransitionsFeatureEnabled) {
+                            Lifecycle.State.STARTED
+                        } else {
+                            Lifecycle.State.RESUMED
+                        }
+                    ) {
                         lifecycleOwner.lifecycleScope.launch {
                             wallpaperInfo = viewModel.getWallpaperInfo(forceReload = false)
                             maybeLoadThumbnail(
@@ -228,7 +443,14 @@ object ScreenPreviewBinder {
                                 onSurfaceViewsReady = surfaceViewsReady,
                                 thumbnailRequested = thumbnailRequested
                             )
+                            if (showLoadingAnimation && wallpaperInfo !is LiveWallpaperInfo) {
+                                loadingAnimation?.playRevealAnimation()
+                            }
                             (wallpaperInfo as? LiveWallpaperInfo)?.let { liveWallpaperInfo ->
+                                if (isPageTransitionsFeatureEnabled) {
+                                    wallpaperConnection?.destroy()
+                                    wallpaperConnection = null
+                                }
                                 val connection =
                                     wallpaperConnection
                                         ?: createWallpaperConnection(
@@ -236,8 +458,15 @@ object ScreenPreviewBinder {
                                                 previewView,
                                                 viewModel,
                                                 wallpaperSurface,
-                                                surfaceViewsReady
-                                            )
+                                                mirrorSurface,
+                                                viewModel.screen
+                                            ) {
+                                                surfaceViewsReady()
+                                                if (showLoadingAnimation) {
+                                                    wallpaperIsReadyForReveal = true
+                                                    loadingAnimation?.playRevealAnimation()
+                                                }
+                                            }
                                             .also { wallpaperConnection = it }
                                 if (!previewView.isAttachedToWindow) {
                                     // Sometimes the service gets connected before the view
@@ -247,7 +476,7 @@ object ScreenPreviewBinder {
                                         object : OnAttachStateChangeListener {
                                             override fun onViewAttachedToWindow(v: View) {
                                                 connection.connect()
-                                                connection.setVisibility(true)
+                                                connection.setVisibility(showLivePreview.get())
                                                 previewView.removeOnAttachStateChangeListener(this)
                                             }
 
@@ -258,7 +487,7 @@ object ScreenPreviewBinder {
                                     )
                                 } else {
                                     connection.connect()
-                                    connection.setVisibility(true)
+                                    connection.setVisibility(showLivePreview.get())
                                 }
                             }
                         }
@@ -278,6 +507,10 @@ object ScreenPreviewBinder {
                 // itself anew the next time the bind function is invoked.
                 removeAndReadd(workspaceSurface)
             }
+
+            override fun surface(): SurfaceView {
+                return wallpaperSurface
+            }
         }
     }
 
@@ -286,7 +519,9 @@ object ScreenPreviewBinder {
         previewView: CardView,
         viewModel: ScreenPreviewViewModel,
         wallpaperSurface: SurfaceView,
-        onSurfaceViewsReady: () -> Unit
+        mirrorSurface: SurfaceView?,
+        screen: CustomizationSections.Screen,
+        onEngineShown: () -> Unit
     ) =
         WallpaperConnection(
             Intent(WallpaperService.SERVICE_INTERFACE).apply {
@@ -302,11 +537,13 @@ object ScreenPreviewBinder {
                 }
 
                 override fun onEngineShown() {
-                    onSurfaceViewsReady()
+                    onEngineShown()
                 }
             },
             wallpaperSurface,
-            null,
+            mirrorSurface,
+            screen.toFlag(),
+            WallpaperConnection.WHICH_PREVIEW.PREVIEW_CURRENT
         )
 
     private fun removeAndReadd(view: View) {
