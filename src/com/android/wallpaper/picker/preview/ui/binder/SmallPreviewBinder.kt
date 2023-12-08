@@ -44,7 +44,7 @@ object SmallPreviewBinder {
         val workspaceSurface: SurfaceView = view.requireViewById(R.id.workspace_surface)
 
         view.setOnClickListener {
-            viewModel.onSmallPreviewClicked(screen, foldableDisplay)
+            viewModel.onSmallPreviewClicked(screen, orientation, foldableDisplay)
             navigate?.invoke(wallpaperSurface)
         }
 
