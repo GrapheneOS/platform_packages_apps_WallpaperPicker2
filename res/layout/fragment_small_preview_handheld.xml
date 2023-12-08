@@ -65,6 +65,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <com.android.wallpaper.picker.preview.ui.view.PreviewActionFloatingSheet
+        android:id="@+id/floating_sheet"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" />
+
     <com.android.wallpaper.picker.preview.ui.view.PreviewActionGroup
         android:id="@+id/action_button_group"
         android:layout_width="wrap_content"
@@ -73,10 +78,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <com.android.wallpaper.widget.FloatingSheet
-        android:id="@+id/floating_sheet"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
