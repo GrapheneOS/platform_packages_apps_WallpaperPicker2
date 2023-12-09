@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.model.wallpaper
+package com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet
 
-import android.app.WallpaperInfo
-
-/** Represents set of attributes that are specific to live wallpapers. */
-data class LiveWallpaperData(
-    val groupName: String,
-    val systemWallpaperInfo: WallpaperInfo,
-    val isTitleVisible: Boolean,
-    val isApplied: Boolean,
-    val effectNames: String?
+/** This data class represents the view data for the info floating sheet */
+data class InformationFloatingSheetViewModel(
+    val attributions: List<String?>?,
+    val exploreActionUrl: String?,
 )

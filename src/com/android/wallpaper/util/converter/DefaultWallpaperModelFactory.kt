@@ -17,61 +17,39 @@
 package com.android.wallpaper.util.converter
 
 import android.content.Context
+import com.android.wallpaper.model.CreativeWallpaperInfo
+import com.android.wallpaper.model.ImageWallpaperInfo
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.model.wallpaper.StaticWallpaperData
 import com.android.wallpaper.model.wallpaper.WallpaperModel
+import com.android.wallpaper.util.converter.WallpaperModelFactory.Companion.getCommonWallpaperData
+import com.android.wallpaper.util.converter.WallpaperModelFactory.Companion.getCreativeWallpaperData
+import com.android.wallpaper.util.converter.WallpaperModelFactory.Companion.getImageWallpaperData
+import com.android.wallpaper.util.converter.WallpaperModelFactory.Companion.getLiveWallpaperData
+import javax.inject.Inject
+import javax.inject.Singleton
 
-/**
- * This class is responsible for creating an instance of Live/Static WallpaperModel from the given
- * wallpaperInfo object.
- */
-open class DefaultWallpaperModelFactory {
+@Singleton
+class DefaultWallpaperModelFactory @Inject constructor() : WallpaperModelFactory {
 
-    private val defaultLiveWallpaperDataFactory = DefaultLiveWallpaperDataFactory()
-    private val defaultStaticWallpaperDataFactory = DefaultStaticWallpaperDataFactory()
-
-    /**
-     * Composes an instance of LiveWallpaperModel depending on the type of WallpaperInfo object.
-     *
-     * @param context: context of the application
-     * @param wallpaperInfo: wallpaperInfo object for the wallpaper being converted to the new model
-     *   class
-     */
-    open fun getWallpaperModel(
-        context: Context,
-        wallpaperInfo: LiveWallpaperInfo
-    ): WallpaperModel.LiveWallpaperModel {
-        return WallpaperModel.LiveWallpaperModel(
-            commonWallpaperData =
-                CommonWallpaperDataFactory.getCommonWallpaperData(wallpaperInfo, context),
-            liveWallpaperData =
-                defaultLiveWallpaperDataFactory.getLiveWallpaperData(wallpaperInfo, context),
-            creativeWallpaperData =
-                defaultLiveWallpaperDataFactory.getCreativeWallpaperData(wallpaperInfo),
-            internalLiveWallpaperData = null
-        )
-    }
-
-    /**
-     * Composes an instance of StaticWallpaperModel depending the type of WallpaperInfo object. This
-     * will throw an exception in case you pass any type of LiveWallpaperInfo object to this method.
-     *
-     * @param context: context of the application
-     * @param wallpaperInfo: wallpaperInfo object for the wallpaper being converted to the new model
-     *   class
-     */
-    open fun getWallpaperModel(
-        context: Context,
-        wallpaperInfo: WallpaperInfo
-    ): WallpaperModel.StaticWallpaperModel {
-        return WallpaperModel.StaticWallpaperModel(
-            commonWallpaperData =
-                CommonWallpaperDataFactory.getCommonWallpaperData(wallpaperInfo, context),
-            staticWallpaperData =
-                defaultStaticWallpaperDataFactory.getStaticWallpaperData(wallpaperInfo, context),
-            imageWallpaperData =
-                defaultStaticWallpaperDataFactory.getImageWallpaperData(wallpaperInfo),
-            networkWallpaperData = null
-        )
+    override fun getWallpaperModel(context: Context, wallpaperInfo: WallpaperInfo): WallpaperModel {
+        return if (wallpaperInfo is LiveWallpaperInfo) {
+            WallpaperModel.LiveWallpaperModel(
+                commonWallpaperData = wallpaperInfo.getCommonWallpaperData(context),
+                liveWallpaperData = wallpaperInfo.getLiveWallpaperData(context),
+                creativeWallpaperData =
+                    (wallpaperInfo as? CreativeWallpaperInfo)?.getCreativeWallpaperData(),
+                internalLiveWallpaperData = null,
+            )
+        } else {
+            WallpaperModel.StaticWallpaperModel(
+                commonWallpaperData = wallpaperInfo.getCommonWallpaperData(context),
+                staticWallpaperData = StaticWallpaperData(asset = wallpaperInfo.getAsset(context)),
+                imageWallpaperData =
+                    (wallpaperInfo as? ImageWallpaperInfo)?.getImageWallpaperData(),
+                networkWallpaperData = null
+            )
+        }
     }
 }
