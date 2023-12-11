@@ -62,11 +62,10 @@ import java.util.List;
 public class WallpaperConnection extends IWallpaperConnection.Stub implements ServiceConnection {
 
     /**
-     * Defines the different possible scenarios for which we need to dispatch a command
-     * from picker to the wallpaper.
+     * Defines different possible scenarios for which we need to dispatch a command from picker to
+     * the wallpaper.
      */
-
-    public enum WHICH_PREVIEW {
+    public enum WhichPreview {
         /**
          * Represents the case when we preview a currently applied wallpaper (home/lock) simply
          * by tapping on it.
@@ -83,7 +82,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
 
         private final int mValue;
 
-        WHICH_PREVIEW(int value) {
+        WhichPreview(int value) {
             this.mValue = value;
         }
 
@@ -120,7 +119,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     private boolean mEngineReady;
     private boolean mDestroyed;
     private int mDestinationFlag;
-    private WHICH_PREVIEW mWhichPreview;
+    private WhichPreview mWhichPreview;
 
     /**
      * @param intent used to bind the wallpaper service
@@ -130,7 +129,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
      */
     public WallpaperConnection(Intent intent, Context context,
             @Nullable WallpaperConnectionListener listener, @NonNull SurfaceView containerView,
-            WHICH_PREVIEW preview) {
+            WhichPreview preview) {
         this(intent, context, listener, containerView, null, null,
                 preview);
     }
@@ -150,7 +149,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
             @Nullable WallpaperConnectionListener listener, @NonNull SurfaceView containerView,
             @Nullable SurfaceView secondaryContainerView,
             @Nullable @WallpaperManager.SetWallpaperFlags Integer destinationFlag,
-            WHICH_PREVIEW preview) {
+            WhichPreview preview) {
         mContext = context.getApplicationContext();
         mIntent = intent;
         mListener = listener;
