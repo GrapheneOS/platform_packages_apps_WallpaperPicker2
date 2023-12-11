@@ -17,8 +17,6 @@ package com.android.wallpaper.picker.di.modules
 
 import android.app.WallpaperManager
 import android.content.Context
-import com.android.wallpaper.dispatchers.BackgroundDispatcher
-import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl

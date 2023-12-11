@@ -16,9 +16,9 @@
 
 package com.android.wallpaper.picker.preview.domain.interactor
 
-import com.android.wallpaper.dispatchers.BackgroundDispatcher
-import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.model.wallpaper.WallpaperModel
+import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
+import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
