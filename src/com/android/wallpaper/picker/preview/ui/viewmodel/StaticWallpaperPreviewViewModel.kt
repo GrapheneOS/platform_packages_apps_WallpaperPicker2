@@ -23,10 +23,10 @@ import android.graphics.ColorSpace
 import android.graphics.Point
 import android.graphics.Rect
 import com.android.wallpaper.asset.Asset
-import com.android.wallpaper.dispatchers.BackgroundDispatcher
 import com.android.wallpaper.model.wallpaper.ScreenOrientation
 import com.android.wallpaper.model.wallpaper.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.module.WallpaperPreferences
+import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.preview.domain.interactor.WallpaperPreviewInteractor
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import dagger.hilt.android.qualifiers.ApplicationContext

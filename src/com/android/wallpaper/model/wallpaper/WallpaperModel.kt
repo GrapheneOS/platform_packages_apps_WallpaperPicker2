@@ -40,6 +40,7 @@ sealed class WallpaperModel {
         override val commonWallpaperData: CommonWallpaperData,
         val staticWallpaperData: StaticWallpaperData,
         val imageWallpaperData: ImageWallpaperData?,
-        val networkWallpaperData: NetworkWallpaperData?
+        val networkWallpaperData: NetworkWallpaperData?,
+        val downloadableWallpaperData: DownloadableWallpaperData?,
     ) : WallpaperModel()
 }
