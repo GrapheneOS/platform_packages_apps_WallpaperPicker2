@@ -32,6 +32,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/transparent"
         android:fitsSystemWindows="true">
         <include
             android:id="@+id/toolbar_container"
