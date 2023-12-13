@@ -19,7 +19,7 @@ package com.android.wallpaper.picker.preview.ui.fragment
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.view.View
+import android.view.LayoutInflater
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -41,13 +41,20 @@ class SetWallpaperDialogFragment : Hilt_SetWallpaperDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
 
-        val layout = View.inflate(requireContext(), R.layout.set_wallpaper_dialog, null)
+        val layout =
+            LayoutInflater.from(requireContext()).inflate(R.layout.set_wallpaper_dialog, null)
+        val dialog =
+            AlertDialog.Builder(requireContext(), R.style.SetWallpaperPreviewDialogTheme)
+                .setView(layout)
+                .create()
         SetWallpaperDialogBinder.bind(
-            layout,
+            dialog,
+            "Set",
+            "Cancel",
         ) {
             findNavController().popBackStack()
         }
 
-        return AlertDialog.Builder(requireContext()).setView(layout).create()
+        return dialog
     }
 }

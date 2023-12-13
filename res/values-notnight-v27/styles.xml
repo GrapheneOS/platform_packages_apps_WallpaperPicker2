@@ -48,4 +48,11 @@
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
         <item name="android:dialogCornerRadius">24dp</item>
     </style>
+
+    <!-- SetWallpaperPreviewDialog -->
+    <style name="SetWallpaperPreviewDialogTheme" parent="@android:style/Theme.DeviceDefault.Light.Dialog.NoActionBar.MinWidth">
+        <item name="android:buttonBarPositiveButtonStyle">@style/SetWallpaperDialog.Button</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/SetWallpaperDialog.Button.OutlinedButton</item>
+        <item name="android:buttonBarNeutralButtonStyle">@style/SetWallpaperDialog.Button.TextButton</item>
+    </style>
 </resources>
