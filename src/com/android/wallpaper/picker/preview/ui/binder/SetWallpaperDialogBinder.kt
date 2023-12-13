@@ -16,21 +16,22 @@
 
 package com.android.wallpaper.picker.preview.ui.binder
 
-import android.view.View
-import android.widget.Button
-import com.android.wallpaper.R
+import android.app.AlertDialog
+import android.app.Dialog
 
 /** Binds the dialog on small preview confirming and setting wallpaper with destination. */
 object SetWallpaperDialogBinder {
 
     fun bind(
-        dialogView: View,
+        dialog: AlertDialog,
+        primaryText: String,
+        secondaryText: String,
         navigate: () -> Unit,
     ) {
         // TODO(b/303457019): For the set button, listen to a data flow of onClick listener
-        dialogView.requireViewById<Button>(R.id.button_set).setOnClickListener { navigate.invoke() }
-        dialogView.requireViewById<Button>(R.id.button_cancel).setOnClickListener {
-            navigate.invoke()
+        dialog.apply {
+            setButton(Dialog.BUTTON_POSITIVE, primaryText) { _, _ -> navigate.invoke() }
+            setButton(Dialog.BUTTON_NEGATIVE, secondaryText) { _, _ -> navigate.invoke() }
         }
     }
 }
