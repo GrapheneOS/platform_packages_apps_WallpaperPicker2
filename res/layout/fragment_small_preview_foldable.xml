@@ -38,9 +38,10 @@
         android:layout_height="wrap_content"
         android:elevation="@dimen/wallpaper_preview_buttons_elevation"
         android:layout_marginEnd="@dimen/set_wallpaper_button_margin_end"
-        android:background="@drawable/set_wallpaper_button_background"
+        android:background="@drawable/set_wallpaper_button_background_variant"
         android:text="@string/set_wallpaper_button_text"
-        android:textColor="@color/text_color_on_accent"
+        android:textColor="@color/system_on_primary"
+        android:textAppearance="@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/toolbar_container"
         app:layout_constraintBottom_toBottomOf="@id/toolbar_container"/>

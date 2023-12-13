@@ -52,16 +52,16 @@
             android:id="@+id/button_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/set_wallpaper_button_background"
-            android:textColor="@color/text_color_on_accent"
+            android:background="@drawable/set_wallpaper_dialog_positive_button"
+            android:textColor="@color/system_on_primary"
             android:text="Cancel" />
 
         <Button
             android:id="@+id/button_set"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/set_wallpaper_button_background"
-            android:textColor="@color/text_color_on_accent"
+            android:background="@drawable/set_wallpaper_dialog_positive_button"
+            android:textColor="@color/system_on_primary"
             android:text="Set" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,5 +25,5 @@
         android:background="@drawable/small_preview_tab_background"
         android:layout_gravity="center"
         android:textAppearance="@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps"
-        android:textSize="16sp"/>
+        android:textColor="@color/system_on_primary" />
 </FrameLayout>

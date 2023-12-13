@@ -50,6 +50,7 @@
             android:elevation="@dimen/wallpaper_preview_buttons_elevation"
             android:layout_marginEnd="@dimen/set_wallpaper_button_margin_end"
             android:contentDescription="@string/show_preview_controls_action"
+            android:textColor="@color/system_on_primary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/toolbar_container"
             app:layout_constraintBottom_toBottomOf="@id/toolbar_container"/>
