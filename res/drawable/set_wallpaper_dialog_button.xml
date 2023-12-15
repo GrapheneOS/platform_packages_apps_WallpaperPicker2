@@ -28,6 +28,16 @@
             <solid android:color="?android:colorControlHighlight" />
         </shape>
     </item>
-
-    <item android:drawable="@drawable/set_wallpaper_dialog_positive_button_base" />
+    <item>
+        <shape
+            android:shape="rectangle">
+            <corners android:radius="@dimen/set_wallpaper_button_corner_radius" />
+            <padding
+                android:left="@dimen/set_wallpaper_button_horizontal_padding"
+                android:top="@dimen/set_wallpaper_button_vertical_padding"
+                android:right="@dimen/set_wallpaper_button_horizontal_padding"
+                android:bottom="@dimen/set_wallpaper_button_vertical_padding" />
+            <solid  android:color="@color/system_secondary" />
+        </shape>
+    </item>
 </ripple>
