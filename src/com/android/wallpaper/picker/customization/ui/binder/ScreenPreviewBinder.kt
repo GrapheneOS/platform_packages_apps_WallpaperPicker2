@@ -163,6 +163,19 @@ object ScreenPreviewBinder {
 
         var disposableHandle: DisposableHandle? = null
 
+        val cleanupWallpaperConnectionRunnable = Runnable {
+            disposableHandle?.dispose()
+            wallpaperConnection?.destroy()
+            wallpaperConnection = null
+        }
+
+        fun cleanupWallpaperConnection() {
+            // If existing, remove any scheduled cleanups...
+            previewView.removeCallbacks(cleanupWallpaperConnectionRunnable)
+            // ...and cleanup immediately
+            cleanupWallpaperConnectionRunnable.run()
+        }
+
         val job =
             lifecycleOwner.lifecycleScope.launch {
                 launch {
@@ -206,9 +219,7 @@ object ScreenPreviewBinder {
                             override fun onDestroy(owner: LifecycleOwner) {
                                 super.onDestroy(owner)
                                 if (isPageTransitionsFeatureEnabled) {
-                                    disposableHandle?.dispose()
-                                    wallpaperConnection?.destroy()
-                                    wallpaperConnection = null
+                                    cleanupWallpaperConnection()
                                 }
                             }
 
@@ -246,10 +257,12 @@ object ScreenPreviewBinder {
                                     } else null
                                 )
                                 wallpaperIsReadyForReveal = false
-                                if (!isPageTransitionsFeatureEnabled) {
-                                    disposableHandle?.dispose()
-                                    wallpaperConnection?.destroy()
-                                    wallpaperConnection = null
+                                if (isPageTransitionsFeatureEnabled) {
+                                    // delay cleanup to prevent flicker between onStop and page
+                                    // transition animation start
+                                    previewView.postDelayed(cleanupWallpaperConnectionRunnable, 100)
+                                } else {
+                                    cleanupWallpaperConnectionRunnable.run()
                                 }
                             }
 
@@ -463,9 +476,7 @@ object ScreenPreviewBinder {
                             }
                             (wallpaperInfo as? LiveWallpaperInfo)?.let { liveWallpaperInfo ->
                                 if (isPageTransitionsFeatureEnabled) {
-                                    disposableHandle?.dispose()
-                                    wallpaperConnection?.destroy()
-                                    wallpaperConnection = null
+                                    cleanupWallpaperConnection()
                                 }
                                 val connection =
                                     wallpaperConnection
