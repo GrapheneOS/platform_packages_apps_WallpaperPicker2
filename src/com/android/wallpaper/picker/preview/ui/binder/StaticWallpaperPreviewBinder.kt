@@ -46,18 +46,12 @@ object StaticWallpaperPreviewBinder {
     private val ALPHA_OUT: Interpolator = PathInterpolator(0f, 0f, 0.8f, 1f)
     private const val CROSS_FADE_DURATION: Long = 200
 
-    /**
-     * Binds static wallpaper preview.
-     *
-     * @param fullPreviewCropModel null if this is not binding the full preview.
-     */
     fun bind(
         lowResImageView: ImageView,
         fullResImageView: SubsamplingScaleImageView,
         viewModel: StaticWallpaperPreviewViewModel,
         displaySize: Point,
         viewLifecycleOwner: LifecycleOwner,
-        allowUserCropping: Boolean = false,
         shouldCalibrateWithSystemScale: Boolean = false,
     ) {
         lowResImageView.initLowResImageView()
@@ -79,24 +73,22 @@ object StaticWallpaperPreviewBinder {
                             shouldCalibrateWithSystemScale,
                         )
 
-                        if (allowUserCropping) {
-                            viewModel.fullPreviewCropModel?.let {
-                                viewModel.fullPreviewCropModel =
-                                    FullPreviewCropModel(
-                                        cropHint = cropHint
-                                                ?: WallpaperCropUtils.calculateVisibleRect(
-                                                    imageModel.rawWallpaperSize,
-                                                    Point(
-                                                        fullResImageView.measuredWidth,
-                                                        fullResImageView.measuredHeight
-                                                    )
-                                                ),
-                                        it.wallpaperZoom,
-                                        it.hostViewSize,
-                                        it.cropSurfaceSize,
-                                    )
-                            }
-                        }
+                        // Fill in the default crop region if the displaySize for this preview is
+                        // missing.
+                        viewModel.fullPreviewCropModels.putIfAbsent(
+                            displaySize,
+                            FullPreviewCropModel(
+                                cropHint =
+                                    WallpaperCropUtils.calculateVisibleRect(
+                                        imageModel.rawWallpaperSize,
+                                        Point(
+                                            fullResImageView.measuredWidth,
+                                            fullResImageView.measuredHeight
+                                        )
+                                    ),
+                                cropSizeModel = null,
+                            )
+                        )
 
                         crossFadeInFullResImageView(lowResImageView, fullResImageView)
                     }

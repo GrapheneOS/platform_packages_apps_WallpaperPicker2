@@ -192,6 +192,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             floatingSheet = view.requireViewById(R.id.floating_sheet),
             previewViewModel = wallpaperPreviewViewModel,
             actionsViewModel = wallpaperPreviewViewModel.previewActionsViewModel,
+            displaySize = displayUtils.getRealSize(requireActivity().display),
             lifecycleOwner = viewLifecycleOwner,
             logger = logger,
             onStartEditActivity = {

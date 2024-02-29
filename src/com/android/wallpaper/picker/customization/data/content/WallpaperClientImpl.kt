@@ -45,6 +45,7 @@ import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination.BOTH
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination.Companion.toDestinationInt
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination.HOME
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination.LOCK
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -374,7 +375,7 @@ class WallpaperClientImpl(
         val uri =
             Uri.parse(uriString)
                 ?.buildUpon()
-                ?.appendQueryParameter("destination", destination.toString())
+                ?.appendQueryParameter("destination", destination.toDestinationInt().toString())
                 ?.build()
                 ?: return null
         val authority = uri.authority ?: return null
@@ -593,21 +594,26 @@ class WallpaperClientImpl(
      * on the view size hosting the preview and the wallpaper zoom of the preview on that view,
      * whereas the rest of multi-crop is based on full wallpaper size. So scaled back at the end.
      *
+     * If [CropSizeModel] is null, returns the original cropHint without parallax.
+     *
      * @param wallpaperSize full wallpaper image size.
      */
     private fun FullPreviewCropModel.adjustCropForParallax(
         wallpaperSize: Point,
     ): Rect {
-        return WallpaperCropUtils.calculateCropRect(
-                context,
-                hostViewSize,
-                cropSurfaceSize,
-                wallpaperSize,
-                cropHint,
-                wallpaperZoom,
-                /* cropExtraWidth= */ true,
-            )
-            .apply { scale(1f / wallpaperZoom) }
+        return cropSizeModel?.let {
+            WallpaperCropUtils.calculateCropRect(
+                    context,
+                    it.hostViewSize,
+                    it.cropSurfaceSize,
+                    wallpaperSize,
+                    cropHint,
+                    it.wallpaperZoom,
+                    /* cropExtraWidth= */ true,
+                )
+                .apply { scale(1f / it.wallpaperZoom) }
+        }
+            ?: cropHint
     }
 
     companion object {

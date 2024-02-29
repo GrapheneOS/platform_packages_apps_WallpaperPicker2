@@ -92,7 +92,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         mNetworkStatus = mNetworkStatusNotifier.getNetworkStatus();
         mDisplayUtils = injector.getDisplayUtils(this);
 
-        enforceOrientation();
+        enforcePortraitForHandheldAndFoldedDisplay();
 
         // Restore this Activity's state before restoring contained Fragments state.
         super.onCreate(savedInstanceState);
@@ -394,22 +394,21 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        enforceOrientation();
+        enforcePortraitForHandheldAndFoldedDisplay();
     }
 
     /**
-     * Allows any orientation for large screen devices (tablets and unfolded foldables) while
-     * forcing portrait for smaller screens (handheld and folded foldables).
+     * If the display is a handheld display or a folded display from a foldable, we enforce the
+     * activity to be portrait.
      *
      * This method should be called upon initialization of this activity, and whenever there is a
      * configuration change.
      */
     @SuppressLint("SourceLockedOrientationActivity")
-    private void enforceOrientation() {
-        int wantedOrientation =
-                mDisplayUtils.isLargeScreenDevice() && mDisplayUtils.isOnWallpaperDisplay(this)
-                        ? ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-                        : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+    private void enforcePortraitForHandheldAndFoldedDisplay() {
+        int wantedOrientation = mDisplayUtils.isLargeScreenOrUnfoldedDisplay(this)
+                ? ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         if (getRequestedOrientation() != wantedOrientation) {
             setRequestedOrientation(wantedOrientation);
         }

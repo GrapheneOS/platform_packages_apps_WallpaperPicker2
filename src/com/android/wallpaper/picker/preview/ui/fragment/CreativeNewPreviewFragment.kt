@@ -68,7 +68,9 @@ class CreativeNewPreviewFragment : Hilt_CreativeNewPreviewFragment() {
             mainScope = mainScope,
         )
 
-        wallpaperPreviewViewModel.setDefaultWallpaperPreviewConfigViewModel()
+        wallpaperPreviewViewModel.setDefaultWallpaperPreviewConfigViewModel(
+            displayUtils.getRealSize(requireActivity().display)
+        )
         view.requireViewById<Toolbar>(R.id.toolbar).isVisible = false
         view.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible = false
         view.requireViewById<Button>(R.id.crop_wallpaper_button).isVisible = false
@@ -103,5 +105,9 @@ class CreativeNewPreviewFragment : Hilt_CreativeNewPreviewFragment() {
         creativeWallpaperEditActivityResult.launch(intent)
 
         return view
+    }
+
+    override fun getToolbarColorId(): Int {
+        return android.R.color.transparent
     }
 }

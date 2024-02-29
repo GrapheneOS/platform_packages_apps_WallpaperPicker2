@@ -16,7 +16,6 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
-import android.graphics.PointF
 import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
@@ -31,8 +30,9 @@ import com.android.wallpaper.R
 import com.android.wallpaper.picker.TouchForwardingLayout
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.di.modules.MainDispatcher
+import com.android.wallpaper.picker.preview.shared.model.CropSizeModel
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
-import com.android.wallpaper.picker.preview.ui.util.FullResImageViewUtil.getCropRect
+import com.android.wallpaper.picker.preview.ui.util.SubsamplingScaleImageViewUtil.setOnNewCropListener
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil.attachView
 import com.android.wallpaper.picker.preview.ui.view.FullPreviewFrameLayout
@@ -41,7 +41,6 @@ import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.WallpaperCropUtils
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.OnStateChangedListener
 import java.lang.Integer.min
 import kotlin.math.max
 import kotlinx.coroutines.CoroutineScope
@@ -108,12 +107,15 @@ object FullWallpaperPreviewBinder {
                                             surfaceView,
                                         ) { crop, zoom ->
                                             viewModel.staticWallpaperPreviewViewModel
-                                                .fullPreviewCropModel =
+                                                .fullPreviewCropModels[config.displaySize] =
                                                 FullPreviewCropModel(
                                                     cropHint = crop,
-                                                    wallpaperZoom = zoom,
-                                                    hostViewSize = surfaceSize,
-                                                    cropSurfaceSize = cropSurfaceSize,
+                                                    cropSizeModel =
+                                                        CropSizeModel(
+                                                            wallpaperZoom = zoom,
+                                                            hostViewSize = surfaceSize,
+                                                            cropSurfaceSize = cropSurfaceSize,
+                                                        ),
                                                 )
                                         }
 
@@ -132,7 +134,6 @@ object FullWallpaperPreviewBinder {
                                         viewModel.staticWallpaperPreviewViewModel,
                                         config.displaySize,
                                         lifecycleOwner,
-                                        allowUserCropping,
                                     )
                                 }
                             }
@@ -169,21 +170,5 @@ object FullWallpaperPreviewBinder {
     private fun TouchForwardingLayout.initTouchForwarding(targetView: View) {
         setForwardingEnabled(true)
         setTargetView(targetView)
-    }
-
-    private fun SubsamplingScaleImageView.setOnNewCropListener(
-        onNewCrop: (crop: Rect, zoom: Float) -> Unit
-    ) {
-        setOnStateChangedListener(
-            object : OnStateChangedListener {
-                override fun onScaleChanged(p0: Float, p1: Int) {
-                    onNewCrop.invoke(getCropRect(), scale)
-                }
-
-                override fun onCenterChanged(p0: PointF?, p1: Int) {
-                    onNewCrop.invoke(getCropRect(), scale)
-                }
-            }
-        )
     }
 }

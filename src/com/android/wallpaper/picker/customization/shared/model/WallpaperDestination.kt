@@ -20,6 +20,10 @@ package com.android.wallpaper.picker.customization.shared.model
 import android.app.WallpaperManager.FLAG_LOCK
 import android.app.WallpaperManager.FLAG_SYSTEM
 import android.app.WallpaperManager.SetWallpaperFlags
+import com.android.wallpaper.module.WallpaperPersister.DEST_BOTH
+import com.android.wallpaper.module.WallpaperPersister.DEST_HOME_SCREEN
+import com.android.wallpaper.module.WallpaperPersister.DEST_LOCK_SCREEN
+import com.android.wallpaper.module.WallpaperPersister.Destination
 
 /** Enumerates all known wallpaper destinations. */
 enum class WallpaperDestination {
@@ -37,6 +41,15 @@ enum class WallpaperDestination {
                 FLAG_SYSTEM -> HOME
                 FLAG_LOCK -> LOCK
                 else -> throw IllegalArgumentException("Bad @SetWallpaperFlags value $flags")
+            }
+        }
+
+        @Destination
+        fun WallpaperDestination.toDestinationInt(): Int {
+            return when (this) {
+                BOTH -> DEST_BOTH
+                HOME -> DEST_HOME_SCREEN
+                LOCK -> DEST_LOCK_SCREEN
             }
         }
     }

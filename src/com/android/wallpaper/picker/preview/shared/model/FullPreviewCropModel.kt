@@ -19,14 +19,30 @@ package com.android.wallpaper.picker.preview.shared.model
 import android.graphics.Point
 import android.graphics.Rect
 
-/** Data class for cropHints related info. */
+/**
+ * Data class represents user's cropHint for a dimension.
+ *
+ * It could be one of below:
+ * 1. A current wallpaper crop.
+ * 2. User's crop via full preview.
+ * 3. Default crop from small preview.
+ *
+ * Only #2 will it contains [cropSizeModel], the other cases parallax (0 for #3) has already
+ * included in [cropHint].
+ */
 data class FullPreviewCropModel(
-    /** The user's crop of wallpaper on FullPreviewFragment wrt the full wallpaper size. */
-    val cropHint: Rect = Rect(0, 0, 0, 0),
+    /** The user's crop of wallpaper based on the full wallpaper size. */
+    val cropHint: Rect,
+    /** The data required to compute parallax for this crop, null for no parallax. */
+    val cropSizeModel: CropSizeModel?,
+)
+
+/** Required for computing parallax. */
+data class CropSizeModel(
     /** The zoom of the wallpaper on its hosting view when user selects the cropHint. */
-    val wallpaperZoom: Float = 0f,
+    val wallpaperZoom: Float,
     /** The size of the view hosting the wallpaper, e.g. SurfaceView. */
-    val hostViewSize: Point = Point(0, 0),
+    val hostViewSize: Point,
     /** A larger version of hostViewSize that can safely contain parallax. */
-    val cropSurfaceSize: Point = Point(0, 0),
+    val cropSurfaceSize: Point,
 )

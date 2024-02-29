@@ -51,15 +51,26 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 class StaticWallpaperPreviewViewModel
 @Inject
 constructor(
-    private val interactor: WallpaperPreviewInteractor,
+    interactor: WallpaperPreviewInteractor,
     @ApplicationContext private val context: Context,
     private val wallpaperPreferences: WallpaperPreferences,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
 ) {
-    /** The state of static wallpaper crop in full preview, before user confirmation. */
-    var fullPreviewCropModel: FullPreviewCropModel? = null
+    /**
+     * The state of static wallpaper crop in full preview, before user confirmation.
+     *
+     * The initial value should be the default crop on small preview, which could be the cropHints
+     * for current wallpaper or default crop area for a new wallpaper.
+     */
+    val fullPreviewCropModels: MutableMap<Point, FullPreviewCropModel> = mutableMapOf()
 
-    /** The info picker needs to post process crops for setting static wallpaper. */
+    /**
+     * The info picker needs to post process crops for setting static wallpaper.
+     *
+     * It will be filled with current cropHints when previewing current wallpaper, and null when
+     * previewing a new wallpaper, and gets updated through [updateCropHintsInfo] when user picks a
+     * new crop.
+     */
     private val cropHintsInfo: MutableStateFlow<Map<Point, FullPreviewCropModel>?> =
         MutableStateFlow(null)
 
@@ -108,6 +119,12 @@ constructor(
             }
             .distinctUntilChanged()
 
+    /**
+     * Updates new cropHints per displaySize that's been confirmed by the user.
+     *
+     * That's when picker gets current cropHints from [WallpaperManager] or when user crops and
+     * confirms a crop.
+     */
     fun updateCropHintsInfo(cropHintsInfo: Map<Point, FullPreviewCropModel>) {
         this.cropHintsInfo.value = this.cropHintsInfo.value?.plus(cropHintsInfo) ?: cropHintsInfo
     }

@@ -86,6 +86,27 @@ class DisplayUtils(private val context: Context) {
     }
 
     /**
+     * This flag returns true if the display is:
+     * 1. a large screen device display, e.g. tablet
+     * 2. an unfolded display from a foldable device
+     *
+     * This flag returns false the display is:
+     * 1. a handheld device display
+     * 2. a folded display from a foldable device
+     */
+    fun isLargeScreenOrUnfoldedDisplay(activity: Activity): Boolean {
+        // Note that a foldable is a large screen device if the largest display is large screen.
+        // Ths flag is true if it is a large screen device, e.g. tablet, or a foldable device.
+        val isLargeScreenOrFoldable = isLargeScreenDevice()
+        // For a single display device, this flag is always true.
+        // For a multi-display device, it is only true when the current display is the largest
+        // display. For the case of foldable, it is true when the display is the unfolded one, and
+        // false when it is folded.
+        val isSingleDisplayOrUnfolded = isOnWallpaperDisplay(activity)
+        return isLargeScreenOrFoldable && isSingleDisplayOrUnfolded
+    }
+
+    /**
      * Returns true if this device's screen (or largest screen in case of multiple screen devices)
      * is considered a "Large screen"
      */

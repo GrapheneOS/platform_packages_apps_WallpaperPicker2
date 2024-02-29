@@ -84,10 +84,12 @@ constructor(
                 false
             }
         }
+
     fun dismissTooltip() = interactor.dismissTooltip()
 
     private val _whichPreview = MutableStateFlow<WhichPreview?>(null)
     private val whichPreview: Flow<WhichPreview> = _whichPreview.asStateFlow().filterNotNull()
+
     fun setWhichPreview(whichPreview: WhichPreview) {
         _whichPreview.value = whichPreview
     }
@@ -99,6 +101,7 @@ constructor(
                     cropHints.mapValues {
                         FullPreviewCropModel(
                             cropHint = it.value,
+                            cropSizeModel = null,
                         )
                     }
                 )
@@ -161,23 +164,11 @@ constructor(
         _fullWorkspacePreviewConfigViewModel.filterNotNull()
 
     val onCropButtonClick: Flow<(() -> Unit)?> =
-        combine(wallpaper, fullWallpaperPreviewConfigViewModel.filterNotNull()) {
-            wallpaper,
-            previewViewModel ->
+        combine(wallpaper, fullWallpaperPreviewConfigViewModel.filterNotNull()) { wallpaper, _ ->
             if (wallpaper is StaticWallpaperModel && !wallpaper.isDownloadableWallpaper()) {
                 {
-                    staticWallpaperPreviewViewModel.fullPreviewCropModel?.let {
-                        staticWallpaperPreviewViewModel.updateCropHintsInfo(
-                            mapOf(
-                                previewViewModel.displaySize to
-                                    FullPreviewCropModel(
-                                        it.cropHint,
-                                        it.wallpaperZoom,
-                                        it.hostViewSize,
-                                        it.cropSurfaceSize,
-                                    )
-                            )
-                        )
+                    staticWallpaperPreviewViewModel.run {
+                        updateCropHintsInfo(fullPreviewCropModels)
                     }
                 }
             } else {
@@ -321,11 +312,11 @@ constructor(
             getWorkspacePreviewConfig(screen, foldableDisplay)
     }
 
-    fun setDefaultWallpaperPreviewConfigViewModel() {
+    fun setDefaultWallpaperPreviewConfigViewModel(displaySize: Point) {
         fullWallpaperPreviewConfigViewModel.value =
             WallpaperPreviewConfigViewModel(
                 Screen.HOME_SCREEN,
-                wallpaperDisplaySize,
+                displaySize,
             )
     }
 

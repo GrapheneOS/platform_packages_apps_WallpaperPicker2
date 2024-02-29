@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.preview.ui
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
@@ -64,6 +65,7 @@ class WallpaperPreviewActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enforcePortraitForHandheldAndFoldedDisplay()
         window.navigationBarColor = Color.TRANSPARENT
         window.statusBarColor = Color.TRANSPARENT
         setContentView(R.layout.activity_wallpaper_preview)
@@ -139,9 +141,6 @@ class WallpaperPreviewActivity :
 
     override fun onResume() {
         super.onResume()
-        requestedOrientation =
-            if (displayUtils.isOnWallpaperDisplay(this)) ActivityInfo.SCREEN_ORIENTATION_USER
-            else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         if (isInMultiWindowMode) {
             Toast.makeText(this, R.string.wallpaper_exit_split_screen, Toast.LENGTH_SHORT).show()
             onBackPressedDispatcher.onBackPressed()
@@ -155,6 +154,11 @@ class WallpaperPreviewActivity :
         }
         effectsRepository.destroy()
         super.onDestroy()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        enforcePortraitForHandheldAndFoldedDisplay()
     }
 
     private fun WallpaperInfo.convertToWallpaperModel(): WallpaperModel {
@@ -187,6 +191,23 @@ class WallpaperPreviewActivity :
             intent.putExtra(EXTRA_VIEW_AS_HOME, isViewAsHome)
             intent.putExtra(IS_NEW_TASK, isNewTask)
             return intent
+        }
+    }
+
+    /**
+     * If the display is a handheld display or a folded display from a foldable, we enforce the
+     * activity to be portrait.
+     *
+     * This method should be called upon initialization of this activity, and whenever there is a
+     * configuration change.
+     */
+    private fun enforcePortraitForHandheldAndFoldedDisplay() {
+        val wantedOrientation =
+            if (displayUtils.isLargeScreenOrUnfoldedDisplay(this))
+                ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+            else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        if (requestedOrientation != wantedOrientation) {
+            requestedOrientation = wantedOrientation
         }
     }
 }
