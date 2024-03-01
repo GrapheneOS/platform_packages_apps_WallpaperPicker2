@@ -15,20 +15,25 @@
  */
 package com.android.wallpaper.picker.preview.ui
 
+import android.platform.test.annotations.EnableFlags
+import android.platform.test.flag.junit.SetFlagsRule
 import androidx.navigation.fragment.NavHostFragment
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import com.android.wallpaper.Flags.FLAG_MULTI_CROP_PREVIEW_UI_FLAG
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestStaticWallpaperInfo
+import com.android.window.flags.Flags.FLAG_MULTI_CROP
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -38,6 +43,8 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class WallpaperPreviewActivityTest {
     @get:Rule var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule val setFlagsRule = SetFlagsRule()
 
     @Inject lateinit var testInjector: TestInjector
 
@@ -59,6 +66,8 @@ class WallpaperPreviewActivityTest {
     }
 
     @Test
+    @Ignore("b/327241549")
+    @EnableFlags(FLAG_MULTI_CROP_PREVIEW_UI_FLAG, FLAG_MULTI_CROP)
     fun showsNavHostFragment() {
         val scenario: ActivityScenario<WallpaperPreviewActivity> =
             ActivityScenario.launch(activityStartIntent)

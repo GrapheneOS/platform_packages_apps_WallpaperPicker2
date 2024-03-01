@@ -16,8 +16,10 @@
 
 package com.android.wallpaper.picker.preview.domain.interactor
 
+import android.app.WallpaperColors
 import android.graphics.Bitmap
 import android.graphics.Point
+import android.graphics.Rect
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -73,4 +75,7 @@ constructor(
             wallpaperModel,
         )
     }
+
+    suspend fun getWallpaperColors(bitmap: Bitmap, cropHints: Map<Point, Rect>?): WallpaperColors? =
+        wallpaperRepository.getWallpaperColors(bitmap, cropHints)
 }

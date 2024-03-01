@@ -57,13 +57,15 @@ class WallpaperPreviewViewModel
 @Inject
 constructor(
     private val interactor: WallpaperPreviewInteractor,
-    val staticWallpaperPreviewViewModel: StaticWallpaperPreviewViewModel,
+    staticWallpaperPreviewViewModelFactory: StaticWallpaperPreviewViewModel.Factory,
     val previewActionsViewModel: PreviewActionsViewModel,
     private val displayUtils: DisplayUtils,
     @HomeScreenPreviewUtils private val homePreviewUtils: PreviewUtils,
     @LockScreenPreviewUtils private val lockPreviewUtils: PreviewUtils,
 ) : ViewModel() {
 
+    val staticWallpaperPreviewViewModel =
+        staticWallpaperPreviewViewModelFactory.create(viewModelScope)
     val smallerDisplaySize = displayUtils.getRealSize(displayUtils.getSmallerDisplay())
     val wallpaperDisplaySize = displayUtils.getRealSize(displayUtils.getWallpaperDisplay())
     var isViewAsHome = false

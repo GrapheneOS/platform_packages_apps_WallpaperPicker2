@@ -17,6 +17,7 @@
 
 package com.android.wallpaper.picker.customization.data.content
 
+import android.app.WallpaperColors
 import android.app.WallpaperManager
 import android.app.WallpaperManager.FLAG_LOCK
 import android.app.WallpaperManager.FLAG_SYSTEM
@@ -569,6 +570,13 @@ class WallpaperClientImpl(
             }
         }
         return cropHintsMap
+    }
+
+    override suspend fun getWallpaperColors(
+        bitmap: Bitmap,
+        cropHints: Map<Point, Rect>?
+    ): WallpaperColors? {
+        return wallpaperManager.getWallpaperColors(bitmap, cropHints)
     }
 
     fun WallpaperDestination.asString(): String {

@@ -17,7 +17,6 @@ package com.android.wallpaper.picker.preview.ui.binder
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
 import android.graphics.RenderEffect
@@ -65,7 +64,7 @@ object StaticWallpaperPreviewBinder {
                     viewModel.subsamplingScaleImageViewModel.collect { imageModel ->
                         val cropHint = imageModel.fullPreviewCropModels?.get(displaySize)?.cropHint
                         fullResImageView.setFullResImage(
-                            imageModel.rawWallpaperBitmap,
+                            ImageSource.cachedBitmap(imageModel.rawWallpaperBitmap),
                             imageModel.rawWallpaperSize,
                             displaySize,
                             cropHint,
@@ -120,7 +119,7 @@ object StaticWallpaperPreviewBinder {
      *   this system scale to [SubsamplingScaleImageView].
      */
     private fun SubsamplingScaleImageView.setFullResImage(
-        rawWallpaperBitmap: Bitmap,
+        imageSource: ImageSource,
         rawWallpaperSize: Point,
         displaySize: Point,
         cropHint: Rect?,
@@ -128,7 +127,7 @@ object StaticWallpaperPreviewBinder {
         shouldCalibrateWithSystemScale: Boolean = false,
     ) {
         // Set the full res image
-        setImage(ImageSource.bitmap(rawWallpaperBitmap))
+        setImage(imageSource)
         // Calculate the scale and the center point for the full res image
         FullResImageViewUtil.getScaleAndCenter(
                 Point(measuredWidth, measuredHeight),

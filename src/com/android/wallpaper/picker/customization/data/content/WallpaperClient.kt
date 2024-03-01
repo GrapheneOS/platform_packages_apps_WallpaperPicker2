@@ -17,6 +17,7 @@
 
 package com.android.wallpaper.picker.customization.data.content
 
+import android.app.WallpaperColors
 import android.app.WallpaperManager
 import android.graphics.Bitmap
 import android.graphics.Point
@@ -99,4 +100,7 @@ interface WallpaperClient {
         displaySizes: List<Point>,
         @WallpaperManager.SetWallpaperFlags which: Int
     ): Map<Point, Rect>?
+
+    /** Returns the wallpaper colors for preview a bitmap with a set of crop hints */
+    suspend fun getWallpaperColors(bitmap: Bitmap, cropHints: Map<Point, Rect>?): WallpaperColors?
 }

@@ -17,6 +17,7 @@
 
 package com.android.wallpaper.testing
 
+import android.app.WallpaperColors
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
@@ -140,6 +141,13 @@ class FakeWallpaperClient : WallpaperClient {
 
     override fun getCurrentCropHints(displaySizes: List<Point>, which: Int): Map<Point, Rect>? {
         return emptyMap()
+    }
+
+    override suspend fun getWallpaperColors(
+        bitmap: Bitmap,
+        cropHints: Map<Point, Rect>?
+    ): WallpaperColors? {
+        return null
     }
 
     companion object {

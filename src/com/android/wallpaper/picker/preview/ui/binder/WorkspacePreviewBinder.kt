@@ -17,6 +17,7 @@ package com.android.wallpaper.picker.preview.ui.binder
 
 import android.app.WallpaperColors
 import android.os.Bundle
+import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.os.bundleOf
@@ -116,13 +117,25 @@ object WorkspacePreviewBinder {
                 object : PreviewUtils.WorkspacePreviewCallback {
                     override fun onPreviewRendered(resultBundle: Bundle?) {
                         if (resultBundle != null) {
-                            surface.setChildSurfacePackage(
-                                SurfaceViewUtils.getSurfacePackage(resultBundle)
-                            )
+                            SurfaceViewUtils.getSurfacePackage(resultBundle).apply {
+                                if (this != null) {
+                                    surface.setChildSurfacePackage(this)
+                                } else {
+                                    Log.w(
+                                        TAG,
+                                        "Result bundle from rendering preview does not contain " +
+                                            "a child surface package."
+                                    )
+                                }
+                            }
+                        } else {
+                            Log.w(TAG, "Result bundle from rendering preview is null.")
                         }
                     }
                 }
             )
         }
     }
+
+    const val TAG = "WorkspacePreviewBinder"
 }

@@ -58,6 +58,7 @@ android_test {
         "junit",
         "kotlinx_coroutines_test",
         "truth",
+        "flag-junit",
     ],
     libs: [
         "android.test.runner",
