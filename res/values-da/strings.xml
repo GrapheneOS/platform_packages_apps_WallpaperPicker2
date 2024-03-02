@@ -45,7 +45,7 @@
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Animeret baggrundstjeneste til skiftende baggrunde"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Daglig baggrund"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Tryk for at aktivere"</string>
-    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Baggrunden skifter automatisk hver dag. Tryk på &lt;strong&gt;Angiv baggrund&lt;/strong&gt; på næste skærmbillede for at afslutte konfigurationen."</string>
+    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Baggrunden skifter automatisk hver dag. Tryk på &lt;strong&gt;Angiv baggrund&lt;/strong&gt; på næste skærm for at afslutte konfigurationen."</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"Download kun fremtidige baggrunde via Wi-Fi"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"Fortsæt"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"Downloader den første baggrund…"</string>
