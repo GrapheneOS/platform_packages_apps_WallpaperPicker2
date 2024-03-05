@@ -20,9 +20,11 @@ import static android.app.WallpaperManager.FLAG_SYSTEM;
 import static android.app.WallpaperManager.SetWallpaperFlags;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.Rect;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.asset.Asset;
@@ -31,6 +33,7 @@ import com.android.wallpaper.model.WallpaperInfo;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface for classes which persist wallpapers to the system.
@@ -159,7 +162,18 @@ public interface WallpaperPersister {
      * Android, otherwise on pre-N versions of Android will return a positive integer when the
      * operation was successful and zero if the operation encountered an error.
      */
-    int setStreamToWallpaperManager(InputStream inputStream, Rect cropHint,
+    int setStreamToWallpaperManager(InputStream inputStream, @Nullable Rect cropHint,
+            boolean allowBackup, int whichWallpaper);
+
+    /**
+     * Sets a wallpaper stream to the {@link android.app.WallpaperManager}.
+     *
+     * @return an integer wallpaper ID. This is an actual wallpaper ID on N and later versions of
+     * Android, otherwise on pre-N versions of Android will return a positive integer when the
+     * operation was successful and zero if the operation encountered an error.
+     */
+    int setStreamWithCropsToWallpaperManager(InputStream inputStream,
+            @NonNull Map<Point, Rect> cropModel,
             boolean allowBackup, int whichWallpaper);
 
     /**

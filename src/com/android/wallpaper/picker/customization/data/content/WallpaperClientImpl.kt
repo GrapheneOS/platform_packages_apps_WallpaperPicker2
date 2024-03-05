@@ -167,8 +167,7 @@ class WallpaperClientImpl(
             destination,
             wallpaperModel,
             bitmap,
-            // TODO (b/309139122): Introduce crop hints to recent wallpapers
-            emptyMap(),
+            cropHintsWithParallax,
         )
     }
 

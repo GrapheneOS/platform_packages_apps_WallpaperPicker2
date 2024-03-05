@@ -897,7 +897,7 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
         destination: WallpaperDestination,
         wallpaperModel: StaticWallpaperModel,
         bitmap: Bitmap,
-        cropHints: Map<Point, Rect?>,
+        cropHints: Map<Point, Rect>?,
     ) {}
 
     override suspend fun addLiveWallpaperToRecentWallpapers(

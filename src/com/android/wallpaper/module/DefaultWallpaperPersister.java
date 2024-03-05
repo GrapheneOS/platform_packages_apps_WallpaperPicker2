@@ -59,6 +59,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Concrete implementation of WallpaperPersister which actually sets wallpapers to the system via
@@ -395,11 +396,22 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
     }
 
     @Override
-    public int setStreamToWallpaperManager(InputStream inputStream, Rect cropHint,
+    public int setStreamToWallpaperManager(InputStream inputStream, @Nullable Rect cropHint,
             boolean allowBackup, int whichWallpaper) {
         try {
             return mWallpaperManager.setStream(inputStream, cropHint, allowBackup,
                     whichWallpaper);
+        } catch (IOException e) {
+            return 0;
+        }
+    }
+
+    @Override
+    public int setStreamWithCropsToWallpaperManager(InputStream inputStream,
+            @NonNull Map<Point, Rect> cropHints, boolean allowBackup, int whichWallpaper) {
+        try {
+            return mWallpaperManager.setStreamWithCrops(inputStream, cropHints, allowBackup,
+                whichWallpaper);
         } catch (IOException e) {
             return 0;
         }

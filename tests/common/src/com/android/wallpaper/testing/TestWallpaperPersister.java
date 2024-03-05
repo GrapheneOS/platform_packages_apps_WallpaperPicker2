@@ -17,8 +17,10 @@ package com.android.wallpaper.testing;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.Rect;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.asset.Asset;
@@ -31,6 +33,7 @@ import com.android.wallpaper.module.WallpaperPreferences;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Test double for {@link WallpaperPersister}.
@@ -43,6 +46,7 @@ public class TestWallpaperPersister implements WallpaperPersister {
     private Bitmap mCurrentHomeWallpaper;
     private Bitmap mCurrentLockWallpaper;
     private Bitmap mPendingHomeWallpaper;
+
     private Bitmap mPendingLockWallpaper;
     private List<String> mHomeAttributions;
     private String mHomeActionUrl;
@@ -237,6 +241,12 @@ public class TestWallpaperPersister implements WallpaperPersister {
     @Override
     public int setStreamToWallpaperManager(InputStream inputStream, Rect cropHint,
             boolean allowBackup, int whichWallpaper) {
+        return 1;
+    }
+
+    @Override
+    public int setStreamWithCropsToWallpaperManager(InputStream inputStream,
+            @NonNull Map<Point, Rect> cropHints, boolean allowBackup, int whichWallpaper) {
         return 1;
     }
 }

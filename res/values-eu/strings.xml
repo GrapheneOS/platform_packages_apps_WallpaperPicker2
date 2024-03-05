@@ -31,11 +31,11 @@
     <string name="wallpaper_destination_both" msgid="1124197176741944063">"Hasieran eta pantaila blokeatuan"</string>
     <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"Hautatu horma-paper bat"</string>
     <string name="creative_wallpaper_title" msgid="3581650238648981372">"Sortu horma-papera"</string>
-    <string name="home_screen_message" msgid="106444102822522813">"Hasierako pantaila"</string>
+    <string name="home_screen_message" msgid="106444102822522813">"Orri nagusia"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Pantaila blokeatua"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Hasieran + pantaila blokeatuan"</string>
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Ezarri horma-papera"</string>
-    <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Hasierako pantaila"</string>
+    <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Orri nagusia"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Pantaila blokeatua"</string>
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Hasierako pantaila eta pantaila blokeatua"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Txandakako irudidun horma-papera"</string>
@@ -58,13 +58,13 @@
     <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"Gailuaren administratzaileak desgaituta dauka horma-papera ezartzeko aukera"</string>
     <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"Ezarri da horma-papera"</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"Internetera konektatu behar duzu horma-paperak ikusteko. Konekta zaitez eta saiatu berriro."</string>
-    <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"Hasierako pantailan ezarrita dagoen horma-paperaren irudi txikia"</string>
+    <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"Orri nagusian ezarrita dagoen horma-paperaren irudi txikia"</string>
     <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"Pantaila blokeatuan ezarrita dagoen horma-paperaren irudi txikia"</string>
     <string name="currently_set_wallpaper_thumbnail" msgid="8651887838745545107">"Ezarrita dagoen horma-paperaren irudi txikia"</string>
     <string name="wallpaper_thumbnail" msgid="569931475923605974">"Horma-paperaren irudi txikia"</string>
-    <string name="explore_home_screen" msgid="8756346794535765482">"Arakatu hasierako pantailaren horma-papera"</string>
+    <string name="explore_home_screen" msgid="8756346794535765482">"Arakatu orri nagusiaren horma-papera"</string>
     <string name="explore_lock_screen" msgid="268938342103703665">"Arakatu pantaila blokeatuaren horma-papera"</string>
-    <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"Freskatu hasierako pantailaren eguneko horma-papera"</string>
+    <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"Freskatu orri nagusiaren eguneko horma-papera"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Freskatu eguneko horma-papera"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"Horma-paperaren aurrebistaren pantaila"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"Eguneko horma-papera freskatzen…"</string>
@@ -101,7 +101,7 @@
     <string name="wallpaper_title" msgid="6754214682228331092">"Horma-papera"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Horma-paperaren aurrebista"</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"Pantaila blokeatuko horma-paperaren aurrebista"</string>
-    <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"Hasierako pantailako horma-paperaren aurrebista"</string>
+    <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"Orri nagusiko horma-paperaren aurrebista"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Ez dago bildumarik"</string>
     <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"Irten pantaila zatituaren modutik eta saiatu berriro"</string>
     <string name="set_wallpaper_dialog_set_button" msgid="5760149969510325088">"Ezarri"</string>
@@ -126,7 +126,7 @@
     <string name="settings_snackbar_enable" msgid="5992112808061426068">"Gaitu"</string>
     <string name="open_my_photos" msgid="4107196465713868381">"Ireki nire argazkiak"</string>
     <string name="lock_screen_tab" msgid="6672930765010407652">"Pantaila blokeatua"</string>
-    <string name="home_screen_tab" msgid="1080445697837877526">"Hasierako pantaila"</string>
+    <string name="home_screen_tab" msgid="1080445697837877526">"Orri nagusia"</string>
     <string name="reset" msgid="4945445169532850631">"Berrezarri"</string>
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Aldaketak berrezarri?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Ez dira gordeko aldaketak"</string>

@@ -17,6 +17,7 @@
 package com.android.wallpaper.testing
 
 import android.app.WallpaperColors
+import android.app.WallpaperInfo
 import android.content.ComponentName
 import android.graphics.Color
 import android.net.Uri
@@ -25,6 +26,7 @@ import com.android.wallpaper.picker.data.ColorInfo
 import com.android.wallpaper.picker.data.CommonWallpaperData
 import com.android.wallpaper.picker.data.Destination
 import com.android.wallpaper.picker.data.ImageWallpaperData
+import com.android.wallpaper.picker.data.LiveWallpaperData
 import com.android.wallpaper.picker.data.StaticWallpaperData
 import com.android.wallpaper.picker.data.WallpaperId
 import com.android.wallpaper.picker.data.WallpaperModel
@@ -41,13 +43,14 @@ class WallpaperModelUtils {
                 Color.valueOf(Color.BLUE)
             )
         val DEFAULT_ASSET = TestAsset(TestStaticWallpaperInfo.COLOR_DEFAULT, false)
+        const val DEFAULT_GROUP_NAME = "group name"
 
         fun getStaticWallpaperModel(
             wallpaperId: String,
             collectionId: String,
             placeholderColor: Int = DEFAULT_PLACEHOLDER_COLOR,
-            attribution: List<String> = emptyList(),
-            actionUrl: String = DEFAULT_ACTION_URL,
+            attribution: List<String>? = emptyList(),
+            actionUrl: String? = DEFAULT_ACTION_URL,
             colors: WallpaperColors = DEFAULT_COLORS,
             asset: Asset = DEFAULT_ASSET,
         ): WallpaperModel.StaticWallpaperModel {
@@ -82,6 +85,53 @@ class WallpaperModelUtils {
                 imageWallpaperData = ImageWallpaperData(Uri.EMPTY),
                 networkWallpaperData = null,
                 downloadableWallpaperData = null,
+            )
+        }
+
+        fun getLiveWallpaperModel(
+            wallpaperId: String,
+            collectionId: String,
+            placeholderColor: Int = DEFAULT_PLACEHOLDER_COLOR,
+            attribution: List<String>? = emptyList(),
+            actionUrl: String? = DEFAULT_ACTION_URL,
+            colors: WallpaperColors = DEFAULT_COLORS,
+            asset: Asset = DEFAULT_ASSET,
+            groupName: String = DEFAULT_GROUP_NAME,
+            systemWallpaperInfo: WallpaperInfo,
+            isTitleVisible: Boolean = true,
+            isApplied: Boolean = true,
+            effectNames: String? = null,
+        ): WallpaperModel.LiveWallpaperModel {
+            return WallpaperModel.LiveWallpaperModel(
+                commonWallpaperData =
+                    CommonWallpaperData(
+                        id =
+                            WallpaperId(
+                                systemWallpaperInfo.component,
+                                wallpaperId,
+                                collectionId,
+                            ),
+                        title = null,
+                        attributions = attribution,
+                        exploreActionUrl = actionUrl,
+                        thumbAsset = asset,
+                        placeholderColorInfo =
+                            ColorInfo(
+                                colors,
+                                placeholderColor,
+                            ),
+                        destination = Destination.NOT_APPLIED,
+                    ),
+                liveWallpaperData =
+                    LiveWallpaperData(
+                        groupName,
+                        systemWallpaperInfo,
+                        isTitleVisible,
+                        isApplied,
+                        effectNames
+                    ),
+                creativeWallpaperData = null,
+                internalLiveWallpaperData = null,
             )
         }
     }

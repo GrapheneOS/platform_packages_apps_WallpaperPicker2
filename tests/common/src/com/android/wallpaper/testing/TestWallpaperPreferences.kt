@@ -477,7 +477,7 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
         destination: WallpaperDestination,
         wallpaperModel: WallpaperModel.StaticWallpaperModel,
         bitmap: Bitmap,
-        cropHints: Map<Point, Rect?>
+        cropHints: Map<Point, Rect>?,
     ) {}
 
     override suspend fun addLiveWallpaperToRecentWallpapers(

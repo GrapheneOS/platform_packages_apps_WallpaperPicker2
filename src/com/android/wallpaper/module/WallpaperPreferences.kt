@@ -392,7 +392,7 @@ interface WallpaperPreferences {
         destination: WallpaperDestination,
         wallpaperModel: StaticWallpaperModel,
         bitmap: Bitmap,
-        cropHints: Map<Point, Rect?>,
+        cropHints: Map<Point, Rect>?,
     )
 
     /**
