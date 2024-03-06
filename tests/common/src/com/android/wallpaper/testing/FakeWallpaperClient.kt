@@ -21,6 +21,7 @@ import android.app.WallpaperColors
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
+import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -92,6 +93,7 @@ class FakeWallpaperClient : WallpaperClient {
         inputStream: InputStream?,
         bitmap: Bitmap,
         wallpaperSize: Point,
+        asset: Asset,
         fullPreviewCropModels: Map<Point, FullPreviewCropModel>?,
     ) {
         TODO("Not yet implemented")

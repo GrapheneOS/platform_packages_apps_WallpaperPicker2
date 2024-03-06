@@ -20,6 +20,7 @@ import android.app.WallpaperColors
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
+import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -51,6 +52,7 @@ constructor(
         inputStream: InputStream?,
         bitmap: Bitmap,
         wallpaperSize: Point,
+        asset: Asset,
         fullPreviewCropModels: Map<Point, FullPreviewCropModel>? = null,
     ) {
         wallpaperRepository.setStaticWallpaper(
@@ -60,6 +62,7 @@ constructor(
             inputStream,
             bitmap,
             wallpaperSize,
+            asset,
             fullPreviewCropModels,
         )
     }

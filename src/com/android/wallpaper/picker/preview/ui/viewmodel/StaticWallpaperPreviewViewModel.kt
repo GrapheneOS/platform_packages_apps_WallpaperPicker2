@@ -91,8 +91,8 @@ constructor(
             .map { it.staticWallpaperData.asset.getLowResBitmap(context) }
             .filterNotNull()
             .flowOn(bgDispatcher)
-    // Asset detail includes the dimensions, bitmap and input stream decoded from the asset.
-    private val assetDetail: Flow<Triple<Point, Bitmap?, InputStream?>?> =
+    // Asset detail includes the dimensions, bitmap and the asset.
+    private val assetDetail: Flow<Triple<Point, Bitmap?, Asset>?> =
         interactor.wallpaperModel
             .map { (it as? StaticWallpaperModel)?.staticWallpaperData?.asset }
             .map {
@@ -101,8 +101,7 @@ constructor(
                 } else {
                     val dimensions = it.decodeRawDimensions()
                     val bitmap = it.decodeBitmap(dimensions)
-                    val stream = it.getStream()
-                    Triple(dimensions, bitmap, stream)
+                    Triple(dimensions, bitmap, it)
                 }
             }
             .flowOn(bgDispatcher)
@@ -115,9 +114,15 @@ constructor(
                 if (assetDetail == null) {
                     null
                 } else {
-                    val (dimensions, bitmap, stream) = assetDetail
+                    val (dimensions, bitmap, asset) = assetDetail
                     bitmap?.let {
-                        FullResWallpaperViewModel(bitmap, dimensions, stream, cropHintsInfo)
+                        FullResWallpaperViewModel(
+                            bitmap,
+                            dimensions,
+                            asset.getStream(),
+                            asset,
+                            cropHintsInfo,
+                        )
                     }
                 }
             }

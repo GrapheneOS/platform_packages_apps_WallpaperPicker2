@@ -238,6 +238,7 @@ constructor(
                                 inputStream = it.stream,
                                 bitmap = it.rawWallpaperBitmap,
                                 wallpaperSize = it.rawWallpaperSize,
+                                asset = it.asset,
                                 fullPreviewCropModels = it.fullPreviewCropModels,
                             )
                         }

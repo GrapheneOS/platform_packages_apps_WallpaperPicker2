@@ -22,6 +22,7 @@ import android.app.WallpaperManager
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
+import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -48,8 +49,9 @@ interface WallpaperClient {
      * @param wallpaperModel The wallpaper model of the wallpaper.
      * @param bitmap The bitmap of the static wallpaper. Note that the bitmap should be the
      *   original, full-size bitmap.
-     * @param wallpaperSize raw wallpaper size
-     * @param fullPreviewCropModels full preview crop info for each dimension that user has cropped
+     * @param wallpaperSize raw wallpaper size.
+     * @param asset wallpaper asset.
+     * @param fullPreviewCropModels full preview crop info for each dimension that user has cropped.
      */
     suspend fun setStaticWallpaper(
         @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
@@ -58,6 +60,7 @@ interface WallpaperClient {
         inputStream: InputStream?,
         bitmap: Bitmap,
         wallpaperSize: Point,
+        asset: Asset,
         fullPreviewCropModels: Map<Point, FullPreviewCropModel>?,
     )
 

@@ -36,7 +36,9 @@ import android.net.Uri
 import android.os.Looper
 import android.util.Log
 import androidx.collection.ArrayMap
+import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.asset.BitmapUtils
+import com.android.wallpaper.asset.CurrentWallpaperAsset
 import com.android.wallpaper.model.CreativeCategory
 import com.android.wallpaper.model.LiveWallpaperPrefMetadata
 import com.android.wallpaper.model.StaticWallpaperPrefMetadata
@@ -134,6 +136,7 @@ class WallpaperClientImpl(
         inputStream: InputStream?,
         bitmap: Bitmap,
         wallpaperSize: Point,
+        asset: Asset,
         fullPreviewCropModels: Map<Point, FullPreviewCropModel>?,
     ) {
         if (destination == HOME || destination == BOTH) {
@@ -154,6 +157,7 @@ class WallpaperClientImpl(
                 bitmap,
                 cropHintsWithParallax,
                 destination,
+                asset,
             )
 
         wallpaperPreferences.setStaticWallpaperMetadata(
@@ -188,8 +192,11 @@ class WallpaperClientImpl(
         bitmap: Bitmap,
         cropHints: Map<Point, Rect>,
         destination: WallpaperDestination,
+        asset: Asset,
     ): Int {
-        return if (inputStream != null) {
+        // The InputStream of current wallpaper points to system wallpaper file which will be
+        // overwritten during set wallpaper and reads 0 bytes, use Bitmap instead.
+        return if (inputStream != null && asset !is CurrentWallpaperAsset) {
             setStreamWithCrops(
                 inputStream,
                 cropHints,
