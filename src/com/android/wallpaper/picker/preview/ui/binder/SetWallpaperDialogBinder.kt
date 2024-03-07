@@ -62,7 +62,6 @@ object SetWallpaperDialogBinder {
                 previewLayout,
                 wallpaperPreviewViewModel,
                 lifecycleOwner,
-                mainScope,
                 currentNavDestId,
                 navigate,
             )
@@ -72,7 +71,6 @@ object SetWallpaperDialogBinder {
                 wallpaperPreviewViewModel,
                 handheldDisplaySize,
                 lifecycleOwner,
-                mainScope,
                 currentNavDestId,
                 navigate,
             )
@@ -125,7 +123,6 @@ object SetWallpaperDialogBinder {
         previewLayout: View,
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
-        mainScope: CoroutineScope,
         currentNavDestId: Int,
         navigate: ((View) -> Unit)?,
     ) {
@@ -149,7 +146,6 @@ object SetWallpaperDialogBinder {
                         applicationContext = previewLayout.context.applicationContext,
                         view = dualDisplayAspectRatioLayout.requireViewById(display.getViewId()),
                         viewModel = wallpaperPreviewViewModel,
-                        mainScope = mainScope,
                         viewLifecycleOwner = lifecycleOwner,
                         screen = screenId.key,
                         displaySize = it,
@@ -167,7 +163,6 @@ object SetWallpaperDialogBinder {
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
         displaySize: Point,
         lifecycleOwner: LifecycleOwner,
-        mainScope: CoroutineScope,
         currentNavDestId: Int,
         navigate: ((View) -> Unit)?,
     ) {
@@ -183,7 +178,6 @@ object SetWallpaperDialogBinder {
                 screen = screenId.key,
                 displaySize = displaySize,
                 foldableDisplay = null,
-                mainScope = mainScope,
                 viewLifecycleOwner = lifecycleOwner,
                 currentNavDestId = currentNavDestId,
                 navigate = navigate,

@@ -34,7 +34,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.AppbarFragment
-import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.ui.binder.CropWallpaperButtonBinder
 import com.android.wallpaper.picker.preview.ui.binder.FullWallpaperPreviewBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewTooltipBinder
@@ -45,7 +44,6 @@ import com.android.wallpaper.util.DisplayUtils
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineScope
 
 /** Shows full preview of user selected wallpaper for cropping, zooming and positioning. */
 @AndroidEntryPoint(AppbarFragment::class)
@@ -53,7 +51,6 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
 
     @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
-    @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
 
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
 
@@ -111,7 +108,6 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
             viewModel = wallpaperPreviewViewModel,
             displayUtils = displayUtils,
             lifecycleOwner = viewLifecycleOwner,
-            mainScope = mainScope,
         )
 
         CropWallpaperButtonBinder.bind(

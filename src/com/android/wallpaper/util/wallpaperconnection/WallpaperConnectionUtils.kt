@@ -17,15 +17,13 @@ import android.view.SurfaceControl
 import android.view.SurfaceView
 import android.view.View
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
-import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.util.ScreenSizeCalculator
 import com.android.wallpaper.util.WallpaperConnection
 import com.android.wallpaper.util.WallpaperConnection.WhichPreview
-import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.getKey
 import kotlinx.coroutines.CancellableContinuation
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -46,7 +44,6 @@ object WallpaperConnectionUtils {
     /** Only call this function when the surface view is attached. */
     suspend fun connect(
         context: Context,
-        @MainDispatcher mainScope: CoroutineScope,
         wallpaperModel: LiveWallpaperModel,
         whichPreview: WhichPreview,
         destinationFlag: Int,
@@ -65,8 +62,8 @@ object WallpaperConnectionUtils {
         if (!engineMap.containsKey(engineKey)) {
             mutex.withLock {
                 if (!engineMap.containsKey(engineKey)) {
-                    engineMap[engineKey] =
-                        mainScope.async {
+                    engineMap[engineKey] = coroutineScope {
+                        async {
                             initEngine(
                                 context,
                                 wallpaperModel.getWallpaperServiceIntent(),
@@ -77,6 +74,7 @@ object WallpaperConnectionUtils {
                                 listener,
                             )
                         }
+                    }
                 }
             }
         }

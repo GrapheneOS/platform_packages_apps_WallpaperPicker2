@@ -29,7 +29,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.TouchForwardingLayout
 import com.android.wallpaper.picker.data.WallpaperModel
-import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.shared.model.CropSizeModel
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
 import com.android.wallpaper.picker.preview.ui.util.SubsamplingScaleImageViewUtil.setOnNewCropListener
@@ -43,7 +42,6 @@ import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import java.lang.Integer.min
 import kotlin.math.max
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -56,7 +54,6 @@ object FullWallpaperPreviewBinder {
         viewModel: WallpaperPreviewViewModel,
         displayUtils: DisplayUtils,
         lifecycleOwner: LifecycleOwner,
-        @MainDispatcher mainScope: CoroutineScope,
     ) {
         val wallpaperPreviewCrop: FullPreviewFrameLayout =
             view.requireViewById(R.id.wallpaper_preview_crop)
@@ -94,7 +91,6 @@ object FullWallpaperPreviewBinder {
                                 if (wallpaper is WallpaperModel.LiveWallpaperModel) {
                                     WallpaperConnectionUtils.connect(
                                         applicationContext,
-                                        mainScope,
                                         wallpaper,
                                         whichPreview,
                                         config.screen.toFlag(),

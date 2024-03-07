@@ -27,7 +27,6 @@ import com.android.wallpaper.model.wallpaper.PreviewPagerPage
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.SinglePreviewPagerAdapter
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.pagetransformers.PreviewCardPageTransformer
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
-import kotlinx.coroutines.CoroutineScope
 
 /** Binds single preview home screen and lock screen tabs view pager. */
 object PreviewPagerBinder {
@@ -36,7 +35,6 @@ object PreviewPagerBinder {
     fun bind(
         applicationContext: Context,
         viewLifecycleOwner: LifecycleOwner,
-        mainScope: CoroutineScope,
         previewsViewPager: ViewPager2,
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
         previewDisplaySize: Point,
@@ -59,7 +57,6 @@ object PreviewPagerBinder {
                     screen = PreviewPagerPage.entries[position].screen,
                     displaySize = previewDisplaySize,
                     foldableDisplay = null,
-                    mainScope = mainScope,
                     viewLifecycleOwner = viewLifecycleOwner,
                     currentNavDestId = currentNavDestId,
                     navigate = navigate,

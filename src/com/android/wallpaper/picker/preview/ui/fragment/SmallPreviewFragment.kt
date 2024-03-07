@@ -32,7 +32,6 @@ import androidx.navigation.fragment.findNavController
 import com.android.wallpaper.R
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.AppbarFragment
-import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.ui.binder.DualPreviewSelectorBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewActionsBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewSelectorBinder
@@ -47,7 +46,6 @@ import com.android.wallpaper.util.DisplayUtils
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineScope
 
 /**
  * This fragment displays the preview of the selected wallpaper on all available workspaces and
@@ -58,7 +56,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
     @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
-    @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
     @Inject lateinit var logger: UserEventLogger
 
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
@@ -128,7 +125,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 wallpaperPreviewViewModel,
                 appContext,
                 viewLifecycleOwner,
-                mainScope,
                 currentNavDestId,
             ) { sharedElement ->
                 ViewCompat.setTransitionName(sharedElement, SMALL_PREVIEW_SHARED_ELEMENT_ID)
@@ -153,7 +149,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 wallpaperPreviewViewModel,
                 appContext,
                 viewLifecycleOwner,
-                mainScope,
                 currentNavDestId,
             ) { sharedElement ->
                 ViewCompat.setTransitionName(sharedElement, SMALL_PREVIEW_SHARED_ELEMENT_ID)

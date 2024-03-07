@@ -27,13 +27,11 @@ import com.android.wallpaper.R
 import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import com.android.wallpaper.picker.data.WallpaperModel
-import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil.attachView
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.android.wallpaper.util.wallpaperconnection.WallpaperEngineConnection.WallpaperEngineConnectionListener
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -53,7 +51,6 @@ object SmallWallpaperPreviewBinder {
         screen: Screen,
         displaySize: Point,
         applicationContext: Context,
-        @MainDispatcher mainScope: CoroutineScope,
         viewLifecycleOwner: LifecycleOwner,
     ) {
         var job: Job? = null
@@ -67,7 +64,6 @@ object SmallWallpaperPreviewBinder {
                                 if (wallpaper is WallpaperModel.LiveWallpaperModel) {
                                     WallpaperConnectionUtils.connect(
                                         applicationContext,
-                                        mainScope,
                                         wallpaper,
                                         whichPreview,
                                         screen.toFlag(),

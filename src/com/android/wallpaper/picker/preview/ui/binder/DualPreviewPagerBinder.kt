@@ -26,7 +26,6 @@ import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.Du
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout.Companion.getViewId
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
-import kotlinx.coroutines.CoroutineScope
 
 /** Binds dual preview home screen and lock screen view pager. */
 object DualPreviewPagerBinder {
@@ -36,7 +35,6 @@ object DualPreviewPagerBinder {
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
         applicationContext: Context,
         viewLifecycleOwner: LifecycleOwner,
-        mainScope: CoroutineScope,
         currentNavDestId: Int,
         navigate: (View) -> Unit,
     ) {
@@ -67,7 +65,6 @@ object DualPreviewPagerBinder {
                         applicationContext = applicationContext,
                         view = dualDisplayAspectRatioLayout.requireViewById(display.getViewId()),
                         viewModel = wallpaperPreviewViewModel,
-                        mainScope = mainScope,
                         viewLifecycleOwner = viewLifecycleOwner,
                         screen = PreviewPagerPage.entries[position].screen,
                         displaySize = it,

@@ -24,6 +24,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.Message
 import android.text.TextUtils
 import java.util.concurrent.Executors
 
@@ -93,6 +94,12 @@ class PreviewUtils(
                 )
             Handler(Looper.getMainLooper()).post { callback.onPreviewRendered(result) }
         }
+    }
+
+    /** Cleans up the preview on the renderer side */
+    fun cleanUp(workspaceCallback: Message?) {
+        // Send any message to clean up the corresponding preview on the renderer side.
+        workspaceCallback?.replyTo?.send(workspaceCallback)
     }
 
     /** Easy way to generate a Uri with the provider info from this class. */

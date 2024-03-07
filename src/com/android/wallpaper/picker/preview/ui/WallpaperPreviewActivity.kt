@@ -32,6 +32,7 @@ import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.BasePreviewActivity
 import com.android.wallpaper.picker.data.WallpaperModel
+import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.data.repository.EffectsRepository
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import com.android.wallpaper.picker.preview.data.util.LiveWallpaperDownloader
@@ -47,8 +48,8 @@ import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 /** This activity holds the flow for the preview screen. */
 @AndroidEntryPoint(BasePreviewActivity::class)
@@ -60,6 +61,7 @@ class WallpaperPreviewActivity :
     @Inject lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
     @Inject lateinit var effectsRepository: EffectsRepository
     @Inject lateinit var liveWallpaperDownloader: LiveWallpaperDownloader
+    @MainDispatcher @Inject lateinit var mainScope: CoroutineScope
 
     private val wallpaperPreviewViewModel: WallpaperPreviewViewModel by viewModels()
 
@@ -148,11 +150,15 @@ class WallpaperPreviewActivity :
     }
 
     override fun onDestroy() {
-        liveWallpaperDownloader.cleanup()
-        (wallpaperPreviewViewModel.wallpaper.value as? WallpaperModel.LiveWallpaperModel)?.let {
-            runBlocking { WallpaperConnectionUtils.disconnect(applicationContext, it) }
+        // TODO(b/328302105): MainScope ensures the job gets done non-blocking even if the activity
+        //  has been destroyed already. Consider making this part of WallpaperConnectionUtils.
+        mainScope.launch {
+            liveWallpaperDownloader.cleanup()
+            (wallpaperPreviewViewModel.wallpaper.value as? WallpaperModel.LiveWallpaperModel)?.let {
+                WallpaperConnectionUtils.disconnect(appContext, it)
+            }
+            effectsRepository.destroy()
         }
-        effectsRepository.destroy()
         super.onDestroy()
     }
 

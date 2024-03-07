@@ -31,7 +31,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.AppbarFragment
-import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.ui.binder.FullWallpaperPreviewBinder
 import com.android.wallpaper.picker.preview.ui.fragment.SmallPreviewFragment.Companion.ARG_EDIT_INTENT
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
@@ -39,7 +38,6 @@ import com.android.wallpaper.util.DisplayUtils
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineScope
 
 /** Shows full preview with an edit activity overlay. */
 @AndroidEntryPoint(AppbarFragment::class)
@@ -47,7 +45,6 @@ class CreativeNewPreviewFragment : Hilt_CreativeNewPreviewFragment() {
 
     @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
-    @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
 
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
 
@@ -65,7 +62,6 @@ class CreativeNewPreviewFragment : Hilt_CreativeNewPreviewFragment() {
             viewModel = wallpaperPreviewViewModel,
             displayUtils = displayUtils,
             lifecycleOwner = viewLifecycleOwner,
-            mainScope = mainScope,
         )
 
         wallpaperPreviewViewModel.setDefaultWallpaperPreviewConfigViewModel(

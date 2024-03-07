@@ -24,9 +24,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.FoldableDisplay
 import com.android.wallpaper.module.CustomizationSections.Screen
-import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
-import kotlinx.coroutines.CoroutineScope
 
 object SmallPreviewBinder {
     /** @param foldableDisplay Only used for foldable devices; otherwise, set to null. */
@@ -37,7 +35,6 @@ object SmallPreviewBinder {
         screen: Screen,
         displaySize: Point,
         foldableDisplay: FoldableDisplay?,
-        @MainDispatcher mainScope: CoroutineScope,
         viewLifecycleOwner: LifecycleOwner,
         currentNavDestId: Int,
         navigate: ((View) -> Unit)? = null,
@@ -72,7 +69,6 @@ object SmallPreviewBinder {
             screen = screen,
             displaySize = displaySize,
             applicationContext = applicationContext,
-            mainScope = mainScope,
             viewLifecycleOwner = viewLifecycleOwner,
         )
     }

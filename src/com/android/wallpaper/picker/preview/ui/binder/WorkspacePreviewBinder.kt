@@ -17,6 +17,7 @@ package com.android.wallpaper.picker.preview.ui.binder
 
 import android.app.WallpaperColors
 import android.os.Bundle
+import android.os.Message
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -29,8 +30,12 @@ import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewMod
 import com.android.wallpaper.picker.preview.ui.viewmodel.WorkspacePreviewConfigViewModel
 import com.android.wallpaper.util.PreviewUtils
 import com.android.wallpaper.util.SurfaceViewUtils
+import kotlin.coroutines.resume
+import kotlinx.coroutines.DisposableHandle
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 object WorkspacePreviewBinder {
     fun bind(
@@ -39,22 +44,36 @@ object WorkspacePreviewBinder {
         viewModel: WallpaperPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
     ) {
+        var job: Job? = null
+        var previewDisposableHandle: DisposableHandle? = null
         surface.setZOrderMediaOverlay(true)
         surface.holder.addCallback(
             object : SurfaceViewUtil.SurfaceCallback {
                 override fun surfaceCreated(holder: SurfaceHolder) {
-                    lifecycleOwner.lifecycleScope.launch {
-                        viewModel.wallpaperColorsModel.collect {
-                            if (it is WallpaperColorsModel.Loaded) {
-                                renderWorkspacePreview(
-                                    surface = surface,
-                                    previewUtils = config.previewUtils,
-                                    displayId = config.displayId,
-                                    wallpaperColors = it.colors
-                                )
+                    job =
+                        lifecycleOwner.lifecycleScope.launch {
+                            viewModel.wallpaperColorsModel.collect {
+                                if (it is WallpaperColorsModel.Loaded) {
+                                    val workspaceCallback =
+                                        renderWorkspacePreview(
+                                            surface = surface,
+                                            previewUtils = config.previewUtils,
+                                            displayId = config.displayId,
+                                            wallpaperColors = it.colors
+                                        )
+                                    // Dispose the previous preview on the renderer side.
+                                    previewDisposableHandle?.dispose()
+                                    previewDisposableHandle = DisposableHandle {
+                                        config.previewUtils.cleanUp(workspaceCallback)
+                                    }
+                                }
                             }
                         }
-                    }
+                }
+
+                override fun surfaceDestroyed(holder: SurfaceHolder) {
+                    job?.cancel()
+                    previewDisposableHandle?.dispose()
                 }
             }
         )
@@ -69,39 +88,54 @@ object WorkspacePreviewBinder {
         viewModel: WallpaperPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
     ) {
+        var job: Job? = null
+        var previewDisposableHandle: DisposableHandle? = null
         surface.setZOrderMediaOverlay(true)
         surface.holder.addCallback(
             object : SurfaceViewUtil.SurfaceCallback {
                 override fun surfaceCreated(holder: SurfaceHolder) {
-                    lifecycleOwner.lifecycleScope.launch {
-                        combine(
-                                viewModel.fullWorkspacePreviewConfigViewModel,
-                                viewModel.wallpaperColorsModel
-                            ) { config, colorsModel ->
-                                config to colorsModel
-                            }
-                            .collect { (config, colorsModel) ->
-                                if (colorsModel is WallpaperColorsModel.Loaded) {
-                                    renderWorkspacePreview(
-                                        surface = surface,
-                                        previewUtils = config.previewUtils,
-                                        displayId = config.displayId,
-                                        wallpaperColors = colorsModel.colors
-                                    )
+                    job =
+                        lifecycleOwner.lifecycleScope.launch {
+                            combine(
+                                    viewModel.fullWorkspacePreviewConfigViewModel,
+                                    viewModel.wallpaperColorsModel
+                                ) { config, colorsModel ->
+                                    config to colorsModel
                                 }
-                            }
-                    }
+                                .collect { (config, colorsModel) ->
+                                    if (colorsModel is WallpaperColorsModel.Loaded) {
+                                        val workspaceCallback =
+                                            renderWorkspacePreview(
+                                                surface = surface,
+                                                previewUtils = config.previewUtils,
+                                                displayId = config.displayId,
+                                                wallpaperColors = colorsModel.colors
+                                            )
+                                        // Dispose the previous preview on the renderer side.
+                                        previewDisposableHandle?.dispose()
+                                        previewDisposableHandle = DisposableHandle {
+                                            config.previewUtils.cleanUp(workspaceCallback)
+                                        }
+                                    }
+                                }
+                        }
+                }
+
+                override fun surfaceDestroyed(holder: SurfaceHolder) {
+                    job?.cancel()
+                    previewDisposableHandle?.dispose()
                 }
             }
         )
     }
 
-    private fun renderWorkspacePreview(
+    private suspend fun renderWorkspacePreview(
         surface: SurfaceView,
         previewUtils: PreviewUtils,
         displayId: Int,
         wallpaperColors: WallpaperColors? = null,
-    ) {
+    ): Message? {
+        var workspaceCallback: Message? = null
         if (previewUtils.supportsPreview()) {
             val extras = bundleOf(Pair(SurfaceViewUtils.KEY_DISPLAY_ID, displayId))
             wallpaperColors?.let {
@@ -112,29 +146,34 @@ object WorkspacePreviewBinder {
                     surface,
                     extras,
                 )
-            previewUtils.renderPreview(
-                request,
-                object : PreviewUtils.WorkspacePreviewCallback {
-                    override fun onPreviewRendered(resultBundle: Bundle?) {
-                        if (resultBundle != null) {
-                            SurfaceViewUtils.getSurfacePackage(resultBundle).apply {
-                                if (this != null) {
-                                    surface.setChildSurfacePackage(this)
-                                } else {
-                                    Log.w(
-                                        TAG,
-                                        "Result bundle from rendering preview does not contain " +
-                                            "a child surface package."
-                                    )
+            workspaceCallback = suspendCancellableCoroutine { continuation ->
+                previewUtils.renderPreview(
+                    request,
+                    object : PreviewUtils.WorkspacePreviewCallback {
+                        override fun onPreviewRendered(resultBundle: Bundle?) {
+                            if (resultBundle != null) {
+                                SurfaceViewUtils.getSurfacePackage(resultBundle).apply {
+                                    if (this != null) {
+                                        surface.setChildSurfacePackage(this)
+                                    } else {
+                                        Log.w(
+                                            TAG,
+                                            "Result bundle from rendering preview does not contain " +
+                                                "a child surface package."
+                                        )
+                                    }
                                 }
+                                continuation.resume(SurfaceViewUtils.getCallback(resultBundle))
+                            } else {
+                                Log.w(TAG, "Result bundle from rendering preview is null.")
+                                continuation.resume(null)
                             }
-                        } else {
-                            Log.w(TAG, "Result bundle from rendering preview is null.")
                         }
                     }
-                }
-            )
+                )
+            }
         }
+        return workspaceCallback
     }
 
     const val TAG = "WorkspacePreviewBinder"
