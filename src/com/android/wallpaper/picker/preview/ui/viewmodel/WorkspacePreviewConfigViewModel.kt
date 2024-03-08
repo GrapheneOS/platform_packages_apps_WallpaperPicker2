@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
+import com.android.wallpaper.model.wallpaper.FoldableDisplay
 import com.android.wallpaper.util.PreviewUtils
 
 /** Defines configuration associated with a single workspace preview. */
@@ -23,6 +24,6 @@ data class WorkspacePreviewConfigViewModel(
     /** The preview utils for rendering the workspace preview, different for Home & Lock screens. */
     val previewUtils: PreviewUtils,
 
-    /** The ID of the display to be rendered. */
-    val displayId: Int,
+    /** The foldable display to be rendered, or null if the device is not a foldable. */
+    val foldableDisplay: FoldableDisplay?,
 )

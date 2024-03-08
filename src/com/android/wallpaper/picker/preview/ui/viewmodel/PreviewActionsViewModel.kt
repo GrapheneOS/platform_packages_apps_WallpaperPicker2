@@ -21,6 +21,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
 import android.service.wallpaper.WallpaperSettingsActivity
+import com.android.wallpaper.effects.Effect
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
 import com.android.wallpaper.picker.data.CreativeWallpaperData
 import com.android.wallpaper.picker.data.DownloadableWallpaperData
@@ -64,7 +65,11 @@ constructor(
             } else {
                 InformationFloatingSheetViewModel(
                     wallpaperModel.commonWallpaperData.attributions,
-                    wallpaperModel.commonWallpaperData.exploreActionUrl,
+                    if (wallpaperModel.commonWallpaperData.exploreActionUrl.isNullOrEmpty()) {
+                        null
+                    } else {
+                        wallpaperModel.commonWallpaperData.exploreActionUrl
+                    }
                 )
             }
         }
@@ -223,23 +228,33 @@ constructor(
                     null
                 }
                 else -> {
-                    getEffectFloatingSheetViewModel(status, effect.title, effect.type)
+                    getEffectFloatingSheetViewModel(status, effect)
                 }
             }
         }
 
     private fun getEffectFloatingSheetViewModel(
         status: EffectsRepository.EffectStatus,
-        title: String,
-        effectType: EffectEnumInterface,
+        effect: Effect,
     ): EffectFloatingSheetViewModel {
         val floatingSheetViewStatus =
             when (status) {
-                EffectsRepository.EffectStatus.EFFECT_APPLY_IN_PROGRESS ->
+                EffectsRepository.EffectStatus.EFFECT_APPLY_IN_PROGRESS -> {
                     WallpaperEffectsView2.Status.PROCESSING
-                EffectsRepository.EffectStatus.EFFECT_APPLIED ->
+                }
+                EffectsRepository.EffectStatus.EFFECT_APPLIED -> {
                     WallpaperEffectsView2.Status.SUCCESS
-                else -> WallpaperEffectsView2.Status.IDLE
+                }
+                EffectsRepository.EffectStatus.EFFECT_DOWNLOAD_READY -> {
+                    WallpaperEffectsView2.Status.SHOW_DOWNLOAD_BUTTON
+                }
+                EffectsRepository.EffectStatus.EFFECT_DOWNLOAD_IN_PROGRESS -> {
+                    // downloading of ml models in progress
+                    WallpaperEffectsView2.Status.DOWNLOADING
+                }
+                else -> {
+                    WallpaperEffectsView2.Status.IDLE
+                }
             }
         return EffectFloatingSheetViewModel(
             myPhotosClickListener = {},
@@ -260,14 +275,14 @@ constructor(
             },
             object : WallpaperEffectsView2.EffectDownloadClickListener {
                 override fun onEffectDownloadClick() {
-                    TODO("Not yet implemented")
+                    interactor.startEffectsMLDownload(effect)
                 }
             },
             floatingSheetViewStatus,
             resultCode = null,
             errorMessage = null,
-            title,
-            effectType,
+            effect.title,
+            effect.type,
             interactor.getEffectTextRes(),
         )
     }

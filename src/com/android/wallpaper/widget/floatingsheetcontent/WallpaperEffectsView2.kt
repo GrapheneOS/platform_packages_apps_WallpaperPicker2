@@ -210,7 +210,6 @@ class WallpaperEffectsView2(context: Context?, attrs: AttributeSet?) :
         container?.visibility = INVISIBLE
         downloadProgression?.visibility = INVISIBLE
         downloadButtonLayout?.visibility = INVISIBLE
-        downloadProgression?.visibility = INVISIBLE
     }
 
     private fun showFailedLayout(errorMessage: String?) {
@@ -220,7 +219,6 @@ class WallpaperEffectsView2(context: Context?, attrs: AttributeSet?) :
         container?.visibility = VISIBLE
         downloadProgression?.visibility = INVISIBLE
         downloadButtonLayout?.visibility = INVISIBLE
-        downloadProgression?.visibility = INVISIBLE
     }
 
     private fun controlButtonByCode(view: View?, resultCode: Int?, mask: Int) {

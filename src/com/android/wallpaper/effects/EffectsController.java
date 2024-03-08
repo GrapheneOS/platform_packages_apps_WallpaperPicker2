@@ -44,11 +44,13 @@ public abstract class EffectsController {
     public static final int RESULT_FOREGROUND_DOWNLOAD_SUCCEEDED = 512;
     public static final int RESULT_FOREGROUND_DOWNLOAD_FAILED = 1024;
     public static final int RESULT_PROBE_FOREGROUND_DOWNLOADING = 2048;
+
     /**
      * Interface of the Effect enum.
      */
     public interface EffectEnumInterface {
     }
+
     public enum Effect implements EffectEnumInterface {
         NONE,
     }
@@ -94,10 +96,12 @@ public abstract class EffectsController {
     }
 
     /** Sets the {@link EffectsServiceListener} to receive updates. */
-    public void setListener(EffectsServiceListener listener) {}
+    public void setListener(EffectsServiceListener listener) {
+    }
 
     /** Removes the listener set via {@link #setListener(EffectsServiceListener)}. */
-    public void removeListener() {}
+    public void removeListener() {
+    }
 
     /** Returns true if the effect is expected by this controller. */
     public boolean isTargetEffect(EffectEnumInterface effect) {
@@ -113,7 +117,8 @@ public abstract class EffectsController {
          *
          * @param effect The effect that was generated.
          * @param bundle The data that the Service might have sent to the picker.
-         * @param error The error code. if there's an error, value is greater than zero.
+         * @param error The error code. if there's an error, value is greater than
+         *              zero.
          * @param originalStatusCode The original status code used for metrics logging.
          * @param errorMessage The error message.
          */
@@ -157,4 +162,11 @@ public abstract class EffectsController {
     public Uri getContentUri() {
         return Uri.EMPTY;
     }
+
+    /**
+     * This initiates the downloading of the ML models for a given effect
+     *
+     * @param effect The Effect for which we want to download the ML model
+     */
+    public void startForegroundDownload(com.android.wallpaper.effects.Effect effect){}
 }

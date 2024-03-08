@@ -58,7 +58,8 @@ object WorkspacePreviewBinder {
                                         renderWorkspacePreview(
                                             surface = surface,
                                             previewUtils = config.previewUtils,
-                                            displayId = config.displayId,
+                                            displayId =
+                                                viewModel.getDisplayId(config.foldableDisplay),
                                             wallpaperColors = it.colors
                                         )
                                     // Dispose the previous preview on the renderer side.
@@ -108,7 +109,8 @@ object WorkspacePreviewBinder {
                                             renderWorkspacePreview(
                                                 surface = surface,
                                                 previewUtils = config.previewUtils,
-                                                displayId = config.displayId,
+                                                displayId =
+                                                    viewModel.getDisplayId(config.foldableDisplay),
                                                 wallpaperColors = colorsModel.colors
                                             )
                                         // Dispose the previous preview on the renderer side.

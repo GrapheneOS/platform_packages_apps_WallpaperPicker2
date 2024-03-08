@@ -29,7 +29,6 @@ import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import java.io.InputStream
 import javax.inject.Inject
 import kotlinx.coroutines.flow.StateFlow
 
@@ -49,7 +48,6 @@ constructor(
         @UserEventLogger.SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
         destination: WallpaperDestination,
         wallpaperModel: StaticWallpaperModel,
-        inputStream: InputStream?,
         bitmap: Bitmap,
         wallpaperSize: Point,
         asset: Asset,
@@ -59,7 +57,6 @@ constructor(
             setWallpaperEntryPoint,
             destination,
             wallpaperModel,
-            inputStream,
             bitmap,
             wallpaperSize,
             asset,

@@ -111,10 +111,9 @@ class PreviewActionFloatingSheet(context: Context, attrs: AttributeSet?) :
                     }
                 }
             }
-            if (onExploreButtonClicked != null) {
-                exploreButton.isVisible = true
-                exploreButton.setOnClickListener { onExploreButtonClicked.invoke() }
-            }
+
+            exploreButton.isVisible = onExploreButtonClicked != null
+            exploreButton.setOnClickListener { onExploreButtonClicked?.invoke() }
         }
         floatingSheetView.removeAllViews()
         floatingSheetView.addView(view)

@@ -272,6 +272,15 @@ constructor(
         )
     }
 
+    /**
+     * This function triggers the downloading of the machine learning models. The downloading occurs
+     * in the foreground off the main thread so it's safe to trigger it from the main thread.
+     */
+    fun startEffectsModelDownload(effect: Effect) {
+        effectsController.startForegroundDownload(effect)
+        _effectStatus.value = EffectStatus.EFFECT_DOWNLOAD_IN_PROGRESS
+    }
+
     companion object {
         private const val TAG = "EffectsRepository"
     }

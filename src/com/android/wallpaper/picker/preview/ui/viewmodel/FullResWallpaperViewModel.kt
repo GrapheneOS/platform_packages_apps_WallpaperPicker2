@@ -19,12 +19,10 @@ import android.graphics.Bitmap
 import android.graphics.Point
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
-import java.io.InputStream
 
 data class FullResWallpaperViewModel(
     val rawWallpaperBitmap: Bitmap,
     val rawWallpaperSize: Point,
-    val stream: InputStream?,
     val asset: Asset,
     val fullPreviewCropModels: Map<Point, FullPreviewCropModel>?,
 )

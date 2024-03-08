@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.picker.preview.domain.interactor
 
+import com.android.wallpaper.effects.Effect
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.data.repository.EffectsRepository
@@ -66,5 +67,9 @@ constructor(
         val wallpaperModel = wallpaperPreviewRepository.downloadWallpaper()
         _isDownloadingWallpaper.value = false
         return wallpaperModel
+    }
+
+    fun startEffectsMLDownload(effect: Effect) {
+        effectsRepository.startEffectsModelDownload(effect)
     }
 }

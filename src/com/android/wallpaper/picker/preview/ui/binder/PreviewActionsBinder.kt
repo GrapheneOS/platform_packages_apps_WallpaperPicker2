@@ -102,8 +102,7 @@ object PreviewActionsBinder {
                                 viewModel.exploreActionUrl?.let { url ->
                                     {
                                         logger.logWallpaperExploreButtonClicked()
-                                        val appContext = floatingSheet.context.applicationContext
-                                        appContext.startActivity(
+                                        floatingSheet.context.startActivity(
                                             Intent(Intent.ACTION_VIEW, Uri.parse(url))
                                         )
                                     }

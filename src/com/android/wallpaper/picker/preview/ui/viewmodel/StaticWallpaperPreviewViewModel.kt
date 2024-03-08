@@ -23,7 +23,6 @@ import android.graphics.ColorSpace
 import android.graphics.Point
 import android.graphics.Rect
 import com.android.wallpaper.asset.Asset
-import com.android.wallpaper.asset.StreamableAsset
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
@@ -34,7 +33,6 @@ import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import java.io.ByteArrayOutputStream
-import java.io.InputStream
 import javax.inject.Inject
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineDispatcher
@@ -119,7 +117,6 @@ constructor(
                         FullResWallpaperViewModel(
                             bitmap,
                             dimensions,
-                            asset.getStream(),
                             asset,
                             cropHintsInfo,
                         )
@@ -177,15 +174,6 @@ constructor(
         suspendCancellableCoroutine { k: CancellableContinuation<Bitmap?> ->
             val callback = Asset.BitmapReceiver { k.resumeWith(Result.success(it)) }
             decodeBitmap(dimensions.x, dimensions.y, /* hardwareBitmapAllowed= */ false, callback)
-        }
-
-    private suspend fun Asset.getStream(): InputStream? =
-        suspendCancellableCoroutine { k: CancellableContinuation<InputStream?> ->
-            if (this is StreamableAsset) {
-                fetchInputStream { k.resumeWith(Result.success(it)) }
-            } else {
-                k.resumeWith(Result.success(null))
-            }
         }
 
     // TODO b/296288298 Create a util class functions for Bitmap and Asset
