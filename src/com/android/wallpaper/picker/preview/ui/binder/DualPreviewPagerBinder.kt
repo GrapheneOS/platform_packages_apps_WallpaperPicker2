@@ -17,6 +17,7 @@ package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
 import android.view.View
+import android.view.View.OVER_SCROLL_NEVER
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.FoldableDisplay
@@ -74,6 +75,8 @@ object DualPreviewPagerBinder {
                     )
                 }
             }
+
+            dualPreviewView.overScrollMode = OVER_SCROLL_NEVER
         }
     }
 }

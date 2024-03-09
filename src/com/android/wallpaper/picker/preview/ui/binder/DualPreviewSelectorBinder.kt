@@ -20,6 +20,7 @@ import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager.widget.ViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
+import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.TabTextPagerAdapter
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 
 /**
@@ -51,6 +52,10 @@ object DualPreviewSelectorBinder {
             currentNavDestId,
             navigate,
         )
+        tabsViewPager.currentItem =
+            (tabsViewPager.adapter as TabTextPagerAdapter).getPageNumber(
+                wallpaperPreviewViewModel.isViewAsHome
+            )
     }
 
     private fun synchronizePreviewAndTabsPager(

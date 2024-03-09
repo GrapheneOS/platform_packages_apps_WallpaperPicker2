@@ -22,6 +22,7 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import android.widget.ImageView
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -57,13 +58,17 @@ object FullWallpaperPreviewBinder {
     ) {
         val wallpaperPreviewCrop: FullPreviewFrameLayout =
             view.requireViewById(R.id.wallpaper_preview_crop)
+        val previewCard: CardView = view.requireViewById(R.id.preview_card)
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.fullWallpaper.collect { (_, config, _) ->
+                    val currentSize = displayUtils.getRealSize(checkNotNull(view.context.display))
+                    val targetSize = config.displaySize
                     wallpaperPreviewCrop.setCurrentAndTargetDisplaySize(
-                        displayUtils.getRealSize(checkNotNull(view.context.display)),
-                        config.displaySize,
+                        currentSize,
+                        targetSize,
                     )
+                    if (targetSize == currentSize) previewCard.radius = 0f
                 }
             }
         }

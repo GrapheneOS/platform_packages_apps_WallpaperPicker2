@@ -37,6 +37,18 @@ class TabTextPagerAdapter : PagerAdapter() {
         return view == `object`
     }
 
+    /**
+     * Obtains the page number for the home or lock tab
+     *
+     * @param isHome if true, this function will return the page number for the home tab, if false
+     *   if false, the one for the lock tab
+     */
+    fun getPageNumber(isHome: Boolean): Int {
+        return textPages.indexOf(
+            if (isHome) R.string.home_screen_message else R.string.lock_screen_message
+        )
+    }
+
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val itemView =
             LayoutInflater.from(container.context).inflate(R.layout.item_text, container, false)
