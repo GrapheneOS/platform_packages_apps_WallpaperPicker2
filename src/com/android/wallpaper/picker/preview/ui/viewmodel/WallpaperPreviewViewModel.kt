@@ -64,14 +64,22 @@ constructor(
     @LockScreenPreviewUtils private val lockPreviewUtils: PreviewUtils,
 ) : ViewModel() {
 
+    // Don't update smaller display since we always use portrait, always use wallpaper display on
+    // single display device.
+    val smallerDisplaySize = displayUtils.getRealSize(displayUtils.getSmallerDisplay())
+    var wallpaperDisplaySize = displayUtils.getRealSize(displayUtils.getWallpaperDisplay())
+        private set
+
     val staticWallpaperPreviewViewModel =
         staticWallpaperPreviewViewModelFactory.create(viewModelScope)
-    val smallerDisplaySize = displayUtils.getRealSize(displayUtils.getSmallerDisplay())
-    val wallpaperDisplaySize = displayUtils.getRealSize(displayUtils.getWallpaperDisplay())
     var isViewAsHome = false
     var isNewTask = false
 
     val wallpaper: StateFlow<WallpaperModel?> = interactor.wallpaperModel
+
+    fun updateDisplayConfiguration() {
+        wallpaperDisplaySize = displayUtils.getRealSize(displayUtils.getWallpaperDisplay())
+    }
 
     fun shouldShowTooltip(): Flow<Boolean> =
         combine(interactor.wallpaperModel.filterNotNull(), interactor.hasTooltipBeenShown) {

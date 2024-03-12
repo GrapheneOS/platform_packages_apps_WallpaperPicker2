@@ -32,7 +32,6 @@ import androidx.fragment.app.FragmentManager;
 import com.android.wallpaper.R;
 import com.android.wallpaper.config.BaseFlags;
 import com.android.wallpaper.model.ImageWallpaperInfo;
-import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity;
@@ -143,17 +142,17 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
     private void loadPreviewFragment() {
         BaseFlags flags = InjectorProvider.getInjector().getFlags();
         Intent intent = getIntent();
-        WallpaperInfo wallpaper = new ImageWallpaperInfo(intent.getData());
         if (flags.isMultiCropPreviewUiEnabled() && flags.isMultiCropEnabled()) {
-            startActivity(WallpaperPreviewActivity.Companion.newIntent(
-                    this.getApplicationContext(), wallpaper, /* isAssetIdPresent= */ false,
-                    /* isViewAsHome= */ true, /* isNewTask= */ false));
+            Intent wallpaperIntent = WallpaperPreviewActivity.Companion.newIntent(
+                    this.getApplicationContext(), intent, /* isAssetIdPresent= */ false,
+                    /* isViewAsHome= */ true, /* isNewTask= */ false);
+            startActivity(wallpaperIntent);
             finish();
             return;
         }
         Fragment fragment = InjectorProvider.getInjector().getPreviewFragment(
                 /* context */ this,
-                wallpaper,
+                new ImageWallpaperInfo(intent.getData()),
                 /* viewAsHome= */ true,
                 /* isAssetIdPresent= */ false,
                 /* isNewTask= */ false);

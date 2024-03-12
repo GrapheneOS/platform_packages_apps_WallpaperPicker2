@@ -136,6 +136,7 @@
 
       <activity
           android:name="com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity"
+          android:configChanges="screenSize | orientation"
           android:excludeFromRecents="true"
           android:taskAffinity="@string/multi_crop_task_affinity"
           android:resizeableActivity="false"

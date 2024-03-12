@@ -107,6 +107,7 @@ object SmallWallpaperPreviewBinder {
 
                 override fun surfaceDestroyed(holder: SurfaceHolder) {
                     job?.cancel()
+                    surface.holder.removeCallback(this)
                     // Note that we disconnect wallpaper connection for live wallpapers in
                     // WallpaperPreviewActivity's onDestroy().
                     // This is to reduce multiple times of connecting and disconnecting live

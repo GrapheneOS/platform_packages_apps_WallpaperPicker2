@@ -26,8 +26,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.android.wallpaper.R
+import com.android.wallpaper.model.ImageWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.BasePreviewActivity
@@ -63,6 +66,8 @@ class WallpaperPreviewActivity :
     @Inject lateinit var liveWallpaperDownloader: LiveWallpaperDownloader
     @MainDispatcher @Inject lateinit var mainScope: CoroutineScope
 
+    private lateinit var navController: NavController
+
     private val wallpaperPreviewViewModel: WallpaperPreviewViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +76,10 @@ class WallpaperPreviewActivity :
         window.navigationBarColor = Color.TRANSPARENT
         window.statusBarColor = Color.TRANSPARENT
         setContentView(R.layout.activity_wallpaper_preview)
+        navController =
+            (supportFragmentManager.findFragmentById(R.id.wallpaper_preview_nav_host)
+                    as NavHostFragment)
+                .navController
         // Fits screen to navbar and statusbar
         WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
         val isAssetIdPresent = intent.getBooleanExtra(IS_ASSET_ID_PRESENT, false)
@@ -114,10 +123,6 @@ class WallpaperPreviewActivity :
         if (liveWallpaperModel != null && liveWallpaperModel.isNewCreativeWallpaper()) {
             // If it's a new creative wallpaper, override the start destination to the fullscreen
             // fragment for the create-new flow of creative wallpapers
-            val navController =
-                (supportFragmentManager.findFragmentById(R.id.wallpaper_preview_nav_host)
-                        as NavHostFragment)
-                    .navController
             val navGraph =
                 navController.navInflater.inflate(R.navigation.wallpaper_preview_nav_graph)
             navGraph.setStartDestination(R.id.creativeNewPreviewFragment)
@@ -164,6 +169,22 @@ class WallpaperPreviewActivity :
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
+
+        wallpaperPreviewViewModel.updateDisplayConfiguration()
+        // Restart current navigation destination
+        navController.apply {
+            currentDestination?.id?.let {
+                navigate(
+                    resId = it,
+                    args = null,
+                    navOptions =
+                        NavOptions.Builder()
+                            .setPopUpTo(destinationId = it, inclusive = true)
+                            .build(),
+                )
+            }
+        }
+
         enforcePortraitForHandheldAndFoldedDisplay()
     }
 
@@ -196,6 +217,38 @@ class WallpaperPreviewActivity :
             intent.putExtra(IS_ASSET_ID_PRESENT, isAssetIdPresent)
             intent.putExtra(EXTRA_VIEW_AS_HOME, isViewAsHome)
             intent.putExtra(IS_NEW_TASK, isNewTask)
+            return intent
+        }
+
+        /**
+         * Returns a new [Intent] that can be used to start [WallpaperPreviewActivity], explicitly
+         * propagating any permissions on the wallpaper data to the new [Intent].
+         *
+         * @param context application context.
+         * @param wallpaperInfo selected by user for editing preview.
+         * @param isNewTask true to launch at a new task.
+         *
+         * TODO(b/291761856): Use wallpaper model to replace wallpaper info.
+         */
+        fun newIntent(
+            context: Context,
+            originalIntent: Intent,
+            isAssetIdPresent: Boolean,
+            isViewAsHome: Boolean = false,
+            isNewTask: Boolean = false,
+        ): Intent {
+            val data = originalIntent.data
+            val intent =
+                newIntent(
+                    context,
+                    ImageWallpaperInfo(data),
+                    isAssetIdPresent,
+                    isViewAsHome,
+                    isNewTask
+                )
+            // Both these lines are required for permission propagation
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            intent.setData(data)
             return intent
         }
     }
