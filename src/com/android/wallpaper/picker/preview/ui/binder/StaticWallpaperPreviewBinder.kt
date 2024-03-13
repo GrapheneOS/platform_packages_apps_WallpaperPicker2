@@ -31,7 +31,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
 import com.android.wallpaper.picker.preview.ui.util.FullResImageViewUtil
-import com.android.wallpaper.picker.preview.ui.view.SystemScaledWallpaperPreviewSurfaceView
 import com.android.wallpaper.picker.preview.ui.viewmodel.StaticWallpaperPreviewViewModel
 import com.android.wallpaper.util.RtlUtils
 import com.android.wallpaper.util.WallpaperCropUtils
@@ -51,7 +50,6 @@ object StaticWallpaperPreviewBinder {
         viewModel: StaticWallpaperPreviewViewModel,
         displaySize: Point,
         viewLifecycleOwner: LifecycleOwner,
-        shouldCalibrateWithSystemScale: Boolean = false,
     ) {
         lowResImageView.initLowResImageView()
         fullResImageView.initFullResImageView()
@@ -69,7 +67,6 @@ object StaticWallpaperPreviewBinder {
                             displaySize,
                             cropHint,
                             RtlUtils.isRtl(lowResImageView.context),
-                            shouldCalibrateWithSystemScale,
                         )
 
                         // Fill in the default crop region if the displaySize for this preview is
@@ -111,20 +108,12 @@ object StaticWallpaperPreviewBinder {
         setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE)
     }
 
-    /**
-     * @param shouldCalibrateWithSystemScale This flag should be true for rendering small previews.
-     *   Unlikely full wallpaper preview for static wallpapers, small wallpaper preview does not
-     *   scale up the surface view larger than the display view to conform with the system's actual
-     *   wallpaper scale (see [SystemScaledWallpaperPreviewSurfaceView]). Instead we need to apply
-     *   this system scale to [SubsamplingScaleImageView].
-     */
     private fun SubsamplingScaleImageView.setFullResImage(
         imageSource: ImageSource,
         rawWallpaperSize: Point,
         displaySize: Point,
         cropHint: Rect?,
         isRtl: Boolean,
-        shouldCalibrateWithSystemScale: Boolean = false,
     ) {
         // Set the full res image
         setImage(imageSource)
@@ -139,13 +128,7 @@ object StaticWallpaperPreviewBinder {
             .let { scaleAndCenter ->
                 minScale = scaleAndCenter.minScale
                 maxScale = scaleAndCenter.maxScale
-                val scale =
-                    if (shouldCalibrateWithSystemScale)
-                        WallpaperCropUtils.getSystemWallpaperMaximumScale(
-                            context.applicationContext
-                        )
-                    else 1F
-                setScaleAndCenter(scaleAndCenter.defaultScale * scale, scaleAndCenter.center)
+                setScaleAndCenter(scaleAndCenter.defaultScale, scaleAndCenter.center)
             }
     }
 

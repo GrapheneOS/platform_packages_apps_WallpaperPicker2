@@ -16,6 +16,7 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
+import android.graphics.Point
 import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
@@ -23,6 +24,7 @@ import android.view.SurfaceView
 import android.view.View
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
+import androidx.core.view.doOnLayout
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -40,6 +42,7 @@ import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewMod
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.WallpaperCropUtils
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.shouldEnforceSingleEngine
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import java.lang.Integer.min
 import kotlin.math.max
@@ -80,15 +83,6 @@ object FullWallpaperPreviewBinder {
         surfaceView.holder.addCallback(
             object : SurfaceViewUtil.SurfaceCallback {
                 override fun surfaceCreated(holder: SurfaceHolder) {
-                    val surfaceSize = holder.surface.defaultSize
-                    val cropSurfaceSize =
-                        WallpaperCropUtils.calculateCropSurfaceSize(
-                            view.resources,
-                            max(surfaceSize.x, surfaceSize.y),
-                            min(surfaceSize.x, surfaceSize.y),
-                            surfaceSize.x,
-                            surfaceSize.y
-                        )
                     job =
                         lifecycleOwner.lifecycleScope.launch {
                             viewModel.fullWallpaper.collect {
@@ -100,13 +94,34 @@ object FullWallpaperPreviewBinder {
                                         whichPreview,
                                         config.screen.toFlag(),
                                         surfaceView,
+                                        WallpaperConnectionUtils.EngineRenderingConfig(
+                                            wallpaper.shouldEnforceSingleEngine(),
+                                            config.foldableDisplay,
+                                            viewModel.smallerDisplaySize,
+                                            viewModel.wallpaperDisplaySize,
+                                        )
                                     )
                                 } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
-                                    val (lowResImageView, fullResImageView) =
-                                        initStaticPreviewSurface(
-                                            applicationContext,
-                                            surfaceView,
-                                        ) { crop, zoom ->
+                                    val preview =
+                                        LayoutInflater.from(applicationContext)
+                                            .inflate(R.layout.fullscreen_wallpaper_preview, null)
+                                    surfaceView.attachView(preview)
+                                    val fullResImageView =
+                                        preview.requireViewById<SubsamplingScaleImageView>(
+                                            R.id.full_res_image
+                                        )
+                                    fullResImageView.doOnLayout {
+                                        val imageSize =
+                                            Point(fullResImageView.width, fullResImageView.height)
+                                        val cropImageSize =
+                                            WallpaperCropUtils.calculateCropSurfaceSize(
+                                                view.resources,
+                                                max(imageSize.x, imageSize.y),
+                                                min(imageSize.x, imageSize.y),
+                                                imageSize.x,
+                                                imageSize.y
+                                            )
+                                        fullResImageView.setOnNewCropListener { crop, zoom ->
                                             viewModel.staticWallpaperPreviewViewModel
                                                 .fullPreviewCropModels[config.displaySize] =
                                                 FullPreviewCropModel(
@@ -114,11 +129,14 @@ object FullWallpaperPreviewBinder {
                                                     cropSizeModel =
                                                         CropSizeModel(
                                                             wallpaperZoom = zoom,
-                                                            hostViewSize = surfaceSize,
-                                                            cropSurfaceSize = cropSurfaceSize,
+                                                            hostViewSize = imageSize,
+                                                            cropViewSize = cropImageSize,
                                                         ),
                                                 )
                                         }
+                                    }
+                                    val lowResImageView =
+                                        preview.requireViewById<ImageView>(R.id.low_res_image)
 
                                     // We do not allow users to pinch to crop if it is a
                                     // downloadable wallpaper.

@@ -17,15 +17,15 @@ package com.android.wallpaper.picker.preview.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.SurfaceView
 import com.android.wallpaper.util.WallpaperCropUtils
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 
 /**
- * A [SurfaceView] for wallpaper preview that scales and centers the surface to simulate the actual
- * wallpaper surface's default system zoom.
+ * A [SubsamplingScaleImageView] for wallpaper preview that scales and centers the surface to
+ * simulate the actual wallpaper surface's default system zoom.
  */
-class SystemScaledWallpaperPreviewSurfaceView(context: Context, attrs: AttributeSet? = null) :
-    SurfaceView(context, attrs) {
+class SystemScaledSubsamplingScaleImageView(context: Context, attrs: AttributeSet? = null) :
+    SubsamplingScaleImageView(context, attrs) {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 

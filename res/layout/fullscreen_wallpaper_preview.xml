@@ -25,7 +25,7 @@
         android:scaleType="centerCrop"
         android:background="?android:colorBackground" />
 
-    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+    <com.android.wallpaper.picker.preview.ui.view.SystemScaledSubsamplingScaleImageView
         android:id="@+id/full_res_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

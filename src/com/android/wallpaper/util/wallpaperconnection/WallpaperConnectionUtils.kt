@@ -7,19 +7,19 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.Matrix
 import android.graphics.Point
+import android.net.Uri
 import android.os.RemoteException
 import android.service.wallpaper.IWallpaperEngine
 import android.service.wallpaper.IWallpaperService
 import android.service.wallpaper.WallpaperService
 import android.util.Log
-import android.view.Display
 import android.view.SurfaceControl
 import android.view.SurfaceView
-import android.view.View
+import com.android.wallpaper.model.wallpaper.FoldableDisplay
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
-import com.android.wallpaper.util.ScreenSizeCalculator
 import com.android.wallpaper.util.WallpaperConnection
 import com.android.wallpaper.util.WallpaperConnection.WhichPreview
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.getKey
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -38,6 +38,9 @@ object WallpaperConnectionUtils {
     // Note that when one wallpaper engine's render is mirrored to a new surface view, we call
     // engine.mirrorSurfaceControl() and will have a new surface control instance.
     private val surfaceControlMap = mutableMapOf<String, MutableList<SurfaceControl>>()
+    // Track the currently used creative wallpaper config preview URI to avoid unnecessary multiple
+    // update queries for the same preview.
+    private val creativeWallpaperConfigPreviewUriMap = mutableMapOf<String, Uri>()
 
     private val mutex = Mutex()
 
@@ -48,15 +51,24 @@ object WallpaperConnectionUtils {
         whichPreview: WhichPreview,
         destinationFlag: Int,
         surfaceView: SurfaceView,
+        engineRenderingConfig: EngineRenderingConfig,
         listener: WallpaperEngineConnection.WallpaperEngineConnectionListener? = null,
     ) {
         val wallpaperInfo = wallpaperModel.liveWallpaperData.systemWallpaperInfo
-        val engineKey = wallpaperInfo.getKey()
-        val displayMetrics = getDisplayMetrics(surfaceView)
+        val engineDisplaySize = engineRenderingConfig.getEngineDisplaySize()
+        val engineKey = wallpaperInfo.getKey(engineDisplaySize)
 
         // Update the creative wallpaper uri before starting the service.
         wallpaperModel.creativeWallpaperData?.configPreviewUri?.let {
-            context.contentResolver.update(it, ContentValues(), null)
+            val uriKey = wallpaperInfo.getKey()
+            if (!creativeWallpaperConfigPreviewUriMap.containsKey(uriKey)) {
+                mutex.withLock {
+                    if (!creativeWallpaperConfigPreviewUriMap.containsKey(uriKey)) {
+                        context.contentResolver.update(it, ContentValues(), null)
+                        creativeWallpaperConfigPreviewUriMap[uriKey] = it
+                    }
+                }
+            }
         }
 
         if (!engineMap.containsKey(engineKey)) {
@@ -67,7 +79,7 @@ object WallpaperConnectionUtils {
                             initEngine(
                                 context,
                                 wallpaperModel.getWallpaperServiceIntent(),
-                                displayMetrics,
+                                engineDisplaySize,
                                 destinationFlag,
                                 whichPreview,
                                 surfaceView,
@@ -81,7 +93,13 @@ object WallpaperConnectionUtils {
 
         engineMap[engineKey]?.await()?.let { (_, engineConnection) ->
             engineConnection.engine?.let {
-                mirrorAndReparent(engineKey, it, surfaceView, displayMetrics)
+                mirrorAndReparent(
+                    engineKey,
+                    it,
+                    surfaceView,
+                    engineRenderingConfig.getEngineDisplaySize(),
+                    engineRenderingConfig.enforceSingleEngine,
+                )
             }
         }
     }
@@ -95,8 +113,10 @@ object WallpaperConnectionUtils {
     suspend fun disconnect(
         context: Context,
         wallpaperModel: LiveWallpaperModel,
+        displaySize: Point,
     ) {
-        val engineKey = wallpaperModel.liveWallpaperData.systemWallpaperInfo.getKey()
+        val engineKey = wallpaperModel.liveWallpaperData.systemWallpaperInfo.getKey(displaySize)
+
         if (engineMap.containsKey(engineKey)) {
             mutex.withLock {
                 engineMap.remove(engineKey)?.await()?.let { (serviceConnection, engineConnection) ->
@@ -112,6 +132,15 @@ object WallpaperConnectionUtils {
                 surfaceControlMap.remove(engineKey)?.let { surfaceControls ->
                     surfaceControls.forEach { it.release() }
                     surfaceControls.clear()
+                }
+            }
+        }
+
+        val uriKey = wallpaperModel.liveWallpaperData.systemWallpaperInfo.getKey()
+        if (creativeWallpaperConfigPreviewUriMap.containsKey(uriKey)) {
+            mutex.withLock {
+                if (creativeWallpaperConfigPreviewUriMap.containsKey(uriKey)) {
+                    creativeWallpaperConfigPreviewUriMap.remove(uriKey)
                 }
             }
         }
@@ -135,6 +164,8 @@ object WallpaperConnectionUtils {
                 }
             }
         }
+
+        creativeWallpaperConfigPreviewUriMap.clear()
     }
 
     private suspend fun initEngine(
@@ -155,8 +186,13 @@ object WallpaperConnectionUtils {
         return Pair(serviceConnection, engineConnection)
     }
 
-    private fun WallpaperInfo.getKey(): String {
-        return this.packageName.plus(":").plus(this.serviceName)
+    private fun WallpaperInfo.getKey(displaySize: Point? = null): String {
+        val keyWithoutSizeInformation = this.packageName.plus(":").plus(this.serviceName)
+        return if (displaySize != null) {
+            keyWithoutSizeInformation.plus(":").plus("${displaySize.x}x${displaySize.y}")
+        } else {
+            keyWithoutSizeInformation
+        }
     }
 
     private suspend fun bindWallpaperService(
@@ -193,7 +229,8 @@ object WallpaperConnectionUtils {
         engineKey: String,
         engine: IWallpaperEngine,
         parentSurface: SurfaceView,
-        displayMetrics: Point
+        displayMetrics: Point,
+        enforceSingleEngine: Boolean,
     ) {
         fun logError(e: Exception) {
             Log.e(WallpaperConnection::class.simpleName, "Fail to reparent wallpaper surface", e)
@@ -209,10 +246,10 @@ object WallpaperConnectionUtils {
             SurfaceControl.Transaction().use { t ->
                 t.setMatrix(
                     wallpaperSurfaceControl,
-                    values[Matrix.MSCALE_X],
-                    values[Matrix.MSKEW_Y],
+                    if (enforceSingleEngine) values[Matrix.MSCALE_Y] else values[Matrix.MSCALE_X],
                     values[Matrix.MSKEW_X],
-                    values[Matrix.MSCALE_Y]
+                    values[Matrix.MSKEW_Y],
+                    values[Matrix.MSCALE_Y],
                 )
                 t.reparent(wallpaperSurfaceControl, parentSurfaceControl)
                 t.show(wallpaperSurfaceControl)
@@ -254,9 +291,34 @@ object WallpaperConnectionUtils {
         return values
     }
 
-    private fun getDisplayMetrics(view: View): Point {
-        val screenSizeCalculator = ScreenSizeCalculator.getInstance()
-        val display: Display = view.display
-        return screenSizeCalculator.getScreenSize(display)
+    data class EngineRenderingConfig(
+        val enforceSingleEngine: Boolean,
+        val foldableDisplay: FoldableDisplay?,
+        val smallDisplaySize: Point,
+        val wallpaperDisplaySize: Point,
+    ) {
+        fun getEngineDisplaySize(): Point {
+            // If we need to enforce single engine, always return the larger screen's preview
+            return if (enforceSingleEngine) {
+                return wallpaperDisplaySize
+            } else {
+                getPreviewDisplaySize()
+            }
+        }
+
+        private fun getPreviewDisplaySize(): Point {
+            return when (foldableDisplay) {
+                FoldableDisplay.FOLDED -> smallDisplaySize
+                else -> wallpaperDisplaySize
+            }
+        }
+    }
+
+    fun LiveWallpaperModel.shouldEnforceSingleEngine(): Boolean {
+        return when {
+            creativeWallpaperData != null -> false
+            liveWallpaperData.effectNames != null -> false
+            else -> true // Only fallback to single engine rendering for legacy live wallpapers
+        }
     }
 }

@@ -44,5 +44,5 @@ data class CropSizeModel(
     /** The size of the view hosting the wallpaper, e.g. SurfaceView. */
     val hostViewSize: Point,
     /** A larger version of hostViewSize that can safely contain parallax. */
-    val cropSurfaceSize: Point,
+    val cropViewSize: Point,
 )

@@ -16,6 +16,7 @@
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
 import android.graphics.Point
+import com.android.wallpaper.model.wallpaper.FoldableDisplay
 import com.android.wallpaper.module.CustomizationSections.Screen
 
 /** Configuration for a wallpaper preview. */
@@ -23,6 +24,9 @@ data class WallpaperPreviewConfigViewModel(
 
     /** The [Screen] the preview is rendering. */
     val screen: Screen,
+
+    /** Is it a folded or unfolded display. Null for handheld. */
+    val foldableDisplay: FoldableDisplay?,
 
     /** The display size the preview is based on. */
     val displaySize: Point,

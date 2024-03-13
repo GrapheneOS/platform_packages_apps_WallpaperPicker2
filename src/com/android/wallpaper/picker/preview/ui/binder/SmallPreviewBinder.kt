@@ -70,6 +70,7 @@ object SmallPreviewBinder {
             displaySize = displaySize,
             applicationContext = applicationContext,
             viewLifecycleOwner = viewLifecycleOwner,
+            foldableDisplay = foldableDisplay,
         )
     }
 }

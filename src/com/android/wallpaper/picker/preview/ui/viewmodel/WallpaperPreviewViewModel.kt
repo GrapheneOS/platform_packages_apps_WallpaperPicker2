@@ -328,10 +328,14 @@ constructor(
             getWorkspacePreviewConfig(screen, foldableDisplay)
     }
 
-    fun setDefaultWallpaperPreviewConfigViewModel(displaySize: Point) {
+    fun setDefaultWallpaperPreviewConfigViewModel(
+        foldableDisplay: FoldableDisplay?,
+        displaySize: Point
+    ) {
         fullWallpaperPreviewConfigViewModel.value =
             WallpaperPreviewConfigViewModel(
                 Screen.HOME_SCREEN,
+                foldableDisplay,
                 displaySize,
             )
     }
@@ -354,6 +358,7 @@ constructor(
             }
         return WallpaperPreviewConfigViewModel(
             screen = screen,
+            foldableDisplay = foldableDisplay,
             displaySize = displaySize,
         )
     }

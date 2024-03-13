@@ -620,7 +620,7 @@ class WallpaperClientImpl(
             WallpaperCropUtils.calculateCropRect(
                     context,
                     it.hostViewSize,
-                    it.cropSurfaceSize,
+                    it.cropViewSize,
                     wallpaperSize,
                     cropHint,
                     it.wallpaperZoom,

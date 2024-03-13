@@ -24,6 +24,7 @@ import android.view.SurfaceView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.android.wallpaper.R
+import com.android.wallpaper.model.wallpaper.FoldableDisplay
 import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import com.android.wallpaper.picker.data.WallpaperModel
@@ -31,6 +32,7 @@ import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil.attachView
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.shouldEnforceSingleEngine
 import com.android.wallpaper.util.wallpaperconnection.WallpaperEngineConnection.WallpaperEngineConnectionListener
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -52,6 +54,7 @@ object SmallWallpaperPreviewBinder {
         displaySize: Point,
         applicationContext: Context,
         viewLifecycleOwner: LifecycleOwner,
+        foldableDisplay: FoldableDisplay?,
     ) {
         var job: Job? = null
         surface.setZOrderMediaOverlay(true)
@@ -68,6 +71,12 @@ object SmallWallpaperPreviewBinder {
                                         whichPreview,
                                         screen.toFlag(),
                                         surface,
+                                        WallpaperConnectionUtils.EngineRenderingConfig(
+                                            wallpaper.shouldEnforceSingleEngine(),
+                                            foldableDisplay = foldableDisplay,
+                                            viewModel.smallerDisplaySize,
+                                            viewModel.wallpaperDisplaySize,
+                                        ),
                                         object : WallpaperEngineConnectionListener {
                                             override fun onWallpaperColorsChanged(
                                                 colors: WallpaperColors?,
@@ -77,7 +86,7 @@ object SmallWallpaperPreviewBinder {
                                                     WallpaperColorsModel.Loaded(colors)
                                                 )
                                             }
-                                        }
+                                        },
                                     )
                                 } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
                                     val staticPreviewView =
@@ -93,7 +102,6 @@ object SmallWallpaperPreviewBinder {
                                         viewModel = viewModel.staticWallpaperPreviewViewModel,
                                         displaySize = displaySize,
                                         viewLifecycleOwner = viewLifecycleOwner,
-                                        shouldCalibrateWithSystemScale = true,
                                     )
                                     // This is to possibly shut down all live wallpaper services
                                     // if they exist; otherwise static wallpaper can not show up.

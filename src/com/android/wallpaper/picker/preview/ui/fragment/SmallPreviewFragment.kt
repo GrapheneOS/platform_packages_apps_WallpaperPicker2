@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.picker.preview.ui.fragment
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
@@ -187,6 +188,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             floatingSheet = view.requireViewById(R.id.floating_sheet),
             previewViewModel = wallpaperPreviewViewModel,
             actionsViewModel = wallpaperPreviewViewModel.previewActionsViewModel,
+            foldableDisplay = (activity as? Activity)?.let { displayUtils.getFoldableDisplay(it) },
             displaySize = displayUtils.getRealSize(requireActivity().display),
             lifecycleOwner = viewLifecycleOwner,
             logger = logger,
