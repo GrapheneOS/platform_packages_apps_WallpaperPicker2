@@ -20,7 +20,7 @@ import android.graphics.Point
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import com.android.wallpaper.R
-import com.android.wallpaper.model.wallpaper.FoldableDisplay
+import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import kotlin.math.max
 
 /**
@@ -32,7 +32,7 @@ class DualDisplayAspectRatioLayout(
     attrs: AttributeSet?,
 ) : LinearLayout(context, attrs) {
 
-    private var previewDisplaySizes: Map<FoldableDisplay, Point>? = null
+    private var previewDisplaySizes: Map<DeviceDisplayType, Point>? = null
 
     /**
      * This measures the desired size of the preview views for both of foldable device's displays.
@@ -56,8 +56,8 @@ class DualDisplayAspectRatioLayout(
         // TODO: This only works for portrait mode currently, need to incorporate landscape
         val parentWidth = this.measuredWidth - totalMarginPixels
 
-        val smallDisplaySize = checkNotNull(getPreviewDisplaySize(FoldableDisplay.FOLDED))
-        val largeDisplaySize = checkNotNull(getPreviewDisplaySize(FoldableDisplay.UNFOLDED))
+        val smallDisplaySize = checkNotNull(getPreviewDisplaySize(DeviceDisplayType.FOLDED))
+        val largeDisplaySize = checkNotNull(getPreviewDisplaySize(DeviceDisplayType.UNFOLDED))
 
         // calculate the aspect ratio (ar) of the folded display
         val smallDisplayAR = smallDisplaySize.x.toFloat() / smallDisplaySize.y
@@ -134,20 +134,24 @@ class DualDisplayAspectRatioLayout(
         )
     }
 
-    fun setDisplaySizes(displaySizes: Map<FoldableDisplay, Point>) {
+    fun setDisplaySizes(displaySizes: Map<DeviceDisplayType, Point>) {
         previewDisplaySizes = displaySizes
     }
 
-    fun getPreviewDisplaySize(display: FoldableDisplay): Point? {
+    fun getPreviewDisplaySize(display: DeviceDisplayType): Point? {
         return previewDisplaySizes?.get(display)
     }
 
     companion object {
         /** Defines children view ids for [DualDisplayAspectRatioLayout]. */
-        fun FoldableDisplay.getViewId(): Int {
+        fun DeviceDisplayType.getViewId(): Int {
             return when (this) {
-                FoldableDisplay.FOLDED -> R.id.small_preview_folded_preview
-                FoldableDisplay.UNFOLDED -> R.id.small_preview_unfolded_preview
+                DeviceDisplayType.SINGLE ->
+                    throw IllegalStateException(
+                        "DualDisplayAspectRatioLayout does not supper handheld DeviceDisplayType"
+                    )
+                DeviceDisplayType.FOLDED -> R.id.small_preview_folded_preview
+                DeviceDisplayType.UNFOLDED -> R.id.small_preview_unfolded_preview
             }
         }
     }

@@ -18,7 +18,7 @@
     android:height="@dimen/wallpaper_control_icon_size"
     android:viewportHeight="@dimen/wallpaper_control_icon_viewport_size"
     android:viewportWidth="@dimen/wallpaper_control_icon_viewport_size"
-    android:tint="@color/wallpaper_control_button_ic_color_tint"
+    android:tint="?android:textColorPrimary"
     android:tintMode="multiply">
     <path
         android:fillColor="@android:color/white"

@@ -96,7 +96,7 @@ object FullWallpaperPreviewBinder {
                                         surfaceView,
                                         WallpaperConnectionUtils.EngineRenderingConfig(
                                             wallpaper.shouldEnforceSingleEngine(),
-                                            config.foldableDisplay,
+                                            config.deviceDisplayType,
                                             viewModel.smallerDisplaySize,
                                             viewModel.wallpaperDisplaySize,
                                         )

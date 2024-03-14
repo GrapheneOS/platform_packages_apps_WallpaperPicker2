@@ -407,10 +407,16 @@ interface WallpaperPreferences {
     )
 
     /** Sets whether the preview tooltip should be shown. */
-    fun setHasPreviewTooltipBeenShown(hasTooltipBeenShown: Boolean)
+    fun setHasSmallPreviewTooltipBeenShown(hasTooltipBeenShown: Boolean)
 
     /** Gets whether the preview tooltip should be shown. */
-    fun getHasPreviewTooltipBeenShown(): Boolean
+    fun getHasSmallPreviewTooltipBeenShown(): Boolean
+
+    /** Sets whether the preview tooltip should be shown. */
+    fun setHasFullPreviewTooltipBeenShown(hasTooltipBeenShown: Boolean)
+
+    /** Gets whether the preview tooltip should be shown. */
+    fun getHasFullPreviewTooltipBeenShown(): Boolean
 
     /** The possible wallpaper presentation modes, i.e., either "static" or "rotating". */
     @IntDef(PRESENTATION_MODE_STATIC, PRESENTATION_MODE_ROTATING) annotation class PresentationMode

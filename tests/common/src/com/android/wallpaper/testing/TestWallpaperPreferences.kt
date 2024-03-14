@@ -84,7 +84,8 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
     private var mLockLiveWallpaperPrefMetadata: LiveWallpaperPrefMetadata? = null
     private val mWallStoredColor: HashMap<String, String> = HashMap()
 
-    private var hasPreviewTooltipBeenShown = true
+    private var hasSmallPreviewTooltipBeenShown = false
+    private var hasFullPreviewTooltipBeenShown = false
 
     init {
         wallpaperPresentationMode = WallpaperPreferences.PRESENTATION_MODE_STATIC
@@ -485,12 +486,20 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
         wallpaperModel: WallpaperModel.LiveWallpaperModel
     ) {}
 
-    override fun setHasPreviewTooltipBeenShown(hasTooltipBeenShown: Boolean) {
-        this.hasPreviewTooltipBeenShown = hasTooltipBeenShown
+    override fun setHasSmallPreviewTooltipBeenShown(hasTooltipBeenShown: Boolean) {
+        this.hasSmallPreviewTooltipBeenShown = hasTooltipBeenShown
     }
 
-    override fun getHasPreviewTooltipBeenShown(): Boolean {
-        return hasPreviewTooltipBeenShown
+    override fun getHasSmallPreviewTooltipBeenShown(): Boolean {
+        return hasSmallPreviewTooltipBeenShown
+    }
+
+    override fun setHasFullPreviewTooltipBeenShown(hasTooltipBeenShown: Boolean) {
+        this.hasFullPreviewTooltipBeenShown = hasTooltipBeenShown
+    }
+
+    override fun getHasFullPreviewTooltipBeenShown(): Boolean {
+        return hasFullPreviewTooltipBeenShown
     }
 
     private fun setAppLaunchCount(count: Int) {

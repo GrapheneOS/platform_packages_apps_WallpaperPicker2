@@ -24,7 +24,7 @@ import android.view.SurfaceView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.android.wallpaper.R
-import com.android.wallpaper.model.wallpaper.FoldableDisplay
+import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import com.android.wallpaper.picker.data.WallpaperModel
@@ -54,7 +54,7 @@ object SmallWallpaperPreviewBinder {
         displaySize: Point,
         applicationContext: Context,
         viewLifecycleOwner: LifecycleOwner,
-        foldableDisplay: FoldableDisplay?,
+        deviceDisplayType: DeviceDisplayType,
     ) {
         var job: Job? = null
         surface.setZOrderMediaOverlay(true)
@@ -73,7 +73,7 @@ object SmallWallpaperPreviewBinder {
                                         surface,
                                         WallpaperConnectionUtils.EngineRenderingConfig(
                                             wallpaper.shouldEnforceSingleEngine(),
-                                            foldableDisplay = foldableDisplay,
+                                            deviceDisplayType = deviceDisplayType,
                                             viewModel.smallerDisplaySize,
                                             viewModel.wallpaperDisplaySize,
                                         ),

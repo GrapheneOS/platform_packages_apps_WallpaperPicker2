@@ -126,8 +126,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
 
         PreviewTooltipBinder.bind(
             tooltipStub = view.requireViewById(R.id.tooltip_stub),
-            enableClickToDismiss = true,
-            viewModel = wallpaperPreviewViewModel,
+            viewModel = wallpaperPreviewViewModel.fullTooltipViewModel,
             lifecycleOwner = viewLifecycleOwner,
         )
 

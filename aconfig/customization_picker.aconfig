@@ -1,5 +1,5 @@
 package: "com.android.wallpaper"
-container: "system"
+container: "system_ext"
 
 flag {
     name: "multi_crop_preview_ui_flag"

@@ -15,7 +15,12 @@
  */
 package com.android.wallpaper.model.wallpaper
 
-enum class FoldableDisplay {
-    FOLDED,
-    UNFOLDED,
+enum class DeviceDisplayType {
+    SINGLE, // The screen of a single-screen device
+    FOLDED, // The outer screen of a foldable
+    UNFOLDED; // The inner screen of a foldable
+
+    companion object {
+        val FOLDABLE_DISPLAY_TYPES = setOf(FOLDED, UNFOLDED)
+    }
 }

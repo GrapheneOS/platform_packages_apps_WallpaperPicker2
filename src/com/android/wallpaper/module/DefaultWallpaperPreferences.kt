@@ -905,19 +905,36 @@ open class DefaultWallpaperPreferences(private val context: Context) : Wallpaper
         wallpaperModel: LiveWallpaperModel
     ) {}
 
-    override fun setHasPreviewTooltipBeenShown(hasTooltipBeenShown: Boolean) {
+    override fun setHasSmallPreviewTooltipBeenShown(hasTooltipBeenShown: Boolean) {
         sharedPrefs
             .edit()
             .putBoolean(
-                WallpaperPreferenceKeys.KEY_HAS_PREVIEW_TOOLTIP_BEEN_SHOWN,
+                WallpaperPreferenceKeys.KEY_HAS_SMALL_PREVIEW_TOOLTIP_BEEN_SHOWN,
                 hasTooltipBeenShown
             )
             .apply()
     }
 
-    override fun getHasPreviewTooltipBeenShown(): Boolean {
+    override fun getHasSmallPreviewTooltipBeenShown(): Boolean {
         return sharedPrefs.getBoolean(
-            WallpaperPreferenceKeys.KEY_HAS_PREVIEW_TOOLTIP_BEEN_SHOWN,
+            WallpaperPreferenceKeys.KEY_HAS_SMALL_PREVIEW_TOOLTIP_BEEN_SHOWN,
+            false
+        )
+    }
+
+    override fun setHasFullPreviewTooltipBeenShown(hasTooltipBeenShown: Boolean) {
+        sharedPrefs
+            .edit()
+            .putBoolean(
+                WallpaperPreferenceKeys.KEY_HAS_FULL_PREVIEW_TOOLTIP_BEEN_SHOWN,
+                hasTooltipBeenShown
+            )
+            .apply()
+    }
+
+    override fun getHasFullPreviewTooltipBeenShown(): Boolean {
+        return sharedPrefs.getBoolean(
+            WallpaperPreferenceKeys.KEY_HAS_FULL_PREVIEW_TOOLTIP_BEEN_SHOWN,
             false
         )
     }

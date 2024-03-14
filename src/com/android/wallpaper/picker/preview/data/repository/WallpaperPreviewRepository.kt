@@ -47,13 +47,24 @@ constructor(
         _wallpaperModel.value = wallpaperModel
     }
 
-    private val _hasTooltipBeenShown: MutableStateFlow<Boolean> =
-        MutableStateFlow(preferences.getHasPreviewTooltipBeenShown())
-    val hasTooltipBeenShown: StateFlow<Boolean> = _hasTooltipBeenShown.asStateFlow()
+    private val _hasSmallPreviewTooltipBeenShown: MutableStateFlow<Boolean> =
+        MutableStateFlow(preferences.getHasFullPreviewTooltipBeenShown())
+    val hasSmallPreviewTooltipBeenShown: StateFlow<Boolean> =
+        _hasSmallPreviewTooltipBeenShown.asStateFlow()
 
-    fun dismissTooltip() {
-        _hasTooltipBeenShown.value = true
-        preferences.setHasPreviewTooltipBeenShown(true)
+    fun hasShownSmallPreviewTooltip() {
+        _hasSmallPreviewTooltipBeenShown.value = true
+        preferences.setHasSmallPreviewTooltipBeenShown(true)
+    }
+
+    private val _hasFullPreviewTooltipBeenShown: MutableStateFlow<Boolean> =
+        MutableStateFlow(preferences.getHasFullPreviewTooltipBeenShown())
+    val hasFullPreviewTooltipBeenShown: StateFlow<Boolean> =
+        _hasFullPreviewTooltipBeenShown.asStateFlow()
+
+    fun dismissFullPreviewTooltip() {
+        _hasFullPreviewTooltipBeenShown.value = true
+        preferences.setHasFullPreviewTooltipBeenShown(true)
     }
 
     suspend fun downloadWallpaper(): LiveWallpaperDownloadResultModel? =

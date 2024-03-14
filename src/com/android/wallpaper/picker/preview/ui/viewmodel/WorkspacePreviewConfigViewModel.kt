@@ -15,7 +15,7 @@
  */
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
-import com.android.wallpaper.model.wallpaper.FoldableDisplay
+import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.util.PreviewUtils
 
 /** Defines configuration associated with a single workspace preview. */
@@ -25,5 +25,5 @@ data class WorkspacePreviewConfigViewModel(
     val previewUtils: PreviewUtils,
 
     /** The foldable display to be rendered, or null if the device is not a foldable. */
-    val foldableDisplay: FoldableDisplay?,
+    val deviceDisplayType: DeviceDisplayType,
 )

@@ -98,18 +98,22 @@ class WallpaperPreviewRepositoryTest {
 
     @Test
     fun dismissTooltip() {
-        prefs.setHasPreviewTooltipBeenShown(false)
+        prefs.setHasSmallPreviewTooltipBeenShown(false)
+        prefs.setHasFullPreviewTooltipBeenShown(false)
         underTest =
             WallpaperPreviewRepository(
                 liveWallpaperDownloader = TestLiveWallpaperDownloader(null),
                 preferences = prefs,
                 bgDispatcher = testDispatcher,
             )
-        assertThat(underTest.hasTooltipBeenShown.value).isFalse()
+        assertThat(underTest.hasSmallPreviewTooltipBeenShown.value).isFalse()
+        assertThat(underTest.hasFullPreviewTooltipBeenShown.value).isFalse()
 
-        underTest.dismissTooltip()
-        assertThat(prefs.getHasPreviewTooltipBeenShown()).isTrue()
-        assertThat(underTest.hasTooltipBeenShown.value).isTrue()
+        underTest.hasShownSmallPreviewTooltip()
+        assertThat(prefs.getHasSmallPreviewTooltipBeenShown()).isTrue()
+        assertThat(underTest.hasSmallPreviewTooltipBeenShown.value).isTrue()
+        assertThat(prefs.getHasFullPreviewTooltipBeenShown()).isFalse()
+        assertThat(underTest.hasFullPreviewTooltipBeenShown.value).isFalse()
     }
 
     @Test

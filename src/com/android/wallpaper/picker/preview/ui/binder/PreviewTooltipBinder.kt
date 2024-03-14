@@ -22,24 +22,29 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 object PreviewTooltipBinder {
+    interface TooltipViewModel {
+        val shouldShowTooltip: Flow<Boolean>
+        val enableClickToDismiss: Boolean
+        fun dismissTooltip()
+    }
+
     fun bind(
         tooltipStub: ViewStub,
-        enableClickToDismiss: Boolean,
-        viewModel: WallpaperPreviewViewModel,
+        viewModel: TooltipViewModel,
         lifecycleOwner: LifecycleOwner,
     ) {
         var tooltip: View? = null
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.shouldShowTooltip().collect { shouldShowTooltip ->
+                    viewModel.shouldShowTooltip.collect { shouldShowTooltip ->
                         if (shouldShowTooltip && tooltip == null) {
                             tooltip = tooltipStub.inflate()
-                            if (enableClickToDismiss) {
+                            if (viewModel.enableClickToDismiss) {
                                 tooltip?.setOnClickListener { viewModel.dismissTooltip() }
                             }
                         }

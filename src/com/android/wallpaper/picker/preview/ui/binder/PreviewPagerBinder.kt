@@ -23,6 +23,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
+import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.model.wallpaper.PreviewPagerPage
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.SinglePreviewPagerAdapter
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.pagetransformers.PreviewCardPageTransformer
@@ -45,8 +46,7 @@ object PreviewPagerBinder {
             adapter = SinglePreviewPagerAdapter { viewHolder, position ->
                 PreviewTooltipBinder.bind(
                     tooltipStub = viewHolder.itemView.requireViewById(R.id.tooltip_stub),
-                    enableClickToDismiss = false,
-                    viewModel = wallpaperPreviewViewModel,
+                    viewModel = wallpaperPreviewViewModel.smallTooltipViewModel,
                     lifecycleOwner = viewLifecycleOwner,
                 )
 
@@ -56,7 +56,7 @@ object PreviewPagerBinder {
                     viewModel = wallpaperPreviewViewModel,
                     screen = PreviewPagerPage.entries[position].screen,
                     displaySize = previewDisplaySize,
-                    foldableDisplay = null,
+                    deviceDisplayType = DeviceDisplayType.SINGLE,
                     viewLifecycleOwner = viewLifecycleOwner,
                     currentNavDestId = currentNavDestId,
                     navigate = navigate,

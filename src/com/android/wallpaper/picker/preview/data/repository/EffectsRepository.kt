@@ -256,6 +256,7 @@ constructor(
 
     fun destroy() {
         effectsController.removeListener()
+        wallpaperEffect.value = null
     }
 
     fun isTargetEffect(effect: EffectsController.EffectEnumInterface): Boolean {

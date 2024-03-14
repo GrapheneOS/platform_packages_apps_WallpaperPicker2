@@ -23,7 +23,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.android.wallpaper.model.wallpaper.FoldableDisplay
+import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.preview.ui.view.PreviewActionFloatingSheet
 import com.android.wallpaper.picker.preview.ui.view.PreviewActionGroup
@@ -49,7 +49,7 @@ object PreviewActionsBinder {
         floatingSheet: PreviewActionFloatingSheet,
         previewViewModel: WallpaperPreviewViewModel,
         actionsViewModel: PreviewActionsViewModel,
-        foldableDisplay: FoldableDisplay?,
+        deviceDisplayType: DeviceDisplayType,
         displaySize: Point,
         lifecycleOwner: LifecycleOwner,
         logger: UserEventLogger,
@@ -167,7 +167,7 @@ object PreviewActionsBinder {
                                     // We need to set default wallpaper preview config view model
                                     // before entering full screen with edit activity overlay.
                                     previewViewModel.setDefaultWallpaperPreviewConfigViewModel(
-                                        foldableDisplay,
+                                        deviceDisplayType,
                                         displaySize,
                                     )
                                     onStartEditActivity.invoke(it)

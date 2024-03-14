@@ -25,7 +25,7 @@ import android.view.DisplayInfo
 import android.view.Surface.ROTATION_270
 import android.view.Surface.ROTATION_90
 import com.android.systemui.shared.recents.utilities.Utilities
-import com.android.wallpaper.model.wallpaper.FoldableDisplay
+import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import kotlin.math.min
 
 /**
@@ -154,14 +154,14 @@ class DisplayUtils(private val context: Context) {
         return smallestDisplay ?: largestDisplay
     }
 
-    fun getFoldableDisplay(activity: Activity): FoldableDisplay? {
+    fun getCurrentDisplayType(activity: Activity): DeviceDisplayType {
         if (!hasMultiInternalDisplays()) {
-            return null
+            return DeviceDisplayType.SINGLE
         }
         return if (isOnWallpaperDisplay(activity)) {
-            FoldableDisplay.UNFOLDED
+            DeviceDisplayType.UNFOLDED
         } else {
-            FoldableDisplay.FOLDED
+            DeviceDisplayType.FOLDED
         }
     }
 

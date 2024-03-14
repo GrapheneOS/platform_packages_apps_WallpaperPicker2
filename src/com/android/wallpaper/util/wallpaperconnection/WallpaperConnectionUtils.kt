@@ -15,11 +15,10 @@ import android.service.wallpaper.WallpaperService
 import android.util.Log
 import android.view.SurfaceControl
 import android.view.SurfaceView
-import com.android.wallpaper.model.wallpaper.FoldableDisplay
+import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
 import com.android.wallpaper.util.WallpaperConnection
 import com.android.wallpaper.util.WallpaperConnection.WhichPreview
-import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.getKey
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -293,7 +292,7 @@ object WallpaperConnectionUtils {
 
     data class EngineRenderingConfig(
         val enforceSingleEngine: Boolean,
-        val foldableDisplay: FoldableDisplay?,
+        val deviceDisplayType: DeviceDisplayType,
         val smallDisplaySize: Point,
         val wallpaperDisplaySize: Point,
     ) {
@@ -307,9 +306,10 @@ object WallpaperConnectionUtils {
         }
 
         private fun getPreviewDisplaySize(): Point {
-            return when (foldableDisplay) {
-                FoldableDisplay.FOLDED -> smallDisplaySize
-                else -> wallpaperDisplaySize
+            return when (deviceDisplayType) {
+                DeviceDisplayType.SINGLE -> wallpaperDisplaySize
+                DeviceDisplayType.FOLDED -> smallDisplaySize
+                DeviceDisplayType.UNFOLDED -> wallpaperDisplaySize
             }
         }
     }

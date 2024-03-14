@@ -20,7 +20,7 @@ import android.graphics.Rect
 import android.stats.style.StyleEnums
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.wallpaper.model.wallpaper.FoldableDisplay
+import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
@@ -33,6 +33,7 @@ import com.android.wallpaper.picker.di.modules.PreviewUtilsModule.LockScreenPrev
 import com.android.wallpaper.picker.preview.domain.interactor.WallpaperPreviewInteractor
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
+import com.android.wallpaper.picker.preview.ui.binder.PreviewTooltipBinder
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
 import com.android.wallpaper.util.WallpaperConnection.WhichPreview
@@ -81,21 +82,38 @@ constructor(
         wallpaperDisplaySize = displayUtils.getRealSize(displayUtils.getWallpaperDisplay())
     }
 
-    fun shouldShowTooltip(): Flow<Boolean> =
-        combine(interactor.wallpaperModel.filterNotNull(), interactor.hasTooltipBeenShown) {
-            wallpaper,
-            hasTooltipBeenShown ->
-            // Only show tooltip for non-downloadable static wallpapers. Hide tooltip for live
-            // wallpaper and downloadable wallpaper as their crop is not adjustable.
-            if (wallpaper is StaticWallpaperModel && !wallpaper.isDownloadableWallpaper()) {
-                // Only show tooltip if it has not been shown before.
-                !hasTooltipBeenShown
-            } else {
-                false
-            }
+    private val isWallpaperCroppable: Flow<Boolean> =
+        wallpaper.map { wallpaper ->
+            wallpaper is StaticWallpaperModel && !wallpaper.isDownloadableWallpaper()
         }
 
-    fun dismissTooltip() = interactor.dismissTooltip()
+    val smallTooltipViewModel =
+        object : PreviewTooltipBinder.TooltipViewModel {
+            override val shouldShowTooltip: Flow<Boolean> =
+                combine(isWallpaperCroppable, interactor.hasSmallPreviewTooltipBeenShown) {
+                    isCroppable,
+                    hasTooltipBeenShown ->
+                    // Only show tooltip if it has not been shown before.
+                    isCroppable && !hasTooltipBeenShown
+                }
+            override val enableClickToDismiss: Boolean = false
+
+            override fun dismissTooltip() = interactor.hasShownSmallPreviewTooltip()
+        }
+
+    val fullTooltipViewModel =
+        object : PreviewTooltipBinder.TooltipViewModel {
+            override val shouldShowTooltip: Flow<Boolean> =
+                combine(isWallpaperCroppable, interactor.hasFullPreviewTooltipBeenShown) {
+                    isCroppable,
+                    hasTooltipBeenShown ->
+                    // Only show tooltip if it has not been shown before.
+                    isCroppable && !hasTooltipBeenShown
+                }
+            override val enableClickToDismiss: Boolean = true
+
+            override fun dismissTooltip() = interactor.dismissFullPreviewTooltip()
+        }
 
     private val _whichPreview = MutableStateFlow<WhichPreview?>(null)
     private val whichPreview: Flow<WhichPreview> = _whichPreview.asStateFlow().filterNotNull()
@@ -283,7 +301,7 @@ constructor(
 
     fun getWorkspacePreviewConfig(
         screen: Screen,
-        foldableDisplay: FoldableDisplay?,
+        deviceDisplayType: DeviceDisplayType,
     ): WorkspacePreviewConfigViewModel {
         val previewUtils =
             when (screen) {
@@ -299,20 +317,19 @@ constructor(
         // binder.
         return WorkspacePreviewConfigViewModel(
             previewUtils = previewUtils,
-            foldableDisplay = foldableDisplay,
+            deviceDisplayType = deviceDisplayType,
         )
     }
 
-    /** @param foldableDisplay Only used for foldable devices; otherwise, set to null. */
-    fun getDisplayId(foldableDisplay: FoldableDisplay?): Int {
-        return when (foldableDisplay) {
-            FoldableDisplay.FOLDED -> {
-                displayUtils.getSmallerDisplay().displayId
-            }
-            FoldableDisplay.UNFOLDED -> {
+    fun getDisplayId(deviceDisplayType: DeviceDisplayType): Int {
+        return when (deviceDisplayType) {
+            DeviceDisplayType.SINGLE -> {
                 displayUtils.getWallpaperDisplay().displayId
             }
-            null -> {
+            DeviceDisplayType.FOLDED -> {
+                displayUtils.getSmallerDisplay().displayId
+            }
+            DeviceDisplayType.UNFOLDED -> {
                 displayUtils.getWallpaperDisplay().displayId
             }
         }
@@ -320,45 +337,46 @@ constructor(
 
     fun onSmallPreviewClicked(
         screen: Screen,
-        foldableDisplay: FoldableDisplay?,
+        deviceDisplayType: DeviceDisplayType,
     ) {
+        smallTooltipViewModel.dismissTooltip()
         fullWallpaperPreviewConfigViewModel.value =
-            getWallpaperPreviewConfig(screen, foldableDisplay)
+            getWallpaperPreviewConfig(screen, deviceDisplayType)
         _fullWorkspacePreviewConfigViewModel.value =
-            getWorkspacePreviewConfig(screen, foldableDisplay)
+            getWorkspacePreviewConfig(screen, deviceDisplayType)
     }
 
     fun setDefaultWallpaperPreviewConfigViewModel(
-        foldableDisplay: FoldableDisplay?,
+        deviceDisplayType: DeviceDisplayType,
         displaySize: Point
     ) {
         fullWallpaperPreviewConfigViewModel.value =
             WallpaperPreviewConfigViewModel(
                 Screen.HOME_SCREEN,
-                foldableDisplay,
+                deviceDisplayType,
                 displaySize,
             )
     }
 
     private fun getWallpaperPreviewConfig(
         screen: Screen,
-        foldableDisplay: FoldableDisplay?,
+        deviceDisplayType: DeviceDisplayType,
     ): WallpaperPreviewConfigViewModel {
         val displaySize =
-            when (foldableDisplay) {
-                FoldableDisplay.FOLDED -> {
-                    smallerDisplaySize
-                }
-                FoldableDisplay.UNFOLDED -> {
+            when (deviceDisplayType) {
+                DeviceDisplayType.SINGLE -> {
                     wallpaperDisplaySize
                 }
-                null -> {
+                DeviceDisplayType.FOLDED -> {
+                    smallerDisplaySize
+                }
+                DeviceDisplayType.UNFOLDED -> {
                     wallpaperDisplaySize
                 }
             }
         return WallpaperPreviewConfigViewModel(
             screen = screen,
-            foldableDisplay = foldableDisplay,
+            deviceDisplayType = deviceDisplayType,
             displaySize = displaySize,
         )
     }

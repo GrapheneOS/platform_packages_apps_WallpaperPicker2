@@ -15,6 +15,6 @@
      limitations under the License.
 -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/wallpaper_control_button_background" />
+    <item android:drawable="@drawable/wallpaper_control_button_off_background" />
     <item android:drawable="@drawable/ic_file_download" />
 </layer-list>

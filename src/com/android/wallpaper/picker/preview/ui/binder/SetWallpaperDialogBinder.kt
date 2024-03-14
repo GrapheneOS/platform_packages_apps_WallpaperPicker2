@@ -26,7 +26,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
-import com.android.wallpaper.model.wallpaper.FoldableDisplay
+import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout.Companion.getViewId
@@ -135,11 +135,11 @@ object SetWallpaperDialogBinder {
 
             dualDisplayAspectRatioLayout.setDisplaySizes(
                 mapOf(
-                    FoldableDisplay.FOLDED to wallpaperPreviewViewModel.smallerDisplaySize,
-                    FoldableDisplay.UNFOLDED to wallpaperPreviewViewModel.wallpaperDisplaySize,
+                    DeviceDisplayType.FOLDED to wallpaperPreviewViewModel.smallerDisplaySize,
+                    DeviceDisplayType.UNFOLDED to wallpaperPreviewViewModel.wallpaperDisplaySize,
                 )
             )
-            FoldableDisplay.entries.forEach { display ->
+            DeviceDisplayType.FOLDABLE_DISPLAY_TYPES.forEach { display ->
                 val previewDisplaySize = dualDisplayAspectRatioLayout.getPreviewDisplaySize(display)
                 previewDisplaySize?.let {
                     SmallPreviewBinder.bind(
@@ -149,7 +149,7 @@ object SetWallpaperDialogBinder {
                         viewLifecycleOwner = lifecycleOwner,
                         screen = screenId.key,
                         displaySize = it,
-                        foldableDisplay = display,
+                        deviceDisplayType = display,
                         currentNavDestId = currentNavDestId,
                         navigate = navigate,
                     )
@@ -177,7 +177,7 @@ object SetWallpaperDialogBinder {
                 viewModel = wallpaperPreviewViewModel,
                 screen = screenId.key,
                 displaySize = displaySize,
-                foldableDisplay = null,
+                deviceDisplayType = DeviceDisplayType.SINGLE,
                 viewLifecycleOwner = lifecycleOwner,
                 currentNavDestId = currentNavDestId,
                 navigate = navigate,

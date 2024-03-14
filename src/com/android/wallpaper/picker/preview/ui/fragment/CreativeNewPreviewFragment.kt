@@ -56,10 +56,8 @@ class CreativeNewPreviewFragment : Hilt_CreativeNewPreviewFragment() {
         val view = inflater.inflate(R.layout.fragment_full_preview, container, false)
         setUpToolbar(view)
 
-        val foldableDisplay = displayUtils.getFoldableDisplay(requireActivity())
-
         wallpaperPreviewViewModel.setDefaultWallpaperPreviewConfigViewModel(
-            foldableDisplay = foldableDisplay,
+            deviceDisplayType = displayUtils.getCurrentDisplayType(requireActivity()),
             displaySize = displayUtils.getRealSize(requireActivity().display),
         )
 

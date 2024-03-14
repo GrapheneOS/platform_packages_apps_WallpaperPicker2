@@ -22,19 +22,19 @@ import android.view.View
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
-import com.android.wallpaper.model.wallpaper.FoldableDisplay
+import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 
 object SmallPreviewBinder {
-    /** @param foldableDisplay Only used for foldable devices; otherwise, set to null. */
+
     fun bind(
         applicationContext: Context,
         view: View,
         viewModel: WallpaperPreviewViewModel,
         screen: Screen,
         displaySize: Point,
-        foldableDisplay: FoldableDisplay?,
+        deviceDisplayType: DeviceDisplayType,
         viewLifecycleOwner: LifecycleOwner,
         currentNavDestId: Int,
         navigate: ((View) -> Unit)? = null,
@@ -45,7 +45,7 @@ object SmallPreviewBinder {
 
         if (R.id.smallPreviewFragment == currentNavDestId) {
             view.setOnClickListener {
-                viewModel.onSmallPreviewClicked(screen, foldableDisplay)
+                viewModel.onSmallPreviewClicked(screen, deviceDisplayType)
                 navigate?.invoke(previewCard)
             }
         } else if (R.id.setWallpaperDialog == currentNavDestId) {
@@ -55,7 +55,7 @@ object SmallPreviewBinder {
                 )
         }
 
-        val config = viewModel.getWorkspacePreviewConfig(screen, foldableDisplay)
+        val config = viewModel.getWorkspacePreviewConfig(screen, deviceDisplayType)
         WorkspacePreviewBinder.bind(
             workspaceSurface,
             config,
@@ -70,7 +70,7 @@ object SmallPreviewBinder {
             displaySize = displaySize,
             applicationContext = applicationContext,
             viewLifecycleOwner = viewLifecycleOwner,
-            foldableDisplay = foldableDisplay,
+            deviceDisplayType = deviceDisplayType,
         )
     }
 }
