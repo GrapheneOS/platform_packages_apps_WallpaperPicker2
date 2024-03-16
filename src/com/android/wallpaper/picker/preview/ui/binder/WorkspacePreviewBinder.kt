@@ -22,8 +22,10 @@ import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.os.bundleOf
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
@@ -44,41 +46,73 @@ object WorkspacePreviewBinder {
         viewModel: WallpaperPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
     ) {
-        var job: Job? = null
-        var previewDisposableHandle: DisposableHandle? = null
-        surface.setZOrderMediaOverlay(true)
-        surface.holder.addCallback(
-            object : SurfaceViewUtil.SurfaceCallback {
-                override fun surfaceCreated(holder: SurfaceHolder) {
-                    job =
-                        lifecycleOwner.lifecycleScope.launch {
-                            viewModel.wallpaperColorsModel.collect {
-                                if (it is WallpaperColorsModel.Loaded) {
-                                    val workspaceCallback =
-                                        renderWorkspacePreview(
-                                            surface = surface,
-                                            previewUtils = config.previewUtils,
-                                            displayId =
-                                                viewModel.getDisplayId(config.deviceDisplayType),
-                                            wallpaperColors = it.colors
-                                        )
-                                    // Dispose the previous preview on the renderer side.
-                                    previewDisposableHandle?.dispose()
-                                    previewDisposableHandle = DisposableHandle {
-                                        config.previewUtils.cleanUp(workspaceCallback)
-                                    }
+        var surfaceCallback: SurfaceViewUtil.SurfaceCallback? = null
+        lifecycleOwner.lifecycleScope.launch {
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                surfaceCallback =
+                    bindSurface(
+                        surface = surface,
+                        viewModel = viewModel,
+                        config = config,
+                        lifecycleOwner = lifecycleOwner,
+                    )
+                surface.setZOrderMediaOverlay(true)
+                surface.holder.addCallback(surfaceCallback)
+            }
+            // When OnDestroy, release the surface
+            surfaceCallback?.let {
+                surface.holder.removeCallback(it)
+                surfaceCallback = null
+            }
+        }
+    }
+
+    /**
+     * Create a surface callback that binds the surface when surface created. Note that we return
+     * the surface callback reference so that we can remove the callback from the surface when the
+     * screen is destroyed.
+     */
+    private fun bindSurface(
+        surface: SurfaceView,
+        viewModel: WallpaperPreviewViewModel,
+        config: WorkspacePreviewConfigViewModel,
+        lifecycleOwner: LifecycleOwner,
+    ): SurfaceViewUtil.SurfaceCallback {
+        return object : SurfaceViewUtil.SurfaceCallback {
+
+            var job: Job? = null
+            var previewDisposableHandle: DisposableHandle? = null
+
+            override fun surfaceCreated(holder: SurfaceHolder) {
+                job =
+                    lifecycleOwner.lifecycleScope.launch {
+                        viewModel.wallpaperColorsModel.collect {
+                            if (it is WallpaperColorsModel.Loaded) {
+                                val workspaceCallback =
+                                    renderWorkspacePreview(
+                                        surface = surface,
+                                        previewUtils = config.previewUtils,
+                                        displayId =
+                                            viewModel.getDisplayId(config.deviceDisplayType),
+                                        wallpaperColors = it.colors
+                                    )
+                                // Dispose the previous preview on the renderer side.
+                                previewDisposableHandle?.dispose()
+                                previewDisposableHandle = DisposableHandle {
+                                    config.previewUtils.cleanUp(workspaceCallback)
                                 }
                             }
                         }
-                }
-
-                override fun surfaceDestroyed(holder: SurfaceHolder) {
-                    job?.cancel()
-                    previewDisposableHandle?.dispose()
-                    surface.holder.removeCallback(this)
-                }
+                    }
             }
-        )
+
+            override fun surfaceDestroyed(holder: SurfaceHolder) {
+                job?.cancel()
+                job = null
+                previewDisposableHandle?.dispose()
+                previewDisposableHandle = null
+            }
+        }
     }
 
     /**
@@ -90,49 +124,77 @@ object WorkspacePreviewBinder {
         viewModel: WallpaperPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
     ) {
-        var job: Job? = null
-        var previewDisposableHandle: DisposableHandle? = null
-        surface.setZOrderMediaOverlay(true)
-        surface.holder.addCallback(
-            object : SurfaceViewUtil.SurfaceCallback {
-                override fun surfaceCreated(holder: SurfaceHolder) {
-                    job =
-                        lifecycleOwner.lifecycleScope.launch {
-                            combine(
-                                    viewModel.fullWorkspacePreviewConfigViewModel,
-                                    viewModel.wallpaperColorsModel
-                                ) { config, colorsModel ->
-                                    config to colorsModel
-                                }
-                                .collect { (config, colorsModel) ->
-                                    if (colorsModel is WallpaperColorsModel.Loaded) {
-                                        val workspaceCallback =
-                                            renderWorkspacePreview(
-                                                surface = surface,
-                                                previewUtils = config.previewUtils,
-                                                displayId =
-                                                    viewModel.getDisplayId(
-                                                        config.deviceDisplayType
-                                                    ),
-                                                wallpaperColors = colorsModel.colors
-                                            )
-                                        // Dispose the previous preview on the renderer side.
-                                        previewDisposableHandle?.dispose()
-                                        previewDisposableHandle = DisposableHandle {
-                                            config.previewUtils.cleanUp(workspaceCallback)
-                                        }
+        var surfaceCallback: SurfaceViewUtil.SurfaceCallback? = null
+        lifecycleOwner.lifecycleScope.launch {
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                surfaceCallback =
+                    bindFullSurface(
+                        surface = surface,
+                        viewModel = viewModel,
+                        lifecycleOwner = lifecycleOwner,
+                    )
+                surface.setZOrderMediaOverlay(true)
+                surface.holder.addCallback(surfaceCallback)
+            }
+            // When OnDestroy, release the surface
+            surfaceCallback?.let {
+                surface.holder.removeCallback(it)
+                surfaceCallback = null
+            }
+        }
+    }
+
+    /**
+     * Create a surface callback that binds the surface when surface created. Note that we return
+     * the surface callback reference so that we can remove the callback from the surface when the
+     * screen is destroyed.
+     */
+    private fun bindFullSurface(
+        surface: SurfaceView,
+        viewModel: WallpaperPreviewViewModel,
+        lifecycleOwner: LifecycleOwner,
+    ): SurfaceViewUtil.SurfaceCallback {
+        return object : SurfaceViewUtil.SurfaceCallback {
+
+            var job: Job? = null
+            var previewDisposableHandle: DisposableHandle? = null
+
+            override fun surfaceCreated(holder: SurfaceHolder) {
+                job =
+                    lifecycleOwner.lifecycleScope.launch {
+                        combine(
+                                viewModel.fullWorkspacePreviewConfigViewModel,
+                                viewModel.wallpaperColorsModel
+                            ) { config, colorsModel ->
+                                config to colorsModel
+                            }
+                            .collect { (config, colorsModel) ->
+                                if (colorsModel is WallpaperColorsModel.Loaded) {
+                                    val workspaceCallback =
+                                        renderWorkspacePreview(
+                                            surface = surface,
+                                            previewUtils = config.previewUtils,
+                                            displayId =
+                                                viewModel.getDisplayId(config.deviceDisplayType),
+                                            wallpaperColors = colorsModel.colors
+                                        )
+                                    // Dispose the previous preview on the renderer side.
+                                    previewDisposableHandle?.dispose()
+                                    previewDisposableHandle = DisposableHandle {
+                                        config.previewUtils.cleanUp(workspaceCallback)
                                     }
                                 }
-                        }
-                }
-
-                override fun surfaceDestroyed(holder: SurfaceHolder) {
-                    job?.cancel()
-                    previewDisposableHandle?.dispose()
-                    surface.holder.removeCallback(this)
-                }
+                            }
+                    }
             }
-        )
+
+            override fun surfaceDestroyed(holder: SurfaceHolder) {
+                job?.cancel()
+                job = null
+                previewDisposableHandle?.dispose()
+                previewDisposableHandle = null
+            }
+        }
     }
 
     private suspend fun renderWorkspacePreview(

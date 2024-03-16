@@ -38,6 +38,7 @@ import com.android.wallpaper.picker.preview.ui.binder.PreviewSelectorBinder
 import com.android.wallpaper.picker.preview.ui.binder.SetWallpaperButtonBinder
 import com.android.wallpaper.picker.preview.ui.binder.SetWallpaperProgressDialogBinder
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
+import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.TabTextPagerAdapter
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.TabsPagerContainer
 import com.android.wallpaper.picker.preview.ui.view.PreviewActionGroup
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action
@@ -117,16 +118,19 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         if (displayUtils.hasMultiInternalDisplays()) {
             val dualPreviewView: DualPreviewViewPager =
                 view.requireViewById(R.id.dual_preview_pager)
-            val tabPager: TabsPagerContainer = view.requireViewById(R.id.pager_container)
+            val viewPager =
+                view.requireViewById<TabsPagerContainer>(R.id.pager_container).getViewPager()
 
             DualPreviewSelectorBinder.bind(
-                tabPager.getViewPager(),
+                viewPager,
                 dualPreviewView,
                 wallpaperPreviewViewModel,
                 appContext,
                 viewLifecycleOwner,
                 currentNavDestId,
             ) { sharedElement ->
+                wallpaperPreviewViewModel.isViewAsHome =
+                    (viewPager.adapter as TabTextPagerAdapter).getIsHome(viewPager.currentItem)
                 ViewCompat.setTransitionName(sharedElement, SMALL_PREVIEW_SHARED_ELEMENT_ID)
                 val extras =
                     FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)
@@ -139,10 +143,11 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                     )
             }
         } else {
-            val tabPager: TabsPagerContainer = view.requireViewById(R.id.pager_container)
+            val viewPager =
+                view.requireViewById<TabsPagerContainer>(R.id.pager_container).getViewPager()
 
             PreviewSelectorBinder.bind(
-                tabPager.getViewPager(),
+                viewPager,
                 view.requireViewById(R.id.pager_previews),
                 displayUtils.getRealSize(displayUtils.getWallpaperDisplay()),
                 // TODO: pass correct view models for the view pager
@@ -151,6 +156,8 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 viewLifecycleOwner,
                 currentNavDestId,
             ) { sharedElement ->
+                wallpaperPreviewViewModel.isViewAsHome =
+                    (viewPager.adapter as TabTextPagerAdapter).getIsHome(viewPager.currentItem)
                 ViewCompat.setTransitionName(sharedElement, SMALL_PREVIEW_SHARED_ELEMENT_ID)
                 val extras =
                     FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)

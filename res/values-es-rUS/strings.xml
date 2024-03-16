@@ -21,7 +21,7 @@
     <!-- no translation found for app_name (8773648973927541493) -->
     <skip />
     <string name="select_wallpaper_label" msgid="6989581259339646085">"Categorías de fondos de pantalla"</string>
-    <string name="set_wallpaper_button_text" msgid="5445978864530156290">"Definir como fondo de pantalla"</string>
+    <string name="set_wallpaper_button_text" msgid="5445978864530156290">"Definir fondo de pantalla"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Estableciendo como fondo de pantalla…"</string>
     <string name="try_again" msgid="8278874823700921234">"Reintentar"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"No se pudo establecer como fondo de pantalla."</string>

@@ -21,8 +21,10 @@ import android.graphics.Point
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.module.CustomizationSections.Screen
@@ -56,73 +58,108 @@ object SmallWallpaperPreviewBinder {
         viewLifecycleOwner: LifecycleOwner,
         deviceDisplayType: DeviceDisplayType,
     ) {
-        var job: Job? = null
-        surface.setZOrderMediaOverlay(true)
-        surface.holder.addCallback(
-            object : SurfaceViewUtil.SurfaceCallback {
-                override fun surfaceCreated(holder: SurfaceHolder) {
-                    job =
-                        viewLifecycleOwner.lifecycleScope.launch {
-                            viewModel.smallWallpaper.collect { (wallpaper, whichPreview) ->
-                                if (wallpaper is WallpaperModel.LiveWallpaperModel) {
-                                    WallpaperConnectionUtils.connect(
-                                        applicationContext,
-                                        wallpaper,
-                                        whichPreview,
-                                        screen.toFlag(),
-                                        surface,
-                                        WallpaperConnectionUtils.EngineRenderingConfig(
-                                            wallpaper.shouldEnforceSingleEngine(),
-                                            deviceDisplayType = deviceDisplayType,
-                                            viewModel.smallerDisplaySize,
-                                            viewModel.wallpaperDisplaySize,
-                                        ),
-                                        object : WallpaperEngineConnectionListener {
-                                            override fun onWallpaperColorsChanged(
-                                                colors: WallpaperColors?,
-                                                displayId: Int
-                                            ) {
-                                                viewModel.setWallpaperConnectionColors(
-                                                    WallpaperColorsModel.Loaded(colors)
-                                                )
-                                            }
-                                        },
-                                    )
-                                } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
-                                    val staticPreviewView =
-                                        LayoutInflater.from(applicationContext)
-                                            .inflate(R.layout.fullscreen_wallpaper_preview, null)
-                                    surface.attachView(staticPreviewView)
-                                    // Bind static wallpaper
-                                    StaticWallpaperPreviewBinder.bind(
-                                        lowResImageView =
-                                            staticPreviewView.requireViewById(R.id.low_res_image),
-                                        fullResImageView =
-                                            staticPreviewView.requireViewById(R.id.full_res_image),
-                                        viewModel = viewModel.staticWallpaperPreviewViewModel,
-                                        displaySize = displaySize,
-                                        viewLifecycleOwner = viewLifecycleOwner,
-                                    )
-                                    // This is to possibly shut down all live wallpaper services
-                                    // if they exist; otherwise static wallpaper can not show up.
-                                    WallpaperConnectionUtils.disconnectAllServices(
-                                        applicationContext
-                                    )
-                                }
+        var surfaceCallback: SurfaceViewUtil.SurfaceCallback? = null
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                surfaceCallback =
+                    bindSurface(
+                        applicationContext = applicationContext,
+                        surface = surface,
+                        viewModel = viewModel,
+                        screen = screen,
+                        deviceDisplayType = deviceDisplayType,
+                        displaySize = displaySize,
+                        lifecycleOwner = viewLifecycleOwner,
+                    )
+                surface.setZOrderMediaOverlay(true)
+                surfaceCallback?.let { surface.holder.addCallback(it) }
+            }
+            // When OnDestroy, release the surface
+            surfaceCallback?.let {
+                surface.holder.removeCallback(it)
+                surfaceCallback = null
+            }
+        }
+    }
+
+    /**
+     * Create a surface callback that binds the surface when surface created. Note that we return
+     * the surface callback reference so that we can remove the callback from the surface when the
+     * screen is destroyed.
+     */
+    private fun bindSurface(
+        applicationContext: Context,
+        surface: SurfaceView,
+        viewModel: WallpaperPreviewViewModel,
+        screen: Screen,
+        deviceDisplayType: DeviceDisplayType,
+        displaySize: Point,
+        lifecycleOwner: LifecycleOwner,
+    ): SurfaceViewUtil.SurfaceCallback {
+
+        return object : SurfaceViewUtil.SurfaceCallback {
+
+            var job: Job? = null
+
+            override fun surfaceCreated(holder: SurfaceHolder) {
+                job =
+                    lifecycleOwner.lifecycleScope.launch {
+                        viewModel.smallWallpaper.collect { (wallpaper, whichPreview) ->
+                            if (wallpaper is WallpaperModel.LiveWallpaperModel) {
+                                WallpaperConnectionUtils.connect(
+                                    applicationContext,
+                                    wallpaper,
+                                    whichPreview,
+                                    screen.toFlag(),
+                                    surface,
+                                    WallpaperConnectionUtils.EngineRenderingConfig(
+                                        wallpaper.shouldEnforceSingleEngine(),
+                                        deviceDisplayType = deviceDisplayType,
+                                        viewModel.smallerDisplaySize,
+                                        viewModel.wallpaperDisplaySize,
+                                    ),
+                                    object : WallpaperEngineConnectionListener {
+                                        override fun onWallpaperColorsChanged(
+                                            colors: WallpaperColors?,
+                                            displayId: Int
+                                        ) {
+                                            viewModel.setWallpaperConnectionColors(
+                                                WallpaperColorsModel.Loaded(colors)
+                                            )
+                                        }
+                                    },
+                                )
+                            } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
+                                val staticPreviewView =
+                                    LayoutInflater.from(applicationContext)
+                                        .inflate(R.layout.fullscreen_wallpaper_preview, null)
+                                surface.attachView(staticPreviewView)
+                                // Bind static wallpaper
+                                StaticWallpaperPreviewBinder.bind(
+                                    lowResImageView =
+                                        staticPreviewView.requireViewById(R.id.low_res_image),
+                                    fullResImageView =
+                                        staticPreviewView.requireViewById(R.id.full_res_image),
+                                    viewModel = viewModel.staticWallpaperPreviewViewModel,
+                                    displaySize = displaySize,
+                                    viewLifecycleOwner = lifecycleOwner,
+                                )
+                                // This is to possibly shut down all live wallpaper services
+                                // if they exist; otherwise static wallpaper can not show up.
+                                WallpaperConnectionUtils.disconnectAllServices(applicationContext)
                             }
                         }
-                }
-
-                override fun surfaceDestroyed(holder: SurfaceHolder) {
-                    job?.cancel()
-                    surface.holder.removeCallback(this)
-                    // Note that we disconnect wallpaper connection for live wallpapers in
-                    // WallpaperPreviewActivity's onDestroy().
-                    // This is to reduce multiple times of connecting and disconnecting live
-                    // wallpaper services, when going back and forth small and full preview.
-                }
+                    }
             }
-        )
-        // TODO (b/300979155): Clean up surface when no longer needed, e.g. onDestroyed
+
+            override fun surfaceDestroyed(holder: SurfaceHolder) {
+                job?.cancel()
+                job = null
+                // Note that we disconnect wallpaper connection for live wallpapers in
+                // WallpaperPreviewActivity's onDestroy().
+                // This is to reduce multiple times of connecting and disconnecting live
+                // wallpaper services, when going back and forth small and full preview.
+            }
+        }
     }
 }

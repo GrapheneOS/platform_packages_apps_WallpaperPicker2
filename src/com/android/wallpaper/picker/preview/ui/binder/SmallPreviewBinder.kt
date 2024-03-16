@@ -20,11 +20,15 @@ import android.graphics.Point
 import android.view.SurfaceView
 import android.view.View
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import kotlinx.coroutines.launch
 
 object SmallPreviewBinder {
 
@@ -43,16 +47,22 @@ object SmallPreviewBinder {
         val wallpaperSurface: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
         val workspaceSurface: SurfaceView = view.requireViewById(R.id.workspace_surface)
 
-        if (R.id.smallPreviewFragment == currentNavDestId) {
-            view.setOnClickListener {
-                viewModel.onSmallPreviewClicked(screen, deviceDisplayType)
-                navigate?.invoke(previewCard)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                if (R.id.smallPreviewFragment == currentNavDestId) {
+                    view.setOnClickListener {
+                        viewModel.onSmallPreviewClicked(screen, deviceDisplayType)
+                        navigate?.invoke(previewCard)
+                    }
+                } else if (R.id.setWallpaperDialog == currentNavDestId) {
+                    previewCard.radius =
+                        previewCard.resources.getDimension(
+                            R.dimen.set_wallpaper_dialog_preview_corner_radius
+                        )
+                }
             }
-        } else if (R.id.setWallpaperDialog == currentNavDestId) {
-            previewCard.radius =
-                previewCard.resources.getDimension(
-                    R.dimen.set_wallpaper_dialog_preview_corner_radius
-                )
+            // Remove on click listener when on destroyed
+            view.setOnClickListener(null)
         }
 
         val config = viewModel.getWorkspacePreviewConfig(screen, deviceDisplayType)

@@ -49,6 +49,10 @@ class TabTextPagerAdapter : PagerAdapter() {
         )
     }
 
+    fun getIsHome(currentItem: Int): Boolean {
+        return textPages[currentItem] == R.string.home_screen_message
+    }
+
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val itemView =
             LayoutInflater.from(container.context).inflate(R.layout.item_text, container, false)
