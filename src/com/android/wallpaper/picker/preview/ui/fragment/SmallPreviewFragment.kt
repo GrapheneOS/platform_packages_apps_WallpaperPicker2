@@ -84,7 +84,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             viewModel = wallpaperPreviewViewModel,
             lifecycleOwner = viewLifecycleOwner,
         ) {
-            findNavController().navigate(R.id.action_smallPreviewFragment_to_setWallpaperDialog)
+            findNavController().navigate(R.id.setWallpaperDialog)
         }
         setWallpaperProgressDialog =
             ProgressDialog(context, R.style.LightDialogTheme).apply {

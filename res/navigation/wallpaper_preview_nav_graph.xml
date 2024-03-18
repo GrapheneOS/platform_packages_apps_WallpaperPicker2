@@ -42,5 +42,8 @@
     <dialog
         android:id="@+id/setWallpaperDialog"
         android:name="com.android.wallpaper.picker.preview.ui.fragment.SetWallpaperDialogFragment">
+        <action
+            android:id="@+id/action_setWallpaperDialog_self"
+            app:destination="@id/setWallpaperDialog" />
     </dialog>
 </navigation>
