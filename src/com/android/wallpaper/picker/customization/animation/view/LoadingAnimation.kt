@@ -111,8 +111,12 @@ class LoadingAnimation(
 
         elapsedTime = seed ?: (0L..10000L).random()
 
+        fadeInAnimator?.removeAllListeners()
+        fadeInAnimator?.removeAllUpdateListeners()
         fadeInAnimator?.cancel()
         timeAnimator?.cancel()
+        revealAnimator?.removeAllListeners()
+        revealAnimator?.removeAllUpdateListeners()
         revealAnimator?.cancel()
 
         fadeInAnimator =
@@ -159,7 +163,11 @@ class LoadingAnimation(
         )
             return
 
-        if (animationState == AnimationState.FADE_IN_PLAYING) fadeInAnimator?.cancel()
+        if (animationState == AnimationState.FADE_IN_PLAYING) {
+            fadeInAnimator?.removeAllListeners()
+            fadeInAnimator?.removeAllUpdateListeners()
+            fadeInAnimator?.cancel()
+        }
 
         animationState = AnimationState.REVEAL_PLAYING
 
@@ -221,7 +229,11 @@ class LoadingAnimation(
         )
             return
 
-        if (animationState == AnimationState.FADE_IN_PLAYING) fadeInAnimator?.cancel()
+        if (animationState == AnimationState.FADE_IN_PLAYING) {
+            fadeInAnimator?.removeAllListeners()
+            fadeInAnimator?.removeAllUpdateListeners()
+            fadeInAnimator?.cancel()
+        }
 
         animationState = AnimationState.FADE_OUT_PLAYING
 
@@ -329,6 +341,8 @@ class LoadingAnimation(
 
     /** Cancels the animation. Unlike end() , cancel() causes the animation to stop in its tracks */
     fun cancel() {
+        fadeInAnimator?.removeAllListeners()
+        fadeInAnimator?.removeAllUpdateListeners()
         fadeInAnimator?.cancel()
         timeAnimator?.cancel()
         revealAnimator?.removeAllListeners()
@@ -338,6 +352,8 @@ class LoadingAnimation(
 
     /** Ends the animation, and causes the animation to skip to the end state */
     fun end() {
+        fadeInAnimator?.removeAllListeners()
+        fadeInAnimator?.removeAllUpdateListeners()
         fadeInAnimator?.end()
         timeAnimator?.end()
         revealAnimator?.removeAllListeners()

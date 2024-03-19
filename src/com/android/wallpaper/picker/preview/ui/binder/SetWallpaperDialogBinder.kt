@@ -136,7 +136,8 @@ object SetWallpaperDialogBinder {
             dualDisplayAspectRatioLayout.setDisplaySizes(
                 mapOf(
                     DeviceDisplayType.FOLDED to wallpaperPreviewViewModel.smallerDisplaySize,
-                    DeviceDisplayType.UNFOLDED to wallpaperPreviewViewModel.wallpaperDisplaySize,
+                    DeviceDisplayType.UNFOLDED to
+                        wallpaperPreviewViewModel.wallpaperDisplaySize.value,
                 )
             )
             DeviceDisplayType.FOLDABLE_DISPLAY_TYPES.forEach { display ->

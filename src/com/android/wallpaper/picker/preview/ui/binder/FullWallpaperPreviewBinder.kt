@@ -133,7 +133,7 @@ object FullWallpaperPreviewBinder {
                                         wallpaper.shouldEnforceSingleEngine(),
                                         config.deviceDisplayType,
                                         viewModel.smallerDisplaySize,
-                                        viewModel.wallpaperDisplaySize,
+                                        config.displaySize,
                                     )
                                 )
                             } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {

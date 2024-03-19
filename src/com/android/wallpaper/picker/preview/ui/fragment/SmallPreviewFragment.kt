@@ -21,14 +21,22 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.children
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Transition
+import androidx.transition.doOnStart
+import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.AppbarFragment
@@ -97,6 +105,39 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             viewModel = wallpaperPreviewViewModel,
             lifecycleOwner = viewLifecycleOwner,
         )
+
+        // Transitions currently don't function properly with SurfaceViews. Hide all SurfaceViews
+        // before a transition as a workaround.
+        if (displayUtils.hasMultiInternalDisplays()) {
+            (exitTransition as? Transition)?.doOnStart {
+                val dualPreviewView: DualPreviewViewPager =
+                    view.requireViewById(R.id.dual_preview_pager)
+                dualPreviewView.children.forEach {
+                    val foldedPreview: FrameLayout =
+                        it.requireViewById(R.id.small_preview_folded_preview)
+                    val unfoldedPreview: FrameLayout =
+                        it.requireViewById(R.id.small_preview_unfolded_preview)
+                    foldedPreview.requireViewById<SurfaceView>(R.id.wallpaper_surface).isVisible =
+                        false
+                    foldedPreview.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible =
+                        false
+                    unfoldedPreview.requireViewById<SurfaceView>(R.id.wallpaper_surface).isVisible =
+                        false
+                    unfoldedPreview.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible =
+                        false
+                }
+            }
+        } else {
+            (exitTransition as? Transition)?.doOnStart {
+                val previewView: RecyclerView =
+                    view.requireViewById<ViewPager2>(R.id.pager_previews).getChildAt(0)
+                        as RecyclerView
+                previewView.children.forEach {
+                    it.requireViewById<SurfaceView>(R.id.wallpaper_surface).isVisible = false
+                    it.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible = false
+                }
+            }
+        }
 
         return view
     }

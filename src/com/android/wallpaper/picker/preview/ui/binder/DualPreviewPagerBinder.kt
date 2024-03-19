@@ -53,7 +53,8 @@ object DualPreviewPagerBinder {
             val displaySizes =
                 mapOf(
                     DeviceDisplayType.FOLDED to wallpaperPreviewViewModel.smallerDisplaySize,
-                    DeviceDisplayType.UNFOLDED to wallpaperPreviewViewModel.wallpaperDisplaySize,
+                    DeviceDisplayType.UNFOLDED to
+                        wallpaperPreviewViewModel.wallpaperDisplaySize.value,
                 )
             dualDisplayAspectRatioLayout.setDisplaySizes(displaySizes)
             dualPreviewView.setDisplaySizes(displaySizes)

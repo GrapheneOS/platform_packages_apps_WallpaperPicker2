@@ -100,6 +100,7 @@ object SmallWallpaperPreviewBinder {
         return object : SurfaceViewUtil.SurfaceCallback {
 
             var job: Job? = null
+            var loadingAnimationBinding: PreviewEffectsLoadingBinder.Binding? = null
 
             override fun surfaceCreated(holder: SurfaceHolder) {
                 job =
@@ -116,7 +117,7 @@ object SmallWallpaperPreviewBinder {
                                         wallpaper.shouldEnforceSingleEngine(),
                                         deviceDisplayType = deviceDisplayType,
                                         viewModel.smallerDisplaySize,
-                                        viewModel.wallpaperDisplaySize,
+                                        viewModel.wallpaperDisplaySize.value,
                                     ),
                                     object : WallpaperEngineConnectionListener {
                                         override fun onWallpaperColorsChanged(
@@ -147,6 +148,14 @@ object SmallWallpaperPreviewBinder {
                                 // This is to possibly shut down all live wallpaper services
                                 // if they exist; otherwise static wallpaper can not show up.
                                 WallpaperConnectionUtils.disconnectAllServices(applicationContext)
+
+                                loadingAnimationBinding =
+                                    PreviewEffectsLoadingBinder.bind(
+                                        view =
+                                            staticPreviewView.requireViewById(R.id.full_res_image),
+                                        viewModel = viewModel,
+                                        viewLifecycleOwner = lifecycleOwner,
+                                    )
                             }
                         }
                     }
@@ -155,6 +164,8 @@ object SmallWallpaperPreviewBinder {
             override fun surfaceDestroyed(holder: SurfaceHolder) {
                 job?.cancel()
                 job = null
+                loadingAnimationBinding?.destroy()
+                loadingAnimationBinding = null
                 // Note that we disconnect wallpaper connection for live wallpapers in
                 // WallpaperPreviewActivity's onDestroy().
                 // This is to reduce multiple times of connecting and disconnecting live

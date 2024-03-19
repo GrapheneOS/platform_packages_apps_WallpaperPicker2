@@ -17,11 +17,14 @@
 package com.android.wallpaper.picker.preview.ui.fragment
 
 import android.app.Activity
+import android.app.ActivityOptions
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.transition.Slide
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
@@ -83,6 +86,7 @@ class SetWallpaperDialogFragment : Hilt_SetWallpaperDialogFragment() {
                     .show()
                 if (activityReference != null) {
                     if (wallpaperPreviewViewModel.isNewTask) {
+                        activityReference.window?.exitTransition = Slide(Gravity.END)
                         val intent = Intent(activityReference, TrampolinePickerActivity::class.java)
                         intent.setFlags(
                             Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -92,7 +96,11 @@ class SetWallpaperDialogFragment : Hilt_SetWallpaperDialogFragment() {
                             if (wallpaperPreviewViewModel.isViewAsHome) LAUNCH_SOURCE_LAUNCHER
                             else LAUNCH_SOURCE_SETTINGS_HOMEPAGE
                         )
-                        activityReference.startActivity(intent)
+                        activityReference.startActivity(
+                            intent,
+                            ActivityOptions.makeSceneTransitionAnimation(activityReference)
+                                .toBundle()
+                        )
                     } else {
                         activityReference.setResult(Activity.RESULT_OK)
                         activityReference.finish()
