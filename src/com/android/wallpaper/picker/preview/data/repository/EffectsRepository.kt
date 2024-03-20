@@ -30,6 +30,7 @@ import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.Effect
 import com.android.wallpaper.effects.EffectContract
 import com.android.wallpaper.effects.EffectsController
+import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
 import com.android.wallpaper.picker.data.LiveWallpaperData
 import com.android.wallpaper.picker.data.WallpaperId
 import com.android.wallpaper.picker.data.WallpaperModel
@@ -81,12 +82,7 @@ constructor(
         onWallpaperUpdated = onWallpaperModelUpdated
         withContext(bgDispatcher) {
             val listener =
-                EffectsController.EffectsServiceListener {
-                    _,
-                    bundle,
-                    resultCode,
-                    originalStatusCode,
-                    errorMessage ->
+                EffectsController.EffectsServiceListener { effect, bundle, resultCode, _, _ ->
                     when (resultCode) {
                         EffectsController.RESULT_PROBE_SUCCESS -> {
                             _effectStatus.value = EffectStatus.EFFECT_READY
@@ -113,20 +109,20 @@ constructor(
                         EffectsController.RESULT_SUCCESS -> {
                             _effectStatus.value = EffectStatus.EFFECT_APPLIED
                             // TODO logger.logEffectApply
-                            bundle.getCinematicWallpaperModel()?.let {
+                            bundle.getCinematicWallpaperModel(effect)?.let {
                                 onWallpaperUpdated.invoke(it)
                             }
                         }
                         EffectsController.RESULT_SUCCESS_WITH_GENERATION_ERROR -> {
                             _effectStatus.value = EffectStatus.EFFECT_APPLIED
                             // TODO logger.logEffectApply
-                            bundle.getCinematicWallpaperModel()?.let {
+                            bundle.getCinematicWallpaperModel(effect)?.let {
                                 onWallpaperUpdated.invoke(it)
                             }
                         }
                         EffectsController.RESULT_SUCCESS_REUSED -> {
                             _effectStatus.value = EffectStatus.EFFECT_APPLIED
-                            bundle.getCinematicWallpaperModel()?.let {
+                            bundle.getCinematicWallpaperModel(effect)?.let {
                                 onWallpaperUpdated.invoke(it)
                             }
                         }
@@ -175,7 +171,9 @@ constructor(
         }
     }
 
-    private fun Bundle.getCinematicWallpaperModel(): LiveWallpaperModel? {
+    private fun Bundle.getCinematicWallpaperModel(
+        effect: EffectEnumInterface
+    ): LiveWallpaperModel? {
         val componentName =
             if (containsKey(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT)) {
                 getParcelable<ComponentName>(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT)
@@ -219,7 +217,7 @@ constructor(
                     systemWallpaperInfo = wallpaperInfo,
                     isTitleVisible = false,
                     isApplied = false,
-                    effectNames = null,
+                    effectNames = effect.toString(),
                 )
             return LiveWallpaperModel(
                 commonWallpaperData = commonWallpaperData,
@@ -236,7 +234,7 @@ constructor(
         }
     }
 
-    fun enableImageEffect(effect: EffectsController.EffectEnumInterface) {
+    fun enableImageEffect(effect: EffectEnumInterface) {
         _effectStatus.value = EffectStatus.EFFECT_APPLY_IN_PROGRESS
         // TODO: Maybe we should call reconnect wallpaper if we have created a LiveWallpaperModel
         //       if (mLiveWallpaperInfo != null) {

@@ -216,10 +216,7 @@ constructor(
 
     /** [EFFECTS] */
     private val _effectFloatingSheetViewModel: Flow<EffectFloatingSheetViewModel?> =
-        combine(interactor.wallpaperModel, interactor.effectsStatus, interactor.effect) {
-            _,
-            status,
-            effect ->
+        combine(interactor.effectsStatus, interactor.effect) { status, effect ->
             effect ?: return@combine null
             when (status) {
                 EffectsRepository.EffectStatus.EFFECT_DISABLE -> {

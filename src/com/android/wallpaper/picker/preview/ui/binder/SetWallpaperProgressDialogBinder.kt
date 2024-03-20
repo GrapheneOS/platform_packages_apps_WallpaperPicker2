@@ -16,7 +16,7 @@
 
 package com.android.wallpaper.picker.preview.ui.binder
 
-import android.app.ProgressDialog
+import android.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 object SetWallpaperProgressDialogBinder {
 
     fun bind(
-        dialog: ProgressDialog,
+        dialog: AlertDialog,
         viewModel: WallpaperPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
     ) {

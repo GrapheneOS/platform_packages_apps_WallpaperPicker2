@@ -16,7 +16,6 @@
 package com.android.wallpaper.picker.preview.ui.fragment
 
 import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -25,6 +24,7 @@ import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -68,7 +68,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
     @Inject lateinit var logger: UserEventLogger
 
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
-    private lateinit var setWallpaperProgressDialog: ProgressDialog
+    private lateinit var setWallpaperProgressDialog: AlertDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -94,12 +94,8 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         ) {
             findNavController().navigate(R.id.setWallpaperDialog)
         }
-        setWallpaperProgressDialog =
-            ProgressDialog(context, R.style.LightDialogTheme).apply {
-                setTitle(null)
-                setMessage(context.getString(R.string.set_wallpaper_progress_message))
-                isIndeterminate = true
-            }
+
+        setWallpaperProgressDialog = getSetWallpaperProgressDialog(inflater)
         SetWallpaperProgressDialogBinder.bind(
             dialog = setWallpaperProgressDialog,
             viewModel = wallpaperPreviewViewModel,
@@ -270,6 +266,16 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                     .show()
             },
         )
+    }
+
+    private fun getSetWallpaperProgressDialog(
+        inflater: LayoutInflater,
+    ): AlertDialog {
+        val dialogView = inflater.inflate(R.layout.set_wallpaper_progress_dialog_view, null)
+        dialogView
+            .requireViewById<TextView>(R.id.set_wallpaper_progress_dialog_text)
+            .setText(R.string.set_wallpaper_progress_message)
+        return AlertDialog.Builder(activity).setView(dialogView).create()
     }
 
     companion object {

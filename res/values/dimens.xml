@@ -264,6 +264,10 @@
     <dimen name="set_wallpaper_button_margin_end">16dp</dimen>
     <dimen name="set_wallpaper_button_min_height">48dp</dimen>
 
+    <!-- Set wallpaper dialog -->
+    <dimen name="set_wallpaper_progress_dialog_padding">16dp</dimen>
+    <dimen name="set_wallpaper_progress_dialog_progress_bar_margin_end">10dp</dimen>
+
     <!-- Wallpaper control button group -->
     <dimen name="wallpaper_control_button_group_divider_space">16dp</dimen>
     <dimen name="wallpaper_control_button_group_margin_top">24dp</dimen>
