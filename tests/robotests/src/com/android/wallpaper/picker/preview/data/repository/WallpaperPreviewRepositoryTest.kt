@@ -109,7 +109,7 @@ class WallpaperPreviewRepositoryTest {
         assertThat(underTest.hasSmallPreviewTooltipBeenShown.value).isFalse()
         assertThat(underTest.hasFullPreviewTooltipBeenShown.value).isFalse()
 
-        underTest.hasShownSmallPreviewTooltip()
+        underTest.hideSmallPreviewTooltip()
         assertThat(prefs.getHasSmallPreviewTooltipBeenShown()).isTrue()
         assertThat(underTest.hasSmallPreviewTooltipBeenShown.value).isTrue()
         assertThat(prefs.getHasFullPreviewTooltipBeenShown()).isFalse()

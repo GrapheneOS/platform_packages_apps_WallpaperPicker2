@@ -41,6 +41,7 @@ import com.android.wallpaper.asset.BitmapUtils
 import com.android.wallpaper.asset.CurrentWallpaperAsset
 import com.android.wallpaper.asset.StreamableAsset
 import com.android.wallpaper.model.CreativeCategory
+import com.android.wallpaper.model.CreativeWallpaperInfo
 import com.android.wallpaper.model.LiveWallpaperPrefMetadata
 import com.android.wallpaper.model.StaticWallpaperPrefMetadata
 import com.android.wallpaper.model.WallpaperInfo
@@ -57,6 +58,8 @@ import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
 import com.android.wallpaper.util.WallpaperCropUtils
+import com.android.wallpaper.util.converter.WallpaperModelFactory.Companion.getCommonWallpaperData
+import com.android.wallpaper.util.converter.WallpaperModelFactory.Companion.getCreativeWallpaperData
 import java.io.IOException
 import java.io.InputStream
 import java.util.EnumMap
@@ -268,40 +271,61 @@ class WallpaperClientImpl(
             stopWallpaperRotation()
         }
 
-        if (wallpaperModel.creativeWallpaperData != null) {
-            saveCreativeWallpaperAtExternal(wallpaperModel, destination)
-        }
+        val updatedWallpaperModel =
+            wallpaperModel.creativeWallpaperData?.let {
+                saveCreativeWallpaperAtExternal(wallpaperModel, destination)
+            }
+                ?: wallpaperModel
 
-        val managerId = wallpaperManager.setLiveWallpaperToSystem(wallpaperModel, destination)
+        val managerId =
+            wallpaperManager.setLiveWallpaperToSystem(updatedWallpaperModel, destination)
 
         wallpaperPreferences.setLiveWallpaperMetadata(
-            metadata = wallpaperModel.getMetadata(managerId),
+            metadata = updatedWallpaperModel.getMetadata(managerId),
             destination = destination,
         )
 
-        wallpaperPreferences.addLiveWallpaperToRecentWallpapers(destination, wallpaperModel)
+        wallpaperPreferences.addLiveWallpaperToRecentWallpapers(destination, updatedWallpaperModel)
     }
 
-    /** Call the external app to save the creative wallpaper. */
+    /**
+     * Call the external app to save the creative wallpaper, and return an updated model based on
+     * the response.
+     */
     private fun saveCreativeWallpaperAtExternal(
         wallpaperModel: LiveWallpaperModel,
         destination: WallpaperDestination,
-    ) {
+    ): LiveWallpaperModel? {
         wallpaperModel.getSaveWallpaperUriAndAuthority(destination)?.let { (uri, authority) ->
             try {
                 context.contentResolver.acquireContentProviderClient(authority).use { client ->
-                    client?.query(
-                        /* url= */ uri,
-                        /* projection= */ null,
-                        /* selection= */ null,
-                        /* selectionArgs= */ null,
-                        /* sortOrder= */ null,
+                    val cursor =
+                        client?.query(
+                            /* url= */ uri,
+                            /* projection= */ null,
+                            /* selection= */ null,
+                            /* selectionArgs= */ null,
+                            /* sortOrder= */ null,
+                        )
+                    if (cursor == null || !cursor.moveToFirst()) return null
+                    val info =
+                        CreativeWallpaperInfo.buildFromCursor(
+                            wallpaperModel.liveWallpaperData.systemWallpaperInfo,
+                            cursor
+                        )
+                    // NB: need to regenerate common data to update the thumbnail asset
+                    return LiveWallpaperModel(
+                        info.getCommonWallpaperData(context),
+                        wallpaperModel.liveWallpaperData,
+                        info.getCreativeWallpaperData(),
+                        wallpaperModel.internalLiveWallpaperData
                     )
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed updating creative live wallpaper at external.")
             }
         }
+        return null
     }
 
     /**

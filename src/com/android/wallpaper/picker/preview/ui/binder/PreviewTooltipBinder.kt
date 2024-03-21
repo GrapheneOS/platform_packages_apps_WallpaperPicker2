@@ -17,6 +17,8 @@ package com.android.wallpaper.picker.preview.ui.binder
 
 import android.view.View
 import android.view.ViewStub
+import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -28,11 +30,10 @@ import kotlinx.coroutines.launch
 object PreviewTooltipBinder {
     interface TooltipViewModel {
         val shouldShowTooltip: Flow<Boolean>
-        val enableClickToDismiss: Boolean
         fun dismissTooltip()
     }
 
-    fun bind(
+    fun bindSmallPreviewTooltip(
         tooltipStub: ViewStub,
         viewModel: TooltipViewModel,
         lifecycleOwner: LifecycleOwner,
@@ -44,13 +45,76 @@ object PreviewTooltipBinder {
                     viewModel.shouldShowTooltip.collect { shouldShowTooltip ->
                         if (shouldShowTooltip && tooltip == null) {
                             tooltip = tooltipStub.inflate()
-                            if (viewModel.enableClickToDismiss) {
-                                tooltip?.setOnClickListener { viewModel.dismissTooltip() }
+                        }
+                        tooltip?.doOnLayout {
+                            it.isVisible = true
+                            it.alpha = if (shouldShowTooltip) 0f else 1f
+                            it.pivotX = it.measuredWidth / 2f
+                            it.pivotY = it.measuredHeight.toFloat()
+                            it.scaleX = if (shouldShowTooltip) 0.2f else 1f
+                            it.scaleY = if (shouldShowTooltip) 0.2f else 1f
+
+                            if (shouldShowTooltip) {
+                                it.animate()
+                                    .scaleX(1f)
+                                    .scaleY(1f)
+                                    .alpha(1f)
+                                    .setStartDelay(1000L)
+                                    .setDuration(200L)
+                                    .setInterpolator(AccelerateDecelerateInterpolator())
+                                    .start()
+                            } else {
+                                it.animate()
+                                    .alpha(0f)
+                                    .setDuration(75L)
+                                    .setInterpolator(AccelerateDecelerateInterpolator())
+                                    .withEndAction { tooltip?.isVisible = false }
+                                    .start()
                             }
                         }
-                        // TODO (b/303318205): animate tooltip
-                        // Only show tooltip if it has not been shown before.
-                        tooltip?.isVisible = shouldShowTooltip
+                    }
+                }
+            }
+        }
+    }
+
+    fun bindFullPreviewTooltip(
+        tooltipStub: ViewStub,
+        viewModel: TooltipViewModel,
+        lifecycleOwner: LifecycleOwner,
+    ) {
+        var tooltip: View? = null
+        lifecycleOwner.lifecycleScope.launch {
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.shouldShowTooltip.collect { shouldShowTooltip ->
+                        if (shouldShowTooltip && tooltip == null) {
+                            tooltip = tooltipStub.inflate()
+                            tooltip?.setOnClickListener { viewModel.dismissTooltip() }
+                        }
+                        tooltip?.doOnLayout {
+                            it.isVisible = true
+                            it.alpha = if (shouldShowTooltip) 0f else 1f
+                            it.translationY = if (shouldShowTooltip) -20f else 0f
+
+                            if (shouldShowTooltip) {
+                                it.animate()
+                                    .alpha(1f)
+                                    .translationY(0f)
+                                    .setStartDelay(500L)
+                                    .setDuration(200L)
+                                    .setInterpolator(AccelerateDecelerateInterpolator())
+                                    .start()
+                            } else {
+                                it.animate()
+                                    .alpha(0f)
+                                    .translationY(-20f)
+                                    .setDuration(75L)
+                                    .setInterpolator(AccelerateDecelerateInterpolator())
+                                    .withEndAction { tooltip?.isVisible = false }
+                                    .start()
+                            }
+                        }
                     }
                 }
             }

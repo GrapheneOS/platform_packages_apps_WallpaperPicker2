@@ -20,6 +20,7 @@ import android.graphics.Point
 import android.view.SurfaceView
 import android.view.View
 import androidx.cardview.widget.CardView
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -48,21 +49,32 @@ object SmallPreviewBinder {
         val workspaceSurface: SurfaceView = view.requireViewById(R.id.workspace_surface)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                if (R.id.smallPreviewFragment == currentNavDestId) {
-                    view.setOnClickListener {
-                        viewModel.onSmallPreviewClicked(screen, deviceDisplayType)
-                        navigate?.invoke(previewCard)
+            launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                    if (R.id.smallPreviewFragment == currentNavDestId) {
+                        view.setOnClickListener {
+                            viewModel.onSmallPreviewClicked(screen, deviceDisplayType)
+                            navigate?.invoke(previewCard)
+                        }
+                    } else if (R.id.setWallpaperDialog == currentNavDestId) {
+                        previewCard.radius =
+                            previewCard.resources.getDimension(
+                                R.dimen.set_wallpaper_dialog_preview_corner_radius
+                            )
                     }
-                } else if (R.id.setWallpaperDialog == currentNavDestId) {
-                    previewCard.radius =
-                        previewCard.resources.getDimension(
-                            R.dimen.set_wallpaper_dialog_preview_corner_radius
-                        )
+                }
+                // Remove on click listener when on destroyed
+                view.setOnClickListener(null)
+            }
+            launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    // SurfaceViews are hidden when exit transition starts in SmallPreviewFragment.
+                    // Ensure they are visible when the fragment starts on the edge case that the
+                    // the fragment resumes after the exit transition.
+                    wallpaperSurface.isVisible = true
+                    workspaceSurface.isVisible = true
                 }
             }
-            // Remove on click listener when on destroyed
-            view.setOnClickListener(null)
         }
 
         val config = viewModel.getWorkspacePreviewConfig(screen, deviceDisplayType)

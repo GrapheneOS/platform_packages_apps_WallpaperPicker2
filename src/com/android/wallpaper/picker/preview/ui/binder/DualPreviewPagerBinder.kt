@@ -41,7 +41,7 @@ object DualPreviewPagerBinder {
     ) {
         // implement adapter for the dual preview pager
         dualPreviewView.adapter = DualPreviewPagerAdapter { view, position ->
-            PreviewTooltipBinder.bind(
+            PreviewTooltipBinder.bindSmallPreviewTooltip(
                 tooltipStub = view.requireViewById(R.id.tooltip_stub),
                 viewModel = wallpaperPreviewViewModel.smallTooltipViewModel,
                 lifecycleOwner = viewLifecycleOwner,

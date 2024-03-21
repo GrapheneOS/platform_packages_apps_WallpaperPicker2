@@ -47,6 +47,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -97,28 +98,28 @@ constructor(
         object : PreviewTooltipBinder.TooltipViewModel {
             override val shouldShowTooltip: Flow<Boolean> =
                 combine(isWallpaperCroppable, interactor.hasSmallPreviewTooltipBeenShown) {
-                    isCroppable,
-                    hasTooltipBeenShown ->
-                    // Only show tooltip if it has not been shown before.
-                    isCroppable && !hasTooltipBeenShown
-                }
-            override val enableClickToDismiss: Boolean = false
+                        isCroppable,
+                        hasTooltipBeenShown ->
+                        // Only show tooltip if it has not been shown before.
+                        isCroppable && !hasTooltipBeenShown
+                    }
+                    .distinctUntilChanged()
 
-            override fun dismissTooltip() = interactor.hasShownSmallPreviewTooltip()
+            override fun dismissTooltip() = interactor.hideSmallPreviewTooltip()
         }
 
     val fullTooltipViewModel =
         object : PreviewTooltipBinder.TooltipViewModel {
             override val shouldShowTooltip: Flow<Boolean> =
                 combine(isWallpaperCroppable, interactor.hasFullPreviewTooltipBeenShown) {
-                    isCroppable,
-                    hasTooltipBeenShown ->
-                    // Only show tooltip if it has not been shown before.
-                    isCroppable && !hasTooltipBeenShown
-                }
-            override val enableClickToDismiss: Boolean = true
+                        isCroppable,
+                        hasTooltipBeenShown ->
+                        // Only show tooltip if it has not been shown before.
+                        isCroppable && !hasTooltipBeenShown
+                    }
+                    .distinctUntilChanged()
 
-            override fun dismissTooltip() = interactor.dismissFullPreviewTooltip()
+            override fun dismissTooltip() = interactor.hideFullPreviewTooltip()
         }
 
     private val _whichPreview = MutableStateFlow<WhichPreview?>(null)

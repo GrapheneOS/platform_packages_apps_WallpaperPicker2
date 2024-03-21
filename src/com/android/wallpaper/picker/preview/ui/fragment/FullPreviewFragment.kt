@@ -124,7 +124,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
             lifecycleOwner = viewLifecycleOwner,
         )
 
-        PreviewTooltipBinder.bind(
+        PreviewTooltipBinder.bindFullPreviewTooltip(
             tooltipStub = view.requireViewById(R.id.tooltip_stub),
             viewModel = wallpaperPreviewViewModel.fullTooltipViewModel,
             lifecycleOwner = viewLifecycleOwner,

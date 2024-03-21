@@ -52,7 +52,7 @@ constructor(
     val hasSmallPreviewTooltipBeenShown: StateFlow<Boolean> =
         _hasSmallPreviewTooltipBeenShown.asStateFlow()
 
-    fun hasShownSmallPreviewTooltip() {
+    fun hideSmallPreviewTooltip() {
         _hasSmallPreviewTooltipBeenShown.value = true
         preferences.setHasSmallPreviewTooltipBeenShown(true)
     }
@@ -62,7 +62,7 @@ constructor(
     val hasFullPreviewTooltipBeenShown: StateFlow<Boolean> =
         _hasFullPreviewTooltipBeenShown.asStateFlow()
 
-    fun dismissFullPreviewTooltip() {
+    fun hideFullPreviewTooltip() {
         _hasFullPreviewTooltipBeenShown.value = true
         preferences.setHasFullPreviewTooltipBeenShown(true)
     }
