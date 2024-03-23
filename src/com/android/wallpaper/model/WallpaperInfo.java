@@ -321,9 +321,7 @@ public abstract class WallpaperInfo implements Parcelable {
     /** Returns the crop {@link Rect} of each displaySize for this wallpaper. */
     public @Nullable Map<Point, Rect> getWallpaperCropHints() {
         BaseFlags flags = InjectorProvider.getInjector().getFlags();
-        boolean isMultiCropEnabled =
-                flags.isMultiCropPreviewUiEnabled() && flags.isMultiCropEnabled();
-        if (!isMultiCropEnabled) {
+        if (!flags.isMultiCropEnabled()) {
             return null;
         }
 

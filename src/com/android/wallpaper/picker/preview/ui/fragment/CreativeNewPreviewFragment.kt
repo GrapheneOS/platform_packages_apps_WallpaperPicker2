@@ -25,7 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toolbar
-import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -65,6 +65,7 @@ class CreativeNewPreviewFragment : Hilt_CreativeNewPreviewFragment() {
             applicationContext = appContext,
             view = view,
             viewModel = wallpaperPreviewViewModel,
+            transition = null,
             displayUtils = displayUtils,
             lifecycleOwner = viewLifecycleOwner,
         )
@@ -79,20 +80,10 @@ class CreativeNewPreviewFragment : Hilt_CreativeNewPreviewFragment() {
                     "To render the first screen in the create new creative wallpaper flow, the intent for rendering the edit activity overlay can not be null."
                 )
         val creativeWallpaperEditActivityResult =
-            registerForActivityResult(
-                object : ActivityResultContract<Intent, Int>() {
-                    override fun createIntent(context: Context, input: Intent): Intent {
-                        return input
-                    }
-
-                    override fun parseResult(resultCode: Int, intent: Intent?): Int {
-                        return resultCode
-                    }
-                },
-            ) {
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 // Callback when the overlaying edit activity is finished. Result code of RESULT_OK
                 // means the user clicked on the check button; RESULT_CANCELED otherwise.
-                if (it == RESULT_OK) {
+                if (it.resultCode == RESULT_OK) {
                     // When clicking on the check button, navigate to the small preview fragment.
                     findNavController()
                         .navigate(R.id.action_creativeNewPreviewFragment_to_smallPreviewFragment)
@@ -100,6 +91,7 @@ class CreativeNewPreviewFragment : Hilt_CreativeNewPreviewFragment() {
                     activity?.finish()
                 }
             }
+
         creativeWallpaperEditActivityResult.launch(intent)
 
         return view

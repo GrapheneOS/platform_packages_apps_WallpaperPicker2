@@ -588,8 +588,7 @@ class WallpaperClientImpl(
         @SetWallpaperFlags which: Int
     ): Map<Point, Rect>? {
         val flags = InjectorProvider.getInjector().getFlags()
-        val isMultiCropEnabled = flags.isMultiCropPreviewUiEnabled() && flags.isMultiCropEnabled()
-        if (!isMultiCropEnabled) {
+        if (!flags.isMultiCropEnabled()) {
             return null
         }
         val cropHints: List<Rect>? =

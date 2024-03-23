@@ -195,8 +195,7 @@ public final class WallpaperCropUtils {
             Point defaultCropSurfaceSize, Point targetHostSize, int scrollX, int scrollY,
             boolean cropExtraWidth) {
         BaseFlags flags = InjectorProvider.getInjector().getFlags();
-        boolean isMultiCropEnabled =
-                flags.isMultiCropPreviewUiEnabled() && flags.isMultiCropEnabled();
+        boolean isMultiCropEnabled = flags.isMultiCropEnabled();
         // Calculate Rect of wallpaper in physical pixel terms (i.e., scaled to current zoom).
         int scaledWallpaperWidth = Math.round(wallpaperSize.x * wallpaperZoom);
         int scaledWallpaperHeight = Math.round(wallpaperSize.y * wallpaperZoom);

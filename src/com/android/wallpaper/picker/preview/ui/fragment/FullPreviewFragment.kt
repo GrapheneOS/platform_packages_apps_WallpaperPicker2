@@ -31,7 +31,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.transition.TransitionInflater
+import androidx.transition.Transition
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.preview.ui.binder.CropWallpaperButtonBinder
@@ -39,6 +39,7 @@ import com.android.wallpaper.picker.preview.ui.binder.FullWallpaperPreviewBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewTooltipBinder
 import com.android.wallpaper.picker.preview.ui.binder.WorkspacePreviewBinder
 import com.android.wallpaper.picker.preview.ui.fragment.SmallPreviewFragment.Companion.ARG_EDIT_INTENT
+import com.android.wallpaper.picker.preview.ui.transition.ChangeScaleAndPosition
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,8 +58,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (ENABLE_ANIMATION) {
-            sharedElementEnterTransition =
-                TransitionInflater.from(appContext).inflateTransition(R.transition.shared_view)
+            sharedElementEnterTransition = ChangeScaleAndPosition()
         }
     }
 
@@ -106,6 +106,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
             applicationContext = appContext,
             view = view,
             viewModel = wallpaperPreviewViewModel,
+            transition = sharedElementEnterTransition as? Transition,
             displayUtils = displayUtils,
             lifecycleOwner = viewLifecycleOwner,
         )
@@ -147,6 +148,6 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
     }
 
     companion object {
-        const val ENABLE_ANIMATION = false
+        const val ENABLE_ANIMATION = true
     }
 }

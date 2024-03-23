@@ -20,23 +20,18 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.children
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.Transition
-import androidx.transition.doOnStart
-import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.AppbarFragment
@@ -55,6 +50,7 @@ import com.android.wallpaper.util.DisplayUtils
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 /**
  * This fragment displays the preview of the selected wallpaper on all available workspaces and
@@ -102,39 +98,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             lifecycleOwner = viewLifecycleOwner,
         )
 
-        // Transitions currently don't function properly with SurfaceViews. Hide all SurfaceViews
-        // before a transition as a workaround.
-        if (displayUtils.hasMultiInternalDisplays()) {
-            (exitTransition as? Transition)?.doOnStart {
-                val dualPreviewView: DualPreviewViewPager =
-                    view.requireViewById(R.id.dual_preview_pager)
-                dualPreviewView.children.forEach {
-                    val foldedPreview: FrameLayout =
-                        it.requireViewById(R.id.small_preview_folded_preview)
-                    val unfoldedPreview: FrameLayout =
-                        it.requireViewById(R.id.small_preview_unfolded_preview)
-                    foldedPreview.requireViewById<SurfaceView>(R.id.wallpaper_surface).isVisible =
-                        false
-                    foldedPreview.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible =
-                        false
-                    unfoldedPreview.requireViewById<SurfaceView>(R.id.wallpaper_surface).isVisible =
-                        false
-                    unfoldedPreview.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible =
-                        false
-                }
-            }
-        } else {
-            (exitTransition as? Transition)?.doOnStart {
-                val previewView: RecyclerView =
-                    view.requireViewById<ViewPager2>(R.id.pager_previews).getChildAt(0)
-                        as RecyclerView
-                previewView.children.forEach {
-                    it.requireViewById<SurfaceView>(R.id.wallpaper_surface).isVisible = false
-                    it.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible = false
-                }
-            }
-        }
-
         return view
     }
 
@@ -171,6 +134,8 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 ViewCompat.setTransitionName(sharedElement, SMALL_PREVIEW_SHARED_ELEMENT_ID)
                 val extras =
                     FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)
+                // Set to false on small-to-full preview transition to remove surfaceView jank.
+                (view as ViewGroup).isTransitionGroup = false
                 findNavController()
                     .navigate(
                         resId = R.id.action_smallPreviewFragment_to_fullPreviewFragment,
@@ -198,6 +163,8 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 ViewCompat.setTransitionName(sharedElement, SMALL_PREVIEW_SHARED_ELEMENT_ID)
                 val extras =
                     FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)
+                // Set to false on small-to-full preview transition to remove surfaceView jank.
+                (view as ViewGroup).isTransitionGroup = false
                 findNavController()
                     .navigate(
                         resId = R.id.action_smallPreviewFragment_to_fullPreviewFragment,
@@ -205,6 +172,14 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                         navOptions = null,
                         navigatorExtras = extras
                     )
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Always reset isTransitionGroup value on start for the edge case that the
+                // navigation is cancelled and the fragment resumes.
+                (view as ViewGroup).isTransitionGroup = true
             }
         }
     }

@@ -21,7 +21,6 @@ import com.android.settings.accessibility.Flags.enableColorContrastControl
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
 import com.android.systemui.shared.customization.data.content.CustomizationProviderContract as Contract
-import com.android.wallpaper.Flags.multiCropPreviewUiFlag
 import com.android.wallpaper.Flags.refactorWallpaperCategoryFlag
 import com.android.wallpaper.Flags.wallpaperRestorerFlag
 import com.android.wallpaper.module.InjectorProvider
@@ -38,9 +37,6 @@ abstract class BaseFlags {
     open fun isWallpaperRestorerEnabled() = wallpaperRestorerFlag()
     open fun isWallpaperCategoryRefactoringEnabled() = refactorWallpaperCategoryFlag()
     open fun isColorContrastControlEnabled() = enableColorContrastControl()
-
-    /** Enables new preview UI if both [isMultiCropEnabled] and this flag are true. */
-    open fun isMultiCropPreviewUiEnabled() = multiCropPreviewUiFlag()
 
     open fun isMultiCropEnabled() = WallpaperManager.isMultiCropEnabled()
 

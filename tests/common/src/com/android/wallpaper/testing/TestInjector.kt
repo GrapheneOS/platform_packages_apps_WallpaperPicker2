@@ -266,7 +266,7 @@ open class TestInjector @Inject constructor(private val userEventLogger: UserEve
     }
 
     override fun getWallpaperInteractor(context: Context): WallpaperInteractor {
-        if (getFlags().isMultiCropEnabled() && getFlags().isMultiCropPreviewUiEnabled()) {
+        if (getFlags().isMultiCropEnabled()) {
             return injectedWallpaperInteractor
         }
 

@@ -17,7 +17,6 @@ package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
 import android.graphics.Point
-import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -29,6 +28,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.transition.Transition
+import androidx.transition.doOnEnd
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.TouchForwardingLayout
 import com.android.wallpaper.picker.data.WallpaperModel
@@ -46,6 +47,7 @@ import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.s
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import java.lang.Integer.min
 import kotlin.math.max
+import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -56,12 +58,14 @@ object FullWallpaperPreviewBinder {
         applicationContext: Context,
         view: View,
         viewModel: WallpaperPreviewViewModel,
+        transition: Transition?,
         displayUtils: DisplayUtils,
         lifecycleOwner: LifecycleOwner,
     ) {
         val wallpaperPreviewCrop: FullPreviewFrameLayout =
             view.requireViewById(R.id.wallpaper_preview_crop)
         val previewCard: CardView = view.requireViewById(R.id.preview_card)
+        var transitionDisposableHandle: DisposableHandle? = null
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.fullWallpaper.collect { (_, config, _) ->
@@ -71,9 +75,21 @@ object FullWallpaperPreviewBinder {
                         currentSize,
                         targetSize,
                     )
-                    if (targetSize == currentSize) previewCard.radius = 0f
+                    val setFinalPreviewCardRadius = {
+                        if (targetSize == currentSize) previewCard.radius = 0f
+                    }
+                    if (transition == null) {
+                        setFinalPreviewCardRadius()
+                    } else {
+                        transitionDisposableHandle?.dispose()
+                        val listener = transition.doOnEnd { setFinalPreviewCardRadius() }
+                        transitionDisposableHandle = DisposableHandle {
+                            listener.let { transition.removeListener(it) }
+                        }
+                    }
                 }
             }
+            transitionDisposableHandle?.dispose()
         }
         val surfaceView: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
         val surfaceTouchForwardingLayout: TouchForwardingLayout =
@@ -203,21 +219,6 @@ object FullWallpaperPreviewBinder {
                 // wallpaper services, when going back and forth small and full preview.
             }
         }
-    }
-
-    private fun initStaticPreviewSurface(
-        applicationContext: Context,
-        surfaceView: SurfaceView,
-        onNewCrop: (crop: Rect, zoom: Float) -> Unit
-    ): Pair<ImageView, SubsamplingScaleImageView> {
-        val preview =
-            LayoutInflater.from(applicationContext)
-                .inflate(R.layout.fullscreen_wallpaper_preview, null)
-        surfaceView.attachView(preview)
-        val fullResImageView =
-            preview.requireViewById<SubsamplingScaleImageView>(R.id.full_res_image)
-        fullResImageView.setOnNewCropListener { crop, zoom -> onNewCrop.invoke(crop, zoom) }
-        return Pair(preview.requireViewById(R.id.low_res_image), fullResImageView)
     }
 
     private fun TouchForwardingLayout.initTouchForwarding(targetView: View) {

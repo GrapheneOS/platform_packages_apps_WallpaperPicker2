@@ -60,8 +60,7 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
             WallpaperInfoCallback callback) {
 
         BaseFlags flags = InjectorProvider.getInjector().getFlags();
-        final boolean isMultiCropEnabled =
-                flags.isMultiCropEnabled() && flags.isMultiCropPreviewUiEnabled();
+        final boolean isMultiCropEnabled = flags.isMultiCropEnabled();
 
         boolean isHomeWallpaperSynced  = homeWallpaperSynced(context);
         boolean isLockWallpaperSynced  = lockWallpaperSynced(context);

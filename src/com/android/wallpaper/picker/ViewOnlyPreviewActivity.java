@@ -110,7 +110,7 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
             LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
             final boolean isMultiPanel = multiPanesChecker.isMultiPanesEnabled(appContext);
             final BaseFlags flags = InjectorProvider.getInjector().getFlags();
-            if (flags.isMultiCropPreviewUiEnabled() && flags.isMultiCropEnabled()) {
+            if (flags.isMultiCropEnabled()) {
                 return WallpaperPreviewActivity.Companion.newIntent(appContext, wallpaper,
                         isAssetIdPresent, mIsViewAsHome, /* isNewTask= */ isMultiPanel);
             }

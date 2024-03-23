@@ -127,8 +127,7 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
         BaseFlags flags = InjectorProvider.getInjector().getFlags();
         // Only get the full wallpaper asset when previewing a multi-crop wallpaper, otherwise get
         // the cropped asset.
-        boolean getFullAsset = flags.isMultiCropPreviewUiEnabled() && flags.isMultiCropEnabled()
-                && !mCropHints.isEmpty();
+        boolean getFullAsset = flags.isMultiCropEnabled() && !mCropHints.isEmpty();
 
         return (isSystemBuiltIn)
                 ? new BuiltInWallpaperAsset(context)

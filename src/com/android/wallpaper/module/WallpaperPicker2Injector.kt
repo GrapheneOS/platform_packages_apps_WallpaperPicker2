@@ -305,7 +305,7 @@ constructor(
     }
 
     override fun getWallpaperInteractor(context: Context): WallpaperInteractor {
-        if (getFlags().isMultiCropEnabled() && getFlags().isMultiCropPreviewUiEnabled()) {
+        if (getFlags().isMultiCropEnabled()) {
             return injectedWallpaperInteractor.get()
         }
 
@@ -324,7 +324,7 @@ constructor(
     }
 
     override fun getWallpaperClient(context: Context): WallpaperClient {
-        if (getFlags().isMultiCropEnabled() && getFlags().isMultiCropPreviewUiEnabled()) {
+        if (getFlags().isMultiCropEnabled()) {
             return injectedWallpaperClient.get()
         }
 

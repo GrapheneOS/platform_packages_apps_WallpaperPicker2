@@ -142,7 +142,7 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
     private void loadPreviewFragment() {
         BaseFlags flags = InjectorProvider.getInjector().getFlags();
         Intent intent = getIntent();
-        if (flags.isMultiCropPreviewUiEnabled() && flags.isMultiCropEnabled()) {
+        if (flags.isMultiCropEnabled()) {
             Intent wallpaperIntent = WallpaperPreviewActivity.Companion.newIntent(
                     this.getApplicationContext(), intent, /* isAssetIdPresent= */ false,
                     /* isViewAsHome= */ true, /* isNewTask= */ false);

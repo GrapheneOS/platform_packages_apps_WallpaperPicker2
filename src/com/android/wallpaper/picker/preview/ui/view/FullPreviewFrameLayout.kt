@@ -52,7 +52,6 @@ class FullPreviewFrameLayout(context: Context, attrs: AttributeSet? = null) :
         val maxRect = targetSize.findMaxRectWithRatioIn(currentSize)
         val width = maxRect.x.toInt()
         val height = maxRect.y.toInt()
-        setMeasuredDimension(width, height)
         measureChildren(
             MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)

@@ -123,20 +123,25 @@ class WallpaperPreviewActivity :
 
         val liveWallpaperModel = (wallpaper as? WallpaperModel.LiveWallpaperModel)
         if (liveWallpaperModel != null && liveWallpaperModel.isNewCreativeWallpaper()) {
-            // If it's a new creative wallpaper, override the start destination to the fullscreen
-            // fragment for the create-new flow of creative wallpapers
-            val navGraph =
-                navController.navInflater.inflate(R.navigation.wallpaper_preview_nav_graph)
-            navGraph.setStartDestination(R.id.creativeNewPreviewFragment)
-            navController.setGraph(
-                navGraph,
-                Bundle().apply {
-                    putParcelable(
-                        SmallPreviewFragment.ARG_EDIT_INTENT,
-                        liveWallpaperModel.liveWallpaperData.getEditActivityIntent()
-                    )
-                }
-            )
+            val navState = savedInstanceState?.getParcelable<Bundle?>(NAV_STATE)
+            if (navState != null) {
+                navController.restoreState(navState)
+            } else {
+                // If it's a new creative wallpaper, override the start destination to the
+                // fullscreen fragment for the create-new flow of creative wallpapers
+                val navGraph =
+                    navController.navInflater.inflate(R.navigation.wallpaper_preview_nav_graph)
+                navGraph.setStartDestination(R.id.creativeNewPreviewFragment)
+                navController.setGraph(
+                    navGraph,
+                    Bundle().apply {
+                        putParcelable(
+                            SmallPreviewFragment.ARG_EDIT_INTENT,
+                            liveWallpaperModel.liveWallpaperData.getEditActivityIntent()
+                        )
+                    }
+                )
+            }
         }
     }
 
@@ -154,6 +159,11 @@ class WallpaperPreviewActivity :
             Toast.makeText(this, R.string.wallpaper_exit_split_screen, Toast.LENGTH_SHORT).show()
             onBackPressedDispatcher.onBackPressed()
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(NAV_STATE, navController.saveState())
     }
 
     override fun onDestroy() {
@@ -182,9 +192,14 @@ class WallpaperPreviewActivity :
         super.onConfigurationChanged(newConfig)
 
         wallpaperPreviewViewModel.updateDisplayConfiguration()
-        // Restart current navigation destination
+        // Restart current navigation destination to force preview layout changes...
         navController.apply {
             currentDestination?.id?.let {
+                // ...unless we're in the creative fragment, where it's not necessary and
+                // interferes with receiving the creative Activity result.
+                if (it == R.id.creativeNewPreviewFragment) {
+                    return@let
+                }
                 navigate(
                     resId = it,
                     args = null,
@@ -204,6 +219,8 @@ class WallpaperPreviewActivity :
     }
 
     companion object {
+        const val NAV_STATE = "wpa_nav_state"
+
         /**
          * Returns a new [Intent] that can be used to start [WallpaperPreviewActivity].
          *

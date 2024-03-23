@@ -17,8 +17,7 @@
 <com.android.wallpaper.picker.preview.ui.view.FullPreviewFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/wallpaper_preview_crop"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center">
+    android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/preview_card"
@@ -26,7 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="true"
-        android:contentDescription="@string/wallpaper_preview_card_content_description">
+        android:contentDescription="@string/wallpaper_preview_card_content_description"
+        android:layout_gravity="center">
 
         <SurfaceView
             android:id="@+id/wallpaper_surface"

@@ -97,7 +97,7 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         enforcePortraitForHandheldAndFoldedDisplay();
 
         BaseFlags flags = injector.getFlags();
-        if (flags.isMultiCropEnabled() && flags.isMultiCropPreviewUiEnabled()) {
+        if (flags.isMultiCropEnabled()) {
             getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         }
 

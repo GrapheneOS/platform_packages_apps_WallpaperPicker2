@@ -134,7 +134,7 @@ object ScreenPreviewBinder {
 
         val flags = BaseFlags.get()
         val isPageTransitionsFeatureEnabled = flags.isPageTransitionsFeatureEnabled(activity)
-        val isMultiCropEnabled = flags.isMultiCropEnabled() && flags.isMultiCropPreviewUiEnabled()
+        val isMultiCropEnabled = flags.isMultiCropEnabled()
 
         val showLoadingAnimation =
             flags.isPreviewLoadingAnimationEnabled(activity.applicationContext)
