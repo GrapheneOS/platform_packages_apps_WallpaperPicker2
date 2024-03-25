@@ -73,7 +73,7 @@ class WallpaperEffectsView2(context: Context?, attrs: AttributeSet?) :
         SUCCESS,
         PROCESSING,
         SHOW_DOWNLOAD_BUTTON,
-        DOWNLOADING,
+        DOWNLOADING, // downloading of ml models in progress
     }
 
     /**

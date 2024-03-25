@@ -37,7 +37,7 @@ import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.BasePreviewActivity
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.di.modules.MainDispatcher
-import com.android.wallpaper.picker.preview.data.repository.EffectsRepository
+import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import com.android.wallpaper.picker.preview.data.util.LiveWallpaperDownloader
 import com.android.wallpaper.picker.preview.ui.fragment.SmallPreviewFragment
@@ -63,7 +63,7 @@ class WallpaperPreviewActivity :
     @Inject lateinit var displayUtils: DisplayUtils
     @Inject lateinit var wallpaperModelFactory: WallpaperModelFactory
     @Inject lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
-    @Inject lateinit var effectsRepository: EffectsRepository
+    @Inject lateinit var imageEffectsRepository: ImageEffectsRepository
     @Inject lateinit var liveWallpaperDownloader: LiveWallpaperDownloader
     @MainDispatcher @Inject lateinit var mainScope: CoroutineScope
 
@@ -112,7 +112,7 @@ class WallpaperPreviewActivity :
 
         if ((wallpaper as? WallpaperModel.StaticWallpaperModel)?.imageWallpaperData != null) {
             lifecycleScope.launch {
-                effectsRepository.initializeEffect(
+                imageEffectsRepository.initializeEffect(
                     staticWallpaperModel = wallpaper,
                     onWallpaperModelUpdated = { wallpaper ->
                         wallpaperPreviewRepository.setWallpaperModel(wallpaper)
@@ -183,7 +183,7 @@ class WallpaperPreviewActivity :
                     wallpaperPreviewViewModel.wallpaperDisplaySize.value
                 )
             }
-            effectsRepository.destroy()
+            imageEffectsRepository.destroy()
         }
         super.onDestroy()
     }

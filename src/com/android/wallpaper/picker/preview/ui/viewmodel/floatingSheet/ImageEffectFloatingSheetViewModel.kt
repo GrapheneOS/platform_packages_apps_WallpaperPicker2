@@ -16,7 +16,20 @@
 
 package com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet
 
+import android.view.View
+import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
+import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2
+
 /** This data class represents the view data for the effect floating sheet */
-data class EffectFloatingSheetViewModel(
-    val imageEffectFloatingSheetViewModel: ImageEffectFloatingSheetViewModel? = null,
+data class ImageEffectFloatingSheetViewModel(
+    val myPhotosClickListener: View.OnClickListener,
+    val collapseFloatingSheetListener: View.OnClickListener,
+    val effectSwitchListener: WallpaperEffectsView2.EffectSwitchListener,
+    val effectDownloadClickListener: WallpaperEffectsView2.EffectDownloadClickListener,
+    val status: WallpaperEffectsView2.Status,
+    val resultCode: Int?,
+    val errorMessage: String?,
+    val title: String,
+    val effectType: EffectEnumInterface,
+    val effectTextRes: WallpaperEffectsView2.EffectTextRes,
 )

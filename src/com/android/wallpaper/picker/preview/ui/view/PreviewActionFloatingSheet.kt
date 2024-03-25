@@ -50,7 +50,7 @@ class PreviewActionFloatingSheet(context: Context, attrs: AttributeSet?) :
         floatingSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    fun setEffectContent(
+    fun setImageEffectContent(
         effect: EffectEnumInterface,
         myPhotosClickListener: OnClickListener,
         collapseFloatingSheetListener: OnClickListener,

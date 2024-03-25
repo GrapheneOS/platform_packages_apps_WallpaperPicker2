@@ -28,7 +28,11 @@ import com.android.wallpaper.picker.data.DownloadableWallpaperData
 import com.android.wallpaper.picker.data.LiveWallpaperData
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
-import com.android.wallpaper.picker.preview.data.repository.EffectsRepository
+import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository
+import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_APPLIED
+import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_APPLY_IN_PROGRESS
+import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_DOWNLOAD_IN_PROGRESS
+import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_DOWNLOAD_READY
 import com.android.wallpaper.picker.preview.domain.interactor.PreviewActionsInteractor
 import com.android.wallpaper.picker.preview.ui.util.LiveWallpaperDeleteUtil
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.CUSTOMIZE
@@ -38,8 +42,15 @@ import com.android.wallpaper.picker.preview.ui.viewmodel.Action.EFFECTS
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.INFORMATION
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.SHARE
 import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.EffectFloatingSheetViewModel
+import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.ImageEffectFloatingSheetViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.InformationFloatingSheetViewModel
-import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2
+import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.EffectDownloadClickListener
+import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.EffectSwitchListener
+import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.Status.DOWNLOADING
+import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.Status.IDLE
+import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.Status.PROCESSING
+import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.Status.SHOW_DOWNLOAD_BUTTON
+import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.Status.SUCCESS
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -216,69 +227,76 @@ constructor(
 
     /** [EFFECTS] */
     private val _effectFloatingSheetViewModel: Flow<EffectFloatingSheetViewModel?> =
-        combine(interactor.effectsStatus, interactor.effect) { status, effect ->
-            effect ?: return@combine null
-            when (status) {
-                EffectsRepository.EffectStatus.EFFECT_DISABLE -> {
-                    null
+        combine(interactor.imageEffectsStatus, interactor.imageEffect) {
+            imageEffectStatus,
+            imageEffect ->
+            if (imageEffect != null) {
+                when (imageEffectStatus) {
+                    ImageEffectsRepository.EffectStatus.EFFECT_DISABLE -> {
+                        null
+                    }
+                    else -> {
+                        getEffectFloatingSheetViewModel(imageEffectStatus, imageEffect)
+                    }
                 }
-                else -> {
-                    getEffectFloatingSheetViewModel(status, effect)
-                }
+            } else {
+                null
             }
         }
 
     private fun getEffectFloatingSheetViewModel(
-        status: EffectsRepository.EffectStatus,
+        status: ImageEffectsRepository.EffectStatus,
         effect: Effect,
     ): EffectFloatingSheetViewModel {
         val floatingSheetViewStatus =
             when (status) {
-                EffectsRepository.EffectStatus.EFFECT_APPLY_IN_PROGRESS -> {
-                    WallpaperEffectsView2.Status.PROCESSING
+                EFFECT_APPLY_IN_PROGRESS -> {
+                    PROCESSING
                 }
-                EffectsRepository.EffectStatus.EFFECT_APPLIED -> {
-                    WallpaperEffectsView2.Status.SUCCESS
+                EFFECT_APPLIED -> {
+                    SUCCESS
                 }
-                EffectsRepository.EffectStatus.EFFECT_DOWNLOAD_READY -> {
-                    WallpaperEffectsView2.Status.SHOW_DOWNLOAD_BUTTON
+                EFFECT_DOWNLOAD_READY -> {
+                    SHOW_DOWNLOAD_BUTTON
                 }
-                EffectsRepository.EffectStatus.EFFECT_DOWNLOAD_IN_PROGRESS -> {
-                    // downloading of ml models in progress
-                    WallpaperEffectsView2.Status.DOWNLOADING
+                EFFECT_DOWNLOAD_IN_PROGRESS -> {
+                    DOWNLOADING
                 }
                 else -> {
-                    WallpaperEffectsView2.Status.IDLE
+                    IDLE
                 }
             }
         return EffectFloatingSheetViewModel(
-            myPhotosClickListener = {},
-            collapseFloatingSheetListener = {},
-            object : WallpaperEffectsView2.EffectSwitchListener {
-                override fun onEffectSwitchChanged(
-                    effect: EffectEnumInterface,
-                    isChecked: Boolean
-                ) {
-                    if (interactor.isTargetEffect(effect)) {
-                        if (isChecked) {
-                            interactor.enableImageEffect(effect)
-                        } else {
-                            interactor.disableImageEffect()
+            imageEffectFloatingSheetViewModel =
+                ImageEffectFloatingSheetViewModel(
+                    myPhotosClickListener = {},
+                    collapseFloatingSheetListener = {},
+                    object : EffectSwitchListener {
+                        override fun onEffectSwitchChanged(
+                            effect: EffectEnumInterface,
+                            isChecked: Boolean
+                        ) {
+                            if (interactor.isTargetEffect(effect)) {
+                                if (isChecked) {
+                                    interactor.enableImageEffect(effect)
+                                } else {
+                                    interactor.disableImageEffect()
+                                }
+                            }
                         }
-                    }
-                }
-            },
-            object : WallpaperEffectsView2.EffectDownloadClickListener {
-                override fun onEffectDownloadClick() {
-                    interactor.startEffectsMLDownload(effect)
-                }
-            },
-            floatingSheetViewStatus,
-            resultCode = null,
-            errorMessage = null,
-            effect.title,
-            effect.type,
-            interactor.getEffectTextRes(),
+                    },
+                    object : EffectDownloadClickListener {
+                        override fun onEffectDownloadClick() {
+                            interactor.startEffectsMLDownload(effect)
+                        }
+                    },
+                    floatingSheetViewStatus,
+                    resultCode = null,
+                    errorMessage = null,
+                    effect.title,
+                    effect.type,
+                    interactor.getEffectTextRes(),
+                ),
         )
     }
 

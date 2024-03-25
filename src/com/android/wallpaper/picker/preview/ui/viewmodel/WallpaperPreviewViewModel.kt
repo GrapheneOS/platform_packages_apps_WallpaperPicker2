@@ -83,7 +83,7 @@ constructor(
     val wallpaper: StateFlow<WallpaperModel?> = interactor.wallpaperModel
 
     // Used to display loading indication on the preview.
-    val effectStatus = actionsInteractor.effectsStatus
+    val effectStatus = actionsInteractor.imageEffectsStatus
 
     fun updateDisplayConfiguration() {
         _wallpaperDisplaySize.value = displayUtils.getRealSize(displayUtils.getWallpaperDisplay())

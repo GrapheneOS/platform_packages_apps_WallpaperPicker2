@@ -49,7 +49,7 @@ import kotlinx.coroutines.withContext
 import org.xmlpull.v1.XmlPullParserException
 
 @Singleton
-class EffectsRepository
+class ImageEffectsRepository
 @Inject
 constructor(
     @ApplicationContext private val context: Context,
@@ -67,7 +67,8 @@ constructor(
 
     private val _effectStatus = MutableStateFlow(EffectStatus.EFFECT_DISABLE)
     val effectStatus = _effectStatus.asStateFlow()
-    val wallpaperEffect = MutableStateFlow<Effect?>(null)
+    private val _wallpaperEffect = MutableStateFlow<Effect?>(null)
+    val wallpaperEffect = _wallpaperEffect.asStateFlow()
     // This StaticWallpaperModel is set when initializing the repository and used for
     // 1. Providing essential data to construct LiveWallpaperData when effect is enabled
     // 2. Reverting back to the original static image wallpaper when effect is disabled
@@ -153,7 +154,7 @@ constructor(
                         while (it.moveToNext()) {
                             val titleRow: Int = it.getColumnIndex(EffectContract.KEY_EFFECT_TITLE)
                             val idRow: Int = it.getColumnIndex(EffectContract.KEY_EFFECT_ID)
-                            wallpaperEffect.value =
+                            _wallpaperEffect.value =
                                 Effect(
                                     it.getInt(idRow),
                                     it.getString(titleRow),
@@ -254,10 +255,10 @@ constructor(
 
     fun destroy() {
         effectsController.removeListener()
-        wallpaperEffect.value = null
+        _wallpaperEffect.value = null
     }
 
-    fun isTargetEffect(effect: EffectsController.EffectEnumInterface): Boolean {
+    fun isTargetEffect(effect: EffectEnumInterface): Boolean {
         return effectsController.isTargetEffect(effect)
     }
 

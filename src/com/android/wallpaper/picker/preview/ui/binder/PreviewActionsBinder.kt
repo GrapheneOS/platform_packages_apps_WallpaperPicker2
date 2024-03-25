@@ -258,18 +258,21 @@ object PreviewActionsBinder {
                                     floatingSheet.expand()
                                 }
                                 effectViewModel != null -> {
-                                    floatingSheet.setEffectContent(
-                                        effectViewModel.effectType,
-                                        effectViewModel.myPhotosClickListener,
-                                        effectViewModel.collapseFloatingSheetListener,
-                                        effectViewModel.effectSwitchListener,
-                                        effectViewModel.effectDownloadClickListener,
-                                        effectViewModel.status,
-                                        effectViewModel.resultCode,
-                                        effectViewModel.errorMessage,
-                                        effectViewModel.title,
-                                        effectViewModel.effectTextRes,
-                                    )
+                                    effectViewModel.imageEffectFloatingSheetViewModel?.let {
+                                        floatingSheet.setImageEffectContent(
+                                            it.effectType,
+                                            it.myPhotosClickListener,
+                                            it.collapseFloatingSheetListener,
+                                            it.effectSwitchListener,
+                                            it.effectDownloadClickListener,
+                                            it.status,
+                                            it.resultCode,
+                                            it.errorMessage,
+                                            it.title,
+                                            it.effectTextRes,
+                                        )
+                                    }
+
                                     floatingSheet.expand()
                                 }
                                 else -> floatingSheet.collapse()

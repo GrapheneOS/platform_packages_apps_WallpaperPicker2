@@ -19,7 +19,7 @@ package com.android.wallpaper.picker.preview.domain.interactor
 import com.android.wallpaper.effects.Effect
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
 import com.android.wallpaper.picker.data.WallpaperModel
-import com.android.wallpaper.picker.preview.data.repository.EffectsRepository
+import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultModel
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2
@@ -36,30 +36,30 @@ class PreviewActionsInteractor
 @Inject
 constructor(
     private val wallpaperPreviewRepository: WallpaperPreviewRepository,
-    private val effectsRepository: EffectsRepository,
+    private val imageEffectsRepository: ImageEffectsRepository,
 ) {
     val wallpaperModel: StateFlow<WallpaperModel?> = wallpaperPreviewRepository.wallpaperModel
 
     private val _isDownloadingWallpaper = MutableStateFlow<Boolean>(false)
     val isDownloadingWallpaper: Flow<Boolean> = _isDownloadingWallpaper.asStateFlow()
 
-    val effectsStatus = effectsRepository.effectStatus
-    val effect = effectsRepository.wallpaperEffect
+    val imageEffectsStatus = imageEffectsRepository.effectStatus
+    val imageEffect = imageEffectsRepository.wallpaperEffect
 
     fun enableImageEffect(effect: EffectEnumInterface) {
-        effectsRepository.enableImageEffect(effect)
+        imageEffectsRepository.enableImageEffect(effect)
     }
 
     fun disableImageEffect() {
-        effectsRepository.disableImageEffect()
+        imageEffectsRepository.disableImageEffect()
     }
 
     fun isTargetEffect(effect: EffectEnumInterface): Boolean {
-        return effectsRepository.isTargetEffect(effect)
+        return imageEffectsRepository.isTargetEffect(effect)
     }
 
     fun getEffectTextRes(): WallpaperEffectsView2.EffectTextRes {
-        return effectsRepository.getEffectTextRes()
+        return imageEffectsRepository.getEffectTextRes()
     }
 
     suspend fun downloadWallpaper(): LiveWallpaperDownloadResultModel? {
@@ -70,6 +70,6 @@ constructor(
     }
 
     fun startEffectsMLDownload(effect: Effect) {
-        effectsRepository.startEffectsModelDownload(effect)
+        imageEffectsRepository.startEffectsModelDownload(effect)
     }
 }
