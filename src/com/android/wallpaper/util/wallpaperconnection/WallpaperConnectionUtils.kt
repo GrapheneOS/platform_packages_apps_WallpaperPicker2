@@ -317,7 +317,7 @@ object WallpaperConnectionUtils {
     fun LiveWallpaperModel.shouldEnforceSingleEngine(): Boolean {
         return when {
             creativeWallpaperData != null -> false
-            liveWallpaperData.effectNames != null -> false
+            liveWallpaperData.isEffectWallpaper -> false
             else -> true // Only fallback to single engine rendering for legacy live wallpapers
         }
     }

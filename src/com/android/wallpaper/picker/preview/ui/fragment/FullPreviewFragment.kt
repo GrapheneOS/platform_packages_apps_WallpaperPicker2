@@ -57,9 +57,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (ENABLE_ANIMATION) {
-            sharedElementEnterTransition = ChangeScaleAndPosition()
-        }
+        sharedElementEnterTransition = ChangeScaleAndPosition()
     }
 
     override fun onCreateView(
@@ -145,9 +143,5 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
 
     override fun getToolbarTextColor(): Int {
         return ContextCompat.getColor(requireContext(), R.color.system_on_surface)
-    }
-
-    companion object {
-        const val ENABLE_ANIMATION = true
     }
 }

@@ -128,6 +128,7 @@ class WallpaperModelUtils {
                         systemWallpaperInfo,
                         isTitleVisible,
                         isApplied,
+                        effectNames != null,
                         effectNames
                     ),
                 creativeWallpaperData = null,

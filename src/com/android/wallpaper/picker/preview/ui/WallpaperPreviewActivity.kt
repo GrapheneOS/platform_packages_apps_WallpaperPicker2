@@ -110,7 +110,10 @@ class WallpaperPreviewActivity :
             )
         }
 
-        if ((wallpaper as? WallpaperModel.StaticWallpaperModel)?.imageWallpaperData != null) {
+        if (
+            (wallpaper as? WallpaperModel.StaticWallpaperModel)?.imageWallpaperData != null &&
+                imageEffectsRepository.areEffectsAvailable()
+        ) {
             lifecycleScope.launch {
                 imageEffectsRepository.initializeEffect(
                     staticWallpaperModel = wallpaper,
@@ -167,6 +170,7 @@ class WallpaperPreviewActivity :
     }
 
     override fun onDestroy() {
+        imageEffectsRepository.destroy()
         // TODO(b/328302105): MainScope ensures the job gets done non-blocking even if the activity
         //  has been destroyed already. Consider making this part of WallpaperConnectionUtils.
         mainScope.launch {
@@ -183,7 +187,6 @@ class WallpaperPreviewActivity :
                     wallpaperPreviewViewModel.wallpaperDisplaySize.value
                 )
             }
-            imageEffectsRepository.destroy()
         }
         super.onDestroy()
     }

@@ -199,6 +199,7 @@ class WallpaperPreviewRepositoryTest {
                     systemWallpaperInfo = wallpaperInfo,
                     isTitleVisible = false,
                     isApplied = false,
+                    isEffectWallpaper = false,
                     effectNames = null,
                 ),
             creativeWallpaperData = null,

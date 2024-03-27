@@ -20,6 +20,7 @@ import android.app.WallpaperManager
 import android.content.ComponentName
 import android.content.Context
 import android.util.Log
+import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.CreativeWallpaperInfo
 import com.android.wallpaper.model.CurrentWallpaperInfo
 import com.android.wallpaper.model.ImageWallpaperInfo
@@ -100,7 +101,10 @@ interface WallpaperModelFactory {
             )
         }
 
-        fun LiveWallpaperInfo.getLiveWallpaperData(context: Context): LiveWallpaperData {
+        fun LiveWallpaperInfo.getLiveWallpaperData(
+            context: Context,
+            effectsController: EffectsController? = null
+        ): LiveWallpaperData {
             val groupNameOfWallpaper = (this as? CreativeWallpaperInfo)?.groupName ?: ""
             val wallpaperManager = WallpaperManager.getInstance(context)
             val currentHomeWallpaper =
@@ -111,6 +115,10 @@ interface WallpaperModelFactory {
                 systemWallpaperInfo = info,
                 isTitleVisible = isVisibleTitle,
                 isApplied = isApplied(currentHomeWallpaper, currentLockWallpaper),
+                // TODO (331227828): don't relay on effectNames to determine if this is an effect
+                // live wallpaper
+                isEffectWallpaper = effectsController?.isEffectsWallpaper(info)
+                        ?: (effectNames != null),
                 effectNames = effectNames,
             )
         }

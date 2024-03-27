@@ -41,6 +41,7 @@ import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Interpolator;
 import android.view.animation.PathInterpolator;
 import android.widget.CompoundButton;
@@ -56,6 +57,8 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat;
 import androidx.fragment.app.Fragment;
@@ -317,6 +320,7 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
         mPreviewScrim = view.findViewById(R.id.preview_scrim);
         mExitFullPreviewButton = view.findViewById(R.id.exit_full_preview_button);
         mExitFullPreviewButton.setOnClickListener(v -> toggleWallpaperPreviewControl());
+        updateStatusBarColor();
         return view;
     }
 
@@ -355,6 +359,21 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
         backIcon.setAutoMirrored(true);
         backIcon.setTint(getResources().getColor(R.color.preview_toolbar_text_light));
         return backIcon;
+    }
+
+    private void updateStatusBarColor() {
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        Window window = activity.getWindow();
+        WindowInsetsControllerCompat windowInsetsController =
+                WindowCompat.getInsetsController(window, window.getDecorView());
+        boolean shouldUseLightText =
+                mPreviewScrim.getVisibility() == VISIBLE || (mWallpaperColors != null && (
+                        (mWallpaperColors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_TEXT)
+                                != WallpaperColors.HINT_SUPPORTS_DARK_TEXT));
+        windowInsetsController.setAppearanceLightStatusBars(!shouldUseLightText);
     }
 
     private void setUpScreenPreviewOverlay() {
@@ -528,7 +547,13 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
         mPreviewScrim.animate()
                 .alpha(hide ? 0f : 1f)
                 .setDuration(mShortAnimTimeMillis)
-                .setListener(new ViewAnimatorListener(mPreviewScrim, hide));
+                .setListener(new ViewAnimatorListener(mPreviewScrim, hide) {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        updateStatusBarColor();
+                    }
+                });
         mWallpaperControlButtonGroup.animate().alpha(hide ? 0f : 1f)
                 .setDuration(mShortAnimTimeMillis)
                 .setListener(new ViewAnimatorListener(mWallpaperControlButtonGroup, hide));

@@ -24,13 +24,17 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.service.wallpaper.WallpaperService
+import android.stats.style.StyleEnums
 import android.util.Log
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.Effect
 import com.android.wallpaper.effects.EffectContract
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.data.LiveWallpaperData
 import com.android.wallpaper.picker.data.WallpaperId
 import com.android.wallpaper.picker.data.WallpaperModel
@@ -54,6 +58,7 @@ class ImageEffectsRepository
 constructor(
     @ApplicationContext private val context: Context,
     private val effectsController: EffectsController,
+    private val logger: UserEventLogger,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
 ) {
     enum class EffectStatus {
@@ -75,15 +80,29 @@ constructor(
     private lateinit var staticWallpaperModel: StaticWallpaperModel
     private lateinit var onWallpaperUpdated: (wallpaper: WallpaperModel) -> Unit
 
+    private val timeOutHandler: Handler = Handler(Looper.getMainLooper())
+    private var startGeneratingTime = 0L
+
+    /** Returns whether effects are available at all on the device */
+    fun areEffectsAvailable(): Boolean {
+        return effectsController.areEffectsAvailable()
+    }
+
     suspend fun initializeEffect(
         staticWallpaperModel: StaticWallpaperModel,
         onWallpaperModelUpdated: (wallpaper: WallpaperModel) -> Unit
     ) {
         this.staticWallpaperModel = staticWallpaperModel
         onWallpaperUpdated = onWallpaperModelUpdated
+
         withContext(bgDispatcher) {
             val listener =
-                EffectsController.EffectsServiceListener { effect, bundle, resultCode, _, _ ->
+                EffectsController.EffectsServiceListener {
+                    effect,
+                    bundle,
+                    resultCode,
+                    originalStatusCode,
+                    _ ->
                     when (resultCode) {
                         EffectsController.RESULT_PROBE_SUCCESS -> {
                             _effectStatus.value = EffectStatus.EFFECT_READY
@@ -107,16 +126,16 @@ constructor(
                             // TODO logger.logEffectForegroundDownload
                             _effectStatus.value = EffectStatus.EFFECT_DOWNLOAD_READY
                         }
-                        EffectsController.RESULT_SUCCESS -> {
-                            _effectStatus.value = EffectStatus.EFFECT_APPLIED
-                            // TODO logger.logEffectApply
-                            bundle.getCinematicWallpaperModel(effect)?.let {
-                                onWallpaperUpdated.invoke(it)
-                            }
-                        }
+                        EffectsController.RESULT_SUCCESS,
                         EffectsController.RESULT_SUCCESS_WITH_GENERATION_ERROR -> {
                             _effectStatus.value = EffectStatus.EFFECT_APPLIED
-                            // TODO logger.logEffectApply
+                            logger.logEffectApply(
+                                getEffectNameForLogging(),
+                                StyleEnums.EFFECT_APPLIED_ON_SUCCESS,
+                                /* timeElapsedMillis= */ System.currentTimeMillis() -
+                                    startGeneratingTime,
+                                /* resultCode= */ originalStatusCode
+                            )
                             bundle.getCinematicWallpaperModel(effect)?.let {
                                 onWallpaperUpdated.invoke(it)
                             }
@@ -130,6 +149,13 @@ constructor(
                         else -> {
                             // TODO onImageEffectFailed
                             _effectStatus.value = EffectStatus.EFFECT_READY
+                            logger.logEffectApply(
+                                getEffectNameForLogging(),
+                                StyleEnums.EFFECT_APPLIED_ON_FAILED,
+                                /* timeElapsedMillis= */ System.currentTimeMillis() -
+                                    startGeneratingTime,
+                                /* resultCode= */ originalStatusCode
+                            )
                         }
                     }
                 }
@@ -218,6 +244,7 @@ constructor(
                     systemWallpaperInfo = wallpaperInfo,
                     isTitleVisible = false,
                     isApplied = false,
+                    isEffectWallpaper = effectsController.isEffectsWallpaper(wallpaperInfo),
                     effectNames = effect.toString(),
                 )
             return LiveWallpaperModel(
@@ -236,6 +263,7 @@ constructor(
     }
 
     fun enableImageEffect(effect: EffectEnumInterface) {
+        startGeneratingTime = System.currentTimeMillis()
         _effectStatus.value = EffectStatus.EFFECT_APPLY_IN_PROGRESS
         // TODO: Maybe we should call reconnect wallpaper if we have created a LiveWallpaperModel
         //       if (mLiveWallpaperInfo != null) {
@@ -244,12 +272,30 @@ constructor(
         //       }
         val uri = staticWallpaperModel.imageWallpaperData?.uri ?: return
         effectsController.generateEffect(effect, uri)
-        // TODO: Implement time out
+        timeOutHandler.postDelayed(
+            {
+                wallpaperEffect.value?.let { effectsController.interruptGenerate(it) }
+                _effectStatus.value = EffectStatus.EFFECT_READY
+                logger.logEffectApply(
+                    getEffectNameForLogging(),
+                    StyleEnums.EFFECT_APPLIED_ON_FAILED,
+                    System.currentTimeMillis() - startGeneratingTime,
+                    EffectsController.ERROR_ORIGINAL_TIME_OUT,
+                )
+            },
+            TIME_OUT_TIME_IN_MS
+        )
     }
 
     fun disableImageEffect() {
         // TODO implement disabling effect
         _effectStatus.value = EffectStatus.EFFECT_READY
+        logger.logEffectApply(
+            wallpaperEffect.value?.type.toString(),
+            StyleEnums.EFFECT_APPLIED_OFF,
+            0L,
+            0,
+        )
         onWallpaperUpdated.invoke(staticWallpaperModel)
     }
 
@@ -281,7 +327,12 @@ constructor(
         _effectStatus.value = EffectStatus.EFFECT_DOWNLOAD_IN_PROGRESS
     }
 
+    private fun getEffectNameForLogging(): String {
+        return wallpaperEffect.value?.type.toString()
+    }
+
     companion object {
         private const val TAG = "EffectsRepository"
+        private const val TIME_OUT_TIME_IN_MS = 90000L
     }
 }
