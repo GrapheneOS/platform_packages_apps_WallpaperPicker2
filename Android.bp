@@ -35,7 +35,7 @@ android_library {
         "androidx.lifecycle_lifecycle-runtime-ktx",
         "androidx.recyclerview_recyclerview",
         "androidx.slice_slice-view",
-        "androidx.transition_transition-ktx-nodeps",
+        "androidx.transition_transition-ktx",
         "androidx.viewpager2_viewpager2",
         "androidx.navigation_navigation-ui-ktx",
         "androidx.navigation_navigation-fragment-ktx",

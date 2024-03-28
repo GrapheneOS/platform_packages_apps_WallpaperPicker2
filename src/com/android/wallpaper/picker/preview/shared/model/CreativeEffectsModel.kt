@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.data
+package com.android.wallpaper.picker.preview.shared.model
 
-import android.net.Uri
+import com.android.wallpaper.model.WallpaperAction
 
-/** Represents data that is specific to only CreativeWallpapers. */
-data class CreativeWallpaperData(
-    val configPreviewUri: Uri?,
-    val cleanPreviewUri: Uri?,
-    val deleteUri: Uri?,
-    val thumbnailUri: Uri?,
-    val shareUri: Uri?,
-    val author: String,
-    val description: String,
-    val contentDescription: String?,
-    val isCurrent: Boolean,
-    val creativeWallpaperEffectsData: CreativeWallpaperEffectsData?,
+data class CreativeEffectsModel(
+    val title: String,
+    val subtitle: String,
+    val actions: List<WallpaperAction>,
 )

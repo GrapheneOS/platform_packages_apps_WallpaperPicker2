@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.widget.floatingsheetcontent
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +30,6 @@ import com.android.wallpaper.model.WallpaperAction
  */
 class WallpaperActionsToggleAdapter(
     private val actionToggles: List<WallpaperAction>,
-    private val clearToggle: Uri,
     private val wallpaperEffectSwitchListener: WallpaperEffectSwitchListener
 ) : RecyclerView.Adapter<WallpaperActionsToggleAdapter.ViewHolder>() {
 

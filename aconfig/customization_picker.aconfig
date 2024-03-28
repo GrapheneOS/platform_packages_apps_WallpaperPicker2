@@ -2,13 +2,6 @@ package: "com.android.wallpaper"
 container: "system_ext"
 
 flag {
-    name: "multi_crop_preview_ui_flag"
-    namespace: "customization_picker"
-    description: "Enables new preview UI if both the SysUI multi crop flag and this flag are true."
-    bug: "291761856"
-}
-
-flag {
     name: "wallpaper_restorer_flag"
     namespace: "customization_picker"
     description: "Enables wallpaper restorer when the flag is turned on."

@@ -29,6 +29,7 @@ import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.picker.data.ColorInfo
 import com.android.wallpaper.picker.data.CommonWallpaperData
 import com.android.wallpaper.picker.data.CreativeWallpaperData
+import com.android.wallpaper.picker.data.CreativeWallpaperEffectsData
 import com.android.wallpaper.picker.data.Destination
 import com.android.wallpaper.picker.data.ImageWallpaperData
 import com.android.wallpaper.picker.data.LiveWallpaperData
@@ -134,6 +135,25 @@ interface WallpaperModelFactory {
                 description = description ?: "",
                 contentDescription = contentDescription,
                 isCurrent = isCurrent,
+                creativeWallpaperEffectsData = getCreativeWallpaperEffectData(),
+            )
+        }
+
+        private fun CreativeWallpaperInfo.getCreativeWallpaperEffectData():
+            CreativeWallpaperEffectsData? {
+            val effectsBottomSheetTitle =
+                effectsBottomSheetTitle.takeUnless { it.isNullOrEmpty() } ?: return null
+            val effectsBottomSheetSubtitle =
+                effectsBottomSheetSubtitle.takeUnless { it.isNullOrEmpty() } ?: return null
+            val clearActionsUri =
+                clearActionsUri.takeUnless { it?.scheme.isNullOrEmpty() } ?: return null
+            val effectsUri = effectsUri.takeUnless { it?.scheme.isNullOrEmpty() } ?: return null
+            return CreativeWallpaperEffectsData(
+                effectsBottomSheetTitle = effectsBottomSheetTitle,
+                effectsBottomSheetSubtitle = effectsBottomSheetSubtitle,
+                currentEffectId = currentlyAppliedEffectId ?: "",
+                clearActionUri = clearActionsUri,
+                effectsUri = effectsUri,
             )
         }
 

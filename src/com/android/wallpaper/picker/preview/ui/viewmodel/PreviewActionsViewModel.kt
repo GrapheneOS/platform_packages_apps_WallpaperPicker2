@@ -41,9 +41,11 @@ import com.android.wallpaper.picker.preview.ui.viewmodel.Action.EDIT
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.EFFECTS
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.INFORMATION
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.SHARE
+import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.CreativeEffectFloatingSheetViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.EffectFloatingSheetViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.ImageEffectFloatingSheetViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.InformationFloatingSheetViewModel
+import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.EffectDownloadClickListener
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.EffectSwitchListener
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.Status.DOWNLOADING
@@ -227,27 +229,47 @@ constructor(
 
     /** [EFFECTS] */
     private val _effectFloatingSheetViewModel: Flow<EffectFloatingSheetViewModel?> =
-        combine(interactor.imageEffectsStatus, interactor.imageEffect) {
-            imageEffectStatus,
-            imageEffect ->
-            if (imageEffect != null) {
-                when (imageEffectStatus) {
-                    ImageEffectsRepository.EffectStatus.EFFECT_DISABLE -> {
-                        null
+        combine(
+            interactor.imageEffectsStatus,
+            interactor.imageEffect,
+            interactor.creativeEffectsModel
+        ) { imageEffectStatus, imageEffect, creativeEffectsModel ->
+            when {
+                (creativeEffectsModel != null) ->
+                    EffectFloatingSheetViewModel(
+                        creativeEffectFloatingSheetViewModel =
+                            CreativeEffectFloatingSheetViewModel(
+                                title = creativeEffectsModel.title,
+                                subtitle = creativeEffectsModel.subtitle,
+                                wallpaperActions = creativeEffectsModel.actions,
+                                wallpaperEffectSwitchListener = {
+                                    interactor.turnOnCreativeEffect(it)
+                                },
+                            )
+                    )
+                (imageEffect != null) ->
+                    when (imageEffectStatus) {
+                        ImageEffectsRepository.EffectStatus.EFFECT_DISABLE -> {
+                            null
+                        }
+                        else -> {
+                            EffectFloatingSheetViewModel(
+                                imageEffectFloatingSheetViewModel =
+                                    getImageEffectFloatingSheetViewModel(
+                                        imageEffectStatus,
+                                        imageEffect
+                                    )
+                            )
+                        }
                     }
-                    else -> {
-                        getEffectFloatingSheetViewModel(imageEffectStatus, imageEffect)
-                    }
-                }
-            } else {
-                null
+                else -> null
             }
         }
 
-    private fun getEffectFloatingSheetViewModel(
+    private fun getImageEffectFloatingSheetViewModel(
         status: ImageEffectsRepository.EffectStatus,
         effect: Effect,
-    ): EffectFloatingSheetViewModel {
+    ): ImageEffectFloatingSheetViewModel {
         val floatingSheetViewStatus =
             when (status) {
                 EFFECT_APPLY_IN_PROGRESS -> {
@@ -262,41 +284,41 @@ constructor(
                 EFFECT_DOWNLOAD_IN_PROGRESS -> {
                     DOWNLOADING
                 }
+                ImageEffectsRepository.EffectStatus.EFFECT_DOWNLOAD_FAILED -> {
+                    WallpaperEffectsView2.Status.FAILED
+                }
                 else -> {
                     IDLE
                 }
             }
-        return EffectFloatingSheetViewModel(
-            imageEffectFloatingSheetViewModel =
-                ImageEffectFloatingSheetViewModel(
-                    myPhotosClickListener = {},
-                    collapseFloatingSheetListener = {},
-                    object : EffectSwitchListener {
-                        override fun onEffectSwitchChanged(
-                            effect: EffectEnumInterface,
-                            isChecked: Boolean
-                        ) {
-                            if (interactor.isTargetEffect(effect)) {
-                                if (isChecked) {
-                                    interactor.enableImageEffect(effect)
-                                } else {
-                                    interactor.disableImageEffect()
-                                }
-                            }
+        return ImageEffectFloatingSheetViewModel(
+            myPhotosClickListener = {},
+            collapseFloatingSheetListener = {},
+            object : EffectSwitchListener {
+                override fun onEffectSwitchChanged(
+                    effect: EffectEnumInterface,
+                    isChecked: Boolean
+                ) {
+                    if (interactor.isTargetEffect(effect)) {
+                        if (isChecked) {
+                            interactor.enableImageEffect(effect)
+                        } else {
+                            interactor.disableImageEffect()
                         }
-                    },
-                    object : EffectDownloadClickListener {
-                        override fun onEffectDownloadClick() {
-                            interactor.startEffectsMLDownload(effect)
-                        }
-                    },
-                    floatingSheetViewStatus,
-                    resultCode = null,
-                    errorMessage = null,
-                    effect.title,
-                    effect.type,
-                    interactor.getEffectTextRes(),
-                ),
+                    }
+                }
+            },
+            object : EffectDownloadClickListener {
+                override fun onEffectDownloadClick() {
+                    interactor.startEffectsMLDownload(effect)
+                }
+            },
+            floatingSheetViewStatus,
+            resultCode = null,
+            errorMessage = null,
+            effect.title,
+            effect.type,
+            interactor.getEffectTextRes(),
         )
     }
 

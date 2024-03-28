@@ -37,6 +37,7 @@ import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.BasePreviewActivity
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.di.modules.MainDispatcher
+import com.android.wallpaper.picker.preview.data.repository.CreativeEffectsRepository
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import com.android.wallpaper.picker.preview.data.util.LiveWallpaperDownloader
@@ -63,7 +64,9 @@ class WallpaperPreviewActivity :
     @Inject lateinit var displayUtils: DisplayUtils
     @Inject lateinit var wallpaperModelFactory: WallpaperModelFactory
     @Inject lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
+
     @Inject lateinit var imageEffectsRepository: ImageEffectsRepository
+    @Inject lateinit var creativeEffectsRepository: CreativeEffectsRepository
     @Inject lateinit var liveWallpaperDownloader: LiveWallpaperDownloader
     @MainDispatcher @Inject lateinit var mainScope: CoroutineScope
 
@@ -110,7 +113,15 @@ class WallpaperPreviewActivity :
             )
         }
 
-        if (
+        val creativeWallpaperEffectData =
+            (wallpaper as? WallpaperModel.LiveWallpaperModel)
+                ?.creativeWallpaperData
+                ?.creativeWallpaperEffectsData
+        if (creativeWallpaperEffectData != null) {
+            lifecycleScope.launch {
+                creativeEffectsRepository.initializeEffect(creativeWallpaperEffectData)
+            }
+        } else if (
             (wallpaper as? WallpaperModel.StaticWallpaperModel)?.imageWallpaperData != null &&
                 imageEffectsRepository.areEffectsAvailable()
         ) {
@@ -171,6 +182,7 @@ class WallpaperPreviewActivity :
 
     override fun onDestroy() {
         imageEffectsRepository.destroy()
+        creativeEffectsRepository.destroy()
         // TODO(b/328302105): MainScope ensures the job gets done non-blocking even if the activity
         //  has been destroyed already. Consider making this part of WallpaperConnectionUtils.
         mainScope.launch {

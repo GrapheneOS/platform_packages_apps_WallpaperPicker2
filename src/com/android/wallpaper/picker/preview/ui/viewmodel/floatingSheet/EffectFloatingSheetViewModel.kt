@@ -19,4 +19,5 @@ package com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet
 /** This data class represents the view data for the effect floating sheet */
 data class EffectFloatingSheetViewModel(
     val imageEffectFloatingSheetViewModel: ImageEffectFloatingSheetViewModel? = null,
+    val creativeEffectFloatingSheetViewModel: CreativeEffectFloatingSheetViewModel? = null,
 )

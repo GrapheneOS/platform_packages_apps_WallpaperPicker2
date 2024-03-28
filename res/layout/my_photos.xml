@@ -20,22 +20,26 @@
     android:id="@+id/tile_group"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:focusable="false"
     android:orientation="vertical"
     android:layout_marginTop="10dp"
-    android:importantForAccessibility="no">
+    android:importantForAccessibility="yes">
 
     <TextView
         android:id="@+id/tile_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/choose_a_wallpaper_section_title"
         android:text="@string/choose_a_wallpaper_section_title"
         android:textAppearance="@style/CategorySectionTitleTextAppearance"
+        android:focusable="false"
         android:layout_gravity="bottom" />
 
     <include android:id="@+id/tile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:focusable="true"
         layout="@layout/grid_item_category">
     </include>
 </LinearLayout>

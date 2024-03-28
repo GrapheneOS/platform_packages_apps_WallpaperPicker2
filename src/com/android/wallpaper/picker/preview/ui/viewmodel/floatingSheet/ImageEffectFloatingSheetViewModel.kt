@@ -20,7 +20,7 @@ import android.view.View
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2
 
-/** This data class represents the view data for the effect floating sheet */
+/** This data class represents the view data for the image wallpaper effect floating sheet */
 data class ImageEffectFloatingSheetViewModel(
     val myPhotosClickListener: View.OnClickListener,
     val collapseFloatingSheetListener: View.OnClickListener,

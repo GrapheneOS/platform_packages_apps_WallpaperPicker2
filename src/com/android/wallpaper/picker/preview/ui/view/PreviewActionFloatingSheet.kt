@@ -25,7 +25,11 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import com.android.wallpaper.R
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
+import com.android.wallpaper.model.WallpaperAction
 import com.android.wallpaper.util.SizeCalculator
+import com.android.wallpaper.widget.floatingsheetcontent.WallpaperActionSelectionBottomSheet
+import com.android.wallpaper.widget.floatingsheetcontent.WallpaperActionsToggleAdapter
+import com.android.wallpaper.widget.floatingsheetcontent.WallpaperActionsToggleAdapter.WallpaperEffectSwitchListener
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
@@ -77,6 +81,31 @@ class PreviewActionFloatingSheet(context: Context, attrs: AttributeSet?) :
             errorMessage,
         )
         view.updateEffectTitle(title)
+        floatingSheetView.removeAllViews()
+        floatingSheetView.addView(view)
+    }
+
+    fun setCreativeEffectContent(
+        title: String,
+        subtitle: String,
+        wallpaperActions: List<WallpaperAction>,
+        wallpaperEffectSwitchListener: WallpaperEffectSwitchListener,
+    ) {
+        val view =
+            LayoutInflater.from(context)
+                .inflate(R.layout.wallpaper_action_selection_bottom_sheet, this, false)
+                as WallpaperActionSelectionBottomSheet
+        view.setBottomSheetTitle(title)
+        view.setBottomSheetSubtitle(subtitle)
+        view.setUpActionToggleOptions(
+            WallpaperActionsToggleAdapter(
+                // TODO(b/270729418): enable multiple effect options once final design is
+                //  agreed upon.
+                // Forcing only one effect item for now
+                if (wallpaperActions.isNotEmpty()) wallpaperActions.subList(0, 1) else listOf(),
+                wallpaperEffectSwitchListener,
+            )
+        )
         floatingSheetView.removeAllViews()
         floatingSheetView.addView(view)
     }

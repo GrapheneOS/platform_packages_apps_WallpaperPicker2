@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.preview.domain.interactor
 import com.android.wallpaper.effects.Effect
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
 import com.android.wallpaper.picker.data.WallpaperModel
+import com.android.wallpaper.picker.preview.data.repository.CreativeEffectsRepository
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultModel
@@ -37,6 +38,7 @@ class PreviewActionsInteractor
 constructor(
     private val wallpaperPreviewRepository: WallpaperPreviewRepository,
     private val imageEffectsRepository: ImageEffectsRepository,
+    private val creativeEffectsRepository: CreativeEffectsRepository,
 ) {
     val wallpaperModel: StateFlow<WallpaperModel?> = wallpaperPreviewRepository.wallpaperModel
 
@@ -45,6 +47,11 @@ constructor(
 
     val imageEffectsStatus = imageEffectsRepository.effectStatus
     val imageEffect = imageEffectsRepository.wallpaperEffect
+    val creativeEffectsModel = creativeEffectsRepository.creativeEffectsModel
+
+    suspend fun turnOnCreativeEffect(actionPosition: Int) {
+        creativeEffectsRepository.turnOnCreativeEffect(actionPosition)
+    }
 
     fun enableImageEffect(effect: EffectEnumInterface) {
         imageEffectsRepository.enableImageEffect(effect)

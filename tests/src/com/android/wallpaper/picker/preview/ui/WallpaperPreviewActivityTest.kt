@@ -22,7 +22,6 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import com.android.wallpaper.Flags.FLAG_MULTI_CROP_PREVIEW_UI_FLAG
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.testing.TestInjector
@@ -67,7 +66,7 @@ class WallpaperPreviewActivityTest {
 
     @Test
     @Ignore("b/327241549")
-    @EnableFlags(FLAG_MULTI_CROP_PREVIEW_UI_FLAG, FLAG_MULTI_CROP)
+    @EnableFlags(FLAG_MULTI_CROP)
     fun showsNavHostFragment() {
         val scenario: ActivityScenario<WallpaperPreviewActivity> =
             ActivityScenario.launch(activityStartIntent)

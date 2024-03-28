@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.picker.preview.ui.binder
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
 import android.view.LayoutInflater
@@ -133,25 +134,42 @@ object FullWallpaperPreviewBinder {
 
             var job: Job? = null
 
+            // Suppress lint warning for setting on touch listener to a live wallpaper surface view.
+            // This is because the touch effect on a live wallpaper is purely visual, instead of
+            // functional. The effect can be different for different live wallpapers.
+            @SuppressLint("ClickableViewAccessibility")
             override fun surfaceCreated(holder: SurfaceHolder) {
                 job =
                     lifecycleOwner.lifecycleScope.launch {
                         viewModel.fullWallpaper.collect {
                             (wallpaper, config, allowUserCropping, whichPreview) ->
                             if (wallpaper is WallpaperModel.LiveWallpaperModel) {
-                                WallpaperConnectionUtils.connect(
-                                    applicationContext,
-                                    wallpaper,
-                                    whichPreview,
-                                    config.screen.toFlag(),
-                                    surfaceView,
+                                val engineRenderingConfig =
                                     WallpaperConnectionUtils.EngineRenderingConfig(
                                         wallpaper.shouldEnforceSingleEngine(),
                                         config.deviceDisplayType,
                                         viewModel.smallerDisplaySize,
                                         config.displaySize,
                                     )
+                                WallpaperConnectionUtils.connect(
+                                    applicationContext,
+                                    wallpaper,
+                                    whichPreview,
+                                    config.screen.toFlag(),
+                                    surfaceView,
+                                    engineRenderingConfig,
                                 )
+                                surfaceTouchForwardingLayout.initTouchForwarding(surfaceView)
+                                surfaceView.setOnTouchListener { _, event ->
+                                    lifecycleOwner.lifecycleScope.launch {
+                                        WallpaperConnectionUtils.dispatchTouchEvent(
+                                            wallpaper,
+                                            engineRenderingConfig,
+                                            event,
+                                        )
+                                    }
+                                    false
+                                }
                             } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
                                 val preview =
                                     LayoutInflater.from(applicationContext)
@@ -213,6 +231,9 @@ object FullWallpaperPreviewBinder {
             override fun surfaceDestroyed(holder: SurfaceHolder) {
                 job?.cancel()
                 job = null
+                // Clean up surface view's on touche listener
+                surfaceTouchForwardingLayout.removeTouchForwarding()
+                surfaceView.setOnTouchListener(null)
                 // Note that we disconnect wallpaper connection for live wallpapers in
                 // WallpaperPreviewActivity's onDestroy().
                 // This is to reduce multiple times of connecting and disconnecting live
@@ -224,5 +245,10 @@ object FullWallpaperPreviewBinder {
     private fun TouchForwardingLayout.initTouchForwarding(targetView: View) {
         setForwardingEnabled(true)
         setTargetView(targetView)
+    }
+
+    private fun TouchForwardingLayout.removeTouchForwarding() {
+        setForwardingEnabled(false)
+        setTargetView(null)
     }
 }

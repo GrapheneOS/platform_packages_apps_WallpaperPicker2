@@ -68,6 +68,7 @@ constructor(
         EFFECT_DOWNLOAD_IN_PROGRESS,
         EFFECT_APPLY_IN_PROGRESS,
         EFFECT_APPLIED,
+        EFFECT_DOWNLOAD_FAILED,
     }
 
     private val _effectStatus = MutableStateFlow(EffectStatus.EFFECT_DISABLE)
@@ -82,6 +83,7 @@ constructor(
 
     private val timeOutHandler: Handler = Handler(Looper.getMainLooper())
     private var startGeneratingTime = 0L
+    private var startDownloadTime = 0L
 
     /** Returns whether effects are available at all on the device */
     fun areEffectsAvailable(): Boolean {
@@ -119,12 +121,21 @@ constructor(
                             _effectStatus.value = EffectStatus.EFFECT_DOWNLOAD_IN_PROGRESS
                         }
                         EffectsController.RESULT_FOREGROUND_DOWNLOAD_SUCCEEDED -> {
-                            // TODO logger.logEffectForegroundDownload
+                            logger.logEffectForegroundDownload(
+                                getEffectNameForLogging(),
+                                StyleEnums.EFFECT_APPLIED_ON_SUCCESS,
+                                System.currentTimeMillis() - startDownloadTime,
+                            )
                             _effectStatus.value = EffectStatus.EFFECT_READY
                         }
-                        EffectsController.RESULT_FOREGROUND_DOWNLOAD_FAILED -> {
-                            // TODO logger.logEffectForegroundDownload
-                            _effectStatus.value = EffectStatus.EFFECT_DOWNLOAD_READY
+                        EffectsController.RESULT_FOREGROUND_DOWNLOAD_FAILED,
+                        EffectsController.RESULT_ERROR_TRY_AGAIN_LATER -> {
+                            logger.logEffectForegroundDownload(
+                                getEffectNameForLogging(),
+                                StyleEnums.EFFECT_APPLIED_ON_FAILED,
+                                System.currentTimeMillis() - startDownloadTime,
+                            )
+                            _effectStatus.value = EffectStatus.EFFECT_DOWNLOAD_FAILED
                         }
                         EffectsController.RESULT_SUCCESS,
                         EffectsController.RESULT_SUCCESS_WITH_GENERATION_ERROR -> {
@@ -148,7 +159,7 @@ constructor(
                         }
                         else -> {
                             // TODO onImageEffectFailed
-                            _effectStatus.value = EffectStatus.EFFECT_READY
+                            _effectStatus.value = EffectStatus.EFFECT_DOWNLOAD_FAILED
                             logger.logEffectApply(
                                 getEffectNameForLogging(),
                                 StyleEnums.EFFECT_APPLIED_ON_FAILED,
@@ -325,10 +336,17 @@ constructor(
     fun startEffectsModelDownload(effect: Effect) {
         effectsController.startForegroundDownload(effect)
         _effectStatus.value = EffectStatus.EFFECT_DOWNLOAD_IN_PROGRESS
+        startDownloadTime = System.currentTimeMillis()
+        logger.logEffectForegroundDownload(
+            getEffectNameForLogging(),
+            StyleEnums.EFFECT_APPLIED_STARTED,
+            0,
+        )
     }
 
     private fun getEffectNameForLogging(): String {
-        return wallpaperEffect.value?.type.toString()
+        val effect = wallpaperEffect.value
+        return effect?.type?.toString() ?: EffectsController.Effect.UNKNOWN.toString()
     }
 
     companion object {

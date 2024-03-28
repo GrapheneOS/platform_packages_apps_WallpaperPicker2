@@ -60,7 +60,6 @@ class WallpaperActionSelectionBottomSheetContent(
                 //  agreed upon.
                 // Forcing only one effect item for now
                 Arrays.asList(wallpaperActions.get(0)),
-                clearActionsUri,
                 wallpaperEffectSwitchListener
             )
         )

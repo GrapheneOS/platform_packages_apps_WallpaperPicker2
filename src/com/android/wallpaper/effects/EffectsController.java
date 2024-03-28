@@ -55,6 +55,7 @@ public abstract class EffectsController {
     }
 
     public enum Effect implements EffectEnumInterface {
+        UNKNOWN,
         NONE,
     }
 
