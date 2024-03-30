@@ -15,12 +15,20 @@
  */
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
+import android.graphics.Point
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.util.WallpaperConnection.WhichPreview
 
+/** Information needed to bind a wallpaper in the full preview. */
 data class FullWallpaperPreviewViewModel(
+    /** The wallpaper model to preview. */
     val wallpaper: WallpaperModel,
-    val config: WallpaperPreviewConfigViewModel,
+    /** Configuration for a full preview. */
+    val config: FullPreviewConfigViewModel,
+    /** The display size the preview is based on. */
+    val displaySize: Point,
+    /** Whether to enable user cropping on the given wallpaper. */
     val allowUserCropping: Boolean,
+    /** Different possible scenarios for the preview. */
     val whichPreview: WhichPreview,
 )

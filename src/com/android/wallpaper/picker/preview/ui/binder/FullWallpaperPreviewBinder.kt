@@ -69,15 +69,14 @@ object FullWallpaperPreviewBinder {
         var transitionDisposableHandle: DisposableHandle? = null
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.fullWallpaper.collect { (_, config, _) ->
+                viewModel.fullWallpaper.collect { (_, _, displaySize, _) ->
                     val currentSize = displayUtils.getRealSize(checkNotNull(view.context.display))
-                    val targetSize = config.displaySize
                     wallpaperPreviewCrop.setCurrentAndTargetDisplaySize(
                         currentSize,
-                        targetSize,
+                        displaySize,
                     )
                     val setFinalPreviewCardRadius = {
-                        if (targetSize == currentSize) previewCard.radius = 0f
+                        if (displaySize == currentSize) previewCard.radius = 0f
                     }
                     if (transition == null) {
                         setFinalPreviewCardRadius()
@@ -142,14 +141,14 @@ object FullWallpaperPreviewBinder {
                 job =
                     lifecycleOwner.lifecycleScope.launch {
                         viewModel.fullWallpaper.collect {
-                            (wallpaper, config, allowUserCropping, whichPreview) ->
+                            (wallpaper, config, displaySize, allowUserCropping, whichPreview) ->
                             if (wallpaper is WallpaperModel.LiveWallpaperModel) {
                                 val engineRenderingConfig =
                                     WallpaperConnectionUtils.EngineRenderingConfig(
                                         wallpaper.shouldEnforceSingleEngine(),
                                         config.deviceDisplayType,
                                         viewModel.smallerDisplaySize,
-                                        config.displaySize,
+                                        displaySize,
                                     )
                                 WallpaperConnectionUtils.connect(
                                     applicationContext,
@@ -192,7 +191,7 @@ object FullWallpaperPreviewBinder {
                                         )
                                     fullResImageView.setOnNewCropListener { crop, zoom ->
                                         viewModel.staticWallpaperPreviewViewModel
-                                            .fullPreviewCropModels[config.displaySize] =
+                                            .fullPreviewCropModels[displaySize] =
                                             FullPreviewCropModel(
                                                 cropHint = crop,
                                                 cropSizeModel =
@@ -220,7 +219,7 @@ object FullWallpaperPreviewBinder {
                                     lowResImageView,
                                     fullResImageView,
                                     viewModel.staticWallpaperPreviewViewModel,
-                                    config.displaySize,
+                                    displaySize,
                                     lifecycleOwner,
                                 )
                             }

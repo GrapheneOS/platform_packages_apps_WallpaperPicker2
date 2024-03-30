@@ -22,13 +22,15 @@
     <include layout="@layout/small_preview_foldable_card_view_selector"
         android:id="@+id/lock_preview_selector"
         android:layout_width="@dimen/set_wallpaper_dialog_foldable_preview_width"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"/>
     <TextView
         style="@style/TextAppearance.SetWallpaperDialog.Subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/set_wallpaper_lock_screen_destination"/>
+        android:text="@string/set_wallpaper_lock_screen_destination"
+        android:maxWidth="@dimen/set_wallpaper_dialog_foldable_preview_width"/>
 
     <android.widget.Space
         android:layout_width="match_parent"
@@ -37,12 +39,14 @@
     <include layout="@layout/small_preview_foldable_card_view_selector"
         android:id="@+id/home_preview_selector"
         android:layout_width="@dimen/set_wallpaper_dialog_foldable_preview_width"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"/>
     <TextView
         style="@style/TextAppearance.SetWallpaperDialog.Subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/set_wallpaper_home_screen_destination"/>
+        android:text="@string/set_wallpaper_home_screen_destination"
+        android:maxWidth="@dimen/set_wallpaper_dialog_foldable_preview_width"/>
 
 </LinearLayout>

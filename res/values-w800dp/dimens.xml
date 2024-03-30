@@ -69,4 +69,13 @@
     display.
     -->
     <dimen name="screen_preview_width">600dp</dimen>
+
+    <!-- Dimensions for wallpaper effects dialog -->
+    <dimen name="set_wallpaper_dialog_handheld_width">900dp</dimen>
+    <dimen name="set_wallpaper_dialog_handheld_content_width">840dp</dimen>
+    <dimen name="set_wallpaper_dialog_handheld_preview_width">416dp</dimen>
+    <dimen name="set_wallpaper_dialog_handheld_preview_height">260dp</dimen>
+    <dimen name="set_wallpaper_dialog_foldable_width">410dp</dimen>
+    <dimen name="set_wallpaper_dialog_foldable_content_width">370dp</dimen>
+    <dimen name="set_wallpaper_dialog_foldable_preview_width">300dp</dimen>
 </resources>

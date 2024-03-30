@@ -16,7 +16,6 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Intent
-import android.graphics.Point
 import android.net.Uri
 import android.view.View
 import androidx.lifecycle.Lifecycle
@@ -51,7 +50,6 @@ object PreviewActionsBinder {
         previewViewModel: WallpaperPreviewViewModel,
         actionsViewModel: PreviewActionsViewModel,
         deviceDisplayType: DeviceDisplayType,
-        displaySize: Point,
         lifecycleOwner: LifecycleOwner,
         logger: UserEventLogger,
         onStartEditActivity: (intent: Intent) -> Unit,
@@ -167,9 +165,8 @@ object PreviewActionsBinder {
                                 {
                                     // We need to set default wallpaper preview config view model
                                     // before entering full screen with edit activity overlay.
-                                    previewViewModel.setDefaultWallpaperPreviewConfigViewModel(
-                                        deviceDisplayType,
-                                        displaySize,
+                                    previewViewModel.setDefaultFullPreviewConfigViewModel(
+                                        deviceDisplayType
                                     )
                                     onStartEditActivity.invoke(it)
                                 }

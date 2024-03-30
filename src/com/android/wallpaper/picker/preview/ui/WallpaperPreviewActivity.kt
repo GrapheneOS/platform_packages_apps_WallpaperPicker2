@@ -18,7 +18,6 @@ package com.android.wallpaper.picker.preview.ui
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Window
@@ -28,7 +27,6 @@ import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.android.wallpaper.R
 import com.android.wallpaper.model.ImageWallpaperInfo
@@ -78,6 +76,7 @@ class WallpaperPreviewActivity :
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
         super.onCreate(savedInstanceState)
         enforcePortraitForHandheldAndFoldedDisplay()
+        wallpaperPreviewViewModel.updateDisplayConfiguration()
         window.navigationBarColor = Color.TRANSPARENT
         window.statusBarColor = Color.TRANSPARENT
         setContentView(R.layout.activity_wallpaper_preview)
@@ -201,32 +200,6 @@ class WallpaperPreviewActivity :
             }
         }
         super.onDestroy()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-
-        wallpaperPreviewViewModel.updateDisplayConfiguration()
-        // Restart current navigation destination to force preview layout changes...
-        navController.apply {
-            currentDestination?.id?.let {
-                // ...unless we're in the creative fragment, where it's not necessary and
-                // interferes with receiving the creative Activity result.
-                if (it == R.id.creativeNewPreviewFragment) {
-                    return@let
-                }
-                navigate(
-                    resId = it,
-                    args = null,
-                    navOptions =
-                        NavOptions.Builder()
-                            .setPopUpTo(destinationId = it, inclusive = true)
-                            .build(),
-                )
-            }
-        }
-
-        enforcePortraitForHandheldAndFoldedDisplay()
     }
 
     private fun WallpaperInfo.convertToWallpaperModel(): WallpaperModel {

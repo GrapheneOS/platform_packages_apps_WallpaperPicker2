@@ -35,6 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/set_wallpaper_lock_screen_destination"
+        android:maxWidth="@dimen/set_wallpaper_dialog_handheld_preview_width"
         app:layout_constraintTop_toBottomOf="@id/lock_preview_selector"
         app:layout_constraintStart_toStartOf="@+id/lock_preview_selector"
         app:layout_constraintEnd_toEndOf="@+id/lock_preview_selector"/>
@@ -54,6 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/set_wallpaper_home_screen_destination"
+        android:maxWidth="@dimen/set_wallpaper_dialog_handheld_preview_width"
         app:layout_constraintTop_toBottomOf="@id/home_preview_selector"
         app:layout_constraintStart_toStartOf="@+id/home_preview_selector"
         app:layout_constraintEnd_toEndOf="@+id/home_preview_selector"/>

@@ -56,9 +56,8 @@ class CreativeNewPreviewFragment : Hilt_CreativeNewPreviewFragment() {
         val view = inflater.inflate(R.layout.fragment_full_preview, container, false)
         setUpToolbar(view)
 
-        wallpaperPreviewViewModel.setDefaultWallpaperPreviewConfigViewModel(
+        wallpaperPreviewViewModel.setDefaultFullPreviewConfigViewModel(
             deviceDisplayType = displayUtils.getCurrentDisplayType(requireActivity()),
-            displaySize = displayUtils.getRealSize(requireActivity().display),
         )
 
         FullWallpaperPreviewBinder.bind(

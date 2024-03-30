@@ -361,11 +361,14 @@
     <dimen name="small_preview_button_radius">15dp</dimen>
 
     <!-- Dimensions for set wallpaper dialog with previews -->
-    <dimen name="set_wallpaper_dialog_foldable_preview_width">270dp</dimen>
-    <dimen name="set_wallpaper_dialog_handheld_width">270dp</dimen>
+    <dimen name="set_wallpaper_dialog_foldable_width">370dp</dimen>
+    <dimen name="set_wallpaper_dialog_foldable_content_width">320dp</dimen>
+    <dimen name="set_wallpaper_dialog_foldable_preview_width">290dp</dimen>
+    <dimen name="set_wallpaper_dialog_handheld_width">340dp</dimen>
+    <dimen name="set_wallpaper_dialog_handheld_content_width">270dp</dimen>
     <dimen name="set_wallpaper_dialog_handheld_preview_width">130dp</dimen>
     <dimen name="set_wallpaper_dialog_handheld_preview_height">260dp</dimen>
-    <dimen name="set_wallpaper_dialog_button_margin_vertical">16dp</dimen>
+    <dimen name="set_wallpaper_dialog_button_margin_vertical">8dp</dimen>
     <dimen name="set_wallpaper_dialog_bottom_padding">16dp</dimen>
     <dimen name="set_wallpaper_dialog_preview_corner_radius">14dp</dimen>
 

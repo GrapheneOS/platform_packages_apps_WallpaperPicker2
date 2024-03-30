@@ -207,7 +207,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             previewViewModel = wallpaperPreviewViewModel,
             actionsViewModel = wallpaperPreviewViewModel.previewActionsViewModel,
             deviceDisplayType = displayUtils.getCurrentDisplayType(requireActivity()),
-            displaySize = displayUtils.getRealSize(requireActivity().display),
             lifecycleOwner = viewLifecycleOwner,
             logger = logger,
             onStartEditActivity = {

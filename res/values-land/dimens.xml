@@ -25,4 +25,10 @@
     <dimen name="preview_page_gap">60dp</dimen>
     <dimen name="preview_page_horizontal_margin">92dp</dimen>
     <dimen name="preview_card_padding">8dp</dimen>
+
+    <!-- Dimensions for wallpaper effects dialog -->
+    <dimen name="set_wallpaper_dialog_handheld_width">900dp</dimen>
+    <dimen name="set_wallpaper_dialog_handheld_content_width">840dp</dimen>
+    <dimen name="set_wallpaper_dialog_handheld_preview_width">416dp</dimen>
+    <dimen name="set_wallpaper_dialog_handheld_preview_height">260dp</dimen>
 </resources>
