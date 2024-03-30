@@ -19,17 +19,21 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.annotation.MenuRes;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toolbar;
 import android.widget.Toolbar.OnMenuItemClickListener;
 
 import androidx.annotation.Nullable;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.config.BaseFlags;
@@ -129,6 +133,7 @@ public abstract class AppbarFragment extends BottomActionBarFragment
 
         // Update toolbar and status bar color.
         setToolbarColor(getToolbarColorId());
+        setUpStatusBar(isStatusBarLightText());
 
         CharSequence title;
         if (getArguments() != null) {
@@ -166,6 +171,21 @@ public abstract class AppbarFragment extends BottomActionBarFragment
 
     protected int getToolbarColorId() {
         return R.color.toolbar_color;
+    }
+
+    protected void setUpStatusBar(boolean shouldUseLightText) {
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        Window window = activity.getWindow();
+        WindowInsetsControllerCompat windowInsetsController =
+                WindowCompat.getInsetsController(window, window.getDecorView());
+        windowInsetsController.setAppearanceLightStatusBars(!shouldUseLightText);
+    }
+
+    protected boolean isStatusBarLightText() {
+        return getResources().getBoolean(R.bool.isFragmentStatusBarLightText);
     }
 
     protected int getToolbarTextColor() {

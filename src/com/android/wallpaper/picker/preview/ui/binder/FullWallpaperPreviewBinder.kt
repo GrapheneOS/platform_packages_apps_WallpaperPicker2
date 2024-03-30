@@ -24,7 +24,9 @@ import android.view.SurfaceView
 import android.view.View
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.doOnLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -62,10 +64,12 @@ object FullWallpaperPreviewBinder {
         transition: Transition?,
         displayUtils: DisplayUtils,
         lifecycleOwner: LifecycleOwner,
+        insetsController: WindowInsetsControllerCompat? = null,
     ) {
         val wallpaperPreviewCrop: FullPreviewFrameLayout =
             view.requireViewById(R.id.wallpaper_preview_crop)
         val previewCard: CardView = view.requireViewById(R.id.preview_card)
+        val scrimView: View = view.requireViewById(R.id.preview_scrim)
         var transitionDisposableHandle: DisposableHandle? = null
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -75,14 +79,24 @@ object FullWallpaperPreviewBinder {
                         currentSize,
                         displaySize,
                     )
-                    val setFinalPreviewCardRadius = {
-                        if (displaySize == currentSize) previewCard.radius = 0f
-                    }
+
+                    val setFinalPreviewCardRadiusAndStatusBarColor =
+                        { isWallpaperFullScreen: Boolean ->
+                            if (isWallpaperFullScreen) {
+                                previewCard.radius = 0f
+                                insetsController?.isAppearanceLightStatusBars = false
+                            }
+                            scrimView.isVisible = isWallpaperFullScreen
+                        }
+                    val isPreviewingFullScreen = displaySize == currentSize
                     if (transition == null) {
-                        setFinalPreviewCardRadius()
+                        setFinalPreviewCardRadiusAndStatusBarColor(isPreviewingFullScreen)
                     } else {
                         transitionDisposableHandle?.dispose()
-                        val listener = transition.doOnEnd { setFinalPreviewCardRadius() }
+                        val listener =
+                            transition.doOnEnd {
+                                setFinalPreviewCardRadiusAndStatusBarColor(isPreviewingFullScreen)
+                            }
                         transitionDisposableHandle = DisposableHandle {
                             listener.let { transition.removeListener(it) }
                         }

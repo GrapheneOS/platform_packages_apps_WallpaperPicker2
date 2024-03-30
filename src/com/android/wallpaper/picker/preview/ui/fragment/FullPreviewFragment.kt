@@ -28,6 +28,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -99,6 +100,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
             creativeWallpaperEditActivityResult.launch(it)
             return view
         }
+        val window = requireActivity().window
 
         FullWallpaperPreviewBinder.bind(
             applicationContext = appContext,
@@ -107,6 +109,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
             transition = sharedElementEnterTransition as? Transition,
             displayUtils = displayUtils,
             lifecycleOwner = viewLifecycleOwner,
+            insetsController = WindowCompat.getInsetsController(window, window.decorView)
         )
 
         CropWallpaperButtonBinder.bind(
