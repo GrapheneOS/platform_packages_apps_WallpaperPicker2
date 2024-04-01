@@ -199,7 +199,7 @@ constructor(
     /** [EDIT] */
     val editIntent: Flow<Intent?> =
         interactor.wallpaperModel.map {
-            (it as? WallpaperModel.LiveWallpaperModel)?.liveWallpaperData?.getEditActivityIntent()
+            (it as? LiveWallpaperModel)?.liveWallpaperData?.getEditActivityIntent(false)
         }
     val isEditVisible: Flow<Boolean> = editIntent.map { it != null }
 
@@ -391,6 +391,8 @@ constructor(
     }
 
     companion object {
+        const val EXTRA_KEY_IS_CREATE_NEW = "is_create_new"
+
         private fun WallpaperModel.shouldShowInformationFloatingSheet(): Boolean {
             if (
                 this is LiveWallpaperModel &&
@@ -427,7 +429,11 @@ constructor(
             }
         }
 
-        fun LiveWallpaperData.getEditActivityIntent(): Intent? {
+        /**
+         * @param isCreateNew: True means creating a new creative wallpaper. False means editing an
+         *   existing wallpaper.
+         */
+        fun LiveWallpaperData.getEditActivityIntent(isCreateNew: Boolean): Intent? {
             val settingsActivity = systemWallpaperInfo.settingsActivity
             if (settingsActivity.isNullOrEmpty()) {
                 return null
@@ -436,6 +442,7 @@ constructor(
                 Intent().apply {
                     component = ComponentName(systemWallpaperInfo.packageName, settingsActivity)
                     putExtra(WallpaperSettingsActivity.EXTRA_PREVIEW_MODE, true)
+                    putExtra(EXTRA_KEY_IS_CREATE_NEW, isCreateNew)
                 }
             return intent
         }

@@ -144,13 +144,13 @@ class WallpaperPreviewActivity :
                 // fullscreen fragment for the create-new flow of creative wallpapers
                 val navGraph =
                     navController.navInflater.inflate(R.navigation.wallpaper_preview_nav_graph)
-                navGraph.setStartDestination(R.id.creativeNewPreviewFragment)
+                navGraph.setStartDestination(R.id.creativeEditPreviewFragment)
                 navController.setGraph(
                     navGraph,
                     Bundle().apply {
                         putParcelable(
                             SmallPreviewFragment.ARG_EDIT_INTENT,
-                            liveWallpaperModel.liveWallpaperData.getEditActivityIntent()
+                            liveWallpaperModel.liveWallpaperData.getEditActivityIntent(true)
                         )
                     }
                 )
@@ -182,23 +182,30 @@ class WallpaperPreviewActivity :
     override fun onDestroy() {
         imageEffectsRepository.destroy()
         creativeEffectsRepository.destroy()
-        // TODO(b/328302105): MainScope ensures the job gets done non-blocking even if the activity
-        //  has been destroyed already. Consider making this part of WallpaperConnectionUtils.
-        mainScope.launch {
-            liveWallpaperDownloader.cleanup()
-            (wallpaperPreviewViewModel.wallpaper.value as? WallpaperModel.LiveWallpaperModel)?.let {
-                WallpaperConnectionUtils.disconnect(
-                    appContext,
-                    it,
-                    wallpaperPreviewViewModel.smallerDisplaySize
-                )
-                WallpaperConnectionUtils.disconnect(
-                    appContext,
-                    it,
-                    wallpaperPreviewViewModel.wallpaperDisplaySize.value
-                )
+        // Only disconnect when leaving the Activity. If onDestroy is caused by an orientation
+        // change, we should keep the connection to avoid initiating the engines again.
+        if (isFinishing) {
+            // TODO(b/328302105): MainScope ensures the job gets done non-blocking even if the
+            //   activity has been destroyed already. Consider making this part of
+            //   WallpaperConnectionUtils.
+            mainScope.launch {
+                liveWallpaperDownloader.cleanup()
+                (wallpaperPreviewViewModel.wallpaper.value as? WallpaperModel.LiveWallpaperModel)
+                    ?.let {
+                        WallpaperConnectionUtils.disconnect(
+                            appContext,
+                            it,
+                            wallpaperPreviewViewModel.smallerDisplaySize
+                        )
+                        WallpaperConnectionUtils.disconnect(
+                            appContext,
+                            it,
+                            wallpaperPreviewViewModel.wallpaperDisplaySize.value
+                        )
+                    }
             }
         }
+
         super.onDestroy()
     }
 

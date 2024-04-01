@@ -16,20 +16,14 @@
 package com.android.wallpaper.picker.preview.ui.fragment
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Toolbar
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.transition.Transition
@@ -39,7 +33,6 @@ import com.android.wallpaper.picker.preview.ui.binder.CropWallpaperButtonBinder
 import com.android.wallpaper.picker.preview.ui.binder.FullWallpaperPreviewBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewTooltipBinder
 import com.android.wallpaper.picker.preview.ui.binder.WorkspacePreviewBinder
-import com.android.wallpaper.picker.preview.ui.fragment.SmallPreviewFragment.Companion.ARG_EDIT_INTENT
 import com.android.wallpaper.picker.preview.ui.transition.ChangeScaleAndPosition
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
@@ -75,33 +68,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
             SmallPreviewFragment.FULL_PREVIEW_SHARED_ELEMENT_ID
         )
 
-        val creativeWallpaperEditActivityResult =
-            registerForActivityResult(
-                object : ActivityResultContract<Intent, Int>() {
-                    override fun createIntent(context: Context, input: Intent): Intent {
-                        return input
-                    }
-
-                    override fun parseResult(resultCode: Int, intent: Intent?): Int {
-                        return resultCode
-                    }
-                },
-            ) {
-                // Callback when the overlaying edit activity is finished. Result code of RESULT_OK
-                // means the user clicked on the check button; RESULT_CANCELED otherwise.
-                findNavController().popBackStack()
-            }
-        // If edit intent is nonnull, we launch the edit overlay activity, with the wallpaper
-        // preview from the Wallpaper Picker app's fragment.
-        arguments?.getParcelable(ARG_EDIT_INTENT, Intent::class.java)?.let {
-            view.requireViewById<Toolbar>(R.id.toolbar).isVisible = false
-            view.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible = false
-            view.requireViewById<Button>(R.id.crop_wallpaper_button).isVisible = false
-            creativeWallpaperEditActivityResult.launch(it)
-            return view
-        }
         val window = requireActivity().window
-
         FullWallpaperPreviewBinder.bind(
             applicationContext = appContext,
             view = view,

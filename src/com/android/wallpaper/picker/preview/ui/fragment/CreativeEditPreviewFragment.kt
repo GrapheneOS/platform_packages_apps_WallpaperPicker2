@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toolbar
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -33,6 +34,7 @@ import com.android.wallpaper.R
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.preview.ui.binder.FullWallpaperPreviewBinder
 import com.android.wallpaper.picker.preview.ui.fragment.SmallPreviewFragment.Companion.ARG_EDIT_INTENT
+import com.android.wallpaper.picker.preview.ui.viewmodel.PreviewActionsViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,7 +43,7 @@ import javax.inject.Inject
 
 /** Shows full preview with an edit activity overlay. */
 @AndroidEntryPoint(AppbarFragment::class)
-class CreativeNewPreviewFragment : Hilt_CreativeNewPreviewFragment() {
+class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
 
     @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
@@ -78,20 +80,47 @@ class CreativeNewPreviewFragment : Hilt_CreativeNewPreviewFragment() {
                 ?: throw IllegalArgumentException(
                     "To render the first screen in the create new creative wallpaper flow, the intent for rendering the edit activity overlay can not be null."
                 )
+        val isCreateNew =
+            intent.getBooleanExtra(PreviewActionsViewModel.EXTRA_KEY_IS_CREATE_NEW, false)
         val creativeWallpaperEditActivityResult =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                // Callback when the overlaying edit activity is finished. Result code of RESULT_OK
-                // means the user clicked on the check button; RESULT_CANCELED otherwise.
-                if (it.resultCode == RESULT_OK) {
-                    // When clicking on the check button, navigate to the small preview fragment.
-                    findNavController()
-                        .navigate(R.id.action_creativeNewPreviewFragment_to_smallPreviewFragment)
-                } else {
-                    activity?.finish()
+            if (isCreateNew) {
+                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                    // Callback when the overlaying edit activity is finished. Result code of
+                    // RESULT_OK means the user clicked on the check button; RESULT_CANCELED
+                    // otherwise.
+                    if (it.resultCode == RESULT_OK) {
+                        // When clicking on the check button, navigate to the small preview
+                        // fragment.
+                        findNavController()
+                            .navigate(
+                                R.id.action_creativeEditPreviewFragment_to_smallPreviewFragment
+                            )
+                    } else {
+                        activity?.finish()
+                    }
+                }
+            } else {
+                registerForActivityResult(
+                    object : ActivityResultContract<Intent, Int>() {
+                        override fun createIntent(context: Context, input: Intent): Intent {
+                            return input
+                        }
+
+                        override fun parseResult(resultCode: Int, intent: Intent?): Int {
+                            return resultCode
+                        }
+                    },
+                ) {
+                    findNavController().popBackStack()
                 }
             }
 
-        creativeWallpaperEditActivityResult.launch(intent)
+        if (savedInstanceState == null) {
+            // Launch the overlay activity only when the fragment is freshly created. Otherwise, it
+            // is from a configuration change and the overlay activity should recreate itself
+            // already, where we should not launch another one.
+            creativeWallpaperEditActivityResult.launch(intent)
+        }
 
         return view
     }

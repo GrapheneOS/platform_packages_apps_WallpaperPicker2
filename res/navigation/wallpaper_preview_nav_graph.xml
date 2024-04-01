@@ -16,7 +16,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/wallpaper_preview_nav_graph"
-    app:startDestination="@id/smallPreviewFragment">
+    app:startDestination="@+id/smallPreviewFragment">
 
     <fragment
         android:id="@+id/smallPreviewFragment"
@@ -26,13 +26,16 @@
             app:destination="@+id/fullPreviewFragment" />
         <action
             android:id="@+id/action_smallPreviewFragment_to_setWallpaperDialog"
-            app:destination="@id/setWallpaperDialog" />
+            app:destination="@+id/setWallpaperDialog" />
+        <action
+            android:id="@+id/action_smallPreviewFragment_to_creativeEditPreviewFragment"
+            app:destination="@+id/creativeEditPreviewFragment" />
     </fragment>
     <fragment
-        android:id="@+id/creativeNewPreviewFragment"
-        android:name="com.android.wallpaper.picker.preview.ui.fragment.CreativeNewPreviewFragment">
+        android:id="@+id/creativeEditPreviewFragment"
+        android:name="com.android.wallpaper.picker.preview.ui.fragment.CreativeEditPreviewFragment">
         <action
-            android:id="@+id/action_creativeNewPreviewFragment_to_smallPreviewFragment"
+            android:id="@+id/action_creativeEditPreviewFragment_to_smallPreviewFragment"
             app:destination="@+id/smallPreviewFragment" />
     </fragment>
     <fragment
@@ -44,6 +47,6 @@
         android:name="com.android.wallpaper.picker.preview.ui.fragment.SetWallpaperDialogFragment">
         <action
             android:id="@+id/action_setWallpaperDialog_self"
-            app:destination="@id/setWallpaperDialog" />
+            app:destination="@+id/setWallpaperDialog" />
     </dialog>
 </navigation>
