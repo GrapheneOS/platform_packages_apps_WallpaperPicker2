@@ -23,7 +23,6 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.transition.Transition
@@ -48,6 +47,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
     @Inject lateinit var displayUtils: DisplayUtils
 
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
+    private var useLightToolbar = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +68,6 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
             SmallPreviewFragment.FULL_PREVIEW_SHARED_ELEMENT_ID
         )
 
-        val window = requireActivity().window
         FullWallpaperPreviewBinder.bind(
             applicationContext = appContext,
             view = view,
@@ -76,8 +75,10 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
             transition = sharedElementEnterTransition as? Transition,
             displayUtils = displayUtils,
             lifecycleOwner = viewLifecycleOwner,
-            insetsController = WindowCompat.getInsetsController(window, window.decorView)
-        )
+        ) { isFullScreen ->
+            useLightToolbar = isFullScreen
+            setUpToolbar(view)
+        }
 
         CropWallpaperButtonBinder.bind(
             button = view.requireViewById(R.id.crop_wallpaper_button),
@@ -112,6 +113,15 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
     }
 
     override fun getToolbarTextColor(): Int {
-        return ContextCompat.getColor(requireContext(), R.color.system_on_surface)
+        return if (useLightToolbar) {
+            ContextCompat.getColor(requireContext(), android.R.color.system_on_primary_light)
+        } else {
+            ContextCompat.getColor(requireContext(), R.color.system_on_surface)
+        }
+    }
+
+    override fun isStatusBarLightText(): Boolean {
+        return requireContext().resources.getBoolean(R.bool.isFragmentStatusBarLightText) or
+            useLightToolbar
     }
 }

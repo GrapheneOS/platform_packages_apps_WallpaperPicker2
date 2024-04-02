@@ -484,7 +484,7 @@ public class ImagePreviewFragment extends PreviewFragment {
 
             mProgressBar.setVisibility(View.VISIBLE);
             View wallpaperPreviewContainer = LayoutInflater.from(context).inflate(
-                    R.layout.fullscreen_wallpaper_preview, null);
+                    R.layout.fullscreen_wallpaper_preview_old, null);
             mFullResImageView = wallpaperPreviewContainer.findViewById(R.id.full_res_image);
             mLowResImageView = wallpaperPreviewContainer.findViewById(R.id.low_res_image);
             mLowResImageView.setRenderEffect(

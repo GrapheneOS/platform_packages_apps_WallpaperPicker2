@@ -185,6 +185,9 @@
     <dimen name="wallpaper_info_pane_interaction_top_margin">39dp</dimen>
     <dimen name="wallpaper_info_pane_explore_button_top_margin">50dp</dimen>
 
+    <!-- Minimum height for the wallpaper info explore button. -->
+    <dimen name="wallpaper_info_explore_button_height">48dp</dimen>
+
     <dimen name="option_border_width">2dp</dimen>
     <dimen name="option_selected_border_width">3dp</dimen>
     <dimen name="option_title_font_text_size">14sp</dimen>

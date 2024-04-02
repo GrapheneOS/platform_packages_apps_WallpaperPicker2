@@ -193,6 +193,7 @@ object SetWallpaperDialogBinder {
         dialogViewModel: WallpaperPreviewViewModel,
     ) {
         selector.isActivated = selectedScreens.contains(screen)
+        selector.isSelected = selector.isActivated
         selector.setOnClickListener { dialogViewModel.onSetWallpaperDialogScreenSelected(screen) }
     }
 }
