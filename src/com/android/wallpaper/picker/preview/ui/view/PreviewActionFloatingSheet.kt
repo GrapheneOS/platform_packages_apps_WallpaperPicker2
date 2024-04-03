@@ -16,6 +16,7 @@
 package com.android.wallpaper.picker.preview.ui.view
 
 import android.content.Context
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -23,6 +24,10 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.lifecycle.LiveData
+import androidx.slice.Slice
+import androidx.slice.widget.SliceLiveData
+import androidx.slice.widget.SliceView
 import com.android.wallpaper.R
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
 import com.android.wallpaper.model.WallpaperAction
@@ -44,6 +49,8 @@ class PreviewActionFloatingSheet(context: Context, attrs: AttributeSet?) :
     private val floatingSheetView: ViewGroup
     private val floatingSheetContainer: ViewGroup
     private val floatingSheetBehavior: BottomSheetBehavior<ViewGroup>
+
+    private var customizeLiveDataAndView: Pair<LiveData<Slice>, SliceView>? = null
 
     init {
         LayoutInflater.from(context).inflate(R.layout.floating_sheet2, this, true)
@@ -112,7 +119,7 @@ class PreviewActionFloatingSheet(context: Context, attrs: AttributeSet?) :
 
     fun setInformationContent(
         attributions: List<String?>?,
-        onExploreButtonClicked: (() -> Unit)?,
+        onExploreButtonClickListener: OnClickListener?,
     ) {
         val view = LayoutInflater.from(context).inflate(R.layout.wallpaper_info_view2, this, false)
         val title: TextView = view.requireViewById(R.id.wallpaper_info_title)
@@ -141,9 +148,24 @@ class PreviewActionFloatingSheet(context: Context, attrs: AttributeSet?) :
                 }
             }
 
-            exploreButton.isVisible = onExploreButtonClicked != null
-            exploreButton.setOnClickListener { onExploreButtonClicked?.invoke() }
+            exploreButton.isVisible = onExploreButtonClickListener != null
+            exploreButton.setOnClickListener(onExploreButtonClickListener)
         }
+        floatingSheetView.removeAllViews()
+        floatingSheetView.addView(view)
+    }
+
+    fun setCustomizeContent(uri: Uri) {
+        removeCustomizeLiveDataObserver()
+        val view =
+            LayoutInflater.from(context).inflate(R.layout.preview_customize_settings2, this, false)
+        val settingsSliceView: SliceView =
+            view.requireViewById<SliceView>(R.id.settings_slice).apply {
+                mode = SliceView.MODE_LARGE
+                isScrollable = false
+            }
+        customizeLiveDataAndView = SliceLiveData.fromUri(view.context, uri) to settingsSliceView
+        customizeLiveDataAndView?.let { (liveData, observer) -> liveData.observeForever(observer) }
         floatingSheetView.removeAllViews()
         floatingSheetView.addView(view)
     }
@@ -154,6 +176,7 @@ class PreviewActionFloatingSheet(context: Context, attrs: AttributeSet?) :
 
     fun collapse() {
         floatingSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        removeCustomizeLiveDataObserver()
     }
 
     /**
@@ -169,5 +192,10 @@ class PreviewActionFloatingSheet(context: Context, attrs: AttributeSet?) :
 
     fun removeFloatingSheetCallback(callback: BottomSheetCallback) {
         floatingSheetBehavior.removeBottomSheetCallback(callback)
+    }
+
+    private fun removeCustomizeLiveDataObserver() {
+        customizeLiveDataAndView?.let { (liveData, observer) -> liveData.removeObserver(observer) }
+        customizeLiveDataAndView = null
     }
 }

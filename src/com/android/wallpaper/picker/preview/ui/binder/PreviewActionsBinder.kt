@@ -39,7 +39,6 @@ import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewMod
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperActionsToggleAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 /** Binds the action buttons and bottom sheet to [PreviewActionsViewModel] */
@@ -231,16 +230,19 @@ object PreviewActionsBinder {
 
                 /** Floating sheet behavior */
                 launch {
-                    combine(
-                            actionsViewModel.informationFloatingSheetViewModel,
-                            actionsViewModel.effectFloatingSheetViewModel
-                        ) { informationViewModel, effectViewModel ->
-                            informationViewModel to effectViewModel
-                        }
-                        .collect { (informationViewModel, effectViewModel) ->
+                    actionsViewModel.previewFloatingSheetViewModel.collect { floatingSheetViewModel
+                        ->
+                        if (floatingSheetViewModel != null) {
+                            val (
+                                informationViewModel,
+                                imageEffectViewModel,
+                                creativeEffectViewModel,
+                                customizeViewModel,
+                            ) = floatingSheetViewModel
                             when {
                                 informationViewModel != null -> {
-                                    val onExploreButtonClicked =
+                                    floatingSheet.setInformationContent(
+                                        informationViewModel.attributions,
                                         informationViewModel.exploreActionUrl?.let { url ->
                                             {
                                                 logger.logWallpaperExploreButtonClicked()
@@ -248,57 +250,47 @@ object PreviewActionsBinder {
                                                     Intent(Intent.ACTION_VIEW, Uri.parse(url))
                                                 )
                                             }
-                                        }
-                                    floatingSheet.setInformationContent(
-                                        informationViewModel.attributions,
-                                        onExploreButtonClicked
+                                        },
                                     )
-                                    floatingSheet.expand()
                                 }
-                                effectViewModel != null -> {
-                                    val imageEffectViewModel =
-                                        effectViewModel.imageEffectFloatingSheetViewModel
-                                    val creativeEffectViewModel =
-                                        effectViewModel.creativeEffectFloatingSheetViewModel
-                                    if (imageEffectViewModel != null) {
-                                        floatingSheet.setImageEffectContent(
-                                            imageEffectViewModel.effectType,
-                                            imageEffectViewModel.myPhotosClickListener,
-                                            imageEffectViewModel.collapseFloatingSheetListener,
-                                            imageEffectViewModel.effectSwitchListener,
-                                            imageEffectViewModel.effectDownloadClickListener,
-                                            imageEffectViewModel.status,
-                                            imageEffectViewModel.resultCode,
-                                            imageEffectViewModel.errorMessage,
-                                            imageEffectViewModel.title,
-                                            imageEffectViewModel.effectTextRes,
-                                        )
-                                    } else if (creativeEffectViewModel != null) {
-                                        floatingSheet.setCreativeEffectContent(
-                                            creativeEffectViewModel.title,
-                                            creativeEffectViewModel.subtitle,
-                                            creativeEffectViewModel.wallpaperActions,
-                                            object :
-                                                WallpaperActionsToggleAdapter.WallpaperEffectSwitchListener {
-                                                override fun onEffectSwitchChanged(
-                                                    checkedItem: Int
-                                                ) {
-                                                    launch {
-                                                        creativeEffectViewModel
-                                                            .wallpaperEffectSwitchListener(
-                                                                checkedItem
-                                                            )
-                                                    }
+                                imageEffectViewModel != null ->
+                                    floatingSheet.setImageEffectContent(
+                                        imageEffectViewModel.effectType,
+                                        imageEffectViewModel.myPhotosClickListener,
+                                        imageEffectViewModel.collapseFloatingSheetListener,
+                                        imageEffectViewModel.effectSwitchListener,
+                                        imageEffectViewModel.effectDownloadClickListener,
+                                        imageEffectViewModel.status,
+                                        imageEffectViewModel.resultCode,
+                                        imageEffectViewModel.errorMessage,
+                                        imageEffectViewModel.title,
+                                        imageEffectViewModel.effectTextRes,
+                                    )
+                                creativeEffectViewModel != null ->
+                                    floatingSheet.setCreativeEffectContent(
+                                        creativeEffectViewModel.title,
+                                        creativeEffectViewModel.subtitle,
+                                        creativeEffectViewModel.wallpaperActions,
+                                        object :
+                                            WallpaperActionsToggleAdapter.WallpaperEffectSwitchListener {
+                                            override fun onEffectSwitchChanged(checkedItem: Int) {
+                                                launch {
+                                                    creativeEffectViewModel
+                                                        .wallpaperEffectSwitchListener(checkedItem)
                                                 }
-                                            },
-                                        )
-                                    }
-
-                                    floatingSheet.expand()
-                                }
-                                else -> floatingSheet.collapse()
+                                            }
+                                        },
+                                    )
+                                customizeViewModel != null ->
+                                    floatingSheet.setCustomizeContent(
+                                        customizeViewModel.customizeSliceUri
+                                    )
                             }
+                            floatingSheet.expand()
+                        } else {
+                            floatingSheet.collapse()
                         }
+                    }
                 }
             }
         }

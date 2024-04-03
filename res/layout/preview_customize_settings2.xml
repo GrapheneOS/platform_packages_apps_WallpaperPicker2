@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2020 The Android Open Source Project
+     Copyright (C) 2024 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,19 +14,17 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/floating_sheet_customize_content_min_height"
+    android:gravity="center"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/low_res_image"
+    <!-- TODO(b/179127651): Figure out where these slices are generated to update them -->
+    <androidx.slice.widget.SliceView
+        android:id="@+id/settings_slice"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:background="?android:colorBackground" />
-
-    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-        android:id="@+id/full_res_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</FrameLayout>
+        android:layout_height="wrap_content"/>
+</LinearLayout>

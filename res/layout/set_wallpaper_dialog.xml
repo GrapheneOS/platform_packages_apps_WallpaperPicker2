@@ -66,8 +66,10 @@
             style="@style/SetWallpaperDialog.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/set_wallpaper_dialog_set_button"
             android:layout_marginVertical="@dimen/set_wallpaper_dialog_button_margin_vertical"
+            android:gravity="center"
+            android:minHeight="@dimen/touch_target_min_height"
+            android:text="@string/set_wallpaper_dialog_set_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -76,9 +78,11 @@
             style="@style/SetWallpaperDialog.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cancel"
             android:layout_marginEnd="@dimen/spacing_8dp"
             android:layout_marginVertical="@dimen/set_wallpaper_dialog_button_margin_vertical"
+            android:gravity="center"
+            android:minHeight="@dimen/touch_target_min_height"
+            android:text="@string/cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_set"/>
 

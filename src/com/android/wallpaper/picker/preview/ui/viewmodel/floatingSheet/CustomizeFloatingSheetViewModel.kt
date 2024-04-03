@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 package com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet
 
-/** This data class represents the view data for the effect floating sheet */
-data class EffectFloatingSheetViewModel(
-    val imageEffectFloatingSheetViewModel: ImageEffectFloatingSheetViewModel? = null,
-    val creativeEffectFloatingSheetViewModel: CreativeEffectFloatingSheetViewModel? = null,
+import android.net.Uri
+
+data class CustomizeFloatingSheetViewModel(
+    val customizeSliceUri: Uri,
 )

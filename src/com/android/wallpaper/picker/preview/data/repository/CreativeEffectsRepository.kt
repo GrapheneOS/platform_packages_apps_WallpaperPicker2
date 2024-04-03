@@ -26,15 +26,14 @@ import com.android.wallpaper.picker.data.CreativeWallpaperEffectsData
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.preview.shared.model.CreativeEffectsModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 
-// TODO(b/331387166): Make CreativeEffectsRepository and ImageEffectsRepository Activity-scoped
-@Singleton
+@ActivityRetainedScoped
 class CreativeEffectsRepository
 @Inject
 constructor(

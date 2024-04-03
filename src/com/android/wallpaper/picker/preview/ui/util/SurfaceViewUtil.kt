@@ -24,11 +24,11 @@ import android.view.ViewGroup
 
 object SurfaceViewUtil {
 
-    fun SurfaceView.attachView(view: View) {
+    fun SurfaceView.attachView(view: View, newWidth: Int = width, newHeight: Int = height) {
         // Detach view from its parent, if the view has one
         (view.parent as ViewGroup?)?.removeView(view)
         val host = SurfaceControlViewHost(context, display, hostToken)
-        host.setView(view, width, height)
+        host.setView(view, newWidth, newHeight)
         setChildSurfacePackage(checkNotNull(host.surfacePackage))
     }
 

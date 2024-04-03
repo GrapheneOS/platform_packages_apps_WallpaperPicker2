@@ -43,16 +43,16 @@ import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.EffectTextRes
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import java.io.IOException
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.xmlpull.v1.XmlPullParserException
 
-@Singleton
+@ActivityRetainedScoped
 class ImageEffectsRepository
 @Inject
 constructor(

@@ -22,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
 import androidx.core.view.doOnLayout
@@ -43,6 +44,7 @@ import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil.attachView
 import com.android.wallpaper.picker.preview.ui.view.FullPreviewFrameLayout
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
+import com.android.wallpaper.util.RtlUtils.isRtl
 import com.android.wallpaper.util.WallpaperCropUtils
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.shouldEnforceSingleEngine
@@ -185,7 +187,8 @@ object FullWallpaperPreviewBinder {
                                 val preview =
                                     LayoutInflater.from(applicationContext)
                                         .inflate(R.layout.fullscreen_wallpaper_preview, null)
-                                surfaceView.attachView(preview)
+                                adjustSizeAndAttachPreview(applicationContext, surfaceView, preview)
+
                                 val fullResImageView =
                                     preview.requireViewById<SubsamplingScaleImageView>(
                                         R.id.full_res_image
@@ -228,11 +231,12 @@ object FullWallpaperPreviewBinder {
 
                                 // Bind static wallpaper
                                 StaticWallpaperPreviewBinder.bind(
-                                    lowResImageView,
-                                    fullResImageView,
-                                    viewModel.staticWallpaperPreviewViewModel,
-                                    displaySize,
-                                    lifecycleOwner,
+                                    lowResImageView = lowResImageView,
+                                    fullResImageView = fullResImageView,
+                                    viewModel = viewModel.staticWallpaperPreviewViewModel,
+                                    displaySize = displaySize,
+                                    viewLifecycleOwner = lifecycleOwner,
+                                    isFullScreen = true,
                                 )
                             }
                         }
@@ -251,6 +255,45 @@ object FullWallpaperPreviewBinder {
                 // wallpaper services, when going back and forth small and full preview.
             }
         }
+    }
+
+    // When showing full screen, we set the parent SurfaceView to be bigger than the image by N
+    // percent (usually 10%) as given by getSystemWallpaperMaximumScale. This ensures that no matter
+    // what scale and pan is set by the user, at least N% of the source image in the preview will be
+    // preserved around the visible crop. This is needed for system zoom out animations.
+    private fun adjustSizeAndAttachPreview(
+        applicationContext: Context,
+        surfaceView: SurfaceView,
+        preview: View,
+    ) {
+        val scale = WallpaperCropUtils.getSystemWallpaperMaximumScale(applicationContext)
+        val origWidth = surfaceView.width
+        val origHeight = surfaceView.height
+
+        val width = (origWidth * scale).toInt()
+        val height = (origHeight * scale).toInt()
+        var left = (origWidth - width) / 2
+        val top = (origHeight - height) / 2
+
+        if (isRtl(applicationContext)) {
+            left *= -1
+        }
+
+        val params: ViewGroup.LayoutParams = surfaceView.getLayoutParams()
+        params.width = width
+        params.height = height
+        surfaceView.setX(left.toFloat())
+        surfaceView.setY(top.toFloat())
+        surfaceView.setLayoutParams(params)
+        surfaceView.requestLayout()
+
+        preview.measure(
+            View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY)
+        )
+        preview.layout(0, 0, width, height)
+
+        surfaceView.attachView(preview, width, height)
     }
 
     private fun TouchForwardingLayout.initTouchForwarding(targetView: View) {
