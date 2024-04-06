@@ -20,6 +20,8 @@ import com.android.wallpaper.module.logging.NoOpUserEventLogger
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.preview.data.util.DefaultLiveWallpaperDownloader
 import com.android.wallpaper.picker.preview.data.util.LiveWallpaperDownloader
+import com.android.wallpaper.system.UiModeManagerImpl
+import com.android.wallpaper.system.UiModeManagerWrapper
 import com.android.wallpaper.util.converter.DefaultWallpaperModelFactory
 import com.android.wallpaper.util.converter.WallpaperModelFactory
 import dagger.Binds
@@ -46,6 +48,8 @@ abstract class AppModule {
     abstract fun bindLiveWallpaperDownloader(
         impl: DefaultLiveWallpaperDownloader
     ): LiveWallpaperDownloader
+
+    @Binds @Singleton abstract fun bindUiModeManager(impl: UiModeManagerImpl): UiModeManagerWrapper
 
     companion object {
         @Provides

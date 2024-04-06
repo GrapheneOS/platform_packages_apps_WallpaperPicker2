@@ -84,7 +84,10 @@ class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
             intent.getBooleanExtra(PreviewActionsViewModel.EXTRA_KEY_IS_CREATE_NEW, false)
         val creativeWallpaperEditActivityResult =
             if (isCreateNew) {
-                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                requireActivity().activityResultRegistry.register(
+                    CREATIVE_RESULT_REGISTRY,
+                    ActivityResultContracts.StartActivityForResult()
+                ) {
                     // Callback when the overlaying edit activity is finished. Result code of
                     // RESULT_OK means the user clicked on the check button; RESULT_CANCELED
                     // otherwise.
@@ -100,7 +103,8 @@ class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
                     }
                 }
             } else {
-                registerForActivityResult(
+                requireActivity().activityResultRegistry.register(
+                    CREATIVE_RESULT_REGISTRY,
                     object : ActivityResultContract<Intent, Int>() {
                         override fun createIntent(context: Context, input: Intent): Intent {
                             return input
@@ -127,5 +131,9 @@ class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
 
     override fun getToolbarColorId(): Int {
         return android.R.color.transparent
+    }
+
+    companion object {
+        private const val CREATIVE_RESULT_REGISTRY = "creative_result_registry"
     }
 }

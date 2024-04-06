@@ -35,7 +35,6 @@ import android.graphics.Rect
 import android.net.Uri
 import android.os.Looper
 import android.util.Log
-import androidx.collection.ArrayMap
 import com.android.app.tracing.TraceUtils.traceAsync
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.asset.BitmapUtils
@@ -606,13 +605,8 @@ class WallpaperClientImpl(
         }
         val cropHints: List<Rect>? =
             wallpaperManager.getBitmapCrops(displaySizes, which, /* originalBitmap= */ true)
-        val cropHintsMap: MutableMap<Point, Rect> = ArrayMap()
-        if (cropHints != null) {
-            for (i in cropHints.indices) {
-                cropHintsMap[displaySizes[i]] = cropHints[i]
-            }
-        }
-        return cropHintsMap
+
+        return cropHints?.indices?.associate { displaySizes[it] to cropHints[it] }
     }
 
     override suspend fun getWallpaperColors(

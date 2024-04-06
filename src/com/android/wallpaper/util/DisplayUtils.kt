@@ -181,7 +181,17 @@ class DisplayUtils(private val context: Context) {
         return allDisplays.filter { it.type == Display.TYPE_INTERNAL }
     }
 
-    fun getInternalDisplaySizes(): List<Point> {
-        return getInternalDisplays().map { getRealSize(it) }
+    fun getInternalDisplaySizes(
+        allDimensions: Boolean = false,
+    ): List<Point> {
+        return getInternalDisplays()
+            .map { getRealSize(it) }
+            .let {
+                if (allDimensions) {
+                    it + it.map { size -> Point(size.y, size.x) }
+                } else {
+                    it
+                }
+            }
     }
 }

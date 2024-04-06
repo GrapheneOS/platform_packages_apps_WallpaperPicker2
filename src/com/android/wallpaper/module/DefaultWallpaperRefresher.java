@@ -374,7 +374,8 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
 
         private Map<Point, Rect> getCurrentWallpaperCropHints(
                 @WallpaperManager.SetWallpaperFlags int which) {
-            List<Point> displaySizes = mDisplayUtils.getInternalDisplaySizes();
+            List<Point> displaySizes = mDisplayUtils
+                    .getInternalDisplaySizes(/* allDimensions= */ true);
             return mWallpaperClient.getCurrentCropHints(displaySizes, which);
         }
     }

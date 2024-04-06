@@ -56,6 +56,7 @@ import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.individual.IndividualPickerFragment
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
+import com.android.wallpaper.system.UiModeManagerWrapper
 import com.android.wallpaper.util.DisplayUtils
 import dagger.Lazy
 import javax.inject.Inject
@@ -101,6 +102,8 @@ constructor(
     private var previewActivityIntentFactory: InlinePreviewIntentFactory? = null
     private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
     @Inject lateinit var userEventLogger: Lazy<UserEventLogger>
+
+    @Inject lateinit var uiModeManager: UiModeManagerWrapper
 
     override fun getApplicationCoroutineScope(): CoroutineScope {
         return mainScope
