@@ -85,6 +85,10 @@ constructor(
     // Used to display loading indication on the preview.
     val effectStatus = actionsInteractor.imageEffectsStatus
 
+    // This flag prevents launching the creative edit activity again when orientation change.
+    // On orientation change, the fragment's onCreateView will be called again.
+    var isCurrentlyEditingCreativeWallpaper = false
+
     fun updateDisplayConfiguration() {
         _wallpaperDisplaySize.value = displayUtils.getRealSize(displayUtils.getWallpaperDisplay())
     }

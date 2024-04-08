@@ -15,6 +15,7 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LightDialogTheme"
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:layout_width="wrap_content"
@@ -28,6 +29,8 @@
 
     <TextView
         android:id="@+id/set_wallpaper_progress_dialog_text"
+        android:textAppearance="?android:textAppearance"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="@string/set_wallpaper_progress_message" />
 </LinearLayout>

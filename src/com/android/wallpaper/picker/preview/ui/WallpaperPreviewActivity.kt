@@ -26,7 +26,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.android.wallpaper.R
 import com.android.wallpaper.model.ImageWallpaperInfo
@@ -68,8 +67,6 @@ class WallpaperPreviewActivity :
     @Inject lateinit var liveWallpaperDownloader: LiveWallpaperDownloader
     @MainDispatcher @Inject lateinit var mainScope: CoroutineScope
 
-    private lateinit var navController: NavController
-
     private val wallpaperPreviewViewModel: WallpaperPreviewViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,18 +77,30 @@ class WallpaperPreviewActivity :
         window.navigationBarColor = Color.TRANSPARENT
         window.statusBarColor = Color.TRANSPARENT
         setContentView(R.layout.activity_wallpaper_preview)
-        navController =
+        val wallpaper =
+            checkNotNull(intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java))
+                .convertToWallpaperModel()
+        val navController =
             (supportFragmentManager.findFragmentById(R.id.wallpaper_preview_nav_host)
                     as NavHostFragment)
                 .navController
+        val graph = navController.navInflater.inflate(R.navigation.wallpaper_preview_nav_graph)
+        val startDestinationArgs: Bundle? =
+            (wallpaper as? WallpaperModel.LiveWallpaperModel)
+                ?.let {
+                    if (it.isNewCreativeWallpaper()) it.getNewCreativeWallpaperArgs() else null
+                }
+                ?.also {
+                    // For creating a new creative wallpaper, replace the default start destination
+                    // with CreativeEditPreviewFragment.
+                    graph.setStartDestination(R.id.creativeEditPreviewFragment)
+                }
+        navController.setGraph(graph, startDestinationArgs)
         // Fits screen to navbar and statusbar
         WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
         val isAssetIdPresent = intent.getBooleanExtra(IS_ASSET_ID_PRESENT, false)
         wallpaperPreviewViewModel.isNewTask = intent.getBooleanExtra(IS_NEW_TASK, false)
         wallpaperPreviewViewModel.isViewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, false)
-        val wallpaper =
-            checkNotNull(intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java))
-                .convertToWallpaperModel()
         wallpaperPreviewRepository.setWallpaperModel(wallpaper)
         val whichPreview =
             if (isAssetIdPresent) WallpaperConnection.WhichPreview.EDIT_NON_CURRENT
@@ -133,29 +142,6 @@ class WallpaperPreviewActivity :
                 )
             }
         }
-
-        val liveWallpaperModel = (wallpaper as? WallpaperModel.LiveWallpaperModel)
-        if (liveWallpaperModel != null && liveWallpaperModel.isNewCreativeWallpaper()) {
-            val navState = savedInstanceState?.getParcelable<Bundle?>(NAV_STATE)
-            if (navState != null) {
-                navController.restoreState(navState)
-            } else {
-                // If it's a new creative wallpaper, override the start destination to the
-                // fullscreen fragment for the create-new flow of creative wallpapers
-                val navGraph =
-                    navController.navInflater.inflate(R.navigation.wallpaper_preview_nav_graph)
-                navGraph.setStartDestination(R.id.creativeEditPreviewFragment)
-                navController.setGraph(
-                    navGraph,
-                    Bundle().apply {
-                        putParcelable(
-                            SmallPreviewFragment.ARG_EDIT_INTENT,
-                            liveWallpaperModel.liveWallpaperData.getEditActivityIntent(true)
-                        )
-                    }
-                )
-            }
-        }
     }
 
     override fun onUpArrowPressed() {
@@ -172,11 +158,6 @@ class WallpaperPreviewActivity :
             Toast.makeText(this, R.string.wallpaper_exit_split_screen, Toast.LENGTH_SHORT).show()
             onBackPressedDispatcher.onBackPressed()
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable(NAV_STATE, navController.saveState())
     }
 
     override fun onDestroy() {
@@ -214,8 +195,6 @@ class WallpaperPreviewActivity :
     }
 
     companion object {
-        const val NAV_STATE = "wpa_nav_state"
-
         /**
          * Returns a new [Intent] that can be used to start [WallpaperPreviewActivity].
          *
@@ -274,6 +253,14 @@ class WallpaperPreviewActivity :
             intent.setData(data)
             return intent
         }
+
+        private fun WallpaperModel.LiveWallpaperModel.getNewCreativeWallpaperArgs() =
+            Bundle().apply {
+                putParcelable(
+                    SmallPreviewFragment.ARG_EDIT_INTENT,
+                    liveWallpaperData.getEditActivityIntent(true),
+                )
+            }
     }
 
     /**

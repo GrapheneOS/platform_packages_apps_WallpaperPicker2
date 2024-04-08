@@ -22,7 +22,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -246,9 +245,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         inflater: LayoutInflater,
     ): AlertDialog {
         val dialogView = inflater.inflate(R.layout.set_wallpaper_progress_dialog_view, null)
-        dialogView
-            .requireViewById<TextView>(R.id.set_wallpaper_progress_dialog_text)
-            .setText(R.string.set_wallpaper_progress_message)
         return AlertDialog.Builder(activity).setView(dialogView).create()
     }
 
