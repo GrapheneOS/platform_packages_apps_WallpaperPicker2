@@ -22,7 +22,6 @@ import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
 import androidx.core.view.doOnLayout
@@ -146,6 +145,8 @@ object FullWallpaperPreviewBinder {
         return object : SurfaceViewUtil.SurfaceCallback {
 
             var job: Job? = null
+            var surfaceOrigWidth: Int? = null
+            var surfaceOrigHeight: Int? = null
 
             // Suppress lint warning for setting on touch listener to a live wallpaper surface view.
             // This is because the touch effect on a live wallpaper is purely visual, instead of
@@ -187,7 +188,15 @@ object FullWallpaperPreviewBinder {
                                 val preview =
                                     LayoutInflater.from(applicationContext)
                                         .inflate(R.layout.fullscreen_wallpaper_preview, null)
-                                adjustSizeAndAttachPreview(applicationContext, surfaceView, preview)
+                                adjustSizeAndAttachPreview(
+                                    applicationContext,
+                                    surfaceOrigWidth
+                                        ?: surfaceView.width.also { surfaceOrigWidth = it },
+                                    surfaceOrigHeight
+                                        ?: surfaceView.height.also { surfaceOrigHeight = it },
+                                    surfaceView,
+                                    preview,
+                                )
 
                                 val fullResImageView =
                                     preview.requireViewById<SubsamplingScaleImageView>(
@@ -263,28 +272,31 @@ object FullWallpaperPreviewBinder {
     // preserved around the visible crop. This is needed for system zoom out animations.
     private fun adjustSizeAndAttachPreview(
         applicationContext: Context,
+        origWidth: Int,
+        origHeight: Int,
         surfaceView: SurfaceView,
         preview: View,
     ) {
         val scale = WallpaperCropUtils.getSystemWallpaperMaximumScale(applicationContext)
-        val origWidth = surfaceView.width
-        val origHeight = surfaceView.height
 
         val width = (origWidth * scale).toInt()
         val height = (origHeight * scale).toInt()
-        var left = (origWidth - width) / 2
+        val left =
+            ((origWidth - width) / 2).let {
+                if (isRtl(applicationContext)) {
+                    -it
+                } else {
+                    it
+                }
+            }
         val top = (origHeight - height) / 2
 
-        if (isRtl(applicationContext)) {
-            left *= -1
-        }
-
-        val params: ViewGroup.LayoutParams = surfaceView.getLayoutParams()
+        val params = surfaceView.layoutParams
         params.width = width
         params.height = height
-        surfaceView.setX(left.toFloat())
-        surfaceView.setY(top.toFloat())
-        surfaceView.setLayoutParams(params)
+        surfaceView.x = left.toFloat()
+        surfaceView.y = top.toFloat()
+        surfaceView.layoutParams = params
         surfaceView.requestLayout()
 
         preview.measure(
