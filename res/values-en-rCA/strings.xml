@@ -71,6 +71,8 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Refresh daily wallpaper"</string>
     <!-- no translation found for preview_screen_description (3386387053327775919) -->
     <skip />
+    <!-- no translation found for full_preview_check_button_description (700484353763952975) -->
+    <skip />
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"Refreshing daily wallpaper…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"Failed to refresh daily wallpaper. Please check your network connection and try again."</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"On-device wallpapers"</string>

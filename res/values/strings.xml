@@ -237,6 +237,12 @@
     <!-- Content description for the wallpaper preview screen. [CHAR LIMIT=none] -->
     <string name="preview_screen_description">Wallpaper preview screen</string>
 
+    <!-- Content description when the device is in a folded state. [CHAR LIMIT=none] -->
+    <string name="folded_device_state_description">Folded</string>
+
+    <!-- Content description when device is in an unfolded state. [CHAR LIMIT=none] -->
+    <string name="unfolded_device_state_description">Unfolded</string>
+
     <!-- Content description for a button on full preview screen to confirm user's wallpaper
          edit. [CHAR LIMIT=none] -->
     <string name="full_preview_check_button_description">Done editing wallpaper</string>

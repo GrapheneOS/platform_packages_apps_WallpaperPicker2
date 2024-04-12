@@ -67,6 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"მთავარი ეკრანის ყოველდღიური ფონის განახლება"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"ყოველდღიური ფონის განახლება"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"ფონის გადახედვის ეკრანი"</string>
+    <string name="full_preview_check_button_description" msgid="700484353763952975">"ფონის რედაქტირება დასრულდა"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"მიმდინარეობს ყოველდღიური ფონის განახლება…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"ყოველდღიური ფონი ვერ განახლდა. გთხოვთ, შეამოწმოთ ქსელის კავშირი და ხელახლა ცადოთ."</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"მოწყობილობაზე შენახული ფონები"</string>

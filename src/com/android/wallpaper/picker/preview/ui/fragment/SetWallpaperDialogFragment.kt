@@ -115,8 +115,8 @@ class SetWallpaperDialogFragment : Hilt_SetWallpaperDialogFragment() {
                         )
                     } else {
                         activityReference.setResult(Activity.RESULT_OK)
-                        activityReference.finish()
                     }
+                    activityReference.finish()
                 }
             },
             onDismissDialog = { findNavController().popBackStack() },

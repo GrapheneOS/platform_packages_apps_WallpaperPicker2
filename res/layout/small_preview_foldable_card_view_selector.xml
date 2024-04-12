@@ -26,7 +26,8 @@
 
         <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="noHideDescendants">
             <include
                 android:id="@+id/small_preview_folded_preview"
                 layout="@layout/small_wallpaper_preview_card"
@@ -65,7 +66,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/set_wallpaper_dialog_preview_selector"/>
-
         </FrameLayout>
 
     </com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout>

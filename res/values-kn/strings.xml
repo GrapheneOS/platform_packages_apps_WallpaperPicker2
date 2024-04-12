@@ -35,7 +35,7 @@
     <string name="lock_screen_message" msgid="1534506081955058013">"ಲಾಕ್ ಪರದೆ"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"ಮುಖಪುಟ ಮತ್ತು ಲಾಕ್‌"</string>
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"ವಾಲ್‌ಪೇಪರ್ ಅನ್ನು ಆನ್‌ಗೆ ಹೊಂದಿಸಿ"</string>
-    <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"ಮುಖಪುಟದ ಪರದೆ"</string>
+    <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"ಹೋಮ್ ಸ್ಕ್ರೀನ್"</string>
     <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"ಲಾಕ್ ಪರದೆ"</string>
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"ಹೋಮ್ ಮತ್ತು ಲಾಕ್ ಸ್ಕ್ರೀನ್‌ಗಳು"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"ತಿರುಗುವ ಚಿತ್ರದ ವಾಲ್‌ಪೇಪರ್"</string>
@@ -67,6 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"ದೈನಂದಿನ ಮುಖಪುಟ ಪರದೆಯ ವಾಲ್‌ಪೇಪರ್ ರಿಫ್ರೆಶ್ ಮಾಡಿ"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"ದಿನನಿತ್ಯದ ವಾಲ್‌ಪೇಪರ್ ಅನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಿ"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"ವಾಲ್‌ಪೇಪರ್ ಪೂರ್ವವೀಕ್ಷಣೆಯ ಪರದೆ"</string>
+    <string name="full_preview_check_button_description" msgid="700484353763952975">"ವಾಲ್‌ಪೇಪರ್ ಎಡಿಟಿಂಗ್ ಪೂರ್ಣಗೊಂಡಿದೆ"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"ದೈನಂದಿನ ವಾಲ್‌ಪೇಪರ್ ಅನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಲಾಗುತ್ತಿದೆ…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"ಪ್ರತಿದಿನದ ವಾಲ್‌ಪೇಪರ್ ರಿಫ್ರೆಶ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ. ನಿಮ್ಮ ನೆಟ್‌ವರ್ಕ್ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಹಾಗೂ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"ಸಾಧನದಲ್ಲಿನ ವಾಲ್‌ಪೇಪರ್‌ಗಳು"</string>
