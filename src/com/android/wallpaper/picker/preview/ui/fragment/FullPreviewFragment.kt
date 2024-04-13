@@ -75,6 +75,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
             transition = sharedElementEnterTransition as? Transition,
             displayUtils = displayUtils,
             lifecycleOwner = viewLifecycleOwner,
+            savedInstanceState = savedInstanceState,
         ) { isFullScreen ->
             useLightToolbar = isFullScreen
             setUpToolbar(view)

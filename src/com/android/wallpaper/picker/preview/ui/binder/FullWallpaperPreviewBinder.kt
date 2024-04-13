@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.preview.ui.binder
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
+import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
@@ -67,6 +68,7 @@ object FullWallpaperPreviewBinder {
         transition: Transition?,
         displayUtils: DisplayUtils,
         lifecycleOwner: LifecycleOwner,
+        savedInstanceState: Bundle?,
         onWallpaperLoaded: ((Boolean) -> Unit)? = null,
     ) {
         val wallpaperPreviewCrop: FullPreviewFrameLayout =
@@ -91,7 +93,7 @@ object FullWallpaperPreviewBinder {
                         onWallpaperLoaded?.invoke(isWallpaperFullScreen)
                     }
                     val isPreviewingFullScreen = displaySize == currentSize
-                    if (transition == null) {
+                    if (transition == null || savedInstanceState != null) {
                         setFinalPreviewCardRadiusAndEndLoading(isPreviewingFullScreen)
                     } else {
                         transitionDisposableHandle?.dispose()

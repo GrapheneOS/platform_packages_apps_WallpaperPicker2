@@ -69,6 +69,7 @@ class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
             transition = null,
             displayUtils = displayUtils,
             lifecycleOwner = viewLifecycleOwner,
+            savedInstanceState = savedInstanceState,
         )
 
         view.requireViewById<Toolbar>(R.id.toolbar).isVisible = false

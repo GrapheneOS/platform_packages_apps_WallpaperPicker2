@@ -284,7 +284,12 @@ constructor(
                                 bitmap = it.rawWallpaperBitmap,
                                 wallpaperSize = it.rawWallpaperSize,
                                 asset = it.asset,
-                                fullPreviewCropModels = it.fullPreviewCropModels,
+                                fullPreviewCropModels =
+                                    if (it.fullPreviewCropModels.isNullOrEmpty()) {
+                                        staticWallpaperPreviewViewModel.fullPreviewCropModels
+                                    } else {
+                                        it.fullPreviewCropModels
+                                    },
                             )
                         }
                     is LiveWallpaperModel -> {
