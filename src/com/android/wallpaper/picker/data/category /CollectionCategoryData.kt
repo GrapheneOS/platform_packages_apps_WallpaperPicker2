@@ -21,7 +21,7 @@ import com.android.wallpaper.picker.data.WallpaperModel
 
 /** Represents set of attributes that depict a collection of wallpapers. */
 data class CollectionCategoryData(
-    val wallpaperModels: List<WallpaperModel>,
+    val wallpaperModels: MutableList<WallpaperModel>,
     val thumbAsset: Asset,
     val featuredThumbnailIndex: Int,
     val isSingleWallpaperCategory: Boolean

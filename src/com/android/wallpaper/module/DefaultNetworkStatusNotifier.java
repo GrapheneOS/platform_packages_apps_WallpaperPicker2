@@ -22,22 +22,29 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import dagger.hilt.android.qualifiers.ApplicationContext;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Implementation of {@link NetworkStatusNotifier} which uses
  * {@link android.net.ConnectivityManager} to provide network status.
  */
-public class DefaultNetworkStatusNotifier implements NetworkStatusNotifier {
+@Singleton
+public class DefaultNetworkStatusNotifier implements NetworkStatusNotifier  {
 
     private Context mAppContext;
     private ConnectivityManager mConnectivityManager;
     private BroadcastReceiver mReceiver;
     private List<Listener> mListeners;
 
-    public DefaultNetworkStatusNotifier(Context context) {
-        mAppContext = context.getApplicationContext();
+    @Inject
+    public DefaultNetworkStatusNotifier(@ApplicationContext Context context) {
+        mAppContext = context;
 
         mConnectivityManager =
                 (ConnectivityManager) mAppContext.getSystemService(Context.CONNECTIVITY_SERVICE);

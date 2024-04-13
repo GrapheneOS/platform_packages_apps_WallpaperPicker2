@@ -57,11 +57,13 @@ constructor(private val wallpaperModelFactory: WallpaperModelFactory) {
 
     private fun WallpaperCategory.getCollectionsCategoryData(
         context: Context
-    ): CollectionCategoryData? {
+    ): CollectionCategoryData {
         val wallpaperModelList =
-            wallpapers.map { wallpaperInfo ->
-                wallpaperModelFactory.getWallpaperModel(context, wallpaperInfo)
-            }
+            wallpapers
+                .map { wallpaperInfo ->
+                    wallpaperModelFactory.getWallpaperModel(context, wallpaperInfo)
+                }
+                .toMutableList()
         return CollectionCategoryData(
             wallpaperModels = wallpaperModelList,
             thumbAsset = thumbAsset,
