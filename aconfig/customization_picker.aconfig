@@ -14,3 +14,10 @@ flag {
     description: "Enables wallpaper category selection according to recommended architecture when flag is turned on."
     bug: "290840060"
 }
+
+flag {
+    name: "magic_portrait_flag"
+    namespace: "customization_picker"
+    description: "Enables magic portrait integration when flag is turned on."
+    bug: "334125919"
+}

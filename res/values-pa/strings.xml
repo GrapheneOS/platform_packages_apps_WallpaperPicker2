@@ -67,6 +67,10 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"ਰੋਜ਼ਾਨਾ ਹੋਮ ਸਕ੍ਰੀਨ ਵਾਲਪੇਪਰ ਨੂੰ ਰਿਫ੍ਰੈਸ਼ ਕਰੋ"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"ਰੋਜ਼ਾਨਾ ਵਾਲਪੇਪਰ ਰਿਫ੍ਰੈਸ਼ ਕਰੋ"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"ਵਾਲਪੇਪਰ ਦੀ ਪੂਰਵ-ਝਲਕ ਸਕ੍ਰੀਨ"</string>
+    <!-- no translation found for folded_device_state_description (4972608448265616264) -->
+    <skip />
+    <!-- no translation found for unfolded_device_state_description (3071975681472460627) -->
+    <skip />
     <string name="full_preview_check_button_description" msgid="700484353763952975">"ਵਾਲਪੇਪਰ ਦਾ ਸੰਪਾਦਨ ਕਰਨ ਦੀ ਪ੍ਰਕਿਰਿਆ ਪੂਰੀ ਹੋਈ"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"ਰੋਜ਼ਾਨਾ ਵਾਲਪੇਪਰ ਰਿਫ੍ਰੈਸ਼ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"ਰੋਜ਼ਾਨਾ ਵਾਲਪੇਪਰ ਰਿਫ੍ਰੈਸ਼ ਕਰਨਾ ਅਸਫਲ ਰਿਹਾ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਨੈੱਟਵਰਕ ਕਨੈਕਸ਼ਨ ਦੀ ਜਾਂਚ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"</string>

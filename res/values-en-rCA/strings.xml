@@ -71,6 +71,10 @@
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Refresh daily wallpaper"</string>
     <!-- no translation found for preview_screen_description (3386387053327775919) -->
     <skip />
+    <!-- no translation found for folded_device_state_description (4972608448265616264) -->
+    <skip />
+    <!-- no translation found for unfolded_device_state_description (3071975681472460627) -->
+    <skip />
     <!-- no translation found for full_preview_check_button_description (700484353763952975) -->
     <skip />
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"Refreshing daily wallpaper…"</string>

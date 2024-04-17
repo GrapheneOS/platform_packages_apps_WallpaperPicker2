@@ -21,6 +21,7 @@ import com.android.settings.accessibility.Flags.enableColorContrastControl
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
 import com.android.systemui.shared.customization.data.content.CustomizationProviderContract as Contract
+import com.android.wallpaper.Flags.magicPortraitFlag
 import com.android.wallpaper.Flags.refactorWallpaperCategoryFlag
 import com.android.wallpaper.Flags.wallpaperRestorerFlag
 import com.android.wallpaper.module.InjectorProvider
@@ -37,6 +38,7 @@ abstract class BaseFlags {
     open fun isWallpaperRestorerEnabled() = wallpaperRestorerFlag()
     open fun isWallpaperCategoryRefactoringEnabled() = refactorWallpaperCategoryFlag()
     open fun isColorContrastControlEnabled() = enableColorContrastControl()
+    open fun isMagicPortraitEnabled() = magicPortraitFlag()
 
     open fun isMultiCropEnabled() = WallpaperManager.isMultiCropEnabled()
 
