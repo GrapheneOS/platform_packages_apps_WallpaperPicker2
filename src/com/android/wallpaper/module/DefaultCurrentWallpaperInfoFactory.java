@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 
 import com.android.wallpaper.config.BaseFlags;
 import com.android.wallpaper.model.CurrentWallpaperInfo;
+import com.android.wallpaper.model.DefaultWallpaperInfo;
 import com.android.wallpaper.model.LiveWallpaperMetadata;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.WallpaperPreferences.PresentationMode;
@@ -138,11 +139,15 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                             lockWallpaper = mLiveWallpaperInfoFactory.getLiveWallpaperInfo(
                                     lockWallpaperMetadata.getWallpaperComponent());
                         } else {
-                            lockWallpaper = new CurrentWallpaperInfo(
-                                    lockWallpaperMetadata.getAttributions(),
-                                    lockWallpaperMetadata.getActionUrl(),
-                                    lockWallpaperMetadata.getCollectionId(),
-                                    WallpaperManager.FLAG_LOCK);
+                            if (isLockWallpaperBuiltIn(context)) {
+                                lockWallpaper = new DefaultWallpaperInfo();
+                            } else {
+                                lockWallpaper = new CurrentWallpaperInfo(
+                                        lockWallpaperMetadata.getAttributions(),
+                                        lockWallpaperMetadata.getActionUrl(),
+                                        lockWallpaperMetadata.getCollectionId(),
+                                        WallpaperManager.FLAG_LOCK);
+                            }
 
                             if (isMultiCropEnabled) {
                                 lockWallpaper.setWallpaperCropHints(
@@ -157,6 +162,15 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
 
                     callback.onWallpaperInfoCreated(homeWallpaper, lockWallpaper, presentationMode);
                 });
+    }
+
+    private boolean isLockWallpaperBuiltIn(Context context) {
+        WallpaperManager manager =
+                (WallpaperManager) context.getSystemService(Context.WALLPAPER_SERVICE);
+
+        return manager.lockScreenWallpaperExists()
+                && manager.getWallpaperInfo(WallpaperManager.FLAG_LOCK) == null
+                && manager.getWallpaperFile(WallpaperManager.FLAG_LOCK) == null;
     }
 
     /**
@@ -200,8 +214,14 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
         ComponentName homeComponentName = info != null
                 ? info.getComponent() : null;
         if (currentComponentName == null) {
-            // If both are null, it's synced.
-            return homeComponentName == null;
+            // If both are null, it might not be synced for LOCK (param which is 2):
+            // When previous LOCK is default static then homeComponentName will be null, and current
+            // wallpaper is live for both home and lock then currentComponentName will be null.
+            if (homeComponentName == null) {
+                return which != WallpaperManager.FLAG_LOCK;
+            } else {
+                return false;
+            }
         } else if (homeComponentName == null) {
             // currentComponentName not null and homeComponentName null. It's not synced.
             return false;

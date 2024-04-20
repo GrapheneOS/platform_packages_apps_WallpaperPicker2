@@ -263,7 +263,7 @@ object FullWallpaperPreviewBinder {
                                     fullResImageView = fullResImageView,
                                     viewModel = viewModel.staticWallpaperPreviewViewModel,
                                     displaySize = displaySize,
-                                    viewLifecycleOwner = lifecycleOwner,
+                                    parentCoroutineScope = this,
                                     isFullScreen = true,
                                 )
                             }

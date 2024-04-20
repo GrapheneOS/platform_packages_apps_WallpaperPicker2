@@ -143,7 +143,7 @@ object SmallWallpaperPreviewBinder {
                                         staticPreviewView.requireViewById(R.id.full_res_image),
                                     viewModel = viewModel.staticWallpaperPreviewViewModel,
                                     displaySize = displaySize,
-                                    viewLifecycleOwner = lifecycleOwner,
+                                    parentCoroutineScope = this,
                                 )
                                 // This is to possibly shut down all live wallpaper services
                                 // if they exist; otherwise static wallpaper can not show up.

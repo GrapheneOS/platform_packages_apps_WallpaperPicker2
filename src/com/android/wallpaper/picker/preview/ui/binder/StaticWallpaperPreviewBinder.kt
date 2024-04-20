@@ -26,9 +26,6 @@ import android.view.animation.Interpolator
 import android.view.animation.PathInterpolator
 import android.widget.ImageView
 import androidx.core.view.doOnLayout
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
 import com.android.app.tracing.TraceUtils.trace
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
 import com.android.wallpaper.picker.preview.ui.util.FullResImageViewUtil
@@ -38,6 +35,7 @@ import com.android.wallpaper.util.WallpaperCropUtils
 import com.android.wallpaper.util.WallpaperSurfaceCallback.LOW_RES_BITMAP_BLUR_RADIUS
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 object StaticWallpaperPreviewBinder {
@@ -45,18 +43,18 @@ object StaticWallpaperPreviewBinder {
     private val ALPHA_OUT: Interpolator = PathInterpolator(0f, 0f, 0.8f, 1f)
     private const val CROSS_FADE_DURATION: Long = 200
 
-    suspend fun bind(
+    fun bind(
         lowResImageView: ImageView,
         fullResImageView: SubsamplingScaleImageView,
         viewModel: StaticWallpaperPreviewViewModel,
         displaySize: Point,
-        viewLifecycleOwner: LifecycleOwner,
+        parentCoroutineScope: CoroutineScope,
         isFullScreen: Boolean = false,
     ) {
         lowResImageView.initLowResImageView()
         fullResImageView.initFullResImageView()
 
-        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+        parentCoroutineScope.launch {
             launch { viewModel.lowResBitmap.collect { lowResImageView.setImageBitmap(it) } }
 
             launch {

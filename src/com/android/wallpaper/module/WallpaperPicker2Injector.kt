@@ -87,23 +87,24 @@ constructor(
     private var requester: Requester? = null
     private var systemFeatureChecker: SystemFeatureChecker? = null
     private var wallpaperPersister: WallpaperPersister? = null
-    @Inject lateinit var prefs: WallpaperPreferences
     private var wallpaperRefresher: WallpaperRefresher? = null
     private var wallpaperStatusChecker: WallpaperStatusChecker? = null
     private var flags: BaseFlags? = null
     private var undoInteractor: UndoInteractor? = null
     private var wallpaperInteractor: WallpaperInteractor? = null
-    @Inject lateinit var injectedWallpaperInteractor: Lazy<WallpaperInteractor>
     private var wallpaperClient: WallpaperClient? = null
-    @Inject lateinit var injectedWallpaperClient: Lazy<WallpaperClient>
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
     private var secureSettingsRepository: SecureSettingsRepository? = null
     private var wallpaperColorsRepository: WallpaperColorsRepository? = null
     private var previewActivityIntentFactory: InlinePreviewIntentFactory? = null
     private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
-    @Inject lateinit var userEventLogger: Lazy<UserEventLogger>
 
-    @Inject lateinit var uiModeManager: UiModeManagerWrapper
+    // Injected objects, sorted by type
+    @Inject lateinit var uiModeManager: Lazy<UiModeManagerWrapper>
+    @Inject lateinit var userEventLogger: Lazy<UserEventLogger>
+    @Inject lateinit var injectedWallpaperClient: Lazy<WallpaperClient>
+    @Inject lateinit var injectedWallpaperInteractor: Lazy<WallpaperInteractor>
+    @Inject lateinit var prefs: Lazy<WallpaperPreferences>
 
     override fun getApplicationCoroutineScope(): CoroutineScope {
         return mainScope
@@ -271,7 +272,7 @@ constructor(
 
     @Synchronized
     override fun getPreferences(context: Context): WallpaperPreferences {
-        return prefs
+        return prefs.get()
     }
 
     @Synchronized

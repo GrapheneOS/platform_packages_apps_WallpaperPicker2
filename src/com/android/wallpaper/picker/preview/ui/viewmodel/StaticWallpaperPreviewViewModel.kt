@@ -93,14 +93,8 @@ constructor(
     private val assetDetail: Flow<Triple<Point, Bitmap?, Asset>?> =
         interactor.wallpaperModel
             .map { (it as? StaticWallpaperModel)?.staticWallpaperData?.asset }
-            .map {
-                if (it == null) {
-                    null
-                } else {
-                    val dimensions = it.decodeRawDimensions()
-                    val bitmap = it.decodeBitmap(dimensions)
-                    Triple(dimensions, bitmap, it)
-                }
+            .map { asset ->
+                asset?.decodeRawDimensions()?.let { Triple(it, asset.decodeBitmap(it), asset) }
             }
             .flowOn(bgDispatcher)
             // We only want to decode bitmap every time when wallpaper model is updated, instead of
@@ -162,10 +156,9 @@ constructor(
     }
 
     // TODO b/296288298 Create a util class for Bitmap and Asset
-    private suspend fun Asset.decodeRawDimensions(): Point =
-        suspendCancellableCoroutine { k: CancellableContinuation<Point> ->
-            val callback =
-                Asset.DimensionsReceiver { it?.let { k.resumeWith(Result.success(Point(it))) } }
+    private suspend fun Asset.decodeRawDimensions(): Point? =
+        suspendCancellableCoroutine { k: CancellableContinuation<Point?> ->
+            val callback = Asset.DimensionsReceiver { k.resumeWith(Result.success(it)) }
             decodeRawDimensions(null, callback)
         }
 
