@@ -26,6 +26,9 @@ import android.view.Surface.ROTATION_270
 import android.view.Surface.ROTATION_90
 import com.android.systemui.shared.recents.utilities.Utilities
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.min
 
 /**
@@ -35,7 +38,8 @@ import kotlin.math.min
  * Always pass [Context] or [Display] for the current display, instead of using the context in this
  * class, which is fine for stateless info.
  */
-class DisplayUtils(private val context: Context) {
+@Singleton
+class DisplayUtils @Inject constructor(@ApplicationContext private val appContext: Context) {
     companion object {
         private const val TAG = "DisplayUtils"
         private val ROTATION_HORIZONTAL_HINGE = setOf(ROTATION_90, ROTATION_270)
@@ -43,7 +47,7 @@ class DisplayUtils(private val context: Context) {
     }
 
     private val displayManager: DisplayManager by lazy {
-        context.applicationContext.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        appContext.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
     }
 
     fun hasMultiInternalDisplays(): Boolean {
@@ -118,7 +122,7 @@ class DisplayUtils(private val context: Context) {
         val smallestWidth = min(maxDisplaysDimension.x, maxDisplaysDimension.y)
         return Utilities.dpiFromPx(
             smallestWidth.toFloat(),
-            context.resources.configuration.densityDpi
+            appContext.resources.configuration.densityDpi
         ) >= TABLET_MIN_DPS
     }
 
@@ -175,7 +179,7 @@ class DisplayUtils(private val context: Context) {
         val allDisplays: Array<out Display> =
             displayManager.getDisplays(DisplayManager.DISPLAY_CATEGORY_ALL_INCLUDING_DISABLED)
         if (allDisplays.isEmpty()) {
-            Log.e(TAG, "No displays found on context ${context.applicationContext}")
+            Log.e(TAG, "No displays found on context $appContext")
             throw RuntimeException("No displays found!")
         }
         return allDisplays.filter { it.type == Display.TYPE_INTERNAL }

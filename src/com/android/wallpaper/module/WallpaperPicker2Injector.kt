@@ -76,7 +76,6 @@ constructor(
     private var categoryProvider: CategoryProvider? = null
     private var currentWallpaperFactory: CurrentWallpaperInfoFactory? = null
     private var customizationSections: CustomizationSections? = null
-    private var displayUtils: DisplayUtils? = null
     private var drawableLayerResolver: DrawableLayerResolver? = null
     private var exploreIntentChecker: ExploreIntentChecker? = null
     private var liveWallpaperInfoFactory: LiveWallpaperInfoFactory? = null
@@ -100,6 +99,7 @@ constructor(
     private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
 
     // Injected objects, sorted by type
+    @Inject lateinit var displayUtils: Lazy<DisplayUtils>
     @Inject lateinit var uiModeManager: Lazy<UiModeManagerWrapper>
     @Inject lateinit var userEventLogger: Lazy<UserEventLogger>
     @Inject lateinit var injectedWallpaperClient: Lazy<WallpaperClient>
@@ -152,7 +152,7 @@ constructor(
     }
 
     override fun getDisplayUtils(context: Context): DisplayUtils {
-        return displayUtils ?: DisplayUtils(context.applicationContext).also { displayUtils = it }
+        return displayUtils.get()
     }
 
     override fun getDownloadableIntentAction(): String? {
@@ -261,7 +261,7 @@ constructor(
                     WallpaperManager.getInstance(context.applicationContext),
                     getPreferences(context),
                     WallpaperChangedNotifier.getInstance(),
-                    getDisplayUtils(context),
+                    displayUtils.get(),
                     getBitmapCropper(),
                     getWallpaperStatusChecker(context),
                     getCurrentWallpaperInfoFactory(context),
