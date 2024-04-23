@@ -41,6 +41,7 @@ import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
+import com.android.wallpaper.picker.preview.shared.model.ImageEffectsModel
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.EffectTextRes
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -69,10 +70,12 @@ constructor(
         EFFECT_APPLY_IN_PROGRESS,
         EFFECT_APPLIED,
         EFFECT_DOWNLOAD_FAILED,
+        EFFECT_APPLY_FAILED,
     }
 
-    private val _effectStatus = MutableStateFlow(EffectStatus.EFFECT_DISABLE)
-    val effectStatus = _effectStatus.asStateFlow()
+    private val _imageEffectsModel =
+        MutableStateFlow(ImageEffectsModel(EffectStatus.EFFECT_DISABLE))
+    val imageEffectsModel = _imageEffectsModel.asStateFlow()
     private val _wallpaperEffect = MutableStateFlow<Effect?>(null)
     val wallpaperEffect = _wallpaperEffect.asStateFlow()
     // This StaticWallpaperModel is set when initializing the repository and used for
@@ -104,21 +107,30 @@ constructor(
                     bundle,
                     resultCode,
                     originalStatusCode,
-                    _ ->
+                    errorMessage ->
                     when (resultCode) {
                         EffectsController.RESULT_PROBE_SUCCESS -> {
-                            _effectStatus.value = EffectStatus.EFFECT_READY
+                            _imageEffectsModel.value =
+                                ImageEffectsModel(EffectStatus.EFFECT_READY, resultCode)
                         }
                         EffectsController.RESULT_PROBE_ERROR -> {
                             // Do nothing intended
                         }
                         EffectsController.RESULT_ERROR_PROBE_SUPPORT_FOREGROUND -> {
                             if (BaseFlags.get().isWallpaperEffectModelDownloadEnabled()) {
-                                _effectStatus.value = EffectStatus.EFFECT_DOWNLOAD_READY
+                                _imageEffectsModel.value =
+                                    ImageEffectsModel(
+                                        EffectStatus.EFFECT_DOWNLOAD_READY,
+                                        resultCode,
+                                    )
                             }
                         }
                         EffectsController.RESULT_PROBE_FOREGROUND_DOWNLOADING -> {
-                            _effectStatus.value = EffectStatus.EFFECT_DOWNLOAD_IN_PROGRESS
+                            _imageEffectsModel.value =
+                                ImageEffectsModel(
+                                    EffectStatus.EFFECT_DOWNLOAD_IN_PROGRESS,
+                                    resultCode,
+                                )
                         }
                         EffectsController.RESULT_FOREGROUND_DOWNLOAD_SUCCEEDED -> {
                             logger.logEffectForegroundDownload(
@@ -126,7 +138,8 @@ constructor(
                                 StyleEnums.EFFECT_APPLIED_ON_SUCCESS,
                                 System.currentTimeMillis() - startDownloadTime,
                             )
-                            _effectStatus.value = EffectStatus.EFFECT_READY
+                            _imageEffectsModel.value =
+                                ImageEffectsModel(EffectStatus.EFFECT_READY, resultCode)
                         }
                         EffectsController.RESULT_FOREGROUND_DOWNLOAD_FAILED,
                         EffectsController.RESULT_ERROR_TRY_AGAIN_LATER -> {
@@ -135,37 +148,52 @@ constructor(
                                 StyleEnums.EFFECT_APPLIED_ON_FAILED,
                                 System.currentTimeMillis() - startDownloadTime,
                             )
-                            _effectStatus.value = EffectStatus.EFFECT_DOWNLOAD_FAILED
+                            _imageEffectsModel.value =
+                                ImageEffectsModel(
+                                    EffectStatus.EFFECT_DOWNLOAD_FAILED,
+                                    resultCode,
+                                    errorMessage,
+                                )
                         }
                         EffectsController.RESULT_SUCCESS,
                         EffectsController.RESULT_SUCCESS_WITH_GENERATION_ERROR -> {
-                            _effectStatus.value = EffectStatus.EFFECT_APPLIED
+                            _imageEffectsModel.value =
+                                ImageEffectsModel(
+                                    EffectStatus.EFFECT_APPLIED,
+                                    resultCode,
+                                    errorMessage,
+                                )
                             logger.logEffectApply(
                                 getEffectNameForLogging(),
                                 StyleEnums.EFFECT_APPLIED_ON_SUCCESS,
                                 /* timeElapsedMillis= */ System.currentTimeMillis() -
                                     startGeneratingTime,
-                                /* resultCode= */ originalStatusCode
+                                /* resultCode= */ originalStatusCode,
                             )
                             bundle.getCinematicWallpaperModel(effect)?.let {
                                 onWallpaperUpdated.invoke(it)
                             }
                         }
                         EffectsController.RESULT_SUCCESS_REUSED -> {
-                            _effectStatus.value = EffectStatus.EFFECT_APPLIED
+                            _imageEffectsModel.value =
+                                ImageEffectsModel(EffectStatus.EFFECT_APPLIED, resultCode)
                             bundle.getCinematicWallpaperModel(effect)?.let {
                                 onWallpaperUpdated.invoke(it)
                             }
                         }
                         else -> {
-                            // TODO onImageEffectFailed
-                            _effectStatus.value = EffectStatus.EFFECT_DOWNLOAD_FAILED
+                            _imageEffectsModel.value =
+                                ImageEffectsModel(
+                                    EffectStatus.EFFECT_APPLY_FAILED,
+                                    resultCode,
+                                    errorMessage,
+                                )
                             logger.logEffectApply(
                                 getEffectNameForLogging(),
                                 StyleEnums.EFFECT_APPLIED_ON_FAILED,
                                 /* timeElapsedMillis= */ System.currentTimeMillis() -
                                     startGeneratingTime,
-                                /* resultCode= */ originalStatusCode
+                                /* resultCode= */ originalStatusCode,
                             )
                         }
                     }
@@ -195,14 +223,14 @@ constructor(
                                 Effect(
                                     it.getInt(idRow),
                                     it.getString(titleRow),
-                                    effectsController.targetEffect
+                                    effectsController.targetEffect,
                                 )
                         }
                     }
             }
 
             if (effectsController.isEffectTriggered) {
-                _effectStatus.value = EffectStatus.EFFECT_READY
+                _imageEffectsModel.value = ImageEffectsModel(EffectStatus.EFFECT_READY)
             } else {
                 effectsController.triggerEffect(context)
             }
@@ -275,7 +303,7 @@ constructor(
 
     fun enableImageEffect(effect: EffectEnumInterface) {
         startGeneratingTime = System.currentTimeMillis()
-        _effectStatus.value = EffectStatus.EFFECT_APPLY_IN_PROGRESS
+        _imageEffectsModel.value = ImageEffectsModel(EffectStatus.EFFECT_APPLY_IN_PROGRESS)
         // TODO: Maybe we should call reconnect wallpaper if we have created a LiveWallpaperModel
         //       if (mLiveWallpaperInfo != null) {
         //           mCinematicViewModel.reconnectWallpaper()
@@ -286,7 +314,7 @@ constructor(
         timeOutHandler.postDelayed(
             {
                 wallpaperEffect.value?.let { effectsController.interruptGenerate(it) }
-                _effectStatus.value = EffectStatus.EFFECT_READY
+                _imageEffectsModel.value = ImageEffectsModel(EffectStatus.EFFECT_READY)
                 logger.logEffectApply(
                     getEffectNameForLogging(),
                     StyleEnums.EFFECT_APPLIED_ON_FAILED,
@@ -299,8 +327,7 @@ constructor(
     }
 
     fun disableImageEffect() {
-        // TODO implement disabling effect
-        _effectStatus.value = EffectStatus.EFFECT_READY
+        _imageEffectsModel.value = ImageEffectsModel(EffectStatus.EFFECT_READY)
         logger.logEffectApply(
             wallpaperEffect.value?.type.toString(),
             StyleEnums.EFFECT_APPLIED_OFF,
@@ -335,7 +362,7 @@ constructor(
      */
     fun startEffectsModelDownload(effect: Effect) {
         effectsController.startForegroundDownload(effect)
-        _effectStatus.value = EffectStatus.EFFECT_DOWNLOAD_IN_PROGRESS
+        _imageEffectsModel.value = ImageEffectsModel(EffectStatus.EFFECT_DOWNLOAD_IN_PROGRESS)
         startDownloadTime = System.currentTimeMillis()
         logger.logEffectForegroundDownload(
             getEffectNameForLogging(),

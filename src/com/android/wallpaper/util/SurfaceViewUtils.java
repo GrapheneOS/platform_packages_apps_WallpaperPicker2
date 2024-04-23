@@ -34,11 +34,6 @@ public class SurfaceViewUtils {
     public static final String KEY_WALLPAPER_COLORS = "wallpaper_colors";
 
     /** Create a surface view request. */
-    public static Bundle createSurfaceViewRequest(SurfaceView surfaceView) {
-        return createSurfaceViewRequest(surfaceView, null);
-    }
-
-    /** Create a surface view request. */
     public static Bundle createSurfaceViewRequest(
             SurfaceView surfaceView,
             @Nullable Bundle extras) {

@@ -38,6 +38,8 @@ object SetWallpaperButtonBinder {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.isSetWallpaperButtonVisible.collect { button.isVisible = it } }
 
+                launch { viewModel.isSetWallpaperButtonEnabled.collect { button.isEnabled = it } }
+
                 launch {
                     viewModel.onSetWallpaperButtonClicked.collect { onClicked ->
                         button.setOnClickListener(

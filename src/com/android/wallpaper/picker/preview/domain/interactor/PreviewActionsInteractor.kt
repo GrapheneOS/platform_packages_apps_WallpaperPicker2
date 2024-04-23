@@ -45,7 +45,7 @@ constructor(
     private val _isDownloadingWallpaper = MutableStateFlow<Boolean>(false)
     val isDownloadingWallpaper: Flow<Boolean> = _isDownloadingWallpaper.asStateFlow()
 
-    val imageEffectsStatus = imageEffectsRepository.effectStatus
+    val imageEffectsModel = imageEffectsRepository.imageEffectsModel
     val imageEffect = imageEffectsRepository.wallpaperEffect
     val creativeEffectsModel = creativeEffectsRepository.creativeEffectsModel
 

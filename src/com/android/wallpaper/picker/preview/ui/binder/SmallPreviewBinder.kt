@@ -51,9 +51,15 @@ object SmallPreviewBinder {
             launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                     if (R.id.smallPreviewFragment == currentNavDestId) {
-                        view.setOnClickListener {
-                            viewModel.onSmallPreviewClicked(screen, deviceDisplayType)
-                            navigate?.invoke(previewCard)
+                        viewModel.isSmallPreviewClickable.collect {
+                            if (it) {
+                                view.setOnClickListener {
+                                    viewModel.onSmallPreviewClicked(screen, deviceDisplayType)
+                                    navigate?.invoke(previewCard)
+                                }
+                            } else {
+                                view.setOnClickListener(null)
+                            }
                         }
                     } else if (R.id.setWallpaperDialog == currentNavDestId) {
                         previewCard.radius =

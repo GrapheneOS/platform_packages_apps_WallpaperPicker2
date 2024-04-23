@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.preview.ui.binder
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -209,6 +210,12 @@ object PreviewActionsBinder {
                 launch {
                     actionsViewModel.onEffectsClicked.collect {
                         actionGroup.setClickListener(EFFECTS, it)
+                    }
+                }
+
+                launch {
+                    actionsViewModel.effectDownloadFailureToastText.collect {
+                        Toast.makeText(floatingSheet.context, it, Toast.LENGTH_LONG).show()
                     }
                 }
 

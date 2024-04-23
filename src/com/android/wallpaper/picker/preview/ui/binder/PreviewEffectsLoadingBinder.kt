@@ -47,13 +47,13 @@ object PreviewEffectsLoadingBinder {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                     loadingAnimation = getLoadingAnimation(view)
-                    viewModel.effectStatus.collect { status ->
-                        if (status == EFFECT_APPLY_IN_PROGRESS) {
+                    viewModel.imageEffectsModel.collect { model ->
+                        if (model.status == EFFECT_APPLY_IN_PROGRESS) {
                             loadingAnimation?.playLoadingAnimation(seed = null)
                         } else if (
-                            status == EFFECT_APPLIED ||
-                                status == EFFECT_READY ||
-                                status == EFFECT_DOWNLOAD_FAILED
+                            model.status == EFFECT_APPLIED ||
+                                model.status == EFFECT_READY ||
+                                model.status == EFFECT_DOWNLOAD_FAILED
                         ) {
                             // Play reveal animation whether applying the effect succeeded or
                             // failed.
