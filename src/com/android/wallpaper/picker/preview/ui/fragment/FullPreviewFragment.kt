@@ -60,7 +60,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_full_preview, container, false)
-        setUpToolbar(view)
+        setUpToolbar(view, true, true)
 
         val previewCard: CardView = view.requireViewById(R.id.preview_card)
         ViewCompat.setTransitionName(
@@ -107,10 +107,6 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
     // TODO(b/291761856): Use real string
     override fun getDefaultTitle(): CharSequence {
         return ""
-    }
-
-    override fun getToolbarColorId(): Int {
-        return android.R.color.transparent
     }
 
     override fun getToolbarTextColor(): Int {

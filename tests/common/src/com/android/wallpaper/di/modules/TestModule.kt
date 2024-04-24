@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.android.wallpaper.picker.di.modules
+package com.android.wallpaper.di.modules
 
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.pm.PackageManager
-import com.android.wallpaper.system.UiModeManagerImpl
+import com.android.wallpaper.picker.di.modules.AppModule
 import com.android.wallpaper.system.UiModeManagerWrapper
+import com.android.wallpaper.testing.FakeUiModeManager
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import dagger.hilt.testing.TestInstallIn
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
-abstract class AppModule {
-    @Binds @Singleton abstract fun bindUiModeManager(impl: UiModeManagerImpl): UiModeManagerWrapper
+@TestInstallIn(components = [SingletonComponent::class], replaces = [AppModule::class])
+internal abstract class TestModule {
+    @Binds @Singleton abstract fun bindUiModeManager(impl: FakeUiModeManager): UiModeManagerWrapper
 
     companion object {
         @Provides

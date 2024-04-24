@@ -25,6 +25,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.android.systemui.monet.ColorScheme
 import com.android.wallpaper.picker.customization.animation.view.LoadingAnimation
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_APPLIED
+import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_APPLY_FAILED
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_APPLY_IN_PROGRESS
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_DOWNLOAD_FAILED
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_READY
@@ -53,7 +54,8 @@ object PreviewEffectsLoadingBinder {
                         } else if (
                             model.status == EFFECT_APPLIED ||
                                 model.status == EFFECT_READY ||
-                                model.status == EFFECT_DOWNLOAD_FAILED
+                                model.status == EFFECT_DOWNLOAD_FAILED ||
+                                model.status == EFFECT_APPLY_FAILED
                         ) {
                             // Play reveal animation whether applying the effect succeeded or
                             // failed.

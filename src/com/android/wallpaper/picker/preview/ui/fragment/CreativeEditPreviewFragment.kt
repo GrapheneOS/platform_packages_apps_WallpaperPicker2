@@ -56,7 +56,7 @@ class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_full_preview, container, false)
-        setUpToolbar(view)
+        setUpToolbar(view, true, true)
 
         wallpaperPreviewViewModel.setDefaultFullPreviewConfigViewModel(
             deviceDisplayType = displayUtils.getCurrentDisplayType(requireActivity()),
@@ -128,10 +128,6 @@ class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
         }
 
         return view
-    }
-
-    override fun getToolbarColorId(): Int {
-        return android.R.color.transparent
     }
 
     companion object {

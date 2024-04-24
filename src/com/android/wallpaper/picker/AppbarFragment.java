@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toolbar;
@@ -115,7 +116,7 @@ public abstract class AppbarFragment extends BottomActionBarFragment
      * Default upArrow value is true.
      */
     public void setUpToolbar(View rootView) {
-        setUpToolbar(rootView, /* upArrow= */ true);
+        setUpToolbar(rootView, /* upArrow= */ true, false);
     }
 
     /**
@@ -124,15 +125,17 @@ public abstract class AppbarFragment extends BottomActionBarFragment
      *
      * @param rootView given root view.
      * @param upArrow  true to enable up arrow feature.
+     * @param transparentToolbar whether the toolbar should be transparent
      */
-    protected void setUpToolbar(View rootView, boolean upArrow) {
+    protected void setUpToolbar(View rootView, boolean upArrow, boolean transparentToolbar) {
         mUpArrowEnabled = upArrow;
         mToolbar = rootView.findViewById(getToolbarId());
 
         mTitleView = mToolbar.findViewById(R.id.custom_toolbar_title);
 
-        // Update toolbar and status bar color.
-        setToolbarColor(getToolbarColorId());
+        if (transparentToolbar) {
+            setToolbarColor(android.R.color.transparent);
+        }
         setUpStatusBar(isStatusBarLightText());
 
         CharSequence title;
@@ -167,10 +170,6 @@ public abstract class AppbarFragment extends BottomActionBarFragment
 
     protected int getToolbarId() {
         return R.id.toolbar;
-    }
-
-    protected int getToolbarColorId() {
-        return R.color.toolbar_color;
     }
 
     protected void setUpStatusBar(boolean shouldUseLightText) {
@@ -225,8 +224,7 @@ public abstract class AppbarFragment extends BottomActionBarFragment
 
     protected void setToolbarColor(int colorId) {
         mToolbar.setBackgroundResource(colorId);
-        getActivity().getWindow().setStatusBarColor(
-                getActivity().getResources().getColor(colorId));
+        ((ViewGroup) mToolbar.getParent()).setBackgroundResource(colorId);
     }
 
     /**

@@ -986,11 +986,6 @@ public class CategorySelectorFragment extends AppbarFragment {
     }
 
     @Override
-    protected int getToolbarColorId() {
-        return android.R.color.transparent;
-    }
-
-    @Override
     protected int getToolbarTextColor() {
         return ContextCompat.getColor(requireContext(), R.color.system_on_surface);
     }

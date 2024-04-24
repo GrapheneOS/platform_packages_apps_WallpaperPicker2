@@ -93,7 +93,6 @@ public class CustomizationPickerActivity extends FragmentActivity implements App
         mNetworkStatusNotifier = injector.getNetworkStatusNotifier(this);
         mNetworkStatus = mNetworkStatusNotifier.getNetworkStatus();
         mDisplayUtils = injector.getDisplayUtils(this);
-
         enforcePortraitForHandheldAndFoldedDisplay();
 
         BaseFlags flags = injector.getFlags();

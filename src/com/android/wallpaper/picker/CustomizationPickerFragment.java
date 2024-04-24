@@ -50,6 +50,8 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPick
 import com.android.wallpaper.util.ActivityUtils;
 import com.android.wallpaper.util.DisplayUtils;
 
+import com.google.android.material.appbar.AppBarLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -95,9 +97,9 @@ public class CustomizationPickerFragment extends AppbarFragment implements
         final View view = inflater.inflate(layoutId, container, false);
         if (ActivityUtils.isLaunchedFromSettingsRelated(getActivity().getIntent())) {
             setUpToolbar(view, !ActivityEmbeddingUtils.shouldHideNavigateUpButton(
-                    getActivity(), /* isSecondLayerPage= */ true));
+                    getActivity(), /* isSecondLayerPage= */ true), false);
         } else {
-            setUpToolbar(view, /* upArrow= */ false);
+            setUpToolbar(view, /* upArrow= */ false, false);
         }
 
         final Injector injector = InjectorProvider.getInjector();
@@ -144,14 +146,15 @@ public class CustomizationPickerFragment extends AppbarFragment implements
 
         mHomeScrollContainer = view.findViewById(R.id.home_scroll_container);
         mLockScrollContainer = view.findViewById(R.id.lock_scroll_container);
+        AppBarLayout appBarLayout = view.findViewById(R.id.app_bar);
 
         mHomeScrollContainer.setOnScrollChangeListener(
                 (NestedScrollView.OnScrollChangeListener) (scrollView, scrollX, scrollY,
                         oldScrollX, oldScrollY) -> {
                     if (scrollY == 0) {
-                        setToolbarColor(android.R.color.transparent);
+                        appBarLayout.setLifted(false);
                     } else {
-                        setToolbarColor(R.color.system_surface_container_highest);
+                        appBarLayout.setLifted(true);
                     }
                 }
         );
@@ -159,9 +162,9 @@ public class CustomizationPickerFragment extends AppbarFragment implements
                 (NestedScrollView.OnScrollChangeListener) (scrollView, scrollX, scrollY,
                         oldScrollX, oldScrollY) -> {
                     if (scrollY == 0) {
-                        setToolbarColor(android.R.color.transparent);
+                        appBarLayout.setLifted(false);
                     } else {
-                        setToolbarColor(R.color.system_surface_container_highest);
+                        appBarLayout.setLifted(true);
                     }
                 }
         );
@@ -193,11 +196,6 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     @Override
     protected int getToolbarId() {
         return R.id.toolbar;
-    }
-
-    @Override
-    protected int getToolbarColorId() {
-        return android.R.color.transparent;
     }
 
     @Override

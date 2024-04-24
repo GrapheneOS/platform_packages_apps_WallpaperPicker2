@@ -945,10 +945,6 @@ class IndividualPickerFragment2 :
         }
     }
 
-    override fun getToolbarColorId(): Int {
-        return android.R.color.transparent
-    }
-
     override fun getToolbarTextColor(): Int {
         return ContextCompat.getColor(requireContext(), R.color.system_on_surface)
     }

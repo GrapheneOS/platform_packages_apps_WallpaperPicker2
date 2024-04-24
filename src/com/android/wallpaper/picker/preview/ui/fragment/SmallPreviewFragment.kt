@@ -78,7 +78,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 container,
                 false,
             )
-        setUpToolbar(view)
+        setUpToolbar(view, true, true)
         bindScreenPreview(view)
         bindPreviewActions(view)
 
@@ -102,10 +102,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
     override fun getDefaultTitle(): CharSequence {
         return getString(R.string.preview)
-    }
-
-    override fun getToolbarColorId(): Int {
-        return android.R.color.transparent
     }
 
     override fun getToolbarTextColor(): Int {

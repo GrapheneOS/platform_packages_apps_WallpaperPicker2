@@ -108,6 +108,7 @@ constructor(
                     resultCode,
                     originalStatusCode,
                     errorMessage ->
+                    timeOutHandler.removeCallbacksAndMessages(null)
                     when (resultCode) {
                         EffectsController.RESULT_PROBE_SUCCESS -> {
                             _imageEffectsModel.value =
@@ -198,7 +199,6 @@ constructor(
                         }
                     }
                 }
-            // TODO remove listener when destroy
             effectsController.setListener(listener)
 
             effectsController.contentUri.let { uri ->
@@ -314,7 +314,12 @@ constructor(
         timeOutHandler.postDelayed(
             {
                 wallpaperEffect.value?.let { effectsController.interruptGenerate(it) }
-                _imageEffectsModel.value = ImageEffectsModel(EffectStatus.EFFECT_READY)
+                _imageEffectsModel.value =
+                    ImageEffectsModel(
+                        EffectStatus.EFFECT_APPLY_FAILED,
+                        null,
+                        effectsController.retryInstruction,
+                    )
                 logger.logEffectApply(
                     getEffectNameForLogging(),
                     StyleEnums.EFFECT_APPLIED_ON_FAILED,
