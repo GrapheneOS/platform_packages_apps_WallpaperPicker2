@@ -21,6 +21,8 @@ import android.content.pm.PackageManager
 import com.android.wallpaper.picker.di.modules.AppModule
 import com.android.wallpaper.system.UiModeManagerWrapper
 import com.android.wallpaper.testing.FakeUiModeManager
+import com.android.wallpaper.testing.FakeWallpaperXMLParser
+import com.android.wallpaper.util.WallpaperXMLParserInterface
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -33,6 +35,10 @@ import javax.inject.Singleton
 @TestInstallIn(components = [SingletonComponent::class], replaces = [AppModule::class])
 internal abstract class TestModule {
     @Binds @Singleton abstract fun bindUiModeManager(impl: FakeUiModeManager): UiModeManagerWrapper
+
+    @Binds
+    @Singleton
+    abstract fun bindWallpaperXMLParser(impl: FakeWallpaperXMLParser): WallpaperXMLParserInterface
 
     companion object {
         @Provides

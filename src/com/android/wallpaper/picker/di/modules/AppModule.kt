@@ -21,6 +21,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import com.android.wallpaper.system.UiModeManagerImpl
 import com.android.wallpaper.system.UiModeManagerWrapper
+import com.android.wallpaper.util.WallpaperXMLParser
+import com.android.wallpaper.util.WallpaperXMLParserInterface
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -33,6 +35,10 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class AppModule {
     @Binds @Singleton abstract fun bindUiModeManager(impl: UiModeManagerImpl): UiModeManagerWrapper
+
+    @Binds
+    @Singleton
+    abstract fun bindWallpaperXMLParser(impl: WallpaperXMLParser): WallpaperXMLParserInterface
 
     companion object {
         @Provides

@@ -81,7 +81,6 @@ constructor(
     private var liveWallpaperInfoFactory: LiveWallpaperInfoFactory? = null
     private var networkStatusNotifier: NetworkStatusNotifier? = null
     private var packageStatusNotifier: PackageStatusNotifier? = null
-    private var partnerProvider: PartnerProvider? = null
     private var performanceMonitor: PerformanceMonitor? = null
     private var requester: Requester? = null
     private var systemFeatureChecker: SystemFeatureChecker? = null
@@ -98,8 +97,9 @@ constructor(
     private var previewActivityIntentFactory: InlinePreviewIntentFactory? = null
     private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
 
-    // Injected objects, sorted by type
+    // Injected objects, sorted by alphabetical order on the type of object
     @Inject lateinit var displayUtils: Lazy<DisplayUtils>
+    @Inject lateinit var partnerProvider: Lazy<PartnerProvider>
     @Inject lateinit var uiModeManager: Lazy<UiModeManagerWrapper>
     @Inject lateinit var userEventLogger: Lazy<UserEventLogger>
     @Inject lateinit var injectedWallpaperClient: Lazy<WallpaperClient>
@@ -205,8 +205,7 @@ constructor(
 
     @Synchronized
     override fun getPartnerProvider(context: Context): PartnerProvider {
-        return partnerProvider
-            ?: DefaultPartnerProvider(context.applicationContext).also { partnerProvider = it }
+        return partnerProvider.get()
     }
 
     @Synchronized

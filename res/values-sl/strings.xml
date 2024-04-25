@@ -136,6 +136,6 @@
     <string name="more_wallpapers" msgid="8116268433411881705">"Več zaslonskih ozadij"</string>
     <string name="recents_wallpaper_label" msgid="8653165542635660222">"%1$s, %2$d"</string>
     <string name="default_wallpaper_title" msgid="2541071182656978180">"Zaslonsko ozadje"</string>
-    <string name="small_preview_tooltip" msgid="1920430079013352071">"Dotik za urejanje fotografije"</string>
+    <string name="small_preview_tooltip" msgid="1920430079013352071">"Dotaknite se urejanje fotografije"</string>
     <string name="full_preview_tooltip" msgid="4648994028015322759">"Prilagajanje položaja, velikosti in kota fotografij"</string>
 </resources>

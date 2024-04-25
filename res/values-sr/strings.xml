@@ -32,7 +32,7 @@
     <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"Одаберите позадину"</string>
     <string name="creative_wallpaper_title" msgid="3581650238648981372">"Направите позадину"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Почетни екран"</string>
-    <string name="lock_screen_message" msgid="1534506081955058013">"Закључан екран"</string>
+    <string name="lock_screen_message" msgid="1534506081955058013">"Закључани екран"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Почетни и закључани екран"</string>
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Подесите позадину на"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Почетни екран"</string>

@@ -30,6 +30,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.android.wallpaper.R
 import com.android.wallpaper.model.ImageWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.BasePreviewActivity
 import com.android.wallpaper.picker.data.WallpaperModel
@@ -74,6 +75,9 @@ class WallpaperPreviewActivity :
         super.onCreate(savedInstanceState)
         enforcePortraitForHandheldAndFoldedDisplay()
         wallpaperPreviewViewModel.updateDisplayConfiguration()
+        wallpaperPreviewViewModel.setIsWallpaperColorPreviewEnabled(
+            !InjectorProvider.getInjector().isCurrentSelectedColorPreset(appContext)
+        )
         window.navigationBarColor = Color.TRANSPARENT
         window.statusBarColor = Color.TRANSPARENT
         setContentView(R.layout.activity_wallpaper_preview)

@@ -83,23 +83,25 @@ open class TestInjector @Inject constructor(private val userEventLogger: UserEve
     private var exploreIntentChecker: ExploreIntentChecker? = null
     private var networkStatusNotifier: NetworkStatusNotifier? = null
     private var packageStatusNotifier: PackageStatusNotifier? = null
-    private var partnerProvider: PartnerProvider? = null
     private var performanceMonitor: PerformanceMonitor? = null
     private var requester: Requester? = null
     private var systemFeatureChecker: SystemFeatureChecker? = null
     private var wallpaperPersister: WallpaperPersister? = null
-    @Inject lateinit var prefs: WallpaperPreferences
     private var wallpaperRefresher: WallpaperRefresher? = null
     private var wallpaperStatusChecker: WallpaperStatusChecker? = null
     private var flags: BaseFlags? = null
     private var undoInteractor: UndoInteractor? = null
     private var wallpaperInteractor: WallpaperInteractor? = null
-    @Inject lateinit var injectedWallpaperInteractor: WallpaperInteractor
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
     private var wallpaperColorsRepository: WallpaperColorsRepository? = null
     private var wallpaperClient: FakeWallpaperClient? = null
     private var previewActivityIntentFactory: InlinePreviewIntentFactory? = null
     private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
+
+    // Injected objects, sorted by alphabetical order of the type of object
+    @Inject lateinit var partnerProvider: PartnerProvider
+    @Inject lateinit var prefs: WallpaperPreferences
+    @Inject lateinit var injectedWallpaperInteractor: WallpaperInteractor
 
     override fun getApplicationCoroutineScope(): CoroutineScope {
         return appScope ?: CoroutineScope(Dispatchers.Main).also { appScope = it }
@@ -178,7 +180,7 @@ open class TestInjector @Inject constructor(private val userEventLogger: UserEve
     }
 
     override fun getPartnerProvider(context: Context): PartnerProvider {
-        return partnerProvider ?: TestPartnerProvider().also { partnerProvider = it }
+        return partnerProvider
     }
 
     override fun getPerformanceMonitor(): PerformanceMonitor? {

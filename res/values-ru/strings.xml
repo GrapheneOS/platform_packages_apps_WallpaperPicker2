@@ -83,7 +83,7 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Разместить по центру"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Заполнить"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Растянуть"</string>
-    <string name="preview" msgid="1774602101743861071">"Предварительный просмотр"</string>
+    <string name="preview" msgid="1774602101743861071">"Просмотр"</string>
     <string name="tab_info" msgid="818614080690111416">"Информация"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Настройка"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Эффекты"</string>

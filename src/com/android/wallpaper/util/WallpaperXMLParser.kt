@@ -36,9 +36,10 @@ import org.xmlpull.v1.XmlPullParser
 @Singleton
 class WallpaperXMLParser
 @Inject
-constructor(private val context: Context, private val partnerProvider: PartnerProvider) {
+constructor(private val context: Context, private val partnerProvider: PartnerProvider) :
+    WallpaperXMLParserInterface {
 
-    fun parseCategory(parser: XmlResourceParser): WallpaperCategory? {
+    override fun parseCategory(parser: XmlResourceParser): WallpaperCategory? {
         val categoryBuilder =
             WallpaperCategory.Builder(partnerProvider.resources, Xml.asAttributeSet(parser))
         categoryBuilder.setPriorityIfEmpty(PRIORITY_SYSTEM)

@@ -21,11 +21,19 @@ import com.android.wallpaper.module.PartnerProvider;
 
 import java.io.File;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Test implementation for PartnerProvider.
  */
+@Singleton
 public class TestPartnerProvider implements PartnerProvider {
     private File mLegacyWallpaperDirectory;
+
+    @Inject
+    public TestPartnerProvider() {
+    }
 
     @Override
     public Resources getResources() {

@@ -149,6 +149,12 @@ constructor(
         }
     }
 
+    private val _isWallpaperColorPreviewEnabled = MutableStateFlow(false)
+    val isWallpaperColorPreviewEnabled = _isWallpaperColorPreviewEnabled.asStateFlow()
+    fun setIsWallpaperColorPreviewEnabled(isWallpaperColorPreviewEnabled: Boolean) {
+        _isWallpaperColorPreviewEnabled.value = isWallpaperColorPreviewEnabled
+    }
+
     private val _wallpaperConnectionColors: MutableStateFlow<WallpaperColorsModel> =
         MutableStateFlow(WallpaperColorsModel.Loading as WallpaperColorsModel).apply {
             viewModelScope.launch {
@@ -165,7 +171,11 @@ constructor(
                 wallpaperConnectionColors
             }
     val wallpaperColorsModel: Flow<WallpaperColorsModel> =
-        merge(liveWallpaperColors, staticWallpaperPreviewViewModel.wallpaperColors)
+        merge(liveWallpaperColors, staticWallpaperPreviewViewModel.wallpaperColors).combine(
+            isWallpaperColorPreviewEnabled
+        ) { colors, isEnabled ->
+            if (isEnabled) colors else WallpaperColorsModel.Loaded(null)
+        }
 
     // This is only used for the full screen preview.
     private val _fullPreviewConfigViewModel: MutableStateFlow<FullPreviewConfigViewModel?> =

@@ -27,17 +27,25 @@ import android.util.Pair;
 
 import androidx.annotation.Nullable;
 
+import dagger.hilt.android.qualifiers.ApplicationContext;
+
 import java.io.File;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Provides content from the partner customization apk on the device (if there is one).
  */
+
+@Singleton
 public class DefaultPartnerProvider implements PartnerProvider {
 
     private final String mPackageName;
     private final Resources mResources;
 
-    public DefaultPartnerProvider(Context ctx) {
+    @Inject
+    public DefaultPartnerProvider(@ApplicationContext Context ctx) {
         Pair<String, Resources> apkInfo = findSystemApk(ctx.getPackageManager());
         if (apkInfo != null) {
             mPackageName = apkInfo.first;
