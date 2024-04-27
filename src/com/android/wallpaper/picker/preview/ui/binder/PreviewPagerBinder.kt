@@ -19,12 +19,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
 import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.model.wallpaper.PreviewPagerPage
+import com.android.wallpaper.picker.preview.ui.fragment.SmallPreviewFragment
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.SinglePreviewPagerAdapter
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.pagetransformers.PreviewCardPageTransformer
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
@@ -44,6 +46,14 @@ object PreviewPagerBinder {
     ) {
         previewsViewPager.apply {
             adapter = SinglePreviewPagerAdapter { viewHolder, position ->
+                // Set transition names to enable the small to full preview enter and return shared
+                // element transitions.
+                ViewCompat.setTransitionName(
+                    viewHolder.itemView.requireViewById(R.id.preview_card),
+                    if (position == 0) SmallPreviewFragment.SMALL_PREVIEW_LOCK_SHARED_ELEMENT_ID
+                    else SmallPreviewFragment.SMALL_PREVIEW_HOME_SHARED_ELEMENT_ID
+                )
+
                 PreviewTooltipBinder.bindSmallPreviewTooltip(
                     tooltipStub = viewHolder.itemView.requireViewById(R.id.tooltip_stub),
                     viewModel = wallpaperPreviewViewModel.smallTooltipViewModel,

@@ -50,4 +50,9 @@ class ShadowWallpaperInfo {
     fun getComponent(): ComponentName {
         return ComponentName(resolveInfo.serviceInfo.packageName, resolveInfo.serviceInfo.name)
     }
+
+    @Implementation
+    fun getServiceName(): String {
+        return resolveInfo.serviceInfo.name
+    }
 }

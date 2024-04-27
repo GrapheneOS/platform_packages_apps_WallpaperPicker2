@@ -403,6 +403,10 @@ constructor(
             )
     }
 
+    fun resetFullPreviewConfigViewModel() {
+        _fullPreviewConfigViewModel.value = null
+    }
+
     companion object {
         private fun WallpaperModel.isDownloadableWallpaper(): Boolean {
             return this is StaticWallpaperModel && downloadableWallpaperData != null

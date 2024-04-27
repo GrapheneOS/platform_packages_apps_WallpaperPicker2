@@ -16,25 +16,27 @@
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipChildren="false">
 
     <com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout
         android:id="@+id/dual_preview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:clipChildren="false">
 
         <include
             android:id="@+id/small_preview_folded_preview"
             layout="@layout/small_wallpaper_preview_card"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
 
         <include
             android:id="@+id/small_preview_unfolded_preview"
             layout="@layout/small_wallpaper_preview_card"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
     </com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout>
 
     <ViewStub

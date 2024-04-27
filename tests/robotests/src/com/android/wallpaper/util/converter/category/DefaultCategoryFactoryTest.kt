@@ -35,7 +35,7 @@ import org.robolectric.RobolectricTestRunner
 
 @HiltAndroidTest
 @RunWith(RobolectricTestRunner::class)
-class CategoryFactoryTest {
+class DefaultCategoryFactoryTest {
 
     @get:Rule var hiltRule = HiltAndroidRule(this)
 
@@ -49,7 +49,7 @@ class CategoryFactoryTest {
     fun setUp() {
         hiltRule.inject()
         context = ApplicationProvider.getApplicationContext<HiltTestApplication>()
-        mCategoryFactory = CategoryFactory(wallpaperModelFactory)
+        mCategoryFactory = DefaultCategoryFactory(wallpaperModelFactory)
     }
 
     @Test

@@ -38,6 +38,7 @@ import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.DefaultWallpaperPersisterTest.TestSetWallpaperCallback.SetWallpaperStatus;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.module.logging.TestUserEventLogger;
+import com.android.wallpaper.testing.FakeDisplaysProvider;
 import com.android.wallpaper.testing.TestAsset;
 import com.android.wallpaper.testing.TestBitmapCropper;
 import com.android.wallpaper.testing.TestCurrentWallpaperInfoFactory;
@@ -79,7 +80,7 @@ public class DefaultWallpaperPersisterTest {
         mManager = spy(WallpaperManager.getInstance(mContext));
         mPrefs = new TestWallpaperPreferences();
         WallpaperChangedNotifier changedNotifier = spy(WallpaperChangedNotifier.getInstance());
-        DisplayUtils displayUtils = new DisplayUtils(mContext);
+        DisplayUtils displayUtils = new DisplayUtils(mContext, new FakeDisplaysProvider(mContext));
         TestBitmapCropper cropper = new TestBitmapCropper();
         TestWallpaperStatusChecker statusChecker = new TestWallpaperStatusChecker();
         TestCurrentWallpaperInfoFactory wallpaperInfoFactory =

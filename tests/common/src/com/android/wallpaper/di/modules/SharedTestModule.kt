@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.android.wallpaper.picker.di.modules
+package com.android.wallpaper.di.modules
 
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.pm.PackageManager
-import com.android.wallpaper.system.UiModeManagerImpl
+import com.android.wallpaper.picker.di.modules.SharedAppModule
 import com.android.wallpaper.system.UiModeManagerWrapper
-import com.android.wallpaper.util.WallpaperXMLParser
+import com.android.wallpaper.testing.FakeDefaultCategoryFactory
+import com.android.wallpaper.testing.FakeUiModeManager
+import com.android.wallpaper.testing.FakeWallpaperXMLParser
 import com.android.wallpaper.util.WallpaperXMLParserInterface
+import com.android.wallpaper.util.converter.category.CategoryFactory
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import dagger.hilt.testing.TestInstallIn
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
-abstract class AppModule {
-    @Binds @Singleton abstract fun bindUiModeManager(impl: UiModeManagerImpl): UiModeManagerWrapper
+@TestInstallIn(components = [SingletonComponent::class], replaces = [SharedAppModule::class])
+internal abstract class SharedTestModule {
+    @Binds @Singleton abstract fun bindUiModeManager(impl: FakeUiModeManager): UiModeManagerWrapper
 
     @Binds
     @Singleton
-    abstract fun bindWallpaperXMLParser(impl: WallpaperXMLParser): WallpaperXMLParserInterface
+    abstract fun bindWallpaperXMLParser(impl: FakeWallpaperXMLParser): WallpaperXMLParserInterface
+
+    @Binds
+    @Singleton
+    abstract fun bindCategoryFactory(impl: FakeDefaultCategoryFactory): CategoryFactory
 
     companion object {
         @Provides

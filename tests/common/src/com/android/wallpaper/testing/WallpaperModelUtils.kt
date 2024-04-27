@@ -53,6 +53,7 @@ class WallpaperModelUtils {
             actionUrl: String? = DEFAULT_ACTION_URL,
             colors: WallpaperColors = DEFAULT_COLORS,
             asset: Asset = DEFAULT_ASSET,
+            imageWallpaperUri: Uri = Uri.EMPTY,
         ): WallpaperModel.StaticWallpaperModel {
             return WallpaperModel.StaticWallpaperModel(
                 commonWallpaperData =
@@ -82,7 +83,7 @@ class WallpaperModelUtils {
                         asset,
                         emptyMap(),
                     ),
-                imageWallpaperData = ImageWallpaperData(Uri.EMPTY),
+                imageWallpaperData = ImageWallpaperData(imageWallpaperUri),
                 networkWallpaperData = null,
                 downloadableWallpaperData = null,
             )

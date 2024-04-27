@@ -99,6 +99,7 @@ open class TestInjector @Inject constructor(private val userEventLogger: UserEve
     private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
 
     // Injected objects, sorted by alphabetical order of the type of object
+    @Inject lateinit var displayUtils: DisplayUtils
     @Inject lateinit var partnerProvider: PartnerProvider
     @Inject lateinit var prefs: WallpaperPreferences
     @Inject lateinit var injectedWallpaperInteractor: WallpaperInteractor
@@ -136,7 +137,7 @@ open class TestInjector @Inject constructor(private val userEventLogger: UserEve
     }
 
     override fun getDisplayUtils(context: Context): DisplayUtils {
-        return DisplayUtils(context)
+        return displayUtils
     }
 
     override fun getDownloadableIntentAction(): String? {

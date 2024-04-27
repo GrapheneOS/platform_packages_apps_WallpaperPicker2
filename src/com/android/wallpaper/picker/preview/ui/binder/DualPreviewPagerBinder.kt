@@ -18,10 +18,13 @@ package com.android.wallpaper.picker.preview.ui.binder
 import android.content.Context
 import android.view.View
 import android.view.View.OVER_SCROLL_NEVER
+import android.widget.FrameLayout
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.model.wallpaper.PreviewPagerPage
+import com.android.wallpaper.picker.preview.ui.fragment.SmallPreviewFragment
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.DualPreviewPagerAdapter
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout
@@ -41,6 +44,26 @@ object DualPreviewPagerBinder {
     ) {
         // implement adapter for the dual preview pager
         dualPreviewView.adapter = DualPreviewPagerAdapter { view, position ->
+            // Set tag to allow small to full preview transition to accurately identify view
+            view.tag = position
+
+            // Set transition names to enable the small to full preview enter and return shared
+            // element transitions.
+            val foldedPreview: FrameLayout = view.requireViewById(R.id.small_preview_folded_preview)
+            val unfoldedPreview: FrameLayout =
+                view.requireViewById(R.id.small_preview_unfolded_preview)
+            ViewCompat.setTransitionName(
+                foldedPreview.requireViewById(R.id.preview_card),
+                if (position == 0) SmallPreviewFragment.SMALL_PREVIEW_LOCK_FOLDED_SHARED_ELEMENT_ID
+                else SmallPreviewFragment.SMALL_PREVIEW_HOME_FOLDED_SHARED_ELEMENT_ID
+            )
+            ViewCompat.setTransitionName(
+                unfoldedPreview.requireViewById(R.id.preview_card),
+                if (position == 0)
+                    SmallPreviewFragment.SMALL_PREVIEW_LOCK_UNFOLDED_SHARED_ELEMENT_ID
+                else SmallPreviewFragment.SMALL_PREVIEW_HOME_UNFOLDED_SHARED_ELEMENT_ID
+            )
+
             PreviewTooltipBinder.bindSmallPreviewTooltip(
                 tooltipStub = view.requireViewById(R.id.tooltip_stub),
                 viewModel = wallpaperPreviewViewModel.smallTooltipViewModel,

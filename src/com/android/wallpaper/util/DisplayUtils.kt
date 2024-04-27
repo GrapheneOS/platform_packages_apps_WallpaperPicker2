@@ -18,8 +18,6 @@ package com.android.wallpaper.util
 import android.app.Activity
 import android.content.Context
 import android.graphics.Point
-import android.hardware.display.DisplayManager
-import android.util.Log
 import android.view.Display
 import android.view.DisplayInfo
 import android.view.Surface.ROTATION_270
@@ -39,19 +37,19 @@ import kotlin.math.min
  * class, which is fine for stateless info.
  */
 @Singleton
-class DisplayUtils @Inject constructor(@ApplicationContext private val appContext: Context) {
+class DisplayUtils
+@Inject
+constructor(
+    @ApplicationContext private val appContext: Context,
+    private val displaysProvider: DisplaysProvider
+) {
     companion object {
-        private const val TAG = "DisplayUtils"
         private val ROTATION_HORIZONTAL_HINGE = setOf(ROTATION_90, ROTATION_270)
         private const val TABLET_MIN_DPS = 600f // See Sysui's Utilities.TABLET_MIN_DPS
     }
 
-    private val displayManager: DisplayManager by lazy {
-        appContext.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-    }
-
     fun hasMultiInternalDisplays(): Boolean {
-        return getInternalDisplays().size > 1
+        return displaysProvider.getInternalDisplays().size > 1
     }
 
     /**
@@ -59,7 +57,7 @@ class DisplayUtils @Inject constructor(@ApplicationContext private val appContex
      * size and cropping.
      */
     fun getWallpaperDisplay(): Display {
-        val internalDisplays = getInternalDisplays()
+        val internalDisplays = displaysProvider.getInternalDisplays()
         return internalDisplays.maxWithOrNull { a, b -> getRealArea(a) - getRealArea(b) }
             ?: internalDisplays[0]
     }
@@ -83,7 +81,7 @@ class DisplayUtils @Inject constructor(@ApplicationContext private val appContex
 
     fun getMaxDisplaysDimension(): Point {
         val dimen = Point()
-        getInternalDisplays().let { displays ->
+        displaysProvider.getInternalDisplays().let { displays ->
             dimen.x = displays.maxOf { getRealSize(it).x }
             dimen.y = displays.maxOf { getRealSize(it).y }
         }
@@ -152,7 +150,7 @@ class DisplayUtils @Inject constructor(@ApplicationContext private val appContex
      * the device is folded. This is always the smallest display in foldable devices.
      */
     fun getSmallerDisplay(): Display {
-        val internalDisplays = getInternalDisplays()
+        val internalDisplays = displaysProvider.getInternalDisplays()
         val largestDisplay = getWallpaperDisplay()
         val smallestDisplay = internalDisplays.firstOrNull() { it != largestDisplay }
         return smallestDisplay ?: largestDisplay
@@ -175,20 +173,11 @@ class DisplayUtils @Inject constructor(@ApplicationContext private val appContex
         return displayInfo.logicalHeight * displayInfo.logicalWidth
     }
 
-    private fun getInternalDisplays(): List<Display> {
-        val allDisplays: Array<out Display> =
-            displayManager.getDisplays(DisplayManager.DISPLAY_CATEGORY_ALL_INCLUDING_DISABLED)
-        if (allDisplays.isEmpty()) {
-            Log.e(TAG, "No displays found on context $appContext")
-            throw RuntimeException("No displays found!")
-        }
-        return allDisplays.filter { it.type == Display.TYPE_INTERNAL }
-    }
-
     fun getInternalDisplaySizes(
         allDimensions: Boolean = false,
     ): List<Point> {
-        return getInternalDisplays()
+        return displaysProvider
+            .getInternalDisplays()
             .map { getRealSize(it) }
             .let {
                 if (allDimensions) {

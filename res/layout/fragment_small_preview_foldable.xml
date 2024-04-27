@@ -22,7 +22,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:transitionGroup="true">
+    android:transitionGroup="true"
+    android:clipChildren="false">
 
     <include
         android:id="@+id/toolbar_container"
@@ -51,6 +52,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/toolbar_container"/>
 
+    <!-- Set clipToPadding to false so that during transition scaling, child card view is not
+    clipped to the header bar -->
     <LinearLayout
         android:id="@+id/pager_group"
         android:layout_width="match_parent"
@@ -62,7 +65,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_container"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
         <com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
             android:id="@+id/dual_preview_pager"
@@ -70,6 +75,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
             android:paddingHorizontal="@dimen/small_dual_preview_edge_space"
+            android:clipChildren="false"
             android:importantForAccessibility="no" />
 
         <com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.TabsPagerContainer

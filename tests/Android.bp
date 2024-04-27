@@ -40,10 +40,10 @@ android_test {
     defaults: ["WallpaperPicker2_defaults"],
     srcs: [
         ":WallpaperPicker2Tests_srcs",
-        "module/src/com/android/wallpaper/TestModule.kt",
     ],
     static_libs: [
         "WallpaperPicker2TestLib",
+        "WallpaperPicker2TestModule",
         "WallpaperPicker2TestRunner",
         "androidx.test.espresso.core",
         "androidx.test.espresso.contrib",

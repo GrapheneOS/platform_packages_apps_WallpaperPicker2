@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.util.converter.category
+package com.android.wallpaper.util
 
-import android.content.Context
-import com.android.wallpaper.model.Category
-import com.android.wallpaper.picker.data.category.CategoryModel
+import android.view.Display
 
-/** This is the interface for converting legacy category to the new category model class. */
-interface CategoryFactory {
-    fun getCategoryModel(context: Context, category: Category): CategoryModel
+/**
+ * Interface created to support testing DisplayUtils. When testing, it allows ShadowDisplayManager
+ * to provide fake displays.
+ */
+interface DisplaysProvider {
+    fun getInternalDisplays(): List<Display>
 }

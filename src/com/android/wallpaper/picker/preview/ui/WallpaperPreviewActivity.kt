@@ -167,6 +167,7 @@ class WallpaperPreviewActivity :
     override fun onDestroy() {
         imageEffectsRepository.destroy()
         creativeEffectsRepository.destroy()
+        liveWallpaperDownloader.cleanup()
         // TODO(b/333879532): Only disconnect when leaving the Activity without introducing black
         //  preview. If onDestroy is caused by an orientation change, we should keep the connection
         //  to avoid initiating the engines again.
@@ -174,7 +175,6 @@ class WallpaperPreviewActivity :
         //   activity has been destroyed already. Consider making this part of
         //   WallpaperConnectionUtils.
         mainScope.launch {
-            liveWallpaperDownloader.cleanup()
             (wallpaperPreviewViewModel.wallpaper.value as? WallpaperModel.LiveWallpaperModel)?.let {
                 WallpaperConnectionUtils.disconnect(
                     appContext,

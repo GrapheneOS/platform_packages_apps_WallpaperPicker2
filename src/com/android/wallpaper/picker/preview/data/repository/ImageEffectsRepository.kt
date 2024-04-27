@@ -366,8 +366,8 @@ constructor(
      * in the foreground off the main thread so it's safe to trigger it from the main thread.
      */
     fun startEffectsModelDownload(effect: Effect) {
-        effectsController.startForegroundDownload(effect)
         _imageEffectsModel.value = ImageEffectsModel(EffectStatus.EFFECT_DOWNLOAD_IN_PROGRESS)
+        effectsController.startForegroundDownload(effect)
         startDownloadTime = System.currentTimeMillis()
         logger.logEffectForegroundDownload(
             getEffectNameForLogging(),

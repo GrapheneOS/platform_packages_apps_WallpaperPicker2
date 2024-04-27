@@ -48,7 +48,7 @@ android_library {
         "kotlinx-coroutines-core",
         "libbackup",
         "SettingsLibCollapsingToolbarBaseActivity",
-	"SettingsLibSettingsTheme",
+	      "SettingsLibSettingsTheme",
         "subsampling-scale-image-view",
         "SystemUISharedLib",
         "SystemUICustomizationLib",
@@ -137,8 +137,16 @@ java_defaults {
 
     static_libs: [
         "WallpaperPicker2Lib",
-        "WallpaperPicker2OverridesLib",
         "hilt_android",
+    ],
+}
+
+java_defaults {
+    name: "WallpaperPicker2_defaults_with_overrides",
+    defaults: ["WallpaperPicker2_defaults"],
+
+    static_libs: [
+        "WallpaperPicker2OverridesLib",
     ],
 }
 

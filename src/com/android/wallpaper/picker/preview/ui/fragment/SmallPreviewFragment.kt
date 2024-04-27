@@ -20,18 +20,28 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
+import androidx.core.view.children
+import androidx.core.view.doOnPreDraw
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Transition
+import androidx.transition.TransitionListenerAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
+import com.android.wallpaper.model.wallpaper.DeviceDisplayType
+import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.preview.ui.binder.DualPreviewSelectorBinder
@@ -70,6 +80,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        postponeEnterTransition()
         val view =
             inflater.inflate(
                 if (displayUtils.hasMultiInternalDisplays())
@@ -96,6 +107,147 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             viewModel = wallpaperPreviewViewModel,
             lifecycleOwner = viewLifecycleOwner,
         )
+
+        // TODO(b/303318205): Refactor transition-related code below into SmallPreviewBinder.
+        view.doOnPreDraw {
+            val fullPreviewConfig = wallpaperPreviewViewModel.fullPreviewConfigViewModel.value
+            if (displayUtils.hasMultiInternalDisplays()) {
+                val dualPreviewPager: DualPreviewViewPager =
+                    view.requireViewById(R.id.dual_preview_pager)
+                // All surface views are initially hidden in the XML to enable smoother transitions.
+                val setSurfaceViewsVisible: () -> Unit = {
+                    dualPreviewPager.children.forEach {
+                        val foldedPreview: FrameLayout =
+                            it.requireViewById(R.id.small_preview_folded_preview)
+                        val unfoldedPreview: FrameLayout =
+                            it.requireViewById(R.id.small_preview_unfolded_preview)
+                        foldedPreview
+                            .requireViewById<SurfaceView>(R.id.wallpaper_surface)
+                            .isVisible = true
+                        foldedPreview
+                            .requireViewById<SurfaceView>(R.id.workspace_surface)
+                            .isVisible = true
+                        unfoldedPreview
+                            .requireViewById<SurfaceView>(R.id.wallpaper_surface)
+                            .isVisible = true
+                        unfoldedPreview
+                            .requireViewById<SurfaceView>(R.id.workspace_surface)
+                            .isVisible = true
+                    }
+                }
+                // If we are returning from full preview with a share element transition, set up
+                // transition, otherwise set all surface views visible.
+                if (fullPreviewConfig != null && reenterTransition != null) {
+                    (reenterTransition as Transition).addListener(
+                        object : TransitionListenerAdapter() {
+                            override fun onTransitionStart(transition: Transition) {
+                                super.onTransitionStart(transition)
+
+                                // Full to small preview return transition is handled by small
+                                // preview.
+                                // Temporarily remove clip to padding to enable shared element to
+                                // display fully.
+                                dualPreviewPager.clipToPadding = false
+
+                                // Only show the surface view used in the shared element transition
+                                // until the transition ends to avoid issues with multiple surface
+                                // views
+                                // overlapping.
+                                val sharedElementPreviewPage: View =
+                                    when (fullPreviewConfig.screen) {
+                                        CustomizationSections.Screen.LOCK_SCREEN ->
+                                            dualPreviewPager.findViewWithTag(0)
+                                        CustomizationSections.Screen.HOME_SCREEN ->
+                                            dualPreviewPager.findViewWithTag(1)
+                                    }
+                                val sharedElementPreview: View =
+                                    when (fullPreviewConfig.deviceDisplayType) {
+                                        DeviceDisplayType.FOLDED ->
+                                            sharedElementPreviewPage.requireViewById(
+                                                R.id.small_preview_folded_preview
+                                            )
+                                        DeviceDisplayType.UNFOLDED ->
+                                            sharedElementPreviewPage.requireViewById(
+                                                R.id.small_preview_unfolded_preview
+                                            )
+                                        DeviceDisplayType.SINGLE ->
+                                            sharedElementPreviewPage.requireViewById(
+                                                R.id.small_preview_folded_preview
+                                            )
+                                    }
+                                sharedElementPreview
+                                    .requireViewById<SurfaceView>(R.id.wallpaper_surface)
+                                    .isVisible = true
+                                sharedElementPreview
+                                    .requireViewById<SurfaceView>(R.id.workspace_surface)
+                                    .isVisible = true
+                            }
+                            override fun onTransitionEnd(transition: Transition) {
+                                super.onTransitionEnd(transition)
+                                dualPreviewPager.clipToPadding = true
+                                setSurfaceViewsVisible()
+                                // TODO (b/303318205): remove listener on lifecycle destroy
+                                (reenterTransition as Transition).removeListener(this)
+                                wallpaperPreviewViewModel.resetFullPreviewConfigViewModel()
+                            }
+                        }
+                    )
+                } else {
+                    setSurfaceViewsVisible()
+                }
+            } else {
+                val previewPager: RecyclerView =
+                    view.requireViewById<ViewPager2>(R.id.pager_previews).getChildAt(0)
+                        as RecyclerView
+                previewPager.clipChildren = false
+                // All surface views are initially hidden in the XML to enable smoother transitions.
+                val setSurfaceViewsVisible: () -> Unit = {
+                    previewPager.children.forEach {
+                        it.requireViewById<SurfaceView>(R.id.wallpaper_surface).isVisible = true
+                        it.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible = true
+                    }
+                }
+                // If we are returning from full preview with a share element transition, set up
+                // transition, otherwise set all surface views visible.
+                if (fullPreviewConfig != null && reenterTransition != null) {
+                    (reenterTransition as Transition).addListener(
+                        object : TransitionListenerAdapter() {
+                            override fun onTransitionStart(transition: Transition) {
+                                super.onTransitionStart(transition)
+                                val sharedElementPreviewPage: View? =
+                                    when (fullPreviewConfig.screen) {
+                                        CustomizationSections.Screen.LOCK_SCREEN ->
+                                            previewPager
+                                                .findViewHolderForAdapterPosition(0)
+                                                ?.itemView
+                                        CustomizationSections.Screen.HOME_SCREEN ->
+                                            previewPager
+                                                .findViewHolderForAdapterPosition(1)
+                                                ?.itemView
+                                    }
+                                sharedElementPreviewPage
+                                    ?.requireViewById<SurfaceView>(R.id.workspace_surface)
+                                    ?.isVisible = true
+                                sharedElementPreviewPage
+                                    ?.requireViewById<SurfaceView>(R.id.wallpaper_surface)
+                                    ?.isVisible = true
+                            }
+
+                            override fun onTransitionEnd(transition: Transition) {
+                                super.onTransitionEnd(transition)
+                                setSurfaceViewsVisible()
+                                // TODO (b/303318205): remove listener on lifecycle destroy
+                                (reenterTransition as Transition).removeListener(this)
+                                wallpaperPreviewViewModel.resetFullPreviewConfigViewModel()
+                            }
+                        }
+                    )
+                } else {
+                    setSurfaceViewsVisible()
+                }
+            }
+            startPostponedEnterTransition()
+        }
 
         return view
     }
@@ -126,7 +278,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             ) { sharedElement ->
                 wallpaperPreviewViewModel.isViewAsHome =
                     (viewPager.adapter as TabTextPagerAdapter).getIsHome(viewPager.currentItem)
-                ViewCompat.setTransitionName(sharedElement, SMALL_PREVIEW_SHARED_ELEMENT_ID)
                 val extras =
                     FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)
                 // Set to false on small-to-full preview transition to remove surfaceView jank.
@@ -155,7 +306,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             ) { sharedElement ->
                 wallpaperPreviewViewModel.isViewAsHome =
                     (viewPager.adapter as TabTextPagerAdapter).getIsHome(viewPager.currentItem)
-                ViewCompat.setTransitionName(sharedElement, SMALL_PREVIEW_SHARED_ELEMENT_ID)
                 val extras =
                     FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)
                 // Set to false on small-to-full preview transition to remove surfaceView jank.
@@ -245,8 +395,13 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
     }
 
     companion object {
-        const val SMALL_PREVIEW_SHARED_ELEMENT_ID = "small_preview_shared_element"
-        const val FULL_PREVIEW_SHARED_ELEMENT_ID = "full_preview_shared_element"
+        const val SMALL_PREVIEW_HOME_SHARED_ELEMENT_ID = "small_preview_home"
+        const val SMALL_PREVIEW_LOCK_SHARED_ELEMENT_ID = "small_preview_lock"
+        const val SMALL_PREVIEW_HOME_FOLDED_SHARED_ELEMENT_ID = "small_preview_home_folded"
+        const val SMALL_PREVIEW_HOME_UNFOLDED_SHARED_ELEMENT_ID = "small_preview_home_unfolded"
+        const val SMALL_PREVIEW_LOCK_FOLDED_SHARED_ELEMENT_ID = "small_preview_lock_folded"
+        const val SMALL_PREVIEW_LOCK_UNFOLDED_SHARED_ELEMENT_ID = "small_preview_lock_unfolded"
+        const val FULL_PREVIEW_SHARED_ELEMENT_ID = "full_preview"
         const val ARG_EDIT_INTENT = "arg_edit_intent"
     }
 }

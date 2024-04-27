@@ -10,6 +10,7 @@ android_app {
     static_libs: [
         "WallpaperPicker2ApplicationLib",
         "WallpaperPicker2TestLib",
+        "WallpaperPicker2TestModule",
     ],
 }
 

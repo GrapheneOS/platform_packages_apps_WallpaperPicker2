@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.util.converter.category
+package com.android.wallpaper.picker.di.modules
 
-import android.content.Context
-import com.android.wallpaper.model.Category
-import com.android.wallpaper.picker.data.category.CategoryModel
+import com.android.wallpaper.util.DisplaysProvider
+import com.android.wallpaper.util.DisplaysProviderImpl
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-/** This is the interface for converting legacy category to the new category model class. */
-interface CategoryFactory {
-    fun getCategoryModel(context: Context, category: Category): CategoryModel
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class DisplaysProviderModule {
+    @Binds
+    @Singleton
+    abstract fun bindDisplaysProvider(impl: DisplaysProviderImpl): DisplaysProvider
 }

@@ -23,7 +23,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    android:transitionGroup="true">
+    android:transitionGroup="true"
+    android:clipChildren="false">
 
     <include
         android:id="@+id/toolbar_container"
@@ -57,7 +58,8 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar_container"
         app:layout_constraintBottom_toTopOf="@id/pager_container"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clipChildren="false"/>
 
     <com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.TabsPagerContainer
         android:id="@+id/pager_container"

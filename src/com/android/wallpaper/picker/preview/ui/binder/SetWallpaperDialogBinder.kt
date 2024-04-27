@@ -17,6 +17,7 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.graphics.Point
+import android.view.SurfaceView
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
@@ -142,10 +143,11 @@ object SetWallpaperDialogBinder {
             )
             DeviceDisplayType.FOLDABLE_DISPLAY_TYPES.forEach { display ->
                 val previewDisplaySize = dualDisplayAspectRatioLayout.getPreviewDisplaySize(display)
+                val view: View = dualDisplayAspectRatioLayout.requireViewById(display.getViewId())
                 previewDisplaySize?.let {
                     SmallPreviewBinder.bind(
                         applicationContext = previewLayout.context.applicationContext,
-                        view = dualDisplayAspectRatioLayout.requireViewById(display.getViewId()),
+                        view = view,
                         viewModel = wallpaperPreviewViewModel,
                         viewLifecycleOwner = lifecycleOwner,
                         screen = screenId.key,
@@ -155,6 +157,10 @@ object SetWallpaperDialogBinder {
                         navigate = navigate,
                     )
                 }
+                // All surface views are initially hidden in the XML to enable smoother transitions.
+                // TODO(b/303318205): Refactor transition-related code below into SmallPreviewBinder
+                view.requireViewById<SurfaceView>(R.id.wallpaper_surface).isVisible = true
+                view.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible = true
             }
         }
     }
@@ -169,12 +175,13 @@ object SetWallpaperDialogBinder {
     ) {
         previewLayout.isVisible = true
         PreviewScreenIds.forEach { screenId ->
+            val view: View =
+                previewLayout
+                    .requireViewById<FrameLayout>(screenId.value)
+                    .requireViewById(R.id.preview)
             SmallPreviewBinder.bind(
                 applicationContext = previewLayout.context.applicationContext,
-                view =
-                    previewLayout
-                        .requireViewById<FrameLayout>(screenId.value)
-                        .requireViewById(R.id.preview),
+                view = view,
                 viewModel = wallpaperPreviewViewModel,
                 screen = screenId.key,
                 displaySize = displaySize,
@@ -183,6 +190,10 @@ object SetWallpaperDialogBinder {
                 currentNavDestId = currentNavDestId,
                 navigate = navigate,
             )
+            // All surface views are initially hidden in the XML to enable smoother transitions.
+            // TODO(b/303318205): Refactor transition-related code below into SmallPreviewBinder
+            view.requireViewById<SurfaceView>(R.id.wallpaper_surface).isVisible = true
+            view.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible = true
         }
     }
 

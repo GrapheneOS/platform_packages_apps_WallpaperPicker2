@@ -14,20 +14,24 @@
   ~ limitations under the License.
   ~
   -->
+<!-- Set clipToPadding to false so that during transition scaling, child card view is not clipped to
+the header bar -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipChildren="false">
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <com.android.wallpaper.picker.DisplayAspectRatioFrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false">
 
         <include
             android:id="@+id/preview"
             layout="@layout/small_wallpaper_preview_card"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"/>
     </com.android.wallpaper.picker.DisplayAspectRatioFrameLayout>
 
