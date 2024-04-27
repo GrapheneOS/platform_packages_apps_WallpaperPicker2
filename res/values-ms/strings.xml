@@ -32,7 +32,7 @@
     <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"Pilih Hiasan latar"</string>
     <string name="creative_wallpaper_title" msgid="3581650238648981372">"Buat hiasan latar"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Skrin utama"</string>
-    <string name="lock_screen_message" msgid="1534506081955058013">"Kunci skrin"</string>
+    <string name="lock_screen_message" msgid="1534506081955058013">"Skrin kunci"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Skrin Utama &amp; Kunci"</string>
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Tetapkan hiasan latar"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Skrin utama"</string>

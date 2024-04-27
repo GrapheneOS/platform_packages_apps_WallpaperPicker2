@@ -32,11 +32,11 @@
     <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"Odaberite pozadinsku sliku"</string>
     <string name="creative_wallpaper_title" msgid="3581650238648981372">"Kreirajte pozadinsku sliku"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Početni ekran"</string>
-    <string name="lock_screen_message" msgid="1534506081955058013">"Zaključavanje ekrana"</string>
+    <string name="lock_screen_message" msgid="1534506081955058013">"Zaključani ekran"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Početni i zaključani ekran"</string>
     <string name="set_wallpaper_dialog_message" msgid="2110475703996853076">"Postavite pozadinsku sliku na"</string>
     <string name="set_wallpaper_home_screen_destination" msgid="7315594722013109354">"Početni ekran"</string>
-    <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Zaključavanje ekrana"</string>
+    <string name="set_wallpaper_lock_screen_destination" msgid="6224685559375417945">"Zaključani ekran"</string>
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Početni i zaključani ekrani"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Smjenjivanje pozadinskih slika"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Da ovdje prikažete trenutne pozadinske slike, aplikaciji <xliff:g id="APP_NAME">%1$s</xliff:g> treba pristup pohrani na vašem uređaju."</string>
