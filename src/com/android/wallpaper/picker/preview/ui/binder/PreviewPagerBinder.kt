@@ -19,16 +19,16 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
 import android.view.View
-import androidx.core.view.ViewCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Transition
 import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.model.wallpaper.PreviewPagerPage
-import com.android.wallpaper.picker.preview.ui.fragment.SmallPreviewFragment
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.SinglePreviewPagerAdapter
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.pagetransformers.PreviewCardPageTransformer
+import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 
 /** Binds single preview home screen and lock screen tabs view pager. */
@@ -42,18 +42,12 @@ object PreviewPagerBinder {
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
         previewDisplaySize: Point,
         currentNavDestId: Int,
+        transition: Transition?,
+        transitionConfig: FullPreviewConfigViewModel?,
         navigate: (View) -> Unit,
     ) {
         previewsViewPager.apply {
             adapter = SinglePreviewPagerAdapter { viewHolder, position ->
-                // Set transition names to enable the small to full preview enter and return shared
-                // element transitions.
-                ViewCompat.setTransitionName(
-                    viewHolder.itemView.requireViewById(R.id.preview_card),
-                    if (position == 0) SmallPreviewFragment.SMALL_PREVIEW_LOCK_SHARED_ELEMENT_ID
-                    else SmallPreviewFragment.SMALL_PREVIEW_HOME_SHARED_ELEMENT_ID
-                )
-
                 PreviewTooltipBinder.bindSmallPreviewTooltip(
                     tooltipStub = viewHolder.itemView.requireViewById(R.id.tooltip_stub),
                     viewModel = wallpaperPreviewViewModel.smallTooltipViewModel,
@@ -69,12 +63,12 @@ object PreviewPagerBinder {
                     deviceDisplayType = DeviceDisplayType.SINGLE,
                     viewLifecycleOwner = viewLifecycleOwner,
                     currentNavDestId = currentNavDestId,
+                    transition = transition,
+                    transitionConfig = transitionConfig,
                     navigate = navigate,
                 )
             }
             offscreenPageLimit = SinglePreviewPagerAdapter.PREVIEW_PAGER_ITEM_COUNT
-            clipChildren = false
-            clipToPadding = false
             setPageTransformer(PreviewCardPageTransformer(previewDisplaySize))
         }
 
@@ -83,6 +77,9 @@ object PreviewPagerBinder {
         val child: View = previewsViewPager.getChildAt(0)
         if (child is RecyclerView) {
             child.overScrollMode = View.OVER_SCROLL_NEVER
+            // Remove clip children to enable child card view to display fully during scaling shared
+            // element transition.
+            child.clipChildren = false
         }
     }
 }

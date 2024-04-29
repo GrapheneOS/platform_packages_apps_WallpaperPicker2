@@ -18,9 +18,11 @@ package com.android.wallpaper.picker.preview.ui.binder
 import android.content.Context
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
+import androidx.transition.Transition
 import androidx.viewpager.widget.ViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.TabTextPagerAdapter
+import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 
 /**
@@ -36,6 +38,8 @@ object DualPreviewSelectorBinder {
         applicationContext: Context,
         viewLifecycleOwner: LifecycleOwner,
         currentNavDestId: Int,
+        transition: Transition?,
+        transitionConfig: FullPreviewConfigViewModel?,
         navigate: (View) -> Unit,
     ) {
         // set up tabs view pager
@@ -50,6 +54,8 @@ object DualPreviewSelectorBinder {
             applicationContext,
             viewLifecycleOwner,
             currentNavDestId,
+            transition,
+            transitionConfig,
             navigate,
         )
         tabsViewPager.currentItem =

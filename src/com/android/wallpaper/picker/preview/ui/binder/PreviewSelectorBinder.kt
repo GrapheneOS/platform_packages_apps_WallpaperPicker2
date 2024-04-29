@@ -19,9 +19,11 @@ import android.content.Context
 import android.graphics.Point
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
+import androidx.transition.Transition
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.TabTextPagerAdapter
+import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 
 /** Binds and synchronizes the tab and preview view pagers. */
@@ -35,6 +37,8 @@ object PreviewSelectorBinder {
         applicationContext: Context,
         viewLifecycleOwner: LifecycleOwner,
         currentNavDestId: Int,
+        transition: Transition?,
+        transitionConfig: FullPreviewConfigViewModel?,
         navigate: (View) -> Unit,
     ) {
         // set up tabs view pager
@@ -48,6 +52,8 @@ object PreviewSelectorBinder {
             wallpaperPreviewViewModel,
             previewDisplaySize,
             currentNavDestId,
+            transition,
+            transitionConfig,
             navigate,
         )
 

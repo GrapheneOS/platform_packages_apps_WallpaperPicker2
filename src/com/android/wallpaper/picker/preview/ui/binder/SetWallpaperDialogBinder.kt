@@ -17,7 +17,6 @@
 package com.android.wallpaper.picker.preview.ui.binder
 
 import android.graphics.Point
-import android.view.SurfaceView
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
@@ -157,10 +156,6 @@ object SetWallpaperDialogBinder {
                         navigate = navigate,
                     )
                 }
-                // All surface views are initially hidden in the XML to enable smoother transitions.
-                // TODO(b/303318205): Refactor transition-related code below into SmallPreviewBinder
-                view.requireViewById<SurfaceView>(R.id.wallpaper_surface).isVisible = true
-                view.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible = true
             }
         }
     }
@@ -190,10 +185,6 @@ object SetWallpaperDialogBinder {
                 currentNavDestId = currentNavDestId,
                 navigate = navigate,
             )
-            // All surface views are initially hidden in the XML to enable smoother transitions.
-            // TODO(b/303318205): Refactor transition-related code below into SmallPreviewBinder
-            view.requireViewById<SurfaceView>(R.id.wallpaper_surface).isVisible = true
-            view.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible = true
         }
     }
 

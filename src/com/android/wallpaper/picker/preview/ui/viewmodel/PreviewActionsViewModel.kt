@@ -315,7 +315,7 @@ constructor(
             },
             object : EffectDownloadClickListener {
                 override fun onEffectDownloadClick() {
-                    interactor.startEffectsMLDownload(effect)
+                    interactor.startEffectsModelDownload(effect)
                 }
             },
             floatingSheetViewStatus,
