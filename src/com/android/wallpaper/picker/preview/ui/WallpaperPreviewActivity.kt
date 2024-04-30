@@ -174,8 +174,14 @@ class WallpaperPreviewActivity :
         // TODO(b/328302105): MainScope ensures the job gets done non-blocking even if the
         //   activity has been destroyed already. Consider making this part of
         //   WallpaperConnectionUtils.
-        mainScope.launch {
-            (wallpaperPreviewViewModel.wallpaper.value as? WallpaperModel.LiveWallpaperModel)?.let {
+        (wallpaperPreviewViewModel.wallpaper.value as? WallpaperModel.LiveWallpaperModel)?.let {
+            // Keep a copy of current wallpaperPreviewViewModel.wallpaperDisplaySize as what we want
+            // to disconnect. There's a chance mainScope executes the job not until new activity
+            // is created and the wallpaperDisplaySize is updated to a new one, e.g. when
+            // orientation changed.
+            // TODO(b/328302105): maintain this state in WallpaperConnectionUtils.
+            val currentWallpaperDisplay = wallpaperPreviewViewModel.wallpaperDisplaySize.value
+            mainScope.launch {
                 WallpaperConnectionUtils.disconnect(
                     appContext,
                     it,
@@ -184,7 +190,7 @@ class WallpaperPreviewActivity :
                 WallpaperConnectionUtils.disconnect(
                     appContext,
                     it,
-                    wallpaperPreviewViewModel.wallpaperDisplaySize.value
+                    currentWallpaperDisplay,
                 )
             }
         }
