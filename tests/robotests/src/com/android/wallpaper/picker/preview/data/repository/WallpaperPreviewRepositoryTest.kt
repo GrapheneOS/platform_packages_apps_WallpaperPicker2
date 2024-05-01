@@ -31,8 +31,8 @@ import com.android.wallpaper.picker.data.Destination
 import com.android.wallpaper.picker.data.LiveWallpaperData
 import com.android.wallpaper.picker.data.WallpaperId
 import com.android.wallpaper.picker.data.WallpaperModel
+import com.android.wallpaper.picker.preview.data.util.FakeLiveWallpaperDownloader
 import com.android.wallpaper.picker.preview.data.util.ShadowWallpaperInfo
-import com.android.wallpaper.picker.preview.data.util.TestLiveWallpaperDownloader
 import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultCode
 import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultModel
 import com.android.wallpaper.testing.TestAsset
@@ -79,7 +79,7 @@ class WallpaperPreviewRepositoryTest {
     fun setWallpaperModel() {
         underTest =
             WallpaperPreviewRepository(
-                liveWallpaperDownloader = TestLiveWallpaperDownloader(null),
+                liveWallpaperDownloader = FakeLiveWallpaperDownloader(),
                 preferences = prefs,
                 bgDispatcher = testDispatcher,
             )
@@ -97,12 +97,12 @@ class WallpaperPreviewRepositoryTest {
     }
 
     @Test
-    fun dismissTooltip() {
+    fun dismissSmallTooltip() {
         prefs.setHasSmallPreviewTooltipBeenShown(false)
         prefs.setHasFullPreviewTooltipBeenShown(false)
         underTest =
             WallpaperPreviewRepository(
-                liveWallpaperDownloader = TestLiveWallpaperDownloader(null),
+                liveWallpaperDownloader = FakeLiveWallpaperDownloader(),
                 preferences = prefs,
                 bgDispatcher = testDispatcher,
             )
@@ -110,6 +110,7 @@ class WallpaperPreviewRepositoryTest {
         assertThat(underTest.hasFullPreviewTooltipBeenShown.value).isFalse()
 
         underTest.hideSmallPreviewTooltip()
+
         assertThat(prefs.getHasSmallPreviewTooltipBeenShown()).isTrue()
         assertThat(underTest.hasSmallPreviewTooltipBeenShown.value).isTrue()
         assertThat(prefs.getHasFullPreviewTooltipBeenShown()).isFalse()
@@ -117,13 +118,34 @@ class WallpaperPreviewRepositoryTest {
     }
 
     @Test
-    fun downloadWallpaper_fails() {
+    fun dismissFullTooltip() {
+        prefs.setHasSmallPreviewTooltipBeenShown(false)
+        prefs.setHasFullPreviewTooltipBeenShown(false)
         underTest =
             WallpaperPreviewRepository(
-                liveWallpaperDownloader =
-                    TestLiveWallpaperDownloader(
-                        LiveWallpaperDownloadResultModel(LiveWallpaperDownloadResultCode.FAIL, null)
-                    ),
+                liveWallpaperDownloader = FakeLiveWallpaperDownloader(),
+                preferences = prefs,
+                bgDispatcher = testDispatcher,
+            )
+        assertThat(underTest.hasSmallPreviewTooltipBeenShown.value).isFalse()
+        assertThat(underTest.hasFullPreviewTooltipBeenShown.value).isFalse()
+
+        underTest.hideFullPreviewTooltip()
+
+        assertThat(prefs.getHasSmallPreviewTooltipBeenShown()).isFalse()
+        assertThat(underTest.hasSmallPreviewTooltipBeenShown.value).isFalse()
+        assertThat(prefs.getHasFullPreviewTooltipBeenShown()).isTrue()
+        assertThat(underTest.hasFullPreviewTooltipBeenShown.value).isTrue()
+    }
+
+    @Test
+    fun downloadWallpaper_fails() {
+        val liveWallpaperDownloader = FakeLiveWallpaperDownloader()
+        liveWallpaperDownloader.wallpaperDownloadResult =
+            LiveWallpaperDownloadResultModel(LiveWallpaperDownloadResultCode.FAIL, null)
+        underTest =
+            WallpaperPreviewRepository(
+                liveWallpaperDownloader = liveWallpaperDownloader,
                 preferences = prefs,
                 bgDispatcher = testDispatcher,
             )
@@ -140,16 +162,16 @@ class WallpaperPreviewRepositoryTest {
 
     @Test
     fun downloadWallpaper_succeeds() {
+        val liveWallpaperDownloader = FakeLiveWallpaperDownloader()
         val resultWallpaper = getTestLiveWallpaperModel()
+        liveWallpaperDownloader.wallpaperDownloadResult =
+            LiveWallpaperDownloadResultModel(
+                code = LiveWallpaperDownloadResultCode.SUCCESS,
+                wallpaperModel = resultWallpaper,
+            )
         underTest =
             WallpaperPreviewRepository(
-                liveWallpaperDownloader =
-                    TestLiveWallpaperDownloader(
-                        LiveWallpaperDownloadResultModel(
-                            code = LiveWallpaperDownloadResultCode.SUCCESS,
-                            wallpaperModel = resultWallpaper,
-                        )
-                    ),
+                liveWallpaperDownloader = liveWallpaperDownloader,
                 preferences = prefs,
                 bgDispatcher = testDispatcher,
             )

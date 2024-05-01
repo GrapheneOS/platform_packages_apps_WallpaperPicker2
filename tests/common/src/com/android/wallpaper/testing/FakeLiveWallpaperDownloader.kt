@@ -21,11 +21,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultModel
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class TestLiveWallpaperDownloader(
-    private val wallpaperDownloadResult: LiveWallpaperDownloadResultModel?
-) : LiveWallpaperDownloader {
-
+@Singleton
+class FakeLiveWallpaperDownloader @Inject constructor() : LiveWallpaperDownloader {
+    var wallpaperDownloadResult: LiveWallpaperDownloadResultModel? = null
     override fun initiateDownloadableService(
         activity: Activity,
         wallpaperData: WallpaperModel.StaticWallpaperModel,

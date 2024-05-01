@@ -15,16 +15,12 @@
  */
 package com.android.wallpaper.picker.di.modules
 
-import android.app.WallpaperManager
-import android.content.Context
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
-import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
@@ -47,19 +43,6 @@ internal object RepositoryModule {
             wallpaperClient,
             wallpaperPreferences,
             bgDispatcher,
-        )
-    }
-
-    @Provides
-    fun provideWallpaperClient(
-        @ApplicationContext appContext: Context,
-        wallpaperManager: WallpaperManager,
-        wallpaperPreferences: WallpaperPreferences,
-    ): WallpaperClient {
-        return WallpaperClientImpl(
-            appContext,
-            wallpaperManager,
-            wallpaperPreferences,
         )
     }
 }

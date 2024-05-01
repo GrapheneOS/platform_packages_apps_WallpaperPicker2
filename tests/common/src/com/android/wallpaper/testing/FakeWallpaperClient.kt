@@ -29,12 +29,15 @@ import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.min
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
-class FakeWallpaperClient : WallpaperClient {
+@Singleton
+class FakeWallpaperClient @Inject constructor() : WallpaperClient {
 
     private val _recentWallpapers =
         MutableStateFlow(

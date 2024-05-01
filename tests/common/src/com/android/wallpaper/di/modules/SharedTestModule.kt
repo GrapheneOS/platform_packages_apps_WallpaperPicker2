@@ -18,10 +18,15 @@ package com.android.wallpaper.di.modules
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.pm.PackageManager
+import com.android.wallpaper.picker.customization.data.content.WallpaperClient
+import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
+import com.android.wallpaper.picker.di.modules.DispatchersModule
+import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.di.modules.SharedAppModule
 import com.android.wallpaper.system.UiModeManagerWrapper
 import com.android.wallpaper.testing.FakeDefaultCategoryFactory
 import com.android.wallpaper.testing.FakeUiModeManager
+import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.FakeWallpaperXMLParser
 import com.android.wallpaper.util.WallpaperXMLParserInterface
 import com.android.wallpaper.util.converter.category.CategoryFactory
@@ -32,9 +37,16 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
 
 @Module
-@TestInstallIn(components = [SingletonComponent::class], replaces = [SharedAppModule::class])
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [SharedAppModule::class, DispatchersModule::class]
+)
 internal abstract class SharedTestModule {
     @Binds @Singleton abstract fun bindUiModeManager(impl: FakeUiModeManager): UiModeManagerWrapper
 
@@ -45,6 +57,15 @@ internal abstract class SharedTestModule {
     @Binds
     @Singleton
     abstract fun bindCategoryFactory(impl: FakeDefaultCategoryFactory): CategoryFactory
+
+    @Binds @Singleton abstract fun bindWallpaperClient(impl: FakeWallpaperClient): WallpaperClient
+
+    @Binds
+    @Singleton
+    @BackgroundDispatcher
+    abstract fun bindBackgroundDispatcher(
+        @MainDispatcher impl: CoroutineDispatcher
+    ): CoroutineDispatcher
 
     companion object {
         @Provides
@@ -57,6 +78,27 @@ internal abstract class SharedTestModule {
         @Singleton
         fun providePackageManager(@ApplicationContext appContext: Context): PackageManager {
             return appContext.packageManager
+        }
+
+        @Provides
+        @Singleton
+        @MainDispatcher
+        fun providesMainDispatcher(): CoroutineDispatcher {
+            return StandardTestDispatcher()
+        }
+
+        @Provides
+        @Singleton
+        @MainDispatcher
+        fun providesMainScope(@MainDispatcher mainDispatcher: CoroutineDispatcher): CoroutineScope {
+            return TestScope(mainDispatcher)
+        }
+
+        @Provides
+        @Singleton
+        @BackgroundDispatcher
+        fun provideBackgroupdScope(@MainDispatcher impl: CoroutineScope): CoroutineScope {
+            return (impl as TestScope).backgroundScope
         }
     }
 }

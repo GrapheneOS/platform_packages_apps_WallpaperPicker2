@@ -33,7 +33,7 @@ import kotlinx.coroutines.Dispatchers
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object DispatchersModule {
+object DispatchersModule {
 
     @Provides
     @MainDispatcher

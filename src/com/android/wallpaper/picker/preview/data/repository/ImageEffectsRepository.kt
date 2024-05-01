@@ -352,7 +352,12 @@ constructor(
     }
 
     fun destroy() {
+        timeOutHandler.removeCallbacksAndMessages(null)
         effectsController.removeListener()
+        // We need to call interruptGenerate() and destroy() to make sure there is no cached effect
+        // wallpaper overriding the currently-selected effect wallpaper preview.
+        wallpaperEffect.value?.let { effectsController.interruptGenerate(it) }
+        effectsController.destroy()
         _wallpaperEffect.value = null
     }
 

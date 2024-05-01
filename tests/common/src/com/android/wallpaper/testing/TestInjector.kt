@@ -94,15 +94,15 @@ open class TestInjector @Inject constructor(private val userEventLogger: UserEve
     private var wallpaperInteractor: WallpaperInteractor? = null
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
     private var wallpaperColorsRepository: WallpaperColorsRepository? = null
-    private var wallpaperClient: FakeWallpaperClient? = null
     private var previewActivityIntentFactory: InlinePreviewIntentFactory? = null
     private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
 
     // Injected objects, sorted by alphabetical order of the type of object
     @Inject lateinit var displayUtils: DisplayUtils
     @Inject lateinit var partnerProvider: PartnerProvider
-    @Inject lateinit var prefs: WallpaperPreferences
+    @Inject lateinit var wallpaperClient: FakeWallpaperClient
     @Inject lateinit var injectedWallpaperInteractor: WallpaperInteractor
+    @Inject lateinit var prefs: WallpaperPreferences
 
     override fun getApplicationCoroutineScope(): CoroutineScope {
         return appScope ?: CoroutineScope(Dispatchers.Main).also { appScope = it }
@@ -330,7 +330,7 @@ open class TestInjector @Inject constructor(private val userEventLogger: UserEve
     }
 
     override fun getWallpaperClient(context: Context): FakeWallpaperClient {
-        return wallpaperClient ?: FakeWallpaperClient().also { wallpaperClient = it }
+        return wallpaperClient
     }
 
     override fun isInstrumentationTest(): Boolean {

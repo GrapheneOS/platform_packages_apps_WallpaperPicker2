@@ -60,9 +60,12 @@ import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
 import com.android.wallpaper.util.WallpaperCropUtils
 import com.android.wallpaper.util.converter.WallpaperModelFactory.Companion.getCommonWallpaperData
 import com.android.wallpaper.util.converter.WallpaperModelFactory.Companion.getCreativeWallpaperData
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException
 import java.io.InputStream
 import java.util.EnumMap
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -70,8 +73,11 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 
-class WallpaperClientImpl(
-    private val context: Context,
+@Singleton
+class WallpaperClientImpl
+@Inject
+constructor(
+    @ApplicationContext private val context: Context,
     private val wallpaperManager: WallpaperManager,
     private val wallpaperPreferences: WallpaperPreferences,
 ) : WallpaperClient {
