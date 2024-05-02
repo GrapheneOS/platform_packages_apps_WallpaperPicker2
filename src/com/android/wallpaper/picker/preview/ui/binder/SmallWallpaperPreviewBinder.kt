@@ -27,7 +27,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
-import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil
@@ -52,7 +51,6 @@ object SmallWallpaperPreviewBinder {
     fun bind(
         surface: SurfaceView,
         viewModel: WallpaperPreviewViewModel,
-        screen: Screen,
         displaySize: Point,
         applicationContext: Context,
         viewLifecycleOwner: LifecycleOwner,
@@ -66,7 +64,6 @@ object SmallWallpaperPreviewBinder {
                         applicationContext = applicationContext,
                         surface = surface,
                         viewModel = viewModel,
-                        screen = screen,
                         deviceDisplayType = deviceDisplayType,
                         displaySize = displaySize,
                         lifecycleOwner = viewLifecycleOwner,
@@ -91,7 +88,6 @@ object SmallWallpaperPreviewBinder {
         applicationContext: Context,
         surface: SurfaceView,
         viewModel: WallpaperPreviewViewModel,
-        screen: Screen,
         deviceDisplayType: DeviceDisplayType,
         displaySize: Point,
         lifecycleOwner: LifecycleOwner,
@@ -111,7 +107,7 @@ object SmallWallpaperPreviewBinder {
                                     applicationContext,
                                     wallpaper,
                                     whichPreview,
-                                    screen.toFlag(),
+                                    viewModel.getWallpaperPreviewSource().toFlag(),
                                     surface,
                                     WallpaperConnectionUtils.EngineRenderingConfig(
                                         wallpaper.shouldEnforceSingleEngine(),

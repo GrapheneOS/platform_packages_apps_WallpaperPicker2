@@ -188,7 +188,7 @@ object FullWallpaperPreviewBinder {
                                     applicationContext,
                                     wallpaper,
                                     whichPreview,
-                                    config.screen.toFlag(),
+                                    viewModel.getWallpaperPreviewSource().toFlag(),
                                     surfaceView,
                                     engineRenderingConfig,
                                 )

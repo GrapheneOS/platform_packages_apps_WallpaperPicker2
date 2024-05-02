@@ -89,6 +89,8 @@ class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
                     CREATIVE_RESULT_REGISTRY,
                     ActivityResultContracts.StartActivityForResult()
                 ) {
+                    // Reset full preview view model to disable full to small preview transition
+                    wallpaperPreviewViewModel.resetFullPreviewConfigViewModel()
                     wallpaperPreviewViewModel.isCurrentlyEditingCreativeWallpaper = false
                     // Callback when the overlaying edit activity is finished. Result code of
                     // RESULT_OK means the user clicked on the check button; RESULT_CANCELED
@@ -118,6 +120,8 @@ class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
                         }
                     },
                 ) {
+                    // Reset full preview view model to disable full to small preview transition
+                    wallpaperPreviewViewModel.resetFullPreviewConfigViewModel()
                     findNavController().popBackStack()
                 }
             }

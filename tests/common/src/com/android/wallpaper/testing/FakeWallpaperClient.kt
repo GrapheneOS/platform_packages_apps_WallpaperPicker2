@@ -38,6 +38,12 @@ import kotlinx.coroutines.flow.map
 
 @Singleton
 class FakeWallpaperClient @Inject constructor() : WallpaperClient {
+    val wallpapersSet =
+        mutableMapOf(
+            WallpaperDestination.HOME to
+                mutableListOf<com.android.wallpaper.picker.data.WallpaperModel>(),
+            WallpaperDestination.LOCK to mutableListOf()
+        )
 
     private val _recentWallpapers =
         MutableStateFlow(
@@ -97,7 +103,7 @@ class FakeWallpaperClient @Inject constructor() : WallpaperClient {
         asset: Asset,
         fullPreviewCropModels: Map<Point, FullPreviewCropModel>?,
     ) {
-        TODO("Not yet implemented")
+        addToWallpapersSet(wallpaperModel, destination)
     }
 
     override suspend fun setLiveWallpaper(
@@ -105,7 +111,18 @@ class FakeWallpaperClient @Inject constructor() : WallpaperClient {
         destination: WallpaperDestination,
         wallpaperModel: LiveWallpaperModel,
     ) {
-        TODO("Not yet implemented")
+        addToWallpapersSet(wallpaperModel, destination)
+    }
+
+    private fun addToWallpapersSet(
+        wallpaperModel: com.android.wallpaper.picker.data.WallpaperModel,
+        destination: WallpaperDestination
+    ) {
+        wallpapersSet.forEach { entry ->
+            if (destination == entry.key || destination == WallpaperDestination.BOTH) {
+                entry.value.add(wallpaperModel)
+            }
+        }
     }
 
     override suspend fun setRecentWallpaper(

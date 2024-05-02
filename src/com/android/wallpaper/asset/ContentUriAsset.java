@@ -43,8 +43,10 @@ import com.bumptech.glide.request.target.Target;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Represents an asset located via an Android content URI.
@@ -58,6 +60,8 @@ public final class ContentUriAsset extends StreamableAsset {
     private final Context mContext;
     private final Uri mUri;
     private final RequestOptions mRequestOptions;
+
+    private final Future<InputStream> mInputStreamFuture;
 
     private ExifInterfaceCompat mExifCompat;
     private int mExifOrientation;
@@ -75,6 +79,7 @@ public final class ContentUriAsset extends StreamableAsset {
         mExifOrientation = ExifInterfaceCompat.EXIF_ORIENTATION_UNKNOWN;
         mContext = context.getApplicationContext();
         mUri = uri;
+        mInputStreamFuture = openInputStreamFuture();
 
         if (uncached) {
             mRequestOptions = requestOptions.apply(RequestOptions
@@ -204,17 +209,32 @@ public final class ContentUriAsset extends StreamableAsset {
                 Log.w(TAG, "Couldn't read stream for " + mUri, e);
             }
         }
-
     }
 
     @Override
     protected InputStream openInputStream() {
+        InputStream inputStream = null;
         try {
-            return mContext.getContentResolver().openInputStream(mUri);
-        } catch (FileNotFoundException e) {
-            Log.w(TAG, "Image file not found", e);
-            return null;
+            inputStream = mInputStreamFuture.get();
+        } catch (ExecutionException e) {
+            Log.w(TAG, "Fail to open input stream", e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            Log.w(TAG, "Open input stream interrupted", e);
         }
+
+        return inputStream;
+    }
+
+    private Future<InputStream> openInputStreamFuture() {
+        return sExecutorService.submit(() -> {
+            try {
+                return mContext.getContentResolver().openInputStream(mUri);
+            } catch (FileNotFoundException e) {
+                Log.w(TAG, "Image file not found", e);
+                return null;
+            }
+        });
     }
 
     @Override

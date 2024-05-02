@@ -78,8 +78,14 @@ constructor(
 
     val staticWallpaperPreviewViewModel =
         staticWallpaperPreviewViewModelFactory.create(viewModelScope)
-    var isViewAsHome = false
+
     var isNewTask = false
+
+    // The source of current wallpaper preview, from HS or LS wallpaper.
+    var isViewAsHome = false
+
+    fun getWallpaperPreviewSource(): Screen =
+        if (isViewAsHome) Screen.HOME_SCREEN else Screen.LOCK_SCREEN
 
     val wallpaper: StateFlow<WallpaperModel?> = interactor.wallpaperModel
 
