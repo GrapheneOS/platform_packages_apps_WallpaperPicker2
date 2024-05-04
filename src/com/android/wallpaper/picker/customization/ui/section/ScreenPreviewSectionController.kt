@@ -94,8 +94,7 @@ open class ScreenPreviewSectionController(
         val view =
             LayoutInflater.from(context)
                 .inflate(
-                    if (params.isOnLockScreen) R.layout.screen_preview_section_lock
-                    else R.layout.screen_preview_section_home,
+                    R.layout.screen_preview_section,
                     /* parent= */ null,
                 ) as ScreenPreviewView
 
@@ -112,6 +111,19 @@ open class ScreenPreviewSectionController(
             layoutParams.gravity = Gravity.CENTER
             previewHost.layoutParams = layoutParams
         }
+
+        view
+            .requireViewById<ScreenPreviewClickView>(R.id.screen_preview_click_view)
+            .setOnPreviewClickedListener {
+                lifecycleOwner.lifecycleScope.launch {
+                    getWallpaperInfo(context)?.let { wallpaperInfo ->
+                        wallpaperPreviewNavigator.showViewOnlyPreview(
+                            wallpaperInfo,
+                            /* isAssetIdPresent= */ false,
+                        )
+                    }
+                }
+            }
 
         val previewView: CardView = view.requireViewById(R.id.preview)
 
@@ -135,16 +147,6 @@ open class ScreenPreviewSectionController(
                 onWallpaperPreviewDirty = { activity.recreate() },
                 animationStateViewModel = customizationPickerViewModel,
                 isWallpaperAlwaysVisible = isWallpaperAlwaysVisible,
-                onClick = {
-                    lifecycleOwner.lifecycleScope.launch {
-                        getWallpaperInfo(context)?.let { wallpaperInfo ->
-                            wallpaperPreviewNavigator.showViewOnlyPreview(
-                                wallpaperInfo,
-                                /* isAssetIdPresent= */ false,
-                            )
-                        }
-                    }
-                }
             )
     }
 

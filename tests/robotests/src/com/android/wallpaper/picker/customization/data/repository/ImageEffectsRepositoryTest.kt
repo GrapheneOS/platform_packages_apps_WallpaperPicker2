@@ -16,36 +16,39 @@
 
 package com.android.wallpaper.picker.customization.data.repository
 
-import android.content.ContentProvider
-import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.content.pm.ServiceInfo
-import android.database.Cursor
-import android.database.MatrixCursor
 import android.net.Uri
 import android.service.wallpaper.WallpaperService
 import androidx.test.core.app.ApplicationProvider
 import com.android.wallpaper.effects.Effect
-import com.android.wallpaper.effects.EffectContract
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.effects.EffectsController.RESULT_PROBE_SUCCESS
 import com.android.wallpaper.effects.FakeEffectsController
+import com.android.wallpaper.effects.FakeEffectsController.Companion.LIVE_WALLPAPER_COMPONENT_CLASS_NAME
+import com.android.wallpaper.effects.FakeEffectsController.Companion.LIVE_WALLPAPER_COMPONENT_PKG_NAME
 import com.android.wallpaper.module.logging.TestUserEventLogger
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository
 import com.android.wallpaper.picker.preview.data.util.ShadowWallpaperInfo
 import com.android.wallpaper.picker.preview.shared.model.ImageEffectsModel
+import com.android.wallpaper.testing.FakeContentProvider
+import com.android.wallpaper.testing.FakeContentProvider.Companion.FAKE_EFFECT_ID
+import com.android.wallpaper.testing.FakeContentProvider.Companion.FAKE_EFFECT_TITLE
 import com.android.wallpaper.testing.WallpaperModelUtils.Companion.getStaticWallpaperModel
 import com.android.wallpaper.testing.collectLastValue
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import javax.inject.Inject
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -53,10 +56,14 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowContentResolver
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@HiltAndroidTest
 @Config(shadows = [ShadowWallpaperInfo::class])
 @RunWith(RobolectricTestRunner::class)
 class ImageEffectsRepositoryTest {
+    @get:Rule var hiltRule = HiltAndroidRule(this)
+
+    @Inject lateinit var contentProvider: FakeContentProvider
+    @Inject lateinit var effectsController: FakeEffectsController
 
     private val context: HiltTestApplication = ApplicationProvider.getApplicationContext()
     private val testDispatcher = StandardTestDispatcher()
@@ -65,24 +72,21 @@ class ImageEffectsRepositoryTest {
         getStaticWallpaperModel(
             wallpaperId = "testWallpaperId",
             collectionId = "testCollection",
-            imageWallpaperUri =
-                Uri.parse(
-                    "content://com.google.android.apps.photos.contentprovider/-1/1/content%3A%2F%2Fmedia%2Fexternal%2Fimages%2Fmedia%2F29/ORIGINAL/NONE/image%2Fjpeg/1309681125"
-                )
+            imageWallpaperUri = Uri.parse("content://com.test/image")
         )
 
     @Before
     fun setUp() {
+        hiltRule.inject()
         // Register a fake the content provider
-        val contentProvider = FakeContentProvider()
         ShadowContentResolver.registerProviderInternal(
             FakeEffectsController.AUTHORITY,
             contentProvider,
         )
         // Make a shadow of package manager
         val pm = shadowOf(context.packageManager)
-        val packageName = "com.google.android.wallpaper.effects"
-        val className = "com.google.android.wallpaper.effects.cinematic.CinematicWallpaperService"
+        val packageName = LIVE_WALLPAPER_COMPONENT_PKG_NAME
+        val className = LIVE_WALLPAPER_COMPONENT_CLASS_NAME
         val resolveInfo =
             ResolveInfo().apply {
                 serviceInfo = ServiceInfo()
@@ -301,79 +305,20 @@ class ImageEffectsRepositoryTest {
         retryInstruction: String = "",
         noEffectInstruction: String = "",
     ): ImageEffectsRepository {
+        effectsController.apply {
+            fakeAreEffectsAvailable = areEffectsAvailable
+            fakeIsEffectTriggered = isEffectTriggered
+            fakeEffectTitle = effectTitle
+            fakeEffectFailedTitle = effectFailedTitle
+            fakeEffectSubTitle = effectSubTitle
+            fakeRetryInstruction = retryInstruction
+            fakeNoEffectInstruction = noEffectInstruction
+        }
         return ImageEffectsRepository(
             context = context,
-            effectsController =
-                FakeEffectsController(
-                    areEffectsAvailable,
-                    isEffectTriggered,
-                    effectTitle,
-                    effectFailedTitle,
-                    effectSubTitle,
-                    retryInstruction,
-                    noEffectInstruction,
-                ),
+            effectsController = effectsController,
             logger = TestUserEventLogger(),
             bgDispatcher = testDispatcher,
         )
-    }
-
-    private class FakeContentProvider : ContentProvider() {
-        override fun query(
-            uri: Uri,
-            projection: Array<out String>?,
-            selection: String?,
-            selectionArgs: Array<out String>?,
-            sortOrder: String?
-        ): Cursor {
-            val cursor =
-                MatrixCursor(
-                    arrayOf(
-                        EffectContract.ASSET_ID,
-                        EffectContract.KEY_EFFECT_ID,
-                        EffectContract.KEY_EFFECT_TITLE,
-                    ),
-                )
-            if (uri.authority.equals(FakeEffectsController.AUTHORITY)) {
-                // Return to-be-installed component names (flatten String)
-                cursor
-                    .newRow()
-                    .add(EffectContract.ASSET_ID, FAKE_ASSET_ID)
-                    .add(EffectContract.KEY_EFFECT_ID, FAKE_EFFECT_ID)
-                    .add(EffectContract.KEY_EFFECT_TITLE, FAKE_EFFECT_TITLE)
-            }
-            return cursor
-        }
-
-        override fun getType(uri: Uri): String? {
-            TODO("Not yet implemented")
-        }
-
-        override fun insert(uri: Uri, values: ContentValues?): Uri? {
-            TODO("Not yet implemented")
-        }
-
-        override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
-            TODO("Not yet implemented")
-        }
-
-        override fun update(
-            uri: Uri,
-            values: ContentValues?,
-            selection: String?,
-            selectionArgs: Array<out String>?
-        ): Int {
-            TODO("Not yet implemented")
-        }
-
-        override fun onCreate(): Boolean {
-            TODO("Not yet implemented")
-        }
-    }
-
-    companion object {
-        const val FAKE_ASSET_ID = 1
-        const val FAKE_EFFECT_ID = 1
-        const val FAKE_EFFECT_TITLE = "Fake Effect Title"
     }
 }

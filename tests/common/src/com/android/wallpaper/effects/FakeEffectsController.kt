@@ -21,16 +21,19 @@ import android.content.ComponentName
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class FakeEffectsController(
-    private val areEffectsAvailable: Boolean,
-    private val isEffectTriggered: Boolean,
-    private val effectTitle: String,
-    private val effectFailedTitle: String,
-    private val effectSubTitle: String,
-    private val retryInstruction: String,
-    private val noEffectInstruction: String,
-) : EffectsController() {
+@Singleton
+class FakeEffectsController @Inject constructor() : EffectsController() {
+
+    var fakeAreEffectsAvailable: Boolean = true
+    var fakeIsEffectTriggered: Boolean = true
+    var fakeEffectTitle: String = ""
+    var fakeEffectFailedTitle: String = ""
+    var fakeEffectSubTitle: String = ""
+    var fakeRetryInstruction: String = ""
+    var fakeNoEffectInstruction: String = ""
 
     enum class Effect : EffectEnumInterface {
         NONE,
@@ -46,19 +49,19 @@ class FakeEffectsController(
                 putParcelable(
                     WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
                     ComponentName(
-                        "com.google.android.wallpaper.effects",
-                        "com.google.android.wallpaper.effects.cinematic.CinematicWallpaperService",
+                        LIVE_WALLPAPER_COMPONENT_PKG_NAME,
+                        LIVE_WALLPAPER_COMPONENT_CLASS_NAME,
                     )
                 )
                 putInt(EffectContract.ASSET_ID, 1)
             },
             RESULT_SUCCESS,
             RESULT_ORIGINAL_UNKNOWN,
-            null /* errorMessage */,
+            null, /* errorMessage */
         )
     }
 
-    override fun areEffectsAvailable(): Boolean = areEffectsAvailable
+    override fun areEffectsAvailable(): Boolean = fakeAreEffectsAvailable
 
     override fun triggerEffect(context: Context?) {
         effectsServiceListener?.onEffectFinished(
@@ -66,7 +69,7 @@ class FakeEffectsController(
             Bundle(),
             RESULT_PROBE_SUCCESS,
             RESULT_ORIGINAL_UNKNOWN,
-            null /* errorMessage */,
+            null, /* errorMessage */
         )
     }
 
@@ -76,17 +79,17 @@ class FakeEffectsController(
 
     override fun getTargetEffect(): EffectEnumInterface = Effect.FAKE_EFFECT
 
-    override fun isEffectTriggered(): Boolean = isEffectTriggered
+    override fun isEffectTriggered(): Boolean = fakeIsEffectTriggered
 
-    override fun getEffectTitle(): String = effectTitle
+    override fun getEffectTitle(): String = fakeEffectTitle
 
-    override fun getEffectFailedTitle(): String = effectFailedTitle
+    override fun getEffectFailedTitle(): String = fakeEffectFailedTitle
 
-    override fun getEffectSubTitle(): String = effectSubTitle
+    override fun getEffectSubTitle(): String = fakeEffectSubTitle
 
-    override fun getRetryInstruction(): String = retryInstruction
+    override fun getRetryInstruction(): String = fakeRetryInstruction
 
-    override fun getNoEffectInstruction(): String = noEffectInstruction
+    override fun getNoEffectInstruction(): String = fakeNoEffectInstruction
 
     override fun getContentUri(): Uri = CONTENT_URI
 
@@ -96,12 +99,14 @@ class FakeEffectsController(
             Bundle(),
             RESULT_FOREGROUND_DOWNLOAD_SUCCEEDED,
             RESULT_ORIGINAL_UNKNOWN,
-            null /* errorMessage */,
+            null, /* errorMessage */
         )
     }
 
     companion object {
-        const val AUTHORITY = "com.google.android.wallpaper.effects.effectprovider"
+        const val LIVE_WALLPAPER_COMPONENT_PKG_NAME = "com.test.effects"
+        const val LIVE_WALLPAPER_COMPONENT_CLASS_NAME = "test.Effects"
+        const val AUTHORITY = "com.test.effects"
         private const val EFFECT_PATH = "/effects"
         val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY$EFFECT_PATH")
     }
