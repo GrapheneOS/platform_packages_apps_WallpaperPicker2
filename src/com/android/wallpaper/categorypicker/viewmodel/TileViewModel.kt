@@ -19,9 +19,4 @@ package com.android.wallpaper.categorypicker.viewmodel
 import com.android.wallpaper.asset.Asset
 
 /** This class represents the view model for a single category tile. */
-class TileViewModel(
-    private val thumbAsset: Asset,
-    private val overlayAsset: Asset,
-    private val text: String,
-    val onClicked: (() -> Unit)? = null
-)
+class TileViewModel(val thumbAsset: Asset?, val text: String, val onClicked: (() -> Unit)? = null)

@@ -173,6 +173,15 @@ public class WallpaperCategory extends Category {
         }
 
         /**
+         * Adds the given list of {@link WallpaperInfo} to this category
+         * @return this for chaining
+         */
+        public Builder addWallpapers(List<WallpaperInfo> wallpapers) {
+            mWallpapers.addAll(wallpapers);
+            return this;
+        }
+
+        /**
          * If no priority was parsed from the XML attributes for this category, set the priority to
          * the given value.
          * @return this for chaining

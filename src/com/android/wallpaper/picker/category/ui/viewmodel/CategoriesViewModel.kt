@@ -17,8 +17,12 @@
 package com.android.wallpaper.picker.category.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.android.wallpaper.categorypicker.viewmodel.SectionViewModel
+import com.android.wallpaper.categorypicker.viewmodel.TileViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 /** Top level [ViewModel] for the categories screen */
 @HiltViewModel
@@ -26,4 +30,23 @@ class CategoriesViewModel
 @Inject
 constructor(
 // TODO: inject interacters here
-) : ViewModel() {}
+) : ViewModel() {
+
+    // this is a stub flow to mimic category data until the interactor is ready to consume
+    val sections: Flow<List<SectionViewModel>> = flow {
+        val tiles = generateTiles()
+
+        val columnCount = 3
+
+        // Split the tiles into sections
+        val sections = tiles.chunked(columnCount).map { SectionViewModel(it, columnCount = 3) }
+
+        // Emit the list of sections
+        emit(sections)
+    }
+
+    // stub data source for testing until interacter is ready to cosnume
+    fun generateTiles(): List<TileViewModel> {
+        return (1..10).map { TileViewModel(null, "Tile $it") }
+    }
+}

@@ -79,4 +79,8 @@ constructor(
     fun startEffectsModelDownload(effect: Effect) {
         imageEffectsRepository.startEffectsModelDownload(effect)
     }
+
+    fun interruptEffectsModelDownload(effect: Effect) {
+        imageEffectsRepository.interruptEffectsModelDownload(effect)
+    }
 }

@@ -390,6 +390,11 @@ constructor(
         )
     }
 
+    fun interruptEffectsModelDownload(effect: Effect) {
+        _imageEffectsModel.value = ImageEffectsModel(EffectStatus.EFFECT_DOWNLOAD_READY)
+        effectsController.interruptForegroundDownload(effect)
+    }
+
     private fun getEffectNameForLogging(): String {
         val effect = wallpaperEffect.value
         return effect?.type?.toString() ?: EffectsController.Effect.UNKNOWN.toString()

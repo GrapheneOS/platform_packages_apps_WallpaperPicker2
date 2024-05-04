@@ -30,6 +30,8 @@ import javax.inject.Singleton;
 @Singleton
 public class TestPartnerProvider implements PartnerProvider {
     private File mLegacyWallpaperDirectory;
+    private String mPackageName;
+    private Resources mResources;
 
     @Inject
     public TestPartnerProvider() {
@@ -37,9 +39,15 @@ public class TestPartnerProvider implements PartnerProvider {
 
     @Override
     public Resources getResources() {
-        return null;
+        return mResources;
     }
 
+    public void setPackageName(String packageName) {
+        this.mPackageName = packageName;
+    }
+    public void setResources(Resources mResources) {
+        this.mResources = mResources;
+    }
     @Override
     public File getLegacyWallpaperDirectory() {
         return mLegacyWallpaperDirectory;
@@ -56,7 +64,7 @@ public class TestPartnerProvider implements PartnerProvider {
 
     @Override
     public String getPackageName() {
-        return null;
+        return mPackageName;
     }
 
     @Override

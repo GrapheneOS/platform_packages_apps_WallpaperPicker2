@@ -28,6 +28,7 @@ android_library {
         "src/**/*.java",
         "src/**/*.kt",
     ],
+    resource_dirs: ["res"],
     static_libs: [
         "WallpaperPicker2Lib",
         "androidx.annotation_annotation",

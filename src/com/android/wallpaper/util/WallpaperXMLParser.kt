@@ -18,15 +18,19 @@ package com.android.wallpaper.util
 
 import android.content.Context
 import android.content.res.XmlResourceParser
+import android.util.Log
 import android.util.Xml
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.SystemStaticWallpaperInfo
 import com.android.wallpaper.model.WallpaperCategory
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.PartnerProvider
+import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserException
 
 /**
  * Utility class for parsing an XML file containing information about a list of wallpapers. The
@@ -36,61 +40,91 @@ import org.xmlpull.v1.XmlPullParser
 @Singleton
 class WallpaperXMLParser
 @Inject
-constructor(private val context: Context, private val partnerProvider: PartnerProvider) :
-    WallpaperXMLParserInterface {
+constructor(
+    @ApplicationContext private val context: Context,
+    private val partnerProvider: PartnerProvider
+) : WallpaperXMLParserInterface {
 
-    override fun parseCategory(parser: XmlResourceParser): WallpaperCategory? {
-        val categoryBuilder =
-            WallpaperCategory.Builder(partnerProvider.resources, Xml.asAttributeSet(parser))
-        categoryBuilder.setPriorityIfEmpty(PRIORITY_SYSTEM)
-        var publishedPlaceholder = false
-        val pair = parseXML(parser, parser.depth, categoryBuilder, false)
-        publishedPlaceholder = pair.first
-        val category = categoryBuilder.build()
-        return if (category.unmodifiableWallpapers.isNotEmpty()) category else null
+    /** This method is responsible for generating list of system categories from the XML file. */
+    override fun parseSystemCategories(parser: XmlResourceParser): List<WallpaperCategory> {
+        val categories = mutableListOf<WallpaperCategory>()
+        try {
+            var priorityTracker = 0
+            val depth = parser.depth
+            var type: Int
+            while (
+                (parser.next().also { type = it } != XmlPullParser.END_TAG ||
+                    parser.depth > depth) && type != XmlPullParser.END_DOCUMENT
+            ) {
+                if (type == XmlPullParser.START_TAG && WallpaperCategory.TAG_NAME == parser.name) {
+                    val categoryBuilder =
+                        WallpaperCategory.Builder(
+                            partnerProvider.resources,
+                            Xml.asAttributeSet(parser)
+                        )
+                    categoryBuilder.setPriorityIfEmpty(PRIORITY_SYSTEM + priorityTracker++)
+                    categoryBuilder.addWallpapers(
+                        parseXmlForWallpapersForASingleCategory(parser, categoryBuilder.id)
+                    )
+                    val category = categoryBuilder.build()
+                    category?.let { categories.add(it) }
+                }
+            }
+        } catch (e: Exception) {
+            when (e) {
+                is IOException,
+                is XmlPullParserException -> {
+                    Log.w(TAG, "Failed to parse the XML file of system wallpapers", e)
+                    return emptyList()
+                }
+                else -> throw e
+            }
+        }
+        return categories
     }
 
-    private fun parseXML(
+    /**
+     * This method is responsible for parsing the XML for a single category and returning a list of
+     * WallpaperInfo objects.
+     */
+    private fun parseXmlForWallpapersForASingleCategory(
         parser: XmlResourceParser,
-        categoryDepth: Int,
-        categoryBuilder: WallpaperCategory.Builder,
-        publishedPlaceholder: Boolean
-    ): Pair<Boolean, Int> {
-        var type1 = parser.eventType
-        var publishedPlaceholder1 = publishedPlaceholder
+        categoryId: String
+    ): List<WallpaperInfo> {
+        val outputWallpaperInfo = mutableListOf<WallpaperInfo>()
+        val categoryDepth = parser.depth
+        var type: Int
         while (
-            parser.next().also { type1 = it } != XmlPullParser.END_TAG ||
-                parser.depth > categoryDepth
+            (parser.next().also { type = it } != XmlPullParser.END_TAG ||
+                parser.depth > categoryDepth) && type != XmlPullParser.END_DOCUMENT
         ) {
-            if (type1 == XmlPullParser.START_TAG) {
+            if (type == XmlPullParser.START_TAG) {
                 var wallpaper: WallpaperInfo? = null
                 if (SystemStaticWallpaperInfo.TAG_NAME == parser.name) {
                     wallpaper =
                         SystemStaticWallpaperInfo.fromAttributeSet(
                             partnerProvider.packageName,
-                            categoryBuilder.id,
+                            categoryId,
                             Xml.asAttributeSet(parser)
                         )
                 } else if (LiveWallpaperInfo.TAG_NAME == parser.name) {
                     wallpaper =
                         LiveWallpaperInfo.fromAttributeSet(
                             context,
-                            categoryBuilder.id,
+                            categoryId,
                             Xml.asAttributeSet(parser)
                         )
                 }
                 if (wallpaper != null) {
-                    categoryBuilder.addWallpaper(wallpaper)
-                    if (!publishedPlaceholder1) {
-                        publishedPlaceholder1 = true
-                    }
+                    outputWallpaperInfo.add(wallpaper)
                 }
             }
         }
-        return Pair(publishedPlaceholder1, type1)
+        return outputWallpaperInfo
     }
 
     companion object {
-        private const val PRIORITY_SYSTEM = 100
+        const val PRIORITY_SYSTEM = 100
+        private const val TAG = "WallpaperXMLParser"
     }
 }

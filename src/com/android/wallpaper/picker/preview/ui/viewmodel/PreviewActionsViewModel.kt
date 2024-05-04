@@ -20,7 +20,9 @@ import android.content.ClipData
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.net.Uri
+import android.net.wifi.WifiManager
 import android.service.wallpaper.WallpaperSettingsActivity
 import com.android.wallpaper.effects.Effect
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
@@ -234,6 +236,13 @@ constructor(
         }
 
     /** [EFFECTS] */
+    private val _imageEffectConfirmDownloadDialogViewModel:
+        MutableStateFlow<ImageEffectDialogViewModel?> =
+        MutableStateFlow(null)
+    // View model for the dialog that confirms downloading the effect ML model.
+    val imageEffectConfirmDownloadDialogViewModel =
+        _imageEffectConfirmDownloadDialogViewModel.asStateFlow()
+
     private val imageEffectFloatingSheetViewModel: Flow<ImageEffectFloatingSheetViewModel?> =
         combine(interactor.imageEffectsModel, interactor.imageEffect) {
             imageEffectsModel,
@@ -250,6 +259,27 @@ constructor(
                         )
                     }
                 }
+            }
+        }
+    private val _imageEffectConfirmExitDialogViewModel:
+        MutableStateFlow<ImageEffectDialogViewModel?> =
+        MutableStateFlow(null)
+    val imageEffectConfirmExitDialogViewModel = _imageEffectConfirmExitDialogViewModel.asStateFlow()
+    val handleOnBackPressed: Flow<(() -> Unit)?> =
+        combine(imageEffectFloatingSheetViewModel, interactor.imageEffect) { viewModel, effect ->
+            if (viewModel?.status == DOWNLOADING) {
+                {
+                    _imageEffectConfirmExitDialogViewModel.value =
+                        ImageEffectDialogViewModel(
+                            onDismiss = { _imageEffectConfirmExitDialogViewModel.value = null },
+                            onContinue = {
+                                // Continue to exit the screen. We should stop downloading.
+                                effect?.let { interactor.interruptEffectsModelDownload(it) }
+                            },
+                        )
+                }
+            } else {
+                null
             }
         }
 
@@ -315,7 +345,20 @@ constructor(
             },
             object : EffectDownloadClickListener {
                 override fun onEffectDownloadClick() {
-                    interactor.startEffectsModelDownload(effect)
+                    if (isWifiOnAndConnected()) {
+                        interactor.startEffectsModelDownload(effect)
+                    } else {
+                        _imageEffectConfirmDownloadDialogViewModel.value =
+                            ImageEffectDialogViewModel(
+                                onDismiss = {
+                                    _imageEffectConfirmDownloadDialogViewModel.value = null
+                                },
+                                onContinue = {
+                                    // Continue to download the ML model
+                                    interactor.startEffectsModelDownload(effect)
+                                },
+                            )
+                    }
                 }
             },
             floatingSheetViewStatus,
@@ -325,6 +368,20 @@ constructor(
             effect.type,
             interactor.getEffectTextRes(),
         )
+    }
+
+    private fun isWifiOnAndConnected(): Boolean {
+        val wifiMgr = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        return if (wifiMgr.isWifiEnabled) { // Wi-Fi adapter is ON
+            val connMgr =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val wifiInfo = wifiMgr.connectionInfo
+            val wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+            val signalLevel = wifiMgr.calculateSignalLevel(wifiInfo.rssi)
+            signalLevel > 0 && wifi!!.isConnectedOrConnecting
+        } else {
+            false
+        }
     }
 
     val isEffectsVisible: Flow<Boolean> =

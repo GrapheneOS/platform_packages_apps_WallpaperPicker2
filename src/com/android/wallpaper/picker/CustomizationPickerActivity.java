@@ -63,12 +63,15 @@ import com.android.wallpaper.util.LaunchUtils;
 import com.android.wallpaper.widget.BottomActionBar;
 import com.android.wallpaper.widget.BottomActionBar.BottomActionBarHost;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  *  Main Activity allowing containing view sections for the user to switch between the different
  *  Fragments providing customization options.
  */
-public class CustomizationPickerActivity extends FragmentActivity implements AppbarFragmentHost,
-        WallpapersUiContainer, BottomActionBarHost, FragmentTransactionChecker,
+@AndroidEntryPoint(FragmentActivity.class)
+public class CustomizationPickerActivity extends Hilt_CustomizationPickerActivity implements
+        AppbarFragmentHost, WallpapersUiContainer, BottomActionBarHost, FragmentTransactionChecker,
         PermissionRequester, CategorySelectorFragmentHost, IndividualPickerFragmentHost,
         WallpaperPreviewNavigator {
 

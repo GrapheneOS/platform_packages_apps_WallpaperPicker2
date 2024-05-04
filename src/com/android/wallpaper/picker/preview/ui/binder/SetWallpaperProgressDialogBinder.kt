@@ -16,11 +16,13 @@
 
 package com.android.wallpaper.picker.preview.ui.binder
 
+import android.app.Activity
 import android.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.wallpaper.R
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import kotlinx.coroutines.launch
 
@@ -28,18 +30,37 @@ import kotlinx.coroutines.launch
 object SetWallpaperProgressDialogBinder {
 
     fun bind(
-        dialog: AlertDialog,
         viewModel: WallpaperPreviewViewModel,
+        activity: Activity,
         lifecycleOwner: LifecycleOwner,
     ) {
+        var setWallpaperProgressDialog: AlertDialog? = null
+
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.isSetWallpaperProgressBarVisible.collect {
-                        if (it) dialog.show() else dialog.hide()
+                    viewModel.isSetWallpaperProgressBarVisible.collect { visible ->
+                        if (visible) {
+                            val dialog =
+                                setWallpaperProgressDialog
+                                    ?: createSetWallpaperProgressDialog(activity).also {
+                                        setWallpaperProgressDialog = it
+                                    }
+                            dialog.show()
+                        } else {
+                            setWallpaperProgressDialog?.hide()
+                        }
                     }
                 }
             }
         }
+    }
+
+    private fun createSetWallpaperProgressDialog(
+        activity: Activity,
+    ): AlertDialog {
+        val dialogView =
+            activity.layoutInflater.inflate(R.layout.set_wallpaper_progress_dialog_view, null)
+        return AlertDialog.Builder(activity).setView(dialogView).create()
     }
 }

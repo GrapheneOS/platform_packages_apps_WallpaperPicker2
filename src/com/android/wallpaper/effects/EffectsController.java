@@ -191,4 +191,11 @@ public abstract class EffectsController {
      * @param effect The Effect for which we want to download the ML model
      */
     public void startForegroundDownload(com.android.wallpaper.effects.Effect effect){}
+
+    /**
+     * Sends the interrupt foreground downloading to effect.
+     *
+     * @param effect The effect that is being downloaded.
+     */
+    public void interruptForegroundDownload(com.android.wallpaper.effects.Effect effect) {}
 }

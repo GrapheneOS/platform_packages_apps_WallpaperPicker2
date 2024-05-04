@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.categorypicker.viewmodel
+package com.android.wallpaper.picker.preview.ui.viewmodel
 
-/**
- * This class represents the view model for a single section that can contain a number of individual
- * tiles.
- */
-class SectionViewModel(val items: List<TileViewModel>, val columnCount: Int)
+data class ImageEffectDialogViewModel(
+    val onDismiss: (() -> Unit),
+    val onContinue: (() -> Unit),
+)

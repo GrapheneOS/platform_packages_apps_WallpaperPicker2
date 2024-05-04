@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.util
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Point
 import android.view.Display
@@ -64,18 +63,24 @@ constructor(
 
     /**
      * Checks if the device only has one display or unfolded screen in horizontal hinge orientation.
+     *
+     * @param context Must be a context that is associated with a display, such as an Activity or a
+     *   context created via createDisplayContext(android.view.Display).
      */
-    fun isSingleDisplayOrUnfoldedHorizontalHinge(activity: Activity): Boolean {
-        return !hasMultiInternalDisplays() || isUnfoldedHorizontalHinge(activity)
+    fun isSingleDisplayOrUnfoldedHorizontalHinge(context: Context): Boolean {
+        return !hasMultiInternalDisplays() || isUnfoldedHorizontalHinge(context)
     }
 
     /**
      * Checks if the device is a foldable and it's unfolded and in horizontal hinge orientation
      * (portrait).
+     *
+     * @param context Must be a context that is associated with a display, such as an Activity or a
+     *   context created via createDisplayContext(android.view.Display).
      */
-    fun isUnfoldedHorizontalHinge(activity: Activity): Boolean {
-        return activity.display?.rotation in ROTATION_HORIZONTAL_HINGE &&
-            isOnWallpaperDisplay(activity) &&
+    fun isUnfoldedHorizontalHinge(context: Context): Boolean {
+        return context.display.rotation in ROTATION_HORIZONTAL_HINGE &&
+            isOnWallpaperDisplay(context) &&
             hasMultiInternalDisplays()
     }
 
@@ -96,8 +101,12 @@ constructor(
      * This flag returns false the display is:
      * 1. a handheld device display
      * 2. a folded display from a foldable device
+     *
+     * @param context Must be a context that is associated with a display, such as an Activity or a
+     *   context created via createDisplayContext(android.view.Display).
      */
-    fun isLargeScreenOrUnfoldedDisplay(activity: Activity): Boolean {
+    // TODO (b/338247922): This function is not tested due to testing blocker isOnWallpaperDisplay
+    fun isLargeScreenOrUnfoldedDisplay(context: Context): Boolean {
         // Note that a foldable is a large screen device if the largest display is large screen.
         // Ths flag is true if it is a large screen device, e.g. tablet, or a foldable device.
         val isLargeScreenOrFoldable = isLargeScreenDevice()
@@ -105,7 +114,7 @@ constructor(
         // For a multi-display device, it is only true when the current display is the largest
         // display. For the case of foldable, it is true when the display is the unfolded one, and
         // false when it is folded.
-        val isSingleDisplayOrUnfolded = isOnWallpaperDisplay(activity)
+        val isSingleDisplayOrUnfolded = isOnWallpaperDisplay(context)
         return isLargeScreenOrFoldable && isSingleDisplayOrUnfolded
     }
 
@@ -131,9 +140,13 @@ constructor(
      * display device the only display is both the wallpaper display and the current display.
      *
      * For single display device, this is always true.
+     *
+     * @param context Must be a context that is associated with a display, such as an Activity or a
+     *   context created via createDisplayContext(android.view.Display).
      */
-    fun isOnWallpaperDisplay(activity: Activity): Boolean {
-        return activity.display?.uniqueId == getWallpaperDisplay().uniqueId
+    // TODO (b/338247922): This function is not tested due to fake Display limitations with uniqueId
+    fun isOnWallpaperDisplay(context: Context): Boolean {
+        return context.display.uniqueId == getWallpaperDisplay().uniqueId
     }
 
     /** Gets the real width and height of the display. */
@@ -152,15 +165,20 @@ constructor(
     fun getSmallerDisplay(): Display {
         val internalDisplays = displaysProvider.getInternalDisplays()
         val largestDisplay = getWallpaperDisplay()
-        val smallestDisplay = internalDisplays.firstOrNull() { it != largestDisplay }
+        val smallestDisplay = internalDisplays.firstOrNull { it != largestDisplay }
         return smallestDisplay ?: largestDisplay
     }
 
-    fun getCurrentDisplayType(activity: Activity): DeviceDisplayType {
+    /**
+     * @param context Must be a context that is associated with a display, such as an Activity or a
+     *   context created via createDisplayContext(android.view.Display).
+     */
+    // TODO (b/338247922): This function is not tested due to testing blocker isOnWallpaperDisplay
+    fun getCurrentDisplayType(context: Context): DeviceDisplayType {
         if (!hasMultiInternalDisplays()) {
             return DeviceDisplayType.SINGLE
         }
-        return if (isOnWallpaperDisplay(activity)) {
+        return if (isOnWallpaperDisplay(context)) {
             DeviceDisplayType.UNFOLDED
         } else {
             DeviceDisplayType.FOLDED

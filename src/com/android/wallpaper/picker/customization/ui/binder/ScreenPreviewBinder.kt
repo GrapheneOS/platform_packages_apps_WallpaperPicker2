@@ -101,6 +101,7 @@ object ScreenPreviewBinder {
         animationStateViewModel: AnimationStateViewModel? = null,
         isWallpaperAlwaysVisible: Boolean = true,
         mirrorSurface: SurfaceView? = null,
+        onClick: (() -> Unit)? = null,
     ): Binding {
         val workspaceSurface: SurfaceView = previewView.requireViewById(R.id.workspace_surface)
         val wallpaperSurface: WallpaperSurfaceView =
@@ -113,17 +114,14 @@ object ScreenPreviewBinder {
         val fixedWidthDisplayFrameLayout = previewView.parent as? FixedWidthDisplayRatioFrameLayout
         val screenPreviewClickView = fixedWidthDisplayFrameLayout?.parent as? ScreenPreviewClickView
         if (screenPreviewClickView != null) {
-            // If screenPreviewClickView exists, we will have it handle accessibility and
-            // disable a11y for the descendants.
-            // Set the content description on the parent view
-            screenPreviewClickView.contentDescription =
-                activity.resources.getString(viewModel.previewContentDescription)
-            fixedWidthDisplayFrameLayout.importantForAccessibility =
-                View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
-            // This ensures that we do not announce the time multiple times
-            previewView.importantForAccessibility =
-                View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+            onClick?.let { screenPreviewClickView.setOnPreviewClickedListener(it) }
         }
+
+        previewView.isClickable = (onClick != null)
+        onClick?.let { previewView.setOnClickListener { it() } }
+
+        previewView.contentDescription =
+            activity.resources.getString(viewModel.previewContentDescription)
 
         var wallpaperIsReadyForReveal = false
         val surfaceViewsReady = {
@@ -148,8 +146,6 @@ object ScreenPreviewBinder {
 
         previewView.radius =
             previewView.resources.getDimension(R.dimen.wallpaper_picker_entry_card_corner_radius)
-
-        previewView.isClickable = true
 
         var previewSurfaceCallback: WorkspaceSurfaceHolderCallback? = null
         var wallpaperSurfaceCallback: WallpaperSurfaceCallback? = null

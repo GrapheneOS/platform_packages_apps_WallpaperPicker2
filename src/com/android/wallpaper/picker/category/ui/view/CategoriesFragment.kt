@@ -40,14 +40,10 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
         savedInstanceState: Bundle?,
     ): View {
         val view =
-            inflater.inflate(
-                R.layout.fragment_category_selector,
-                container,
-                /* attachToRoot= */ false
-            )
+            inflater.inflate(R.layout.categories_fragment, container, /* attachToRoot= */ false)
 
         CategoriesBinder.bind(
-            gridView = view.requireViewById<RecyclerView>(R.id.category_grid),
+            categoriesPage = view.requireViewById<RecyclerView>(R.id.content_parent),
             viewModel = categoriesViewModel,
             lifecycleOwner = viewLifecycleOwner,
         )

@@ -17,9 +17,7 @@
 package com.android.wallpaper.picker.category.client
 
 import android.content.Context
-import android.util.Log
 import com.android.wallpaper.R
-import com.android.wallpaper.model.Category
 import com.android.wallpaper.model.DefaultWallpaperInfo
 import com.android.wallpaper.model.ImageCategory
 import com.android.wallpaper.model.LegacyPartnerWallpaperInfo
@@ -29,14 +27,12 @@ import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.DefaultCategoryProvider
 import com.android.wallpaper.module.PartnerProvider
 import com.android.wallpaper.picker.data.category.CategoryModel
-import com.android.wallpaper.util.WallpaperXMLParser
+import com.android.wallpaper.util.WallpaperXMLParserInterface
 import com.android.wallpaper.util.converter.category.CategoryFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.IOException
 import java.util.Locale
 import javax.inject.Inject
-import org.xmlpull.v1.XmlPullParser
-import org.xmlpull.v1.XmlPullParserException
+import javax.inject.Singleton
 
 /**
  * This class is responsible for fetching wallpaper categories, listed as follows:
@@ -45,13 +41,14 @@ import org.xmlpull.v1.XmlPullParserException
  *    wallpapers, modern way is described below)
  * 3. System categories on device (modern way of pre-loading wallpapers on device)
  */
+@Singleton
 class DefaultWallpaperCategoryClient
 @Inject
 constructor(
     @ApplicationContext val context: Context,
     private val partnerProvider: PartnerProvider,
     private val categoryFactory: CategoryFactory,
-    private val wallpaperXMLParser: WallpaperXMLParser
+    private val wallpaperXMLParser: WallpaperXMLParserInterface
 ) {
 
     /** This method is used for fetching and creating the MyPhotos category tile. */
@@ -105,7 +102,6 @@ constructor(
     suspend fun getSystemCategories(): List<CategoryModel> {
         val partnerRes = partnerProvider.resources
         val packageName = partnerProvider.packageName
-        val categories = mutableListOf<Category>()
         val categoryModels = mutableListOf<CategoryModel>()
         if (partnerRes == null || packageName == null) {
             return categoryModels
@@ -119,29 +115,8 @@ constructor(
             return categoryModels
         }
 
-        try {
-            val parser = partnerRes.getXml(wallpapersResId)
-            val depth = parser.depth
-            var type: Int
-            while (
-                parser.next().also { type = it } != XmlPullParser.END_TAG ||
-                    parser.depth > depth && type != XmlPullParser.END_DOCUMENT
-            ) {
-                if (type == XmlPullParser.START_TAG && WallpaperCategory.TAG_NAME == parser.name) {
-                    val category = wallpaperXMLParser.parseCategory(parser)
-                    category?.let { categories.add(it) }
-                }
-            }
-        } catch (e: Exception) {
-            when (e) {
-                is IOException,
-                is XmlPullParserException -> {
-                    Log.w(TAG, "Couldn't read system wallpapers definition", e)
-                    return emptyList()
-                }
-                else -> throw e
-            }
-        }
+        val categories =
+            wallpaperXMLParser.parseSystemCategories(partnerRes.getXml(wallpapersResId))
         return categories.map { category -> categoryFactory.getCategoryModel(context, category) }
     }
 
