@@ -112,19 +112,6 @@ open class ScreenPreviewSectionController(
             previewHost.layoutParams = layoutParams
         }
 
-        view
-            .requireViewById<ScreenPreviewClickView>(R.id.screen_preview_click_view)
-            .setOnPreviewClickedListener {
-                lifecycleOwner.lifecycleScope.launch {
-                    getWallpaperInfo(context)?.let { wallpaperInfo ->
-                        wallpaperPreviewNavigator.showViewOnlyPreview(
-                            wallpaperInfo,
-                            /* isAssetIdPresent= */ false,
-                        )
-                    }
-                }
-            }
-
         val previewView: CardView = view.requireViewById(R.id.preview)
 
         bindScreenPreview(previewView, context, !params.isWallpaperVisibilityControlledByTab)
@@ -147,6 +134,16 @@ open class ScreenPreviewSectionController(
                 onWallpaperPreviewDirty = { activity.recreate() },
                 animationStateViewModel = customizationPickerViewModel,
                 isWallpaperAlwaysVisible = isWallpaperAlwaysVisible,
+                onClick = {
+                    lifecycleOwner.lifecycleScope.launch {
+                        getWallpaperInfo(context)?.let { wallpaperInfo ->
+                            wallpaperPreviewNavigator.showViewOnlyPreview(
+                                wallpaperInfo,
+                                /* isAssetIdPresent= */ false,
+                            )
+                        }
+                    }
+                }
             )
     }
 

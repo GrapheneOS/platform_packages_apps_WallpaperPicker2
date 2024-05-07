@@ -35,11 +35,10 @@
         android:focusable="false"
         android:layout_gravity="bottom" />
 
-    <include android:id="@+id/tile"
+    <include
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:focusable="true"
-        layout="@layout/grid_item_category">
-    </include>
+        layout="@layout/grid_item_category" />
 </LinearLayout>

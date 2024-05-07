@@ -28,7 +28,6 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -415,17 +414,6 @@ public class CategorySelectorFragment extends AppbarFragment {
             mCategory = category;
             mTitleView.setText(category.getTitle());
             drawThumbnailAndOverlayIcon();
-            // We do this since itemView here refers to the broader LinearLayout defined in
-            // xml layout file of myPhotos block. Doing this allows us to make sure that the
-            // onClickListener is configured only on the CardView of MyPhotos and nowhere else
-            if (mIsCreativeWallpaperEnabled && mCategory != null
-                    && TextUtils.equals(mCategory.getCollectionId(),
-                    getActivity().getApplicationContext().getString(
-                            R.string.image_wallpaper_collection_id))) {
-                itemView.setOnClickListener(null);
-                CardView categoryView = itemView.findViewById(R.id.category);
-                categoryView.setOnClickListener(this);
-            }
         }
 
         /**
@@ -528,6 +516,14 @@ public class CategorySelectorFragment extends AppbarFragment {
             // Use the height as the card corner radius for the "My photos" category
             // for a stadium border.
             categoryView.setRadius(height);
+            // We do this since itemView here refers to the broader LinearLayout defined in
+            // the My Photos xml, which includes the section title. Doing this allows us to make
+            // sure that the onClickListener is configured only on the My Photos grid item.
+            if (mIsCreativeWallpaperEnabled) {
+                itemView.setOnClickListener(null);
+                itemView.setClickable(false);
+                itemView.findViewById(R.id.tile).setOnClickListener(this);
+            }
         }
     }
 
