@@ -51,6 +51,7 @@ object SmallPreviewBinder {
         navigate: ((View) -> Unit)? = null,
         transition: Transition? = null,
         transitionConfig: FullPreviewConfigViewModel? = null,
+        isFirstBinding: Boolean,
     ) {
         val previewCard: CardView = view.requireViewById(R.id.preview_card)
         val wallpaperSurface: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
@@ -173,6 +174,7 @@ object SmallPreviewBinder {
             applicationContext = applicationContext,
             viewLifecycleOwner = viewLifecycleOwner,
             deviceDisplayType = deviceDisplayType,
+            isFirstBinding = isFirstBinding,
         )
     }
 }

@@ -56,7 +56,7 @@ class FakeDefaultCategoryFactory @Inject constructor() : CategoryFactory {
     override fun getCategoryModel(context: Context, category: Category): CategoryModel {
         return CategoryModel(
             commonCategoryData = createCommonCategoryData(category),
-            collectionCategoryData = createCollectionsCategoryData(category),
+            collectionCategoryData = createCollectionsCategoryData(category, context),
             imageCategoryData = createImageCategoryData(category),
             thirdPartyCategoryData = createThirdPartyCategoryData(category)
         )
@@ -70,11 +70,14 @@ class FakeDefaultCategoryFactory @Inject constructor() : CategoryFactory {
         )
     }
 
-    private fun createCollectionsCategoryData(category: Category): CollectionCategoryData? {
+    private fun createCollectionsCategoryData(
+        category: Category,
+        context: Context
+    ): CollectionCategoryData? {
         return if (category is WallpaperCategory) {
             CollectionCategoryData(
                 wallpaperModels = wallpaperModels,
-                thumbAsset = category.thumbAsset,
+                thumbAsset = category.getThumbnail(context),
                 featuredThumbnailIndex = category.featuredThumbnailIndex,
                 isSingleWallpaperCategory = category.isSingleWallpaperCategory
             )

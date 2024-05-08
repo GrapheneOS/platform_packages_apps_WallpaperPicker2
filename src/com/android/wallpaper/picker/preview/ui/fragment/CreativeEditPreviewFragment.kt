@@ -48,6 +48,8 @@ class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
     @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
 
+    private lateinit var currentView: View
+
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
 
     override fun onCreateView(
@@ -55,26 +57,16 @@ class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_full_preview, container, false)
-        setUpToolbar(view, true, true)
+        currentView = inflater.inflate(R.layout.fragment_full_preview, container, false)
+        setUpToolbar(currentView, true, true)
 
         wallpaperPreviewViewModel.setDefaultFullPreviewConfigViewModel(
             deviceDisplayType = displayUtils.getCurrentDisplayType(requireActivity()),
         )
 
-        FullWallpaperPreviewBinder.bind(
-            applicationContext = appContext,
-            view = view,
-            viewModel = wallpaperPreviewViewModel,
-            transition = null,
-            displayUtils = displayUtils,
-            lifecycleOwner = viewLifecycleOwner,
-            savedInstanceState = savedInstanceState,
-        )
-
-        view.requireViewById<Toolbar>(R.id.toolbar).isVisible = false
-        view.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible = false
-        view.requireViewById<Button>(R.id.crop_wallpaper_button).isVisible = false
+        currentView.requireViewById<Toolbar>(R.id.toolbar).isVisible = false
+        currentView.requireViewById<SurfaceView>(R.id.workspace_surface).isVisible = false
+        currentView.requireViewById<Button>(R.id.crop_wallpaper_button).isVisible = false
 
         val intent =
             arguments?.getParcelable(ARG_EDIT_INTENT, Intent::class.java)
@@ -131,7 +123,22 @@ class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
             creativeWallpaperEditActivityResult.launch(intent)
         }
 
-        return view
+        return currentView
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        FullWallpaperPreviewBinder.bind(
+            applicationContext = appContext,
+            view = currentView,
+            viewModel = wallpaperPreviewViewModel,
+            transition = null,
+            displayUtils = displayUtils,
+            lifecycleOwner = viewLifecycleOwner,
+            savedInstanceState = savedInstanceState,
+            isFirstBinding = savedInstanceState == null
+        )
     }
 
     companion object {

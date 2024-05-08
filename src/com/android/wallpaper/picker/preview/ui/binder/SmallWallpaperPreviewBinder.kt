@@ -55,6 +55,7 @@ object SmallWallpaperPreviewBinder {
         applicationContext: Context,
         viewLifecycleOwner: LifecycleOwner,
         deviceDisplayType: DeviceDisplayType,
+        isFirstBinding: Boolean,
     ) {
         var surfaceCallback: SurfaceViewUtil.SurfaceCallback? = null
         viewLifecycleOwner.lifecycleScope.launch {
@@ -67,6 +68,7 @@ object SmallWallpaperPreviewBinder {
                         deviceDisplayType = deviceDisplayType,
                         displaySize = displaySize,
                         lifecycleOwner = viewLifecycleOwner,
+                        isFirstBinding
                     )
                 surface.setZOrderMediaOverlay(true)
                 surfaceCallback?.let { surface.holder.addCallback(it) }
@@ -91,6 +93,7 @@ object SmallWallpaperPreviewBinder {
         deviceDisplayType: DeviceDisplayType,
         displaySize: Point,
         lifecycleOwner: LifecycleOwner,
+        isFirstBinding: Boolean,
     ): SurfaceViewUtil.SurfaceCallback {
 
         return object : SurfaceViewUtil.SurfaceCallback {
@@ -115,6 +118,7 @@ object SmallWallpaperPreviewBinder {
                                         viewModel.smallerDisplaySize,
                                         viewModel.wallpaperDisplaySize.value,
                                     ),
+                                    isFirstBinding,
                                     object : WallpaperEngineConnectionListener {
                                         override fun onWallpaperColorsChanged(
                                             colors: WallpaperColors?,

@@ -229,11 +229,16 @@ constructor(
         }
 
     val onCropButtonClick: Flow<(() -> Unit)?> =
-        combine(wallpaper, fullPreviewConfigViewModel.filterNotNull()) { wallpaper, _ ->
+        combine(wallpaper, fullPreviewConfigViewModel.filterNotNull(), fullWallpaper) {
+            wallpaper,
+            _,
+            fullWallpaper ->
             if (wallpaper is StaticWallpaperModel && !wallpaper.isDownloadableWallpaper()) {
                 {
                     staticWallpaperPreviewViewModel.run {
-                        updateCropHintsInfo(fullPreviewCropModels)
+                        updateCropHintsInfo(
+                            fullPreviewCropModels.filterKeys { it == fullWallpaper.displaySize }
+                        )
                     }
                 }
             } else {

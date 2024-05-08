@@ -22,7 +22,6 @@ import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
 import com.android.wallpaper.util.WallpaperConnection
 import com.android.wallpaper.util.WallpaperConnection.WhichPreview
-import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.getKey
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -55,6 +54,7 @@ object WallpaperConnectionUtils {
         destinationFlag: Int,
         surfaceView: SurfaceView,
         engineRenderingConfig: EngineRenderingConfig,
+        isFirstBinding: Boolean,
         listener: WallpaperEngineConnection.WallpaperEngineConnectionListener? = null,
     ) {
         val wallpaperInfo = wallpaperModel.liveWallpaperData.systemWallpaperInfo
@@ -68,7 +68,10 @@ object WallpaperConnectionUtils {
                 if (!creativeWallpaperConfigPreviewUriMap.containsKey(uriKey)) {
                     mutex.withLock {
                         if (!creativeWallpaperConfigPreviewUriMap.containsKey(uriKey)) {
-                            context.contentResolver.update(it, ContentValues(), null)
+                            // First time binding wallpaper should initialize wallpaper preview.
+                            if (isFirstBinding) {
+                                context.contentResolver.update(it, ContentValues(), null)
+                            }
                             creativeWallpaperConfigPreviewUriMap[uriKey] = it
                         }
                     }

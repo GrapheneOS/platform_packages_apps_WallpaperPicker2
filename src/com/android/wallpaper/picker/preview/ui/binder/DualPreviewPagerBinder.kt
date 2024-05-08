@@ -47,6 +47,7 @@ object DualPreviewPagerBinder {
         currentNavDestId: Int,
         transition: Transition?,
         transitionConfig: FullPreviewConfigViewModel?,
+        isFirstBinding: Boolean,
         navigate: (View) -> Unit,
     ) {
         var transitionDisposableHandle: DisposableHandle? = null
@@ -117,6 +118,7 @@ object DualPreviewPagerBinder {
                         currentNavDestId = currentNavDestId,
                         transition = transition,
                         transitionConfig = transitionConfig,
+                        isFirstBinding = isFirstBinding,
                         navigate = navigate,
                     )
                 }

@@ -44,6 +44,7 @@ object PreviewPagerBinder {
         currentNavDestId: Int,
         transition: Transition?,
         transitionConfig: FullPreviewConfigViewModel?,
+        isFirstBinding: Boolean,
         navigate: (View) -> Unit,
     ) {
         previewsViewPager.apply {
@@ -65,6 +66,7 @@ object PreviewPagerBinder {
                     currentNavDestId = currentNavDestId,
                     transition = transition,
                     transitionConfig = transitionConfig,
+                    isFirstBinding = isFirstBinding,
                     navigate = navigate,
                 )
             }

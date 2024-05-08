@@ -120,6 +120,7 @@ class SetWallpaperDialogFragment : Hilt_SetWallpaperDialogFragment() {
                 }
             },
             onDismissDialog = { findNavController().popBackStack() },
+            isFirstBinding = false,
             navigate = null,
         )
 

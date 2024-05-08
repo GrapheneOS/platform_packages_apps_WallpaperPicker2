@@ -46,6 +46,8 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
     @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
 
+    private lateinit var currentView: View
+
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
     private var useLightToolbar = false
 
@@ -59,30 +61,17 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_full_preview, container, false)
-        setUpToolbar(view, true, true)
+        currentView = inflater.inflate(R.layout.fragment_full_preview, container, false)
+        setUpToolbar(currentView, true, true)
 
-        val previewCard: CardView = view.requireViewById(R.id.preview_card)
+        val previewCard: CardView = currentView.requireViewById(R.id.preview_card)
         ViewCompat.setTransitionName(
             previewCard,
             SmallPreviewFragment.FULL_PREVIEW_SHARED_ELEMENT_ID
         )
 
-        FullWallpaperPreviewBinder.bind(
-            applicationContext = appContext,
-            view = view,
-            viewModel = wallpaperPreviewViewModel,
-            transition = sharedElementEnterTransition as? Transition,
-            displayUtils = displayUtils,
-            lifecycleOwner = viewLifecycleOwner,
-            savedInstanceState = savedInstanceState,
-        ) { isFullScreen ->
-            useLightToolbar = isFullScreen
-            setUpToolbar(view)
-        }
-
         CropWallpaperButtonBinder.bind(
-            button = view.requireViewById(R.id.crop_wallpaper_button),
+            button = currentView.requireViewById(R.id.crop_wallpaper_button),
             viewModel = wallpaperPreviewViewModel,
             lifecycleOwner = viewLifecycleOwner,
         ) {
@@ -90,18 +79,40 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
         }
 
         WorkspacePreviewBinder.bindFullWorkspacePreview(
-            surface = view.requireViewById(R.id.workspace_surface),
+            surface = currentView.requireViewById(R.id.workspace_surface),
             viewModel = wallpaperPreviewViewModel,
             lifecycleOwner = viewLifecycleOwner,
         )
 
         PreviewTooltipBinder.bindFullPreviewTooltip(
-            tooltipStub = view.requireViewById(R.id.tooltip_stub),
+            tooltipStub = currentView.requireViewById(R.id.tooltip_stub),
             viewModel = wallpaperPreviewViewModel.fullTooltipViewModel,
             lifecycleOwner = viewLifecycleOwner,
         )
 
-        return view
+        return currentView
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        var isFirstBinding = false
+        if (savedInstanceState == null) {
+            isFirstBinding = true
+        }
+
+        FullWallpaperPreviewBinder.bind(
+            applicationContext = appContext,
+            view = currentView,
+            viewModel = wallpaperPreviewViewModel,
+            transition = sharedElementEnterTransition as? Transition,
+            displayUtils = displayUtils,
+            lifecycleOwner = viewLifecycleOwner,
+            savedInstanceState = savedInstanceState,
+            isFirstBinding = isFirstBinding,
+        ) { isFullScreen ->
+            useLightToolbar = isFullScreen
+            setUpToolbar(view)
+        }
     }
 
     // TODO(b/291761856): Use real string

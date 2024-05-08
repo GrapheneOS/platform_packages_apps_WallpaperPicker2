@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
@@ -64,6 +65,9 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
     @Inject lateinit var logger: UserEventLogger
     @Inject lateinit var imageEffectDialogUtil: ImageEffectDialogUtil
 
+    private lateinit var currentView: View
+    private lateinit var shareActivityResult: ActivityResultLauncher<Intent>
+
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
 
     override fun onCreateView(
@@ -72,7 +76,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         savedInstanceState: Bundle?,
     ): View {
         postponeEnterTransition()
-        val view =
+        currentView =
             inflater.inflate(
                 if (displayUtils.hasMultiInternalDisplays())
                     R.layout.fragment_small_preview_foldable
@@ -80,12 +84,11 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 container,
                 false,
             )
-        setUpToolbar(view, true, true)
-        bindScreenPreview(view)
-        bindPreviewActions(view)
+        setUpToolbar(currentView, /* upArrow= */ true, /* transparentToolbar= */ true)
+        bindPreviewActions(currentView)
 
         SetWallpaperButtonBinder.bind(
-            button = view.requireViewById(R.id.button_set_wallpaper),
+            button = currentView.requireViewById(R.id.button_set_wallpaper),
             viewModel = wallpaperPreviewViewModel,
             lifecycleOwner = viewLifecycleOwner,
         ) {
@@ -98,7 +101,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             lifecycleOwner = viewLifecycleOwner,
         )
 
-        view.doOnPreDraw {
+        currentView.doOnPreDraw {
             // FullPreviewConfigViewModel not being null indicates that we are navigated to small
             // preview from the full preview, and therefore should play the shared element re-enter
             // animation. Reset it after views are finished binding.
@@ -106,7 +109,29 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             startPostponedEnterTransition()
         }
 
-        return view
+        shareActivityResult =
+            registerForActivityResult(
+                object : ActivityResultContract<Intent, Int>() {
+                    override fun createIntent(context: Context, input: Intent): Intent {
+                        return input
+                    }
+
+                    override fun parseResult(resultCode: Int, intent: Intent?): Int {
+                        return resultCode
+                    }
+                },
+            ) {
+                currentView
+                    .findViewById<PreviewActionGroup>(R.id.action_button_group)
+                    ?.setIsChecked(Action.SHARE, false)
+            }
+
+        return currentView
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        bindScreenPreview(currentView, isFirstBinding = savedInstanceState == null)
     }
 
     override fun getDefaultTitle(): CharSequence {
@@ -117,7 +142,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         return ContextCompat.getColor(requireContext(), R.color.system_on_surface)
     }
 
-    private fun bindScreenPreview(view: View) {
+    private fun bindScreenPreview(view: View, isFirstBinding: Boolean) {
         val currentNavDestId = checkNotNull(findNavController().currentDestination?.id)
         if (displayUtils.hasMultiInternalDisplays()) {
             val dualPreviewView: DualPreviewViewPager =
@@ -134,6 +159,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 currentNavDestId,
                 (reenterTransition as Transition?),
                 wallpaperPreviewViewModel.fullPreviewConfigViewModel.value,
+                isFirstBinding,
             ) { sharedElement ->
                 wallpaperPreviewViewModel.isViewAsHome =
                     (viewPager.adapter as TabTextPagerAdapter).getIsHome(viewPager.currentItem)
@@ -163,6 +189,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 currentNavDestId,
                 (reenterTransition as Transition?),
                 wallpaperPreviewViewModel.fullPreviewConfigViewModel.value,
+                isFirstBinding,
             ) { sharedElement ->
                 wallpaperPreviewViewModel.isViewAsHome =
                     (viewPager.adapter as TabTextPagerAdapter).getIsHome(viewPager.currentItem)
@@ -190,22 +217,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
     }
 
     private fun bindPreviewActions(view: View) {
-        val shareActivityResult =
-            registerForActivityResult(
-                object : ActivityResultContract<Intent, Int>() {
-                    override fun createIntent(context: Context, input: Intent): Intent {
-                        return input
-                    }
-
-                    override fun parseResult(resultCode: Int, intent: Intent?): Int {
-                        return resultCode
-                    }
-                },
-            ) {
-                view
-                    .findViewById<PreviewActionGroup>(R.id.action_button_group)
-                    ?.setIsChecked(Action.SHARE, false)
-            }
         PreviewActionsBinder.bind(
             actionGroup = view.requireViewById(R.id.action_button_group),
             floatingSheet = view.requireViewById(R.id.floating_sheet),

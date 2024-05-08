@@ -17,24 +17,39 @@
 package com.android.wallpaper.testing
 
 import android.content.res.XmlResourceParser
-import com.android.wallpaper.model.Category
 import com.android.wallpaper.model.SystemStaticWallpaperInfo
 import com.android.wallpaper.model.WallpaperCategory
-import com.android.wallpaper.util.WallpaperXMLParserInterface
+import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.util.WallpaperParser
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FakeWallpaperXMLParser @Inject constructor() : WallpaperXMLParserInterface {
-    override fun parseSystemCategories(parser: XmlResourceParser): List<Category> {
-        val wallpapers = listOf(fakeWallpaper)
+class FakeWallpaperParser @Inject constructor() : WallpaperParser {
+    var wallpapers: List<WallpaperInfo> = emptyList()
+
+    override fun parseSystemCategories(parser: XmlResourceParser): List<WallpaperCategory> {
+        val wallpapers = listOf(fakeSystemStaticWallpaperInfo)
         return listOf(
-            WallpaperCategory("Fake Category Title", "Fake CollectionID", 1, wallpapers, 1)
+            WallpaperCategory(
+                /* title= */ "sample-title-1",
+                /* collectionId= */ "sample-collection-id",
+                wallpapers,
+                1
+            )
         )
     }
 
+    override fun parsePartnerWallpaperInfoResources(): List<WallpaperInfo> {
+        return wallpapers
+    }
+
+    fun setPartnerWallpapers(wallpapers: List<WallpaperInfo>) {
+        this.wallpapers = wallpapers
+    }
+
     companion object FakeWallpaperData {
-        val fakeWallpaper =
+        val fakeSystemStaticWallpaperInfo =
             SystemStaticWallpaperInfo(
                 "fake_package_name",
                 "fake_wallpaper_1",

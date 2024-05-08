@@ -27,8 +27,8 @@ import com.android.wallpaper.system.UiModeManagerWrapper
 import com.android.wallpaper.testing.FakeDefaultCategoryFactory
 import com.android.wallpaper.testing.FakeUiModeManager
 import com.android.wallpaper.testing.FakeWallpaperClient
-import com.android.wallpaper.testing.FakeWallpaperXMLParser
-import com.android.wallpaper.util.WallpaperXMLParserInterface
+import com.android.wallpaper.testing.FakeWallpaperParser
+import com.android.wallpaper.util.WallpaperParser
 import com.android.wallpaper.util.converter.category.CategoryFactory
 import dagger.Binds
 import dagger.Module
@@ -52,7 +52,7 @@ internal abstract class SharedTestModule {
 
     @Binds
     @Singleton
-    abstract fun bindWallpaperXMLParser(impl: FakeWallpaperXMLParser): WallpaperXMLParserInterface
+    abstract fun bindWallpaperXMLParser(impl: FakeWallpaperParser): WallpaperParser
 
     @Binds
     @Singleton

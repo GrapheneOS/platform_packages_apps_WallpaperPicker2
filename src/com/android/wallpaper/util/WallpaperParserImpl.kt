@@ -21,6 +21,7 @@ import android.content.res.XmlResourceParser
 import android.util.Log
 import android.util.Xml
 import com.android.wallpaper.model.LiveWallpaperInfo
+import com.android.wallpaper.model.PartnerWallpaperInfo
 import com.android.wallpaper.model.SystemStaticWallpaperInfo
 import com.android.wallpaper.model.WallpaperCategory
 import com.android.wallpaper.model.WallpaperInfo
@@ -38,12 +39,12 @@ import org.xmlpull.v1.XmlPullParserException
  * was earlier present in a single method.
  */
 @Singleton
-class WallpaperXMLParser
+class WallpaperParserImpl
 @Inject
 constructor(
     @ApplicationContext private val context: Context,
     private val partnerProvider: PartnerProvider
-) : WallpaperXMLParserInterface {
+) : WallpaperParser {
 
     /** This method is responsible for generating list of system categories from the XML file. */
     override fun parseSystemCategories(parser: XmlResourceParser): List<WallpaperCategory> {
@@ -81,6 +82,44 @@ constructor(
             }
         }
         return categories
+    }
+
+    /**
+     * This method is responsible for parsing resources for PartnerWallpaperInfo wallpapers and
+     * returning a list of such wallpapers.
+     */
+    override fun parsePartnerWallpaperInfoResources(): List<WallpaperInfo> {
+        val wallpaperInfos: MutableList<WallpaperInfo> = ArrayList()
+
+        val partnerRes = partnerProvider.getResources()
+        val packageName = partnerProvider.getPackageName()
+        if (partnerRes == null) {
+            return wallpaperInfos
+        }
+
+        val resId =
+            partnerRes.getIdentifier(PartnerProvider.LEGACY_WALLPAPER_RES_ID, "array", packageName)
+        // Certain partner configurations don't have wallpapers provided, so need to check; return
+        // early if they are missing.
+        if (resId == 0) {
+            return wallpaperInfos
+        }
+
+        val extras = partnerRes.getStringArray(resId)
+        for (extra in extras) {
+            val wpResId = partnerRes.getIdentifier(extra, "drawable", packageName)
+            if (wpResId != 0) {
+                val thumbRes = partnerRes.getIdentifier(extra + "_small", "drawable", packageName)
+                if (thumbRes != 0) {
+                    val wallpaperInfo: WallpaperInfo = PartnerWallpaperInfo(thumbRes, wpResId)
+                    wallpaperInfos.add(wallpaperInfo)
+                }
+            } else {
+                Log.e(TAG, "Couldn't find wallpaper $extra")
+            }
+        }
+
+        return wallpaperInfos
     }
 
     /**

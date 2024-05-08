@@ -68,6 +68,14 @@ constructor(
     val fullPreviewCropModels: MutableMap<Point, FullPreviewCropModel> = mutableMapOf()
 
     /**
+     * The default crops for the current wallpaper, which is center aligned on the preview.
+     *
+     * Always update default through [updateDefaultPreviewCropModel] to make sure multiple updates
+     * of the same preview only counts the first time it appears.
+     */
+    private val defaultPreviewCropModels: MutableMap<Point, FullPreviewCropModel> = mutableMapOf()
+
+    /**
      * The info picker needs to post process crops for setting static wallpaper.
      *
      * It will be filled with current cropHints when previewing current wallpaper, and null when
@@ -144,15 +152,41 @@ constructor(
         }
 
     /**
-     * Updates new cropHints per displaySize that's been confirmed by the user.
+     * Updates new cropHints per displaySize that's been confirmed by the user or from a new default
+     * crop.
      *
      * That's when picker gets current cropHints from [WallpaperManager] or when user crops and
-     * confirms a crop.
+     * confirms a crop, or when a small preview for a new display size has been discovered the first
+     * time.
      */
-    fun updateCropHintsInfo(cropHintsInfo: Map<Point, FullPreviewCropModel>) {
-        val newInfo = this.cropHintsInfo.value?.plus(cropHintsInfo) ?: cropHintsInfo
+    fun updateCropHintsInfo(
+        cropHintsInfo: Map<Point, FullPreviewCropModel>,
+        updateDefaultCrop: Boolean = false
+    ) {
+        val newInfo =
+            this.cropHintsInfo.value?.let { currentCropHintsInfo ->
+                currentCropHintsInfo.plus(
+                    if (updateDefaultCrop)
+                        cropHintsInfo.filterKeys { !currentCropHintsInfo.keys.contains(it) }
+                    else cropHintsInfo
+                )
+            }
+                ?: cropHintsInfo
         this.cropHintsInfo.value = newInfo
         fullPreviewCropModels.putAll(newInfo)
+    }
+
+    /** Updates default cropHint for [displaySize] if it's not already exist. */
+    fun updateDefaultPreviewCropModel(displaySize: Point, cropModel: FullPreviewCropModel) {
+        defaultPreviewCropModels.let { cropModels ->
+            if (!cropModels.contains(displaySize)) {
+                cropModels[displaySize] = cropModel
+                updateCropHintsInfo(
+                    cropModels.filterKeys { it == displaySize },
+                    updateDefaultCrop = true,
+                )
+            }
+        }
     }
 
     // TODO b/296288298 Create a util class for Bitmap and Asset

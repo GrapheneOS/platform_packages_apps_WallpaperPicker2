@@ -52,6 +52,7 @@ object SetWallpaperDialogBinder {
         currentNavDestId: Int,
         onFinishActivity: () -> Unit,
         onDismissDialog: () -> Unit,
+        isFirstBinding: Boolean,
         navigate: ((View) -> Unit)?,
     ) {
         val previewLayout: View =
@@ -63,6 +64,7 @@ object SetWallpaperDialogBinder {
                 wallpaperPreviewViewModel,
                 lifecycleOwner,
                 currentNavDestId,
+                isFirstBinding,
                 navigate,
             )
         else
@@ -72,6 +74,7 @@ object SetWallpaperDialogBinder {
                 handheldDisplaySize,
                 lifecycleOwner,
                 currentNavDestId,
+                isFirstBinding,
                 navigate,
             )
 
@@ -124,6 +127,7 @@ object SetWallpaperDialogBinder {
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
         currentNavDestId: Int,
+        isFirstBinding: Boolean,
         navigate: ((View) -> Unit)?,
     ) {
         previewLayout.isVisible = true
@@ -153,6 +157,7 @@ object SetWallpaperDialogBinder {
                         displaySize = it,
                         deviceDisplayType = display,
                         currentNavDestId = currentNavDestId,
+                        isFirstBinding = isFirstBinding,
                         navigate = navigate,
                     )
                 }
@@ -166,6 +171,7 @@ object SetWallpaperDialogBinder {
         displaySize: Point,
         lifecycleOwner: LifecycleOwner,
         currentNavDestId: Int,
+        isFirstBinding: Boolean,
         navigate: ((View) -> Unit)?,
     ) {
         previewLayout.isVisible = true
@@ -183,6 +189,7 @@ object SetWallpaperDialogBinder {
                 deviceDisplayType = DeviceDisplayType.SINGLE,
                 viewLifecycleOwner = lifecycleOwner,
                 currentNavDestId = currentNavDestId,
+                isFirstBinding = isFirstBinding,
                 navigate = navigate,
             )
         }

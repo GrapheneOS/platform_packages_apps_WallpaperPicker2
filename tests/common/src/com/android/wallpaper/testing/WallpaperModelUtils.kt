@@ -34,6 +34,8 @@ import com.android.wallpaper.util.converter.WallpaperModelFactory
 
 class WallpaperModelUtils {
     companion object {
+        const val SAMPLE_TITLE1 = "wallpaper-1"
+        const val SAMPLE_TITLE2 = "wallpaper-2"
         const val DEFAULT_PLACEHOLDER_COLOR = 1200
         const val DEFAULT_ACTION_URL = "http://www.bogus.com"
         val DEFAULT_COLORS =
@@ -67,7 +69,7 @@ class WallpaperModelUtils {
                                 wallpaperId,
                                 collectionId,
                             ),
-                        title = null,
+                        title = SAMPLE_TITLE1,
                         attributions = attribution,
                         exploreActionUrl = actionUrl,
                         thumbAsset = asset,
@@ -112,7 +114,7 @@ class WallpaperModelUtils {
                                 wallpaperId,
                                 collectionId,
                             ),
-                        title = null,
+                        title = SAMPLE_TITLE2,
                         attributions = attribution,
                         exploreActionUrl = actionUrl,
                         thumbAsset = asset,

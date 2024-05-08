@@ -21,13 +21,11 @@ import com.android.wallpaper.R
 import com.android.wallpaper.model.DefaultWallpaperInfo
 import com.android.wallpaper.model.ImageCategory
 import com.android.wallpaper.model.LegacyPartnerWallpaperInfo
-import com.android.wallpaper.model.PartnerWallpaperInfo
 import com.android.wallpaper.model.WallpaperCategory
 import com.android.wallpaper.model.WallpaperInfo
-import com.android.wallpaper.module.DefaultCategoryProvider
 import com.android.wallpaper.module.PartnerProvider
 import com.android.wallpaper.picker.data.category.CategoryModel
-import com.android.wallpaper.util.WallpaperXMLParserInterface
+import com.android.wallpaper.util.WallpaperParser
 import com.android.wallpaper.util.converter.category.CategoryFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
@@ -48,8 +46,8 @@ constructor(
     @ApplicationContext val context: Context,
     private val partnerProvider: PartnerProvider,
     private val categoryFactory: CategoryFactory,
-    private val wallpaperXMLParser: WallpaperXMLParserInterface
-) {
+    private val wallpaperXMLParser: WallpaperParser
+) : WallpaperCategoryClient {
 
     /** This method is used for fetching and creating the MyPhotos category tile. */
     fun getMyPhotosCategory(): CategoryModel {
@@ -57,7 +55,7 @@ constructor(
             ImageCategory(
                 context.getString(R.string.my_photos_category_title),
                 context.getString(R.string.image_wallpaper_collection_id),
-                DefaultCategoryProvider.getPriorityMyPhotos(context),
+                PRIORITY_MY_PHOTOS_WHEN_CREATIVE_WALLPAPERS_ENABLED,
                 R.drawable.wallpaperpicker_emptystate /* overlayIconResId */
             )
         return categoryFactory.getCategoryModel(context, imageCategory)
@@ -75,7 +73,7 @@ constructor(
             onDeviceWallpapers.add(defaultWallpaperInfo)
         }
 
-        val partnerWallpaperInfos = PartnerWallpaperInfo.getAll(context)
+        val partnerWallpaperInfos = wallpaperXMLParser.parsePartnerWallpaperInfoResources()
         onDeviceWallpapers.addAll(partnerWallpaperInfos)
 
         val legacyPartnerWallpaperInfos = LegacyPartnerWallpaperInfo.getAll(context)
@@ -99,7 +97,7 @@ constructor(
     }
 
     /** This method is used for fetching the system categories. */
-    suspend fun getSystemCategories(): List<CategoryModel> {
+    override suspend fun getSystemCategories(): List<CategoryModel> {
         val partnerRes = partnerProvider.resources
         val packageName = partnerProvider.packageName
         val categoryModels = mutableListOf<CategoryModel>()

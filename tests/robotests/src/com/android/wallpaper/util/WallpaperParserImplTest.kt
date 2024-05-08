@@ -17,6 +17,7 @@
 package com.android.wallpaper.util
 
 import android.content.Context
+import android.content.res.Resources
 import android.content.res.XmlResourceParser
 import androidx.annotation.XmlRes
 import androidx.test.core.app.ApplicationProvider
@@ -44,20 +45,26 @@ import org.robolectric.shadows.ShadowDisplayManager
 @HiltAndroidTest
 @RunWith(RobolectricTestRunner::class)
 @Config(shadows = [ShadowDisplayManager::class])
-class WallpaperXMLParserTest {
+class WallpaperParserImplTest {
 
     @get:Rule var hiltRule = HiltAndroidRule(this)
     var context: Context = ApplicationProvider.getApplicationContext<HiltTestApplication>()
     @Inject lateinit var partnerProvider: TestPartnerProvider
-    @Inject lateinit var wallpaperXMLParser: WallpaperXMLParser
+    @Inject lateinit var mWallpaperXMLParserImpl: WallpaperParserImpl
     private val testDispatcher: CoroutineDispatcher = StandardTestDispatcher()
+    private lateinit var resources: Resources
+    private lateinit var packageName: String
     val testScope = TestScope(testDispatcher)
 
     @Before
     fun setup() {
         hiltRule.inject()
         Dispatchers.setMain(testDispatcher)
-        wallpaperXMLParser = WallpaperXMLParser(context, partnerProvider)
+        mWallpaperXMLParserImpl = WallpaperParserImpl(context, partnerProvider)
+        resources = context.resources
+        partnerProvider.resources = resources
+        packageName = context.packageName
+        partnerProvider.packageName = packageName
     }
 
     /**
@@ -66,17 +73,13 @@ class WallpaperXMLParserTest {
      */
     @Test
     fun parseXMLForSystemCategories_shouldReturnCategories() {
-        val resources = context.resources
-        partnerProvider.resources = resources
-        val packageName = context.packageName
-        partnerProvider.packageName = packageName
         @XmlRes
         val wallpapersResId: Int =
             resources.getIdentifier(PartnerProvider.WALLPAPER_RES_ID, "xml", packageName)
         assertThat(wallpapersResId).isNotEqualTo(0)
         val parser: XmlResourceParser = resources.getXml(wallpapersResId)
 
-        val categories = wallpaperXMLParser.parseSystemCategories(parser)
+        val categories = mWallpaperXMLParserImpl.parseSystemCategories(parser)
 
         assertThat(categories).hasSize(1)
         assertThat(categories[0].collectionId).isEqualTo("category1")
@@ -88,16 +91,12 @@ class WallpaperXMLParserTest {
      */
     @Test
     fun parseInvalidXMLForSystemCategories_shouldReturnEmptyCategories() {
-        val resources = context.resources
-        partnerProvider.resources = resources
-        val packageName = context.packageName
-        partnerProvider.packageName = packageName
         @XmlRes
         val wallpapersResId: Int = resources.getIdentifier("invalid_wallpapers", "xml", packageName)
         assertThat(wallpapersResId).isNotEqualTo(0)
         val parser: XmlResourceParser = resources.getXml(wallpapersResId)
 
-        val categories = wallpaperXMLParser.parseSystemCategories(parser)
+        val categories = mWallpaperXMLParserImpl.parseSystemCategories(parser)
 
         assertThat(categories).hasSize(0)
     }
@@ -108,10 +107,6 @@ class WallpaperXMLParserTest {
      */
     @Test
     fun parseInvalidXMLForSystemCategories_shouldThrowException() {
-        val resources = context.resources
-        partnerProvider.resources = resources
-        val packageName = context.packageName
-        partnerProvider.packageName = packageName
         @XmlRes
         val wallpapersResId: Int =
             resources.getIdentifier("exception_wallpapers", "xml", packageName)
@@ -120,9 +115,22 @@ class WallpaperXMLParserTest {
 
         assertThat(
                 assertThrows(NullPointerException::class.java) {
-                    wallpaperXMLParser.parseSystemCategories(parser)
+                    mWallpaperXMLParserImpl.parseSystemCategories(parser)
                 }
             )
             .isNotNull()
+    }
+
+    /**
+     * This test uses the file strings.xml that is defined in resources folder to make sure we parse
+     * partner wallpaper info correctly.
+     */
+    @Test
+    fun parseValidPartnerWallpaperInfoXml_shouldReturnWallpaperInfo() {
+        val wallpaperInfo = mWallpaperXMLParserImpl.parsePartnerWallpaperInfoResources()
+
+        assertThat(wallpaperInfo).isNotNull()
+        assertThat(wallpaperInfo).hasSize(1)
+        assertThat(wallpaperInfo[0].getCollectionId(context)).isEqualTo("on_device_wallpapers")
     }
 }

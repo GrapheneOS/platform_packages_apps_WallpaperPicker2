@@ -69,6 +69,6 @@ public class TestPartnerProvider implements PartnerProvider {
 
     @Override
     public boolean shouldHideDefaultWallpaper() {
-        return false;
+        return true;
     }
 }

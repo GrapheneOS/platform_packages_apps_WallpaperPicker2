@@ -66,7 +66,7 @@ constructor(private val wallpaperModelFactory: WallpaperModelFactory) : Category
                 .toMutableList()
         return CollectionCategoryData(
             wallpaperModels = wallpaperModelList,
-            thumbAsset = thumbAsset,
+            thumbAsset = getThumbnail(context),
             featuredThumbnailIndex = featuredThumbnailIndex,
             isSingleWallpaperCategory = isSingleWallpaperCategory,
         )

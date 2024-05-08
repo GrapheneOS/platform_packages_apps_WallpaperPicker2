@@ -72,7 +72,7 @@ object StaticWallpaperPreviewBinder {
 
                         // Fill in the default crop region if the displaySize for this preview
                         // is missing.
-                        viewModel.fullPreviewCropModels.putIfAbsent(
+                        viewModel.updateDefaultPreviewCropModel(
                             displaySize,
                             FullPreviewCropModel(
                                 cropHint =
@@ -84,7 +84,7 @@ object StaticWallpaperPreviewBinder {
                                         )
                                     ),
                                 cropSizeModel = null,
-                            )
+                            ),
                         )
 
                         crossFadeInFullResImageView(lowResImageView, fullResImageView)

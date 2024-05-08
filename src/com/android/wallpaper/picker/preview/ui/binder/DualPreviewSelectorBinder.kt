@@ -40,6 +40,7 @@ object DualPreviewSelectorBinder {
         currentNavDestId: Int,
         transition: Transition?,
         transitionConfig: FullPreviewConfigViewModel?,
+        isFirstBinding: Boolean,
         navigate: (View) -> Unit,
     ) {
         // set up tabs view pager
@@ -56,6 +57,7 @@ object DualPreviewSelectorBinder {
             currentNavDestId,
             transition,
             transitionConfig,
+            isFirstBinding,
             navigate,
         )
         tabsViewPager.currentItem =

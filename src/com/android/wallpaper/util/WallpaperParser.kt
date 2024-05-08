@@ -18,7 +18,10 @@ package com.android.wallpaper.util
 
 import android.content.res.XmlResourceParser
 import com.android.wallpaper.model.Category
+import com.android.wallpaper.model.WallpaperInfo
 
-interface WallpaperXMLParserInterface {
+interface WallpaperParser {
     fun parseSystemCategories(parser: XmlResourceParser): List<Category>
+
+    fun parsePartnerWallpaperInfoResources(): List<WallpaperInfo>
 }
