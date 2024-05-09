@@ -15,12 +15,12 @@
  */
 package com.android.wallpaper.picker.preview.ui.binder
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner

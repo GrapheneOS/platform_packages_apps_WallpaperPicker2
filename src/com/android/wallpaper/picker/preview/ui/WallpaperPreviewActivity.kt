@@ -105,7 +105,9 @@ class WallpaperPreviewActivity :
         val isAssetIdPresent = intent.getBooleanExtra(IS_ASSET_ID_PRESENT, false)
         wallpaperPreviewViewModel.isNewTask = intent.getBooleanExtra(IS_NEW_TASK, false)
         wallpaperPreviewViewModel.isViewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, false)
-        wallpaperPreviewRepository.setWallpaperModel(wallpaper)
+        if (savedInstanceState == null) {
+            wallpaperPreviewRepository.setWallpaperModel(wallpaper)
+        }
         val whichPreview =
             if (isAssetIdPresent) WallpaperConnection.WhichPreview.EDIT_NON_CURRENT
             else WallpaperConnection.WhichPreview.EDIT_CURRENT

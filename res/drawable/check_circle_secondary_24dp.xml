@@ -20,5 +20,5 @@
             <solid android:color="@color/system_secondary" />
         </shape>
     </item>
-    <item android:drawable="@drawable/ic_check_24dp" android:gravity="fill" />
+    <item android:drawable="@drawable/ic_check_secondary_24dp"  android:gravity="fill" />
 </layer-list>

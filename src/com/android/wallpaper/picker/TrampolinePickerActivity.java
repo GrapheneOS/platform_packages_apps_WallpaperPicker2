@@ -23,16 +23,16 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import com.android.wallpaper.config.BaseFlags;
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker;
 import com.android.wallpaper.module.MultiPanesChecker;
+import com.android.wallpaper.picker.customization.ui.CustomizationPickerActivity2;
 
 /**
- *  Activity to relinquish task identity for multi-pane and
- *  prevent launching incorrect base intent in non multi-pane.
+ *  Activity to relinquish task identity for multi-pane and prevent launching incorrect base intent
+ *  in non multi-pane.
  */
 public class TrampolinePickerActivity extends FragmentActivity {
-
-    private static final String TAG = "TrampolinePickerActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,18 +42,33 @@ public class TrampolinePickerActivity extends FragmentActivity {
 
     private void trampolineForFormFactors() {
         final MultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
+        final boolean isNewPickerScreen = BaseFlags.get().isNewPickerUi();
+
         Bundle bundle = getIntent().getExtras();
         bundle = (bundle == null) ? new Bundle() : bundle;
-        if (multiPanesChecker.isMultiPanesEnabled(this)) {
-            startActivityForResultSafely(this,
-                    new Intent(this, CustomizationPickerActivity.class).putExtras(
-                            bundle), /* requestCode= */ 0);
+        if (isNewPickerScreen) {
+            startActivityForResultSafely(
+                    /* activity= */ this,
+                    new Intent(this, CustomizationPickerActivity2.class).putExtras(
+                            bundle),
+                    /* requestCode= */ 0
+            );
+            finish();
         } else {
-            startActivityForResultSafely(this,
-                    new Intent(this, PassThroughCustomizationPickerActivity.class).putExtras(
-                            bundle), /* requestCode= */ 0);
+            if (multiPanesChecker.isMultiPanesEnabled(this)) {
+                startActivityForResultSafely(
+                        /* activity= */ this,
+                        new Intent(this, CustomizationPickerActivity.class).putExtras(
+                                bundle),
+                        /* requestCode= */ 0
+                );
+            } else {
+                startActivityForResultSafely(this,
+                        new Intent(this, PassThroughCustomizationPickerActivity.class).putExtras(
+                                bundle), /* requestCode= */ 0);
+            }
+            finish();
         }
-        finish();
     }
 }
 

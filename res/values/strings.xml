@@ -352,6 +352,9 @@
     <!-- Content description of download button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_download">Download</string>
 
+    <!-- Content description of download effects button on the bottom action bar. [CHAR LIMIT=30] -->
+    <string name="download_effects">Download effects</string>
+
     <!-- Content description of "slideshow wallpaper" button on the bottom action bar. [CHAR LIMIT=50] -->
     <string name="bottom_action_bar_slideshow_wallpaper">Slideshow Wallpaper</string>
 

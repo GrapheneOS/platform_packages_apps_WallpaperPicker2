@@ -21,3 +21,10 @@ flag {
     description: "Enables magic portrait integration when flag is turned on."
     bug: "334125919"
 }
+
+flag {
+    name: "new_picker_ui_flag"
+    namespace: "customization_picker"
+    description: "Enables the BC25 design of the customization picker UI."
+    bug: "339081035"
+}

@@ -18,6 +18,8 @@ package com.android.wallpaper.di.modules
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.pm.PackageManager
+import com.android.wallpaper.module.LargeScreenMultiPanesChecker
+import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.DispatchersModule
@@ -99,6 +101,12 @@ internal abstract class SharedTestModule {
         @BackgroundDispatcher
         fun provideBackgroupdScope(@MainDispatcher impl: CoroutineScope): CoroutineScope {
             return (impl as TestScope).backgroundScope
+        }
+
+        @Provides
+        @Singleton
+        fun provideMultiPanesChecker(): MultiPanesChecker {
+            return LargeScreenMultiPanesChecker()
         }
     }
 }

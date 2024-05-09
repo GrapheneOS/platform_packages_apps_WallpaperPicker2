@@ -81,6 +81,7 @@
                 android:layout_width="@dimen/wallpaper_effect_download_button_width"
                 android:layout_height="@dimen/wallpaper_effect_download_button_height"
                 android:background="@drawable/effect_download_button_background"
+                android:contentDescription="@string/download_effects"
                 android:visibility="visible" />
 
             <LinearLayout

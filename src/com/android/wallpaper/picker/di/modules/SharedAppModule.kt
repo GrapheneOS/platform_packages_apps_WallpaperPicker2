@@ -19,6 +19,8 @@ package com.android.wallpaper.picker.di.modules
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.pm.PackageManager
+import com.android.wallpaper.module.LargeScreenMultiPanesChecker
+import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl
 import com.android.wallpaper.system.UiModeManagerImpl
@@ -61,6 +63,12 @@ abstract class SharedAppModule {
         @Singleton
         fun providePackageManager(@ApplicationContext appContext: Context): PackageManager {
             return appContext.packageManager
+        }
+
+        @Provides
+        @Singleton
+        fun provideMultiPanesChecker(): MultiPanesChecker {
+            return LargeScreenMultiPanesChecker()
         }
     }
 }
