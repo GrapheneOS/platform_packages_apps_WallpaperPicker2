@@ -23,10 +23,15 @@ import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultModel
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CompletableDeferred
 
 @Singleton
 class FakeLiveWallpaperDownloader @Inject constructor() : LiveWallpaperDownloader {
-    var wallpaperDownloadResult: LiveWallpaperDownloadResultModel? = null
+    private val downloadResult = CompletableDeferred<LiveWallpaperDownloadResultModel?>()
+
+    fun setWallpaperDownloadResult(result: LiveWallpaperDownloadResultModel?) =
+        downloadResult.complete(result)
+
     override fun initiateDownloadableService(
         activity: Activity,
         wallpaperData: WallpaperModel.StaticWallpaperModel,
@@ -36,6 +41,6 @@ class FakeLiveWallpaperDownloader @Inject constructor() : LiveWallpaperDownloade
     override fun cleanup() {}
 
     override suspend fun downloadWallpaper(): LiveWallpaperDownloadResultModel? {
-        return wallpaperDownloadResult
+        return downloadResult.await()
     }
 }

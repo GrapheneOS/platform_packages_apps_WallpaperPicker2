@@ -141,8 +141,9 @@ class WallpaperPreviewRepositoryTest {
     @Test
     fun downloadWallpaper_fails() {
         val liveWallpaperDownloader = FakeLiveWallpaperDownloader()
-        liveWallpaperDownloader.wallpaperDownloadResult =
+        liveWallpaperDownloader.setWallpaperDownloadResult(
             LiveWallpaperDownloadResultModel(LiveWallpaperDownloadResultCode.FAIL, null)
+        )
         underTest =
             WallpaperPreviewRepository(
                 liveWallpaperDownloader = liveWallpaperDownloader,
@@ -164,11 +165,12 @@ class WallpaperPreviewRepositoryTest {
     fun downloadWallpaper_succeeds() {
         val liveWallpaperDownloader = FakeLiveWallpaperDownloader()
         val resultWallpaper = getTestLiveWallpaperModel()
-        liveWallpaperDownloader.wallpaperDownloadResult =
+        liveWallpaperDownloader.setWallpaperDownloadResult(
             LiveWallpaperDownloadResultModel(
                 code = LiveWallpaperDownloadResultCode.SUCCESS,
                 wallpaperModel = resultWallpaper,
             )
+        )
         underTest =
             WallpaperPreviewRepository(
                 liveWallpaperDownloader = liveWallpaperDownloader,

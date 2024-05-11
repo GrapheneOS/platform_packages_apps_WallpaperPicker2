@@ -42,6 +42,7 @@ import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.TestScope
 
 @Module
@@ -64,12 +65,34 @@ internal abstract class SharedTestModule {
 
     @Binds
     @Singleton
+    @MainDispatcher
+    abstract fun bindMainDispatcher(impl: TestDispatcher): CoroutineDispatcher
+
+    @Binds @Singleton @MainDispatcher abstract fun bindMainScope(impl: TestScope): CoroutineScope
+
+    @Binds
+    @Singleton
     @BackgroundDispatcher
-    abstract fun bindBackgroundDispatcher(
-        @MainDispatcher impl: CoroutineDispatcher
-    ): CoroutineDispatcher
+    abstract fun bindBackgroundDispatcher(impl: TestDispatcher): CoroutineDispatcher
+
+    @Binds
+    @Singleton
+    @BackgroundDispatcher
+    abstract fun bindBackgroundScope(impl: TestScope): CoroutineScope
 
     companion object {
+        @Provides
+        @Singleton
+        fun provideTestDispatcher(): TestDispatcher {
+            return StandardTestDispatcher()
+        }
+
+        @Provides
+        @Singleton
+        fun provideTestScope(testDispatcher: TestDispatcher): TestScope {
+            return TestScope(testDispatcher)
+        }
+
         @Provides
         @Singleton
         fun provideWallpaperManager(@ApplicationContext appContext: Context): WallpaperManager {
@@ -80,27 +103,6 @@ internal abstract class SharedTestModule {
         @Singleton
         fun providePackageManager(@ApplicationContext appContext: Context): PackageManager {
             return appContext.packageManager
-        }
-
-        @Provides
-        @Singleton
-        @MainDispatcher
-        fun providesMainDispatcher(): CoroutineDispatcher {
-            return StandardTestDispatcher()
-        }
-
-        @Provides
-        @Singleton
-        @MainDispatcher
-        fun providesMainScope(@MainDispatcher mainDispatcher: CoroutineDispatcher): CoroutineScope {
-            return TestScope(mainDispatcher)
-        }
-
-        @Provides
-        @Singleton
-        @BackgroundDispatcher
-        fun provideBackgroupdScope(@MainDispatcher impl: CoroutineScope): CoroutineScope {
-            return (impl as TestScope).backgroundScope
         }
 
         @Provides

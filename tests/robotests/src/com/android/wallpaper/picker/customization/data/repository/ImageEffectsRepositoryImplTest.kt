@@ -31,6 +31,7 @@ import com.android.wallpaper.effects.FakeEffectsController.Companion.LIVE_WALLPA
 import com.android.wallpaper.effects.FakeEffectsController.Companion.LIVE_WALLPAPER_COMPONENT_PKG_NAME
 import com.android.wallpaper.module.logging.TestUserEventLogger
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository
+import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepositoryImpl
 import com.android.wallpaper.picker.preview.data.util.ShadowWallpaperInfo
 import com.android.wallpaper.picker.preview.shared.model.ImageEffectsModel
 import com.android.wallpaper.testing.FakeContentProvider
@@ -59,7 +60,7 @@ import org.robolectric.shadows.ShadowContentResolver
 @HiltAndroidTest
 @Config(shadows = [ShadowWallpaperInfo::class])
 @RunWith(RobolectricTestRunner::class)
-class ImageEffectsRepositoryTest {
+class ImageEffectsRepositoryImplTest {
     @get:Rule var hiltRule = HiltAndroidRule(this)
 
     @Inject lateinit var contentProvider: FakeContentProvider
@@ -314,7 +315,7 @@ class ImageEffectsRepositoryTest {
             fakeRetryInstruction = retryInstruction
             fakeNoEffectInstruction = noEffectInstruction
         }
-        return ImageEffectsRepository(
+        return ImageEffectsRepositoryImpl(
             context = context,
             effectsController = effectsController,
             logger = TestUserEventLogger(),
