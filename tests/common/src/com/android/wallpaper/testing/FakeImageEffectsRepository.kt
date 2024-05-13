@@ -60,7 +60,13 @@ class FakeImageEffectsRepository @Inject constructor() : ImageEffectsRepository 
     }
 
     override fun getEffectTextRes(): WallpaperEffectsView2.EffectTextRes {
-        TODO("Not yet implemented")
+        return WallpaperEffectsView2.EffectTextRes(
+            "sample title",
+            "sample failed title",
+            "sample subtitle",
+            "sample retry instructions",
+            "sample no effect instruction"
+        )
     }
 
     override fun startEffectsModelDownload(effect: Effect) {

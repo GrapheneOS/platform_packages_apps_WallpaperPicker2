@@ -25,7 +25,8 @@ import com.android.wallpaper.categorypicker.viewmodel.SectionViewModel
 import com.android.wallpaper.picker.category.ui.view.adapter.CategoryAdapter
 
 /** This view holder caches reference to pertinent views in a [CategorySectionView] */
-class CategorySectionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class CategorySectionViewHolder(itemView: View, val displayDensity: Float) :
+    RecyclerView.ViewHolder(itemView) {
 
     // recycler view for the tiles
     private var sectionTiles: RecyclerView
@@ -40,9 +41,15 @@ class CategorySectionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
     fun bind(item: SectionViewModel) {
         // TODO: this probably is not necessary but if in the case the sections get updated we
         //  should just update the adapter instead of instantiating a new instance
-        sectionTiles.adapter = CategoryAdapter(item.items)
-        sectionTiles.layoutManager = LinearLayoutManager(itemView.context)
+        sectionTiles.adapter = CategoryAdapter(item.items, displayDensity)
+        sectionTiles.layoutManager =
+            LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
 
-        sectionTitle.text = "Section" // TODO: update view model to include section title
+        if (item.items.size > 1) {
+            sectionTitle.text = "Section title" // TODO: update view model to include section title
+            sectionTitle.visibility = View.VISIBLE
+        } else {
+            sectionTitle.visibility = View.GONE
+        }
     }
 }

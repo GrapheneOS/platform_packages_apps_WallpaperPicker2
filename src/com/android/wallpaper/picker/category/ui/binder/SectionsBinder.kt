@@ -24,17 +24,32 @@ import com.android.wallpaper.picker.category.ui.view.adapter.CategorySectionsAda
 
 /** Binds the collection of SectionViewModel to a section */
 object SectionsBinder {
+    private const val FULL_GRID_SPAN = 3
+    private const val SINGLE_COLUMN_SPAN = 1
 
     fun bind(
         sectionsListView: RecyclerView,
         sectionsViewModel:
             List<SectionViewModel>, // TODO: this should not be a list rather a simple view model
+        displayDensity: Float,
         lifecycleOwner: LifecycleOwner,
     ) {
-        sectionsListView.adapter = CategorySectionsAdapter(sectionsViewModel)
-        sectionsListView.layoutManager = GridLayoutManager(sectionsListView.context, 3)
+        sectionsListView.adapter = CategorySectionsAdapter(sectionsViewModel, displayDensity)
 
-        // TODO: bind the spanning adapter for columns <-- this is perhaps done in the secondary
-        //  binder or the secondary adapter
+        val gridLayoutManager =
+            GridLayoutManager(sectionsListView.context, 3).apply { // 3 columns by default
+                spanSizeLookup =
+                    object : GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int): Int {
+                            // TODO: this will be updated to use SectionViewModel.columnCount
+                            return if (sectionsViewModel[position].items.size > 1) {
+                                FULL_GRID_SPAN // Item occupies all columns (full width)
+                            } else {
+                                SINGLE_COLUMN_SPAN // Item occupies a single column
+                            }
+                        }
+                    }
+            }
+        sectionsListView.layoutManager = gridLayoutManager
     }
 }

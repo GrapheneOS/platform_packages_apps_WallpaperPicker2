@@ -32,24 +32,29 @@ class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private var title: TextView
     private var categorySubtitle: TextView
     private var wallpaperCategoryImage: ImageView
-    private var wallpaperCategoryOverlay: ImageView
 
     init {
         title = itemView.requireViewById(R.id.tile_title)
         categorySubtitle = itemView.requireViewById(R.id.category_title)
         wallpaperCategoryImage = itemView.requireViewById(R.id.image)
-        wallpaperCategoryOverlay = itemView.requireViewById(R.id.overlay_icon)
     }
 
-    fun bind(item: TileViewModel, context: Context) {
+    fun bind(item: TileViewModel, context: Context, displayDensity: Float) {
         // TODO: the tiles binding has a lot more logic which will be handled in a dedicated binder
         // TODO: size the tiles appropriately
-        categorySubtitle.visibility = View.GONE
-        if (item.thumbAsset == null) { // defaulting to solid color for now
+        title.visibility = View.GONE
+
+        // Size the overlay icon according to the category.
+        val thumbnailDimenDp: Int = 75 // TODO: calculate the correct size of the thumbnail
+        val thumbnailDimenPx = (thumbnailDimenDp * displayDensity).toInt()
+        wallpaperCategoryImage.getLayoutParams().width = thumbnailDimenPx
+        wallpaperCategoryImage.getLayoutParams().height = thumbnailDimenPx
+        if (item.thumbAsset == null) {
             val placeHolderColor =
                 ResourceUtils.getColorAttr(context, android.R.attr.colorSecondary)
             item.thumbAsset?.loadDrawable(context, wallpaperCategoryImage, placeHolderColor)
         } else {
+            // defaulting to solid color if assets are null
             wallpaperCategoryImage.setBackgroundColor(
                 itemView.context.getResources().getColor(R.color.myphoto_background_color)
             )

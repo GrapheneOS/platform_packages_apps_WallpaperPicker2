@@ -32,6 +32,7 @@ object CategoriesBinder {
     fun bind(
         categoriesPage: View,
         viewModel: CategoriesViewModel,
+        displayDensity: Float,
         lifecycleOwner: LifecycleOwner,
     ) {
         // instantiate the grid and assign its adapter and layout configuration
@@ -42,7 +43,12 @@ object CategoriesBinder {
                 // bind the state for List<SectionsViewModel>
                 launch {
                     viewModel.sections.collect { sections ->
-                        SectionsBinder.bind(sectionsListView, sections, lifecycleOwner)
+                        SectionsBinder.bind(
+                            sectionsListView,
+                            sections,
+                            displayDensity,
+                            lifecycleOwner
+                        )
                     }
                 }
             }

@@ -36,13 +36,17 @@ constructor(
     val sections: Flow<List<SectionViewModel>> = flow {
         val tiles = generateTiles()
 
-        val columnCount = 3
-
-        // Split the tiles into sections
-        val sections = tiles.chunked(columnCount).map { SectionViewModel(it, columnCount = 3) }
-
+        val sectionsList =
+            listOf(
+                SectionViewModel(tiles.subList(0, 3), 3),
+                SectionViewModel(tiles.subList(3, 6), 3),
+                SectionViewModel(listOf(tiles[6]), 1),
+                SectionViewModel(listOf(tiles[7]), 1),
+                SectionViewModel(listOf(tiles[8]), 1),
+                SectionViewModel(listOf(tiles[9]), 1),
+            )
         // Emit the list of sections
-        emit(sections)
+        emit(sectionsList)
     }
 
     // stub data source for testing until interacter is ready to cosnume

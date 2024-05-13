@@ -26,6 +26,7 @@ import com.android.wallpaper.R
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.category.ui.binder.CategoriesBinder
 import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
+import com.android.wallpaper.util.DisplayMetricsRetriever
 import dagger.hilt.android.AndroidEntryPoint
 
 /** This fragment displays the user interface for the categories */
@@ -42,9 +43,13 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
         val view =
             inflater.inflate(R.layout.categories_fragment, container, /* attachToRoot= */ false)
 
+        val metrics =
+            DisplayMetricsRetriever.getInstance()
+                .getDisplayMetrics(context?.resources, activity?.display)
         CategoriesBinder.bind(
             categoriesPage = view.requireViewById<RecyclerView>(R.id.content_parent),
             viewModel = categoriesViewModel,
+            displayDensity = metrics.density,
             lifecycleOwner = viewLifecycleOwner,
         )
         return view

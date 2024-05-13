@@ -26,6 +26,7 @@ import com.android.wallpaper.picker.category.ui.view.viewholder.CategorySectionV
 
 class CategorySectionsAdapter(
     var items: List<SectionViewModel>,
+    val displayDensity: Float,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -45,6 +46,6 @@ class CategorySectionsAdapter(
         val layoutInflater = LayoutInflater.from(parent.context)
         val view: View = layoutInflater.inflate(R.layout.category_section_view, parent, false)
 
-        return CategorySectionViewHolder(view)
+        return CategorySectionViewHolder(view, displayDensity)
     }
 }
