@@ -96,6 +96,8 @@
     <string name="bottom_action_bar_back" msgid="2620581414970740784">"ಮೇಲಕ್ಕೆ ನ್ಯಾವಿಗೇಟ್ ಮಾಡಿ"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"ಎಡಿಟ್ ಮಾಡಿ"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"ಡೌನ್‌ಲೋಡ್"</string>
+    <!-- no translation found for download_effects (2772742927165716701) -->
+    <skip />
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"ಸ್ಲೈಡ್‌ಶೋ ವಾಲ್‌ಪೇಪರ್"</string>
     <string name="bottom_action_bar_apply" msgid="2983308349819178932">"ಅನ್ವಯಿಸಿ"</string>
     <string name="accessibility_preview_pager" msgid="1839869637405028575">"ಪುಟ <xliff:g id="ID_2">%2$d</xliff:g> ರಲ್ಲಿ <xliff:g id="ID_1">%1$d</xliff:g>"</string>

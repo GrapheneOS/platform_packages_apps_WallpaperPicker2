@@ -96,6 +96,8 @@
     <string name="bottom_action_bar_back" msgid="2620581414970740784">"Navegar para cima"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Editar"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Fazer o download"</string>
+    <!-- no translation found for download_effects (2772742927165716701) -->
+    <skip />
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Fundo da apresent. de slides"</string>
     <string name="bottom_action_bar_apply" msgid="2983308349819178932">"Aplicar"</string>
     <string name="accessibility_preview_pager" msgid="1839869637405028575">"Página <xliff:g id="ID_1">%1$d</xliff:g> de <xliff:g id="ID_2">%2$d</xliff:g>"</string>

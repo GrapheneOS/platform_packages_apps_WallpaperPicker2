@@ -96,6 +96,8 @@
     <string name="bottom_action_bar_back" msgid="2620581414970740784">"ઉપર નૅવિગેટ કરો"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"ફેરફાર કરો"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"ડાઉનલોડ કરો"</string>
+    <!-- no translation found for download_effects (2772742927165716701) -->
+    <skip />
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"વૉલપેપરનો સ્લાઇડશો"</string>
     <string name="bottom_action_bar_apply" msgid="2983308349819178932">"લાગુ કરો"</string>
     <string name="accessibility_preview_pager" msgid="1839869637405028575">"<xliff:g id="ID_2">%2$d</xliff:g>માંથી <xliff:g id="ID_1">%1$d</xliff:g> પેજ"</string>

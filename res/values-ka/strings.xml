@@ -96,6 +96,8 @@
     <string name="bottom_action_bar_back" msgid="2620581414970740784">"ნავიგაცია ზემოთ"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"რედაქტირება"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"ჩამოტვირთვა"</string>
+    <!-- no translation found for download_effects (2772742927165716701) -->
+    <skip />
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"ფონების სლაიდშოუ"</string>
     <string name="bottom_action_bar_apply" msgid="2983308349819178932">"მისადაგება"</string>
     <string name="accessibility_preview_pager" msgid="1839869637405028575">"გვერდი <xliff:g id="ID_1">%1$d</xliff:g> / <xliff:g id="ID_2">%2$d</xliff:g>-დან"</string>

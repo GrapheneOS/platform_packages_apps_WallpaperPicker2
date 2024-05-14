@@ -63,34 +63,52 @@ internal abstract class SharedTestModule {
 
     @Binds @Singleton abstract fun bindWallpaperClient(impl: FakeWallpaperClient): WallpaperClient
 
+    // Dispatcher and Scope injection choices are based on documentation at
+    // http://go/android-dev/kotlin/coroutines/test. Most tests will not need to inject anything
+    // other than the TestDispatcher, for use in Dispatchers.setMain().
+
+    // Use the test dispatcher for work intended for the main thread
     @Binds
     @Singleton
     @MainDispatcher
     abstract fun bindMainDispatcher(impl: TestDispatcher): CoroutineDispatcher
 
+    // Use the test scope as the main scope to match the test dispatcher
     @Binds @Singleton @MainDispatcher abstract fun bindMainScope(impl: TestScope): CoroutineScope
 
+    // Also use the test dispatcher for work intended for the background thread. This makes tests
+    // single-threaded and more deterministic.
     @Binds
     @Singleton
     @BackgroundDispatcher
     abstract fun bindBackgroundDispatcher(impl: TestDispatcher): CoroutineDispatcher
 
-    @Binds
-    @Singleton
-    @BackgroundDispatcher
-    abstract fun bindBackgroundScope(impl: TestScope): CoroutineScope
-
     companion object {
+        // This is the most general test dispatcher for use in tests. UnconfinedTestDispatcher
+        // is the other choice. The difference is that the unconfined dispatcher starts new
+        // coroutines eagerly, which could be easier but could also make tests non-deterministic in
+        // some cases.
         @Provides
         @Singleton
         fun provideTestDispatcher(): TestDispatcher {
             return StandardTestDispatcher()
         }
 
+        // Scope corresponding to the test dispatcher and main test thread. Tests will fail if work
+        // is still running in this scope after the test completes.
         @Provides
         @Singleton
         fun provideTestScope(testDispatcher: TestDispatcher): TestScope {
             return TestScope(testDispatcher)
+        }
+
+        // Scope for background work that does not need to finish before a test completes, like
+        // continuously reading values from a flow.
+        @Provides
+        @Singleton
+        @BackgroundDispatcher
+        fun provideBackgroundScope(impl: TestScope): CoroutineScope {
+            return impl.backgroundScope
         }
 
         @Provides
