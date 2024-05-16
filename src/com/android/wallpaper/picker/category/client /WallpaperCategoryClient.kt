@@ -20,5 +20,10 @@ import com.android.wallpaper.picker.data.category.CategoryModel
 
 /** This class is responsible for fetching categories and wallpaper info. from external sources. */
 interface WallpaperCategoryClient {
-    suspend fun getSystemCategories(): List<CategoryModel>
+
+    /**
+     * Every client using this interface can use this method to get the specific categories they
+     * need.
+     */
+    suspend fun getCategories(): List<CategoryModel>
 }

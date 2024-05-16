@@ -79,7 +79,6 @@ constructor(
     private var drawableLayerResolver: DrawableLayerResolver? = null
     private var exploreIntentChecker: ExploreIntentChecker? = null
     private var liveWallpaperInfoFactory: LiveWallpaperInfoFactory? = null
-    private var networkStatusNotifier: NetworkStatusNotifier? = null
     private var packageStatusNotifier: PackageStatusNotifier? = null
     private var performanceMonitor: PerformanceMonitor? = null
     private var requester: Requester? = null
@@ -99,6 +98,7 @@ constructor(
 
     // Injected objects, sorted by alphabetical order on the type of object
     @Inject lateinit var displayUtils: Lazy<DisplayUtils>
+    @Inject lateinit var networkStatusNotifier: Lazy<NetworkStatusNotifier>
     @Inject lateinit var partnerProvider: Lazy<PartnerProvider>
     @Inject lateinit var uiModeManager: Lazy<UiModeManagerWrapper>
     @Inject lateinit var userEventLogger: Lazy<UserEventLogger>
@@ -189,10 +189,7 @@ constructor(
 
     @Synchronized
     override fun getNetworkStatusNotifier(context: Context): NetworkStatusNotifier {
-        return networkStatusNotifier
-            ?: DefaultNetworkStatusNotifier(context.applicationContext).also {
-                networkStatusNotifier = it
-            }
+        return networkStatusNotifier.get()
     }
 
     @Synchronized

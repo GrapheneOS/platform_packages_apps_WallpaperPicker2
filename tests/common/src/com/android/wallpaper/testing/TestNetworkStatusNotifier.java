@@ -21,18 +21,22 @@ import com.android.wallpaper.module.NetworkStatusNotifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Test implementation of {@link NetworkStatusNotifier} which enables clients to manually notify
  * listeners of a network status change.
  */
+@Singleton
 public class TestNetworkStatusNotifier implements NetworkStatusNotifier {
 
-    private List<Listener> mListeners;
+    private final List<Listener> mListeners = new ArrayList<>();
     @NetworkStatus
     private int mNetworkStatus;
 
+    @Inject
     public TestNetworkStatusNotifier() {
-        mListeners = new ArrayList<>();
         mNetworkStatus = NETWORK_CONNECTED;
     }
 

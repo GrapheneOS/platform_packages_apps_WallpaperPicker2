@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker
 import com.android.wallpaper.module.MultiPanesChecker
+import com.android.wallpaper.module.NetworkStatusNotifier
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.DispatchersModule
@@ -30,6 +31,7 @@ import com.android.wallpaper.testing.FakeDefaultCategoryFactory
 import com.android.wallpaper.testing.FakeUiModeManager
 import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.FakeWallpaperParser
+import com.android.wallpaper.testing.TestNetworkStatusNotifier
 import com.android.wallpaper.util.WallpaperParser
 import com.android.wallpaper.util.converter.category.CategoryFactory
 import dagger.Binds
@@ -52,6 +54,10 @@ import kotlinx.coroutines.test.TestScope
 )
 internal abstract class SharedTestModule {
     @Binds @Singleton abstract fun bindUiModeManager(impl: FakeUiModeManager): UiModeManagerWrapper
+
+    @Binds
+    @Singleton
+    abstract fun bindNetworkStatusNotifier(impl: TestNetworkStatusNotifier): NetworkStatusNotifier
 
     @Binds
     @Singleton

@@ -126,7 +126,7 @@ class DefaultWallpaperCategoryClientTest {
     fun getSystemCategories() =
         testScope.runTest {
             val categoryModel =
-                testScope.async { defaultWallpaperCategoryClient.getSystemCategories() }.await()
+                testScope.async { defaultWallpaperCategoryClient.getCategories() }.await()
 
             assertThat(categoryModel).isNotNull()
             assertThat(categoryModel[0].commonCategoryData.title).isEqualTo("sample-title-1")

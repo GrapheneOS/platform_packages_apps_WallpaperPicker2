@@ -26,7 +26,7 @@ import javax.inject.Singleton
 /** This class provides the singleton scoped effects controller for wallpaper picker. */
 @InstallIn(SingletonComponent::class)
 @Module
-internal abstract class EffectsModule {
+abstract class EffectsModule {
 
     @Binds
     @Singleton

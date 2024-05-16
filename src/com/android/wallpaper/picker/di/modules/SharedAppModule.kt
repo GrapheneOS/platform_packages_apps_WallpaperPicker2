@@ -19,8 +19,10 @@ package com.android.wallpaper.picker.di.modules
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.pm.PackageManager
+import com.android.wallpaper.module.DefaultNetworkStatusNotifier
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker
 import com.android.wallpaper.module.MultiPanesChecker
+import com.android.wallpaper.module.NetworkStatusNotifier
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl
 import com.android.wallpaper.system.UiModeManagerImpl
@@ -41,6 +43,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class SharedAppModule {
     @Binds @Singleton abstract fun bindUiModeManager(impl: UiModeManagerImpl): UiModeManagerWrapper
+
+    @Binds
+    @Singleton
+    abstract fun bindNetworkStatusNotifier(
+        impl: DefaultNetworkStatusNotifier
+    ): NetworkStatusNotifier
 
     @Binds
     @Singleton

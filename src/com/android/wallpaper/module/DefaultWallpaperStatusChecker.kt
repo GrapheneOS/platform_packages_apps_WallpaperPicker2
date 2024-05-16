@@ -38,7 +38,7 @@ class DefaultWallpaperStatusChecker(
     }
 
     override fun isLockWallpaperSet(): Boolean {
-        return wallpaperManager.getWallpaperId(WallpaperManager.FLAG_LOCK) > 0
+        return wallpaperManager.getWallpaperId(WallpaperManager.FLAG_LOCK) >= 0
     }
 
     companion object {

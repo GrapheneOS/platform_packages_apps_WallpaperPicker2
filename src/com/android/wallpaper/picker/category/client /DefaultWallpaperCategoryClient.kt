@@ -97,7 +97,7 @@ constructor(
     }
 
     /** This method is used for fetching the system categories. */
-    override suspend fun getSystemCategories(): List<CategoryModel> {
+    override suspend fun getCategories(): List<CategoryModel> {
         val partnerRes = partnerProvider.resources
         val packageName = partnerProvider.packageName
         val categoryModels = mutableListOf<CategoryModel>()
