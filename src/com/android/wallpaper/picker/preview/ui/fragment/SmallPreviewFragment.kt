@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
@@ -33,6 +34,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.transition.Transition
 import com.android.wallpaper.R
+import com.android.wallpaper.R.id.preview_tabs_container
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.preview.ui.binder.DualPreviewSelectorBinder
@@ -41,8 +43,7 @@ import com.android.wallpaper.picker.preview.ui.binder.PreviewSelectorBinder
 import com.android.wallpaper.picker.preview.ui.binder.SetWallpaperButtonBinder
 import com.android.wallpaper.picker.preview.ui.binder.SetWallpaperProgressDialogBinder
 import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.adapters.TabTextPagerAdapter
-import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.TabsPagerContainer
+import com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.PreviewTabs
 import com.android.wallpaper.picker.preview.ui.util.ImageEffectDialogUtil
 import com.android.wallpaper.picker.preview.ui.view.PreviewActionGroup
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action
@@ -144,14 +145,13 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
     private fun bindScreenPreview(view: View, isFirstBinding: Boolean) {
         val currentNavDestId = checkNotNull(findNavController().currentDestination?.id)
+        val tabs = view.requireViewById<PreviewTabs>(preview_tabs_container)
         if (displayUtils.hasMultiInternalDisplays()) {
             val dualPreviewView: DualPreviewViewPager =
                 view.requireViewById(R.id.dual_preview_pager)
-            val viewPager =
-                view.requireViewById<TabsPagerContainer>(R.id.pager_container).getViewPager()
 
             DualPreviewSelectorBinder.bind(
-                viewPager,
+                tabs,
                 dualPreviewView,
                 wallpaperPreviewViewModel,
                 appContext,
@@ -161,8 +161,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 wallpaperPreviewViewModel.fullPreviewConfigViewModel.value,
                 isFirstBinding,
             ) { sharedElement ->
-                wallpaperPreviewViewModel.isViewAsHome =
-                    (viewPager.adapter as TabTextPagerAdapter).getIsHome(viewPager.currentItem)
+                wallpaperPreviewViewModel.isViewAsHome = dualPreviewView.currentItem == 1
                 val extras =
                     FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)
                 // Set to false on small-to-full preview transition to remove surfaceView jank.
@@ -176,11 +175,8 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                     )
             }
         } else {
-            val viewPager =
-                view.requireViewById<TabsPagerContainer>(R.id.pager_container).getViewPager()
-
             PreviewSelectorBinder.bind(
-                viewPager,
+                tabs,
                 view.requireViewById(R.id.pager_previews),
                 displayUtils.getRealSize(displayUtils.getWallpaperDisplay()),
                 wallpaperPreviewViewModel,
@@ -192,7 +188,8 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 isFirstBinding,
             ) { sharedElement ->
                 wallpaperPreviewViewModel.isViewAsHome =
-                    (viewPager.adapter as TabTextPagerAdapter).getIsHome(viewPager.currentItem)
+                    tabs.requireViewById<MotionLayout>(R.id.preview_tabs).currentState ==
+                        R.id.tab_home_screen_selected
                 val extras =
                     FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)
                 // Set to false on small-to-full preview transition to remove surfaceView jank.

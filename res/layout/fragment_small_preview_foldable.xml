@@ -78,13 +78,10 @@
             android:clipChildren="false"
             android:importantForAccessibility="no" />
 
-        <com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.TabsPagerContainer
-            android:id="@+id/pager_container"
-            android:importantForAccessibility="no"
+        <com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.PreviewTabs
+            android:id="@+id/preview_tabs_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipChildren="false"
-            android:clipToPadding="false"
             android:layout_marginTop="@dimen/spacing_10dp"
             android:layout_marginBottom="@dimen/spacing_10dp" />
     </LinearLayout>

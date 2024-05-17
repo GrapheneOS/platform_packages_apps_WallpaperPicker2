@@ -132,7 +132,7 @@
         <item name="android:insetLeft">0dp</item>
         <item name="android:insetRight">0dp</item>
         <item name="android:minWidth">0dp</item>
-        <item name="android:minHeight">22sp</item>
+        <item name="android:minHeight">@dimen/touch_target_min_height</item>
         <item name="android:textSize">16sp</item>
     </style>
 

@@ -958,7 +958,7 @@ public class CategorySelectorFragment extends AppbarFragment {
      * RecyclerView and all other items only take up a single span.
      */
     private class GroupedCategorySpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
-        private static final int DEFAULT_CATEGORY_SPAN_SIZE = 2;
+        private static final int DEFAULT_CATEGORY_SPAN_SIZE = 1;
 
         GroupedCategoryAdapter mAdapter;
 

@@ -63,7 +63,7 @@ import org.robolectric.shadows.ShadowContentResolver
 @HiltAndroidTest
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
-class WallpaperPickerViewModelTest {
+class WallpaperPreviewViewModelTest {
     @get:Rule var hiltRule = HiltAndroidRule(this)
 
     private val staticWallpaperModel =

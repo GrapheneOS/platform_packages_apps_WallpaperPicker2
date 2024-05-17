@@ -125,6 +125,7 @@ object OptionItemBinder {
             } else {
                 null
             }
+        view.isLongClickable = viewModel.onLongClicked != null
 
         val job =
             lifecycleOwner.lifecycleScope.launch {
