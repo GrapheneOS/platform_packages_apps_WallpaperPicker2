@@ -69,7 +69,7 @@
         android:clipChildren="false"
         android:clipToPadding="false">
 
-        <com.android.wallpaper.picker.preview.ui.fragment.smallpreview.DualPreviewViewPager
+        <com.android.wallpaper.picker.preview.ui.view.DualPreviewViewPager
             android:id="@+id/dual_preview_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -78,7 +78,7 @@
             android:clipChildren="false"
             android:importantForAccessibility="no" />
 
-        <com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.PreviewTabs
+        <com.android.wallpaper.picker.preview.ui.view.PreviewTabs
             android:id="@+id/preview_tabs_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

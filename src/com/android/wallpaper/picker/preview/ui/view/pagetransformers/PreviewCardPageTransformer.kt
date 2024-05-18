@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.wallpaper.picker.preview.ui.fragment.smallpreview.pagetransformers
+package com.android.wallpaper.picker.preview.ui.view.pagetransformers
 
 import android.graphics.Point
 import android.view.View

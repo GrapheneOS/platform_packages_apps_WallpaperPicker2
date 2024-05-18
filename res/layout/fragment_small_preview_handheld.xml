@@ -61,7 +61,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:clipChildren="false"/>
 
-    <com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views.PreviewTabs
+    <com.android.wallpaper.picker.preview.ui.view.PreviewTabs
         android:id="@+id/preview_tabs_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.preview.ui.fragment.smallpreview.views
+package com.android.wallpaper.picker.preview.ui.view
 
 import android.animation.ArgbEvaluator
 import android.content.Context
@@ -33,6 +33,7 @@ import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import com.android.wallpaper.R
+import com.android.wallpaper.module.CustomizationSections.Screen
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -55,7 +56,7 @@ class PreviewTabs(
 
     private var downX = 0f
     private var downY = 0f
-    private var onTabSelected: ((tab: Tab) -> Unit)? = null
+    private var onTabSelected: ((tab: Screen) -> Unit)? = null
 
     init {
         inflate(context, R.layout.preview_tabs, this)
@@ -89,12 +90,12 @@ class PreviewTabs(
                         updateTabText(0.0f)
                         lockScreenTabText.isSelected = true
                         homeScreenTabText.isSelected = false
-                        onTabSelected?.invoke(Tab.LOCK_SCREEN)
+                        onTabSelected?.invoke(Screen.LOCK_SCREEN)
                     } else if (currentId == R.id.tab_home_screen_selected) {
                         updateTabText(1.0f)
                         lockScreenTabText.isSelected = false
                         homeScreenTabText.isSelected = true
-                        onTabSelected?.invoke(Tab.HOME_SCREEN)
+                        onTabSelected?.invoke(Screen.HOME_SCREEN)
                     }
                 }
 
@@ -123,29 +124,29 @@ class PreviewTabs(
             val tabLockScreenRect = requireViewById<FrameLayout>(R.id.lock_screen_tab).getViewRect()
             val tabHomeScreenRect = requireViewById<FrameLayout>(R.id.home_screen_tab).getViewRect()
             if (tabLockScreenRect.contains(downX.toInt(), downY.toInt())) {
-                onTabSelected?.invoke(Tab.LOCK_SCREEN)
+                onTabSelected?.invoke(Screen.LOCK_SCREEN)
                 return true
             } else if (tabHomeScreenRect.contains(downX.toInt(), downY.toInt())) {
-                onTabSelected?.invoke(Tab.HOME_SCREEN)
+                onTabSelected?.invoke(Screen.HOME_SCREEN)
                 return true
             }
         }
         return super.onInterceptTouchEvent(event)
     }
 
-    fun setOnTabSelected(onTabSelected: ((tab: Tab) -> Unit)) {
+    fun setOnTabSelected(onTabSelected: ((tab: Screen) -> Unit)) {
         this.onTabSelected = onTabSelected
     }
 
     /** Transition to tab with [TRANSITION_DURATION] transition duration. */
-    fun transitionToTab(tab: Tab) {
+    fun transitionToTab(tab: Screen) {
         when (tab) {
-            Tab.LOCK_SCREEN ->
+            Screen.LOCK_SCREEN ->
                 if (motionLayout.currentState != R.id.tab_lock_screen_selected) {
                     motionLayout.setTransitionDuration(TRANSITION_DURATION)
                     motionLayout.transitionToStart()
                 }
-            Tab.HOME_SCREEN ->
+            Screen.HOME_SCREEN ->
                 if (motionLayout.currentState != R.id.tab_home_screen_selected) {
                     motionLayout.setTransitionDuration(TRANSITION_DURATION)
                     motionLayout.transitionToEnd()
@@ -154,16 +155,16 @@ class PreviewTabs(
     }
 
     /** Set tab with 0 transition duration. */
-    fun setTab(tab: Tab) {
+    fun setTab(tab: Screen) {
         when (tab) {
-            Tab.LOCK_SCREEN -> {
+            Screen.LOCK_SCREEN -> {
                 updateTabText(0.0f)
                 if (motionLayout.currentState != R.id.tab_lock_screen_selected) {
                     motionLayout.setTransitionDuration(0)
                     motionLayout.transitionToStart()
                 }
             }
-            Tab.HOME_SCREEN -> {
+            Screen.HOME_SCREEN -> {
                 updateTabText(1.0f)
                 if (motionLayout.currentState != R.id.tab_home_screen_selected) {
                     motionLayout.setTransitionDuration(0)
@@ -211,7 +212,7 @@ class PreviewTabs(
                         action ==
                             AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_CLICK.id
                     ) {
-                        onTabSelected?.invoke(Tab.LOCK_SCREEN)
+                        onTabSelected?.invoke(Screen.LOCK_SCREEN)
                         return true
                     }
                     return super.performAccessibilityAction(host, action, args)
@@ -241,7 +242,7 @@ class PreviewTabs(
                         action ==
                             AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_CLICK.id
                     ) {
-                        onTabSelected?.invoke(Tab.HOME_SCREEN)
+                        onTabSelected?.invoke(Screen.HOME_SCREEN)
                         return true
                     }
                     return super.performAccessibilityAction(host, action, args)
@@ -251,11 +252,6 @@ class PreviewTabs(
     }
 
     companion object {
-
-        enum class Tab {
-            LOCK_SCREEN,
-            HOME_SCREEN,
-        }
 
         const val TRANSITION_DURATION = 200
 

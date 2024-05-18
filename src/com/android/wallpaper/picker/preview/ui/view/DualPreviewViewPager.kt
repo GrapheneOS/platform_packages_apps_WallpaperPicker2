@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.wallpaper.picker.preview.ui.fragment.smallpreview
+package com.android.wallpaper.picker.preview.ui.view
 
 import android.content.Context
 import android.graphics.Point
@@ -21,7 +21,6 @@ import android.util.AttributeSet
 import androidx.viewpager.widget.ViewPager
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
-import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout
 
 /**
  * This view pager sizes itself to be the exact height required by its content views:
