@@ -24,16 +24,23 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.stream.HttpGlideUrlLoader;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
+import dagger.hilt.android.qualifiers.ApplicationContext;
+
 import java.io.File;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Default implementation of {@link Requester}.
  */
+@Singleton
 public class WallpaperRequester implements Requester {
     // Network timeout that matches expected outer bound of packet loss duration on slower networks,
     // i.e., 2g.
@@ -44,9 +51,10 @@ public class WallpaperRequester implements Requester {
     private RequestQueue mRequestQueue;
     private Context mAppContext;
 
-    public WallpaperRequester(Context context) {
-        mAppContext = context.getApplicationContext();
-        mRequestQueue = Volley.newRequestQueue(context.getApplicationContext());
+    @Inject
+    public WallpaperRequester(@ApplicationContext Context context) {
+        mAppContext = context;
+        mRequestQueue = Volley.newRequestQueue(context);
     }
 
     @Override

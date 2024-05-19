@@ -23,6 +23,8 @@ import com.android.wallpaper.module.DefaultNetworkStatusNotifier
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker
 import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.module.NetworkStatusNotifier
+import com.android.wallpaper.network.Requester
+import com.android.wallpaper.network.WallpaperRequester
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl
 import com.android.wallpaper.system.UiModeManagerImpl
@@ -49,6 +51,8 @@ abstract class SharedAppModule {
     abstract fun bindNetworkStatusNotifier(
         impl: DefaultNetworkStatusNotifier
     ): NetworkStatusNotifier
+
+    @Binds @Singleton abstract fun bindWallpaperRequester(impl: WallpaperRequester): Requester
 
     @Binds
     @Singleton

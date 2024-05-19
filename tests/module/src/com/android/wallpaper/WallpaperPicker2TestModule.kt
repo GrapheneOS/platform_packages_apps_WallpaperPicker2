@@ -23,11 +23,13 @@ import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.logging.TestUserEventLogger
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.modules.WallpaperPicker2AppModule
+import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.di.modules.EffectsModule
 import com.android.wallpaper.picker.preview.data.util.DefaultLiveWallpaperDownloader
 import com.android.wallpaper.picker.preview.data.util.LiveWallpaperDownloader
 import com.android.wallpaper.picker.preview.ui.util.DefaultImageEffectDialogUtil
 import com.android.wallpaper.picker.preview.ui.util.ImageEffectDialogUtil
+import com.android.wallpaper.testing.FakeDefaultRequester
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestPartnerProvider
 import com.android.wallpaper.testing.TestWallpaperPreferences
@@ -48,6 +50,8 @@ abstract class WallpaperPicker2TestModule {
     @Binds @Singleton abstract fun bindInjector(impl: TestInjector): Injector
 
     @Binds @Singleton abstract fun bindUserEventLogger(impl: TestUserEventLogger): UserEventLogger
+
+    @Binds @Singleton abstract fun bindFakeRequester(impl: FakeDefaultRequester): Requester
 
     @Binds
     @Singleton

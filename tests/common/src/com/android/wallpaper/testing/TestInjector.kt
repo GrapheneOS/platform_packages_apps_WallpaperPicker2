@@ -83,7 +83,6 @@ open class TestInjector @Inject constructor(private val userEventLogger: UserEve
     private var exploreIntentChecker: ExploreIntentChecker? = null
     private var packageStatusNotifier: PackageStatusNotifier? = null
     private var performanceMonitor: PerformanceMonitor? = null
-    private var requester: Requester? = null
     private var systemFeatureChecker: SystemFeatureChecker? = null
     private var wallpaperPersister: WallpaperPersister? = null
     private var wallpaperRefresher: WallpaperRefresher? = null
@@ -98,6 +97,7 @@ open class TestInjector @Inject constructor(private val userEventLogger: UserEve
 
     // Injected objects, sorted by alphabetical order of the type of object
     @Inject lateinit var displayUtils: DisplayUtils
+    @Inject lateinit var requester: Requester
     @Inject lateinit var networkStatusNotifier: NetworkStatusNotifier
     @Inject lateinit var partnerProvider: PartnerProvider
     @Inject lateinit var wallpaperClient: FakeWallpaperClient
@@ -205,7 +205,7 @@ open class TestInjector @Inject constructor(private val userEventLogger: UserEve
     }
 
     override fun getRequester(context: Context): Requester {
-        return requester ?: TestRequester().also { requester = it }
+        return requester
     }
 
     override fun getSystemFeatureChecker(): SystemFeatureChecker {
