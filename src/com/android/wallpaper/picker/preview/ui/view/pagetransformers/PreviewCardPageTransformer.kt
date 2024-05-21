@@ -19,6 +19,7 @@ import android.graphics.Point
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
+import com.android.wallpaper.util.RtlUtils
 import kotlin.math.abs
 
 /**
@@ -35,7 +36,12 @@ class PreviewCardPageTransformer(private val screenSizePx: Point) : ViewPager2.P
 
         // device width in pixels minus the page width will give margin
         val availableMargin = screenSizePx.x - cardPreview.width - nextItemVisibleOffsetPx
-        page.translationX = -availableMargin * position
+        page.translationX =
+            if (RtlUtils.isRtl(page.context)) {
+                availableMargin * position
+            } else {
+                -availableMargin * position
+            }
 
         page.alpha = 0.25f + (1 - abs(position))
     }
