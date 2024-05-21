@@ -71,7 +71,7 @@
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"Desplegat"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"He acabat d\'editar el fons de pantalla"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"S\'està actualitzant el fons de pantalla diari…"</string>
-    <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"No s\'ha pogut actualitzar el fons de pantalla diari. Comprova la connexió a la xarxa i torna-ho a provar."</string>
+    <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"No s\'ha pogut actualitzar el fons de pantalla diari. Comprova la connexió de xarxa i torna-ho a provar."</string>
     <string name="on_device_wallpapers_category_title" msgid="805819102071369004">"Fons de pantalla del dispositiu"</string>
     <string name="on_device_wallpapers_category_title_desktop" msgid="316919420410065369">"Al dispositiu"</string>
     <string name="on_device_wallpaper_title" msgid="5262564748034629524">"Fons de pantalla d\'Android"</string>

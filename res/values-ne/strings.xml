@@ -85,7 +85,7 @@
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"तन्काइएको"</string>
     <string name="preview" msgid="1774602101743861071">"प्रिभ्यु"</string>
     <string name="tab_info" msgid="818614080690111416">"जानकारी"</string>
-    <string name="tab_customize" msgid="2533745409174959960">"आफू अनुकूल पार्नुहोस्"</string>
+    <string name="tab_customize" msgid="2533745409174959960">" कस्टम पार्नुहोस्"</string>
     <string name="tab_effects" msgid="3213606157589233901">"इफेक्टहरू"</string>
     <string name="tab_share" msgid="6676269624804601227">"सेयर गर्नुहोस्"</string>
     <string name="my_photos" msgid="8613021349284084982">"मेरा फोटोहरू"</string>
@@ -96,8 +96,7 @@
     <string name="bottom_action_bar_back" msgid="2620581414970740784">"माथि जानुहोस्"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"सम्पादन गर्नुहोस्"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"डाउनलोड गर्नुहोस्"</string>
-    <!-- no translation found for download_effects (2772742927165716701) -->
-    <skip />
+    <string name="download_effects" msgid="2772742927165716701">"इफेक्टहरू डाउनलोड गर्नुहोस्"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"स्लाइड सो वालपेपर"</string>
     <string name="bottom_action_bar_apply" msgid="2983308349819178932">"लागू गर्नुहोस्"</string>
     <string name="accessibility_preview_pager" msgid="1839869637405028575">"<xliff:g id="ID_2">%2$d</xliff:g> मध्ये पृष्ठ <xliff:g id="ID_1">%1$d</xliff:g>"</string>
