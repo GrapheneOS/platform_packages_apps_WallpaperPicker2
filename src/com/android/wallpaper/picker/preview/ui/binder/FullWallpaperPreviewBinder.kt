@@ -115,7 +115,6 @@ object FullWallpaperPreviewBinder {
             view.requireViewById(R.id.touch_forwarding_layout)
 
         if (displayUtils.hasMultiInternalDisplays()) {
-            val currentDescription = surfaceTouchForwardingLayout.contentDescription?.toString()
             lifecycleOwner.lifecycleScope.launch {
                 lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.fullPreviewConfigViewModel.collect { fullPreviewConfigViewModel ->
@@ -128,10 +127,19 @@ object FullWallpaperPreviewBinder {
                         val descriptionString =
                             surfaceTouchForwardingLayout.context.getString(descriptionResourceId)
                         surfaceTouchForwardingLayout.contentDescription =
-                            currentDescription + descriptionString
+                            surfaceTouchForwardingLayout.context.getString(
+                                R.string.preview_screen_description_editable,
+                                descriptionString
+                            )
                     }
                 }
             }
+        } else {
+            surfaceTouchForwardingLayout.contentDescription =
+                surfaceTouchForwardingLayout.context.getString(
+                    R.string.preview_screen_description_editable,
+                    ""
+                )
         }
 
         var surfaceCallback: SurfaceViewUtil.SurfaceCallback? = null

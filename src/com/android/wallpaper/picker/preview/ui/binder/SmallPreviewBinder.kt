@@ -55,23 +55,19 @@ object SmallPreviewBinder {
     ) {
 
         val previewCard: CardView = view.requireViewById(R.id.preview_card)
-        val descriptionString = previewCard.contentDescription
-
-        val updatedDescription =
+        val foldedStateDescription =
             when (deviceDisplayType) {
-                DeviceDisplayType.FOLDED -> {
-                    val foldedStateDescription =
-                        view.context.getString(R.string.folded_device_state_description)
-                    "$descriptionString $foldedStateDescription"
-                }
-                DeviceDisplayType.UNFOLDED -> {
-                    val unfoldedStateDescription =
-                        view.context.getString(R.string.unfolded_device_state_description)
-                    "$descriptionString $unfoldedStateDescription"
-                }
-                else -> descriptionString
+                DeviceDisplayType.FOLDED ->
+                    view.context.getString(R.string.folded_device_state_description)
+                DeviceDisplayType.UNFOLDED ->
+                    view.context.getString(R.string.unfolded_device_state_description)
+                else -> ""
             }
-        previewCard.contentDescription = updatedDescription
+        previewCard.contentDescription =
+            view.context.getString(
+                R.string.wallpaper_preview_card_content_description_editable,
+                foldedStateDescription
+            )
         val wallpaperSurface: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
         val workspaceSurface: SurfaceView = view.requireViewById(R.id.workspace_surface)
         var transitionDisposableHandle: DisposableHandle? = null

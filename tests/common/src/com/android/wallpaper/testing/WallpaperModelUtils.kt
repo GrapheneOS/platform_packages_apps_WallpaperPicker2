@@ -20,6 +20,8 @@ import android.app.WallpaperColors
 import android.app.WallpaperInfo
 import android.content.ComponentName
 import android.graphics.Color
+import android.graphics.Point
+import android.graphics.Rect
 import android.net.Uri
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.picker.data.ColorInfo
@@ -56,6 +58,7 @@ class WallpaperModelUtils {
             colors: WallpaperColors = DEFAULT_COLORS,
             asset: Asset = DEFAULT_ASSET,
             imageWallpaperUri: Uri = Uri.EMPTY,
+            cropHints: Map<Point, Rect> = emptyMap(),
         ): WallpaperModel.StaticWallpaperModel {
             return WallpaperModel.StaticWallpaperModel(
                 commonWallpaperData =
@@ -83,7 +86,7 @@ class WallpaperModelUtils {
                 staticWallpaperData =
                     StaticWallpaperData(
                         asset,
-                        emptyMap(),
+                        cropHints,
                     ),
                 imageWallpaperData = ImageWallpaperData(imageWallpaperUri),
                 networkWallpaperData = null,

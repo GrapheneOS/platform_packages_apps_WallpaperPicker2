@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.preview.data.util
+package com.android.wallpaper.testing
 
 import android.app.WallpaperInfo
 import android.content.ComponentName

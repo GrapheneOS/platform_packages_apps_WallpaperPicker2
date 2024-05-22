@@ -9,6 +9,7 @@ android_app {
     platform_apis: true,
     static_libs: [
         "WallpaperPicker2ApplicationLib",
+        "WallpaperPicker2RoboLib",
         "WallpaperPicker2TestLib",
         "WallpaperPicker2TestModule",
     ],

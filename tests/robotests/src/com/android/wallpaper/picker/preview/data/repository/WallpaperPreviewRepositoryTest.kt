@@ -32,9 +32,9 @@ import com.android.wallpaper.picker.data.LiveWallpaperData
 import com.android.wallpaper.picker.data.WallpaperId
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.data.util.FakeLiveWallpaperDownloader
-import com.android.wallpaper.picker.preview.data.util.ShadowWallpaperInfo
 import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultCode
 import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultModel
+import com.android.wallpaper.testing.ShadowWallpaperInfo
 import com.android.wallpaper.testing.TestAsset
 import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.android.wallpaper.testing.WallpaperModelUtils.Companion.getStaticWallpaperModel

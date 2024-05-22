@@ -32,11 +32,11 @@ import com.android.wallpaper.effects.FakeEffectsController.Companion.LIVE_WALLPA
 import com.android.wallpaper.module.logging.TestUserEventLogger
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepositoryImpl
-import com.android.wallpaper.picker.preview.data.util.ShadowWallpaperInfo
 import com.android.wallpaper.picker.preview.shared.model.ImageEffectsModel
 import com.android.wallpaper.testing.FakeContentProvider
 import com.android.wallpaper.testing.FakeContentProvider.Companion.FAKE_EFFECT_ID
 import com.android.wallpaper.testing.FakeContentProvider.Companion.FAKE_EFFECT_TITLE
+import com.android.wallpaper.testing.ShadowWallpaperInfo
 import com.android.wallpaper.testing.WallpaperModelUtils.Companion.getStaticWallpaperModel
 import com.android.wallpaper.testing.collectLastValue
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2

@@ -29,8 +29,8 @@ import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.PreviewTestActivity
-import com.android.wallpaper.picker.preview.data.util.ShadowWallpaperInfo
 import com.android.wallpaper.testing.FakeWallpaperClient
+import com.android.wallpaper.testing.ShadowWallpaperInfo
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.android.wallpaper.testing.WallpaperModelUtils

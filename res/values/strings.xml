@@ -237,6 +237,9 @@
     <!-- Content description for the wallpaper preview screen. [CHAR LIMIT=none] -->
     <string name="preview_screen_description">Wallpaper preview screen</string>
 
+    <!-- Content description for the wallpaper preview screen when preview can be edited, including folded state of preview. [CHAR LIMIT=none] -->
+    <string name="preview_screen_description_editable">Wallpaper preview screen %1$s. Use two fingers to pan and zoom.</string>
+
     <!-- Content description when the device is in a folded state. [CHAR LIMIT=none] -->
     <string name="folded_device_state_description">Folded</string>
 
@@ -378,6 +381,9 @@
 
     <!-- Content description of wallpaper preview card. [CHAR_LIMIT=40]-->
     <string name="wallpaper_preview_card_content_description">Wallpaper preview</string>
+
+    <!-- Content description of wallpaper preview card when preview can be edited, including folded state of preview. [CHAR_LIMIT=40]-->
+    <string name="wallpaper_preview_card_content_description_editable">Wallpaper preview %1$s, tap to edit your photo</string>
 
     <!-- Content description of lock screen wallpaper preview card. [CHAR_LIMIT=NONE]-->
     <string name="lock_wallpaper_preview_card_content_description">Lock screen wallpaper preview</string>

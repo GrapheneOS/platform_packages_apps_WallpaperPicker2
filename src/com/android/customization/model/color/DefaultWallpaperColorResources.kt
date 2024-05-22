@@ -25,7 +25,7 @@ class DefaultWallpaperColorResources(private val wallpaperColors: WallpaperColor
     WallpaperColorResources() {
 
     override suspend fun apply(context: Context, callback: () -> Unit) {
-        val wallpaperColorScheme = ColorScheme(wallpaperColors = wallpaperColors, darkTheme = false)
+        val wallpaperColorScheme = ColorScheme(wallpaperColors, false)
         with(wallpaperColorScheme) {
             addOverlayColor(neutral1, R.color.system_neutral1_10)
             addOverlayColor(neutral2, R.color.system_neutral2_10)

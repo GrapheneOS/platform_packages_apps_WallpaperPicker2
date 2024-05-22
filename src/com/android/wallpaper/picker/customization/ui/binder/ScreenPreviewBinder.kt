@@ -316,9 +316,7 @@ object ScreenPreviewBinder {
                                         (previewView.resources.configuration.uiMode and
                                             Configuration.UI_MODE_NIGHT_MASK ==
                                             Configuration.UI_MODE_NIGHT_YES)
-                                    loadingAnimation?.updateColor(
-                                        ColorScheme(seed = colorAccent, darkTheme = night)
-                                    )
+                                    loadingAnimation?.updateColor(ColorScheme(colorAccent, night))
                                     loadingAnimation?.setupRevealAnimation(
                                         animationTimeToRestore,
                                         animationTransitionProgress
@@ -441,9 +439,7 @@ object ScreenPreviewBinder {
                                             Configuration.UI_MODE_NIGHT_MASK ==
                                             Configuration.UI_MODE_NIGHT_YES)
                                     animationColorToRestore = colorAccent
-                                    loadingAnimation?.updateColor(
-                                        ColorScheme(seed = colorAccent, darkTheme = night)
-                                    )
+                                    loadingAnimation?.updateColor(ColorScheme(colorAccent, night))
                                     loadingAnimation?.playLoadingAnimation()
                                 }
                             }

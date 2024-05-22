@@ -22,6 +22,7 @@ import android.graphics.BitmapFactory
 import android.graphics.ColorSpace
 import android.graphics.Point
 import android.graphics.Rect
+import androidx.annotation.VisibleForTesting
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
@@ -82,8 +83,8 @@ constructor(
      * previewing a new wallpaper, and gets updated through [updateCropHintsInfo] when user picks a
      * new crop.
      */
-    private val cropHintsInfo: MutableStateFlow<Map<Point, FullPreviewCropModel>?> =
-        MutableStateFlow(null)
+    @get:VisibleForTesting
+    val cropHintsInfo: MutableStateFlow<Map<Point, FullPreviewCropModel>?> = MutableStateFlow(null)
 
     private val cropHints: Flow<Map<Point, Rect>?> =
         cropHintsInfo.map { cropHintsInfoMap ->

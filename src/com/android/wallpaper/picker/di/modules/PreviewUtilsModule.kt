@@ -31,7 +31,7 @@ import javax.inject.Qualifier
  */
 @InstallIn(ActivityRetainedComponent::class)
 @Module
-internal object PreviewUtilsModule {
+object PreviewUtilsModule {
 
     @Qualifier @Retention(AnnotationRetention.BINARY) annotation class LockScreenPreviewUtils
 
