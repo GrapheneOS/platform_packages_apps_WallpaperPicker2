@@ -38,8 +38,10 @@ constructor(
 
         val sectionsList =
             listOf(
-                SectionViewModel(tiles.subList(0, 3), 3),
-                SectionViewModel(tiles.subList(3, 6), 3),
+                SectionViewModel(tiles.subList(0, 2), 3),
+                SectionViewModel(tiles.subList(2, 3), 3),
+                SectionViewModel(listOf(tiles[4]), 1),
+                SectionViewModel(listOf(tiles[5]), 1),
                 SectionViewModel(listOf(tiles[6]), 1),
                 SectionViewModel(listOf(tiles[7]), 1),
                 SectionViewModel(listOf(tiles[8]), 1),

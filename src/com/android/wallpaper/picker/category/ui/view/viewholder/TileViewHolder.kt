@@ -17,6 +17,7 @@
 package com.android.wallpaper.picker.category.ui.view.viewholder
 
 import android.content.Context
+import android.graphics.Point
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
 import com.android.wallpaper.categorypicker.viewmodel.TileViewModel
 import com.android.wallpaper.util.ResourceUtils
+import com.android.wallpaper.util.SizeCalculator
 import com.bumptech.glide.Glide
 
 /** Caches and binds [TileViewHolder] to a [WallpaperTileView] */
@@ -39,16 +41,29 @@ class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         wallpaperCategoryImage = itemView.requireViewById(R.id.image)
     }
 
-    fun bind(item: TileViewModel, context: Context, displayDensity: Float) {
+    fun bind(
+        item: TileViewModel,
+        context: Context,
+        columnCount: Int,
+        tileCount: Int,
+        windowWidth: Int
+    ) {
         // TODO: the tiles binding has a lot more logic which will be handled in a dedicated binder
         // TODO: size the tiles appropriately
         title.visibility = View.GONE
 
-        // Size the overlay icon according to the category.
-        val thumbnailDimenDp: Int = 75 // TODO: calculate the correct size of the thumbnail
-        val thumbnailDimenPx = (thumbnailDimenDp * displayDensity).toInt()
-        wallpaperCategoryImage.getLayoutParams().width = thumbnailDimenPx
-        wallpaperCategoryImage.getLayoutParams().height = thumbnailDimenPx
+        var tileSize: Point
+        // calculate the height
+        if (columnCount == 1 && tileCount == 1) {
+            tileSize = SizeCalculator.getCategoryTileSize(itemView.context, windowWidth)
+        } else if (columnCount > 1 && tileCount == 1) {
+            tileSize = SizeCalculator.getFeaturedCategoryTileSize(itemView.context, windowWidth)
+        } else {
+            tileSize = SizeCalculator.getFeaturedCategoryTileSize(itemView.context, windowWidth)
+            tileSize.y /= 2
+        }
+        wallpaperCategoryImage.getLayoutParams().height = tileSize.y
+
         if (item.thumbAsset == null) {
             val placeHolderColor =
                 ResourceUtils.getColorAttr(context, android.R.attr.colorSecondary)

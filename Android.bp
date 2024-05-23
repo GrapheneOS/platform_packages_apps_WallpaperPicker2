@@ -55,6 +55,8 @@ android_library {
         "volley",
         "SettingsLibActivityEmbedding",
         "monet",
+        "android-support-v7-recyclerview",
+        "flexbox",
         "hilt_android",
         "accessibility_settings_flags_lib",
     ],

@@ -25,7 +25,7 @@ import com.android.wallpaper.categorypicker.viewmodel.TileViewModel
 import com.android.wallpaper.picker.category.ui.view.viewholder.TileViewHolder
 
 /** This binds individual wallpaper category tiles to [WallpaperTileView] */
-class CategoryAdapter(var items: List<TileViewModel>, val displayDensity: Float) :
+class CategoryAdapter(var items: List<TileViewModel>, val columns: Int, val windowWidth: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): RecyclerView.ViewHolder {
         return createIndividualHolder(parent)
@@ -37,7 +37,13 @@ class CategoryAdapter(var items: List<TileViewModel>, val displayDensity: Float)
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         val tile: TileViewModel = items[position]
-        (viewHolder as TileViewHolder?)?.bind(tile, viewHolder.itemView.context, displayDensity)
+        (viewHolder as TileViewHolder?)?.bind(
+            tile,
+            viewHolder.itemView.context,
+            columns,
+            items.size,
+            windowWidth
+        )
     }
 
     private fun createIndividualHolder(parent: ViewGroup): RecyclerView.ViewHolder {

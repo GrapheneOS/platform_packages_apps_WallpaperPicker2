@@ -18,14 +18,18 @@ package com.android.wallpaper.picker.category.ui.view.viewholder
 
 import android.view.View
 import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
 import com.android.wallpaper.categorypicker.viewmodel.SectionViewModel
 import com.android.wallpaper.picker.category.ui.view.adapter.CategoryAdapter
+import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 
 /** This view holder caches reference to pertinent views in a [CategorySectionView] */
-class CategorySectionViewHolder(itemView: View, val displayDensity: Float) :
+class CategorySectionViewHolder(itemView: View, val windowWidth: Int) :
     RecyclerView.ViewHolder(itemView) {
 
     // recycler view for the tiles
@@ -41,9 +45,23 @@ class CategorySectionViewHolder(itemView: View, val displayDensity: Float) :
     fun bind(item: SectionViewModel) {
         // TODO: this probably is not necessary but if in the case the sections get updated we
         //  should just update the adapter instead of instantiating a new instance
-        sectionTiles.adapter = CategoryAdapter(item.items, displayDensity)
-        sectionTiles.layoutManager =
-            LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+        sectionTiles.adapter = CategoryAdapter(item.items, item.columnCount, windowWidth)
+
+        val layoutManager = FlexboxLayoutManager(itemView.context)
+
+        // Horizontal orientation
+        layoutManager.flexDirection = FlexDirection.ROW
+
+        // disable wrapping to make sure everything fits on a single row
+        layoutManager.flexWrap = FlexWrap.NOWRAP
+
+        // Stretch items to fill the horizontal axis
+        layoutManager.alignItems = AlignItems.STRETCH
+
+        // Distribute items evenly on the horizontal axis
+        layoutManager.justifyContent = JustifyContent.SPACE_AROUND
+
+        sectionTiles.layoutManager = layoutManager as RecyclerView.LayoutManager?
 
         if (item.items.size > 1) {
             sectionTitle.text = "Section title" // TODO: update view model to include section title

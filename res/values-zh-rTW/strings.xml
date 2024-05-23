@@ -96,8 +96,7 @@
     <string name="bottom_action_bar_back" msgid="2620581414970740784">"前往頂端"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"編輯"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"下載"</string>
-    <!-- no translation found for download_effects (2772742927165716701) -->
-    <skip />
+    <string name="download_effects" msgid="2772742927165716701">"下載效果"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"投影播放桌布"</string>
     <string name="bottom_action_bar_apply" msgid="2983308349819178932">"套用"</string>
     <string name="accessibility_preview_pager" msgid="1839869637405028575">"第 <xliff:g id="ID_1">%1$d</xliff:g> 頁，共 <xliff:g id="ID_2">%2$d</xliff:g> 頁"</string>

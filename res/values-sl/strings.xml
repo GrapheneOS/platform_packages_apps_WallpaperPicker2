@@ -96,8 +96,7 @@
     <string name="bottom_action_bar_back" msgid="2620581414970740784">"Pomik navzgor"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Urejanje"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Prenos"</string>
-    <!-- no translation found for download_effects (2772742927165716701) -->
-    <skip />
+    <string name="download_effects" msgid="2772742927165716701">"Prenos učinkov"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Diaprojekcija zaslonsk. ozadij"</string>
     <string name="bottom_action_bar_apply" msgid="2983308349819178932">"Uporaba"</string>
     <string name="accessibility_preview_pager" msgid="1839869637405028575">"<xliff:g id="ID_1">%1$d</xliff:g>. stran od <xliff:g id="ID_2">%2$d</xliff:g>"</string>

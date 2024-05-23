@@ -19,37 +19,43 @@ package com.android.wallpaper.picker.category.ui.binder
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.wallpaper.R
 import com.android.wallpaper.categorypicker.viewmodel.SectionViewModel
 import com.android.wallpaper.picker.category.ui.view.adapter.CategorySectionsAdapter
+import com.android.wallpaper.picker.category.ui.view.decoration.CategoriesGridPaddingDecoration
 
 /** Binds the collection of SectionViewModel to a section */
 object SectionsBinder {
-    private const val FULL_GRID_SPAN = 3
-    private const val SINGLE_COLUMN_SPAN = 1
+    private const val DEFAULT_SPAN = 3
 
     fun bind(
         sectionsListView: RecyclerView,
         sectionsViewModel:
             List<SectionViewModel>, // TODO: this should not be a list rather a simple view model
-        displayDensity: Float,
+        windowWidth: Int,
         lifecycleOwner: LifecycleOwner,
     ) {
-        sectionsListView.adapter = CategorySectionsAdapter(sectionsViewModel, displayDensity)
+        sectionsListView.adapter = CategorySectionsAdapter(sectionsViewModel, windowWidth)
 
         val gridLayoutManager =
-            GridLayoutManager(sectionsListView.context, 3).apply { // 3 columns by default
+            GridLayoutManager(sectionsListView.context, DEFAULT_SPAN).apply {
                 spanSizeLookup =
                     object : GridLayoutManager.SpanSizeLookup() {
                         override fun getSpanSize(position: Int): Int {
-                            // TODO: this will be updated to use SectionViewModel.columnCount
-                            return if (sectionsViewModel[position].items.size > 1) {
-                                FULL_GRID_SPAN // Item occupies all columns (full width)
-                            } else {
-                                SINGLE_COLUMN_SPAN // Item occupies a single column
-                            }
+                            return sectionsViewModel[position].columnCount
                         }
                     }
             }
         sectionsListView.layoutManager = gridLayoutManager
+
+        sectionsListView.addItemDecoration(
+            CategoriesGridPaddingDecoration(
+                sectionsListView.context.resources.getDimensionPixelSize(
+                    R.dimen.grid_item_category_padding_horizontal
+                )
+            ) { position ->
+                return@CategoriesGridPaddingDecoration sectionsViewModel[position].columnCount
+            }
+        )
     }
 }
