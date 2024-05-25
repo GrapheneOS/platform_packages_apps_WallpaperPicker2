@@ -31,6 +31,9 @@ public abstract class Category {
     private final String mTitle;
     private final String mCollectionId;
     private final int mPriority;
+    private final boolean mIsDownloadable;
+
+    private final String mDownloadComponent;
 
     /**
      * Constructs a Category object.
@@ -40,9 +43,41 @@ public abstract class Category {
      * @param priority     Priority (lowest number = highest priority) among all categories presented.
      */
     public Category(String title, String collectionId, int priority) {
+        this(title, collectionId, priority, false, null);
+    }
+
+    /**
+     * Constructs a Category object.
+     *
+     * @param title             Displayed title of category.
+     * @param collectionId      A collection ID that callers must ensure is unique among all
+     *                          categories.
+     * @param priority          Priority (lowest number = highest priority) among all categories
+     *                          presented.
+     * @param isDownloadable    Describes if this Category has downloadable wallpapers
+     * @param downloadComponent The name of the component this category uses to download wallpapers
+     */
+    public Category(String title, String collectionId, int priority, boolean isDownloadable,
+            String downloadComponent) {
         mTitle = title;
         mCollectionId = collectionId;
         mPriority = priority;
+        mIsDownloadable = isDownloadable;
+        mDownloadComponent = downloadComponent;
+    }
+
+    /**
+     * Returns whether this category has downloadable wallpapers
+     */
+    public boolean isCategoryDownloadable() {
+        return mIsDownloadable;
+    }
+
+    /**
+     * Returns this [Category]'s download component
+     */
+    public String getCategoryDownloadComponent() {
+        return mDownloadComponent;
     }
 
     /**

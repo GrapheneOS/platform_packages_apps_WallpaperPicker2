@@ -159,42 +159,11 @@ class IndividualPickerFragment2 :
             Glide.get(requireContext()).clearMemory()
         }
         categoryProvider = injector.getCategoryProvider(appContext)
-        categoryProvider.fetchCategories(
-            object : CategoryReceiver {
-                override fun onCategoryReceived(category: Category) {
-                    // Do nothing.
-                }
-
-                override fun doneFetchingCategories() {
-                    val fetchedCategory =
-                        categoryProvider.getCategory(
-                            arguments?.getString(ARG_CATEGORY_COLLECTION_ID)
-                        )
-                    if (fetchedCategory != null && fetchedCategory !is WallpaperCategory) {
-                        return
-                    }
-
-                    if (fetchedCategory == null) {
-                        // The absence of this category in the CategoryProvider indicates a broken
-                        // state, see b/38030129. Hence, finish the activity and return.
-                        getIndividualPickerFragmentHost().moveToPreviousFragment()
-                        Toast.makeText(
-                                context,
-                                R.string.collection_not_exist_msg,
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
-                        return
-                    }
-                    category = fetchedCategory as WallpaperCategory
-                    category?.let { onCategoryLoaded(it) }
-                }
-            },
-            false
-        )
+        fetchCategories(forceRefresh = false, register = true)
     }
 
-    fun onCategoryLoaded(category: Category) {
+    /** This function handles the result of the fetched categories */
+    private fun onCategoryLoaded(category: Category, shouldRegisterPackageListener: Boolean) {
         val fragmentHost = getIndividualPickerFragmentHost()
         if (fragmentHost.isHostToolbarShown) {
             fragmentHost.setToolbarTitle(category.title)
@@ -210,7 +179,9 @@ class IndividualPickerFragment2 :
             shouldForceReload = true
         }
         fetchWallpapers(shouldForceReload)
-        registerPackageListener(category)
+        if (shouldRegisterPackageListener) {
+            registerPackageListener(category)
+        }
     }
 
     private fun fetchWallpapers(forceReload: Boolean) {
@@ -220,7 +191,6 @@ class IndividualPickerFragment2 :
         updateLoading()
         val context = requireContext()
         val userCreatedWallpapers = mutableListOf<WallpaperInfo>()
-
         category?.fetchWallpapers(
             context.applicationContext,
             { fetchedWallpapers ->
@@ -331,12 +301,14 @@ class IndividualPickerFragment2 :
     }
 
     private fun registerPackageListener(category: Category) {
-        if (category.supportsThirdParty()) {
+        if (category.supportsThirdParty() || category.isCategoryDownloadable) {
             appStatusListener =
                 PackageStatusNotifier.Listener { pkgName: String?, status: Int ->
-                    if (
-                        status != PackageStatusNotifier.PackageStatus.REMOVED ||
-                            category.containsThirdParty(pkgName)
+                    if (category.isCategoryDownloadable) {
+                        fetchCategories(true, false)
+                    } else if (
+                        (status != PackageStatusNotifier.PackageStatus.REMOVED ||
+                            category.containsThirdParty(pkgName))
                     ) {
                         fetchWallpapers(true)
                     }
@@ -345,7 +317,53 @@ class IndividualPickerFragment2 :
                 appStatusListener,
                 WallpaperService.SERVICE_INTERFACE
             )
+
+            if (category.isCategoryDownloadable) {
+                category.categoryDownloadComponent?.let {
+                    packageStatusNotifier?.addListener(appStatusListener, it)
+                }
+            }
         }
+    }
+
+    /**
+     * @param forceRefresh if true, force refresh the category list
+     * @param register if true, register a package status listener
+     */
+    private fun fetchCategories(forceRefresh: Boolean, register: Boolean) {
+        categoryProvider.fetchCategories(
+            object : CategoryReceiver {
+                override fun onCategoryReceived(category: Category) {
+                    // Do nothing.
+                }
+
+                override fun doneFetchingCategories() {
+                    val fetchedCategory =
+                        categoryProvider.getCategory(
+                            arguments?.getString(ARG_CATEGORY_COLLECTION_ID)
+                        )
+                    if (fetchedCategory != null && fetchedCategory !is WallpaperCategory) {
+                        return
+                    }
+
+                    if (fetchedCategory == null) {
+                        // The absence of this category in the CategoryProvider indicates a broken
+                        // state, see b/38030129. Hence, finish the activity and return.
+                        getIndividualPickerFragmentHost().moveToPreviousFragment()
+                        Toast.makeText(
+                                context,
+                                R.string.collection_not_exist_msg,
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+                        return
+                    }
+                    category = fetchedCategory as WallpaperCategory
+                    category?.let { onCategoryLoaded(it, register) }
+                }
+            },
+            forceRefresh
+        )
     }
 
     private fun updateLoading() {
@@ -523,6 +541,7 @@ class IndividualPickerFragment2 :
                 imageGrid.paddingBottom
             )
         imageGrid.adapter = adapter
+
         val gridLayoutManager = GridLayoutManager(activity, getNumColumns())
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {

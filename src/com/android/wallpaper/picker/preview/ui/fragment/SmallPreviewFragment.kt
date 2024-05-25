@@ -189,7 +189,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             ) { sharedElement ->
                 wallpaperPreviewViewModel.isViewAsHome =
                     tabs.requireViewById<MotionLayout>(R.id.preview_tabs).currentState ==
-                        R.id.tab_home_screen_selected
+                        R.id.secondary_tab_selected
                 val extras =
                     FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)
                 // Set to false on small-to-full preview transition to remove surfaceView jank.

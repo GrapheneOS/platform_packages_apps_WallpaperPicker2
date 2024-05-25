@@ -33,7 +33,6 @@ import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import com.android.wallpaper.R
-import com.android.wallpaper.module.CustomizationSections.Screen
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -51,18 +50,18 @@ class PreviewTabs(
     private val unSelectedTextColor = ContextCompat.getColor(context, R.color.system_secondary)
 
     private val motionLayout: MotionLayout
-    private val lockScreenTabText: TextView
-    private val homeScreenTabText: TextView
+    private val primaryTabText: TextView
+    private val secondaryTabText: TextView
 
     private var downX = 0f
     private var downY = 0f
-    private var onTabSelected: ((tab: Screen) -> Unit)? = null
+    private var onTabSelected: ((index: Int) -> Unit)? = null
 
     init {
         inflate(context, R.layout.preview_tabs, this)
         motionLayout = requireViewById(R.id.preview_tabs)
-        lockScreenTabText = requireViewById(R.id.lock_screen_tab_text)
-        homeScreenTabText = requireViewById(R.id.home_screen_tab_text)
+        primaryTabText = requireViewById(R.id.primary_tab_text)
+        secondaryTabText = requireViewById(R.id.secondary_tab_text)
 
         setCustomAccessibilityDelegate()
 
@@ -86,16 +85,16 @@ class PreviewTabs(
                 }
 
                 override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
-                    if (currentId == R.id.tab_lock_screen_selected) {
+                    if (currentId == R.id.primary_tab_selected) {
                         updateTabText(0.0f)
-                        lockScreenTabText.isSelected = true
-                        homeScreenTabText.isSelected = false
-                        onTabSelected?.invoke(Screen.LOCK_SCREEN)
-                    } else if (currentId == R.id.tab_home_screen_selected) {
+                        primaryTabText.isSelected = true
+                        secondaryTabText.isSelected = false
+                        onTabSelected?.invoke(0)
+                    } else if (currentId == R.id.secondary_tab_selected) {
                         updateTabText(1.0f)
-                        lockScreenTabText.isSelected = false
-                        homeScreenTabText.isSelected = true
-                        onTabSelected?.invoke(Screen.HOME_SCREEN)
+                        primaryTabText.isSelected = false
+                        secondaryTabText.isSelected = true
+                        onTabSelected?.invoke(1)
                     }
                 }
 
@@ -121,67 +120,63 @@ class PreviewTabs(
         // onClickListener to the individual tabs. This is because, when setting the onClickListener
         // to the individual tabs, the swipe gesture of the tabs will be overridden.
         if (isClick(event, downX, downY)) {
-            val tabLockScreenRect = requireViewById<FrameLayout>(R.id.lock_screen_tab).getViewRect()
-            val tabHomeScreenRect = requireViewById<FrameLayout>(R.id.home_screen_tab).getViewRect()
-            if (tabLockScreenRect.contains(downX.toInt(), downY.toInt())) {
-                onTabSelected?.invoke(Screen.LOCK_SCREEN)
+            val primaryTabRect = requireViewById<FrameLayout>(R.id.primary_tab).getViewRect()
+            val secondaryTabRect = requireViewById<FrameLayout>(R.id.secondary_tab).getViewRect()
+            if (primaryTabRect.contains(downX.toInt(), downY.toInt())) {
+                onTabSelected?.invoke(0)
                 return true
-            } else if (tabHomeScreenRect.contains(downX.toInt(), downY.toInt())) {
-                onTabSelected?.invoke(Screen.HOME_SCREEN)
+            } else if (secondaryTabRect.contains(downX.toInt(), downY.toInt())) {
+                onTabSelected?.invoke(1)
                 return true
             }
         }
         return super.onInterceptTouchEvent(event)
     }
 
-    fun setOnTabSelected(onTabSelected: ((tab: Screen) -> Unit)) {
+    fun setOnTabSelected(onTabSelected: ((index: Int) -> Unit)) {
         this.onTabSelected = onTabSelected
     }
 
     /** Transition to tab with [TRANSITION_DURATION] transition duration. */
-    fun transitionToTab(tab: Screen) {
-        when (tab) {
-            Screen.LOCK_SCREEN ->
-                if (motionLayout.currentState != R.id.tab_lock_screen_selected) {
-                    motionLayout.setTransitionDuration(TRANSITION_DURATION)
-                    motionLayout.transitionToStart()
-                }
-            Screen.HOME_SCREEN ->
-                if (motionLayout.currentState != R.id.tab_home_screen_selected) {
-                    motionLayout.setTransitionDuration(TRANSITION_DURATION)
-                    motionLayout.transitionToEnd()
-                }
+    fun transitionToTab(index: Int) {
+        if (index == 0) {
+            if (motionLayout.currentState != R.id.primary_tab_selected) {
+                motionLayout.setTransitionDuration(TRANSITION_DURATION)
+                motionLayout.transitionToStart()
+            }
+        } else if (index == 1) {
+            if (motionLayout.currentState != R.id.secondary_tab_selected) {
+                motionLayout.setTransitionDuration(TRANSITION_DURATION)
+                motionLayout.transitionToEnd()
+            }
         }
     }
 
     /** Set tab with 0 transition duration. */
-    fun setTab(tab: Screen) {
-        when (tab) {
-            Screen.LOCK_SCREEN -> {
-                updateTabText(0.0f)
-                if (motionLayout.currentState != R.id.tab_lock_screen_selected) {
-                    motionLayout.setTransitionDuration(0)
-                    motionLayout.transitionToStart()
-                }
+    fun setTab(index: Int) {
+        if (index == 0) {
+            updateTabText(0.0f)
+            if (motionLayout.currentState != R.id.primary_tab_selected) {
+                motionLayout.setTransitionDuration(0)
+                motionLayout.transitionToStart()
             }
-            Screen.HOME_SCREEN -> {
-                updateTabText(1.0f)
-                if (motionLayout.currentState != R.id.tab_home_screen_selected) {
-                    motionLayout.setTransitionDuration(0)
-                    motionLayout.transitionToEnd()
-                }
+        } else if (index == 1) {
+            updateTabText(1.0f)
+            if (motionLayout.currentState != R.id.secondary_tab_selected) {
+                motionLayout.setTransitionDuration(0)
+                motionLayout.transitionToEnd()
             }
         }
     }
 
     private fun updateTabText(progress: Float) {
-        lockScreenTabText.apply {
+        primaryTabText.apply {
             setTextColor(
                 argbEvaluator.evaluate(progress, selectedTextColor, unSelectedTextColor) as Int
             )
             background.alpha = (255 * (1 - progress)).toInt()
         }
-        homeScreenTabText.apply {
+        secondaryTabText.apply {
             setTextColor(
                 argbEvaluator.evaluate(progress, unSelectedTextColor, selectedTextColor) as Int
             )
@@ -189,9 +184,14 @@ class PreviewTabs(
         }
     }
 
+    fun setTabsText(primaryText: String, secondaryText: String) {
+        primaryTabText.text = primaryText
+        secondaryTabText.text = secondaryText
+    }
+
     private fun setCustomAccessibilityDelegate() {
         ViewCompat.setAccessibilityDelegate(
-            lockScreenTabText,
+            primaryTabText,
             object : AccessibilityDelegateCompat() {
                 override fun onInitializeAccessibilityNodeInfo(
                     host: View,
@@ -212,7 +212,7 @@ class PreviewTabs(
                         action ==
                             AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_CLICK.id
                     ) {
-                        onTabSelected?.invoke(Screen.LOCK_SCREEN)
+                        onTabSelected?.invoke(0)
                         return true
                     }
                     return super.performAccessibilityAction(host, action, args)
@@ -221,7 +221,7 @@ class PreviewTabs(
         )
 
         ViewCompat.setAccessibilityDelegate(
-            homeScreenTabText,
+            secondaryTabText,
             object : AccessibilityDelegateCompat() {
                 override fun onInitializeAccessibilityNodeInfo(
                     host: View,
@@ -242,7 +242,7 @@ class PreviewTabs(
                         action ==
                             AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_CLICK.id
                     ) {
-                        onTabSelected?.invoke(Screen.HOME_SCREEN)
+                        onTabSelected?.invoke(1)
                         return true
                     }
                     return super.performAccessibilityAction(host, action, args)

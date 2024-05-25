@@ -19,17 +19,21 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
 import android.view.View
+import androidx.core.view.doOnPreDraw
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Transition
 import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
-import com.android.wallpaper.model.wallpaper.PreviewPagerPage
 import com.android.wallpaper.picker.preview.ui.view.adapters.SinglePreviewPagerAdapter
 import com.android.wallpaper.picker.preview.ui.view.pagetransformers.PreviewCardPageTransformer
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import kotlinx.coroutines.launch
 
 /** Binds single preview home screen and lock screen tabs view pager. */
 object PreviewPagerBinder {
@@ -59,7 +63,7 @@ object PreviewPagerBinder {
                     applicationContext = applicationContext,
                     view = viewHolder.itemView.requireViewById(R.id.preview),
                     viewModel = wallpaperPreviewViewModel,
-                    screen = PreviewPagerPage.entries[position].screen,
+                    screen = wallpaperPreviewViewModel.smallPreviewTabs[position],
                     displaySize = previewDisplaySize,
                     deviceDisplayType = DeviceDisplayType.SINGLE,
                     viewLifecycleOwner = viewLifecycleOwner,
@@ -82,6 +86,31 @@ object PreviewPagerBinder {
             // Remove clip children to enable child card view to display fully during scaling shared
             // element transition.
             child.clipChildren = false
+        }
+
+        // Wrap in doOnPreDraw for emoji wallpaper creation case, to make sure recycler view with
+        // previews have finished layout before calling registerOnPageChangeCallback and
+        // setCurrentItem.
+        // TODO (b/339679893): investigate to see if there is a better solution
+        previewsViewPager.doOnPreDraw {
+            previewsViewPager.registerOnPageChangeCallback(
+                object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        super.onPageSelected(position)
+                        wallpaperPreviewViewModel.setSmallPreviewSelectedTabIndex(position)
+                    }
+                }
+            )
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    wallpaperPreviewViewModel.smallPreviewSelectedTabIndex.collect {
+                        if (previewsViewPager.currentItem != it) {
+                            previewsViewPager.setCurrentItem(it, /* smoothScroll= */ true)
+                        }
+                    }
+                }
+            }
         }
     }
 }

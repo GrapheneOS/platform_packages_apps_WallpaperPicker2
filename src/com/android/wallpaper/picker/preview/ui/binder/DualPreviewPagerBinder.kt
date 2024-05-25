@@ -24,9 +24,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
-import com.android.wallpaper.model.wallpaper.PreviewPagerPage
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout.Companion.getViewId
 import com.android.wallpaper.picker.preview.ui.view.DualPreviewViewPager
@@ -112,7 +112,7 @@ object DualPreviewPagerBinder {
                         view = dualDisplayAspectRatioLayout.requireViewById(display.getViewId()),
                         viewModel = wallpaperPreviewViewModel,
                         viewLifecycleOwner = viewLifecycleOwner,
-                        screen = PreviewPagerPage.entries[position].screen,
+                        screen = wallpaperPreviewViewModel.smallPreviewTabs[position],
                         displaySize = it,
                         deviceDisplayType = display,
                         currentNavDestId = currentNavDestId,
@@ -125,6 +125,32 @@ object DualPreviewPagerBinder {
             }
 
             dualPreviewView.overScrollMode = OVER_SCROLL_NEVER
+        }
+
+        val onPageChangeListenerPreviews =
+            object : ViewPager.OnPageChangeListener {
+                override fun onPageSelected(position: Int) {
+                    wallpaperPreviewViewModel.setSmallPreviewSelectedTabIndex(position)
+                }
+
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {}
+
+                override fun onPageScrollStateChanged(state: Int) {}
+            }
+        dualPreviewView.addOnPageChangeListener(onPageChangeListenerPreviews)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                wallpaperPreviewViewModel.smallPreviewSelectedTabIndex.collect {
+                    if (dualPreviewView.currentItem != it) {
+                        dualPreviewView.setCurrentItem(it, /* smoothScroll= */ true)
+                    }
+                }
+            }
         }
     }
 }

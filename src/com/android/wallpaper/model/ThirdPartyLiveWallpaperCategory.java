@@ -38,8 +38,16 @@ public class ThirdPartyLiveWallpaperCategory extends WallpaperCategory {
 
     public ThirdPartyLiveWallpaperCategory(String title, String collectionId,
             List<WallpaperInfo> wallpapers,
+            int priority, @Nullable Set<String> excludedLiveWallpaperPackageNames,
+            boolean isDownloadable, String downloadComponent) {
+        super(title, collectionId, wallpapers, priority, isDownloadable, downloadComponent);
+        mExcludedPackages = excludedLiveWallpaperPackageNames;
+    }
+
+    public ThirdPartyLiveWallpaperCategory(String title, String collectionId,
+            List<WallpaperInfo> wallpapers,
             int priority, @Nullable Set<String> excludedLiveWallpaperPackageNames) {
-        super(title, collectionId, wallpapers, priority);
+        super(title, collectionId, wallpapers, priority, false, null);
         mExcludedPackages = excludedLiveWallpaperPackageNames;
     }
 

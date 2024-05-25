@@ -22,7 +22,7 @@
     app:layoutDescription="@xml/preview_tabs_motion_scene">
 
     <FrameLayout
-        android:id="@+id/lock_screen_tab"
+        android:id="@+id/primary_tab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/guideline_center"
@@ -31,7 +31,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginHorizontal="8dp">
         <TextView
-            android:id="@+id/lock_screen_tab_text"
+            android:id="@+id/primary_tab_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/small_preview_tab_background_selected"
@@ -42,14 +42,14 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/home_screen_tab"
+        android:id="@+id/secondary_tab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/lock_screen_tab"
+        app:layout_constraintStart_toEndOf="@+id/primary_tab"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
         <TextView
-            android:id="@+id/home_screen_tab_text"
+            android:id="@+id/secondary_tab_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/small_preview_tab_background_selected"

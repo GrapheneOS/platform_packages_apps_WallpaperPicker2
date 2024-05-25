@@ -31,6 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:theme="?android:attr/actionBarTheme"
+        android:importantForAccessibility="yes"
         android:layout_gravity="top">
         <TextView
             android:id="@+id/custom_toolbar_title"

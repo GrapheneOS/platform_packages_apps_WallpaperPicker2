@@ -44,13 +44,24 @@ public class WallpaperCategory extends Category {
     private int mFeaturedThumbnailIndex;
 
     public WallpaperCategory(String title, String collectionId, List<WallpaperInfo> wallpapers,
-                             int priority) {
-        this(title, collectionId, 0, wallpapers, priority);
+                             int priority, boolean isDownloadable, String downloadComponent) {
+        this(title, collectionId, 0, wallpapers, priority, isDownloadable, downloadComponent);
+    }
+
+    public WallpaperCategory(String title, String collectionId, List<WallpaperInfo> wallpapers,
+            int priority) {
+        this(title, collectionId, 0, wallpapers, priority, false, null);
     }
 
     public WallpaperCategory(String title, String collectionId, int featuredThumbnailIndex,
                              List<WallpaperInfo> wallpapers, int priority) {
-        super(title, collectionId, priority);
+        this(title, collectionId, featuredThumbnailIndex, wallpapers, priority, false, null);
+    }
+
+    public WallpaperCategory(String title, String collectionId, int featuredThumbnailIndex,
+            List<WallpaperInfo> wallpapers, int priority, boolean isDownloadable,
+            String downloadComponent) {
+        super(title, collectionId, priority, isDownloadable, downloadComponent);
         mWallpapers = wallpapers;
         mWallpapersLock = new Object();
         mFeaturedThumbnailIndex = featuredThumbnailIndex;
@@ -58,7 +69,7 @@ public class WallpaperCategory extends Category {
 
     public WallpaperCategory(String title, String collectionId, Asset thumbAsset,
             List<WallpaperInfo> wallpapers, int priority) {
-        super(title, collectionId, priority);
+        super(title, collectionId, priority, false, null);
         mWallpapers = wallpapers;
         mWallpapersLock = new Object();
         mThumbAsset = thumbAsset;

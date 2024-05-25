@@ -26,6 +26,7 @@
         android:importantForAccessibility="yes"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
+        android:accessibilityTraversalBefore="@id/toolbar"
         android:contentDescription="@string/preview_screen_description"/>
 
     <include layout="@layout/full_wallpaper_preview_card"/>

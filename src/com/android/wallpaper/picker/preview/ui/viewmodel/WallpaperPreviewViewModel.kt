@@ -21,6 +21,7 @@ import android.stats.style.StyleEnums
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
+import com.android.wallpaper.model.wallpaper.PreviewPagerPage
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
@@ -95,6 +96,24 @@ constructor(
     // This flag prevents launching the creative edit activity again when orientation change.
     // On orientation change, the fragment's onCreateView will be called again.
     var isCurrentlyEditingCreativeWallpaper = false
+
+    val smallPreviewTabs = PreviewPagerPage.entries.map { it.screen }
+
+    private val _smallPreviewSelectedTab = MutableStateFlow(getWallpaperPreviewSource())
+    val smallPreviewSelectedTab = _smallPreviewSelectedTab.asStateFlow()
+    val smallPreviewSelectedTabIndex = smallPreviewSelectedTab.map { smallPreviewTabs.indexOf(it) }
+
+    fun getSmallPreviewTabIndex(): Int {
+        return smallPreviewTabs.indexOf(smallPreviewSelectedTab.value)
+    }
+
+    fun setSmallPreviewSelectedTab(screen: Screen) {
+        _smallPreviewSelectedTab.value = screen
+    }
+
+    fun setSmallPreviewSelectedTabIndex(index: Int) {
+        _smallPreviewSelectedTab.value = smallPreviewTabs[index]
+    }
 
     fun updateDisplayConfiguration() {
         _wallpaperDisplaySize.value = displayUtils.getRealSize(displayUtils.getWallpaperDisplay())

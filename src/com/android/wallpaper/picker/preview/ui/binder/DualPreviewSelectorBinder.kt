@@ -19,8 +19,6 @@ import android.content.Context
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.transition.Transition
-import androidx.viewpager.widget.ViewPager
-import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.preview.ui.view.DualPreviewViewPager
 import com.android.wallpaper.picker.preview.ui.view.PreviewTabs
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewConfigViewModel
@@ -56,43 +54,10 @@ object DualPreviewSelectorBinder {
             navigate,
         )
 
-        dualPreviewView.currentItem = if (wallpaperPreviewViewModel.isViewAsHome) 1 else 0
-        tabs.setTab(
-            if (wallpaperPreviewViewModel.isViewAsHome) Screen.HOME_SCREEN else Screen.LOCK_SCREEN
+        TabsBinder.bind(tabs, wallpaperPreviewViewModel, viewLifecycleOwner)
+
+        wallpaperPreviewViewModel.setSmallPreviewSelectedTab(
+            wallpaperPreviewViewModel.getWallpaperPreviewSource()
         )
-        synchronizeTabsWithPreviewPager(tabs, dualPreviewView)
-    }
-
-    private fun synchronizeTabsWithPreviewPager(
-        tabs: PreviewTabs,
-        previewsViewPager: ViewPager,
-    ) {
-        tabs.setOnTabSelected {
-            if (it == Screen.LOCK_SCREEN && previewsViewPager.currentItem != 0) {
-                previewsViewPager.setCurrentItem(0, true)
-            } else if (it == Screen.HOME_SCREEN && previewsViewPager.currentItem != 1) {
-                previewsViewPager.setCurrentItem(1, true)
-            }
-        }
-
-        val onPageChangeListenerPreviews =
-            object : ViewPager.OnPageChangeListener {
-                override fun onPageSelected(position: Int) {
-                    if (position == 0) {
-                        tabs.transitionToTab(Screen.LOCK_SCREEN)
-                    } else if (position == 1) {
-                        tabs.transitionToTab(Screen.HOME_SCREEN)
-                    }
-                }
-
-                override fun onPageScrolled(
-                    position: Int,
-                    positionOffset: Float,
-                    positionOffsetPixels: Int
-                ) {}
-
-                override fun onPageScrollStateChanged(state: Int) {}
-            }
-        previewsViewPager.addOnPageChangeListener(onPageChangeListenerPreviews)
     }
 }
