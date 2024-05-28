@@ -27,7 +27,6 @@ import android.stats.style.StyleEnums
 import androidx.test.core.app.ActivityScenario
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
-import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.PreviewTestActivity
 import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.ShadowWallpaperInfo
@@ -43,9 +42,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -67,7 +66,7 @@ class WallpaperPreviewInteractorTest {
     private lateinit var scenario: ActivityScenario<PreviewTestActivity>
     private lateinit var wallpaperPreviewInteractor: WallpaperPreviewInteractor
 
-    @Inject @MainDispatcher lateinit var testDispatcher: CoroutineDispatcher
+    @Inject lateinit var testDispatcher: TestDispatcher
     @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var testInjector: TestInjector
     @Inject lateinit var prefs: TestWallpaperPreferences

@@ -17,7 +17,6 @@
 package com.android.wallpaper.picker.category.data
 
 import android.content.Context
-import androidx.test.core.app.ApplicationProvider
 import com.android.wallpaper.model.PartnerWallpaperInfo
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.category.client.DefaultWallpaperCategoryClient
@@ -28,14 +27,14 @@ import com.android.wallpaper.testing.FakeWallpaperParser
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestPartnerProvider
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
-import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -51,12 +50,12 @@ import org.robolectric.RobolectricTestRunner
 class DefaultWallpaperCategoryClientTest {
 
     @get:Rule var hiltRule = HiltAndroidRule(this)
-    lateinit var context: Context
+    @Inject @ApplicationContext lateinit var context: Context
     @Inject lateinit var partnerProvider: TestPartnerProvider
     @Inject lateinit var defaultCategoryFactory: FakeDefaultCategoryFactory
     @Inject lateinit var wallpaperXMLParser: FakeWallpaperParser
-    val testDispatcher: CoroutineDispatcher = StandardTestDispatcher()
-    val testScope = TestScope(testDispatcher)
+    @Inject lateinit var testDispatcher: TestDispatcher
+    @Inject lateinit var testScope: TestScope
 
     private lateinit var defaultWallpaperCategoryClient: DefaultWallpaperCategoryClient
     @Inject lateinit var testInjector: TestInjector
@@ -65,7 +64,6 @@ class DefaultWallpaperCategoryClientTest {
     fun setup() {
         hiltRule.inject()
         Dispatchers.setMain(testDispatcher)
-        context = ApplicationProvider.getApplicationContext()
         defaultWallpaperCategoryClient =
             DefaultWallpaperCategoryClient(
                 context,
@@ -104,7 +102,7 @@ class DefaultWallpaperCategoryClientTest {
             val fakePartnerWallpaperInfo = PartnerWallpaperInfo(1, 1)
             wallpaperXMLParser.wallpapers = listOf(fakePartnerWallpaperInfo)
             val categoryModel =
-                testScope.async { defaultWallpaperCategoryClient.getOnDeviceCategory() }.await()
+                async { defaultWallpaperCategoryClient.getOnDeviceCategory() }.await()
 
             assertThat(categoryModel).isNotNull()
             assertThat(categoryModel?.commonCategoryData?.title).isEqualTo("On-device wallpapers")
@@ -117,7 +115,7 @@ class DefaultWallpaperCategoryClientTest {
         testScope.runTest {
             wallpaperXMLParser.wallpapers = emptyList()
             val categoryModel =
-                testScope.async { defaultWallpaperCategoryClient.getOnDeviceCategory() }.await()
+                async { defaultWallpaperCategoryClient.getOnDeviceCategory() }.await()
 
             assertThat(categoryModel).isNull()
         }
@@ -125,8 +123,7 @@ class DefaultWallpaperCategoryClientTest {
     @Test
     fun getSystemCategories() =
         testScope.runTest {
-            val categoryModel =
-                testScope.async { defaultWallpaperCategoryClient.getCategories() }.await()
+            val categoryModel = async { defaultWallpaperCategoryClient.getCategories() }.await()
 
             assertThat(categoryModel).isNotNull()
             assertThat(categoryModel[0].commonCategoryData.title).isEqualTo("sample-title-1")

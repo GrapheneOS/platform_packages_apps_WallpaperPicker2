@@ -20,18 +20,16 @@ import android.content.Context
 import android.content.res.Resources
 import android.content.res.XmlResourceParser
 import androidx.annotation.XmlRes
-import androidx.test.core.app.ApplicationProvider
 import com.android.wallpaper.module.PartnerProvider
 import com.android.wallpaper.testing.TestPartnerProvider
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertThrows
 import org.junit.Before
@@ -43,18 +41,18 @@ import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowDisplayManager
 
 @HiltAndroidTest
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 @Config(shadows = [ShadowDisplayManager::class])
 class WallpaperParserImplTest {
 
     @get:Rule var hiltRule = HiltAndroidRule(this)
-    var context: Context = ApplicationProvider.getApplicationContext<HiltTestApplication>()
+    @Inject @ApplicationContext lateinit var context: Context
     @Inject lateinit var partnerProvider: TestPartnerProvider
     @Inject lateinit var mWallpaperXMLParserImpl: WallpaperParserImpl
-    private val testDispatcher: CoroutineDispatcher = StandardTestDispatcher()
+    @Inject lateinit var testDispatcher: TestDispatcher
     private lateinit var resources: Resources
     private lateinit var packageName: String
-    val testScope = TestScope(testDispatcher)
 
     @Before
     fun setup() {

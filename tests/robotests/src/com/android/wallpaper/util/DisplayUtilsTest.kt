@@ -18,7 +18,6 @@ package com.android.wallpaper.util
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Point
-import androidx.test.core.app.ApplicationProvider
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.testing.FakeDisplaysProvider
 import com.android.wallpaper.testing.FakeDisplaysProvider.Companion.FOLDABLE_FOLDED
@@ -29,9 +28,9 @@ import com.android.wallpaper.testing.FakeDisplaysProvider.Companion.TABLET_LAND
 import com.android.wallpaper.testing.FakeDisplaysProvider.Companion.TABLET_PORT
 import com.android.wallpaper.testing.TestInjector
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
 import javax.inject.Inject
 import org.junit.Before
 import org.junit.Rule
@@ -47,8 +46,7 @@ import org.robolectric.shadows.ShadowDisplayManager
 class DisplayUtilsTest {
     @get:Rule var hiltRule = HiltAndroidRule(this)
 
-    lateinit var appContext: Context
-
+    @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var displaysProvider: FakeDisplaysProvider
     @Inject lateinit var displayUtils: DisplayUtils
     @Inject lateinit var testInjector: TestInjector
@@ -57,7 +55,6 @@ class DisplayUtilsTest {
     fun setUp() {
         hiltRule.inject()
         InjectorProvider.setInjector(testInjector)
-        appContext = ApplicationProvider.getApplicationContext<HiltTestApplication>()
     }
 
     @Test
