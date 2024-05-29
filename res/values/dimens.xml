@@ -388,4 +388,9 @@
     <dimen name="wallpaper_effect_exit_description_size">14sp</dimen>
     <dimen name="wallpaper_effect_exit_button_height">36dp</dimen>
     <dimen name="wallpaper_effect_exit_button_text_size">14sp</dimen>
+
+    <!-- Dimensions for the customization picker  -->
+    <dimen name="customization_picker_preview_header_collapsed_height">250dp</dimen>
+    <dimen name="customization_picker_preview_header_expanded_height">500dp</dimen>
+    <dimen name="preview_corner_radius">32dp</dimen>
 </resources>

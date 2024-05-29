@@ -67,6 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"Obnoviť dennú tapetu na ploche"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Obnoviť dennú tapetu"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"Obrazovka ukážky tapety"</string>
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"Obrazovka s ukážkou tapety %1$s. Dvoma prstami posúvajte a približujte alebo odďaľujte zobrazenie."</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"Zložené"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"Rozložené"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"Úprava tapety bola dokončená"</string>
@@ -104,6 +105,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"Späť"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Tapeta"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Ukážka tapety"</string>
+    <string name="wallpaper_preview_card_content_description_editable" msgid="3111763100515242340">"Ukážka tapety %1$s, klepnutím upravíte fotku"</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"Ukážka tapety na uzamknutej obrazovke"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"Ukážka tapety na ploche"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Zbierka neexistuje"</string>

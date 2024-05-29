@@ -24,6 +24,7 @@ import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
 import com.android.wallpaper.picker.preview.PreviewTestActivity
 import com.android.wallpaper.testing.TestInjector
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -34,6 +35,7 @@ import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
@@ -73,5 +75,11 @@ class CategoriesViewModelTest {
         categoriesViewModel = activity.viewModels<CategoriesViewModel>().value
     }
 
-    // TODO: add test cases when [CategoriesViewModel] is ready
+    // Studio requires at least one test or else it will report a failure
+    @Test
+    fun generateTiles_succeeds() {
+        assertThat(categoriesViewModel.generateTiles()).isNotEmpty()
+    }
+
+    // TODO (b/343476732): add test cases when [CategoriesViewModel] is ready
 }

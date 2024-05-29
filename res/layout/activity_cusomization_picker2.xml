@@ -13,7 +13,140 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<FrameLayout
+<androidx.constraintlayout.motion.widget.MotionLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/picker_motion_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    app:layoutDescription="@xml/customization_picker_layout_scene">
+
+    <FrameLayout
+        android:id="@+id/preview_header"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/customization_picker_preview_header_expanded_height"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/preview_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/bottom_scroll_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/preview_header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/option_clock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="30dp"
+                android:textAlignment="center"
+                android:textColor="@color/text_color_primary"
+                android:text="Clock"
+                android:background="#dc9fb4"/>
+
+            <TextView
+                android:id="@+id/option_shortcut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="30dp"
+                android:textAlignment="center"
+                android:textColor="@color/text_color_primary"
+                android:text="Shortcut"
+                android:background="#e16b8c"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="30dp"
+                android:textAlignment="center"
+                android:textColor="@color/text_color_primary"
+                android:text="section#3"
+                android:background="#8e354a"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="30dp"
+                android:textAlignment="center"
+                android:textColor="@color/text_color_primary"
+                android:text="section#4"
+                android:background="#f8c3cd"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="30dp"
+                android:textAlignment="center"
+                android:textColor="@color/text_color_primary"
+                android:text="section#5"
+                android:background="#f4a7b9"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="30dp"
+                android:textAlignment="center"
+                android:textColor="@color/text_color_primary"
+                android:text="section#6"
+                android:background="#64363c"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="30dp"
+                android:textAlignment="center"
+                android:textColor="@color/text_color_primary"
+                android:text="section#7"
+                android:background="#f596aa"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="30dp"
+                android:textAlignment="center"
+                android:textColor="@color/text_color_primary"
+                android:text="section#8"
+                android:background="#b5495b"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="30dp"
+                android:textAlignment="center"
+                android:textColor="@color/text_color_primary"
+                android:text="section#9"
+                android:background="#e87a90"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Guideline for the preview in the secondary screen -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/preview_guideline_in_secondary_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="0dp" />
+
+    <FrameLayout
+        android:id="@+id/customization_picker_bottom_sheet"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="parent" />
+</androidx.constraintlayout.motion.widget.MotionLayout>

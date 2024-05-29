@@ -28,7 +28,6 @@ import kotlin.math.abs
  */
 class PreviewCardPageTransformer(private val screenSizePx: Point) : ViewPager2.PageTransformer {
     override fun transformPage(page: View, position: Float) {
-        // TODO: cache this call
         val cardPreview = page.requireViewById<View>(R.id.preview)
 
         val nextItemVisibleOffsetPx =

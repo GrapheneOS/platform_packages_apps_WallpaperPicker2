@@ -67,6 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"ଦୈନିକ ହୋମ ସ୍କ୍ରିନ ୱାଲପେପର୍‌କୁ ରିଫ୍ରେସ କରନ୍ତୁ"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"ଦୈନିକ ୱାଲପେପର୍‌କୁ ରିଫ୍ରେଶ୍ କରନ୍ତୁ"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"ୱାଲପେପରର ପ୍ରିଭ୍ୟୁ ସ୍କ୍ରିନ"</string>
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"ୱାଲପେପର ପ୍ରିଭ୍ୟୁ ସ୍କ୍ରିନ %1$s। ପେନ କରି ଜୁମ କରିବାକୁ ଦୁଇଟି ଆଙ୍ଗୁଠି ବ୍ୟବହାର କରନ୍ତୁ।"</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"ଫୋଲ୍ଡେଡ"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"ଅନଫୋଲ୍ଡେଡ"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"ୱାଲପେପର ଏଡିଟିଂ ସମ୍ପୂର୍ଣ୍ଣ ହୋଇଛି"</string>
@@ -104,6 +105,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"ପୂର୍ବବର୍ତ୍ତୀ"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"ୱାଲପେପର୍"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"ୱାଲପେପରର ପ୍ରିଭ୍ୟୁ"</string>
+    <string name="wallpaper_preview_card_content_description_editable" msgid="3111763100515242340">"ୱାଲପେପର ପ୍ରିଭ୍ୟୁ %1$s, ଆପଣଙ୍କ ଫଟୋ ଏଡିଟ କରିବାକୁ ଟାପ କରନ୍ତୁ"</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"ଲକ ସ୍କ୍ରିନ ୱାଲପେପରର ପ୍ରିଭ୍ୟୁ"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"ହୋମ ସ୍କ୍ରିନ ୱାଲପେପରର ପ୍ରିଭ୍ୟୁ"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"ସଂଗ୍ରହ ଉପଲବ୍ଧ ନାହିଁ"</string>

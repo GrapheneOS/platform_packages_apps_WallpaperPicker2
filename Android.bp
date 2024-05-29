@@ -159,7 +159,7 @@ android_app {
     name: "WallpaperPicker2",
     package_name: "com.android.wallpaper",
 
-    defaults: ["WallpaperPicker2_defaults"],
+    defaults: ["WallpaperPicker2_defaults_with_overrides"],
     manifest: ":WallpaperPicker2_Manifest",
 
     platform_apis: true,

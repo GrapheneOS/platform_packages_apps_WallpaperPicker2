@@ -74,13 +74,22 @@ public class ScreenSizeCalculator {
 
     /**
      * Calculates the device's aspect ratio (height/width).
-     *
      * Note: The screen size is getting from {@link #getScreenSize}.
      */
     public float getScreenAspectRatio(Context context) {
         final WindowManager windowManager = context.getSystemService(WindowManager.class);
         final Point screenSize = getScreenSize(windowManager.getDefaultDisplay());
         return (float) screenSize.y / screenSize.x;
+    }
+
+    /**
+     * Calculates the device's screen height.
+     * Note: The screen size is getting from {@link #getScreenSize}.
+     */
+    public int getScreenHeight(Context context) {
+        final WindowManager windowManager = context.getSystemService(WindowManager.class);
+        final Point screenSize = getScreenSize(windowManager.getDefaultDisplay());
+        return screenSize.y;
     }
 
     private Point getPortraitScreenSize(Display display) {
