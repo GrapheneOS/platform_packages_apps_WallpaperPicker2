@@ -20,8 +20,8 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
-import com.android.wallpaper.categorypicker.viewmodel.SectionViewModel
 import com.android.wallpaper.picker.category.ui.view.adapter.CategoryAdapter
+import com.android.wallpaper.picker.category.ui.viewmodel.SectionViewModel
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap

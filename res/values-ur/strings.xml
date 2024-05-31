@@ -67,8 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"روزانہ ہوم اسکرین کا وال پیپر ریفریش کریں"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"روزانہ وال پیپر ریفریش کریں"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"وال پیپر پیش منظر اسکرین"</string>
-    <!-- no translation found for preview_screen_description_editable (506875963019888699) -->
-    <skip />
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"‏وال پیپر کے پیش منظر کی اسکرین ‎%1$s۔ پین اور زوم کرنے کے لیے دو انگلیاں استعمال کریں۔"</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"فولڈ کردہ"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"اَن فولڈ کردہ"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"وال پیپر میں ترمیم ہو گئی"</string>
@@ -106,8 +105,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"گزشتہ"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"وال پیپر"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"وال پیپر کا پیش منظر"</string>
-    <!-- no translation found for wallpaper_preview_card_content_description_editable (3111763100515242340) -->
-    <skip />
+    <string name="wallpaper_preview_card_content_description_editable" msgid="3111763100515242340">"‏وال پیپر کا پیش منظر ‏%1$s، اپنی تصویر میں ترمیم کرنے کیلئے تھپتھپائیں"</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"مقفل اسکرین وال پیپر کا پیش منظر"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"ہوم اسکرین وال پیپر کا پیش منظر"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"مجموعہ موجود نہیں ہے"</string>

@@ -18,8 +18,6 @@ package com.android.wallpaper.picker.preview.ui.viewmodel
 import android.app.WallpaperColors
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ColorSpace
 import android.graphics.Point
 import android.graphics.Rect
 import androidx.annotation.VisibleForTesting
@@ -33,7 +31,6 @@ import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
-import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineDispatcher
@@ -203,28 +200,6 @@ constructor(
             val callback = Asset.BitmapReceiver { k.resumeWith(Result.success(it)) }
             decodeBitmap(dimensions.x, dimensions.y, /* hardwareBitmapAllowed= */ false, callback)
         }
-
-    // TODO b/296288298 Create a util class functions for Bitmap and Asset
-    private fun Bitmap.extractColors(): WallpaperColors? {
-        val tmpOut = ByteArrayOutputStream()
-        var shouldRecycle = false
-        var cropped = this
-        if (cropped.compress(Bitmap.CompressFormat.PNG, 100, tmpOut)) {
-            val outByteArray = tmpOut.toByteArray()
-            val options = BitmapFactory.Options()
-            options.inPreferredColorSpace = ColorSpace.get(ColorSpace.Named.SRGB)
-            cropped = BitmapFactory.decodeByteArray(outByteArray, 0, outByteArray.size)
-        }
-        if (cropped.config == Bitmap.Config.HARDWARE) {
-            cropped = cropped.copy(Bitmap.Config.ARGB_8888, false)
-            shouldRecycle = true
-        }
-        val colors = WallpaperColors.fromBitmap(cropped)
-        if (shouldRecycle) {
-            cropped.recycle()
-        }
-        return colors
-    }
 
     class Factory
     @Inject

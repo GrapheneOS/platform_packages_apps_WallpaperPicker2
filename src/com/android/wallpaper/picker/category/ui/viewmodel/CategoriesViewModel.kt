@@ -17,8 +17,6 @@
 package com.android.wallpaper.picker.category.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.android.wallpaper.categorypicker.viewmodel.SectionViewModel
-import com.android.wallpaper.categorypicker.viewmodel.TileViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

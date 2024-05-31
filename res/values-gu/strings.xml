@@ -67,8 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"દૈનિક હોમ સ્ક્રીન વૉલપેપર રિફ્રેશ કરો"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"દૈનિક વૉલપેપર રિફ્રેશ કરો"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"વૉલપેપરનો પ્રીવ્યૂ બતાવતી સ્ક્રીન"</string>
-    <!-- no translation found for preview_screen_description_editable (506875963019888699) -->
-    <skip />
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"વૉલપેપર પ્રીવ્યૂ સ્ક્રીન %1$s, પૅન અને નાનું-મોટું કરવા માટે બે આંગળીનો ઉપયોગ કરો."</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"ફોલ્ડ કરેલું"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"અનફોલ્ડ કરેલું"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"વૉલપેપરમાં ફેરફાર કરવાનું કામ પૂરું થયું"</string>
@@ -106,8 +105,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"પાછળ"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"વૉલપેપર"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"વૉલપેપરનો પ્રીવ્યૂ કરો"</string>
-    <!-- no translation found for wallpaper_preview_card_content_description_editable (3111763100515242340) -->
-    <skip />
+    <string name="wallpaper_preview_card_content_description_editable" msgid="3111763100515242340">"વૉલપેપર પ્રીવ્યૂ %1$s, તમારા ફોટામાં ફેરફાર કરવા, ટૅપ કરો"</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"લૉક સ્ક્રીનના વૉલપેપરનો પ્રીવ્યૂ"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"હોમ સ્ક્રીનના વૉલપેપરનો પ્રીવ્યૂ"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"સંગ્રહ અસ્તિત્વમાં નથી"</string>

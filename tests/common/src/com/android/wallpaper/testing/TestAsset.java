@@ -104,6 +104,11 @@ public final class TestAsset extends Asset {
         return mBitmap;
     }
 
+    @Override
+    public Bitmap getLowResBitmap(Context context) {
+        return mBitmap;
+    }
+
     public void setBitmap(Bitmap bitmap) {
         mBitmap = bitmap;
     }

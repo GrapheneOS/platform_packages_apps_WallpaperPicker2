@@ -23,7 +23,6 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.content.pm.ServiceInfo
 import android.graphics.Rect
-import android.net.Uri
 import android.service.wallpaper.WallpaperService
 import androidx.activity.viewModels
 import androidx.test.core.app.ActivityScenario
@@ -80,13 +79,6 @@ import org.robolectric.shadows.ShadowContentResolver
 @RunWith(RobolectricTestRunner::class)
 class WallpaperPreviewViewModelTest {
     @get:Rule var hiltRule = HiltAndroidRule(this)
-
-    private val staticWallpaperModel =
-        WallpaperModelUtils.getStaticWallpaperModel(
-            wallpaperId = "testWallpaperId",
-            collectionId = "testCollection",
-            imageWallpaperUri = Uri.parse("content://com.test/image")
-        )
 
     private lateinit var scenario: ActivityScenario<PreviewTestActivity>
     private lateinit var wallpaperPreviewViewModel: WallpaperPreviewViewModel
@@ -187,22 +179,29 @@ class WallpaperPreviewViewModelTest {
         }
 
     @Test
-    fun clickSmallPreview_updatesFullWorkspacePreviewConfig() =
+    fun clickSmallPreview_isSelectedPreview_updatesFullWorkspacePreviewConfig() =
         testScope.runTest {
-            wallpaperPreviewViewModel.onSmallPreviewClicked(
-                CustomizationSections.Screen.HOME_SCREEN,
-                DeviceDisplayType.UNFOLDED
+            wallpaperPreviewViewModel.setSmallPreviewSelectedTab(
+                CustomizationSections.Screen.HOME_SCREEN
             )
+            val onHomePreviewClicked =
+                collectLastValue(
+                    wallpaperPreviewViewModel.onSmallPreviewClicked(
+                        CustomizationSections.Screen.HOME_SCREEN,
+                        DeviceDisplayType.UNFOLDED,
+                    ) {}
+                )
+
+            onHomePreviewClicked()?.invoke()
 
             val config =
                 collectLastValue(wallpaperPreviewViewModel.fullWorkspacePreviewConfigViewModel)()
-
             assertThat(config?.deviceDisplayType).isEqualTo(DeviceDisplayType.UNFOLDED)
             assertThat(config?.previewUtils).isEqualTo(homePreviewUtils)
         }
 
     @Test
-    fun clickSmallPreview_updatesFullWallpaperPreviewConfig() =
+    fun clickSmallPreview_isSelectedPreview_updatesFullWallpaperPreviewConfig() =
         testScope.runTest {
             val model = WallpaperModelUtils.getStaticWallpaperModel("testId", "testCollection")
             updateFullWallpaperFlow(
@@ -210,11 +209,18 @@ class WallpaperPreviewViewModelTest {
                 WhichPreview.PREVIEW_CURRENT,
                 listOf(HANDHELD),
             )
-
-            wallpaperPreviewViewModel.onSmallPreviewClicked(
-                CustomizationSections.Screen.LOCK_SCREEN,
-                DeviceDisplayType.SINGLE
+            wallpaperPreviewViewModel.setSmallPreviewSelectedTab(
+                CustomizationSections.Screen.LOCK_SCREEN
             )
+            val onLockPreviewClicked =
+                collectLastValue(
+                    wallpaperPreviewViewModel.onSmallPreviewClicked(
+                        CustomizationSections.Screen.LOCK_SCREEN,
+                        DeviceDisplayType.SINGLE
+                    ) {}
+                )
+
+            onLockPreviewClicked()?.invoke()
 
             val fullWallpaper = collectLastValue(wallpaperPreviewViewModel.fullWallpaper)()
             assertThat(fullWallpaper).isNotNull()
@@ -226,6 +232,28 @@ class WallpaperPreviewViewModelTest {
                 assertThat(allowUserCropping).isTrue()
                 assertThat(whichPreview).isEqualTo(WhichPreview.PREVIEW_CURRENT)
             }
+        }
+
+    @Test
+    fun clickSmallPreview_isNotSelectedPreview_doesNotUpdateFullWorkspacePreviewConfig() =
+        testScope.runTest {
+            wallpaperPreviewViewModel.setSmallPreviewSelectedTab(
+                CustomizationSections.Screen.LOCK_SCREEN
+            )
+            val onHomePreviewClicked =
+                collectLastValue(
+                    wallpaperPreviewViewModel.onSmallPreviewClicked(
+                        CustomizationSections.Screen.HOME_SCREEN,
+                        DeviceDisplayType.UNFOLDED,
+                    ) {}
+                )
+
+            onHomePreviewClicked()?.invoke()
+
+            val config =
+                collectLastValue(wallpaperPreviewViewModel.fullWorkspacePreviewConfigViewModel)()
+            // Make sure flow does not emit.
+            assertThat(config).isNull()
         }
 
     @Test

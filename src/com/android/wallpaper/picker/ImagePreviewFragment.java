@@ -118,7 +118,6 @@ public class ImagePreviewFragment extends PreviewFragment {
     private BitmapCropper mBitmapCropper;
     private WallpaperColorsExtractor mWallpaperColorsExtractor;
     private DisplayUtils mDisplayUtils;
-    private WallpaperManager mWallpaperManager;
 
     // UI
     protected SurfaceView mWallpaperSurface;
@@ -137,7 +136,6 @@ public class ImagePreviewFragment extends PreviewFragment {
                 appContext, RtlUtils.isRtl(context));
         mBitmapCropper = mInjector.getBitmapCropper();
         mWallpaperColorsExtractor = new WallpaperColorsExtractor(sExecutor, Handler.getMain());
-        mWallpaperManager = context.getSystemService(WallpaperManager.class);
     }
 
     @Override
@@ -455,7 +453,7 @@ public class ImagePreviewFragment extends PreviewFragment {
         // WallpaperManager. WallpaperManager expects a crop that is not yet rescaled to match
         // the screen size (as opposed to BitmapCropper which is used in the single crop case).
         // TODO(b/270726737, b/281648899) clean that comment and that part of the code
-        if (mWallpaperManager.isMultiCropEnabled()) result.scale(1f / mFullResImageView.getScale());
+        if (WallpaperManager.isMultiCropEnabled()) result.scale(1f / mFullResImageView.getScale());
         return result;
     }
 

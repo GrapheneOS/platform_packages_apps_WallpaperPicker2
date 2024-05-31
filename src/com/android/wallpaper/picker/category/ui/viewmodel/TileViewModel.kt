@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.categorypicker.viewmodel
+package com.android.wallpaper.picker.category.ui.viewmodel
 
 import com.android.wallpaper.asset.Asset
 

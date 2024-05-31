@@ -67,8 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"Osvježite dnevnu pozadinsku sliku na početnom ekranu"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Osvježite dnevnu pozadinsku sliku"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"Ekran pregleda pozadinske slike"</string>
-    <!-- no translation found for preview_screen_description_editable (506875963019888699) -->
-    <skip />
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"Ekran za pregled pozadinske slike %1$s. Koristite dva prsta da pomičete i zumirate."</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"Sklopljeno"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"Otklopljeno"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"Gotovo je uređivanje pozadinske slike"</string>
@@ -106,8 +105,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"Nazad"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Pozadinska slika"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Pregled pozadinske slike"</string>
-    <!-- no translation found for wallpaper_preview_card_content_description_editable (3111763100515242340) -->
-    <skip />
+    <string name="wallpaper_preview_card_content_description_editable" msgid="3111763100515242340">"Pregled pozadine %1$s, dodirnite da uredite"</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"Pregled pozadinske slike na zaključanom ekranu"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"Pregled pozadinske slike na početnom ekranu"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Kolekcija ne postoji"</string>

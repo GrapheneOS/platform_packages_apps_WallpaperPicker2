@@ -67,8 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"Osvježi dnevnu pozadinu početnog zaslona"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Osvježi dnevnu pozadinu"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"Zaslon pregleda pozadine"</string>
-    <!-- no translation found for preview_screen_description_editable (506875963019888699) -->
-    <skip />
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"Zaslon pregleda pozadine %1$s. Za pomicanje i zumiranje upotrijebite dva prsta."</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"Zatvoreno"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"Otvoreno"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"Dovršeno je uređivanje pozadine"</string>
@@ -106,8 +105,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"Prethodno"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Pozadina"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Pregled pozadine"</string>
-    <!-- no translation found for wallpaper_preview_card_content_description_editable (3111763100515242340) -->
-    <skip />
+    <string name="wallpaper_preview_card_content_description_editable" msgid="3111763100515242340">"Pregled pozadine %1$s; dodirnite i uredite fotografiju"</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"Pregled pozadine zaključanog zaslona"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"Pregled pozadine početnog zaslona"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Zbirka ne postoji"</string>

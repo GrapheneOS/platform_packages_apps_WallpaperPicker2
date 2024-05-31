@@ -67,8 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"Оновити щоденний фоновий малюнок на головному екрані"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Оновити щоденний фоновий малюнок"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"Екран попереднього перегляду фонового малюнка"</string>
-    <!-- no translation found for preview_screen_description_editable (506875963019888699) -->
-    <skip />
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"Екран попереднього перегляду фонового малюнка %1$s. Виконуйте панорамування й масштабування двома пальцями."</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"Складено"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"Розкладено"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"Завершити редагування фонового малюнка"</string>
@@ -106,8 +105,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"Назад"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Фоновий малюнок"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Перегляд фонового малюнка"</string>
-    <!-- no translation found for wallpaper_preview_card_content_description_editable (3111763100515242340) -->
-    <skip />
+    <string name="wallpaper_preview_card_content_description_editable" msgid="3111763100515242340">"Перегляд фону %1$s. Відредагуйте фото."</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"Попередній перегляд фонового малюнка заблокованого екрана"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"Попередній перегляд фонового малюнка головного екрана"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Колекція не існує"</string>

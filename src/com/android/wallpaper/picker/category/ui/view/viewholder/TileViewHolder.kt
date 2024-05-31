@@ -23,7 +23,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
-import com.android.wallpaper.categorypicker.viewmodel.TileViewModel
+import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
 import com.android.wallpaper.util.ResourceUtils
 import com.android.wallpaper.util.SizeCalculator
 import com.bumptech.glide.Glide

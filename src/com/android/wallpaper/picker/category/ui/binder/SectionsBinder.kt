@@ -20,9 +20,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
-import com.android.wallpaper.categorypicker.viewmodel.SectionViewModel
 import com.android.wallpaper.picker.category.ui.view.adapter.CategorySectionsAdapter
 import com.android.wallpaper.picker.category.ui.view.decoration.CategoriesGridPaddingDecoration
+import com.android.wallpaper.picker.category.ui.viewmodel.SectionViewModel
 
 /** Binds the collection of SectionViewModel to a section */
 object SectionsBinder {

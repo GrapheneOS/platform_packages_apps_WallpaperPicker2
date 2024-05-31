@@ -67,8 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"A kezdőképernyő napi háttérképének frissítése"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Napi háttérkép frissítése"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"Háttérkép előnézeti képernyője"</string>
-    <!-- no translation found for preview_screen_description_editable (506875963019888699) -->
-    <skip />
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"Háttérkép előnézeti képernyője – %1$s. Két ujjal pásztázhat és nagyíthat/kicsinyíthet."</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"Összehajtva"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"Kihajtva"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"Háttérkép szerkesztésének befejezése"</string>
@@ -106,8 +105,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"Előző"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Háttérkép"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Háttérkép előnézete"</string>
-    <!-- no translation found for wallpaper_preview_card_content_description_editable (3111763100515242340) -->
-    <skip />
+    <string name="wallpaper_preview_card_content_description_editable" msgid="3111763100515242340">"Háttérkép előnézete – %1$s, koppintson a szerkesztéshez"</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"Lezárási képernyő háttérképének előnézete"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"Kezdőképernyő háttérképének előnézete"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Nincs ilyen gyűjtemény"</string>

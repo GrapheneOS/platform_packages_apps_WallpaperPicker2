@@ -67,8 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"إعادة تحميل خلفية الشاشة الرئيسية اليومية"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"إعادة تحميل الخلفية اليومية"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"شاشة معاينة الخلفية"</string>
-    <!-- no translation found for preview_screen_description_editable (506875963019888699) -->
-    <skip />
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"‏شاشة معاينة الخلفية \"%1$s\". استخدِم إصبعين لتحريك الخلفية وتكبيرها/تصغيرها."</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"مطوي"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"غير مطوي"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"تم تعديل الخلفية"</string>
@@ -106,8 +105,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"الصفحة السابقة"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"الخلفية"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"معاينة عرض الشرائح"</string>
-    <!-- no translation found for wallpaper_preview_card_content_description_editable (3111763100515242340) -->
-    <skip />
+    <string name="wallpaper_preview_card_content_description_editable" msgid="3111763100515242340">"‏معاينة الخلفية \"%1$s\"، انقر لتعديل الصورة"</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"معاينة خلفية شاشة القفل"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"معاينة خلفية الشاشة الرئيسية"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"المجموعة غير متوفرة."</string>

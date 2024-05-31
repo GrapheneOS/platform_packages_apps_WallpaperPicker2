@@ -21,8 +21,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
-import com.android.wallpaper.categorypicker.viewmodel.TileViewModel
 import com.android.wallpaper.picker.category.ui.view.viewholder.TileViewHolder
+import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
 
 /** This binds individual wallpaper category tiles to [WallpaperTileView] */
 class CategoryAdapter(var items: List<TileViewModel>, val columns: Int, val windowWidth: Int) :

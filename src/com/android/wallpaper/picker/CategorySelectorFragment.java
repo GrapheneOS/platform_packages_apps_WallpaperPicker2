@@ -42,6 +42,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.AccessibilityDelegateCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -78,6 +81,7 @@ public class CategorySelectorFragment extends AppbarFragment {
     private static final int SETTINGS_APP_INFO_REQUEST_CODE = 1;
     private static final String TAG = "CategorySelectorFragment";
     private static final String IMAGE_WALLPAPER_COLLECTION_ID = "image_wallpapers";
+    private static final int CREATIVE_CATEGORY_ROW_INDEX = 0;
 
     /**
      * Interface to be implemented by an Fragment hosting a {@link CategorySelectorFragment}
@@ -551,6 +555,27 @@ public class CategorySelectorFragment extends AppbarFragment {
                     gridItemCategory.setOnClickListener(view -> {
                         onClickListenerForCreativeCategory(position);
                     });
+                    // Make sure the column number is announced when there is more than 1 creative
+                    // category.
+                    if (mCreativeCategoriesSize > 1) {
+                        ViewCompat.setAccessibilityDelegate(gridItemCategory,
+                                new AccessibilityDelegateCompat() {
+                                    @Override
+                                    public void onInitializeAccessibilityNodeInfo(View host,
+                                            AccessibilityNodeInfoCompat info) {
+                                        super.onInitializeAccessibilityNodeInfo(host, info);
+                                        info.setCollectionItemInfo(
+                                                AccessibilityNodeInfoCompat.CollectionItemInfoCompat
+                                                        .obtain(
+                                                            /* rowIndex= */
+                                                                CREATIVE_CATEGORY_ROW_INDEX,
+                                                            /* rowSpan= */ 1,
+                                                            /* columnIndex= */ position,
+                                                            /* columnSpan= */ 1,
+                                                            /* heading= */ false));
+                                    }
+                                });
+                    }
                 }
             }
         }
@@ -781,7 +806,7 @@ public class CategorySelectorFragment extends AppbarFragment {
         @Override
         public int getItemViewType(int position) {
             if (mCategories.stream().anyMatch(Category::supportsUserCreatedWallpapers)) {
-                if (position == 0) {
+                if (position == CREATIVE_CATEGORY_ROW_INDEX) {
                     return ITEM_VIEW_TYPE_CREATIVE_CATEGORY;
                 }
                 if (position == 1) {

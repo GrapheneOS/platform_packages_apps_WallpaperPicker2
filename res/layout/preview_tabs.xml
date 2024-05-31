@@ -37,8 +37,7 @@
             android:background="@drawable/small_preview_tab_background_selected"
             android:layout_gravity="center"
             android:textAppearance="@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps"
-            android:textColor="@color/system_on_primary"
-            android:text = "@string/lock_screen_tab"/>
+            android:textColor="@color/system_on_primary" />
     </FrameLayout>
 
     <FrameLayout
@@ -55,8 +54,7 @@
             android:background="@drawable/small_preview_tab_background_selected"
             android:layout_gravity="center"
             android:textAppearance="@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps"
-            android:textColor="@color/system_on_primary"
-            android:text = "@string/home_screen_tab" />
+            android:textColor="@color/system_on_primary" />
     </FrameLayout>
 
     <androidx.constraintlayout.widget.Guideline

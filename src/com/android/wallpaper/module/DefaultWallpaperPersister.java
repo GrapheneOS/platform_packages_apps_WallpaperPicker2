@@ -112,7 +112,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
         // Set wallpaper without downscaling directly from an input stream if there's no crop rect
         // specified by the caller and the asset is streamable.
 
-        if (mWallpaperManager.isMultiCropEnabled() && (!(asset instanceof StreamableAsset))) {
+        if (WallpaperManager.isMultiCropEnabled() && (!(asset instanceof StreamableAsset))) {
             asset.decodeBitmap(bitmap -> {
                 if (bitmap == null) {
                     callback.onError(null /* throwable */);
@@ -123,7 +123,7 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
             return;
         }
 
-        if ((cropRect == null || mWallpaperManager.isMultiCropEnabled())
+        if ((cropRect == null || WallpaperManager.isMultiCropEnabled())
                 && asset instanceof StreamableAsset) {
             ((StreamableAsset) asset).fetchInputStream(new StreamReceiver() {
                 @Override
@@ -333,14 +333,14 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                 (int) Math.floor((float) cropRect.bottom / minWallpaperZoom));
 
         // Scale and crop the bitmap
-        if (!mWallpaperManager.isMultiCropEnabled()) {
+        if (!WallpaperManager.isMultiCropEnabled()) {
             wallpaperBitmap = Bitmap.createBitmap(wallpaperBitmap,
                     scaledCropRect.left,
                     scaledCropRect.top,
                     scaledCropRect.width(),
                     scaledCropRect.height());
         }
-        scaledCropRect = mWallpaperManager.isMultiCropEnabled() ? scaledCropRect : null;
+        scaledCropRect = WallpaperManager.isMultiCropEnabled() ? scaledCropRect : null;
 
         int wallpaperId = setBitmapToWallpaperManager(wallpaperBitmap, scaledCropRect,
                 /* allowBackup */ false, whichWallpaper);

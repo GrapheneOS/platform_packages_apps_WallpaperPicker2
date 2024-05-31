@@ -67,8 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"Ανανέωση ημερήσιας ταπετσαρίας αρχικής οθόνης"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Ανανέωση ημερήσιας ταπετσαρίας"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"Οθόνη προεπισκόπησης ταπετσαρίας"</string>
-    <!-- no translation found for preview_screen_description_editable (506875963019888699) -->
-    <skip />
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"Οθόνη προεπισκόπησης ταπετσαρίας %1$s. Χρησιμοποιήστε δύο δάχτυλα για μετακίνηση και εστίαση."</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"Διπλωμένη"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"Ξεδιπλωμένη"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"Η επεξεργασία της ταπετσαρίας ολοκληρώθηκε"</string>
@@ -106,8 +105,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"Προηγούμενη"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Ταπετσαρία"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Προεπισκόπηση ταπετσαρίας"</string>
-    <!-- no translation found for wallpaper_preview_card_content_description_editable (3111763100515242340) -->
-    <skip />
+    <string name="wallpaper_preview_card_content_description_editable" msgid="3111763100515242340">"Προεπ. ταπετσ. %1$s, πατήστε για επεξερ."</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"Προεπισκόπηση ταπετσαρίας οθόνης κλειδώματος"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"Προεπισκόπηση ταπετσαρίας αρχικής οθόνης"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Η συλλογή δεν υπάρχει."</string>

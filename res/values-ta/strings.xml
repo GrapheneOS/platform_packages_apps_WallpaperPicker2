@@ -67,8 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"முகப்புத் திரையில் தினசரி வால்பேப்பரைப் புதுப்பிக்கும் பட்டன்"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"தினசரி வால்பேப்பரைப் புதுப்பிக்கும் பட்டன்"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"வால்பேப்பர் மாதிரிக்காட்சித் திரை"</string>
-    <!-- no translation found for preview_screen_description_editable (506875963019888699) -->
-    <skip />
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"வால்பேப்பர் மாதிரிக்காட்சித் திரை %1$s. இரு விரல்களைப் பயன்படுத்தி நகர்த்தலாம், அளவை மாற்றலாம்."</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"மடக்கப்பட்டுள்ளது"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"விரிக்கப்பட்டுள்ளது"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"வால்பேப்பரை எடிட் செய்வதை முடிக்கும்"</string>
@@ -106,8 +105,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"முந்தைய பக்கத்திற்குச் செல்வதற்கான பட்டன்"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"வால்பேப்பர்"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"வால்பேப்பர் மாதிரிக்காட்சி"</string>
-    <!-- no translation found for wallpaper_preview_card_content_description_editable (3111763100515242340) -->
-    <skip />
+    <string name="wallpaper_preview_card_content_description_editable" msgid="3111763100515242340">"மாதிரிக்காட்சி %1$s, மாற்ற தட்டுங்கள்"</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"பூட்டுத் திரை வால்பேப்பரின் மாதிரிக்காட்சி"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"முகப்புத் திரை வால்பேப்பரின் மாதிரிக்காட்சி"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"இந்தத் தொகுப்பு இல்லை"</string>

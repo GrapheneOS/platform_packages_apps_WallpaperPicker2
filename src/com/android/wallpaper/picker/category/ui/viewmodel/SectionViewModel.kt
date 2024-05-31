@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.categorypicker.viewmodel
+package com.android.wallpaper.picker.category.ui.viewmodel
 
 /**
  * This class represents the view model for a single section that can contain a number of individual

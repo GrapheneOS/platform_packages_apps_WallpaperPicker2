@@ -67,8 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"දිනපතා මුල් පිටු තිර වෝල්පේපරය නැවුම් කරන්න"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"දිනපතා වෝල්පේපරය නැවුම් කරන්න"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"වෝල්පේපර පෙරදසුන් තිරය"</string>
-    <!-- no translation found for preview_screen_description_editable (506875963019888699) -->
-    <skip />
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"වෝල්පේපර පෙරදසුන් තිරය %1$s. පෑන් සහ විශාලනය කිරීමට ඇඟිලි දෙකක් භාවිතා කරන්න."</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"නැවූ"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"නොනැවූ"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"වෝල්පේපරය සංස්කරණය කර නිමයි"</string>
@@ -106,8 +105,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"පෙර"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"වෝල්පේපරය"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"වෝල්පේපර පෙරදසුන"</string>
-    <!-- no translation found for wallpaper_preview_card_content_description_editable (3111763100515242340) -->
-    <skip />
+    <string name="wallpaper_preview_card_content_description_editable" msgid="3111763100515242340">"වෝල්පේපර පෙරදසුන %1$s, ඔබේ ඡායාරූපය සංස්කරණය කිරීමට තට්ටු කරන්න"</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"අගුළු තිර වෝල්පේපර පෙරදසුන"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"මුල් තිරයේ බිතුපත් පෙරදසුන"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"එකතුව නොපවතී"</string>

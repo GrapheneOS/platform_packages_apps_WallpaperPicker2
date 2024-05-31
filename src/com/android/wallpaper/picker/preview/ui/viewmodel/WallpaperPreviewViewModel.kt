@@ -418,10 +418,26 @@ constructor(
     fun onSmallPreviewClicked(
         screen: Screen,
         deviceDisplayType: DeviceDisplayType,
-    ) {
-        smallTooltipViewModel.dismissTooltip()
-        _fullPreviewConfigViewModel.value = FullPreviewConfigViewModel(screen, deviceDisplayType)
-    }
+        navigate: () -> Unit,
+    ): Flow<(() -> Unit)?> =
+        combine(isSmallPreviewClickable, smallPreviewSelectedTab) { isClickable, selectedTab ->
+            if (isClickable) {
+                if (selectedTab == screen) {
+                    // If the selected preview matches the selected tab, navigate to full preview.
+                    {
+                        smallTooltipViewModel.dismissTooltip()
+                        _fullPreviewConfigViewModel.value =
+                            FullPreviewConfigViewModel(screen, deviceDisplayType)
+                        navigate()
+                    }
+                } else {
+                    // If the selected preview doesn't match the selected tab, switch tab to match.
+                    { setSmallPreviewSelectedTab(screen) }
+                }
+            } else {
+                null
+            }
+        }
 
     fun setDefaultFullPreviewConfigViewModel(
         deviceDisplayType: DeviceDisplayType,

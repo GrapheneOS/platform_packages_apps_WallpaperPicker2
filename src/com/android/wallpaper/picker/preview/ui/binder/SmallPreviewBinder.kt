@@ -149,16 +149,17 @@ object SmallPreviewBinder {
                 }
 
                 if (R.id.smallPreviewFragment == currentNavDestId) {
-                    viewModel.isSmallPreviewClickable.collect {
-                        if (it) {
-                            view.setOnClickListener {
-                                viewModel.onSmallPreviewClicked(screen, deviceDisplayType)
-                                navigate?.invoke(previewCard)
-                            }
-                        } else {
-                            view.setOnClickListener(null)
+                    viewModel
+                        .onSmallPreviewClicked(screen, deviceDisplayType) {
+                            navigate?.invoke(previewCard)
                         }
-                    }
+                        .collect { onClick ->
+                            if (onClick != null) {
+                                view.setOnClickListener { onClick() }
+                            } else {
+                                view.setOnClickListener(null)
+                            }
+                        }
                 } else if (R.id.setWallpaperDialog == currentNavDestId) {
                     previewCard.radius =
                         previewCard.resources.getDimension(

@@ -44,6 +44,7 @@ class FakeWallpaperClient @Inject constructor() : WallpaperClient {
                 mutableListOf<com.android.wallpaper.picker.data.WallpaperModel>(),
             WallpaperDestination.LOCK to mutableListOf()
         )
+    private var wallpaperColors: WallpaperColors? = null
 
     private val _recentWallpapers =
         MutableStateFlow(
@@ -163,11 +164,15 @@ class FakeWallpaperClient @Inject constructor() : WallpaperClient {
         return emptyMap()
     }
 
+    fun setWallpaperColors(wallpaperColors: WallpaperColors) {
+        this.wallpaperColors = wallpaperColors
+    }
+
     override suspend fun getWallpaperColors(
         bitmap: Bitmap,
         cropHints: Map<Point, Rect>?
     ): WallpaperColors? {
-        return null
+        return wallpaperColors
     }
 
     companion object {

@@ -67,8 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"होम स्क्रीन का रोज़ बदलने वाला वॉलपेपर रीफ़्रेश करें"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"रोज़ बदलने वाला वॉलपेपर रीफ़्रेश करें"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"स्क्रीन पर दिखने वाले वॉलपेपर की झलक"</string>
-    <!-- no translation found for preview_screen_description_editable (506875963019888699) -->
-    <skip />
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"वॉलपेपर की झलक दिखाने वाली स्क्रीन %1$s. पैन और ज़ूम करने के लिए, दो उंगलियों का इस्तेमाल करें."</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"डिवाइस फ़ोल्ड किया गया"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"डिवाइस अनफ़ोल्ड किया गया"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"वॉलपेपर में बदलाव हो गया"</string>
@@ -106,8 +105,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"पीछे जाएं"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"वॉलपेपर"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"वॉलपेपर की झलक देखें"</string>
-    <!-- no translation found for wallpaper_preview_card_content_description_editable (3111763100515242340) -->
-    <skip />
+    <string name="wallpaper_preview_card_content_description_editable" msgid="3111763100515242340">"वॉलपेपर की झलक %1$s, टैप करके फ़ोटो एडिट करें"</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"लॉक स्क्रीन पर दिखने वाले वॉलपेपर की झलक"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"होम स्क्रीन पर दिखने वाले वॉलपेपर की झलक"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"वॉलपेपर का संग्रह मौजूद नहीं है"</string>
