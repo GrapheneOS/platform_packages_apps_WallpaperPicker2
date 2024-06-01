@@ -55,9 +55,5 @@ object DualPreviewSelectorBinder {
         )
 
         TabsBinder.bind(tabs, wallpaperPreviewViewModel, viewLifecycleOwner)
-
-        wallpaperPreviewViewModel.setSmallPreviewSelectedTab(
-            wallpaperPreviewViewModel.getWallpaperPreviewSource()
-        )
     }
 }

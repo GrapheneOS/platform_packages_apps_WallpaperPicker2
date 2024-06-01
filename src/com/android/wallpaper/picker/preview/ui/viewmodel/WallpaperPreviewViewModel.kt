@@ -18,12 +18,14 @@ package com.android.wallpaper.picker.preview.ui.viewmodel
 import android.graphics.Point
 import android.graphics.Rect
 import android.stats.style.StyleEnums
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.model.wallpaper.PreviewPagerPage
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.module.CustomizationSections.Screen
+import com.android.wallpaper.picker.BasePreviewActivity.EXTRA_VIEW_AS_HOME
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.data.WallpaperModel
@@ -68,6 +70,7 @@ constructor(
     private val displayUtils: DisplayUtils,
     @HomeScreenPreviewUtils private val homePreviewUtils: PreviewUtils,
     @LockScreenPreviewUtils private val lockPreviewUtils: PreviewUtils,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     // Don't update smaller display since we always use portrait, always use wallpaper display on
@@ -82,8 +85,7 @@ constructor(
 
     var isNewTask = false
 
-    // The source of current wallpaper preview, from HS or LS wallpaper.
-    var isViewAsHome = false
+    val isViewAsHome = savedStateHandle.get<Boolean>(EXTRA_VIEW_AS_HOME) ?: false
 
     fun getWallpaperPreviewSource(): Screen =
         if (isViewAsHome) Screen.HOME_SCREEN else Screen.LOCK_SCREEN

@@ -62,7 +62,6 @@ class WallpaperPreviewActivity :
     @Inject lateinit var displayUtils: DisplayUtils
     @Inject lateinit var wallpaperModelFactory: WallpaperModelFactory
     @Inject lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
-
     @Inject lateinit var imageEffectsRepository: ImageEffectsRepository
     @Inject lateinit var creativeEffectsRepository: CreativeEffectsRepository
     @Inject lateinit var liveWallpaperDownloader: LiveWallpaperDownloader
@@ -104,7 +103,6 @@ class WallpaperPreviewActivity :
         WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
         val isAssetIdPresent = intent.getBooleanExtra(IS_ASSET_ID_PRESENT, false)
         wallpaperPreviewViewModel.isNewTask = intent.getBooleanExtra(IS_NEW_TASK, false)
-        wallpaperPreviewViewModel.isViewAsHome = intent.getBooleanExtra(EXTRA_VIEW_AS_HOME, false)
         if (savedInstanceState == null) {
             wallpaperPreviewRepository.setWallpaperModel(wallpaper)
         }

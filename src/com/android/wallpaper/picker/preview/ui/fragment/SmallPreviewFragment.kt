@@ -23,7 +23,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
-import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
@@ -161,7 +160,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 wallpaperPreviewViewModel.fullPreviewConfigViewModel.value,
                 isFirstBinding,
             ) { sharedElement ->
-                wallpaperPreviewViewModel.isViewAsHome = dualPreviewView.currentItem == 1
                 val extras =
                     FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)
                 // Set to false on small-to-full preview transition to remove surfaceView jank.
@@ -187,9 +185,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 wallpaperPreviewViewModel.fullPreviewConfigViewModel.value,
                 isFirstBinding,
             ) { sharedElement ->
-                wallpaperPreviewViewModel.isViewAsHome =
-                    tabs.requireViewById<MotionLayout>(R.id.preview_tabs).currentState ==
-                        R.id.secondary_tab_selected
                 val extras =
                     FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)
                 // Set to false on small-to-full preview transition to remove surfaceView jank.

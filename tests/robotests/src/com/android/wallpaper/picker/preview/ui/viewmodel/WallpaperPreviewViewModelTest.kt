@@ -16,6 +16,8 @@
 
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
+import android.app.WallpaperInfo
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -30,6 +32,10 @@ import com.android.wallpaper.effects.FakeEffectsController
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.module.InjectorProvider
+import com.android.wallpaper.picker.BasePreviewActivity.EXTRA_VIEW_AS_HOME
+import com.android.wallpaper.picker.BasePreviewActivity.EXTRA_WALLPAPER_INFO
+import com.android.wallpaper.picker.BasePreviewActivity.IS_ASSET_ID_PRESENT
+import com.android.wallpaper.picker.BasePreviewActivity.IS_NEW_TASK
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.di.modules.PreviewUtilsModule.HomeScreenPreviewUtils
 import com.android.wallpaper.picker.di.modules.PreviewUtilsModule.LockScreenPreviewUtils
@@ -84,6 +90,7 @@ class WallpaperPreviewViewModelTest {
     private lateinit var wallpaperPreviewViewModel: WallpaperPreviewViewModel
     private lateinit var staticWallpapaperPreviewViewModel: StaticWallpaperPreviewViewModel
     private lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
+    private lateinit var startActivityIntent: Intent
     @HomeScreenPreviewUtils private lateinit var homePreviewUtils: PreviewUtils
     @LockScreenPreviewUtils private lateinit var lockPreviewUtils: PreviewUtils
 
@@ -134,9 +141,9 @@ class WallpaperPreviewViewModelTest {
         val intent = Intent(WallpaperService.SERVICE_INTERFACE).setClassName(packageName, className)
         pm.addResolveInfoForIntent(intent, resolveInfo)
 
-        // Launch the test activity to set remaining test objects
-        scenario = ActivityScenario.launch(PreviewTestActivity::class.java)
-        scenario.onActivity { setEverything(it) }
+        startActivityIntent =
+            Intent.makeMainActivity(ComponentName(appContext, PreviewTestActivity::class.java))
+        startActivityForTesting()
     }
 
     @EntryPoint
@@ -157,6 +164,13 @@ class WallpaperPreviewViewModelTest {
         wallpaperPreviewViewModel = activity.viewModels<WallpaperPreviewViewModel>().value
         staticWallpapaperPreviewViewModel =
             wallpaperPreviewViewModel.staticWallpaperPreviewViewModel
+    }
+
+    @Test
+    fun startActivity_withViewAsHome_setsToViewModel() {
+        startActivityForTesting(isViewAsHome = true)
+
+        assertThat(wallpaperPreviewViewModel.isViewAsHome).isTrue()
     }
 
     @Test
@@ -307,5 +321,24 @@ class WallpaperPreviewViewModelTest {
         scenario.onActivity { setEverything(it) }
         wallpaperPreviewRepository.setWallpaperModel(model)
         wallpaperPreviewViewModel.setWhichPreview(whichPreview)
+    }
+
+    /** Launches the test activity to set remaining test objects */
+    private fun startActivityForTesting(
+        wallpaperInfo: WallpaperInfo? = null,
+        isViewAsHome: Boolean? = null,
+        isAssetIdPresent: Boolean? = null,
+        isNewTask: Boolean? = null,
+    ) {
+        scenario =
+            ActivityScenario.launch(
+                startActivityIntent.apply {
+                    wallpaperInfo?.let { putExtra(EXTRA_WALLPAPER_INFO, it) }
+                    isViewAsHome?.let { putExtra(EXTRA_VIEW_AS_HOME, it) }
+                    isAssetIdPresent?.let { putExtra(IS_ASSET_ID_PRESENT, it) }
+                    isNewTask?.let { putExtra(IS_NEW_TASK, it) }
+                }
+            )
+        scenario.onActivity { setEverything(it) }
     }
 }
