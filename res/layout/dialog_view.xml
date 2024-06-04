@@ -38,7 +38,7 @@
         android:layout_marginTop="16dp"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Headline"
         android:textColor="@color/system_on_surface"
-        android:maxLines="1"
+        android:maxLines="2"
         android:ellipsize="end" />
 
     <TextView
