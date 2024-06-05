@@ -67,7 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"Onyesha upya mandhari ya skrini ya kwanza ya kila siku"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Onyesha upya mandhari ya kila siku"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"Skrini ya kukagua mandhari"</string>
-    <string name="preview_screen_description_editable" msgid="506875963019888699">"Skrini ya %1$s ya kukagua mandhari kwanza. Tumia vidole viwili kugeuza upande na kukuza."</string>
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"Skrini ya kukagua mandhari kwanza  %1$s. Tumia vidole viwili kugeuza upande na kukuza."</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"Kimekunjwa"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"Kimefunguliwa"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"Nimemaliza kubadilisha mandhari"</string>

@@ -34,7 +34,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.transition.Transition
-import androidx.transition.doOnEnd
+import androidx.transition.TransitionListenerAdapter
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.picker.TouchForwardingLayout
@@ -77,6 +77,8 @@ object FullWallpaperPreviewBinder {
         val previewCard: CardView = view.requireViewById(R.id.preview_card)
         val scrimView: View = view.requireViewById(R.id.preview_scrim)
         var transitionDisposableHandle: DisposableHandle? = null
+        val mediumAnimTimeMs =
+            view.resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.fullWallpaper.collect { (_, _, displaySize, _) ->
@@ -99,9 +101,26 @@ object FullWallpaperPreviewBinder {
                     } else {
                         transitionDisposableHandle?.dispose()
                         val listener =
-                            transition.doOnEnd {
-                                setFinalPreviewCardRadiusAndEndLoading(isPreviewingFullScreen)
+                            object : TransitionListenerAdapter() {
+                                override fun onTransitionStart(transition: Transition) {
+                                    super.onTransitionStart(transition)
+                                    if (isPreviewingFullScreen) {
+                                        scrimView.isVisible = true
+                                        scrimView.alpha = 0f
+                                        scrimView
+                                            .animate()
+                                            .alpha(1f)
+                                            .setDuration(mediumAnimTimeMs)
+                                            .start()
+                                    }
+                                }
+
+                                override fun onTransitionEnd(transition: Transition) {
+                                    super.onTransitionEnd(transition)
+                                    setFinalPreviewCardRadiusAndEndLoading(isPreviewingFullScreen)
+                                }
                             }
+                        transition.addListener(listener)
                         transitionDisposableHandle = DisposableHandle {
                             listener.let { transition.removeListener(it) }
                         }

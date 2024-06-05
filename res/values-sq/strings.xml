@@ -67,8 +67,7 @@
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"Rifresko imazhin e përditshëm të sfondit të ekranit kryesor"</string>
     <string name="refresh_daily_wallpaper_content_description" msgid="4362142658237147583">"Rifresko imazhin e përditshëm të sfondit"</string>
     <string name="preview_screen_description" msgid="3386387053327775919">"Ekrani i pamjes paraprake të imazhit të sfondit"</string>
-    <!-- no translation found for preview_screen_description_editable (506875963019888699) -->
-    <skip />
+    <string name="preview_screen_description_editable" msgid="506875963019888699">"Ekrani i pamjes paraprake të sfondit - %1$s. Përdor dy gishta për të zgjeruar dhe zmadhuar."</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"Palosur"</string>
     <string name="unfolded_device_state_description" msgid="3071975681472460627">"Shpalosur"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"Modifikimi i imazhit të sfondit u krye"</string>
@@ -106,8 +105,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"Pas"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Imazhi i sfondit"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Pamja paraprake e imazhit të sfondit"</string>
-    <!-- no translation found for wallpaper_preview_card_content_description_editable (3111763100515242340) -->
-    <skip />
+    <string name="wallpaper_preview_card_content_description_editable" msgid="3111763100515242340">"Pamja paraprake e sfondit - %1$s. Trokit për të modifikuar fotografinë"</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"Pamja paraprake e imazhit të sfondit të ekranit të kyçjes"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"Pamja paraprake e imazhit të sfondit të ekranit bazë"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"Koleksioni nuk ekziston"</string>
