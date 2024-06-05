@@ -152,6 +152,11 @@ class PreviewTabs(
         }
     }
 
+    fun resetTransition(targetIndex: Int) {
+        motionLayout.setTransition(R.id.primary_tab_selected, R.id.secondary_tab_selected)
+        motionLayout.setProgress(targetIndex.toFloat())
+    }
+
     /** Set tab with 0 transition duration. */
     fun setTab(index: Int) {
         if (index == 0) {

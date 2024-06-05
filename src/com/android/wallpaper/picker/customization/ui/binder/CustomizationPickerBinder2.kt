@@ -17,61 +17,50 @@
 package com.android.wallpaper.picker.customization.ui.binder
 
 import android.view.View
-import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.android.wallpaper.R
 import com.android.wallpaper.picker.customization.ui.CustomizationPickerActivity2
+import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
-import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.PickerScreen
-import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.PickerScreen.CLOCK
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.PickerScreen.CUSTOMIZATION_OPTION
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.PickerScreen.MAIN
-import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.PickerScreen.SHORTCUT
 import kotlinx.coroutines.launch
 
 object CustomizationPickerBinder2 {
 
     /**
      * @return Callback for the [CustomizationPickerActivity2] to set
-     *   [CustomizationPickerViewModel2]'s screen state to [MAIN]. This is needed since we handle
-     *   the back navigation in [CustomizationPickerActivity2] to go back to the main screen.
+     *   [CustomizationPickerViewModel2]'s screen state to null, which infers to the main screen. We
+     *   need this callback to handle the back navigation in [CustomizationPickerActivity2].
      */
     fun bind(
         view: View,
         viewModel: CustomizationPickerViewModel2,
+        customizationOptionsBinder: CustomizationOptionsBinder,
         lifecycleOwner: LifecycleOwner,
         navigateToPrimary: () -> Unit,
-        navigateToSecondary: (screen: PickerScreen) -> Unit,
+        navigateToSecondary: (screen: CustomizationOptionUtil.CustomizationOption) -> Unit,
     ): () -> Boolean {
-        val optionClock = view.requireViewById<TextView>(R.id.option_clock)
-        val optionShortcut = view.requireViewById<TextView>(R.id.option_shortcut)
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.onCustomizeClockClicked.collect {
-                        optionClock.setOnClickListener { _ -> it?.invoke() }
-                    }
-                }
-
-                launch {
-                    viewModel.onCustomizeShortcutClicked.collect {
-                        optionShortcut.setOnClickListener { _ -> it?.invoke() }
-                    }
-                }
-
-                launch {
-                    viewModel.screen.collect {
-                        when (it) {
+                    viewModel.screen.collect { (screen, option) ->
+                        when (screen) {
                             MAIN -> navigateToPrimary()
-                            CLOCK,
-                            SHORTCUT -> navigateToSecondary(it)
+                            CUSTOMIZATION_OPTION -> option?.let(navigateToSecondary)
                         }
                     }
                 }
             }
         }
-        return { viewModel.setScreenStateMain() }
+
+        customizationOptionsBinder.bind(
+            view,
+            viewModel.customizationOptionsViewModel,
+            lifecycleOwner,
+        )
+        return { viewModel.onBackPressed() }
     }
 }

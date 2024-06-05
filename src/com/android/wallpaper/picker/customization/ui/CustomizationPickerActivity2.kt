@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.motion.widget.MotionLayout.TransitionListener
@@ -33,11 +34,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
 import com.android.wallpaper.module.MultiPanesChecker
+import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder2
+import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
 import com.android.wallpaper.picker.customization.ui.view.adapter.PreviewPagerAdapter
 import com.android.wallpaper.picker.customization.ui.view.transformer.PreviewPagerPageTransformer
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
-import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.PickerScreen
 import com.android.wallpaper.util.ActivityUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -46,10 +48,12 @@ import javax.inject.Inject
 class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
 
     @Inject lateinit var multiPanesChecker: MultiPanesChecker
-
-    private lateinit var viewMap: Map<PickerScreen, View>
+    @Inject lateinit var customizationOptionUtil: CustomizationOptionUtil
+    @Inject lateinit var customizationOptionsBinder: CustomizationOptionsBinder
 
     private var fullyCollapsed = false
+
+    private val customizationPickerViewModel: CustomizationPickerViewModel2 by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +78,10 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         setContentView(R.layout.activity_cusomization_picker2)
 
         val motionContainer = requireViewById<MotionLayout>(R.id.picker_motion_layout)
-        initBottomSheetContent(motionContainer)
+        customizationOptionUtil.initBottomSheetContent(
+            motionContainer.requireViewById<FrameLayout>(R.id.customization_picker_bottom_sheet),
+            layoutInflater
+        )
         motionContainer.setTransitionListener(
             object : EmptyTransitionListener {
                 override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
@@ -89,10 +96,11 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         )
 
         initPreviewPager()
-        val onSetScreenStateMain =
+        val onBackPressed =
             CustomizationPickerBinder2.bind(
                 view = motionContainer,
-                viewModel = CustomizationPickerViewModel2(),
+                viewModel = customizationPickerViewModel,
+                customizationOptionsBinder = customizationOptionsBinder,
                 lifecycleOwner = this,
                 navigateToPrimary = {
                     if (motionContainer.currentState == R.id.secondary) {
@@ -104,7 +112,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
                 },
                 navigateToSecondary = { screen ->
                     if (motionContainer.currentState != R.id.secondary) {
-                        addCustomizePickerBottomSheet(motionContainer, screen) {
+                        setCustomizePickerBottomSheetContent(motionContainer, screen) {
                             fullyCollapsed = motionContainer.progress == 1.0f
                             motionContainer.transitionToState(R.id.secondary)
                         }
@@ -115,7 +123,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         onBackPressedDispatcher.addCallback(
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    val isOnBackPressedHandled = onSetScreenStateMain()
+                    val isOnBackPressedHandled = onBackPressed()
                     if (!isOnBackPressedHandled) {
                         remove()
                         onBackPressedDispatcher.onBackPressed()
@@ -123,6 +131,11 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
                 }
             }
         )
+    }
+
+    override fun onDestroy() {
+        customizationOptionUtil.onDestroy()
+        super.onDestroy()
     }
 
     private fun initPreviewPager() {
@@ -155,31 +168,12 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         }
     }
 
-    private fun initBottomSheetContent(motionContainer: MotionLayout) {
-        val customizationBottomSheet =
-            requireViewById<FrameLayout>(R.id.customization_picker_bottom_sheet)
-        // TODO(b/343300705): Move the view map to a separate class
-        viewMap =
-            mapOf(
-                PickerScreen.CLOCK to
-                    createCustomizationPickerBottomSheetView(PickerScreen.CLOCK, motionContainer)
-                        .also { customizationBottomSheet.addView(it) },
-                PickerScreen.SHORTCUT to
-                    createCustomizationPickerBottomSheetView(PickerScreen.SHORTCUT, motionContainer)
-                        .also { customizationBottomSheet.addView(it) }
-            )
-    }
-
-    private fun addCustomizePickerBottomSheet(
+    private fun setCustomizePickerBottomSheetContent(
         motionContainer: MotionLayout,
-        screen: PickerScreen,
+        screen: CustomizationOptionUtil.CustomizationOption,
         onComplete: () -> Unit
     ) {
-        val view =
-            viewMap[screen]
-                ?: throw IllegalStateException(
-                    "$screen does not have a correspondent bottom sheet view."
-                )
+        val view = customizationOptionUtil.getBottomSheetContent(screen) ?: return
 
         val customizationBottomSheet =
             requireViewById<FrameLayout>(R.id.customization_picker_bottom_sheet)
@@ -221,19 +215,6 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
             onComplete()
         }
     }
-
-    private fun createCustomizationPickerBottomSheetView(
-        screen: PickerScreen,
-        motionContainer: MotionLayout
-    ): View =
-        when (screen) {
-            PickerScreen.MAIN ->
-                throw IllegalStateException(
-                    "There is no bottom sheet for the primary customization picker screen."
-                )
-            PickerScreen.CLOCK -> R.layout.bottom_sheet_clock
-            PickerScreen.SHORTCUT -> R.layout.bottom_sheet_shortcut
-        }.let { layoutInflater.inflate(it, motionContainer, false) }
 
     interface EmptyTransitionListener : TransitionListener {
         override fun onTransitionStarted(motionLayout: MotionLayout?, startId: Int, endId: Int) {

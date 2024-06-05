@@ -16,50 +16,31 @@
 
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.map
 
-class CustomizationPickerViewModel2 {
+@HiltViewModel
+class CustomizationPickerViewModel2
+@Inject
+constructor(
+    val customizationOptionsViewModel: CustomizationOptionsViewModel,
+) : ViewModel() {
 
     enum class PickerScreen {
         MAIN,
-        CLOCK,
-        SHORTCUT,
+        CUSTOMIZATION_OPTION,
     }
 
-    private val _screen = MutableStateFlow(PickerScreen.MAIN)
-    val screen = _screen.asStateFlow()
-
-    val onCustomizeClockClicked: Flow<(() -> Unit)?> =
-        _screen.map {
-            if (it == PickerScreen.MAIN) {
-                { _screen.value = PickerScreen.CLOCK }
+    val screen =
+        customizationOptionsViewModel.selectedOption.map {
+            if (it != null) {
+                Pair(PickerScreen.CUSTOMIZATION_OPTION, it)
             } else {
-                null
+                Pair(PickerScreen.MAIN, null)
             }
         }
 
-    val onCustomizeShortcutClicked: Flow<(() -> Unit)?> =
-        _screen.map {
-            if (it == PickerScreen.MAIN) {
-                { _screen.value = PickerScreen.SHORTCUT }
-            } else {
-                null
-            }
-        }
-
-    /**
-     * @return If the screen state is already [PickerScreen.MAIN], return false; otherwise, set if
-     *   to main and return true.
-     */
-    fun setScreenStateMain(): Boolean {
-        return if (_screen.value != PickerScreen.MAIN) {
-            _screen.value = PickerScreen.MAIN
-            true
-        } else {
-            false
-        }
-    }
+    fun onBackPressed(): Boolean = customizationOptionsViewModel.deselectOption()
 }
