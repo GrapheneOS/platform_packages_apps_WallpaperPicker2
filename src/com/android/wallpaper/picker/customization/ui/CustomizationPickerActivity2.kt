@@ -21,6 +21,7 @@ import android.graphics.Point
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -78,9 +79,10 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         setContentView(R.layout.activity_cusomization_picker2)
 
         val motionContainer = requireViewById<MotionLayout>(R.id.picker_motion_layout)
+
         customizationOptionUtil.initBottomSheetContent(
             motionContainer.requireViewById<FrameLayout>(R.id.customization_picker_bottom_sheet),
-            layoutInflater
+            layoutInflater,
         )
         motionContainer.setTransitionListener(
             object : EmptyTransitionListener {
@@ -99,6 +101,8 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         val onBackPressed =
             CustomizationPickerBinder2.bind(
                 view = motionContainer,
+                lockScreenCustomizationOptionEntries =
+                    initLockScreenCustomizationOptionEntries(motionContainer),
                 viewModel = customizationPickerViewModel,
                 customizationOptionsBinder = customizationOptionsBinder,
                 lifecycleOwner = this,
@@ -136,6 +140,44 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
     override fun onDestroy() {
         customizationOptionUtil.onDestroy()
         super.onDestroy()
+    }
+
+    private fun initLockScreenCustomizationOptionEntries(
+        motionContainer: MotionLayout
+    ): List<Pair<CustomizationOptionUtil.CustomizationOption, View>> {
+        val lockOptionContainer =
+            requireViewById<LinearLayout>(R.id.lock_customization_option_container)
+        val lockOptionEntryViews =
+            customizationOptionUtil.getLockOptionEntryViews(lockOptionContainer, layoutInflater)
+        lockOptionEntryViews.onEachIndexed { index, (_, view) ->
+            val isFirst = index == 0
+            val isLast = index == lockOptionEntryViews.size - 1
+            view.setBackgroundResource(
+                if (isFirst) R.drawable.customization_option_entry_top_background
+                else if (isLast) R.drawable.customization_option_entry_bottom_background
+                else R.drawable.customization_option_entry_background
+            )
+            val padding = resources.getDimension(R.dimen.customization_option_entry_padding).toInt()
+            val cornerRadiusLarge =
+                resources
+                    .getDimension(R.dimen.customization_option_entry_corner_radius_large)
+                    .toInt()
+            val topPadding = if (isFirst) cornerRadiusLarge else padding
+            val bottomPadding = if (isLast) cornerRadiusLarge else padding
+            view.setPaddingRelative(padding, topPadding, padding, bottomPadding)
+            lockOptionContainer.addView(view)
+        }
+
+        lockOptionContainer.doOnPreDraw {
+            motionContainer.getConstraintSet(R.id.collapsed_header_primary)?.apply {
+                constrainHeight(
+                    R.id.preview_header,
+                    motionContainer.height - lockOptionContainer.height
+                )
+            }
+            motionContainer.setTransition(R.id.transition_primary)
+        }
+        return lockOptionEntryViews
     }
 
     private fun initPreviewPager() {

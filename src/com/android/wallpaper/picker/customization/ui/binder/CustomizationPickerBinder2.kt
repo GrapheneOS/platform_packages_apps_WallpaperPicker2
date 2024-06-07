@@ -22,7 +22,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.picker.customization.ui.CustomizationPickerActivity2
-import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
+import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.PickerScreen.CUSTOMIZATION_OPTION
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.PickerScreen.MAIN
@@ -37,11 +37,12 @@ object CustomizationPickerBinder2 {
      */
     fun bind(
         view: View,
+        lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
         viewModel: CustomizationPickerViewModel2,
         customizationOptionsBinder: CustomizationOptionsBinder,
         lifecycleOwner: LifecycleOwner,
         navigateToPrimary: () -> Unit,
-        navigateToSecondary: (screen: CustomizationOptionUtil.CustomizationOption) -> Unit,
+        navigateToSecondary: (screen: CustomizationOption) -> Unit,
     ): () -> Boolean {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -58,6 +59,7 @@ object CustomizationPickerBinder2 {
 
         customizationOptionsBinder.bind(
             view,
+            lockScreenCustomizationOptionEntries,
             viewModel.customizationOptionsViewModel,
             lifecycleOwner,
         )

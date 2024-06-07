@@ -25,6 +25,12 @@ import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.module.NetworkStatusNotifier
 import com.android.wallpaper.network.Requester
 import com.android.wallpaper.network.WallpaperRequester
+import com.android.wallpaper.picker.category.domain.interactor.CategoryInteractor
+import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
+import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
+import com.android.wallpaper.picker.category.domain.interactor.implementations.CategoryInteractorImpl
+import com.android.wallpaper.picker.category.domain.interactor.implementations.CreativeCategoryInteractorImpl
+import com.android.wallpaper.picker.category.domain.interactor.implementations.MyPhotosInteractorImpl
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl
 import com.android.wallpaper.system.UiModeManagerImpl
@@ -63,6 +69,20 @@ abstract class SharedAppModule {
     abstract fun bindCategoryFactory(impl: DefaultCategoryFactory): CategoryFactory
 
     @Binds @Singleton abstract fun bindWallpaperClient(impl: WallpaperClientImpl): WallpaperClient
+
+    @Binds
+    @Singleton
+    abstract fun bindCategoryInteractor(impl: CategoryInteractorImpl): CategoryInteractor
+
+    @Binds
+    @Singleton
+    abstract fun bindCreativeCategoryInteractor(
+        impl: CreativeCategoryInteractorImpl
+    ): CreativeCategoryInteractor
+
+    @Binds
+    @Singleton
+    abstract fun bindMyPhotosInteractor(impl: MyPhotosInteractorImpl): MyPhotosInteractor
 
     companion object {
         @Provides

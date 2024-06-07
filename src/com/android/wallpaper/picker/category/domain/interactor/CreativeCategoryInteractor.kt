@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.customization.ui.binder
+package com.android.wallpaper.picker.category.domain.interactor
 
-import android.view.View
-import androidx.lifecycle.LifecycleOwner
-import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
-import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
+import com.android.wallpaper.picker.data.category.CategoryModel
+import kotlinx.coroutines.flow.Flow
 
-interface CustomizationOptionsBinder {
-
-    fun bind(
-        view: View,
-        lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
-        viewModel: CustomizationOptionsViewModel,
-        lifecycleOwner: LifecycleOwner,
-    )
+/**
+ * Classes that implement this interface implement the business logic in assembling creative
+ * category models
+ */
+interface CreativeCategoryInteractor {
+    val categories: Flow<List<CategoryModel>>
 }

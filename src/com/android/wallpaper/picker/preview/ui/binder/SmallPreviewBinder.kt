@@ -137,6 +137,16 @@ object SmallPreviewBinder {
                                     super.onTransitionEnd(transition)
                                     wallpaperSurface.isVisible = true
                                     workspaceSurface.isVisible = true
+                                    wallpaperSurface.alpha = 0f
+                                    workspaceSurface.alpha = 0f
+
+                                    val mediumAnimTimeMs =
+                                        view.resources
+                                            .getInteger(android.R.integer.config_mediumAnimTime)
+                                            .toLong()
+                                    wallpaperSurface.startFadeInAnimation(mediumAnimTimeMs)
+                                    workspaceSurface.startFadeInAnimation(mediumAnimTimeMs)
+
                                     transition.removeListener(this)
                                     transitionDisposableHandle = null
                                 }
@@ -191,5 +201,9 @@ object SmallPreviewBinder {
             deviceDisplayType = deviceDisplayType,
             isFirstBinding = isFirstBinding,
         )
+    }
+
+    private fun SurfaceView.startFadeInAnimation(duration: Long) {
+        animate().alpha(1f).setDuration(duration).start()
     }
 }

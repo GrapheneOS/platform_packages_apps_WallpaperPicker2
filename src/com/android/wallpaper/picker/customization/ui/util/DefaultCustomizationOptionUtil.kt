@@ -19,21 +19,37 @@ package com.android.wallpaper.picker.customization.ui.util
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.LinearLayout
+import com.android.wallpaper.R
+import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 
 @ActivityScoped
 class DefaultCustomizationOptionUtil @Inject constructor() : CustomizationOptionUtil {
 
-    enum class DefaultLockCustomizationOption : CustomizationOptionUtil.CustomizationOption {
+    enum class DefaultLockCustomizationOption : CustomizationOption {
         WALLPAPER,
     }
 
-    enum class DefaultHomeCustomizationOption : CustomizationOptionUtil.CustomizationOption {
+    enum class DefaultHomeCustomizationOption : CustomizationOption {
         WALLPAPER,
     }
 
-    private var viewMap: Map<CustomizationOptionUtil.CustomizationOption, View>? = null
+    private var viewMap: Map<CustomizationOption, View>? = null
+
+    override fun getLockOptionEntryViews(
+        optionContainer: LinearLayout,
+        layoutInflater: LayoutInflater
+    ): List<Pair<CustomizationOption, View>> =
+        listOf(
+            DefaultLockCustomizationOption.WALLPAPER to
+                layoutInflater.inflate(
+                    R.layout.customization_option_entry_wallpaper,
+                    optionContainer,
+                    false
+                )
+        )
 
     override fun initBottomSheetContent(
         bottomSheetContainer: FrameLayout,
@@ -42,7 +58,7 @@ class DefaultCustomizationOptionUtil @Inject constructor() : CustomizationOption
         viewMap = mapOf()
     }
 
-    override fun getBottomSheetContent(option: CustomizationOptionUtil.CustomizationOption): View? {
+    override fun getBottomSheetContent(option: CustomizationOption): View? {
         return viewMap?.get(option)
     }
 

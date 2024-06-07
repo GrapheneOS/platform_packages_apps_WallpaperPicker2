@@ -392,5 +392,12 @@
     <!-- Dimensions for the customization picker  -->
     <dimen name="customization_picker_preview_header_collapsed_height">250dp</dimen>
     <dimen name="customization_picker_preview_header_expanded_height">500dp</dimen>
+    <dimen name="customization_option_bottom_sheet_horizontal_padding">8dp</dimen>
+    <dimen name="customization_option_entry_corner_radius_large">28dp</dimen>
+    <dimen name="customization_option_entry_corner_radius_small">4dp</dimen>
+    <dimen name="customization_option_entry_divider_height">2dp</dimen>
+    <dimen name="customization_option_entry_more_wallpapers_min_height">48dp</dimen>
+    <dimen name="customization_option_entry_more_wallpapers_drawable_padding">12dp</dimen>
+    <dimen name="customization_option_entry_padding">16dp</dimen>
     <dimen name="preview_corner_radius">32dp</dimen>
 </resources>

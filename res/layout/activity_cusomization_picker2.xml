@@ -45,93 +45,12 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
+            android:id="@+id/lock_customization_option_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/option_clock"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="30dp"
-                android:textAlignment="center"
-                android:textColor="@color/text_color_primary"
-                android:text="Clock"
-                android:background="#dc9fb4"/>
-
-            <TextView
-                android:id="@+id/option_shortcut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="30dp"
-                android:textAlignment="center"
-                android:textColor="@color/text_color_primary"
-                android:text="Shortcut"
-                android:background="#e16b8c"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="30dp"
-                android:textAlignment="center"
-                android:textColor="@color/text_color_primary"
-                android:text="section#3"
-                android:background="#8e354a"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="30dp"
-                android:textAlignment="center"
-                android:textColor="@color/text_color_primary"
-                android:text="section#4"
-                android:background="#f8c3cd"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="30dp"
-                android:textAlignment="center"
-                android:textColor="@color/text_color_primary"
-                android:text="section#5"
-                android:background="#f4a7b9"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="30dp"
-                android:textAlignment="center"
-                android:textColor="@color/text_color_primary"
-                android:text="section#6"
-                android:background="#64363c"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="30dp"
-                android:textAlignment="center"
-                android:textColor="@color/text_color_primary"
-                android:text="section#7"
-                android:background="#f596aa"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="30dp"
-                android:textAlignment="center"
-                android:textColor="@color/text_color_primary"
-                android:text="section#8"
-                android:background="#b5495b"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="30dp"
-                android:textAlignment="center"
-                android:textColor="@color/text_color_primary"
-                android:text="section#9"
-                android:background="#e87a90"/>
-        </LinearLayout>
+            android:showDividers="middle"
+            android:divider="@drawable/customization_option_entry_divider"
+            android:orientation="vertical" />
     </androidx.core.widget.NestedScrollView>
 
     <!-- Guideline for the preview in the secondary screen -->

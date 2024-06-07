@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.customization.ui.binder
+package com.android.wallpaper.picker.category.domain.interactor.implementations
 
-import android.view.View
-import androidx.lifecycle.LifecycleOwner
-import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
-import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
+import com.android.wallpaper.picker.category.domain.interactor.CategoryInteractor
+import com.android.wallpaper.picker.data.category.CategoryModel
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
+/** This class implements the business logic in assembling ungrouped category models */
 @Singleton
-class DefaultCustomizationOptionsBinder @Inject constructor() : CustomizationOptionsBinder {
-
-    override fun bind(
-        view: View,
-        lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
-        viewModel: CustomizationOptionsViewModel,
-        lifecycleOwner: LifecycleOwner
-    ) {}
+class CategoryInteractorImpl @Inject constructor() : CategoryInteractor {
+    override val categories: Flow<List<CategoryModel>> = flow {
+        // TODO: to provide actual implementation
+        emit(listOf())
+    }
 }

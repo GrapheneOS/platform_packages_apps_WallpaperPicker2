@@ -17,40 +17,61 @@
 package com.android.wallpaper.picker.category.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.android.wallpaper.picker.category.domain.interactor.CategoryInteractor
+import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
+import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 
 /** Top level [ViewModel] for the categories screen */
 @HiltViewModel
 class CategoriesViewModel
 @Inject
 constructor(
-// TODO: inject interacters here
+    private val singleCategoryInteractor: CategoryInteractor,
+    private val creativeWallpaperInteractor: CreativeCategoryInteractor,
+    private val myPhotosInteractor: MyPhotosInteractor,
 ) : ViewModel() {
 
-    // this is a stub flow to mimic category data until the interactor is ready to consume
-    val sections: Flow<List<SectionViewModel>> = flow {
-        val tiles = generateTiles()
+    private val individualSectionViewModels: Flow<List<SectionViewModel>> =
+        singleCategoryInteractor.categories.map { categories ->
+            return@map categories.map { category ->
+                SectionViewModel(
+                    tileViewModels = listOf(TileViewModel(null, category.commonCategoryData.title)),
+                    columnCount = 1
+                )
+            }
+        }
 
-        val sectionsList =
-            listOf(
-                SectionViewModel(tiles.subList(0, 2), 3),
-                SectionViewModel(tiles.subList(2, 3), 3),
-                SectionViewModel(listOf(tiles[4]), 1),
-                SectionViewModel(listOf(tiles[5]), 1),
-                SectionViewModel(listOf(tiles[6]), 1),
-                SectionViewModel(listOf(tiles[7]), 1),
-                SectionViewModel(listOf(tiles[8]), 1),
-                SectionViewModel(listOf(tiles[9]), 1),
+    private val creativeSectionViewModel: Flow<SectionViewModel> =
+        creativeWallpaperInteractor.categories.map { categories ->
+            val tiles =
+                categories.map { category ->
+                    TileViewModel(null, category.commonCategoryData.title)
+                }
+            return@map SectionViewModel(tileViewModels = tiles, columnCount = 3)
+        }
+
+    private val myPhotosSectionViewModel: Flow<SectionViewModel> =
+        myPhotosInteractor.category.map { category ->
+            SectionViewModel(
+                tileViewModels = listOf(TileViewModel(null, category.commonCategoryData.title)),
+                columnCount = 3
             )
-        // Emit the list of sections
-        emit(sectionsList)
-    }
+        }
 
-    // stub data source for testing until interacter is ready to cosnume
-    fun generateTiles(): List<TileViewModel> {
-        return (1..10).map { TileViewModel(null, "Tile $it") }
-    }
+    val sections: Flow<List<SectionViewModel>> =
+        combine(individualSectionViewModels, creativeSectionViewModel, myPhotosSectionViewModel) {
+            individualViewModels,
+            creativeViewModel,
+            myPhotosViewModel ->
+            buildList {
+                add(creativeViewModel)
+                add(myPhotosViewModel)
+                addAll(individualViewModels)
+            }
+        }
 }

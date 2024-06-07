@@ -19,12 +19,18 @@ package com.android.wallpaper.picker.customization.ui.util
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 
 /** This util creates the views for customization options. */
 interface CustomizationOptionUtil {
 
     // Enum for customization options
     interface CustomizationOption
+
+    fun getLockOptionEntryViews(
+        optionContainer: LinearLayout,
+        layoutInflater: LayoutInflater
+    ): List<Pair<CustomizationOption, View>>
 
     fun initBottomSheetContent(bottomSheetContainer: FrameLayout, layoutInflater: LayoutInflater)
 

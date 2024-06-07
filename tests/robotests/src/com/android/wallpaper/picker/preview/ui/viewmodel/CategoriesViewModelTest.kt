@@ -78,7 +78,7 @@ class CategoriesViewModelTest {
     // Studio requires at least one test or else it will report a failure
     @Test
     fun generateTiles_succeeds() {
-        assertThat(categoriesViewModel.generateTiles()).isNotEmpty()
+        assertThat(categoriesViewModel.sections).isNotNull()
     }
 
     // TODO (b/343476732): add test cases when [CategoriesViewModel] is ready
