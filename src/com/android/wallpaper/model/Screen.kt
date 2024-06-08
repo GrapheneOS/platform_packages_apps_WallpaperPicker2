@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.wallpaper.picker.preview.ui.viewmodel
 
-import com.android.wallpaper.model.Screen
-import com.android.wallpaper.model.wallpaper.DeviceDisplayType
+package com.android.wallpaper.model
 
-/** Configuration for a full preview, used by both wallpaper and workspace. */
-data class FullPreviewConfigViewModel(
+import android.app.WallpaperManager
 
-    /** The [Screen] the preview is rendering. */
-    val screen: Screen,
+/** Screens for customization. */
+enum class Screen {
+    LOCK_SCREEN,
+    HOME_SCREEN;
 
-    /** Is it a folded or unfolded display. Null for handheld. */
-    val deviceDisplayType: DeviceDisplayType,
-)
+    /** Map the Screen enum to the flag used for setting wallpapers. */
+    fun toFlag(): Int {
+        return when (this) {
+            HOME_SCREEN -> WallpaperManager.FLAG_SYSTEM
+            LOCK_SCREEN -> WallpaperManager.FLAG_LOCK
+        }
+    }
+}

@@ -24,7 +24,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
-import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -65,11 +65,8 @@ constructor(
             coroutineScope = viewModelScope,
         )
 
-    fun getWallpaperQuickSwitchViewModel(
-        screen: CustomizationSections.Screen
-    ): WallpaperQuickSwitchViewModel {
-        return if (screen == CustomizationSections.Screen.LOCK_SCREEN)
-            lockWallpaperQuickSwitchViewModel
+    fun getWallpaperQuickSwitchViewModel(screen: Screen): WallpaperQuickSwitchViewModel {
+        return if (screen == Screen.LOCK_SCREEN) lockWallpaperQuickSwitchViewModel
         else homeWallpaperQuickSwitchViewModel
     }
 

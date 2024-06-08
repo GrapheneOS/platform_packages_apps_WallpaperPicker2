@@ -1,6 +1,6 @@
 package com.android.wallpaper.model.wallpaper
 
-import com.android.wallpaper.module.CustomizationSections.Screen
+import com.android.wallpaper.model.Screen
 
 /**
  * Pages on the small preview pager and their page position as ordinal.

@@ -10,6 +10,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.android.wallpaper.model.CustomizationSectionController;
 import com.android.wallpaper.model.CustomizationSectionController.CustomizationSectionNavigationController;
 import com.android.wallpaper.model.PermissionRequester;
+import com.android.wallpaper.model.Screen;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
 import com.android.wallpaper.picker.customization.data.repository.WallpaperColorsRepository;
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor;

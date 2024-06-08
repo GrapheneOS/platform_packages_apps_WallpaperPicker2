@@ -31,10 +31,10 @@ import androidx.lifecycle.lifecycleScope
 import com.android.systemui.shared.clocks.shared.model.ClockPreviewConstants
 import com.android.wallpaper.R
 import com.android.wallpaper.model.CustomizationSectionController
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.model.WallpaperPreviewNavigator
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory
-import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.FixedWidthDisplayRatioFrameLayout
 import com.android.wallpaper.picker.customization.data.repository.WallpaperColorsRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
@@ -54,7 +54,7 @@ import kotlinx.coroutines.withContext
 open class ScreenPreviewSectionController(
     private val activity: Activity,
     private val lifecycleOwner: LifecycleOwner,
-    private val screen: CustomizationSections.Screen,
+    private val screen: Screen,
     private val wallpaperInfoFactory: CurrentWallpaperInfoFactory,
     private val colorViewModel: WallpaperColorsRepository,
     private val displayUtils: DisplayUtils,
@@ -65,7 +65,7 @@ open class ScreenPreviewSectionController(
     private val customizationPickerViewModel: CustomizationPickerViewModel,
 ) : CustomizationSectionController<ScreenPreviewView> {
 
-    protected val isOnLockScreen: Boolean = screen == CustomizationSections.Screen.LOCK_SCREEN
+    protected val isOnLockScreen: Boolean = screen == Screen.LOCK_SCREEN
 
     protected var previewViewBinding: ScreenPreviewBinder.Binding? = null
 
@@ -202,12 +202,12 @@ open class ScreenPreviewSectionController(
 
     protected fun loadInitialColors(
         context: Context,
-        screen: CustomizationSections.Screen,
+        screen: Screen,
     ) {
         lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val colors =
                 wallpaperManager.getWallpaperColors(
-                    if (screen == CustomizationSections.Screen.LOCK_SCREEN) {
+                    if (screen == Screen.LOCK_SCREEN) {
                         WallpaperManager.FLAG_LOCK
                     } else {
                         WallpaperManager.FLAG_SYSTEM
@@ -215,7 +215,7 @@ open class ScreenPreviewSectionController(
                 )
             withContext(Dispatchers.Main) {
                 if (colors != null) {
-                    if (screen == CustomizationSections.Screen.LOCK_SCREEN) {
+                    if (screen == Screen.LOCK_SCREEN) {
                         colorViewModel.setLockWallpaperColors(colors)
                     } else {
                         colorViewModel.setHomeWallpaperColors(colors)

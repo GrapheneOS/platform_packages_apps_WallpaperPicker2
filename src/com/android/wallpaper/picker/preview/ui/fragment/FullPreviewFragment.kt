@@ -33,6 +33,7 @@ import com.android.wallpaper.picker.preview.ui.binder.FullWallpaperPreviewBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewTooltipBinder
 import com.android.wallpaper.picker.preview.ui.binder.WorkspacePreviewBinder
 import com.android.wallpaper.picker.preview.ui.transition.ChangeScaleAndPosition
+import com.android.wallpaper.picker.preview.ui.util.AnimationUtil
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,6 +54,8 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enterTransition = AnimationUtil.getFastFadeInTransition()
+        returnTransition = AnimationUtil.getFastFadeOutTransition()
         sharedElementEnterTransition = ChangeScaleAndPosition()
     }
 

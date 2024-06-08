@@ -18,7 +18,7 @@
 package com.android.wallpaper.picker.customization.domain.interactor
 
 import android.graphics.Bitmap
-import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -38,13 +38,13 @@ class WallpaperInteractor(
     val maxOptions = repository.maxOptions
 
     /** Returns a flow that is updated whenever the wallpaper has been updated */
-    fun wallpaperUpdateEvents(screen: CustomizationSections.Screen): Flow<WallpaperModel?> {
+    fun wallpaperUpdateEvents(screen: Screen): Flow<WallpaperModel?> {
         return when (screen) {
-            CustomizationSections.Screen.LOCK_SCREEN ->
+            Screen.LOCK_SCREEN ->
                 previews(WallpaperDestination.LOCK, 1).map { recentWallpapers ->
                     if (recentWallpapers.isEmpty()) null else recentWallpapers[0]
                 }
-            CustomizationSections.Screen.HOME_SCREEN ->
+            Screen.HOME_SCREEN ->
                 previews(WallpaperDestination.HOME, 1).map { recentWallpapers ->
                     if (recentWallpapers.isEmpty()) null else recentWallpapers[0]
                 }

@@ -21,10 +21,9 @@ import android.stats.style.StyleEnums
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.model.wallpaper.PreviewPagerPage
-import com.android.wallpaper.module.CustomizationSections
-import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.BasePreviewActivity.EXTRA_VIEW_AS_HOME
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -178,6 +177,7 @@ constructor(
 
     private val _isWallpaperColorPreviewEnabled = MutableStateFlow(false)
     val isWallpaperColorPreviewEnabled = _isWallpaperColorPreviewEnabled.asStateFlow()
+
     fun setIsWallpaperColorPreviewEnabled(isWallpaperColorPreviewEnabled: Boolean) {
         _isWallpaperColorPreviewEnabled.value = isWallpaperColorPreviewEnabled
     }
@@ -357,7 +357,7 @@ constructor(
         }
 
     private fun Set<Screen>.getDestination(): WallpaperDestination {
-        return if (containsAll(CustomizationSections.Screen.entries)) {
+        return if (containsAll(Screen.entries)) {
             WallpaperDestination.BOTH
         } else if (contains(Screen.HOME_SCREEN)) {
             WallpaperDestination.HOME

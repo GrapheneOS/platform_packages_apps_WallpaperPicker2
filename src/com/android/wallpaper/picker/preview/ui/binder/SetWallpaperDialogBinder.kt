@@ -26,8 +26,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
-import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout.Companion.getViewId
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel

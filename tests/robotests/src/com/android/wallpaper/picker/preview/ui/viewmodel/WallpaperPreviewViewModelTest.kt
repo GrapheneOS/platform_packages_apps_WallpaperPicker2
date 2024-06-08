@@ -29,8 +29,8 @@ import android.service.wallpaper.WallpaperService
 import androidx.activity.viewModels
 import androidx.test.core.app.ActivityScenario
 import com.android.wallpaper.effects.FakeEffectsController
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
-import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.BasePreviewActivity.EXTRA_VIEW_AS_HOME
 import com.android.wallpaper.picker.BasePreviewActivity.EXTRA_WALLPAPER_INFO
@@ -150,7 +150,9 @@ class WallpaperPreviewViewModelTest {
     @InstallIn(ActivityComponent::class)
     interface ActivityScopeEntryPoint {
         @HomeScreenPreviewUtils fun homePreviewUtils(): PreviewUtils
+
         @LockScreenPreviewUtils fun lockPreviewUtils(): PreviewUtils
+
         fun wallpaperPreviewRepository(): WallpaperPreviewRepository
     }
 
@@ -195,13 +197,11 @@ class WallpaperPreviewViewModelTest {
     @Test
     fun clickSmallPreview_isSelectedPreview_updatesFullWorkspacePreviewConfig() =
         testScope.runTest {
-            wallpaperPreviewViewModel.setSmallPreviewSelectedTab(
-                CustomizationSections.Screen.HOME_SCREEN
-            )
+            wallpaperPreviewViewModel.setSmallPreviewSelectedTab(Screen.HOME_SCREEN)
             val onHomePreviewClicked =
                 collectLastValue(
                     wallpaperPreviewViewModel.onSmallPreviewClicked(
-                        CustomizationSections.Screen.HOME_SCREEN,
+                        Screen.HOME_SCREEN,
                         DeviceDisplayType.UNFOLDED,
                     ) {}
                 )
@@ -223,13 +223,11 @@ class WallpaperPreviewViewModelTest {
                 WhichPreview.PREVIEW_CURRENT,
                 listOf(HANDHELD),
             )
-            wallpaperPreviewViewModel.setSmallPreviewSelectedTab(
-                CustomizationSections.Screen.LOCK_SCREEN
-            )
+            wallpaperPreviewViewModel.setSmallPreviewSelectedTab(Screen.LOCK_SCREEN)
             val onLockPreviewClicked =
                 collectLastValue(
                     wallpaperPreviewViewModel.onSmallPreviewClicked(
-                        CustomizationSections.Screen.LOCK_SCREEN,
+                        Screen.LOCK_SCREEN,
                         DeviceDisplayType.SINGLE
                     ) {}
                 )
@@ -240,7 +238,7 @@ class WallpaperPreviewViewModelTest {
             assertThat(fullWallpaper).isNotNull()
             fullWallpaper?.run {
                 assertThat(config.deviceDisplayType).isEqualTo(DeviceDisplayType.SINGLE)
-                assertThat(config.screen).isEqualTo(CustomizationSections.Screen.LOCK_SCREEN)
+                assertThat(config.screen).isEqualTo(Screen.LOCK_SCREEN)
                 assertThat(wallpaper).isEqualTo(model)
                 assertThat(displaySize).isEqualTo(HANDHELD.displaySize)
                 assertThat(allowUserCropping).isTrue()
@@ -251,13 +249,11 @@ class WallpaperPreviewViewModelTest {
     @Test
     fun clickSmallPreview_isNotSelectedPreview_doesNotUpdateFullWorkspacePreviewConfig() =
         testScope.runTest {
-            wallpaperPreviewViewModel.setSmallPreviewSelectedTab(
-                CustomizationSections.Screen.LOCK_SCREEN
-            )
+            wallpaperPreviewViewModel.setSmallPreviewSelectedTab(Screen.LOCK_SCREEN)
             val onHomePreviewClicked =
                 collectLastValue(
                     wallpaperPreviewViewModel.onSmallPreviewClicked(
-                        CustomizationSections.Screen.HOME_SCREEN,
+                        Screen.HOME_SCREEN,
                         DeviceDisplayType.UNFOLDED,
                     ) {}
                 )

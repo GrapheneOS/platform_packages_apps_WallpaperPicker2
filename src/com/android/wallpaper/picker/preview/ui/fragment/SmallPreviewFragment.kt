@@ -41,6 +41,7 @@ import com.android.wallpaper.picker.preview.ui.binder.PreviewActionsBinder
 import com.android.wallpaper.picker.preview.ui.binder.PreviewSelectorBinder
 import com.android.wallpaper.picker.preview.ui.binder.SetWallpaperButtonBinder
 import com.android.wallpaper.picker.preview.ui.binder.SetWallpaperProgressDialogBinder
+import com.android.wallpaper.picker.preview.ui.util.AnimationUtil
 import com.android.wallpaper.picker.preview.ui.util.ImageEffectDialogUtil
 import com.android.wallpaper.picker.preview.ui.view.DualPreviewViewPager
 import com.android.wallpaper.picker.preview.ui.view.PreviewActionGroup
@@ -78,6 +79,12 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
      * Read-only during the first half of the lifecycle (when starting a fragment).
      */
     private var isViewDestroyed: Boolean? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = AnimationUtil.getFastFadeOutTransition()
+        reenterTransition = AnimationUtil.getFastFadeInTransition()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

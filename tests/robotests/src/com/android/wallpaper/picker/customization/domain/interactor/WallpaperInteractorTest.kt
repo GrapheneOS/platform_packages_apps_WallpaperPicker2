@@ -19,7 +19,7 @@ package com.android.wallpaper.picker.customization.domain.interactor
 
 import android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW
 import androidx.test.filters.SmallTest
-import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -91,9 +91,7 @@ class WallpaperInteractorTest {
                 buildMap { put(WallpaperDestination.HOME, listOf<WallpaperModel>()) }
             )
             val homeWallpaperUpdateEvents =
-                collectLastValue(
-                    underTest.wallpaperUpdateEvents(CustomizationSections.Screen.HOME_SCREEN)
-                )
+                collectLastValue(underTest.wallpaperUpdateEvents(Screen.HOME_SCREEN))
 
             assertThat(homeWallpaperUpdateEvents()).isNull()
         }
@@ -102,13 +100,9 @@ class WallpaperInteractorTest {
     fun wallpaperUpdateEvents() =
         testScope.runTest {
             val homeWallpaperUpdateEvents =
-                collectLastValue(
-                    underTest.wallpaperUpdateEvents(CustomizationSections.Screen.HOME_SCREEN)
-                )
+                collectLastValue(underTest.wallpaperUpdateEvents(Screen.HOME_SCREEN))
             val lockWallpaperUpdateEvents =
-                collectLastValue(
-                    underTest.wallpaperUpdateEvents(CustomizationSections.Screen.LOCK_SCREEN)
-                )
+                collectLastValue(underTest.wallpaperUpdateEvents(Screen.LOCK_SCREEN))
             val homeWallpaperUpdateOutput1 = homeWallpaperUpdateEvents()
             val lockWallpaperUpdateOutput1 = lockWallpaperUpdateEvents()
 

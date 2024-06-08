@@ -10,6 +10,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.android.wallpaper.model.CustomizationSectionController;
 import com.android.wallpaper.model.CustomizationSectionController.CustomizationSectionNavigationController;
 import com.android.wallpaper.model.PermissionRequester;
+import com.android.wallpaper.model.Screen;
 import com.android.wallpaper.model.WallpaperPreviewNavigator;
 import com.android.wallpaper.picker.customization.data.repository.WallpaperColorsRepository;
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor;
@@ -20,20 +21,6 @@ import java.util.List;
 
 /** Interface for carry {@link CustomizationSectionController}s. */
 public interface CustomizationSections {
-
-    /** Enumerates all screens supported by {@code getSectionControllersForScreen}. */
-    enum Screen {
-        LOCK_SCREEN,
-        HOME_SCREEN;
-
-        public int toFlag() {
-            switch (this) {
-                case HOME_SCREEN: return WallpaperManager.FLAG_SYSTEM;
-                case LOCK_SCREEN: return WallpaperManager.FLAG_LOCK;
-                default: return WallpaperManager.FLAG_SYSTEM | WallpaperManager.FLAG_LOCK;
-            }
-        }
-    }
 
     /**
      * Currently protected under BaseFlags.isUseRevampedUi() flag.

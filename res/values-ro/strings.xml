@@ -93,7 +93,7 @@
     <string name="configure_wallpaper" msgid="849882179182976621">"Setări…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Șterge"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"Editează"</string>
-    <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Ștergi imaginea de fundal de pe dispozitiv?"</string>
+    <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Ștergi această imagine de fundal de pe dispozitiv?"</string>
     <string name="bottom_action_bar_back" msgid="2620581414970740784">"Navighează în sus"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Editează"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Descarcă"</string>

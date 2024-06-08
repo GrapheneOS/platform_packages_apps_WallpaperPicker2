@@ -21,9 +21,8 @@ import android.app.WallpaperColors
 import android.graphics.Bitmap
 import android.os.Bundle
 import com.android.wallpaper.R
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.WallpaperInfo
-import com.android.wallpaper.module.CustomizationSections
-import com.android.wallpaper.module.CustomizationSections.Screen
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -75,9 +74,7 @@ open class ScreenPreviewViewModel(
     }
 
     /** Returns a flow that is updated whenever the wallpaper has been updated */
-    private fun wallpaperUpdateEvents(
-        s: CustomizationSections.Screen = screen
-    ): Flow<WallpaperModel?> {
+    private fun wallpaperUpdateEvents(s: Screen = screen): Flow<WallpaperModel?> {
         return wallpaperInteractor.wallpaperUpdateEvents(s)
     }
 

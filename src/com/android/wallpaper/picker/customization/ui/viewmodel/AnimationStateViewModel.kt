@@ -18,7 +18,7 @@ package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import android.graphics.drawable.Drawable
 import androidx.lifecycle.ViewModel
-import com.android.wallpaper.module.CustomizationSections
+import com.android.wallpaper.model.Screen
 
 /**
  * Interface for a view model that can store the animation state for use after a configuration
@@ -40,16 +40,16 @@ abstract class AnimationStateViewModel : ViewModel() {
     private var homePreviewAnimationState: AnimationState? = null
     private var lockPreviewAnimationState: AnimationState? = null
 
-    fun saveAnimationState(screen: CustomizationSections.Screen, state: AnimationState?) {
-        if (screen == CustomizationSections.Screen.LOCK_SCREEN) {
+    fun saveAnimationState(screen: Screen, state: AnimationState?) {
+        if (screen == Screen.LOCK_SCREEN) {
             lockPreviewAnimationState = state
         } else {
             homePreviewAnimationState = state
         }
     }
 
-    fun getAnimationState(screen: CustomizationSections.Screen): AnimationState? {
-        return if (screen == CustomizationSections.Screen.LOCK_SCREEN) {
+    fun getAnimationState(screen: Screen): AnimationState? {
+        return if (screen == Screen.LOCK_SCREEN) {
             lockPreviewAnimationState
         } else {
             homePreviewAnimationState

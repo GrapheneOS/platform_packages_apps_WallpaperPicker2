@@ -24,7 +24,8 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     android:transitionGroup="true"
-    android:clipChildren="false">
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <include
         android:id="@+id/toolbar_container"

@@ -161,8 +161,7 @@ constructor(
             val cropHintsWithParallax =
                 fullPreviewCropModels?.let { cropModels ->
                     cropModels.mapValues { it.value.adjustCropForParallax(wallpaperSize) }
-                }
-                    ?: emptyMap()
+                } ?: emptyMap()
             val managerId =
                 wallpaperManager.setStaticWallpaperToSystem(
                     asset.getStream(),
@@ -285,8 +284,7 @@ constructor(
             val updatedWallpaperModel =
                 wallpaperModel.creativeWallpaperData?.let {
                     saveCreativeWallpaperAtExternal(wallpaperModel, destination)
-                }
-                    ?: wallpaperModel
+                } ?: wallpaperModel
 
             val managerId =
                 wallpaperManager.setLiveWallpaperToSystem(updatedWallpaperModel, destination)
@@ -417,14 +415,12 @@ constructor(
         val uriString =
             liveWallpaperData.systemWallpaperInfo.serviceInfo.metaData.getString(
                 CreativeCategory.KEY_WALLPAPER_SAVE_CREATIVE_CATEGORY_WALLPAPER
-            )
-                ?: return null
+            ) ?: return null
         val uri =
             Uri.parse(uriString)
                 ?.buildUpon()
                 ?.appendQueryParameter("destination", destination.toDestinationInt().toString())
-                ?.build()
-                ?: return null
+                ?.build() ?: return null
         val authority = uri.authority ?: return null
         return Pair(uri, authority)
     }
@@ -662,9 +658,12 @@ constructor(
                     it.wallpaperZoom,
                     /* cropExtraWidth= */ true,
                 )
-                .apply { scale(1f / it.wallpaperZoom) }
-        }
-            ?: cropHint
+                .apply {
+                    scale(1f / it.wallpaperZoom)
+                    if (right > wallpaperSize.x) right = wallpaperSize.x
+                    if (bottom > wallpaperSize.y) bottom = wallpaperSize.y
+                }
+        } ?: cropHint
     }
 
     private suspend fun Asset.getStream(): InputStream? =
