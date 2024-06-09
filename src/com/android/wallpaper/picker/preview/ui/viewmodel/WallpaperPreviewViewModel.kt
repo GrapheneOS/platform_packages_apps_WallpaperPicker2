@@ -23,7 +23,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
-import com.android.wallpaper.model.wallpaper.PreviewPagerPage
 import com.android.wallpaper.picker.BasePreviewActivity.EXTRA_VIEW_AS_HOME
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -98,7 +97,7 @@ constructor(
     // On orientation change, the fragment's onCreateView will be called again.
     var isCurrentlyEditingCreativeWallpaper = false
 
-    val smallPreviewTabs = PreviewPagerPage.entries.map { it.screen }
+    val smallPreviewTabs = Screen.entries.toList()
 
     private val _smallPreviewSelectedTab = MutableStateFlow(getWallpaperPreviewSource())
     val smallPreviewSelectedTab = _smallPreviewSelectedTab.asStateFlow()
