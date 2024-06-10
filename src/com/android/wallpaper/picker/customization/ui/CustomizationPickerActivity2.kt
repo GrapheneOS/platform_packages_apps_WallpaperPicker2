@@ -29,6 +29,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.motion.widget.MotionLayout.TransitionListener
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Guideline
+import androidx.core.view.WindowCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.RecyclerView
@@ -77,6 +78,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         }
 
         setContentView(R.layout.activity_cusomization_picker2)
+        WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
 
         val motionContainer = requireViewById<MotionLayout>(R.id.picker_motion_layout)
 
@@ -172,12 +174,19 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
             motionContainer.getConstraintSet(R.id.collapsed_header_primary)?.apply {
                 constrainHeight(
                     R.id.preview_header,
-                    motionContainer.height - lockOptionContainer.height
+                    motionContainer.height - lockOptionContainer.height - getNavigationBarHeight()
                 )
             }
             motionContainer.setTransition(R.id.transition_primary)
         }
         return lockOptionEntryViews
+    }
+
+    private fun getNavigationBarHeight(): Int {
+        val resourceId: Int = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        return if (resourceId > 0) {
+            resources.getDimensionPixelSize(resourceId)
+        } else 0
     }
 
     private fun initPreviewPager() {
