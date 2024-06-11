@@ -21,6 +21,9 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.android.wallpaper.R
+import com.android.wallpaper.model.Screen
+import com.android.wallpaper.model.Screen.HOME_SCREEN
+import com.android.wallpaper.model.Screen.LOCK_SCREEN
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
@@ -38,18 +41,31 @@ class DefaultCustomizationOptionUtil @Inject constructor() : CustomizationOption
 
     private var viewMap: Map<CustomizationOption, View>? = null
 
-    override fun getLockOptionEntryViews(
+    override fun getOptionEntries(
+        screen: Screen,
         optionContainer: LinearLayout,
-        layoutInflater: LayoutInflater
+        layoutInflater: LayoutInflater,
     ): List<Pair<CustomizationOption, View>> =
-        listOf(
-            DefaultLockCustomizationOption.WALLPAPER to
-                layoutInflater.inflate(
-                    R.layout.customization_option_entry_wallpaper,
-                    optionContainer,
-                    false
+        when (screen) {
+            LOCK_SCREEN ->
+                listOf(
+                    DefaultLockCustomizationOption.WALLPAPER to
+                        layoutInflater.inflate(
+                            R.layout.customization_option_entry_wallpaper,
+                            optionContainer,
+                            false
+                        )
                 )
-        )
+            HOME_SCREEN ->
+                listOf(
+                    DefaultHomeCustomizationOption.WALLPAPER to
+                        layoutInflater.inflate(
+                            R.layout.customization_option_entry_wallpaper,
+                            optionContainer,
+                            false
+                        )
+                )
+        }
 
     override fun initBottomSheetContent(
         bottomSheetContainer: FrameLayout,

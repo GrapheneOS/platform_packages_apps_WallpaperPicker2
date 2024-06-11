@@ -26,6 +26,7 @@ interface CustomizationOptionsBinder {
     fun bind(
         view: View,
         lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
+        homeScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
         viewModel: CustomizationOptionsViewModel,
         lifecycleOwner: LifecycleOwner,
     )

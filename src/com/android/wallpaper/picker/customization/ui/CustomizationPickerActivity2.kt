@@ -35,10 +35,14 @@ import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.R
+import com.android.wallpaper.model.Screen
+import com.android.wallpaper.model.Screen.HOME_SCREEN
+import com.android.wallpaper.model.Screen.LOCK_SCREEN
 import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder2
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
+import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.picker.customization.ui.view.adapter.PreviewPagerAdapter
 import com.android.wallpaper.picker.customization.ui.view.transformer.PreviewPagerPageTransformer
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
@@ -56,6 +60,17 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
     private var fullyCollapsed = false
 
     private val customizationPickerViewModel: CustomizationPickerViewModel2 by viewModels()
+    // The bottom navigation bar height
+    private val navBarHeight =
+        resources.getIdentifier("navigation_bar_height", "dimen", "android").let {
+            if (it > 0) {
+                resources.getDimensionPixelSize(it)
+            } else 0
+        }
+    private val optionEntryPadding =
+        resources.getDimensionPixelSize(R.dimen.customization_option_entry_padding)
+    private val optionEntryCornerRadiusLarge =
+        resources.getDimensionPixelSize(R.dimen.customization_option_entry_corner_radius_large)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,47 +95,65 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         setContentView(R.layout.activity_cusomization_picker2)
         WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
 
-        val motionContainer = requireViewById<MotionLayout>(R.id.picker_motion_layout)
+        val rootView = requireViewById<MotionLayout>(R.id.picker_motion_layout)
 
         customizationOptionUtil.initBottomSheetContent(
-            motionContainer.requireViewById<FrameLayout>(R.id.customization_picker_bottom_sheet),
+            rootView.requireViewById<FrameLayout>(R.id.customization_picker_bottom_sheet),
             layoutInflater,
         )
-        motionContainer.setTransitionListener(
+        rootView.setTransitionListener(
             object : EmptyTransitionListener {
                 override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
                     if (
                         currentId == R.id.expanded_header_primary ||
                             currentId == R.id.collapsed_header_primary
                     ) {
-                        motionContainer.setTransition(R.id.transition_primary)
+                        rootView.setTransition(R.id.transition_primary)
                     }
                 }
             }
         )
 
         initPreviewPager()
+
+        val optionContainer = requireViewById<MotionLayout>(R.id.customization_option_container)
+        // The collapsed header height should be updated when option container's height is known
+        optionContainer.doOnPreDraw {
+            val collapsedHeaderHeight = rootView.height - optionContainer.height - navBarHeight
+            if (
+                collapsedHeaderHeight >
+                    resources.getDimensionPixelSize(
+                        R.dimen.customization_picker_preview_header_collapsed_height
+                    )
+            ) {
+                rootView
+                    .getConstraintSet(R.id.collapsed_header_primary)
+                    ?.constrainHeight(R.id.preview_header, collapsedHeaderHeight)
+                rootView.setTransition(R.id.transition_primary)
+            }
+        }
+
         val onBackPressed =
             CustomizationPickerBinder2.bind(
-                view = motionContainer,
-                lockScreenCustomizationOptionEntries =
-                    initLockScreenCustomizationOptionEntries(motionContainer),
+                view = rootView,
+                lockScreenCustomizationOptionEntries = initCustomizationOptionEntries(LOCK_SCREEN),
+                homeScreenCustomizationOptionEntries = initCustomizationOptionEntries(HOME_SCREEN),
                 viewModel = customizationPickerViewModel,
                 customizationOptionsBinder = customizationOptionsBinder,
                 lifecycleOwner = this,
                 navigateToPrimary = {
-                    if (motionContainer.currentState == R.id.secondary) {
-                        motionContainer.transitionToState(
+                    if (rootView.currentState == R.id.secondary) {
+                        rootView.transitionToState(
                             if (fullyCollapsed) R.id.collapsed_header_primary
                             else R.id.expanded_header_primary
                         )
                     }
                 },
                 navigateToSecondary = { screen ->
-                    if (motionContainer.currentState != R.id.secondary) {
-                        setCustomizePickerBottomSheetContent(motionContainer, screen) {
-                            fullyCollapsed = motionContainer.progress == 1.0f
-                            motionContainer.transitionToState(R.id.secondary)
+                    if (rootView.currentState != R.id.secondary) {
+                        setCustomizePickerBottomSheetContent(rootView, screen) {
+                            fullyCollapsed = rootView.progress == 1.0f
+                            rootView.transitionToState(R.id.secondary)
                         }
                     }
                 },
@@ -144,49 +177,34 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         super.onDestroy()
     }
 
-    private fun initLockScreenCustomizationOptionEntries(
-        motionContainer: MotionLayout
-    ): List<Pair<CustomizationOptionUtil.CustomizationOption, View>> {
-        val lockOptionContainer =
-            requireViewById<LinearLayout>(R.id.lock_customization_option_container)
-        val lockOptionEntryViews =
-            customizationOptionUtil.getLockOptionEntryViews(lockOptionContainer, layoutInflater)
-        lockOptionEntryViews.onEachIndexed { index, (_, view) ->
+    private fun initCustomizationOptionEntries(
+        screen: Screen,
+    ): List<Pair<CustomizationOption, View>> {
+        val optionEntriesContainer =
+            requireViewById<LinearLayout>(
+                when (screen) {
+                    LOCK_SCREEN -> R.id.lock_customization_option_container
+                    HOME_SCREEN -> R.id.home_customization_option_container
+                }
+            )
+        val optionEntries =
+            customizationOptionUtil.getOptionEntries(screen, optionEntriesContainer, layoutInflater)
+        optionEntries.onEachIndexed { index, (_, view) ->
             val isFirst = index == 0
-            val isLast = index == lockOptionEntryViews.size - 1
+            val isLast = index == optionEntries.size - 1
             view.setBackgroundResource(
                 if (isFirst) R.drawable.customization_option_entry_top_background
                 else if (isLast) R.drawable.customization_option_entry_bottom_background
                 else R.drawable.customization_option_entry_background
             )
-            val padding = resources.getDimension(R.dimen.customization_option_entry_padding).toInt()
-            val cornerRadiusLarge =
-                resources
-                    .getDimension(R.dimen.customization_option_entry_corner_radius_large)
-                    .toInt()
-            val topPadding = if (isFirst) cornerRadiusLarge else padding
-            val bottomPadding = if (isLast) cornerRadiusLarge else padding
-            view.setPaddingRelative(padding, topPadding, padding, bottomPadding)
-            lockOptionContainer.addView(view)
+            val startPadding = optionEntryPadding
+            val topPadding = if (isFirst) optionEntryCornerRadiusLarge else optionEntryPadding
+            val endPadding = optionEntryPadding
+            val bottomPadding = if (isLast) optionEntryCornerRadiusLarge else optionEntryPadding
+            view.setPaddingRelative(startPadding, topPadding, endPadding, bottomPadding)
+            optionEntriesContainer.addView(view)
         }
-
-        lockOptionContainer.doOnPreDraw {
-            motionContainer.getConstraintSet(R.id.collapsed_header_primary)?.apply {
-                constrainHeight(
-                    R.id.preview_header,
-                    motionContainer.height - lockOptionContainer.height - getNavigationBarHeight()
-                )
-            }
-            motionContainer.setTransition(R.id.transition_primary)
-        }
-        return lockOptionEntryViews
-    }
-
-    private fun getNavigationBarHeight(): Int {
-        val resourceId: Int = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        return if (resourceId > 0) {
-            resources.getDimensionPixelSize(resourceId)
-        } else 0
+        return optionEntries
     }
 
     private fun initPreviewPager() {

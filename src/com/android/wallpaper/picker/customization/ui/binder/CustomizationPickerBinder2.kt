@@ -17,10 +17,15 @@
 package com.android.wallpaper.picker.customization.ui.binder
 
 import android.view.View
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.viewpager2.widget.ViewPager2
+import com.android.wallpaper.R
+import com.android.wallpaper.model.Screen.HOME_SCREEN
+import com.android.wallpaper.model.Screen.LOCK_SCREEN
 import com.android.wallpaper.picker.customization.ui.CustomizationPickerActivity2
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
@@ -38,12 +43,24 @@ object CustomizationPickerBinder2 {
     fun bind(
         view: View,
         lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
+        homeScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
         viewModel: CustomizationPickerViewModel2,
         customizationOptionsBinder: CustomizationOptionsBinder,
         lifecycleOwner: LifecycleOwner,
         navigateToPrimary: () -> Unit,
         navigateToSecondary: (screen: CustomizationOption) -> Unit,
     ): () -> Boolean {
+        val optionContainer =
+            view.requireViewById<MotionLayout>(R.id.customization_option_container)
+        val pager = view.requireViewById<ViewPager2>(R.id.preview_pager)
+        pager.registerOnPageChangeCallback(
+            object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    viewModel.selectPreviewScreen(if (position == 0) LOCK_SCREEN else HOME_SCREEN)
+                }
+            }
+        )
+
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -54,12 +71,28 @@ object CustomizationPickerBinder2 {
                         }
                     }
                 }
+
+                launch {
+                    viewModel.selectedPreviewScreen.collect {
+                        when (it) {
+                            LOCK_SCREEN -> {
+                                pager.currentItem = 0
+                                optionContainer.transitionToStart()
+                            }
+                            HOME_SCREEN -> {
+                                pager.currentItem = 1
+                                optionContainer.transitionToEnd()
+                            }
+                        }
+                    }
+                }
             }
         }
 
         customizationOptionsBinder.bind(
             view,
             lockScreenCustomizationOptionEntries,
+            homeScreenCustomizationOptionEntries,
             viewModel.customizationOptionsViewModel,
             lifecycleOwner,
         )

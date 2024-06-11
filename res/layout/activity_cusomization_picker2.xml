@@ -44,13 +44,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout
-            android:id="@+id/lock_customization_option_container"
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/customization_option_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:showDividers="middle"
-            android:divider="@drawable/customization_option_entry_divider"
-            android:orientation="vertical" />
+            android:paddingHorizontal="@dimen/customization_option_container_horizontal_padding"
+            app:layoutDescription="@xml/customization_option_container_layout_scene">
+
+            <LinearLayout
+                android:id="@+id/lock_customization_option_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:showDividers="middle"
+                android:divider="@drawable/customization_option_entry_divider"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:id="@+id/home_customization_option_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:showDividers="middle"
+                android:divider="@drawable/customization_option_entry_divider"
+                android:orientation="vertical" />
+        </androidx.constraintlayout.motion.widget.MotionLayout>
     </androidx.core.widget.NestedScrollView>
 
     <!-- Guideline for the preview in the secondary screen -->

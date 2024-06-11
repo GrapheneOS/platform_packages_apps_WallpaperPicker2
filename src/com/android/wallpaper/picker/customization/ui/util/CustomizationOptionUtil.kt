@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import com.android.wallpaper.model.Screen
 
 /** This util creates the views for customization options. */
 interface CustomizationOptionUtil {
@@ -27,9 +28,10 @@ interface CustomizationOptionUtil {
     // Enum for customization options
     interface CustomizationOption
 
-    fun getLockOptionEntryViews(
+    fun getOptionEntries(
+        screen: Screen,
         optionContainer: LinearLayout,
-        layoutInflater: LayoutInflater
+        layoutInflater: LayoutInflater,
     ): List<Pair<CustomizationOption, View>>
 
     fun initBottomSheetContent(bottomSheetContainer: FrameLayout, layoutInflater: LayoutInflater)
