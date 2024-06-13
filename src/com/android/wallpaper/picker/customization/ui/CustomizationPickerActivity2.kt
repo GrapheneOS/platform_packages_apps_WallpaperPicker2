@@ -60,17 +60,6 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
     private var fullyCollapsed = false
 
     private val customizationPickerViewModel: CustomizationPickerViewModel2 by viewModels()
-    // The bottom navigation bar height
-    private val navBarHeight =
-        resources.getIdentifier("navigation_bar_height", "dimen", "android").let {
-            if (it > 0) {
-                resources.getDimensionPixelSize(it)
-            } else 0
-        }
-    private val optionEntryPadding =
-        resources.getDimensionPixelSize(R.dimen.customization_option_entry_padding)
-    private val optionEntryCornerRadiusLarge =
-        resources.getDimensionPixelSize(R.dimen.customization_option_entry_corner_radius_large)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,6 +108,13 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         val optionContainer = requireViewById<MotionLayout>(R.id.customization_option_container)
         // The collapsed header height should be updated when option container's height is known
         optionContainer.doOnPreDraw {
+            // The bottom navigation bar height
+            val navBarHeight =
+                resources.getIdentifier("navigation_bar_height", "dimen", "android").let {
+                    if (it > 0) {
+                        resources.getDimensionPixelSize(it)
+                    } else 0
+                }
             val collapsedHeaderHeight = rootView.height - optionContainer.height - navBarHeight
             if (
                 collapsedHeaderHeight >
@@ -189,7 +185,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
             )
         val optionEntries =
             customizationOptionUtil.getOptionEntries(screen, optionEntriesContainer, layoutInflater)
-        optionEntries.onEachIndexed { index, (_, view) ->
+        optionEntries.onEachIndexed { index, (option, view) ->
             val isFirst = index == 0
             val isLast = index == optionEntries.size - 1
             view.setBackgroundResource(
@@ -197,11 +193,6 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
                 else if (isLast) R.drawable.customization_option_entry_bottom_background
                 else R.drawable.customization_option_entry_background
             )
-            val startPadding = optionEntryPadding
-            val topPadding = if (isFirst) optionEntryCornerRadiusLarge else optionEntryPadding
-            val endPadding = optionEntryPadding
-            val bottomPadding = if (isLast) optionEntryCornerRadiusLarge else optionEntryPadding
-            view.setPaddingRelative(startPadding, topPadding, endPadding, bottomPadding)
             optionEntriesContainer.addView(view)
         }
         return optionEntries
@@ -239,10 +230,10 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
 
     private fun setCustomizePickerBottomSheetContent(
         motionContainer: MotionLayout,
-        screen: CustomizationOptionUtil.CustomizationOption,
+        option: CustomizationOption,
         onComplete: () -> Unit
     ) {
-        val view = customizationOptionUtil.getBottomSheetContent(screen) ?: return
+        val view = customizationOptionUtil.getBottomSheetContent(option) ?: return
 
         val customizationBottomSheet =
             requireViewById<FrameLayout>(R.id.customization_picker_bottom_sheet)
