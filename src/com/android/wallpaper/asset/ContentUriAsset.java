@@ -218,7 +218,7 @@ public final class ContentUriAsset extends StreamableAsset {
     }
 
     @Override
-    protected int getExifOrientation() {
+    public int getExifOrientation() {
         if (mExifOrientation != ExifInterfaceCompat.EXIF_ORIENTATION_UNKNOWN) {
             return mExifOrientation;
         }

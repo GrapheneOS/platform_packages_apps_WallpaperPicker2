@@ -32,14 +32,26 @@ object FullResImageViewUtil {
         displaySize: Point,
         cropRect: Rect?,
         isRtl: Boolean,
+        systemScale: Float,
     ): ScaleAndCenter {
         // Determine minimum zoom to fit maximum visible area of wallpaper on crop surface.
         // defaultRawWallpaperRect represents a brand new wallpaper preview with no crop hints.
+        // For full screen, the preview image container size has already been adjusted
+        // to preserve a boundary beyond the visible crop per comment at
+        // FullWallpaperPreviewBinder#adjustSizesForCropping.
+        // For small screen preview, we need to apply additional scaling since the
+        // container is the same size as the preview.
+        viewSize.apply {
+            // Preserve precision by not converting scale to int but the result
+            x = (x * systemScale).toInt()
+            y = (y * systemScale).toInt()
+        }
         val defaultRawWallpaperRect =
             WallpaperCropUtils.calculateVisibleRect(rawWallpaperSize, viewSize)
         val visibleRawWallpaperRect =
             cropRect?.let { fitCropRectToLayoutDirection(it, displaySize, isRtl) }
                 ?: defaultRawWallpaperRect
+
         val centerPosition =
             PointF(
                 visibleRawWallpaperRect.centerX().toFloat(),

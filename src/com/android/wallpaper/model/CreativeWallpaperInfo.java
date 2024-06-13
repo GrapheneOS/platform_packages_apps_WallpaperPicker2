@@ -474,6 +474,10 @@ public class CreativeWallpaperInfo extends LiveWallpaperInfo {
                 context, this, saveWallpaperUri, destination);
     }
 
+    public void setConfigPreviewUri(Uri configPreviewUri) {
+        mConfigPreviewUri = configPreviewUri;
+    }
+
     public Uri getConfigPreviewUri() {
         return mConfigPreviewUri;
     }

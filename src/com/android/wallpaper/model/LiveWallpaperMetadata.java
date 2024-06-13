@@ -18,6 +18,7 @@ package com.android.wallpaper.model;
 import android.app.WallpaperInfo;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.net.Uri;
 
 import androidx.annotation.Nullable;
 
@@ -28,8 +29,12 @@ import java.util.Map;
  * Live wallpaper-specific wrapper for user-facing wallpaper metadata.
  */
 public class LiveWallpaperMetadata extends WallpaperMetadata {
-    public LiveWallpaperMetadata(android.app.WallpaperInfo wallpaperComponent) {
+    @Nullable private final Uri mPreviewUri;
+
+    public LiveWallpaperMetadata(android.app.WallpaperInfo wallpaperComponent,
+            @Nullable Uri previewUri) {
         super(null, null, null, wallpaperComponent, null);
+        mPreviewUri = previewUri;
     }
 
     @Override
@@ -56,5 +61,10 @@ public class LiveWallpaperMetadata extends WallpaperMetadata {
     @Override
     public Map<Point, Rect> getWallpaperCropHints() {
         throw new UnsupportedOperationException("Not implemented for live wallpapers");
+    }
+
+    @Nullable
+    public Uri getPreviewUri() {
+        return mPreviewUri;
     }
 }

@@ -38,4 +38,6 @@ class DefaultLiveWallpaperDownloader @Inject constructor() : LiveWallpaperDownlo
     override suspend fun downloadWallpaper(): LiveWallpaperDownloadResultModel? {
         return null
     }
+
+    override fun cancelDownloadWallpaper(): Boolean = false
 }

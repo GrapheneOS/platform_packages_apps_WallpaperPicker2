@@ -265,10 +265,10 @@ constructor(
         MutableStateFlow<ImageEffectDialogViewModel?> =
         MutableStateFlow(null)
     val imageEffectConfirmExitDialogViewModel = _imageEffectConfirmExitDialogViewModel.asStateFlow()
-    val handleOnBackPressed: Flow<(() -> Unit)?> =
-        combine(imageEffectFloatingSheetViewModel, interactor.imageEffect) { viewModel, effect ->
-            if (viewModel?.status == DOWNLOADING) {
-                {
+    val handleOnBackPressed: Flow<(() -> Boolean)?> =
+        combine(imageEffectFloatingSheetViewModel, interactor.imageEffect, isDownloading) { viewModel, effect, isDownloading ->
+            when {
+                viewModel?.status == DOWNLOADING -> { ->
                     _imageEffectConfirmExitDialogViewModel.value =
                         ImageEffectDialogViewModel(
                             onDismiss = { _imageEffectConfirmExitDialogViewModel.value = null },
@@ -277,9 +277,12 @@ constructor(
                                 effect?.let { interactor.interruptEffectsModelDownload(it) }
                             },
                         )
+                    true
                 }
-            } else {
-                null
+                isDownloading -> { ->
+                    interactor.cancelDownloadWallpaper()
+                }
+                else -> null
             }
         }
 

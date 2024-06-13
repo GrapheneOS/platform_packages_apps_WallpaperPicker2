@@ -22,7 +22,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <ImageView
         android:id="@+id/icon"
@@ -65,6 +67,7 @@
         android:gravity="center_vertical|end"
         android:layout_marginTop="32dp"
         android:divider="@drawable/horizontal_divider_10dp"
-        android:showDividers="middle" />
-
+        android:showDividers="middle"
+        android:clipToPadding="false"
+        android:clipChildren="false" />
 </LinearLayout>

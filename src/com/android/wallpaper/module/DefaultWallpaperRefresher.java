@@ -18,23 +18,32 @@ package com.android.wallpaper.module;
 import static android.app.WallpaperManager.FLAG_LOCK;
 import static android.app.WallpaperManager.FLAG_SYSTEM;
 
+import android.annotation.Nullable;
 import android.annotation.SuppressLint;
 import android.app.WallpaperManager;
+import android.content.ContentProviderClient;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.os.RemoteException;
 import android.util.Log;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.asset.BitmapUtils;
+import com.android.wallpaper.model.CreativeCategory;
 import com.android.wallpaper.model.LiveWallpaperMetadata;
+import com.android.wallpaper.model.WallpaperInfoContract;
 import com.android.wallpaper.model.WallpaperMetadata;
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient;
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination;
 import com.android.wallpaper.util.DisplayUtils;
 
 import java.io.FileInputStream;
@@ -132,8 +141,10 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                         /* wallpaperComponent= */ null,
                         getCurrentWallpaperCropHints(FLAG_SYSTEM)));
             } else {
-                wallpaperMetadatas.add(
-                        new LiveWallpaperMetadata(mWallpaperManager.getWallpaperInfo()));
+                android.app.WallpaperInfo info = mWallpaperManager.getWallpaperInfo();
+                Uri previewUri = getCreativePreviewUri(mAppContext, info,
+                        WallpaperDestination.HOME);
+                wallpaperMetadatas.add(new LiveWallpaperMetadata(info, previewUri));
             }
 
             // Return only home metadata if pre-N device or lock screen wallpaper is not explicitly
@@ -157,8 +168,10 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                         /* wallpaperComponent= */ null,
                         getCurrentWallpaperCropHints(FLAG_LOCK)));
             } else {
-                wallpaperMetadatas.add(new LiveWallpaperMetadata(
-                        mWallpaperManager.getWallpaperInfo(FLAG_LOCK)));
+                android.app.WallpaperInfo info = mWallpaperManager.getWallpaperInfo(FLAG_LOCK);
+                Uri previewUri = getCreativePreviewUri(mAppContext, info,
+                        WallpaperDestination.LOCK);
+                wallpaperMetadatas.add(new LiveWallpaperMetadata(info, previewUri));
             }
 
             return wallpaperMetadatas;
@@ -378,5 +391,43 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                     .getInternalDisplaySizes(/* allDimensions= */ true);
             return mWallpaperClient.getCurrentCropHints(displaySizes, which);
         }
+    }
+
+    // Queries a live wallpaper for its preview Uri, and returns it if it exists.
+    private static @Nullable Uri getCreativePreviewUri(Context context,
+            android.app.WallpaperInfo info,
+            WallpaperDestination destination) {
+        Bundle metaData = info.getServiceInfo().metaData;
+        String uri = metaData.getString(
+                CreativeCategory.KEY_WALLPAPER_SAVE_CREATIVE_WALLPAPER_CURRENT);
+        if (uri == null) {
+            return null;
+        }
+        Uri currentAssetsUri = Uri.parse(uri);
+        try (ContentProviderClient client = context.getContentResolver()
+                .acquireContentProviderClient(currentAssetsUri.getAuthority())) {
+            if (client == null) {
+                return null;
+            }
+            try (Cursor cursor = client.query(currentAssetsUri, null, null, null, null)) {
+                if (cursor == null || !cursor.moveToFirst()) {
+                    return null;
+                }
+                do {
+                    String dest = cursor.getString(
+                            cursor.getColumnIndex(WallpaperInfoContract.CURRENT_DESTINATION));
+                    Uri previewUri = Uri.parse(cursor.getString(
+                            cursor.getColumnIndex(
+                                    WallpaperInfoContract.CURRENT_CONFIG_PREVIEW_URI)));
+                    if ((dest.equals("home") && destination == WallpaperDestination.HOME)
+                            || (dest.equals("lock") && destination == WallpaperDestination.LOCK)) {
+                        return previewUri;
+                    }
+                } while (cursor.moveToNext());
+            } catch (RemoteException e) {
+                Log.w(TAG, "Error retrieving current creative asset id: ", e);
+            }
+        }
+        return null;
     }
 }

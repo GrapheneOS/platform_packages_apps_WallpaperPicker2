@@ -144,22 +144,17 @@ object StaticWallpaperPreviewBinder {
                     displaySize,
                     cropHint,
                     isRtl,
-                )
-                .let { scaleAndCenter ->
-                    // For full screen, the preview image container size has already been adjusted
-                    // to preserve a boundary beyond the visible crop per comment at
-                    // FullWallpaperPreviewBinder#adjustSizesForCropping.
-                    // For small screen preview, we need to apply additional scaling since the
-                    // container is the same size as the preview.
-                    val scale =
+                    systemScale =
                         if (isFullScreen) 1f
                         else
                             WallpaperCropUtils.getSystemWallpaperMaximumScale(
-                                context.applicationContext
-                            )
-                    minScale = scaleAndCenter.minScale * scale
+                                context.applicationContext,
+                            ),
+                )
+                .let { scaleAndCenter ->
+                    minScale = scaleAndCenter.minScale
                     maxScale = scaleAndCenter.maxScale
-                    setScaleAndCenter(scaleAndCenter.defaultScale * scale, scaleAndCenter.center)
+                    setScaleAndCenter(scaleAndCenter.defaultScale, scaleAndCenter.center)
                 }
         }
     }

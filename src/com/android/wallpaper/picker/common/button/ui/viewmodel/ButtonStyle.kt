@@ -17,18 +17,23 @@
 
 package com.android.wallpaper.picker.common.button.ui.viewmodel
 
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.annotation.StyleRes
 import com.android.wallpaper.R
 
 sealed class ButtonStyle(
-    @StyleRes open val styleResourceId: Int,
+    @ColorRes open val textColorRes: Int,
+    @DrawableRes open val backgroundDrawableRes: Int,
 ) {
-    object Primary :
+    data object Primary :
         ButtonStyle(
-            styleResourceId = R.style.DialogButton_Primary,
+            textColorRes = R.color.system_on_primary,
+            backgroundDrawableRes = R.drawable.primary_dialog_button_background,
         )
-    object Secondary :
+    data object Secondary :
         ButtonStyle(
-            styleResourceId = R.style.DialogButton_Secondary,
+            textColorRes = R.color.system_on_surface,
+            backgroundDrawableRes = R.drawable.secondary_dialog_button_background,
         )
 }

@@ -197,7 +197,7 @@ public abstract class StreamableAsset extends Asset {
      * Gets the EXIF orientation value of the asset. This method should only be called off the main UI
      * thread.
      */
-    protected int getExifOrientation() {
+    public int getExifOrientation() {
         // By default, assume that the EXIF orientation is normal (i.e., bitmap is rotated 0 degrees
         // from how it should be rendered to a viewer).
         return ExifInterface.ORIENTATION_NORMAL;

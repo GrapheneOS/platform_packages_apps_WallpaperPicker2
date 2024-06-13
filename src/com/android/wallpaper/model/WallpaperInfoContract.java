@@ -46,5 +46,6 @@ public final class WallpaperInfoContract {
     public static final String WALLPAPER_EFFECTS_BUTTON_LABEL = "wallpaper_effects_button_label";
     public static final String WALLPAPER_EFFECTS_TOGGLE_URI = "wallpaper_effects_toggle_uri";
     public static final String WALLPAPER_EFFECTS_TOGGLE_ID = "wallpaper_effects_toggle_id";
-
+    public static final String CURRENT_DESTINATION = "destination";
+    public static final String CURRENT_CONFIG_PREVIEW_URI = "wallpaper_config_preview_uri";
 }

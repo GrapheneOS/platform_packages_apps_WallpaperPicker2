@@ -35,6 +35,7 @@ import android.graphics.Rect
 import android.net.Uri
 import android.os.Looper
 import android.util.Log
+import androidx.exifinterface.media.ExifInterface
 import com.android.app.tracing.TraceUtils.traceAsync
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.asset.BitmapUtils
@@ -164,7 +165,7 @@ constructor(
                 } ?: emptyMap()
             val managerId =
                 wallpaperManager.setStaticWallpaperToSystem(
-                    asset.getStream(),
+                    asset.getStreamOrFromBitmap(bitmap),
                     bitmap,
                     cropHintsWithParallax,
                     destination,
@@ -666,10 +667,14 @@ constructor(
         } ?: cropHint
     }
 
-    private suspend fun Asset.getStream(): InputStream? =
+    private suspend fun Asset.getStreamOrFromBitmap(bitmap: Bitmap): InputStream? =
         suspendCancellableCoroutine { k: CancellableContinuation<InputStream?> ->
             if (this is StreamableAsset) {
-                fetchInputStream { k.resumeWith(Result.success(it)) }
+                if (exifOrientation != ExifInterface.ORIENTATION_NORMAL) {
+                    k.resumeWith(Result.success(BitmapUtils.bitmapToInputStream(bitmap)))
+                } else {
+                    fetchInputStream { k.resumeWith(Result.success(it)) }
+                }
             } else {
                 k.resumeWith(Result.success(null))
             }

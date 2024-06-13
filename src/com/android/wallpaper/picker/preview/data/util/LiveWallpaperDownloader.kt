@@ -45,4 +45,10 @@ interface LiveWallpaperDownloader {
     fun cleanup()
 
     suspend fun downloadWallpaper(): LiveWallpaperDownloadResultModel?
+
+
+    /**
+     * @return True if there is a confirm cancel download dialog from the download service.
+     */
+    fun cancelDownloadWallpaper(): Boolean
 }

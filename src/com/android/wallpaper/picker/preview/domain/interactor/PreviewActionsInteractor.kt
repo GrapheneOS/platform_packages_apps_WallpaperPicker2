@@ -76,6 +76,8 @@ constructor(
         return wallpaperModel
     }
 
+    fun cancelDownloadWallpaper(): Boolean = wallpaperPreviewRepository.cancelDownloadWallpaper()
+
     fun startEffectsModelDownload(effect: Effect) {
         imageEffectsRepository.startEffectsModelDownload(effect)
     }

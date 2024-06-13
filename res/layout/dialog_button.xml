@@ -15,8 +15,9 @@
   ~
   -->
 
-<TextView
+<Button
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/text"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/touch_target_min_height" />
+

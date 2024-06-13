@@ -51,6 +51,8 @@ public class CreativeCategory extends WallpaperCategory {
 
     public static final String KEY_WALLPAPER_SAVE_CREATIVE_CATEGORY_WALLPAPER =
             "android.service.wallpaper.savewallpaper";
+    public static final String KEY_WALLPAPER_SAVE_CREATIVE_WALLPAPER_CURRENT =
+            "android.service.wallpaper.currentwallpapers";
 
     /** Return true for CreativeCategories since we support user generated wallpapers here. */
     @Override

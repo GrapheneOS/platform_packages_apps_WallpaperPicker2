@@ -17,13 +17,11 @@
 
 package com.android.wallpaper.picker.common.button.ui.viewbinder
 
-import android.graphics.Rect
-import android.view.ContextThemeWrapper
+import android.content.Context
 import android.view.LayoutInflater
-import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Button
 import androidx.annotation.LayoutRes
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.common.button.ui.viewmodel.ButtonViewModel
@@ -32,51 +30,21 @@ import com.android.wallpaper.picker.common.text.ui.viewbinder.TextViewBinder
 object ButtonViewBinder {
     /** Returns a newly-created [View] that's already bound to the given [ButtonViewModel]. */
     fun create(
+        context: Context,
         parent: ViewGroup,
         viewModel: ButtonViewModel,
         @LayoutRes buttonLayoutResourceId: Int = R.layout.dialog_button,
     ): View {
-        val view =
-            LayoutInflater.from(
-                    ContextThemeWrapper(
-                        parent.context,
-                        viewModel.style.styleResourceId,
-                    )
-                )
-                .inflate(
-                    buttonLayoutResourceId,
-                    parent,
-                    false,
-                )
-
-        addTouchPadding(view)
-
-        val text: TextView = view.requireViewById(R.id.text)
-        view.setOnClickListener { viewModel.onClicked?.invoke() }
+        val button: Button = LayoutInflater.from(context).inflate(buttonLayoutResourceId, parent, false) as Button
+        button.setTextColor(parent.resources.getColor(viewModel.style.textColorRes, null))
+        button.setBackgroundResource(viewModel.style.backgroundDrawableRes)
+        button.setOnClickListener { viewModel.onClicked?.invoke() }
 
         TextViewBinder.bind(
-            view = text,
+            view = button,
             viewModel = viewModel.text,
         )
 
-        return view
-    }
-
-    /**
-     * Adds touch padding to the top and bottom of the view for accessibility.
-     */
-    private fun addTouchPadding(view: View) {
-        view.post {
-            val touchPadding =
-                view
-                    .resources
-                    .getDimensionPixelSize(R.dimen.shortcut_error_dialog_button_touch_padding)
-            val touchRect = Rect().apply {
-                view.getHitRect(this)
-                top -= touchPadding
-                bottom += touchPadding
-            }
-            view.touchDelegate = TouchDelegate(touchRect, view)
-        }
+        return button
     }
 }

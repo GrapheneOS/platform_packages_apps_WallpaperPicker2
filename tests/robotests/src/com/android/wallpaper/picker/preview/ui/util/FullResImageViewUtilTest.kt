@@ -24,6 +24,7 @@ class FullResImageViewUtilTest {
                     displaySize = Point(screenWidth, screenHeight),
                     cropRect = null,
                     isRtl = false,
+                    systemScale = 1F,
                 )
             )
             .isEqualTo(
@@ -48,6 +49,7 @@ class FullResImageViewUtilTest {
                     displaySize = Point(screenWidth, screenHeight),
                     cropRect = null,
                     isRtl = false,
+                    systemScale = 1F,
                 )
             )
             .isEqualTo(
@@ -72,6 +74,7 @@ class FullResImageViewUtilTest {
                     displaySize = Point(screenWidth, screenHeight),
                     cropRect = null,
                     isRtl = false,
+                    systemScale = 1F,
                 )
             )
             .isEqualTo(
@@ -82,5 +85,25 @@ class FullResImageViewUtilTest {
                     PointF(480F, 480F),
                 )
             )
+    }
+
+    @Test
+    fun getScaleAndCenter_wallpaperSmallerThanScreenEightTimes_getsSameScales() {
+        val screenWidth = 1080
+        val screenHeight = 1920
+        val wallpaperSize = Point(240, 240)
+
+        val scaleAndCenter = FullResImageViewUtil.getScaleAndCenter(
+                viewSize = Point(screenWidth, screenHeight),
+                rawWallpaperSize = wallpaperSize,
+                displaySize = Point(screenWidth, screenHeight),
+                cropRect = null,
+                isRtl = false,
+                systemScale = 1F,
+        )
+
+        assertThat(scaleAndCenter.defaultScale).isEqualTo(8F)
+        assertThat(scaleAndCenter.minScale).isEqualTo(8F)
+        assertThat(scaleAndCenter.maxScale).isEqualTo(8F)
     }
 }

@@ -306,7 +306,12 @@ object PreviewActionsBinder {
                             val callback =
                                 object : OnBackPressedCallback(true) {
                                         override fun handleOnBackPressed() {
-                                            handleOnBackPressed()
+                                            val handled = handleOnBackPressed()
+                                            if(!handled) {
+                                                onBackPressedCallback?.remove()
+                                                onBackPressedCallback = null
+                                                activity.onBackPressedDispatcher.onBackPressed()
+                                            }
                                         }
                                     }
                                     .also { onBackPressedCallback = it }

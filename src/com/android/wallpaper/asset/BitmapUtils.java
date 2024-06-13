@@ -19,6 +19,12 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 
+import androidx.annotation.WorkerThread;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+
 /**
  * Collection of static utility methods for decoding and processing Bitmaps.
  */
@@ -116,5 +122,20 @@ public class BitmapUtils {
         return (totalVerticalPadding == 0)
                 ? DEFAULT_CENTER_ALIGNMENT
                 : paddingTop / ((float) paddingTop + paddingBottom);
+    }
+
+    /**
+     * Converts the bitmap into an input stream with 100% quality.
+     *
+     * Should not be called from the main thread.
+     */
+    @WorkerThread
+    public static InputStream bitmapToInputStream(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        if (bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)) {
+            return new ByteArrayInputStream(outputStream.toByteArray());
+        } else {
+            return null;
+        }
     }
 }

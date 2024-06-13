@@ -43,4 +43,6 @@ class FakeLiveWallpaperDownloader @Inject constructor() : LiveWallpaperDownloade
     override suspend fun downloadWallpaper(): LiveWallpaperDownloadResultModel? {
         return downloadResult.await()
     }
+
+    override fun cancelDownloadWallpaper(): Boolean = false
 }

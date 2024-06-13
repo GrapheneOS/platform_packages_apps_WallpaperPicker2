@@ -103,6 +103,7 @@ object DialogViewBinder {
         viewModel.buttons.forEach { buttonViewModel ->
             buttonContainer.addView(
                 ButtonViewBinder.create(
+                    context = context,
                     parent = buttonContainer,
                     viewModel =
                         buttonViewModel.copy(

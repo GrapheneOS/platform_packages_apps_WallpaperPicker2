@@ -78,4 +78,6 @@ constructor(
                 result
             }
         }
+
+    fun cancelDownloadWallpaper(): Boolean  = liveWallpaperDownloader.cancelDownloadWallpaper()
 }
