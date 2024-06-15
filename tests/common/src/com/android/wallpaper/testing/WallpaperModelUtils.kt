@@ -26,7 +26,9 @@ import android.net.Uri
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.picker.data.ColorInfo
 import com.android.wallpaper.picker.data.CommonWallpaperData
+import com.android.wallpaper.picker.data.CreativeWallpaperData
 import com.android.wallpaper.picker.data.Destination
+import com.android.wallpaper.picker.data.DownloadableWallpaperData
 import com.android.wallpaper.picker.data.ImageWallpaperData
 import com.android.wallpaper.picker.data.LiveWallpaperData
 import com.android.wallpaper.picker.data.StaticWallpaperData
@@ -58,6 +60,7 @@ class WallpaperModelUtils {
             colors: WallpaperColors = DEFAULT_COLORS,
             asset: Asset = DEFAULT_ASSET,
             imageWallpaperUri: Uri = Uri.EMPTY,
+            downloadableWallpaperData: DownloadableWallpaperData? = null,
             cropHints: Map<Point, Rect> = emptyMap(),
         ): WallpaperModel.StaticWallpaperModel {
             return WallpaperModel.StaticWallpaperModel(
@@ -90,7 +93,7 @@ class WallpaperModelUtils {
                     ),
                 imageWallpaperData = ImageWallpaperData(imageWallpaperUri),
                 networkWallpaperData = null,
-                downloadableWallpaperData = null,
+                downloadableWallpaperData = downloadableWallpaperData,
             )
         }
 
@@ -107,6 +110,7 @@ class WallpaperModelUtils {
             isTitleVisible: Boolean = true,
             isApplied: Boolean = true,
             effectNames: String? = null,
+            creativeWallpaperData: CreativeWallpaperData? = null,
         ): WallpaperModel.LiveWallpaperModel {
             return WallpaperModel.LiveWallpaperModel(
                 commonWallpaperData =
@@ -137,7 +141,7 @@ class WallpaperModelUtils {
                         effectNames != null,
                         effectNames
                     ),
-                creativeWallpaperData = null,
+                creativeWallpaperData = creativeWallpaperData,
                 internalLiveWallpaperData = null,
             )
         }
