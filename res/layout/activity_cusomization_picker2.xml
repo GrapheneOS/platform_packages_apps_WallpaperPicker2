@@ -13,75 +13,94 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<androidx.constraintlayout.motion.widget.MotionLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/picker_motion_layout"
+    android:id="@+id/root_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layoutDescription="@xml/customization_picker_layout_scene">
+    android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/preview_header"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/customization_picker_preview_header_expanded_height"
+    <include
+        android:id="@+id/toolbar_container"
+        layout="@layout/section_header_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/preview_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/bottom_scroll_view"
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/picker_motion_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/preview_header"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layoutDescription="@xml/customization_picker_layout_scene">
 
-        <androidx.constraintlayout.motion.widget.MotionLayout
-            android:id="@+id/customization_option_container"
-            android:layout_width="match_parent"
+        <FrameLayout
+            android:id="@+id/preview_header"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/customization_picker_preview_header_expanded_height"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/preview_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/bottom_scroll_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/preview_header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.motion.widget.MotionLayout
+                android:id="@+id/customization_option_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/customization_option_container_horizontal_padding"
+                app:layoutDescription="@xml/customization_option_container_layout_scene">
+
+                <LinearLayout
+                    android:id="@+id/lock_customization_option_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:showDividers="middle"
+                    android:divider="@drawable/customization_option_entry_divider"
+                    android:orientation="vertical" />
+
+                <LinearLayout
+                    android:id="@+id/home_customization_option_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:showDividers="middle"
+                    android:divider="@drawable/customization_option_entry_divider"
+                    android:orientation="vertical" />
+            </androidx.constraintlayout.motion.widget.MotionLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- Guideline for the preview in the secondary screen -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/preview_guideline_in_secondary_screen"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/customization_option_container_horizontal_padding"
-            app:layoutDescription="@xml/customization_option_container_layout_scene">
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="0dp" />
 
-            <LinearLayout
-                android:id="@+id/lock_customization_option_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:showDividers="middle"
-                android:divider="@drawable/customization_option_entry_divider"
-                android:orientation="vertical" />
-
-            <LinearLayout
-                android:id="@+id/home_customization_option_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:showDividers="middle"
-                android:divider="@drawable/customization_option_entry_divider"
-                android:orientation="vertical" />
-        </androidx.constraintlayout.motion.widget.MotionLayout>
-    </androidx.core.widget.NestedScrollView>
-
-    <!-- Guideline for the preview in the secondary screen -->
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/preview_guideline_in_secondary_screen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="0dp" />
-
-    <FrameLayout
-        android:id="@+id/customization_picker_bottom_sheet"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="parent" />
-</androidx.constraintlayout.motion.widget.MotionLayout>
+        <FrameLayout
+            android:id="@+id/customization_picker_bottom_sheet"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="parent" />
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

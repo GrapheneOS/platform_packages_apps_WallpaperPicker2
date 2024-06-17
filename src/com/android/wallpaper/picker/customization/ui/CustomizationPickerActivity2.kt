@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.Toolbar
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -47,6 +48,7 @@ import com.android.wallpaper.picker.customization.ui.view.adapter.PreviewPagerAd
 import com.android.wallpaper.picker.customization.ui.view.transformer.PreviewPagerPageTransformer
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import com.android.wallpaper.util.ActivityUtils
+import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -83,6 +85,8 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
 
         setContentView(R.layout.activity_cusomization_picker2)
         WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
+
+        setupToolbar(requireViewById(R.id.toolbar_container))
 
         val rootView = requireViewById<MotionLayout>(R.id.picker_motion_layout)
 
@@ -171,6 +175,13 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
     override fun onDestroy() {
         customizationOptionUtil.onDestroy()
         super.onDestroy()
+    }
+
+    private fun setupToolbar(toolbarContainer: AppBarLayout) {
+        toolbarContainer.setBackgroundColor(Color.TRANSPARENT)
+        val toolbar = toolbarContainer.requireViewById<Toolbar>(R.id.toolbar)
+        toolbar.title = getString(R.string.app_name)
+        toolbar.setBackgroundColor(Color.TRANSPARENT)
     }
 
     private fun initCustomizationOptionEntries(
