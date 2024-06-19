@@ -42,7 +42,6 @@ import com.android.wallpaper.picker.di.modules.PreviewUtilsModule.LockScreenPrev
 import com.android.wallpaper.picker.preview.PreviewTestActivity
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
-import com.android.wallpaper.picker.preview.data.util.FakeLiveWallpaperDownloader
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
 import com.android.wallpaper.picker.preview.shared.model.ImageEffectsModel
 import com.android.wallpaper.testing.FakeContentProvider
@@ -50,6 +49,7 @@ import com.android.wallpaper.testing.FakeDisplaysProvider
 import com.android.wallpaper.testing.FakeDisplaysProvider.Companion.FOLDABLE_UNFOLDED_LAND
 import com.android.wallpaper.testing.FakeDisplaysProvider.Companion.HANDHELD
 import com.android.wallpaper.testing.FakeImageEffectsRepository
+import com.android.wallpaper.testing.FakeLiveWallpaperDownloader
 import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestWallpaperPreferences

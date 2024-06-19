@@ -19,9 +19,10 @@ package com.android.wallpaper.picker.preview.domain.interactor
 import android.content.Context
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.preview.data.repository.CreativeEffectsRepository
+import com.android.wallpaper.picker.preview.data.repository.DownloadableWallpaperRepository
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
-import com.android.wallpaper.picker.preview.data.util.FakeLiveWallpaperDownloader
 import com.android.wallpaper.testing.FakeImageEffectsRepository
+import com.android.wallpaper.testing.FakeLiveWallpaperDownloader
 import com.android.wallpaper.testing.ShadowWallpaperInfo
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestWallpaperPreferences
@@ -55,6 +56,7 @@ class PreviewActionsInteractorTest {
     private lateinit var previewActionsInteractor: PreviewActionsInteractor
     private lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
     private lateinit var creativeEffectsRepository: CreativeEffectsRepository
+    private lateinit var downloadableWallpaperRepository: DownloadableWallpaperRepository
 
     @Inject lateinit var testDispatcher: TestDispatcher
     @Inject @ApplicationContext lateinit var appContext: Context
@@ -70,18 +72,19 @@ class PreviewActionsInteractorTest {
         InjectorProvider.setInjector(testInjector)
         Dispatchers.setMain(testDispatcher)
 
-        wallpaperPreviewRepository =
-            WallpaperPreviewRepository(
+        wallpaperPreviewRepository = WallpaperPreviewRepository(wallpaperPreferences)
+        downloadableWallpaperRepository =
+            DownloadableWallpaperRepository(
                 liveWallpaperDownloader,
-                wallpaperPreferences,
-                testDispatcher
+                testDispatcher,
             )
         creativeEffectsRepository = CreativeEffectsRepository(appContext, testDispatcher)
         previewActionsInteractor =
             PreviewActionsInteractor(
                 wallpaperPreviewRepository,
                 imageEffectsRepository,
-                creativeEffectsRepository
+                creativeEffectsRepository,
+                downloadableWallpaperRepository,
             )
     }
 

@@ -33,9 +33,9 @@ import com.android.wallpaper.picker.customization.data.repository.WallpaperRepos
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import com.android.wallpaper.picker.preview.PreviewTestActivity
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
-import com.android.wallpaper.picker.preview.data.util.FakeLiveWallpaperDownloader
 import com.android.wallpaper.picker.preview.domain.interactor.WallpaperPreviewInteractor
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
+import com.android.wallpaper.testing.FakeLiveWallpaperDownloader
 import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.ShadowWallpaperInfo
 import com.android.wallpaper.testing.TestInjector
@@ -112,12 +112,7 @@ class StaticWallpaperPreviewViewModelTest {
                 wallpaperPreferences,
                 testDispatcher,
             )
-        wallpaperPreviewRepository =
-            WallpaperPreviewRepository(
-                liveWallpaperDownloader,
-                wallpaperPreferences,
-                testDispatcher,
-            )
+        wallpaperPreviewRepository = WallpaperPreviewRepository(wallpaperPreferences)
         interactor =
             WallpaperPreviewInteractor(
                 wallpaperPreviewRepository,

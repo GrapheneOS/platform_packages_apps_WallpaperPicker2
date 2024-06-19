@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.preview.data.util
+package com.android.wallpaper.testing
 
 import android.app.Activity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import com.android.wallpaper.picker.data.WallpaperModel
+import com.android.wallpaper.picker.preview.data.util.LiveWallpaperDownloader
 import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultModel
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,7 +28,10 @@ import kotlinx.coroutines.CompletableDeferred
 
 @Singleton
 class FakeLiveWallpaperDownloader @Inject constructor() : LiveWallpaperDownloader {
+
     private val downloadResult = CompletableDeferred<LiveWallpaperDownloadResultModel?>()
+
+    var isDownloadWallpaperCanceled = false
 
     fun setWallpaperDownloadResult(result: LiveWallpaperDownloadResultModel?) =
         downloadResult.complete(result)
@@ -44,5 +48,8 @@ class FakeLiveWallpaperDownloader @Inject constructor() : LiveWallpaperDownloade
         return downloadResult.await()
     }
 
-    override fun cancelDownloadWallpaper(): Boolean = false
+    override fun cancelDownloadWallpaper(): Boolean {
+        isDownloadWallpaperCanceled = true
+        return false
+    }
 }

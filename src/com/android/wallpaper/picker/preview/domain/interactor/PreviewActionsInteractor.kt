@@ -20,8 +20,10 @@ import com.android.wallpaper.effects.Effect
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.data.repository.CreativeEffectsRepository
+import com.android.wallpaper.picker.preview.data.repository.DownloadableWallpaperRepository
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
+import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultCode
 import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultModel
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -39,6 +41,7 @@ constructor(
     private val wallpaperPreviewRepository: WallpaperPreviewRepository,
     private val imageEffectsRepository: ImageEffectsRepository,
     private val creativeEffectsRepository: CreativeEffectsRepository,
+    private val downloadableWallpaperRepository: DownloadableWallpaperRepository,
 ) {
     val wallpaperModel: StateFlow<WallpaperModel?> = wallpaperPreviewRepository.wallpaperModel
 
@@ -71,12 +74,21 @@ constructor(
 
     suspend fun downloadWallpaper(): LiveWallpaperDownloadResultModel? {
         _isDownloadingWallpaper.value = true
-        val wallpaperModel = wallpaperPreviewRepository.downloadWallpaper()
+        val resultModel = downloadableWallpaperRepository.downloadWallpaper()
+        if (
+            resultModel?.code == LiveWallpaperDownloadResultCode.SUCCESS &&
+                resultModel.wallpaperModel != null
+        ) {
+            // If download success, update wallpaper preview repo's WallpaperModel to render the
+            // live wallpaper.
+            wallpaperPreviewRepository.setWallpaperModel(resultModel.wallpaperModel)
+        }
         _isDownloadingWallpaper.value = false
-        return wallpaperModel
+        return resultModel
     }
 
-    fun cancelDownloadWallpaper(): Boolean = wallpaperPreviewRepository.cancelDownloadWallpaper()
+    fun cancelDownloadWallpaper(): Boolean =
+        downloadableWallpaperRepository.cancelDownloadWallpaper()
 
     fun startEffectsModelDownload(effect: Effect) {
         imageEffectsRepository.startEffectsModelDownload(effect)
