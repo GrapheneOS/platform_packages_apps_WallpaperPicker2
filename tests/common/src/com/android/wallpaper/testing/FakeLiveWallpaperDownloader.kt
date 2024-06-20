@@ -21,35 +21,60 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.data.util.LiveWallpaperDownloader
-import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultModel
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 @Singleton
 class FakeLiveWallpaperDownloader @Inject constructor() : LiveWallpaperDownloader {
 
-    private val downloadResult = CompletableDeferred<LiveWallpaperDownloadResultModel?>()
+    private var liveWallpaperDownloadListener:
+        LiveWallpaperDownloader.LiveWallpaperDownloadListener? =
+        null
 
-    var isDownloadWallpaperCanceled = false
+    fun proceedToDownloadSuccess(result: WallpaperModel.LiveWallpaperModel) {
+        liveWallpaperDownloadListener?.onDownloadSuccess(result)
+    }
 
-    fun setWallpaperDownloadResult(result: LiveWallpaperDownloadResultModel?) =
-        downloadResult.complete(result)
+    fun proceedToDownloadFailed() {
+        liveWallpaperDownloadListener?.onDownloadFailed()
+    }
+
+    private val _isDownloaderReady = MutableStateFlow(false)
+    override val isDownloaderReady: Flow<Boolean> = _isDownloaderReady.asStateFlow()
+
+    /**
+     * This is to simulate [initiateDownloadableService] without passing [Activity], for testing
+     * purpose.
+     */
+    fun initiateDownloadableServiceByPass() {
+        _isDownloaderReady.value = true
+    }
 
     override fun initiateDownloadableService(
         activity: Activity,
         wallpaperData: WallpaperModel.StaticWallpaperModel,
         intentSenderLauncher: ActivityResultLauncher<IntentSenderRequest>
-    ) {}
+    ) {
+        _isDownloaderReady.value = true
+    }
 
     override fun cleanup() {}
 
-    override suspend fun downloadWallpaper(): LiveWallpaperDownloadResultModel? {
-        return downloadResult.await()
+    override fun downloadWallpaper(
+        listener: LiveWallpaperDownloader.LiveWallpaperDownloadListener
+    ) {
+        liveWallpaperDownloadListener = listener
+        // Please call proceedToDownloadSuccess() and proceedToDownloadFailed() in the test to
+        // simulate download resolutions.
     }
 
+    var isCancelDownloadWallpaperCalled = false
+
     override fun cancelDownloadWallpaper(): Boolean {
-        isDownloadWallpaperCanceled = true
+        isCancelDownloadWallpaperCalled = true
         return false
     }
 }

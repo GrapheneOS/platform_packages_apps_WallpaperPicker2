@@ -27,7 +27,6 @@ import android.service.wallpaper.WallpaperSettingsActivity
 import com.android.wallpaper.effects.Effect
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
 import com.android.wallpaper.picker.data.CreativeWallpaperData
-import com.android.wallpaper.picker.data.DownloadableWallpaperData
 import com.android.wallpaper.picker.data.LiveWallpaperData
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
@@ -40,10 +39,12 @@ import com.android.wallpaper.picker.preview.data.repository.ImageEffectsReposito
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_DOWNLOAD_READY
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_READY
 import com.android.wallpaper.picker.preview.domain.interactor.PreviewActionsInteractor
+import com.android.wallpaper.picker.preview.shared.model.DownloadStatus
 import com.android.wallpaper.picker.preview.shared.model.ImageEffectsModel
 import com.android.wallpaper.picker.preview.ui.util.LiveWallpaperDeleteUtil
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.CUSTOMIZE
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.DELETE
+import com.android.wallpaper.picker.preview.ui.viewmodel.Action.DOWNLOAD
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.EDIT
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.EFFECTS
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.INFORMATION
@@ -117,20 +118,16 @@ constructor(
         }
 
     /** [DOWNLOAD] */
-    private val downloadableWallpaperData: Flow<DownloadableWallpaperData?> =
-        interactor.wallpaperModel.map {
-            (it as? WallpaperModel.StaticWallpaperModel)?.downloadableWallpaperData
+    val isDownloadVisible: Flow<Boolean> =
+        interactor.downloadableWallpaperModel.map {
+            it.status == DownloadStatus.READY_TO_DOWNLOAD || it.status == DownloadStatus.DOWNLOADING
         }
-    val isDownloadVisible: Flow<Boolean> = downloadableWallpaperData.map { it != null }
-
-    val isDownloading: Flow<Boolean> = interactor.isDownloadingWallpaper
-
+    val isDownloading: Flow<Boolean> =
+        interactor.downloadableWallpaperModel.map { it.status == DownloadStatus.DOWNLOADING }
     val isDownloadButtonEnabled: Flow<Boolean> =
-        combine(downloadableWallpaperData, isDownloading) { downloadableData, isDownloading ->
-            downloadableData != null && !isDownloading
-        }
+        interactor.downloadableWallpaperModel.map { it.status == DownloadStatus.READY_TO_DOWNLOAD }
 
-    suspend fun downloadWallpaper() {
+    fun downloadWallpaper() {
         interactor.downloadWallpaper()
     }
 

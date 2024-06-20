@@ -21,22 +21,21 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.content.pm.ServiceInfo
-import androidx.test.core.app.ApplicationProvider
-import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.picker.data.WallpaperModel
-import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultCode
-import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultModel
+import com.android.wallpaper.picker.preview.shared.model.DownloadStatus
+import com.android.wallpaper.picker.preview.shared.model.DownloadableWallpaperModel
 import com.android.wallpaper.testing.FakeLiveWallpaperDownloader
 import com.android.wallpaper.testing.ShadowWallpaperInfo
-import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.android.wallpaper.testing.WallpaperModelUtils
+import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltTestApplication
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import javax.inject.Inject
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -49,101 +48,79 @@ import org.robolectric.annotation.Config
  * ActivityRetainedScoped. We make an instance available via TestActivity, which can inject the SUT
  * and expose it for testing.
  */
+@HiltAndroidTest
 @Config(shadows = [ShadowWallpaperInfo::class])
 @RunWith(RobolectricTestRunner::class)
 class DownloadableWallpaperRepositoryTest {
 
-    private lateinit var context: Context
-    private lateinit var testDispatcher: CoroutineDispatcher
-    private lateinit var testScope: TestScope
+    @get:Rule var hiltRule = HiltAndroidRule(this)
+
+    private lateinit var resultWallpaper: WallpaperModel.LiveWallpaperModel
     private lateinit var underTest: DownloadableWallpaperRepository
-    private lateinit var prefs: WallpaperPreferences
+
+    @Inject @ApplicationContext lateinit var appContext: Context
+    @Inject lateinit var liveWallpaperDownloader: FakeLiveWallpaperDownloader
 
     @Before
     fun setUp() {
-        context = ApplicationProvider.getApplicationContext<HiltTestApplication>()
-        testDispatcher = StandardTestDispatcher()
-        testScope = TestScope(testDispatcher)
-        prefs = TestWallpaperPreferences()
+        hiltRule.inject()
+
+        resultWallpaper = getTestLiveWallpaperModel()
+        underTest =
+            DownloadableWallpaperRepository(liveWallpaperDownloader = liveWallpaperDownloader)
     }
 
     @Test
-    fun downloadWallpaper_fails() {
-        val liveWallpaperDownloader = FakeLiveWallpaperDownloader()
-        liveWallpaperDownloader.setWallpaperDownloadResult(
-            LiveWallpaperDownloadResultModel(LiveWallpaperDownloadResultCode.FAIL, null)
-        )
-        underTest =
-            DownloadableWallpaperRepository(
-                liveWallpaperDownloader = liveWallpaperDownloader,
-                bgDispatcher = testDispatcher,
-            )
+    fun downloadableWallpaperModel_downloadSuccess() = runTest {
+        val downloadableWallpaperModel = collectLastValue(underTest.downloadableWallpaperModel)
 
-        testScope.runTest {
-            val result = underTest.downloadWallpaper()
+        assertThat(downloadableWallpaperModel())
+            .isEqualTo(DownloadableWallpaperModel(DownloadStatus.DOWNLOAD_NOT_AVAILABLE, null))
 
-            assertThat(result).isNotNull()
-            val (code, wallpaperModel) = result!!
-            assertThat(code).isEqualTo(LiveWallpaperDownloadResultCode.FAIL)
-            assertThat(wallpaperModel).isNull()
-        }
+        liveWallpaperDownloader.initiateDownloadableServiceByPass()
+
+        assertThat(downloadableWallpaperModel())
+            .isEqualTo(DownloadableWallpaperModel(DownloadStatus.READY_TO_DOWNLOAD, null))
+
+        underTest.downloadWallpaper {}
+
+        assertThat(downloadableWallpaperModel())
+            .isEqualTo(DownloadableWallpaperModel(DownloadStatus.DOWNLOADING, null))
+
+        liveWallpaperDownloader.proceedToDownloadSuccess(resultWallpaper)
+
+        assertThat(downloadableWallpaperModel())
+            .isEqualTo(DownloadableWallpaperModel(DownloadStatus.DOWNLOADED, resultWallpaper))
     }
 
     @Test
-    fun downloadWallpaper_succeeds() {
-        val liveWallpaperDownloader = FakeLiveWallpaperDownloader()
-        val resultWallpaper = getTestLiveWallpaperModel()
-        liveWallpaperDownloader.setWallpaperDownloadResult(
-            LiveWallpaperDownloadResultModel(
-                code = LiveWallpaperDownloadResultCode.SUCCESS,
-                wallpaperModel = resultWallpaper,
-            )
-        )
-        underTest =
-            DownloadableWallpaperRepository(
-                liveWallpaperDownloader = liveWallpaperDownloader,
-                bgDispatcher = testDispatcher,
-            )
+    fun downloadableWallpaperModel_downloadFailed() = runTest {
+        val downloadableWallpaperModel = collectLastValue(underTest.downloadableWallpaperModel)
 
-        testScope.runTest {
-            val result = underTest.downloadWallpaper()
+        liveWallpaperDownloader.initiateDownloadableServiceByPass()
+        underTest.downloadWallpaper {}
+        liveWallpaperDownloader.proceedToDownloadFailed()
 
-            assertThat(result).isNotNull()
-            val (code, wallpaperModel) = result!!
-            assertThat(code).isEqualTo(LiveWallpaperDownloadResultCode.SUCCESS)
-            assertThat(wallpaperModel).isEqualTo(resultWallpaper)
-        }
+        assertThat(downloadableWallpaperModel())
+            .isEqualTo(DownloadableWallpaperModel(DownloadStatus.READY_TO_DOWNLOAD, null))
     }
 
     @Test
-    fun cancelDownloadWallpaper() {
-        val liveWallpaperDownloader = FakeLiveWallpaperDownloader()
-        val resultWallpaper = getTestLiveWallpaperModel()
-        liveWallpaperDownloader.setWallpaperDownloadResult(
-            LiveWallpaperDownloadResultModel(
-                code = LiveWallpaperDownloadResultCode.SUCCESS,
-                wallpaperModel = resultWallpaper,
-            )
-        )
-        underTest =
-            DownloadableWallpaperRepository(
-                liveWallpaperDownloader = liveWallpaperDownloader,
-                bgDispatcher = testDispatcher,
-            )
+    fun downloadableWallpaperModel_cancelDownloadWallpaper() = runTest {
+        val downloadableWallpaperModel = collectLastValue(underTest.downloadableWallpaperModel)
 
-        testScope.runTest {
-            underTest.downloadWallpaper()
-            underTest.cancelDownloadWallpaper()
+        liveWallpaperDownloader.initiateDownloadableServiceByPass()
+        underTest.downloadWallpaper {}
+        underTest.cancelDownloadWallpaper()
 
-            assertThat(liveWallpaperDownloader.isDownloadWallpaperCanceled).isTrue()
-        }
+        assertThat(liveWallpaperDownloader.isCancelDownloadWallpaperCalled).isTrue()
     }
 
     private fun getTestLiveWallpaperModel(): WallpaperModel.LiveWallpaperModel {
         // ShadowWallpaperInfo allows the creation of this object
         val wallpaperInfo =
             WallpaperInfo(
-                context,
+                appContext,
                 ResolveInfo().apply {
                     serviceInfo = ServiceInfo()
                     serviceInfo.packageName = "com.google.android.apps.wallpaper.nexus"

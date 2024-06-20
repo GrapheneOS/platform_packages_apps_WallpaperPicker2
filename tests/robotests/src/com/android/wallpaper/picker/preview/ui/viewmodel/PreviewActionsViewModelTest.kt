@@ -35,8 +35,6 @@ import com.android.wallpaper.picker.preview.data.repository.ImageEffectsReposito
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import com.android.wallpaper.picker.preview.domain.interactor.PreviewActionsInteractor
 import com.android.wallpaper.picker.preview.shared.model.ImageEffectsModel
-import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultCode
-import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultModel
 import com.android.wallpaper.picker.preview.ui.util.LiveWallpaperDeleteUtil
 import com.android.wallpaper.testing.FakeImageEffectsRepository
 import com.android.wallpaper.testing.FakeLiveWallpaperDownloader
@@ -55,7 +53,6 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -191,10 +188,10 @@ class PreviewActionsViewModelTest {
 
     @Test
     fun isDownloadVisible_preparesDownloadableWallpaperData() = runTest {
-        val model = getDownloadableWallpaperModel()
-        wallpaperPreviewRepository.setWallpaperModel(model)
-
         val isDownloadVisible = collectLastValue(viewModel.isDownloadVisible)
+
+        liveWallpaperDownloader.initiateDownloadableServiceByPass()
+
         assertThat(isDownloadVisible()).isTrue()
     }
 
@@ -202,17 +199,8 @@ class PreviewActionsViewModelTest {
     fun isDownloadButtonEnabled_trueWhenDownloading() = runTest {
         val isDownloadButtonEnabled = collectLastValue(viewModel.isDownloadButtonEnabled)
 
-        // verify the download button is disabled during a download
-        backgroundScope.launch { previewActionsInteractor.downloadWallpaper() }
-        assertThat(isDownloadButtonEnabled()).isFalse()
+        liveWallpaperDownloader.initiateDownloadableServiceByPass()
 
-        val model = getDownloadableWallpaperModel()
-
-        wallpaperPreviewRepository.setWallpaperModel(model)
-        liveWallpaperDownloader.setWallpaperDownloadResult(
-            LiveWallpaperDownloadResultModel(LiveWallpaperDownloadResultCode.FAIL, null)
-        )
-        // verify the download button is enabled after downloading is complete
         assertThat(isDownloadButtonEnabled()).isTrue()
     }
 

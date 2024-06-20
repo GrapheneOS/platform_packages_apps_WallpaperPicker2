@@ -19,8 +19,9 @@ package com.android.wallpaper.picker.preview.data.util
 import android.app.Activity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
-import com.android.wallpaper.picker.data.WallpaperModel
-import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultModel
+import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
+import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Handles the download process of a downloadable wallpaper. This downloader should be aware of the
@@ -28,13 +29,21 @@ import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadRe
  */
 interface LiveWallpaperDownloader {
 
+    val isDownloaderReady: Flow<Boolean>
+
+    interface LiveWallpaperDownloadListener {
+        fun onDownloadSuccess(wallpaperModel: LiveWallpaperModel)
+
+        fun onDownloadFailed()
+    }
+
     /**
      * Initializes the downloadable service. This needs to be called when [Activity.onCreate] and
      * before calling [downloadWallpaper].
      */
     fun initiateDownloadableService(
         activity: Activity,
-        wallpaperData: WallpaperModel.StaticWallpaperModel,
+        wallpaperData: StaticWallpaperModel,
         intentSenderLauncher: ActivityResultLauncher<IntentSenderRequest>,
     )
 
@@ -44,11 +53,8 @@ interface LiveWallpaperDownloader {
      */
     fun cleanup()
 
-    suspend fun downloadWallpaper(): LiveWallpaperDownloadResultModel?
+    fun downloadWallpaper(listener: LiveWallpaperDownloadListener)
 
-
-    /**
-     * @return True if there is a confirm cancel download dialog from the download service.
-     */
+    /** @return True if there is a confirm cancel download dialog from the download service. */
     fun cancelDownloadWallpaper(): Boolean
 }

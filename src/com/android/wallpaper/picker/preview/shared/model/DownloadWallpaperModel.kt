@@ -16,14 +16,19 @@
 
 package com.android.wallpaper.picker.preview.shared.model
 
-import com.android.wallpaper.picker.data.WallpaperModel
+import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
 
-data class LiveWallpaperDownloadResultModel(
-    val code: LiveWallpaperDownloadResultCode,
-    val wallpaperModel: WallpaperModel.LiveWallpaperModel?
+/**
+ * Data class representing the status and the wallpaper from downloading a downloadable wallpaper.
+ */
+data class DownloadableWallpaperModel(
+    val status: DownloadStatus,
+    val wallpaperModel: LiveWallpaperModel?,
 )
 
-enum class LiveWallpaperDownloadResultCode {
-    SUCCESS,
-    FAIL,
+enum class DownloadStatus {
+    DOWNLOAD_NOT_AVAILABLE,
+    READY_TO_DOWNLOAD,
+    DOWNLOADING,
+    DOWNLOADED,
 }

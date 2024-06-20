@@ -23,15 +23,12 @@ import com.android.wallpaper.picker.preview.data.repository.CreativeEffectsRepos
 import com.android.wallpaper.picker.preview.data.repository.DownloadableWallpaperRepository
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
-import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultCode
-import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultModel
+import com.android.wallpaper.picker.preview.shared.model.DownloadableWallpaperModel
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 /** This class handles the business logic for Preview screen's action buttons */
 @ActivityRetainedScoped
@@ -45,8 +42,8 @@ constructor(
 ) {
     val wallpaperModel: StateFlow<WallpaperModel?> = wallpaperPreviewRepository.wallpaperModel
 
-    private val _isDownloadingWallpaper = MutableStateFlow<Boolean>(false)
-    val isDownloadingWallpaper: Flow<Boolean> = _isDownloadingWallpaper.asStateFlow()
+    val downloadableWallpaperModel: Flow<DownloadableWallpaperModel> =
+        downloadableWallpaperRepository.downloadableWallpaperModel
 
     val imageEffectsModel = imageEffectsRepository.imageEffectsModel
     val imageEffect = imageEffectsRepository.wallpaperEffect
@@ -72,19 +69,12 @@ constructor(
         return imageEffectsRepository.getEffectTextRes()
     }
 
-    suspend fun downloadWallpaper(): LiveWallpaperDownloadResultModel? {
-        _isDownloadingWallpaper.value = true
-        val resultModel = downloadableWallpaperRepository.downloadWallpaper()
-        if (
-            resultModel?.code == LiveWallpaperDownloadResultCode.SUCCESS &&
-                resultModel.wallpaperModel != null
-        ) {
+    fun downloadWallpaper() {
+        downloadableWallpaperRepository.downloadWallpaper { viewModel ->
             // If download success, update wallpaper preview repo's WallpaperModel to render the
             // live wallpaper.
-            wallpaperPreviewRepository.setWallpaperModel(resultModel.wallpaperModel)
+            wallpaperPreviewRepository.setWallpaperModel(viewModel)
         }
-        _isDownloadingWallpaper.value = false
-        return resultModel
     }
 
     fun cancelDownloadWallpaper(): Boolean =

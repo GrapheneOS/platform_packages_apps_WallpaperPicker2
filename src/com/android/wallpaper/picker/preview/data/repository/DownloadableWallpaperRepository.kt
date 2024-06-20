@@ -16,23 +16,60 @@
 
 package com.android.wallpaper.picker.preview.data.repository
 
-import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
+import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
 import com.android.wallpaper.picker.preview.data.util.LiveWallpaperDownloader
-import com.android.wallpaper.picker.preview.shared.model.LiveWallpaperDownloadResultModel
+import com.android.wallpaper.picker.preview.shared.model.DownloadStatus.DOWNLOADED
+import com.android.wallpaper.picker.preview.shared.model.DownloadStatus.DOWNLOADING
+import com.android.wallpaper.picker.preview.shared.model.DownloadStatus.DOWNLOAD_NOT_AVAILABLE
+import com.android.wallpaper.picker.preview.shared.model.DownloadStatus.READY_TO_DOWNLOAD
+import com.android.wallpaper.picker.preview.shared.model.DownloadableWallpaperModel
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 
 @ActivityRetainedScoped
 class DownloadableWallpaperRepository
 @Inject
 constructor(
     private val liveWallpaperDownloader: LiveWallpaperDownloader,
-    @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
 ) {
-    suspend fun downloadWallpaper(): LiveWallpaperDownloadResultModel? =
-        withContext(bgDispatcher) { liveWallpaperDownloader.downloadWallpaper() }
 
-    fun cancelDownloadWallpaper(): Boolean = liveWallpaperDownloader.cancelDownloadWallpaper()
+    private val _downloadableWallpaperModel =
+        MutableStateFlow(DownloadableWallpaperModel(READY_TO_DOWNLOAD, null))
+    val downloadableWallpaperModel: Flow<DownloadableWallpaperModel> =
+        combine(
+            _downloadableWallpaperModel.asStateFlow(),
+            liveWallpaperDownloader.isDownloaderReady
+        ) { model, isReady ->
+            if (isReady) {
+                model
+            } else {
+                DownloadableWallpaperModel(DOWNLOAD_NOT_AVAILABLE, null)
+            }
+        }
+
+    fun downloadWallpaper(onDownloaded: (wallpaperModel: LiveWallpaperModel) -> Unit) {
+        _downloadableWallpaperModel.value = DownloadableWallpaperModel(DOWNLOADING, null)
+        liveWallpaperDownloader.downloadWallpaper(
+            object : LiveWallpaperDownloader.LiveWallpaperDownloadListener {
+                override fun onDownloadSuccess(wallpaperModel: LiveWallpaperModel) {
+                    onDownloaded(wallpaperModel)
+                    _downloadableWallpaperModel.value =
+                        DownloadableWallpaperModel(DOWNLOADED, wallpaperModel)
+                }
+
+                override fun onDownloadFailed() {
+                    _downloadableWallpaperModel.value =
+                        DownloadableWallpaperModel(READY_TO_DOWNLOAD, null)
+                }
+            }
+        )
+    }
+
+    fun cancelDownloadWallpaper(): Boolean {
+        return liveWallpaperDownloader.cancelDownloadWallpaper()
+    }
 }

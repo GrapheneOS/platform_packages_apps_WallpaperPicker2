@@ -124,11 +124,7 @@ object PreviewActionsBinder {
                         actionGroup.setClickListener(
                             DOWNLOAD,
                             if (it) {
-                                {
-                                    lifecycleOwner.lifecycleScope.launch {
-                                        actionsViewModel.downloadWallpaper()
-                                    }
-                                }
+                                { actionsViewModel.downloadWallpaper() }
                             } else null,
                         )
                     }
@@ -307,7 +303,7 @@ object PreviewActionsBinder {
                                 object : OnBackPressedCallback(true) {
                                         override fun handleOnBackPressed() {
                                             val handled = handleOnBackPressed()
-                                            if(!handled) {
+                                            if (!handled) {
                                                 onBackPressedCallback?.remove()
                                                 onBackPressedCallback = null
                                                 activity.onBackPressedDispatcher.onBackPressed()
