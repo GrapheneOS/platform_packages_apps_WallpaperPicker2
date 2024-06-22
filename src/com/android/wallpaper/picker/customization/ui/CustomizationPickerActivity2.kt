@@ -62,6 +62,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
     private var fullyCollapsed = false
 
     private val customizationPickerViewModel: CustomizationPickerViewModel2 by viewModels()
+    private var viewMap: Map<CustomizationOption, View>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,10 +91,11 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
 
         val rootView = requireViewById<MotionLayout>(R.id.picker_motion_layout)
 
-        customizationOptionUtil.initBottomSheetContent(
-            rootView.requireViewById<FrameLayout>(R.id.customization_picker_bottom_sheet),
-            layoutInflater,
-        )
+        viewMap =
+            customizationOptionUtil.initBottomSheetContent(
+                rootView.requireViewById<FrameLayout>(R.id.customization_picker_bottom_sheet),
+                layoutInflater,
+            )
         rootView.setTransitionListener(
             object : EmptyTransitionListener {
                 override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
@@ -172,11 +174,6 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         )
     }
 
-    override fun onDestroy() {
-        customizationOptionUtil.onDestroy()
-        super.onDestroy()
-    }
-
     private fun setupToolbar(toolbarContainer: AppBarLayout) {
         toolbarContainer.setBackgroundColor(Color.TRANSPARENT)
         val toolbar = toolbarContainer.requireViewById<Toolbar>(R.id.toolbar)
@@ -244,7 +241,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         option: CustomizationOption,
         onComplete: () -> Unit
     ) {
-        val view = customizationOptionUtil.getBottomSheetContent(option) ?: return
+        val view = viewMap?.get(option) ?: return
 
         val customizationBottomSheet =
             requireViewById<FrameLayout>(R.id.customization_picker_bottom_sheet)

@@ -90,10 +90,11 @@ constructor(
 
     val staticWallpaperModel: Flow<StaticWallpaperModel> =
         interactor.wallpaperModel.map { it as? StaticWallpaperModel }.filterNotNull()
-    val lowResBitmap: Flow<Bitmap> =
+
+    /** Null indicates the wallpaper has no low res image. */
+    val lowResBitmap: Flow<Bitmap?> =
         staticWallpaperModel
             .map { it.staticWallpaperData.asset.getLowResBitmap(context) }
-            .filterNotNull()
             .flowOn(bgDispatcher)
     // Asset detail includes the dimensions, bitmap and the asset.
     private val assetDetail: Flow<Triple<Point, Bitmap?, Asset>?> =
@@ -168,8 +169,7 @@ constructor(
                         cropHintsInfo.filterKeys { !currentCropHintsInfo.keys.contains(it) }
                     else cropHintsInfo
                 )
-            }
-                ?: cropHintsInfo
+            } ?: cropHintsInfo
         this.cropHintsInfo.value = newInfo
         fullPreviewCropModels.putAll(newInfo)
     }

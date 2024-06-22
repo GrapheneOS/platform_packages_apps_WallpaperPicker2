@@ -34,13 +34,8 @@ interface CustomizationOptionUtil {
         layoutInflater: LayoutInflater,
     ): List<Pair<CustomizationOption, View>>
 
-    fun initBottomSheetContent(bottomSheetContainer: FrameLayout, layoutInflater: LayoutInflater)
-
-    fun getBottomSheetContent(option: CustomizationOption): View?
-
-    /**
-     * This function should be called when on destroy. The implementation should release any view
-     * references.
-     */
-    fun onDestroy()
+    fun initBottomSheetContent(
+        bottomSheetContainer: FrameLayout,
+        layoutInflater: LayoutInflater
+    ): Map<CustomizationOption, View>
 }

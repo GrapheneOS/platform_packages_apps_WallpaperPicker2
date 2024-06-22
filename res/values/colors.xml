@@ -79,4 +79,6 @@
     <color name="connected_sections_background">@color/system_surface_bright</color>
     <color name="picker_section_icon_background">@color/system_surface_bright</color>
     <color name="picker_fragment_background">@color/system_surface_bright</color>
+
+    <color name="ripple_material">#1f000000</color>
 </resources>

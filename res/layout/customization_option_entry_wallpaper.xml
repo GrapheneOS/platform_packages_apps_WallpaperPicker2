@@ -20,11 +20,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="@dimen/customization_option_entry_horizontal_padding"
-    android:paddingVertical="@dimen/customization_option_entry_vertical_padding_large"
     android:clickable="true">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
         android:gravity="center"
         android:drawablePadding="@dimen/customization_option_entry_more_wallpapers_drawable_padding"
         android:text="@string/more_wallpapers"
