@@ -120,6 +120,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     private boolean mDestroyed;
     private int mDestinationFlag;
     private WhichPreview mWhichPreview;
+    private IBinder mToken;
 
     /**
      * @param intent used to bind the wallpaper service
@@ -192,29 +193,51 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     public void disconnect() {
         synchronized (this) {
             mConnected = false;
-            if (mEngine != null) {
-                try {
-                    mEngine.destroy();
-                    for (SurfaceControl control : mMirrorSurfaceControls) {
-                        control.release();
-                    }
-                    mMirrorSurfaceControls.clear();
-                } catch (RemoteException e) {
-                    // Ignore
-                }
-                mEngine = null;
-            }
-            try {
-                mContext.unbindService(this);
-            } catch (IllegalArgumentException e) {
-                Log.i(TAG, "Can't unbind wallpaper service. "
-                        + "It might have crashed, just ignoring.");
-            }
-            mService = null;
+            destroyEngine();
+            detachConnection();
+            unbindService();
         }
         if (mListener != null) {
             mListener.onDisconnected();
         }
+    }
+
+    private void destroyEngine() {
+        if (mEngine == null) {
+            return;
+        }
+
+        try {
+            mEngine.destroy();
+            for (SurfaceControl control : mMirrorSurfaceControls) {
+                control.release();
+            }
+            mMirrorSurfaceControls.clear();
+        } catch (RemoteException e) {
+            // Ignore
+        }
+        mEngine = null;
+    }
+
+    private void detachConnection() {
+        if (mService != null) {
+            try {
+                mService.detach(mToken);
+            } catch (RemoteException e) {
+                Log.i(TAG, "Can't detach wallpaper service.");
+            }
+        }
+        mToken = null;
+    }
+
+    private void unbindService() {
+        try {
+            mContext.unbindService(this);
+        } catch (IllegalArgumentException e) {
+            Log.i(TAG, "Can't unbind wallpaper service. "
+                    + "It might have crashed, just ignoring.");
+        }
+        mService = null;
     }
 
     /**
@@ -387,22 +410,22 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     }
 
     private void attachConnection(int displayId) {
+        mToken = mContainerView.getWindowToken();
         try {
             try {
                 Method preUMethod = mService.getClass().getMethod("attach",
                         IWallpaperConnection.class, IBinder.class, int.class, boolean.class,
                         int.class, int.class, Rect.class, int.class);
-                preUMethod.invoke(mService, this, mContainerView.getWindowToken(),
-                        LayoutParams.TYPE_APPLICATION_MEDIA, true, mContainerView.getWidth(),
-                        mContainerView.getHeight(), new Rect(0, 0, 0, 0), displayId);
+                preUMethod.invoke(mService, this, mToken, LayoutParams.TYPE_APPLICATION_MEDIA, true,
+                        mContainerView.getWidth(), mContainerView.getHeight(), new Rect(0, 0, 0, 0),
+                        displayId);
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                 Log.d(TAG, "IWallpaperService#attach method without which argument not available, "
                         + "will use newer version");
                 // Let's try the new attach method that takes "which" argument
-                mService.attach(this, mContainerView.getWindowToken(),
-                        LayoutParams.TYPE_APPLICATION_MEDIA, true, mContainerView.getWidth(),
-                        mContainerView.getHeight(), new Rect(0, 0, 0, 0), displayId,
-                        mDestinationFlag, null);
+                mService.attach(this, mToken, LayoutParams.TYPE_APPLICATION_MEDIA, true,
+                        mContainerView.getWidth(), mContainerView.getHeight(), new Rect(0, 0, 0, 0),
+                        displayId, mDestinationFlag, null);
             }
         } catch (RemoteException e) {
             Log.w(TAG, "Failed attaching wallpaper; clearing", e);

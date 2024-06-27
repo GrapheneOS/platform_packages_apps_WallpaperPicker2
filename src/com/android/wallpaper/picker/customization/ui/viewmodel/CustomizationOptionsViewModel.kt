@@ -17,6 +17,7 @@
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface CustomizationOptionsViewModel {
@@ -28,4 +29,9 @@ interface CustomizationOptionsViewModel {
      * false.
      */
     fun deselectOption(): Boolean
+}
+
+interface CustomizationOptionsViewModelFactory {
+
+    fun create(viewModelScope: CoroutineScope): CustomizationOptionsViewModel
 }

@@ -17,6 +17,7 @@
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.Screen.LOCK_SCREEN
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,8 +30,11 @@ import kotlinx.coroutines.flow.map
 class CustomizationPickerViewModel2
 @Inject
 constructor(
-    val customizationOptionsViewModel: CustomizationOptionsViewModel,
+    customizationOptionsViewModelFactory: CustomizationOptionsViewModelFactory,
 ) : ViewModel() {
+
+    val customizationOptionsViewModel =
+        customizationOptionsViewModelFactory.create(viewModelScope = viewModelScope)
 
     enum class PickerScreen {
         MAIN,

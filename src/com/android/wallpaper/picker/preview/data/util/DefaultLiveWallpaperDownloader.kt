@@ -21,13 +21,13 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.data.util.LiveWallpaperDownloader.LiveWallpaperDownloadListener
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-@Singleton
+@ActivityRetainedScoped
 class DefaultLiveWallpaperDownloader @Inject constructor() : LiveWallpaperDownloader {
 
     private val _isDownloaderReady = MutableStateFlow(false)

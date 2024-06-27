@@ -16,21 +16,21 @@
 
 package com.android.wallpaper.modules
 
-import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModelFactory
-import com.android.wallpaper.picker.customization.ui.viewmodel.DefaultCustomizationOptionsViewModel
+import com.android.wallpaper.picker.preview.data.util.DefaultLiveWallpaperDownloader
+import com.android.wallpaper.picker.preview.data.util.LiveWallpaperDownloader
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
+import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 
 @Module
-@InstallIn(ViewModelComponent::class)
-abstract class WallpaperPicker2ViewModelModule {
+@InstallIn(ActivityRetainedComponent::class)
+abstract class WallpaperPicker2ActivityRetainedModule {
 
     @Binds
-    @ViewModelScoped
-    abstract fun bindCustomizationOptionsViewModelFactory(
-        impl: DefaultCustomizationOptionsViewModel.Factory
-    ): CustomizationOptionsViewModelFactory
+    @ActivityRetainedScoped
+    abstract fun bindLiveWallpaperDownloader(
+        impl: DefaultLiveWallpaperDownloader
+    ): LiveWallpaperDownloader
 }

@@ -17,13 +17,19 @@
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.scopes.ViewModelScoped
-import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-@ViewModelScoped
-class DefaultCustomizationOptionsViewModel @Inject constructor() : CustomizationOptionsViewModel {
+class DefaultCustomizationOptionsViewModel
+@AssistedInject
+constructor(
+    @Assisted viewModelScope: CoroutineScope,
+) : CustomizationOptionsViewModel {
 
     private val _selectedOptionState =
         MutableStateFlow<CustomizationOptionUtil.CustomizationOption?>(null)
@@ -40,5 +46,11 @@ class DefaultCustomizationOptionsViewModel @Inject constructor() : Customization
 
     fun selectOption(option: CustomizationOptionUtil.CustomizationOption) {
         _selectedOptionState.value = option
+    }
+
+    @ViewModelScoped
+    @AssistedFactory
+    interface Factory : CustomizationOptionsViewModelFactory {
+        override fun create(viewModelScope: CoroutineScope): DefaultCustomizationOptionsViewModel
     }
 }

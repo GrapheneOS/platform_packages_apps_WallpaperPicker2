@@ -44,8 +44,8 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"اجازه دسترسی"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"سرویس کاغذ‌دیواری پویا برای کاغذدیواری‌های چرخشی"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"کاغذ‌دیواری روزانه"</string>
-    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"برای روشن کردن، ضربه بزنید"</string>
-    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"‏کاغذ‌دیواری هر روز به‌طور خودکار تغییر خواهد کرد. برای اتمام راه‌اندازی، روی &lt;strong&gt;تنظیم کاغذدیواری &lt;/strong&gt; در صفحه بعد ضربه بزنید."</string>
+    <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"برای روشن کردن، تک‌ضرب بزنید"</string>
+    <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"‏کاغذ‌دیواری هر روز به‌طور خودکار تغییر خواهد کرد. برای اتمام راه‌اندازی، روی &lt;strong&gt;تنظیم کاغذدیواری &lt;/strong&gt; در صفحه بعد تک‌ضرب بزنید."</string>
     <string name="start_rotation_dialog_wifi_only_option_message" msgid="3126269859713666225">"‏کاغذ‌دیواری‌های بعدی فقط ازطریق Wi-Fi بارگیری شود"</string>
     <string name="start_rotation_dialog_continue" msgid="276678987852274872">"ادامه"</string>
     <string name="start_rotation_progress_message" msgid="7872623873682262083">"درحال بارگیری اولین کاغذ‌دیواری..."</string>
@@ -139,6 +139,6 @@
     <string name="more_wallpapers" msgid="8116268433411881705">"کاغذدیواری‌های بیشتر"</string>
     <string name="recents_wallpaper_label" msgid="8653165542635660222">"‏%1$s،‏ %2$d"</string>
     <string name="default_wallpaper_title" msgid="2541071182656978180">"کاغذدیواری"</string>
-    <string name="small_preview_tooltip" msgid="1920430079013352071">"برای ویرایش عکس، ضربه بزنید"</string>
+    <string name="small_preview_tooltip" msgid="1920430079013352071">"برای ویرایش عکس، تک‌ضرب بزنید"</string>
     <string name="full_preview_tooltip" msgid="4648994028015322759">"موقعیت، مقیاس، و زاویه عکس‌هایتان را تنظیم کنید"</string>
 </resources>
