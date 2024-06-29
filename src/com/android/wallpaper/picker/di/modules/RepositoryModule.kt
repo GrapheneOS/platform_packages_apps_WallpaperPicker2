@@ -34,12 +34,12 @@ internal object RepositoryModule {
     @Singleton
     fun provideWallpaperRepository(
         @BackgroundDispatcher bgDispatcher: CoroutineDispatcher,
-        @MainDispatcher mainScope: CoroutineScope,
+        @BackgroundDispatcher bgScope: CoroutineScope,
         wallpaperPreferences: WallpaperPreferences,
         wallpaperClient: WallpaperClient,
     ): WallpaperRepository {
         return WallpaperRepository(
-            mainScope,
+            bgScope,
             wallpaperClient,
             wallpaperPreferences,
             bgDispatcher,

@@ -21,7 +21,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import androidx.core.view.children
-import androidx.core.view.updateLayoutParams
+import androidx.core.view.marginBottom
+import androidx.core.view.marginEnd
+import androidx.core.view.marginStart
+import androidx.core.view.marginTop
 import com.android.wallpaper.util.ScreenSizeCalculator
 
 /**
@@ -39,11 +42,11 @@ class DisplayAspectRatioLinearLayout(
         val screenAspectRatio = ScreenSizeCalculator.getInstance().getScreenAspectRatio(context)
         val parentWidth = this.measuredWidth
         val parentHeight = this.measuredHeight
-        val itemSpacingPx = ITEM_SPACING_DP.toPx(context.resources.displayMetrics.density)
         val (childWidth, childHeight) =
             if (orientation == HORIZONTAL) {
-                val availableWidth =
-                    parentWidth - paddingStart - paddingEnd - (childCount - 1) * itemSpacingPx
+                var childMargins = 0
+                children.forEach { childMargins += it.marginStart + it.marginEnd }
+                val availableWidth = parentWidth - paddingStart - paddingEnd - childMargins
                 val availableHeight = parentHeight - paddingTop - paddingBottom
                 var width = availableWidth / childCount
                 var height = (width * screenAspectRatio).toInt()
@@ -53,9 +56,10 @@ class DisplayAspectRatioLinearLayout(
                 }
                 width to height
             } else {
+                var childMargins = 0
+                children.forEach { childMargins += it.marginTop + it.marginBottom }
                 val availableWidth = parentWidth - paddingStart - paddingEnd
-                val availableHeight =
-                    parentHeight - paddingTop - paddingBottom - (childCount - 1) * itemSpacingPx
+                val availableHeight = parentHeight - paddingTop - paddingBottom - childMargins
                 var height = availableHeight / childCount
                 var width = (height / screenAspectRatio).toInt()
                 if (width > availableWidth) {
@@ -65,22 +69,7 @@ class DisplayAspectRatioLinearLayout(
                 width to height
             }
 
-        val itemSpacingHalfPx = ITEM_SPACING_DP_HALF.toPx(context.resources.displayMetrics.density)
         children.forEachIndexed { index, child ->
-            val addSpacingToStart = index > 0
-            val addSpacingToEnd = index < (childCount - 1)
-            if (orientation == HORIZONTAL) {
-                child.updateLayoutParams<MarginLayoutParams> {
-                    if (addSpacingToStart) this.marginStart = itemSpacingHalfPx
-                    if (addSpacingToEnd) this.marginEnd = itemSpacingHalfPx
-                }
-            } else {
-                child.updateLayoutParams<MarginLayoutParams> {
-                    if (addSpacingToStart) this.topMargin = itemSpacingHalfPx
-                    if (addSpacingToEnd) this.bottomMargin = itemSpacingHalfPx
-                }
-            }
-
             child.measure(
                 MeasureSpec.makeMeasureSpec(
                     childWidth,
@@ -92,14 +81,5 @@ class DisplayAspectRatioLinearLayout(
                 ),
             )
         }
-    }
-
-    private fun Int.toPx(density: Float): Int {
-        return (this * density).toInt()
-    }
-
-    companion object {
-        private const val ITEM_SPACING_DP = 12
-        private const val ITEM_SPACING_DP_HALF = ITEM_SPACING_DP / 2
     }
 }
