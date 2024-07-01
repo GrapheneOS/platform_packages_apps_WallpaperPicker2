@@ -24,7 +24,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="48dp"
+        android:minHeight="@dimen/accessibility_min_height"
         android:gravity="center"
         android:drawablePadding="@dimen/customization_option_entry_more_wallpapers_drawable_padding"
         android:text="@string/more_wallpapers"

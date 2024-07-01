@@ -67,7 +67,7 @@ class DefaultCustomizationOptionUtil @Inject constructor() : CustomizationOption
                 )
         }
 
-    override fun initBottomSheetContent(
+    override fun initFloatingSheet(
         bottomSheetContainer: FrameLayout,
         layoutInflater: LayoutInflater,
     ): Map<CustomizationOption, View> = mapOf()

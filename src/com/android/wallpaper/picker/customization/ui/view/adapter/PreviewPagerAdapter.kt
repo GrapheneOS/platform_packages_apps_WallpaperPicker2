@@ -21,13 +21,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
 
-/** This adapter provides preview views for the small preview fragment */
+/** This adapter provides preview views for the main page previews */
 class PreviewPagerAdapter(
     private val onBindViewHolder: (ViewHolder, Int) -> Unit,
 ) : RecyclerView.Adapter<PreviewPagerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.preview_card, parent, false)
+        val view =
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.customization_picker_preview_card, parent, false)
         // TODO (b/343286927): Add content description for a11y
         view.setPadding(
             0,

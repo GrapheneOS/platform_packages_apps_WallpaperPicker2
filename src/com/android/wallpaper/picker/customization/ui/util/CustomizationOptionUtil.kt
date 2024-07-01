@@ -34,7 +34,7 @@ interface CustomizationOptionUtil {
         layoutInflater: LayoutInflater,
     ): List<Pair<CustomizationOption, View>>
 
-    fun initBottomSheetContent(
+    fun initFloatingSheet(
         bottomSheetContainer: FrameLayout,
         layoutInflater: LayoutInflater
     ): Map<CustomizationOption, View>

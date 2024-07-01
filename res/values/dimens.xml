@@ -14,6 +14,8 @@
      limitations under the License.
 -->
 <resources>
+    <dimen name="accessibility_min_height">48dp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="grid_padding">4dp</dimen>
     <dimen name="grid_padding_desktop">8dp</dimen>
@@ -396,7 +398,6 @@
     <dimen name="customization_option_entry_corner_radius_large">28dp</dimen>
     <dimen name="customization_option_entry_corner_radius_small">4dp</dimen>
     <dimen name="customization_option_entry_divider_height">2dp</dimen>
-    <dimen name="customization_option_entry_more_wallpapers_min_height">48dp</dimen>
     <dimen name="customization_option_entry_more_wallpapers_drawable_padding">12dp</dimen>
     <dimen name="customization_option_entry_horizontal_padding">16dp</dimen>
     <dimen name="customization_option_entry_vertical_padding_large">16dp</dimen>
@@ -404,4 +405,12 @@
     <dimen name="customization_option_entry_text_margin_end">16dp</dimen>
     <dimen name="customization_option_entry_icon_size">60dp</dimen>
     <dimen name="preview_corner_radius">32dp</dimen>
+
+    <!-- Dimensions for the floating tab toolbar -->
+    <dimen name="floating_tab_toolbar_padding">8dp</dimen>
+    <dimen name="floating_tab_toolbar_tab_horizontal_padding">16dp</dimen>
+    <dimen name="floating_tab_toolbar_tab_vertical_padding">8dp</dimen>
+    <dimen name="floating_tab_toolbar_tab_icon_margin_end">8dp</dimen>
+    <dimen name="floating_tab_toolbar_tab_divider_width">8dp</dimen>
+    <dimen name="floating_tab_toolbar_text_max_width">140dp</dimen>
 </resources>

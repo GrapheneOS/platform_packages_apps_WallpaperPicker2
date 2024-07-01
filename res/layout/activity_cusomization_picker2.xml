@@ -96,7 +96,7 @@
             app:layout_constraintGuide_end="0dp" />
 
         <FrameLayout
-            android:id="@+id/customization_picker_bottom_sheet"
+            android:id="@+id/customization_option_floating_sheet_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"

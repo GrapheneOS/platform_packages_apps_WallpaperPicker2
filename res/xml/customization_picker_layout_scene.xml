@@ -72,7 +72,7 @@
             app:layout_constraintGuide_end="0dp" />
 
         <Constraint
-            android:id="@+id/customization_picker_bottom_sheet"
+            android:id="@+id/customization_option_floating_sheet_container"
             android:alpha="1.0"
             android:layout_height="wrap_content"
             android:translationY="0dp"
