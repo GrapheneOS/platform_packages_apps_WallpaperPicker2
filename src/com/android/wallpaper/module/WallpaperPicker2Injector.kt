@@ -90,7 +90,6 @@ constructor(
     private var wallpaperClient: WallpaperClient? = null
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
     private var secureSettingsRepository: SecureSettingsRepository? = null
-    private var wallpaperColorsRepository: WallpaperColorsRepository? = null
     private var previewActivityIntentFactory: InlinePreviewIntentFactory? = null
     private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
 
@@ -104,6 +103,7 @@ constructor(
     @Inject lateinit var injectedWallpaperClient: Lazy<WallpaperClient>
     @Inject lateinit var injectedWallpaperInteractor: Lazy<WallpaperInteractor>
     @Inject lateinit var prefs: Lazy<WallpaperPreferences>
+    @Inject lateinit var wallpaperColorsRepository: Lazy<WallpaperColorsRepository>
 
     override fun getApplicationCoroutineScope(): CoroutineScope {
         return mainScope
@@ -356,8 +356,7 @@ constructor(
     }
 
     override fun getWallpaperColorsRepository(): WallpaperColorsRepository {
-        return wallpaperColorsRepository
-            ?: WallpaperColorsRepository().also { wallpaperColorsRepository = it }
+        return wallpaperColorsRepository.get()
     }
 
     override fun getWallpaperColorResources(
