@@ -480,6 +480,13 @@ constructor(
         }
     }
 
+    fun isAnyActionChecked(): Boolean =
+        _isInformationChecked.value ||
+            _isDeleteChecked.value ||
+            _isEditChecked.value ||
+            _isCustomizeChecked.value ||
+            _isEffectsChecked.value
+
     private fun uncheckAllOthersExcept(action: Action) {
         if (action != INFORMATION) {
             _isInformationChecked.value = false

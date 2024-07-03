@@ -256,7 +256,11 @@ object WallpaperConnectionUtils {
                             serviceConnection: ServiceConnection,
                             wallpaperService: IWallpaperService
                         ) {
-                            k.resumeWith(Result.success(Pair(serviceConnection, wallpaperService)))
+                            if (k.isActive) {
+                                k.resumeWith(
+                                    Result.success(Pair(serviceConnection, wallpaperService))
+                                )
+                            }
                         }
                     }
                 )
@@ -268,7 +272,7 @@ object WallpaperConnectionUtils {
                         Context.BIND_IMPORTANT or
                         Context.BIND_ALLOW_ACTIVITY_STARTS
                 )
-            if (!success) {
+            if (!success && k.isActive) {
                 k.resumeWith(Result.failure(Exception("Fail to bind the live wallpaper service.")))
             }
         }
