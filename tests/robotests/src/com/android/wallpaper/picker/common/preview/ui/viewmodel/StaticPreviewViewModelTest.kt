@@ -26,6 +26,7 @@ import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
 import androidx.test.core.app.ActivityScenario
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.common.preview.domain.interactor.BasePreviewInteractor
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
@@ -65,7 +66,6 @@ import org.robolectric.shadows.ShadowLooper
 @OptIn(ExperimentalCoroutinesApi::class)
 @Config(shadows = [ShadowWallpaperInfo::class])
 @RunWith(RobolectricTestRunner::class)
-// Based on StaticWallpaperPreviewViewModelTest with wallpaper colors tests temporarily removed.
 class StaticPreviewViewModelTest {
     @get:Rule var hiltRule = HiltAndroidRule(this)
 
@@ -97,27 +97,31 @@ class StaticPreviewViewModelTest {
             }
         shadowOf(appContext.packageManager).addOrUpdateActivity(activityInfo)
         scenario = ActivityScenario.launch(PreviewTestActivity::class.java)
-        scenario.onActivity { setEverything(it) }
+        scenario.onActivity {
+            wallpaperRepository =
+                WallpaperRepository(
+                    testScope.backgroundScope,
+                    wallpaperClient,
+                    wallpaperPreferences,
+                    testDispatcher,
+                )
+            wallpaperPreviewRepository = WallpaperPreviewRepository(wallpaperPreferences)
+            interactor =
+                BasePreviewInteractor(
+                    wallpaperPreviewRepository,
+                    wallpaperRepository,
+                )
+            setViewModel(Screen.HOME_SCREEN)
+        }
     }
 
-    private fun setEverything(activity: PreviewTestActivity) {
-        wallpaperRepository =
-            WallpaperRepository(
-                testScope.backgroundScope,
-                wallpaperClient,
-                wallpaperPreferences,
-                testDispatcher,
-            )
-        wallpaperPreviewRepository = WallpaperPreviewRepository(wallpaperPreferences)
-        interactor =
-            BasePreviewInteractor(
-                wallpaperPreviewRepository,
-            )
+    private fun setViewModel(screen: Screen) {
         viewModel =
             StaticPreviewViewModel(
                 interactor,
                 appContext,
                 testDispatcher,
+                screen,
                 testScope.backgroundScope,
             )
     }
@@ -133,7 +137,108 @@ class StaticPreviewViewModelTest {
     }
 
     @Test
-    fun staticWallpaperModel_withStaticWallpaper_shouldEmitNonNullValue() {
+    fun homeStaticWallpaperModel_withStaticHomeScreenAndNoPreviewWallpaper_shouldEmitHomeScreen() {
+        testScope.runTest {
+            val homeStaticWallpaperModel =
+                WallpaperModelUtils.getStaticWallpaperModel(
+                    wallpaperId = "homeWallpaperId",
+                    collectionId = "homeCollection",
+                )
+            val lockStaticWallpaperModel =
+                WallpaperModelUtils.getStaticWallpaperModel(
+                    wallpaperId = "lockWallpaperId",
+                    collectionId = "lockCollection",
+                )
+
+            // Current wallpaper models need to be set up before the view model is run.
+            wallpaperClient.setCurrentWallpaperModels(
+                homeStaticWallpaperModel,
+                lockStaticWallpaperModel
+            )
+            setViewModel(Screen.HOME_SCREEN)
+
+            val actual = collectLastValue(viewModel.staticWallpaperModel)()
+            assertThat(actual).isNotNull()
+            assertThat(actual).isEqualTo(homeStaticWallpaperModel)
+        }
+    }
+
+    @Test
+    fun homeStaticWallpaperModel_withLiveHomeScreenAndNoPreviewWallpaper_shouldEmitNull() {
+        testScope.runTest {
+            val resolveInfo =
+                ResolveInfo().apply {
+                    serviceInfo = ServiceInfo()
+                    serviceInfo.packageName = "com.google.android.apps.wallpaper.nexus"
+                    serviceInfo.splitName = "wallpaper_cities_ny"
+                    serviceInfo.name = "NewYorkWallpaper"
+                    serviceInfo.flags = PackageManager.GET_META_DATA
+                }
+            // ShadowWallpaperInfo allows the creation of this object
+            val wallpaperInfo = WallpaperInfo(appContext, resolveInfo)
+            val liveWallpaperModel =
+                WallpaperModelUtils.getLiveWallpaperModel(
+                    wallpaperId = "liveWallpaperId",
+                    collectionId = "liveCollection",
+                    systemWallpaperInfo = wallpaperInfo,
+                )
+
+            // Current wallpaper models need to be set up before the view model is run.
+            wallpaperClient.setCurrentWallpaperModels(liveWallpaperModel, null)
+            setViewModel(Screen.HOME_SCREEN)
+
+            val actual = collectLastValue(viewModel.staticWallpaperModel)()
+            assertThat(actual).isNull()
+        }
+    }
+
+    @Test
+    fun lockStaticWallpaperModel_withStaticLockScreenAndNoPreviewWallpaper_shouldEmitLockScreen() {
+        testScope.runTest {
+            val homeStaticWallpaperModel =
+                WallpaperModelUtils.getStaticWallpaperModel(
+                    wallpaperId = "homeWallpaperId",
+                    collectionId = "homeCollection",
+                )
+            val lockStaticWallpaperModel =
+                WallpaperModelUtils.getStaticWallpaperModel(
+                    wallpaperId = "lockWallpaperId",
+                    collectionId = "lockCollection",
+                )
+
+            // Current wallpaper models need to be set up before the view model is run.
+            wallpaperClient.setCurrentWallpaperModels(
+                homeStaticWallpaperModel,
+                lockStaticWallpaperModel
+            )
+            setViewModel(Screen.LOCK_SCREEN)
+
+            val actual = collectLastValue(viewModel.staticWallpaperModel)()
+            assertThat(actual).isNotNull()
+            assertThat(actual).isEqualTo(lockStaticWallpaperModel)
+        }
+    }
+
+    @Test
+    fun lockStaticWallpaperModel_withNullLockScreenAndNoPreviewWallpaper_shouldEmitNull() {
+        testScope.runTest {
+            val homeStaticWallpaperModel =
+                WallpaperModelUtils.getStaticWallpaperModel(
+                    wallpaperId = "homeWallpaperId",
+                    collectionId = "homeCollection",
+                )
+
+            // Current wallpaper models need to be set up before the view model is run.
+            wallpaperClient.setCurrentWallpaperModels(homeStaticWallpaperModel, null)
+            setViewModel(Screen.LOCK_SCREEN)
+
+            val actual = collectLastValue(viewModel.staticWallpaperModel)()
+            assertThat(actual).isNull()
+        }
+    }
+
+    @Test
+    fun staticWallpaperModel_withStaticPreview_shouldEmitNonNullValue() {
         testScope.runTest {
             val staticWallpaperModel = collectLastValue(viewModel.staticWallpaperModel)
             val testStaticWallpaperModel =
@@ -151,7 +256,7 @@ class StaticPreviewViewModelTest {
     }
 
     @Test
-    fun staticWallpaperModel_withLiveWallpaper_shouldNotEmit() {
+    fun staticWallpaperModel_withLivePreview_shouldEmitNull() {
         testScope.runTest {
             val staticWallpaperModel = collectLastValue(viewModel.staticWallpaperModel)
             val resolveInfo =
@@ -179,7 +284,7 @@ class StaticPreviewViewModelTest {
     }
 
     @Test
-    fun lowResBitmap_withStaticWallpaper_shouldEmitNonNullValue() {
+    fun lowResBitmap_withStaticPreview_shouldEmitNonNullValue() {
         testScope.runTest {
             val lowResBitmap = collectLastValue(viewModel.lowResBitmap)
             val testStaticWallpaperModel =
@@ -196,7 +301,7 @@ class StaticPreviewViewModelTest {
     }
 
     @Test
-    fun fullResWallpaperViewModel_withStaticWallpaperAndNullCropHints_shouldEmitNonNullValue() {
+    fun fullResWallpaperViewModel_withStaticPreviewAndNullCropHints_shouldEmitNonNullValue() {
         testScope.runTest {
             val fullResWallpaperViewModel = collectLastValue(viewModel.fullResWallpaperViewModel)
             val testStaticWallpaperModel =
@@ -216,7 +321,7 @@ class StaticPreviewViewModelTest {
     }
 
     @Test
-    fun fullResWallpaperViewModel_withStaticWallpaperAndCropHints_shouldEmitNonNullValue() {
+    fun fullResWallpaperViewModel_withStaticPreviewAndCropHints_shouldEmitNonNullValue() {
         testScope.runTest {
             val fullResWallpaperViewModel = collectLastValue(viewModel.fullResWallpaperViewModel)
             val testStaticWallpaperModel =
@@ -245,7 +350,7 @@ class StaticPreviewViewModelTest {
     }
 
     @Test
-    fun subsamplingScaleImageViewModel_withStaticWallpaperAndCropHints_shouldEmitNonNullValue() {
+    fun subsamplingScaleImageViewModel_withStaticPreviewAndCropHints_shouldEmitNonNullValue() {
         testScope.runTest {
             val subsamplingScaleImageViewModel =
                 collectLastValue(viewModel.subsamplingScaleImageViewModel)

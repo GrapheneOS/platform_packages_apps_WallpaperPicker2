@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.common.preview.ui.viewmodel
+package com.android.wallpaper.picker.common.preview.domain.interactor
 
 import android.content.Context
 import android.content.pm.ActivityInfo
 import androidx.test.core.app.ActivityScenario
 import com.android.wallpaper.model.WallpaperModelsPair
 import com.android.wallpaper.module.InjectorProvider
+import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.preview.PreviewTestActivity
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
+import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.android.wallpaper.testing.WallpaperModelUtils
 import com.android.wallpaper.testing.collectLastValue
-import com.android.wallpaper.util.WallpaperConnection
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -53,21 +54,20 @@ import org.robolectric.Shadows.shadowOf
 @HiltAndroidTest
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
-class BasePreviewViewModelTest {
+class BasePreviewInteractorTest {
     @get:Rule var hiltRule = HiltAndroidRule(this)
 
     private lateinit var scenario: ActivityScenario<PreviewTestActivity>
-    private lateinit var basePreviewViewModel: BasePreviewViewModel
-    private lateinit var staticHomePreviewViewModel: StaticPreviewViewModel
-    private lateinit var staticLockPreviewViewModel: StaticPreviewViewModel
     private lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
-    private lateinit var basePreviewViewModelFactory: BasePreviewViewModel.Factory
+    private lateinit var wallpaperRepository: WallpaperRepository
+    private lateinit var interactor: BasePreviewInteractor
 
     @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var testDispatcher: TestDispatcher
     @Inject lateinit var testScope: TestScope
     @Inject lateinit var testInjector: TestInjector
     @Inject lateinit var wallpaperPreferences: TestWallpaperPreferences
+    @Inject lateinit var wallpaperClient: FakeWallpaperClient
 
     @Before
     fun setUp() {
@@ -87,10 +87,8 @@ class BasePreviewViewModelTest {
             val activityScopeEntryPoint =
                 EntryPointAccessors.fromActivity(it, ActivityScopeEntryPoint::class.java)
             wallpaperPreviewRepository = activityScopeEntryPoint.wallpaperPreviewRepository()
-            basePreviewViewModelFactory = activityScopeEntryPoint.basePreviewViewModelFactory()
-            basePreviewViewModel = basePreviewViewModelFactory.create(testScope.backgroundScope)
-            staticHomePreviewViewModel = basePreviewViewModel.staticHomeWallpaperPreviewViewModel
-            staticLockPreviewViewModel = basePreviewViewModel.staticLockWallpaperPreviewViewModel
+            wallpaperRepository = activityScopeEntryPoint.wallpaperRepository()
+            interactor = activityScopeEntryPoint.basePreviewInteractor()
         }
     }
 
@@ -99,28 +97,67 @@ class BasePreviewViewModelTest {
     interface ActivityScopeEntryPoint {
         fun wallpaperPreviewRepository(): WallpaperPreviewRepository
 
-        fun basePreviewViewModelFactory(): BasePreviewViewModel.Factory
+        fun wallpaperRepository(): WallpaperRepository
+
+        fun basePreviewInteractor(): BasePreviewInteractor
     }
 
     @Test
-    fun wallpaper_setWallpaperModelAndWhichPreview_emitsMatchingValues() {
+    fun wallpapers_withHomeAndLockScreenAndPreviewWallpapers_shouldEmitPreview() {
         testScope.runTest {
-            val wallpaperModel =
+            val homeStaticWallpaperModel =
                 WallpaperModelUtils.getStaticWallpaperModel(
-                    wallpaperId = "testId",
-                    collectionId = "testCollection",
+                    wallpaperId = "homeWallpaperId",
+                    collectionId = "homeCollection",
                 )
-            val whichPreview = WallpaperConnection.WhichPreview.PREVIEW_CURRENT
+            val lockStaticWallpaperModel =
+                WallpaperModelUtils.getStaticWallpaperModel(
+                    wallpaperId = "lockWallpaperId",
+                    collectionId = "lockCollection",
+                )
+            val previewStaticWallpaperModel =
+                WallpaperModelUtils.getStaticWallpaperModel(
+                    wallpaperId = "previewWallpaperId",
+                    collectionId = "previewCollection",
+                )
 
-            wallpaperPreviewRepository.setWallpaperModel(wallpaperModel)
-            basePreviewViewModel.setWhichPreview(whichPreview)
+            // Current wallpaper models need to be set up before the view model is run.
+            wallpaperClient.setCurrentWallpaperModels(
+                homeStaticWallpaperModel,
+                lockStaticWallpaperModel
+            )
+            wallpaperPreviewRepository.setWallpaperModel(previewStaticWallpaperModel)
 
-            val wallpapersAndWhichPreview =
-                collectLastValue(basePreviewViewModel.wallpapersAndWhichPreview)()
-            assertThat(wallpapersAndWhichPreview).isNotNull()
-            val (actualWallpapers, actualWhichPreview) = wallpapersAndWhichPreview!!
-            assertThat(actualWallpapers).isEqualTo(WallpaperModelsPair(wallpaperModel, null))
-            assertThat(actualWhichPreview).isEqualTo(whichPreview)
+            val actual = collectLastValue(interactor.wallpapers)()
+            assertThat(actual).isNotNull()
+            assertThat(actual).isEqualTo(WallpaperModelsPair(previewStaticWallpaperModel, null))
+        }
+    }
+
+    @Test
+    fun wallpapers_withHomeAndLockScreenAndNoPreviewWallpapers_shouldEmitCurrentHomeAndLock() {
+        testScope.runTest {
+            val homeStaticWallpaperModel =
+                WallpaperModelUtils.getStaticWallpaperModel(
+                    wallpaperId = "homeWallpaperId",
+                    collectionId = "homeCollection",
+                )
+            val lockStaticWallpaperModel =
+                WallpaperModelUtils.getStaticWallpaperModel(
+                    wallpaperId = "lockWallpaperId",
+                    collectionId = "lockCollection",
+                )
+
+            // Current wallpaper models need to be set up before the view model is run.
+            wallpaperClient.setCurrentWallpaperModels(
+                homeStaticWallpaperModel,
+                lockStaticWallpaperModel
+            )
+
+            val actual = collectLastValue(interactor.wallpapers)()
+            assertThat(actual).isNotNull()
+            assertThat(actual)
+                .isEqualTo(WallpaperModelsPair(homeStaticWallpaperModel, lockStaticWallpaperModel))
         }
     }
 }

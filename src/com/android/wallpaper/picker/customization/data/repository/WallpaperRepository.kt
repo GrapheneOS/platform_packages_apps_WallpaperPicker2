@@ -38,8 +38,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 
@@ -53,6 +55,12 @@ class WallpaperRepository(
     val maxOptions = MAX_OPTIONS
 
     private val thumbnailCache = LruCache<String, Bitmap>(maxOptions)
+
+    // TODO (b/348462236): figure out if current wallpaper model can change in lifecycle & update
+    val currentWallpaperModels =
+        flow { emit(client.getCurrentWallpaperModels()) }
+            .flowOn(backgroundDispatcher)
+            .shareIn(scope = scope, started = SharingStarted.WhileSubscribed(), replay = 1)
 
     /** The ID of the currently-selected wallpaper. */
     fun selectedWallpaperId(
