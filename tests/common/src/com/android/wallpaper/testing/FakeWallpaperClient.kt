@@ -22,7 +22,6 @@ import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
 import com.android.wallpaper.asset.Asset
-import com.android.wallpaper.model.WallpaperModelsPair
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -41,8 +40,9 @@ import kotlinx.coroutines.flow.map
 class FakeWallpaperClient @Inject constructor() : WallpaperClient {
     val wallpapersSet =
         mutableMapOf(
-            WallpaperDestination.HOME to null as com.android.wallpaper.picker.data.WallpaperModel?,
-            WallpaperDestination.LOCK to null as com.android.wallpaper.picker.data.WallpaperModel?,
+            WallpaperDestination.HOME to
+                mutableListOf<com.android.wallpaper.picker.data.WallpaperModel>(),
+            WallpaperDestination.LOCK to mutableListOf()
         )
     private var wallpaperColors: WallpaperColors? = null
 
@@ -119,7 +119,11 @@ class FakeWallpaperClient @Inject constructor() : WallpaperClient {
         wallpaperModel: com.android.wallpaper.picker.data.WallpaperModel,
         destination: WallpaperDestination
     ) {
-        wallpapersSet[destination] = wallpaperModel
+        wallpapersSet.forEach { entry ->
+            if (destination == entry.key || destination == WallpaperDestination.BOTH) {
+                entry.value.add(wallpaperModel)
+            }
+        }
     }
 
     override suspend fun setRecentWallpaper(
@@ -138,7 +142,8 @@ class FakeWallpaperClient @Inject constructor() : WallpaperClient {
                     this[destination] =
                         _recentWallpapers.value[destination]?.sortedBy {
                             it.wallpaperId != wallpaperId
-                        } ?: error("No wallpapers for screen $destination")
+                        }
+                            ?: error("No wallpapers for screen $destination")
                 }
             onDone.invoke()
         }
@@ -168,27 +173,6 @@ class FakeWallpaperClient @Inject constructor() : WallpaperClient {
         cropHints: Map<Point, Rect>?
     ): WallpaperColors? {
         return wallpaperColors
-    }
-
-    fun setCurrentWallpaperModels(
-        homeWallpaper: com.android.wallpaper.picker.data.WallpaperModel,
-        lockWallpaper: com.android.wallpaper.picker.data.WallpaperModel?
-    ) {
-        wallpapersSet[WallpaperDestination.HOME] = homeWallpaper
-        wallpapersSet[WallpaperDestination.LOCK] = lockWallpaper
-    }
-
-    // Getting current home wallpaper should always return non-null value
-    override suspend fun getCurrentWallpaperModels(): WallpaperModelsPair {
-        return WallpaperModelsPair(
-            wallpapersSet[WallpaperDestination.HOME]
-                ?: (WallpaperModelUtils.getStaticWallpaperModel(
-                        wallpaperId = "defaultWallpaperId",
-                        collectionId = "defaultCollection",
-                    )
-                    .also { wallpapersSet[WallpaperDestination.HOME] = it }),
-            wallpapersSet[WallpaperDestination.LOCK]
-        )
     }
 
     companion object {

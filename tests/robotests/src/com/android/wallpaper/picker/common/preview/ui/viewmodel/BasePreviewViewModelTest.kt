@@ -19,10 +19,10 @@ package com.android.wallpaper.picker.common.preview.ui.viewmodel
 import android.content.Context
 import android.content.pm.ActivityInfo
 import androidx.test.core.app.ActivityScenario
-import com.android.wallpaper.model.WallpaperModelsPair
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.preview.PreviewTestActivity
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
+import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.android.wallpaper.testing.WallpaperModelUtils
@@ -58,8 +58,7 @@ class BasePreviewViewModelTest {
 
     private lateinit var scenario: ActivityScenario<PreviewTestActivity>
     private lateinit var basePreviewViewModel: BasePreviewViewModel
-    private lateinit var staticHomePreviewViewModel: StaticPreviewViewModel
-    private lateinit var staticLockPreviewViewModel: StaticPreviewViewModel
+    private lateinit var staticPreviewViewModel: StaticPreviewViewModel
     private lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
     private lateinit var basePreviewViewModelFactory: BasePreviewViewModel.Factory
 
@@ -68,6 +67,7 @@ class BasePreviewViewModelTest {
     @Inject lateinit var testScope: TestScope
     @Inject lateinit var testInjector: TestInjector
     @Inject lateinit var wallpaperPreferences: TestWallpaperPreferences
+    @Inject lateinit var wallpaperClient: FakeWallpaperClient
 
     @Before
     fun setUp() {
@@ -89,8 +89,7 @@ class BasePreviewViewModelTest {
             wallpaperPreviewRepository = activityScopeEntryPoint.wallpaperPreviewRepository()
             basePreviewViewModelFactory = activityScopeEntryPoint.basePreviewViewModelFactory()
             basePreviewViewModel = basePreviewViewModelFactory.create(testScope.backgroundScope)
-            staticHomePreviewViewModel = basePreviewViewModel.staticHomeWallpaperPreviewViewModel
-            staticLockPreviewViewModel = basePreviewViewModel.staticLockWallpaperPreviewViewModel
+            staticPreviewViewModel = basePreviewViewModel.staticWallpaperPreviewViewModel
         }
     }
 
@@ -115,11 +114,10 @@ class BasePreviewViewModelTest {
             wallpaperPreviewRepository.setWallpaperModel(wallpaperModel)
             basePreviewViewModel.setWhichPreview(whichPreview)
 
-            val wallpapersAndWhichPreview =
-                collectLastValue(basePreviewViewModel.wallpapersAndWhichPreview)()
-            assertThat(wallpapersAndWhichPreview).isNotNull()
-            val (actualWallpapers, actualWhichPreview) = wallpapersAndWhichPreview!!
-            assertThat(actualWallpapers).isEqualTo(WallpaperModelsPair(wallpaperModel, null))
+            val wallpaper = collectLastValue(basePreviewViewModel.wallpaper)()
+            assertThat(wallpaper).isNotNull()
+            val (actualWallpaperModel, actualWhichPreview) = wallpaper!!
+            assertThat(actualWallpaperModel).isEqualTo(wallpaperModel)
             assertThat(actualWhichPreview).isEqualTo(whichPreview)
         }
     }

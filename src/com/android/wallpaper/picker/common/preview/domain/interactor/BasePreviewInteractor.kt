@@ -16,36 +16,18 @@
 
 package com.android.wallpaper.picker.common.preview.domain.interactor
 
-import com.android.wallpaper.model.WallpaperModelsPair
-import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 
-// Based on WallpaperPreviewInteractor, except cleaned up to only bind wallpaper and workspace
-// (workspace binding to be added). Also included the ability to preview current wallpapers when no
-// previewing wallpaper is set.
+// Based on WallpaperPreviewInteractor, except cleaned up to only bind workspace and wallpaper.
 @ActivityRetainedScoped
 class BasePreviewInteractor
 @Inject
 constructor(
     wallpaperPreviewRepository: WallpaperPreviewRepository,
-    wallpaperRepository: WallpaperRepository,
 ) {
-    val previewingWallpaper: StateFlow<WallpaperModel?> = wallpaperPreviewRepository.wallpaperModel
-    val currentWallpapers: Flow<WallpaperModelsPair> = wallpaperRepository.currentWallpaperModels
-
-    val wallpapers: Flow<WallpaperModelsPair> =
-        combine(previewingWallpaper, currentWallpapers) { previewingWallpaper, currentWallpapers ->
-            if (previewingWallpaper != null) {
-                // Preview wallpaper on both the home and lock screens if set.
-                WallpaperModelsPair(previewingWallpaper, null)
-            } else {
-                currentWallpapers
-            }
-        }
+    val wallpaperModel: StateFlow<WallpaperModel?> = wallpaperPreviewRepository.wallpaperModel
 }

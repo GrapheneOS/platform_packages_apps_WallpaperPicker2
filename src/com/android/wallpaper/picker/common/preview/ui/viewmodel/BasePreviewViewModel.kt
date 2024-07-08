@@ -16,10 +16,10 @@
 
 package com.android.wallpaper.picker.common.preview.ui.viewmodel
 
-import com.android.wallpaper.model.Screen
-import com.android.wallpaper.model.WallpaperModelsPair
+import androidx.lifecycle.viewModelScope
 import com.android.wallpaper.picker.common.preview.domain.interactor.BasePreviewInteractor
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
+import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.WallpaperConnection
 import dagger.assisted.Assisted
@@ -30,26 +30,24 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
  * Common base preview view-model that is only responsible for binding the workspace and wallpaper.
  */
-// Based on WallpaperPreviewViewModel, except cleaned up to only bind wallpaper and workspace
-// (workspace binding to be added). Also it is changed to no longer be a top-level ViewModel.
-// Instead, the viewModelScope is passed in using assisted inject.
+// Based on WallpaperPreviewViewModel, except cleaned up to only bind workspace and wallpaper. Also
+// it is changed to no longer be a top-level ViewModel. Instead, the viewModelScope is passed in
+// using assisted inject.
 class BasePreviewViewModel
 @AssistedInject
 constructor(
-    private val interactor: BasePreviewInteractor,
+    interactor: BasePreviewInteractor,
     staticPreviewViewModelFactory: StaticPreviewViewModel.Factory,
     displayUtils: DisplayUtils,
-    @Assisted private val viewModelScope: CoroutineScope,
+    @Assisted viewModelScope: CoroutineScope,
 ) {
     // Don't update smaller display since we always use portrait, always use wallpaper display on
     // single display device.
@@ -58,12 +56,7 @@ constructor(
         MutableStateFlow(displayUtils.getRealSize(displayUtils.getWallpaperDisplay()))
     val wallpaperDisplaySize = _wallpaperDisplaySize.asStateFlow()
 
-    val staticHomeWallpaperPreviewViewModel by lazy {
-        staticPreviewViewModelFactory.create(Screen.HOME_SCREEN, viewModelScope)
-    }
-    val staticLockWallpaperPreviewViewModel by lazy {
-        staticPreviewViewModelFactory.create(Screen.LOCK_SCREEN, viewModelScope)
-    }
+    val staticWallpaperPreviewViewModel = staticPreviewViewModelFactory.create(viewModelScope)
 
     private val _whichPreview = MutableStateFlow<WallpaperConnection.WhichPreview?>(null)
     private val whichPreview: Flow<WallpaperConnection.WhichPreview> =
@@ -73,17 +66,10 @@ constructor(
         _whichPreview.value = whichPreview
     }
 
-    val wallpapers =
-        interactor.wallpapers.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null
-        )
-
-    val wallpapersAndWhichPreview:
-        Flow<Pair<WallpaperModelsPair, WallpaperConnection.WhichPreview>> =
-        combine(wallpapers.filterNotNull(), whichPreview) { wallpapers, whichPreview ->
-            Pair(wallpapers, whichPreview)
+    val wallpaper: Flow<Pair<WallpaperModel, WallpaperConnection.WhichPreview>> =
+        combine(interactor.wallpaperModel.filterNotNull(), whichPreview) { wallpaper, whichPreview
+            ->
+            Pair(wallpaper, whichPreview)
         }
 
     // TODO (b/348462236): implement complete wallpaper colors flow to bind workspace

@@ -21,16 +21,13 @@ import android.graphics.Point
 import android.graphics.Rect
 import androidx.annotation.VisibleForTesting
 import com.android.wallpaper.asset.Asset
-import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.common.preview.domain.interactor.BasePreviewInteractor
 import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
+import javax.inject.Inject
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -46,16 +43,15 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 
 /** View model for static wallpaper preview used in the common [BasePreviewViewModel] */
 // Based on StaticWallpaperPreviewViewModel, mostly unchanged, except updated to use
-// BasePreviewInteractor rather than WallpaperPreviewInteractor, and updated to use AssistedInject
-// rather than a regular Inject with a Factory.
+// BasePreviewInteractor rather than WallpaperPreviewInteractor.
+@ViewModelScoped
 class StaticPreviewViewModel
-@AssistedInject
+@Inject
 constructor(
     interactor: BasePreviewInteractor,
     @ApplicationContext private val context: Context,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
-    @Assisted screen: Screen,
-    @Assisted viewModelScope: CoroutineScope,
+    viewModelScope: CoroutineScope,
 ) {
     /**
      * The state of static wallpaper crop in full preview, before user confirmation.
@@ -88,21 +84,17 @@ constructor(
             cropHintsInfoMap?.map { entry -> entry.key to entry.value.cropHint }?.toMap()
         }
 
-    val staticWallpaperModel: Flow<StaticWallpaperModel?> =
-        interactor.wallpapers.map { (homeWallpaper, lockWallpaper) ->
-            val wallpaper = if (screen == Screen.HOME_SCREEN) homeWallpaper else lockWallpaper
-            wallpaper as? StaticWallpaperModel
-        }
+    val staticWallpaperModel: Flow<StaticWallpaperModel> =
+        interactor.wallpaperModel.map { it as? StaticWallpaperModel }.filterNotNull()
     /** Null indicates the wallpaper has no low res image. */
     val lowResBitmap: Flow<Bitmap?> =
         staticWallpaperModel
-            .filterNotNull()
             .map { it.staticWallpaperData.asset.getLowResBitmap(context) }
             .flowOn(bgDispatcher)
     // Asset detail includes the dimensions, bitmap and the asset.
     private val assetDetail: Flow<Triple<Point, Bitmap?, Asset>?> =
-        staticWallpaperModel
-            .map { it?.staticWallpaperData?.asset }
+        interactor.wallpaperModel
+            .map { (it as? StaticWallpaperModel)?.staticWallpaperData?.asset }
             .map { asset ->
                 asset?.decodeRawDimensions()?.let { Triple(it, asset.decodeBitmap(it), asset) }
             }
@@ -185,9 +177,20 @@ constructor(
             decodeBitmap(dimensions.x, dimensions.y, /* hardwareBitmapAllowed= */ false, callback)
         }
 
-    @ViewModelScoped
-    @AssistedFactory
-    interface Factory {
-        fun create(screen: Screen, viewModelScope: CoroutineScope): StaticPreviewViewModel
+    class Factory
+    @Inject
+    constructor(
+        private val interactor: BasePreviewInteractor,
+        @ApplicationContext private val context: Context,
+        @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
+    ) {
+        fun create(viewModelScope: CoroutineScope): StaticPreviewViewModel {
+            return StaticPreviewViewModel(
+                interactor = interactor,
+                context = context,
+                bgDispatcher = bgDispatcher,
+                viewModelScope = viewModelScope,
+            )
+        }
     }
 }

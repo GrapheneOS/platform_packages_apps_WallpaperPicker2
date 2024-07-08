@@ -45,7 +45,9 @@ import com.android.wallpaper.picker.PreviewActivity
 import com.android.wallpaper.picker.PreviewFragment
 import com.android.wallpaper.picker.ViewOnlyPreviewActivity
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
+import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl
 import com.android.wallpaper.picker.customization.data.repository.WallpaperColorsRepository
+import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperSnapshotRestorer
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
@@ -302,11 +304,37 @@ constructor(
     }
 
     override fun getWallpaperInteractor(context: Context): WallpaperInteractor {
-        return injectedWallpaperInteractor.get()
+        if (getFlags().isMultiCropEnabled()) {
+            return injectedWallpaperInteractor.get()
+        }
+
+        val appContext = context.applicationContext
+        return wallpaperInteractor
+            ?: WallpaperInteractor(
+                    repository =
+                        WallpaperRepository(
+                            scope = getApplicationCoroutineScope(),
+                            client = getWallpaperClient(context),
+                            wallpaperPreferences = getPreferences(context = appContext),
+                            backgroundDispatcher = bgDispatcher,
+                        ),
+                )
+                .also { wallpaperInteractor = it }
     }
 
     override fun getWallpaperClient(context: Context): WallpaperClient {
-        return injectedWallpaperClient.get()
+        if (getFlags().isMultiCropEnabled()) {
+            return injectedWallpaperClient.get()
+        }
+
+        val appContext = context.applicationContext
+        return wallpaperClient
+            ?: WallpaperClientImpl(
+                    context = appContext,
+                    wallpaperManager = WallpaperManager.getInstance(appContext),
+                    wallpaperPreferences = getPreferences(appContext),
+                )
+                .also { wallpaperClient = it }
     }
 
     override fun getWallpaperSnapshotRestorer(context: Context): WallpaperSnapshotRestorer {

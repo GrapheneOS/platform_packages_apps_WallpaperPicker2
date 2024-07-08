@@ -23,7 +23,6 @@ import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
 import com.android.wallpaper.asset.Asset
-import com.android.wallpaper.model.WallpaperModelsPair
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -105,6 +104,4 @@ interface WallpaperClient {
 
     /** Returns the wallpaper colors for preview a bitmap with a set of crop hints */
     suspend fun getWallpaperColors(bitmap: Bitmap, cropHints: Map<Point, Rect>?): WallpaperColors?
-
-    suspend fun getCurrentWallpaperModels(): WallpaperModelsPair
 }
