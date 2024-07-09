@@ -30,7 +30,10 @@ import com.android.wallpaper.picker.customization.shared.model.WallpaperDestinat
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
+import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -44,11 +47,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 
 /** Encapsulates access to wallpaper-related data. */
-class WallpaperRepository(
-    private val scope: CoroutineScope,
+@Singleton
+class WallpaperRepository
+@Inject
+constructor(
+    @BackgroundDispatcher private val scope: CoroutineScope,
     private val client: WallpaperClient,
     private val wallpaperPreferences: WallpaperPreferences,
-    private val backgroundDispatcher: CoroutineDispatcher,
+    @BackgroundDispatcher private val backgroundDispatcher: CoroutineDispatcher,
 ) {
     val maxOptions = MAX_OPTIONS
 

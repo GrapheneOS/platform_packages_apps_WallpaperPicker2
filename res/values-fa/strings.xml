@@ -115,9 +115,9 @@
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"پنهان کردن پیش‌نمای رابط کاربری"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"رابط در پیش‌دید پنهان است. دوضربه برای نمایش مجدد"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"نمایش دادن پیش‌نمای رابط کاربری"</string>
-    <string name="hide_preview_controls_content_description" msgid="894958599274977655">"کنترل‌های پیش‌نما نمایش داده می‌شود. برای پنهان کردن دوضربه بزنید"</string>
+    <string name="hide_preview_controls_content_description" msgid="894958599274977655">"کنترل‌های پیش‌نما نمایش داده می‌شود. برای پنهان کردن دو تک‌ضرب بزنید"</string>
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"پنهان کردن کنترل‌های پیش‌نما"</string>
-    <string name="show_preview_controls_content_description" msgid="908147864005440602">"کنترل‌های پیش‌نما پنهان شده است. برای نمایش دوضربه بزنید"</string>
+    <string name="show_preview_controls_content_description" msgid="908147864005440602">"کنترل‌های پیش‌نما پنهان شده است. برای نمایش دو تک‌ضرب بزنید"</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"نمایش کنترل‌های پیش‌نما"</string>
     <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"پنهان کردن اطلاعات کاغذدیواری"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"رابط در پیش‌دید نمایان است. دوضربه برای پنهان کردن"</string>

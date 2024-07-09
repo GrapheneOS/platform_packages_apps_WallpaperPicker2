@@ -40,7 +40,7 @@
     <string name="set_wallpaper_both_destination" msgid="2536004558738350775">"Écrans d\'accueil et de verrouillage"</string>
     <string name="no_backup_image_wallpaper_label" msgid="6316627676107284851">"Rotation de l\'image de fond d\'écran"</string>
     <string name="permission_needed_explanation" msgid="139166837541426823">"Pour afficher le fond d\'écran actuel ici, <xliff:g id="APP_NAME">%1$s</xliff:g> a besoin d\'accéder au répertoire de stockage de votre appareil."</string>
-    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Pour afficher le fond d\'écran actuel ici, l\'application Fonds d\'écran doit pouvoir accéder au répertoire de stockage de l\'appareil.\n\nPour modifier ce réglage, accédez à la section Autorisations de l\'application."</string>
+    <string name="permission_needed_explanation_go_to_settings" msgid="3923551582092599609">"Pour afficher le fond d\'écran actuel ici, l\'appli Fonds d\'écran doit pouvoir accéder au répertoire de stockage de l\'appareil.\n\nPour modifier ce réglage, accédez à la section Autorisations de l\'appli."</string>
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Autoriser l\'accès"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Service de fonds d\'écran animés pour la rotation des images"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Fond d\'écran quotidien"</string>
@@ -80,7 +80,7 @@
     <string name="my_photos_category_title" msgid="4294567122144565273">"Mes photos"</string>
     <string name="my_photos_generic_wallpaper_title" msgid="7002867526154631172">"Ma photo"</string>
     <string name="fallback_wallpaper_title" msgid="6154655421012506001">"Fond d\'écran"</string>
-    <string name="app_not_found" msgid="4431461707854088231">"L\'application n\'est pas installée."</string>
+    <string name="app_not_found" msgid="4431461707854088231">"L\'appli n\'est pas installée."</string>
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Centrer"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Rogné au centre"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Étiré"</string>

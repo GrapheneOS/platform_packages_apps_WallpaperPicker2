@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.modules
 
-import android.content.Context
 import com.android.wallpaper.module.DefaultPartnerProvider
 import com.android.wallpaper.module.DefaultWallpaperPreferences
 import com.android.wallpaper.module.Injector
@@ -34,7 +33,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -65,15 +63,11 @@ abstract class WallpaperPicker2AppModule {
         impl: DefaultCustomizationOptionsBinder
     ): CustomizationOptionsBinder
 
-    companion object {
-        @Provides
-        @Singleton
-        fun provideWallpaperPreferences(
-            @ApplicationContext context: Context
-        ): WallpaperPreferences {
-            return DefaultWallpaperPreferences(context)
-        }
+    @Binds
+    @Singleton
+    abstract fun bindWallpaperPreferences(impl: DefaultWallpaperPreferences): WallpaperPreferences
 
+    companion object {
         @Provides
         @Singleton
         fun provideUserEventLogger(): UserEventLogger {

@@ -38,15 +38,23 @@ import com.android.wallpaper.module.WallpaperPreferences.PresentationMode
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
+import javax.inject.Inject
+import javax.inject.Singleton
 import org.json.JSONArray
 import org.json.JSONException
 
 /** Default implementation that writes to and reads from SharedPreferences. */
-open class DefaultWallpaperPreferences(private val context: Context) : WallpaperPreferences {
+@Singleton
+open class DefaultWallpaperPreferences
+@Inject
+constructor(
+    @ApplicationContext private val context: Context,
+) : WallpaperPreferences {
     protected val sharedPrefs: SharedPreferences =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     protected val noBackupPrefs: SharedPreferences =

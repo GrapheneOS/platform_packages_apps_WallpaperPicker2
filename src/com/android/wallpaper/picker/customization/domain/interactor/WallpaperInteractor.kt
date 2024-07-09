@@ -23,17 +23,16 @@ import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoi
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 /** Handles business logic for wallpaper-related use-cases. */
-class WallpaperInteractor(
-    private val repository: WallpaperRepository,
-    /** Returns whether wallpaper picker should handle reload */
-    val shouldHandleReload: () -> Boolean = { true },
-) {
+@Singleton
+class WallpaperInteractor @Inject constructor(private val repository: WallpaperRepository) {
     val areRecentsAvailable: Boolean = repository.areRecentsAvailable
     val maxOptions = repository.maxOptions
 
