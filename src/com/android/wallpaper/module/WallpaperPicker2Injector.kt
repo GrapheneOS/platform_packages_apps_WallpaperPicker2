@@ -26,8 +26,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import com.android.customization.model.color.DefaultWallpaperColorResources
 import com.android.customization.model.color.WallpaperColorResources
-import com.android.systemui.shared.settings.data.repository.SecureSettingsRepository
-import com.android.systemui.shared.settings.data.repository.SecureSettingsRepositoryImpl
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.CategoryProvider
@@ -89,7 +87,7 @@ constructor(
     private var wallpaperInteractor: WallpaperInteractor? = null
     private var wallpaperClient: WallpaperClient? = null
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
-    private var secureSettingsRepository: SecureSettingsRepository? = null
+
     private var previewActivityIntentFactory: InlinePreviewIntentFactory? = null
     private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
 
@@ -344,15 +342,6 @@ constructor(
                     interactor = getWallpaperInteractor(context),
                 )
                 .also { wallpaperSnapshotRestorer = it }
-    }
-
-    protected fun getSecureSettingsRepository(context: Context): SecureSettingsRepository {
-        return secureSettingsRepository
-            ?: SecureSettingsRepositoryImpl(
-                    contentResolver = context.applicationContext.contentResolver,
-                    backgroundDispatcher = bgDispatcher,
-                )
-                .also { secureSettingsRepository = it }
     }
 
     override fun getWallpaperColorsRepository(): WallpaperColorsRepository {

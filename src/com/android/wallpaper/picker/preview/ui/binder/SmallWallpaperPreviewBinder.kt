@@ -29,9 +29,9 @@ import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import com.android.wallpaper.picker.data.WallpaperModel
-import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil
-import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil.attachView
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import com.android.wallpaper.util.SurfaceViewUtils
+import com.android.wallpaper.util.SurfaceViewUtils.attachView
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.shouldEnforceSingleEngine
 import com.android.wallpaper.util.wallpaperconnection.WallpaperEngineConnection.WallpaperEngineConnectionListener
@@ -57,7 +57,7 @@ object SmallWallpaperPreviewBinder {
         deviceDisplayType: DeviceDisplayType,
         isFirstBinding: Boolean,
     ) {
-        var surfaceCallback: SurfaceViewUtil.SurfaceCallback? = null
+        var surfaceCallback: SurfaceViewUtils.SurfaceCallback? = null
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 surfaceCallback =
@@ -94,9 +94,9 @@ object SmallWallpaperPreviewBinder {
         displaySize: Point,
         lifecycleOwner: LifecycleOwner,
         isFirstBinding: Boolean,
-    ): SurfaceViewUtil.SurfaceCallback {
+    ): SurfaceViewUtils.SurfaceCallback {
 
-        return object : SurfaceViewUtil.SurfaceCallback {
+        return object : SurfaceViewUtils.SurfaceCallback {
 
             var job: Job? = null
             var loadingAnimationBinding: PreviewEffectsLoadingBinder.Binding? = null

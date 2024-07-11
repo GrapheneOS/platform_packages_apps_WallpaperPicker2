@@ -27,7 +27,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
-import com.android.wallpaper.picker.preview.ui.util.SurfaceViewUtil
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WorkspacePreviewConfigViewModel
 import com.android.wallpaper.util.PreviewUtils
@@ -46,7 +45,7 @@ object WorkspacePreviewBinder {
         viewModel: WallpaperPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
     ) {
-        var surfaceCallback: SurfaceViewUtil.SurfaceCallback? = null
+        var surfaceCallback: SurfaceViewUtils.SurfaceCallback? = null
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 surfaceCallback =
@@ -77,8 +76,8 @@ object WorkspacePreviewBinder {
         viewModel: WallpaperPreviewViewModel,
         config: WorkspacePreviewConfigViewModel,
         lifecycleOwner: LifecycleOwner,
-    ): SurfaceViewUtil.SurfaceCallback {
-        return object : SurfaceViewUtil.SurfaceCallback {
+    ): SurfaceViewUtils.SurfaceCallback {
+        return object : SurfaceViewUtils.SurfaceCallback {
 
             var job: Job? = null
             var previewDisposableHandle: DisposableHandle? = null
@@ -124,7 +123,7 @@ object WorkspacePreviewBinder {
         viewModel: WallpaperPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
     ) {
-        var surfaceCallback: SurfaceViewUtil.SurfaceCallback? = null
+        var surfaceCallback: SurfaceViewUtils.SurfaceCallback? = null
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 surfaceCallback =
@@ -153,8 +152,8 @@ object WorkspacePreviewBinder {
         surface: SurfaceView,
         viewModel: WallpaperPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
-    ): SurfaceViewUtil.SurfaceCallback {
-        return object : SurfaceViewUtil.SurfaceCallback {
+    ): SurfaceViewUtils.SurfaceCallback {
+        return object : SurfaceViewUtils.SurfaceCallback {
 
             var job: Job? = null
             var previewDisposableHandle: DisposableHandle? = null

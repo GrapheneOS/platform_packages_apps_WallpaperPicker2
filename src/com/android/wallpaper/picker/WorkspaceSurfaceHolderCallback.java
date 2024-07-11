@@ -21,6 +21,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.Surface;
+import android.view.SurfaceControlViewHost;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -161,9 +162,16 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
         requestPreview(mWorkspaceSurface, (result) -> {
             mRequestPending.set(false);
             if (result != null && mLastSurface != null) {
-                mWorkspaceSurface.setChildSurfacePackage(
-                        SurfaceViewUtils.getSurfacePackage(result));
-                mCallback = SurfaceViewUtils.getCallback(result);
+                final SurfaceControlViewHost.SurfacePackage pkg =
+                        SurfaceViewUtils.INSTANCE.getSurfacePackage(result);
+                if (pkg != null) {
+                    mWorkspaceSurface.setChildSurfacePackage(pkg);
+                } else {
+                    Log.w(TAG,
+                            "Result bundle from rendering preview does not contain a child "
+                                    + "surface package.");
+                }
+                mCallback = SurfaceViewUtils.INSTANCE.getCallback(result);
                 if (mCallback != null && mDelayedMessage != null) {
                     try {
                         mCallback.replyTo.send(mDelayedMessage);
@@ -246,7 +254,8 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
                             + "crash");
             return;
         }
-        Bundle request = SurfaceViewUtils.createSurfaceViewRequest(workspaceSurface, mExtras);
+        Bundle request = SurfaceViewUtils.INSTANCE.createSurfaceViewRequest(workspaceSurface,
+                mExtras);
         if (mWallpaperColors != null) {
             request.putParcelable(KEY_WALLPAPER_COLORS, mWallpaperColors);
         }

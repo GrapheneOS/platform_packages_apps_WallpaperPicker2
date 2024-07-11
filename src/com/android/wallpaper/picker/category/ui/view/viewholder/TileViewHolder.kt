@@ -77,5 +77,8 @@ class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             Glide.with(itemView.context).asDrawable().load(nullObj).into(wallpaperCategoryImage)
         }
         categorySubtitle.text = item.text
+
+        // bind the tile action to the button
+        itemView.setOnClickListener { _ -> item.onClicked?.invoke() }
     }
 }
