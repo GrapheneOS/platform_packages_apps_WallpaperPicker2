@@ -30,8 +30,9 @@ import com.android.wallpaper.picker.common.preview.ui.viewmodel.BasePreviewViewM
  * Common base preview binder that is only responsible for binding the workspace and wallpaper, and
  * uses the [BasePreviewViewModel].
  */
-// Based on SmallPreviewBinder, except cleaned up to only bind workspace and wallpaper. Also we
-// enable a screen to be defined during binding rather than reading from viewModel.isViewAsHome.
+// Based on SmallPreviewBinder, except cleaned up to only bind bind wallpaper and workspace
+// (workspace binding to be added). Also we enable a screen to be defined during binding rather than
+// reading from viewModel.isViewAsHome.
 // TODO (b/348462236): bind workspace
 object BasePreviewBinder {
     fun bind(

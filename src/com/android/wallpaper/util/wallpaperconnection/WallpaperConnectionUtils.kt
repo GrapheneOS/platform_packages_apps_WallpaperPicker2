@@ -114,38 +114,17 @@ object WallpaperConnectionUtils {
         }
     }
 
-    suspend fun disconnect(
-        context: Context,
-        wallpaperModel: LiveWallpaperModel,
-        displaySize: Point,
-    ) {
-        val engineKey = wallpaperModel.liveWallpaperData.systemWallpaperInfo.getKey(displaySize)
-
-        traceAsync(TAG, "disconnect") {
-            if (wallpaperConnectionMap.containsKey(engineKey)) {
-                mutex.withLock {
-                    wallpaperConnectionMap.remove(engineKey)?.await()?.disconnect(context)
-                }
-            }
-
-            if (surfaceControlMap.containsKey(engineKey)) {
-                mutex.withLock {
-                    surfaceControlMap.remove(engineKey)?.let { surfaceControls ->
-                        surfaceControls.forEach { it.release() }
-                        surfaceControls.clear()
-                    }
-                }
-            }
-
-            val uriKey = wallpaperModel.liveWallpaperData.systemWallpaperInfo.getKey()
-            if (creativeWallpaperConfigPreviewUriMap.containsKey(uriKey)) {
-                mutex.withLock {
-                    if (creativeWallpaperConfigPreviewUriMap.containsKey(uriKey)) {
-                        creativeWallpaperConfigPreviewUriMap.remove(uriKey)
-                    }
+    suspend fun disconnectAll(context: Context) {
+        disconnectAllServices(context)
+        surfaceControlMap.keys.map { key ->
+            mutex.withLock {
+                surfaceControlMap[key]?.let { surfaceControls ->
+                    surfaceControls.forEach { it.release() }
+                    surfaceControls.clear()
                 }
             }
         }
+        surfaceControlMap.clear()
     }
 
     /**

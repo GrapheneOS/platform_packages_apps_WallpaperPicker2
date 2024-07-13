@@ -142,8 +142,8 @@ class WallpaperPreviewInteractorTest {
         )
         runCurrent()
 
-        assertThat(client.wallpapersSet[WallpaperDestination.HOME]).containsExactly(wallpaperModel)
-        assertThat(client.wallpapersSet[WallpaperDestination.LOCK]).isEmpty()
+        assertThat(client.wallpapersSet[WallpaperDestination.HOME]).isEqualTo(wallpaperModel)
+        assertThat(client.wallpapersSet[WallpaperDestination.LOCK]).isNull()
     }
 
     @Test
@@ -172,7 +172,7 @@ class WallpaperPreviewInteractorTest {
             wallpaperModel = wallpaperModel,
         )
 
-        assertThat(client.wallpapersSet[WallpaperDestination.HOME]).containsExactly(wallpaperModel)
-        assertThat(client.wallpapersSet[WallpaperDestination.LOCK]).isEmpty()
+        assertThat(client.wallpapersSet[WallpaperDestination.HOME]).isEqualTo(wallpaperModel)
+        assertThat(client.wallpapersSet[WallpaperDestination.LOCK]).isNull()
     }
 }

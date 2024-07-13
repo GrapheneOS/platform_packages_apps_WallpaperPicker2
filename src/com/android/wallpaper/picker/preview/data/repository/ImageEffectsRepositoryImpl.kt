@@ -234,7 +234,14 @@ constructor(
             }
 
             if (effectsController.isEffectTriggered) {
-                _imageEffectsModel.value = ImageEffectsModel(EffectStatus.EFFECT_READY)
+                // If the previous state before a config change restart is effect applied or effect
+                // apply in progress, retain that state.
+                if (
+                    _imageEffectsModel.value.status != EffectStatus.EFFECT_APPLIED &&
+                        _imageEffectsModel.value.status != EffectStatus.EFFECT_APPLY_IN_PROGRESS
+                ) {
+                    _imageEffectsModel.value = ImageEffectsModel(EffectStatus.EFFECT_READY)
+                }
             } else {
                 effectsController.triggerEffect(context)
             }
@@ -249,8 +256,7 @@ constructor(
                 getParcelable<ComponentName>(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT)
             } else {
                 null
-            }
-                ?: return null
+            } ?: return null
 
         val assetId =
             if (containsKey(EffectContract.ASSET_ID)) {
