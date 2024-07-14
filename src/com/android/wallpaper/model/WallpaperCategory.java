@@ -120,7 +120,7 @@ public class WallpaperCategory extends Category {
      * Returns the mutable list of wallpapers backed by this WallpaperCategory. All reads and writes
      * on the returned list must be synchronized with {@code mWallpapersLock}.
      */
-    protected List<WallpaperInfo> getMutableWallpapers() {
+    public List<WallpaperInfo> getMutableWallpapers() {
         return mWallpapers;
     }
 
