@@ -138,7 +138,8 @@
           android:name="com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity"
           android:excludeFromRecents="true"
           android:taskAffinity="@string/multi_crop_task_affinity"
-          android:resizeableActivity="false"
+          android:resizeableActivity="true"
+          android:screenOrientation="portrait"
           android:theme="@style/WallpaperTheme.Preview">
       </activity>
 
