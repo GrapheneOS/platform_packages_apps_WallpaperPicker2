@@ -34,7 +34,8 @@ object CategoriesBinder {
         viewModel: CategoriesViewModel,
         windowWidth: Int,
         lifecycleOwner: LifecycleOwner,
-        navigateToWallpaperCollection: (collectionId: String) -> Unit,
+        navigationHandler:
+            (navigationEvent: CategoriesViewModel.NavigationEvent, navLogic: (() -> Unit)?) -> Unit,
     ) {
         // instantiate the grid and assign its adapter and layout configuration
         val sectionsListView = categoriesPage.requireViewById<RecyclerView>(R.id.category_grid)
@@ -51,18 +52,17 @@ object CategoriesBinder {
                 launch {
                     viewModel.navigationEvents.collect { navigationEvent ->
                         when (navigationEvent) {
-                            is CategoriesViewModel.NavigationEvent.NavigateToWallpaperCollection -> {
+                            is CategoriesViewModel.NavigationEvent.NavigateToWallpaperCollection,
+                            is CategoriesViewModel.NavigationEvent.NavigateToPreviewScreen,
+                            is CategoriesViewModel.NavigationEvent.NavigateToThirdParty -> {
                                 // Perform navigation with event.data
-                                navigateToWallpaperCollection(navigationEvent.categoryId)
+                                navigationHandler(navigationEvent, null)
                             }
                             CategoriesViewModel.NavigationEvent.NavigateToPhotosPicker -> {
                                 // TODO: implement view logic to navigate to the photos picker
-                            }
-                            is CategoriesViewModel.NavigationEvent.NavigateToPreviewScreen -> {
-                                // TODO: implement view logic to navigate to preview screen
-                            }
-                            is CategoriesViewModel.NavigationEvent.NavigateToThirdParty -> {
-                                // TODO: implement view logic to navigate to 3rd party app
+                                navigationHandler(navigationEvent) {
+                                    viewModel.updateMyPhotosCategory()
+                                }
                             }
                         }
                     }

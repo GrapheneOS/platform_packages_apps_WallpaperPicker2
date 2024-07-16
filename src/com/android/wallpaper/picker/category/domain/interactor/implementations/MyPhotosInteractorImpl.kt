@@ -38,4 +38,8 @@ class MyPhotosInteractorImpl @Inject constructor() : MyPhotosInteractor {
             )
         )
     }
+
+    override fun updateMyPhotos() {
+        // TODO: call repo to update my photos category
+    }
 }

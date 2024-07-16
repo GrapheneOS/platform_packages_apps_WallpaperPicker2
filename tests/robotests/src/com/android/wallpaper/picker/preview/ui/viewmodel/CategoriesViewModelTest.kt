@@ -32,6 +32,8 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -139,38 +141,63 @@ class CategoriesViewModelTest {
             // trigger the onClick of the tile and observe that the correct navigation event is
             // emitted
             sectionViewModel.tileViewModels[0].onClicked?.let { onClick ->
+                val collectedValues = mutableListOf<CategoriesViewModel.NavigationEvent>()
+                val job =
+                    launch(testDispatcher) {
+                        categoriesViewModel.navigationEvents.collect { collectedValues.add(it) }
+                    }
+
                 onClick()
-                val navigationEvent = collectLastValue(categoriesViewModel.navigationEvents)()
-                assertThat(navigationEvent)
+
+                testDispatcher.scheduler.advanceUntilIdle()
+                assertThat(collectedValues[0])
                     .isEqualTo(
                         CategoriesViewModel.NavigationEvent.NavigateToWallpaperCollection(
                             CATEGORY_ID_CELESTIAL_DREAMSCAPES
                         )
                     )
+
+                job.cancelAndJoin()
             }
 
             sectionViewModel = it[CATEGORY_INDEX_CYBERPUNK_CITYSCAPE]
             sectionViewModel.tileViewModels[0].onClicked?.let { onClick ->
+                val collectedValues = mutableListOf<CategoriesViewModel.NavigationEvent>()
+                val job =
+                    launch(testDispatcher) {
+                        categoriesViewModel.navigationEvents.collect { collectedValues.add(it) }
+                    }
+
                 onClick()
-                val navigationEvent = collectLastValue(categoriesViewModel.navigationEvents)()
-                assertThat(navigationEvent)
+
+                testDispatcher.scheduler.advanceUntilIdle()
+
+                assertThat(collectedValues[0])
                     .isEqualTo(
                         CategoriesViewModel.NavigationEvent.NavigateToWallpaperCollection(
                             CATEGORY_ID_CYBERPUNK_CITYSCAPE
                         )
                     )
+                job.cancelAndJoin()
             }
 
             sectionViewModel = it[CATEGORY_INDEX_COSMIC_NEBULA]
             sectionViewModel.tileViewModels[0].onClicked?.let { onClick ->
+                val collectedValues = mutableListOf<CategoriesViewModel.NavigationEvent>()
+                val job =
+                    launch(testDispatcher) {
+                        categoriesViewModel.navigationEvents.collect { collectedValues.add(it) }
+                    }
+
                 onClick()
-                val navigationEvent = collectLastValue(categoriesViewModel.navigationEvents)()
-                assertThat(navigationEvent)
+                testDispatcher.scheduler.advanceUntilIdle()
+                assertThat(collectedValues[0])
                     .isEqualTo(
                         CategoriesViewModel.NavigationEvent.NavigateToWallpaperCollection(
                             CATEGORY_ID_COSMIC_NEBULA
                         )
                     )
+                job.cancelAndJoin()
             }
         }
     }
@@ -182,10 +209,17 @@ class CategoriesViewModelTest {
 
         val photoTile = myPhotosSection?.tileViewModels?.get(EXPECTED_POSITION_PHOTO_TILE)
         photoTile?.onClicked?.let { onClick ->
+            val collectedValues = mutableListOf<CategoriesViewModel.NavigationEvent>()
+            val job =
+                launch(testDispatcher) {
+                    categoriesViewModel.navigationEvents.collect { collectedValues.add(it) }
+                }
+
             onClick()
-            val navigationEvent = collectLastValue(categoriesViewModel.navigationEvents)()
-            assertThat(navigationEvent)
+            testDispatcher.scheduler.advanceUntilIdle()
+            assertThat(collectedValues[0])
                 .isEqualTo(CategoriesViewModel.NavigationEvent.NavigateToPhotosPicker)
+            job.cancelAndJoin()
         }
     }
 

@@ -25,4 +25,6 @@ import kotlinx.coroutines.flow.Flow
  */
 interface MyPhotosInteractor {
     val category: Flow<CategoryModel>
+
+    fun updateMyPhotos()
 }

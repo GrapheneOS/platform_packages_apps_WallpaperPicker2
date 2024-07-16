@@ -38,4 +38,6 @@ class FakeMyPhotosInteractor @Inject constructor() : MyPhotosInteractor {
 
         emit(photoCategory)
     }
+
+    override fun updateMyPhotos() {}
 }

@@ -40,7 +40,7 @@ constructor(
     private val myPhotosInteractor: MyPhotosInteractor,
 ) : ViewModel() {
 
-    private val _navigationEvents = MutableSharedFlow<NavigationEvent>(replay = 1)
+    private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
     val navigationEvents = _navigationEvents.asSharedFlow()
 
     private fun navigateToWallpaperCollection(collectionId: String) {
@@ -117,6 +117,11 @@ constructor(
                 addAll(individualViewModels)
             }
         }
+
+    /** This method updates the photos category */
+    fun updateMyPhotosCategory() {
+        myPhotosInteractor.updateMyPhotos()
+    }
 
     sealed class NavigationEvent {
         data class NavigateToWallpaperCollection(val categoryId: String) : NavigationEvent()

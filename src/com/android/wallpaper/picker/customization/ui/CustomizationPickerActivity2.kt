@@ -42,7 +42,6 @@ import com.android.wallpaper.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.Screen.HOME_SCREEN
 import com.android.wallpaper.model.Screen.LOCK_SCREEN
-import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.picker.common.preview.ui.binder.BasePreviewBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
@@ -56,6 +55,7 @@ import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import com.android.wallpaper.util.ActivityUtils
+import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.WallpaperConnection
 import com.android.wallpaper.util.converter.WallpaperModelFactory
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
@@ -73,6 +73,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
     @Inject lateinit var customizationOptionsBinder: CustomizationOptionsBinder
     @Inject lateinit var wallpaperModelFactory: WallpaperModelFactory
     @Inject lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
+    @Inject lateinit var displayUtils: DisplayUtils
     @Inject @BackgroundDispatcher lateinit var backgroundScope: CoroutineScope
     @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
 
@@ -139,7 +140,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         // TODO (b/348462236): adjust flow so this is always false when previewing current wallpaper
         previewViewModel.setIsWallpaperColorPreviewEnabled(false)
 
-        initPreviewPager()
+        initPreviewPager(isFirstBinding = savedInstanceState == null)
 
         val optionContainer = requireViewById<MotionLayout>(R.id.customization_option_container)
         // The collapsed header height should be updated when option container's height is known
@@ -231,7 +232,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         return optionEntries
     }
 
-    private fun initPreviewPager() {
+    private fun initPreviewPager(isFirstBinding: Boolean) {
         val pager = requireViewById<ViewPager2>(R.id.preview_pager)
         val previewViewModel = customizationPickerViewModel.basePreviewViewModel
         pager.apply {
@@ -239,18 +240,20 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
                 val previewCard = viewHolder.itemView.requireViewById<View>(R.id.preview_card)
 
                 BasePreviewBinder.bind(
-                    applicationContext,
-                    previewCard,
-                    previewViewModel,
-                    if (position == 0) {
-                        LOCK_SCREEN
-                    } else {
-                        HOME_SCREEN
-                    },
-                    DeviceDisplayType.SINGLE,
-                    previewViewModel.wallpaperDisplaySize.value,
-                    this@CustomizationPickerActivity2,
-                    true
+                    applicationContext = applicationContext,
+                    view = previewCard,
+                    viewModel = previewViewModel,
+                    screen =
+                        if (position == 0) {
+                            LOCK_SCREEN
+                        } else {
+                            HOME_SCREEN
+                        },
+                    deviceDisplayType =
+                        displayUtils.getCurrentDisplayType(this@CustomizationPickerActivity2),
+                    displaySize = previewViewModel.wallpaperDisplaySize.value,
+                    lifecycleOwner = this@CustomizationPickerActivity2,
+                    isFirstBinding = isFirstBinding,
                 )
             }
             // Disable over scroll
