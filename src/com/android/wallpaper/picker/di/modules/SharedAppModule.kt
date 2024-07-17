@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.di.modules
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import com.android.wallpaper.module.DefaultNetworkStatusNotifier
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker
 import com.android.wallpaper.module.MultiPanesChecker
@@ -101,6 +102,12 @@ abstract class SharedAppModule {
         @Singleton
         fun provideMultiPanesChecker(): MultiPanesChecker {
             return LargeScreenMultiPanesChecker()
+        }
+
+        @Provides
+        @Singleton
+        fun provideResources(@ApplicationContext context: Context): Resources {
+            return context.resources
         }
     }
 }

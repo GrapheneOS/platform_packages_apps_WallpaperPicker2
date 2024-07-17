@@ -53,7 +53,7 @@ import kotlinx.coroutines.launch
 object WallpaperPreviewBinder {
     fun bind(
         applicationContext: Context,
-        surface: SurfaceView,
+        surfaceView: SurfaceView,
         viewModel: BasePreviewViewModel,
         screen: Screen,
         displaySize: Point,
@@ -67,7 +67,7 @@ object WallpaperPreviewBinder {
                 surfaceCallback =
                     bindSurface(
                         applicationContext = applicationContext,
-                        surface = surface,
+                        surfaceView = surfaceView,
                         viewModel = viewModel,
                         screen = screen,
                         deviceDisplayType = deviceDisplayType,
@@ -75,12 +75,12 @@ object WallpaperPreviewBinder {
                         lifecycleOwner = viewLifecycleOwner,
                         isFirstBinding = isFirstBinding,
                     )
-                surface.setZOrderMediaOverlay(true)
-                surfaceCallback?.let { surface.holder.addCallback(it) }
+                surfaceView.setZOrderMediaOverlay(true)
+                surfaceCallback?.let { surfaceView.holder.addCallback(it) }
             }
             // When OnDestroy, release the surface
             surfaceCallback?.let {
-                surface.holder.removeCallback(it)
+                surfaceView.holder.removeCallback(it)
                 surfaceCallback = null
             }
         }
@@ -93,7 +93,7 @@ object WallpaperPreviewBinder {
      */
     private fun bindSurface(
         applicationContext: Context,
-        surface: SurfaceView,
+        surfaceView: SurfaceView,
         viewModel: BasePreviewViewModel,
         screen: Screen,
         deviceDisplayType: DeviceDisplayType,
@@ -138,7 +138,7 @@ object WallpaperPreviewBinder {
                                     wallpaper,
                                     whichPreview,
                                     screen.toFlag(),
-                                    surface,
+                                    surfaceView,
                                     engineRenderingConfig,
                                     isFirstBinding,
                                     listener,
@@ -147,7 +147,16 @@ object WallpaperPreviewBinder {
                                 val staticPreviewView =
                                     LayoutInflater.from(applicationContext)
                                         .inflate(R.layout.fullscreen_wallpaper_preview, null)
-                                surface.attachView(staticPreviewView)
+                                // surfaceView.width and surfaceFrame.width here can be different,
+                                // one represents the size of the view and the other represents the
+                                // size of the surface. When setting a view to the surface host,
+                                // we want to set it based on the surface's size not the view's size
+                                val surfacePosition = surfaceView.holder.surfaceFrame
+                                surfaceView.attachView(
+                                    staticPreviewView,
+                                    surfacePosition.width(),
+                                    surfacePosition.height()
+                                )
                                 // Bind static wallpaper
                                 StaticPreviewBinder.bind(
                                     lowResImageView =

@@ -44,6 +44,7 @@ object CustomizationPickerBinder2 {
         view: View,
         lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
         homeScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
+        customizationOptionFloatingSheetViewMap: Map<CustomizationOption, View>?,
         viewModel: CustomizationPickerViewModel2,
         customizationOptionsBinder: CustomizationOptionsBinder,
         lifecycleOwner: LifecycleOwner,
@@ -93,6 +94,7 @@ object CustomizationPickerBinder2 {
             view,
             lockScreenCustomizationOptionEntries,
             homeScreenCustomizationOptionEntries,
+            customizationOptionFloatingSheetViewMap,
             viewModel.customizationOptionsViewModel,
             lifecycleOwner,
         )

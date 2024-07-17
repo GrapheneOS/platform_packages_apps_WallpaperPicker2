@@ -87,14 +87,6 @@
             </androidx.constraintlayout.motion.widget.MotionLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <!-- Guideline for the preview in the secondary screen -->
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/preview_guideline_in_secondary_screen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_end="0dp" />
-
         <FrameLayout
             android:id="@+id/customization_option_floating_sheet_container"
             android:layout_width="0dp"

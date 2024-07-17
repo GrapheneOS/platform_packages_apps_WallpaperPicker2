@@ -34,12 +34,12 @@
             android:layout_gravity="center"
             android:contentDescription="@string/wallpaper_preview_card_content_description">
 
-            <SurfaceView
+            <com.android.wallpaper.picker.common.preview.ui.view.CustomizationSurfaceView
                 android:id="@+id/wallpaper_surface"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <SurfaceView
+            <com.android.wallpaper.picker.common.preview.ui.view.CustomizationSurfaceView
                 android:id="@+id/workspace_surface"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

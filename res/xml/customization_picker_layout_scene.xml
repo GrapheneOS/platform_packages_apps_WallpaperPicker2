@@ -54,7 +54,7 @@
 
         <Constraint
             android:id="@+id/preview_header"
-            app:layout_constraintBottom_toTopOf="@+id/preview_guideline_in_secondary_screen"
+            app:layout_constraintBottom_toTopOf="@+id/customization_option_floating_sheet_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -68,16 +68,12 @@
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <Constraint
-            android:id="@+id/preview_guideline_in_secondary_screen"
-            app:layout_constraintGuide_end="0dp" />
-
-        <Constraint
             android:id="@+id/customization_option_floating_sheet_container"
             android:alpha="1.0"
             android:layout_height="wrap_content"
             android:translationY="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent" />
     </ConstraintSet>
 </MotionScene>

@@ -18,6 +18,7 @@ package com.android.wallpaper.di.modules
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker
 import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.module.NetworkStatusNotifier
@@ -153,6 +154,12 @@ internal abstract class SharedTestModule {
         @Singleton
         fun provideMultiPanesChecker(): MultiPanesChecker {
             return LargeScreenMultiPanesChecker()
+        }
+
+        @Provides
+        @Singleton
+        fun provideResources(@ApplicationContext context: Context): Resources {
+            return context.resources
         }
     }
 }

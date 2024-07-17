@@ -30,6 +30,7 @@ class DefaultCustomizationOptionsBinder @Inject constructor() : CustomizationOpt
         view: View,
         lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
         homeScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
+        customizationOptionFloatingSheetViewMap: Map<CustomizationOption, View>?,
         viewModel: CustomizationOptionsViewModel,
         lifecycleOwner: LifecycleOwner
     ) {}

@@ -49,7 +49,7 @@ object BasePreviewBinder {
 
         WallpaperPreviewBinder.bind(
             applicationContext = applicationContext,
-            surface = wallpaperSurface,
+            surfaceView = wallpaperSurface,
             viewModel = viewModel,
             screen = screen,
             displaySize = displaySize,
