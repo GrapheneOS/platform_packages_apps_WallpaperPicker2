@@ -87,13 +87,17 @@ constructor(
             if (wallpaperModel == null || !wallpaperModel.shouldShowInformationFloatingSheet()) {
                 null
             } else {
+
                 InformationFloatingSheetViewModel(
                     wallpaperModel.commonWallpaperData.attributions,
                     if (wallpaperModel.commonWallpaperData.exploreActionUrl.isNullOrEmpty()) {
                         null
                     } else {
                         wallpaperModel.commonWallpaperData.exploreActionUrl
-                    }
+                    },
+                    (wallpaperModel as? LiveWallpaperModel)?.let { liveWallpaperModel ->
+                        liveWallpaperModel.liveWallpaperData.contextDescription?.let { it }
+                    },
                 )
             }
         }

@@ -78,7 +78,7 @@ open class ScreenPreviewViewModel(
         return wallpaperInteractor.wallpaperUpdateEvents(s)
     }
 
-    open fun workspaceUpdateEvents(): Flow<Boolean>? = null
+    open fun workspaceUpdateEvents(): Flow<Unit>? = null
 
     fun getInitialExtras(): Bundle? {
         return initialExtrasProvider.invoke()

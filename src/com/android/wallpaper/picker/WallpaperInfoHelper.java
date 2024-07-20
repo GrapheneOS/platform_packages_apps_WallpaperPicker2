@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.InjectorProvider;
@@ -44,7 +45,7 @@ public class WallpaperInfoHelper {
             @NonNull WallpaperInfo wallpaperInfo,
             @NonNull ExploreIntentReceiver callback) {
         String actionUrl = wallpaperInfo.getActionUrl(context);
-        CharSequence actionLabel = context.getString(R.string.explore);
+        CharSequence actionLabel = getActionLabel(context, wallpaperInfo);
         if (actionUrl != null && !actionUrl.isEmpty()) {
             Uri exploreUri = Uri.parse(wallpaperInfo.getActionUrl(context));
             ExploreIntentChecker intentChecker =
@@ -54,6 +55,18 @@ public class WallpaperInfoHelper {
         } else {
             callback.onReceiveExploreIntent(actionLabel, null);
         }
+    }
+
+    private static CharSequence getActionLabel(Context context, WallpaperInfo wallpaperInfo) {
+        CharSequence actionLabel = null;
+        if (wallpaperInfo instanceof LiveWallpaperInfo) {
+            actionLabel = ((LiveWallpaperInfo) wallpaperInfo).getActionDescription(context);
+        }
+
+        if (TextUtils.isEmpty(actionLabel)) {
+            actionLabel = context.getString(R.string.explore);
+        }
+        return actionLabel;
     }
 
     /**

@@ -19,5 +19,6 @@ package com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet
 /** This data class represents the view data for the info floating sheet */
 data class InformationFloatingSheetViewModel(
     val attributions: List<String?>?,
-    val exploreActionUrl: String?,
+    val actionUrl: String?,
+    val actionButtonTitle: CharSequence? = null,
 )
