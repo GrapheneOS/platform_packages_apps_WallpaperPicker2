@@ -27,6 +27,7 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(components = [SingletonComponent::class], replaces = [DisplaysProviderModule::class])
 abstract class FakeDisplaysProviderModule {
+
     @Binds
     @Singleton
     abstract fun bindDisplaysProvider(impl: FakeDisplaysProvider): DisplaysProvider

@@ -51,25 +51,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class SharedAppModule {
-    @Binds @Singleton abstract fun bindUiModeManager(impl: UiModeManagerImpl): UiModeManagerWrapper
-
-    @Binds
-    @Singleton
-    abstract fun bindNetworkStatusNotifier(
-        impl: DefaultNetworkStatusNotifier
-    ): NetworkStatusNotifier
-
-    @Binds @Singleton abstract fun bindWallpaperRequester(impl: WallpaperRequester): Requester
-
-    @Binds
-    @Singleton
-    abstract fun bindWallpaperXMLParser(impl: WallpaperParserImpl): WallpaperParser
 
     @Binds
     @Singleton
     abstract fun bindCategoryFactory(impl: DefaultCategoryFactory): CategoryFactory
-
-    @Binds @Singleton abstract fun bindWallpaperClient(impl: WallpaperClientImpl): WallpaperClient
 
     @Binds
     @Singleton
@@ -78,18 +63,35 @@ abstract class SharedAppModule {
     @Binds
     @Singleton
     abstract fun bindCreativeCategoryInteractor(
-        impl: CreativeCategoryInteractorImpl
+        impl: CreativeCategoryInteractorImpl,
     ): CreativeCategoryInteractor
 
     @Binds
     @Singleton
     abstract fun bindMyPhotosInteractor(impl: MyPhotosInteractorImpl): MyPhotosInteractor
 
+    @Binds
+    @Singleton
+    abstract fun bindNetworkStatusNotifier(
+        impl: DefaultNetworkStatusNotifier
+    ): NetworkStatusNotifier
+
+    @Binds @Singleton abstract fun bindRequester(impl: WallpaperRequester): Requester
+
+    @Binds
+    @Singleton
+    abstract fun bindUiModeManagerWrapper(impl: UiModeManagerImpl): UiModeManagerWrapper
+
+    @Binds @Singleton abstract fun bindWallpaperClient(impl: WallpaperClientImpl): WallpaperClient
+
+    @Binds @Singleton abstract fun bindWallpaperParser(impl: WallpaperParserImpl): WallpaperParser
+
     companion object {
+
         @Provides
         @Singleton
-        fun provideWallpaperManager(@ApplicationContext appContext: Context): WallpaperManager {
-            return WallpaperManager.getInstance(appContext)
+        fun provideMultiPanesChecker(): MultiPanesChecker {
+            return LargeScreenMultiPanesChecker()
         }
 
         @Provides
@@ -100,14 +102,14 @@ abstract class SharedAppModule {
 
         @Provides
         @Singleton
-        fun provideMultiPanesChecker(): MultiPanesChecker {
-            return LargeScreenMultiPanesChecker()
+        fun provideResources(@ApplicationContext context: Context): Resources {
+            return context.resources
         }
 
         @Provides
         @Singleton
-        fun provideResources(@ApplicationContext context: Context): Resources {
-            return context.resources
+        fun provideWallpaperManager(@ApplicationContext appContext: Context): WallpaperManager {
+            return WallpaperManager.getInstance(appContext)
         }
     }
 }

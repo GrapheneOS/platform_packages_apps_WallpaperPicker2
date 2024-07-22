@@ -27,6 +27,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DisplaysProviderModule {
+
     @Binds
     @Singleton
     abstract fun bindDisplaysProvider(impl: DisplaysProviderImpl): DisplaysProvider

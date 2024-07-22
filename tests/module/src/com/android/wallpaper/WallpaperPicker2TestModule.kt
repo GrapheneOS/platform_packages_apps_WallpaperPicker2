@@ -49,37 +49,18 @@ import javax.inject.Singleton
     replaces = [EffectsModule::class, WallpaperPicker2AppModule::class]
 )
 abstract class WallpaperPicker2TestModule {
-    @Binds @Singleton abstract fun bindInjector(impl: TestInjector): Injector
-
-    @Binds @Singleton abstract fun bindUserEventLogger(impl: TestUserEventLogger): UserEventLogger
-
-    @Binds @Singleton abstract fun bindFakeRequester(impl: FakeDefaultRequester): Requester
 
     @Binds
     @Singleton
-    abstract fun bindFakeDefaultWallpaperCategoryClient(
-        impl: FakeDefaultWallpaperCategoryClient
+    abstract fun bindCustomizationOptionsBinder(
+        impl: DefaultCustomizationOptionsBinder
+    ): CustomizationOptionsBinder
+
+    @Binds
+    @Singleton
+    abstract fun bindDefaultWallpaperCategoryClient(
+        impl: FakeDefaultWallpaperCategoryClient,
     ): DefaultWallpaperCategoryClient
-
-    @Binds
-    @Singleton
-    abstract fun bindWallpaperModelFactory(
-        impl: FakeDefaultWallpaperModelFactory
-    ): WallpaperModelFactory
-
-    @Binds
-    @Singleton
-    abstract fun bindWallpaperPreferences(impl: TestWallpaperPreferences): WallpaperPreferences
-
-    @Binds
-    @Singleton
-    abstract fun providePartnerProvider(impl: TestPartnerProvider): PartnerProvider
-
-    @Binds
-    @Singleton
-    abstract fun bindEffectsWallpaperDialogUtil(
-        impl: DefaultImageEffectDialogUtil
-    ): ImageEffectDialogUtil
 
     @Binds
     @Singleton
@@ -87,7 +68,25 @@ abstract class WallpaperPicker2TestModule {
 
     @Binds
     @Singleton
-    abstract fun bindCustomizationOptionsBinder(
-        impl: DefaultCustomizationOptionsBinder
-    ): CustomizationOptionsBinder
+    abstract fun bindImageEffectDialogUtil(
+        impl: DefaultImageEffectDialogUtil
+    ): ImageEffectDialogUtil
+
+    @Binds @Singleton abstract fun bindInjector(impl: TestInjector): Injector
+
+    @Binds @Singleton abstract fun bindPartnerProvider(impl: TestPartnerProvider): PartnerProvider
+
+    @Binds @Singleton abstract fun bindRequester(impl: FakeDefaultRequester): Requester
+
+    @Binds @Singleton abstract fun bindUserEventLogger(impl: TestUserEventLogger): UserEventLogger
+
+    @Binds
+    @Singleton
+    abstract fun bindWallpaperModelFactory(
+        impl: FakeDefaultWallpaperModelFactory,
+    ): WallpaperModelFactory
+
+    @Binds
+    @Singleton
+    abstract fun bindWallpaperPreferences(impl: TestWallpaperPreferences): WallpaperPreferences
 }

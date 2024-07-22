@@ -26,6 +26,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 @Module
 @InstallIn(ActivityRetainedComponent::class)
 abstract class SharedActivityRetainedModule {
+
     @Binds
     abstract fun bindImageEffectsRepository(
         impl: ImageEffectsRepositoryImpl

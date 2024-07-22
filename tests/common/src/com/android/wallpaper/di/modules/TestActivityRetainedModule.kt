@@ -30,6 +30,7 @@ import dagger.hilt.testing.TestInstallIn
     replaces = [SharedActivityRetainedModule::class]
 )
 internal abstract class TestActivityRetainedModule {
+
     @Binds
     abstract fun bindImageEffectsRepository(
         impl: FakeImageEffectsRepository

@@ -37,21 +37,6 @@ object PreviewUtilsModule {
 
     @Qualifier @Retention(AnnotationRetention.BINARY) annotation class HomeScreenPreviewUtils
 
-    @LockScreenPreviewUtils
-    @ActivityRetainedScoped
-    @Provides
-    fun provideLockScreenPreviewUtils(
-        @ApplicationContext appContext: Context,
-    ): PreviewUtils {
-        return PreviewUtils(
-            context = appContext,
-            authority =
-                appContext.getString(
-                    R.string.lock_screen_preview_provider_authority,
-                ),
-        )
-    }
-
     @HomeScreenPreviewUtils
     @ActivityRetainedScoped
     @Provides
@@ -63,6 +48,21 @@ object PreviewUtilsModule {
             authorityMetadataKey =
                 appContext.getString(
                     R.string.grid_control_metadata_name,
+                ),
+        )
+    }
+
+    @LockScreenPreviewUtils
+    @ActivityRetainedScoped
+    @Provides
+    fun provideLockScreenPreviewUtils(
+        @ApplicationContext appContext: Context,
+    ): PreviewUtils {
+        return PreviewUtils(
+            context = appContext,
+            authority =
+                appContext.getString(
+                    R.string.lock_screen_preview_provider_authority,
                 ),
         )
     }

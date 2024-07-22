@@ -60,21 +60,27 @@ import kotlinx.coroutines.test.TestScope
     replaces = [SharedAppModule::class, DispatchersModule::class]
 )
 internal abstract class SharedTestModule {
-    @Binds @Singleton abstract fun bindUiModeManager(impl: FakeUiModeManager): UiModeManagerWrapper
 
+    // Also use the test dispatcher for work intended for the background thread. This makes tests
+    // single-threaded and more deterministic.
     @Binds
     @Singleton
-    abstract fun bindNetworkStatusNotifier(impl: TestNetworkStatusNotifier): NetworkStatusNotifier
-
-    @Binds
-    @Singleton
-    abstract fun bindWallpaperXMLParser(impl: FakeWallpaperParser): WallpaperParser
+    @BackgroundDispatcher
+    abstract fun bindBackgroundDispatcher(impl: TestDispatcher): CoroutineDispatcher
 
     @Binds
     @Singleton
     abstract fun bindCategoryFactory(impl: FakeDefaultCategoryFactory): CategoryFactory
 
-    @Binds @Singleton abstract fun bindWallpaperClient(impl: FakeWallpaperClient): WallpaperClient
+    @Binds
+    @Singleton
+    abstract fun bindCategoryInteractor(impl: FakeCategoryInteractor): CategoryInteractor
+
+    @Binds
+    @Singleton
+    abstract fun bindCreativeCategoryInteractor(
+        impl: FakeCreativeWallpaperInteractor
+    ): CreativeCategoryInteractor
 
     // Dispatcher and Scope injection choices are based on documentation at
     // http://go/android-dev/kotlin/coroutines/test. Most tests will not need to inject anything
@@ -89,28 +95,51 @@ internal abstract class SharedTestModule {
     // Use the test scope as the main scope to match the test dispatcher
     @Binds @Singleton @MainDispatcher abstract fun bindMainScope(impl: TestScope): CoroutineScope
 
-    // Also use the test dispatcher for work intended for the background thread. This makes tests
-    // single-threaded and more deterministic.
-    @Binds
-    @Singleton
-    @BackgroundDispatcher
-    abstract fun bindBackgroundDispatcher(impl: TestDispatcher): CoroutineDispatcher
-
-    @Binds
-    @Singleton
-    abstract fun bindCategoryInteractor(impl: FakeCategoryInteractor): CategoryInteractor
-
-    @Binds
-    @Singleton
-    abstract fun bindCreativeCategoryInteractor(
-        impl: FakeCreativeWallpaperInteractor
-    ): CreativeCategoryInteractor
-
     @Binds
     @Singleton
     abstract fun bindMyPhotosInteractor(impl: FakeMyPhotosInteractor): MyPhotosInteractor
 
+    @Binds
+    @Singleton
+    abstract fun bindNetworkStatusNotifier(impl: TestNetworkStatusNotifier): NetworkStatusNotifier
+
+    @Binds
+    @Singleton
+    abstract fun bindUiModeManagerWrapper(impl: FakeUiModeManager): UiModeManagerWrapper
+
+    @Binds @Singleton abstract fun bindWallpaperClient(impl: FakeWallpaperClient): WallpaperClient
+
+    @Binds @Singleton abstract fun bindWallpaperParser(impl: FakeWallpaperParser): WallpaperParser
+
     companion object {
+
+        // Scope for background work that does not need to finish before a test completes, like
+        // continuously reading values from a flow.
+        @Provides
+        @Singleton
+        @BackgroundDispatcher
+        fun provideBackgroundScope(impl: TestScope): CoroutineScope {
+            return impl.backgroundScope
+        }
+
+        @Provides
+        @Singleton
+        fun provideMultiPanesChecker(): MultiPanesChecker {
+            return LargeScreenMultiPanesChecker()
+        }
+
+        @Provides
+        @Singleton
+        fun providePackageManager(@ApplicationContext appContext: Context): PackageManager {
+            return appContext.packageManager
+        }
+
+        @Provides
+        @Singleton
+        fun provideResources(@ApplicationContext context: Context): Resources {
+            return context.resources
+        }
+
         // This is the most general test dispatcher for use in tests. UnconfinedTestDispatcher
         // is the other choice. The difference is that the unconfined dispatcher starts new
         // coroutines eagerly, which could be easier but could also make tests non-deterministic in
@@ -129,37 +158,10 @@ internal abstract class SharedTestModule {
             return TestScope(testDispatcher)
         }
 
-        // Scope for background work that does not need to finish before a test completes, like
-        // continuously reading values from a flow.
-        @Provides
-        @Singleton
-        @BackgroundDispatcher
-        fun provideBackgroundScope(impl: TestScope): CoroutineScope {
-            return impl.backgroundScope
-        }
-
         @Provides
         @Singleton
         fun provideWallpaperManager(@ApplicationContext appContext: Context): WallpaperManager {
             return WallpaperManager.getInstance(appContext)
-        }
-
-        @Provides
-        @Singleton
-        fun providePackageManager(@ApplicationContext appContext: Context): PackageManager {
-            return appContext.packageManager
-        }
-
-        @Provides
-        @Singleton
-        fun provideMultiPanesChecker(): MultiPanesChecker {
-            return LargeScreenMultiPanesChecker()
-        }
-
-        @Provides
-        @Singleton
-        fun provideResources(@ApplicationContext context: Context): Resources {
-            return context.resources
         }
     }
 }

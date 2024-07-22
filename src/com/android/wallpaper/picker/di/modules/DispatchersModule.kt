@@ -35,17 +35,17 @@ import kotlinx.coroutines.Dispatchers
 @InstallIn(SingletonComponent::class)
 object DispatchersModule {
 
+    @Provides @MainDispatcher fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
+
     @Provides
     @MainDispatcher
     fun provideMainScope(): CoroutineScope = CoroutineScope(Dispatchers.Main)
 
-    @Provides @MainDispatcher fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
+    @Provides
+    @BackgroundDispatcher
+    fun provideBackgroundDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
     @Provides
     @BackgroundDispatcher
     fun provideBackgroundScope(): CoroutineScope = CoroutineScope(Dispatchers.IO)
-
-    @Provides
-    @BackgroundDispatcher
-    fun provideBackgroundDispatcher(): CoroutineDispatcher = Dispatchers.IO
 }
