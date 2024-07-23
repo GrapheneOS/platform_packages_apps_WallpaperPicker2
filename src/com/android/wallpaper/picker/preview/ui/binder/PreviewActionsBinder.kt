@@ -355,7 +355,7 @@ object PreviewActionsBinder {
                                 informationViewModel != null -> {
                                     floatingSheet.setInformationContent(
                                         informationViewModel.attributions,
-                                        informationViewModel.actionUrl?.let { url ->
+                                        informationViewModel.exploreActionUrl?.let { url ->
                                             {
                                                 logger.logWallpaperExploreButtonClicked()
                                                 floatingSheet.context.startActivity(
@@ -363,7 +363,6 @@ object PreviewActionsBinder {
                                                 )
                                             }
                                         },
-                                        informationViewModel.actionButtonTitle
                                     )
                                 }
                                 imageEffectViewModel != null ->
