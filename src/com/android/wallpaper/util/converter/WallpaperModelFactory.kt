@@ -111,8 +111,6 @@ interface WallpaperModelFactory {
             val currentHomeWallpaper =
                 wallpaperManager.getWallpaperInfo(WallpaperManager.FLAG_SYSTEM)
             val currentLockWallpaper = wallpaperManager.getWallpaperInfo(WallpaperManager.FLAG_LOCK)
-            var contextDescription: CharSequence? =
-                info.loadContextDescription(context.getPackageManager())
             return LiveWallpaperData(
                 groupName = groupNameOfWallpaper,
                 systemWallpaperInfo = info,
@@ -120,10 +118,9 @@ interface WallpaperModelFactory {
                 isApplied = isApplied(currentHomeWallpaper, currentLockWallpaper),
                 // TODO (331227828): don't relay on effectNames to determine if this is an effect
                 // live wallpaper
-                isEffectWallpaper =
-                    effectsController?.isEffectsWallpaper(info) ?: (effectNames != null),
+                isEffectWallpaper = effectsController?.isEffectsWallpaper(info)
+                        ?: (effectNames != null),
                 effectNames = effectNames,
-                contextDescription = contextDescription,
             )
         }
 

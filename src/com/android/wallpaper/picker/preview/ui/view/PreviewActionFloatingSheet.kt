@@ -120,7 +120,6 @@ class PreviewActionFloatingSheet(context: Context, attrs: AttributeSet?) :
     fun setInformationContent(
         attributions: List<String?>?,
         onExploreButtonClickListener: OnClickListener?,
-        actionButtonTitle: CharSequence?,
     ) {
         val view = LayoutInflater.from(context).inflate(R.layout.wallpaper_info_view2, this, false)
         val title: TextView = view.requireViewById(R.id.wallpaper_info_title)
@@ -150,7 +149,6 @@ class PreviewActionFloatingSheet(context: Context, attrs: AttributeSet?) :
             }
 
             exploreButton.isVisible = onExploreButtonClickListener != null
-            actionButtonTitle?.let { exploreButton.text = it }
             exploreButton.setOnClickListener(onExploreButtonClickListener)
         }
         floatingSheetView.removeAllViews()
