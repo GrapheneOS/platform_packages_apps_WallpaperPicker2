@@ -15,6 +15,8 @@
  */
 package com.android.wallpaper.modules
 
+import com.android.wallpaper.effects.DefaultEffectsController
+import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.module.DefaultPartnerProvider
 import com.android.wallpaper.module.DefaultWallpaperPreferences
 import com.android.wallpaper.module.Injector
@@ -53,6 +55,10 @@ abstract class WallpaperPicker2AppModule {
     abstract fun bindDefaultWallpaperCategoryClient(
         impl: DefaultWallpaperCategoryClientImpl
     ): DefaultWallpaperCategoryClient
+
+    @Binds
+    @Singleton
+    abstract fun bindEffectsController(impl: DefaultEffectsController): EffectsController
 
     @Binds
     @Singleton

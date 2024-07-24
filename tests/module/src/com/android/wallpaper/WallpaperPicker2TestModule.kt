@@ -27,7 +27,6 @@ import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.category.client.DefaultWallpaperCategoryClient
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
-import com.android.wallpaper.picker.di.modules.EffectsModule
 import com.android.wallpaper.picker.preview.ui.util.DefaultImageEffectDialogUtil
 import com.android.wallpaper.picker.preview.ui.util.ImageEffectDialogUtil
 import com.android.wallpaper.testing.FakeDefaultRequester
@@ -46,7 +45,7 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [EffectsModule::class, WallpaperPicker2AppModule::class]
+    replaces = [WallpaperPicker2AppModule::class]
 )
 abstract class WallpaperPicker2TestModule {
 
