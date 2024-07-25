@@ -191,18 +191,15 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
      * Disconnect and destroy the WallpaperEngine for this connection.
      */
     public void disconnect() {
-        synchronized (this) {
-            mConnected = false;
-            destroyEngine();
-            detachConnection();
-            unbindService();
-        }
+        mConnected = false;
+        destroyEngine();
+        unbindService();
         if (mListener != null) {
             mListener.onDisconnected();
         }
     }
 
-    private void destroyEngine() {
+    private synchronized void destroyEngine() {
         if (mEngine == null) {
             return;
         }
@@ -219,7 +216,13 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
         mEngine = null;
     }
 
-    private void detachConnection() {
+    /**
+     * Detach the connection from wallpaper service. Generally this does not need to be called
+     * throughout an activity's active lifecycle since the same connection is used across
+     * WallpaperConnection instances, for views within the same window. Calling attachConnection
+     * should be enough to overwrite the previous connection.
+     */
+    public synchronized void detachConnection() {
         if (mService != null) {
             try {
                 mService.detach(mToken);
@@ -230,7 +233,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
         mToken = null;
     }
 
-    private void unbindService() {
+    private synchronized void unbindService() {
         try {
             mContext.unbindService(this);
         } catch (IllegalArgumentException e) {

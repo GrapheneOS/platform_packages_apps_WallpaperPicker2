@@ -175,6 +175,19 @@ object ScreenPreviewBinder {
             cleanupWallpaperConnectionRunnable.run()
         }
 
+        val activityLifecycleObserver =
+            object : DefaultLifecycleObserver {
+                override fun onStop(owner: LifecycleOwner) {
+                    super.onStop(owner)
+                    // Wallpaper connection does not need to be detached between
+                    // fragments. Detach in activity onStop so that it is detached
+                    // when CustomizationPickerActivity is put on the back stack or
+                    // destroyed.
+                    wallpaperConnection?.detachConnection()
+                }
+            }
+        (activity as LifecycleOwner).lifecycle.addObserver(activityLifecycleObserver)
+
         val job =
             lifecycleOwner.lifecycleScope.launch {
                 launch {
