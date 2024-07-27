@@ -76,20 +76,17 @@ constructor(
     private suspend fun fetchSystemCategories() {
         try {
             val fetchedCategories = defaultWallpaperClient.getSystemCategories()
-            val processedCategories =
-                fetchedCategories.map { category ->
-                    categoryFactory.getCategoryModel(context, category)
-                }
+            val processedCategories = fetchedCategories.map { categoryFactory.getCategoryModel(it) }
             _systemCategories.value = processedCategories
         } catch (e: Exception) {
             Log.e(TAG, "Error fetching system categories", e)
         }
     }
 
-    private suspend fun fetchMyPhotosCategory() {
+    override suspend fun fetchMyPhotosCategory() {
         try {
             val myPhotos = defaultWallpaperClient.getMyPhotosCategory()
-            _myPhotosCategory.value = myPhotos.let { categoryFactory.getCategoryModel(context, it) }
+            _myPhotosCategory.value = myPhotos.let { categoryFactory.getCategoryModel(it) }
         } catch (e: Exception) {
             Log.e(TAG, "Error fetching My Photos category", e)
         }
@@ -99,8 +96,7 @@ constructor(
         try {
             val onDevice =
                 (defaultWallpaperClient as? DefaultWallpaperCategoryClient)?.getOnDeviceCategory()
-            _onDeviceCategory.value =
-                onDevice?.let { categoryFactory.getCategoryModel(context, it) }
+            _onDeviceCategory.value = onDevice?.let { categoryFactory.getCategoryModel(it) }
         } catch (e: Exception) {
             Log.e(TAG, "Error fetching On Device category", e)
         }

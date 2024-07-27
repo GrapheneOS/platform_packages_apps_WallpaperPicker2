@@ -22,6 +22,7 @@ import android.content.res.Resources
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker
 import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.module.NetworkStatusNotifier
+import com.android.wallpaper.picker.category.data.repository.WallpaperCategoryRepository
 import com.android.wallpaper.picker.category.domain.interactor.CategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
@@ -34,6 +35,7 @@ import com.android.wallpaper.system.UiModeManagerWrapper
 import com.android.wallpaper.testing.FakeCategoryInteractor
 import com.android.wallpaper.testing.FakeCreativeWallpaperInteractor
 import com.android.wallpaper.testing.FakeDefaultCategoryFactory
+import com.android.wallpaper.testing.FakeDefaultWallpaperCategoryRepository
 import com.android.wallpaper.testing.FakeMyPhotosInteractor
 import com.android.wallpaper.testing.FakeUiModeManager
 import com.android.wallpaper.testing.FakeWallpaperClient
@@ -85,6 +87,12 @@ internal abstract class SharedTestModule {
     // Dispatcher and Scope injection choices are based on documentation at
     // http://go/android-dev/kotlin/coroutines/test. Most tests will not need to inject anything
     // other than the TestDispatcher, for use in Dispatchers.setMain().
+
+    @Binds
+    @Singleton
+    abstract fun bindFakeDefaultWallpaperCategoryRepository(
+        impl: FakeDefaultWallpaperCategoryRepository
+    ): WallpaperCategoryRepository
 
     // Use the test dispatcher for work intended for the main thread
     @Binds

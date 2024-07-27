@@ -26,6 +26,10 @@ import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.module.NetworkStatusNotifier
 import com.android.wallpaper.network.Requester
 import com.android.wallpaper.network.WallpaperRequester
+import com.android.wallpaper.picker.category.client.DefaultWallpaperCategoryClient
+import com.android.wallpaper.picker.category.client.DefaultWallpaperCategoryClientImpl
+import com.android.wallpaper.picker.category.data.repository.DefaultWallpaperCategoryRepository
+import com.android.wallpaper.picker.category.data.repository.WallpaperCategoryRepository
 import com.android.wallpaper.picker.category.domain.interactor.CategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
@@ -81,6 +85,18 @@ abstract class SharedAppModule {
     @Binds
     @Singleton
     abstract fun bindUiModeManagerWrapper(impl: UiModeManagerImpl): UiModeManagerWrapper
+
+    @Binds
+    @Singleton
+    abstract fun bindWallpaperCategoryClient(
+        impl: DefaultWallpaperCategoryClientImpl
+    ): DefaultWallpaperCategoryClient
+
+    @Binds
+    @Singleton
+    abstract fun bindWallpaperCategoryRepository(
+        impl: DefaultWallpaperCategoryRepository
+    ): WallpaperCategoryRepository
 
     @Binds @Singleton abstract fun bindWallpaperClient(impl: WallpaperClientImpl): WallpaperClient
 

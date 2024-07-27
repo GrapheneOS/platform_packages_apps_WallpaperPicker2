@@ -26,7 +26,6 @@ import com.android.wallpaper.model.WallpaperCategory
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.PartnerProvider
 import com.android.wallpaper.util.WallpaperParser
-import com.android.wallpaper.util.converter.category.CategoryFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
@@ -50,12 +49,11 @@ constructor(
 
     /** This method is used for fetching and creating the MyPhotos category tile. */
     override suspend fun getMyPhotosCategory(): Category {
-        val imageCategory =
-            ImageCategory(
-                context.getString(R.string.my_photos_category_title),
-                context.getString(R.string.image_wallpaper_collection_id),
-                PRIORITY_MY_PHOTOS_WHEN_CREATIVE_WALLPAPERS_ENABLED,
-                R.drawable.wallpaperpicker_emptystate /* overlayIconResId */
+        val imageCategory = ImageCategory(
+                    context.getString(R.string.my_photos_category_title),
+                    context.getString(R.string.image_wallpaper_collection_id),
+                    PRIORITY_MY_PHOTOS_WHEN_CREATIVE_WALLPAPERS_ENABLED,
+                    R.drawable.wallpaperpicker_emptystate, /* overlayIconResId */
             )
         return imageCategory
     }

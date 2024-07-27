@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.ExploreIntentChecker;
 import com.android.wallpaper.module.InjectorProvider;
@@ -44,7 +45,7 @@ public class WallpaperInfoHelper {
             @NonNull WallpaperInfo wallpaperInfo,
             @NonNull ExploreIntentReceiver callback) {
         String actionUrl = wallpaperInfo.getActionUrl(context);
-        CharSequence actionLabel = context.getString(R.string.explore);
+        CharSequence actionLabel = getActionLabel(context, wallpaperInfo);
         if (actionUrl != null && !actionUrl.isEmpty()) {
             Uri exploreUri = Uri.parse(wallpaperInfo.getActionUrl(context));
             ExploreIntentChecker intentChecker =
@@ -56,24 +57,16 @@ public class WallpaperInfoHelper {
         }
     }
 
-    /**
-     * Loads the explore Intent from the actionUrl
-     */
-    public static void loadExploreIntent(
-            Context context,
-            @Nullable String actionUrl,
-            @NonNull ExploreIntentReceiver callback) {
-        CharSequence actionLabel = context.getString(R.string.explore);
-
-        if (!TextUtils.isEmpty(actionUrl)) {
-            Uri exploreUri = Uri.parse(actionUrl);
-            ExploreIntentChecker intentChecker =
-                    InjectorProvider.getInjector().getExploreIntentChecker(context);
-            intentChecker.fetchValidActionViewIntent(exploreUri,
-                    intent -> callback.onReceiveExploreIntent(actionLabel, intent));
-        } else {
-            callback.onReceiveExploreIntent(actionLabel, null);
+    private static CharSequence getActionLabel(Context context, WallpaperInfo wallpaperInfo) {
+        CharSequence actionLabel = null;
+        if (wallpaperInfo instanceof LiveWallpaperInfo) {
+            actionLabel = ((LiveWallpaperInfo) wallpaperInfo).getActionDescription(context);
         }
+
+        if (TextUtils.isEmpty(actionLabel)) {
+            actionLabel = context.getString(R.string.explore);
+        }
+        return actionLabel;
     }
 
     /** Indicates if the explore button should show up in the wallpaper info view. */

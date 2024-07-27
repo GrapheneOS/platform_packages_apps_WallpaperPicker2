@@ -25,8 +25,6 @@ import com.android.wallpaper.module.WallpaperPicker2Injector
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.logging.NoOpUserEventLogger
 import com.android.wallpaper.module.logging.UserEventLogger
-import com.android.wallpaper.picker.category.client.DefaultWallpaperCategoryClient
-import com.android.wallpaper.picker.category.client.DefaultWallpaperCategoryClientImpl
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
 import com.android.wallpaper.picker.preview.ui.util.DefaultImageEffectDialogUtil
@@ -49,12 +47,6 @@ abstract class WallpaperPicker2AppModule {
     abstract fun bindCustomizationOptionsBinder(
         impl: DefaultCustomizationOptionsBinder
     ): CustomizationOptionsBinder
-
-    @Binds
-    @Singleton
-    abstract fun bindDefaultWallpaperCategoryClient(
-        impl: DefaultWallpaperCategoryClientImpl
-    ): DefaultWallpaperCategoryClient
 
     @Binds
     @Singleton

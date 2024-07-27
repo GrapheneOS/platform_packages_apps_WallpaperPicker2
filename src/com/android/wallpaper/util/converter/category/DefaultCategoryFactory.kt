@@ -28,6 +28,7 @@ import com.android.wallpaper.picker.data.category.CommonCategoryData
 import com.android.wallpaper.picker.data.category.ImageCategoryData
 import com.android.wallpaper.picker.data.category.ThirdPartyCategoryData
 import com.android.wallpaper.util.converter.WallpaperModelFactory
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,14 +36,16 @@ import javax.inject.Singleton
 @Singleton
 class DefaultCategoryFactory
 @Inject
-constructor(private val wallpaperModelFactory: WallpaperModelFactory) : CategoryFactory {
+constructor(
+    @ApplicationContext private val context: Context,
+    private val wallpaperModelFactory: WallpaperModelFactory,
+) : CategoryFactory {
 
-    override fun getCategoryModel(context: Context, category: Category): CategoryModel {
+    override fun getCategoryModel(category: Category): CategoryModel {
         return CategoryModel(
             commonCategoryData = getCommonCategoryData(category),
-            collectionCategoryData =
-                (category as? WallpaperCategory)?.getCollectionsCategoryData(context),
-            imageCategoryData = getImageCategoryData(category, context),
+            collectionCategoryData = (category as? WallpaperCategory)?.getCollectionsCategoryData(),
+            imageCategoryData = getImageCategoryData(category),
             thirdPartyCategoryData = getThirdPartyCategoryData(category)
         )
     }
@@ -55,9 +58,7 @@ constructor(private val wallpaperModelFactory: WallpaperModelFactory) : Category
         )
     }
 
-    private fun WallpaperCategory.getCollectionsCategoryData(
-        context: Context
-    ): CollectionCategoryData {
+    private fun WallpaperCategory.getCollectionsCategoryData(): CollectionCategoryData {
         val wallpaperModelList =
             wallpapers
                 .map { wallpaperInfo ->
@@ -72,9 +73,12 @@ constructor(private val wallpaperModelFactory: WallpaperModelFactory) : Category
         )
     }
 
-    private fun getImageCategoryData(category: Category, context: Context): ImageCategoryData? {
+    private fun getImageCategoryData(category: Category): ImageCategoryData? {
         return if (category is ImageCategory) {
-            ImageCategoryData(overlayIconDrawable = category.getOverlayIcon(context))
+            ImageCategoryData(
+                thumbnailAsset = category.getThumbnail(context),
+                defaultDrawable = category.getOverlayIcon(context)
+            )
         } else {
             Log.w(TAG, "Passed category is not of type ImageCategory")
             null

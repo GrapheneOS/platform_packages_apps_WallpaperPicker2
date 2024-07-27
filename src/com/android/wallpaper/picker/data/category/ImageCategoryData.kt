@@ -17,9 +17,11 @@
 package com.android.wallpaper.picker.data.category
 
 import android.graphics.drawable.Drawable
+import com.android.wallpaper.asset.Asset
 
 /**
  * Represents set of attributes for depicting the block used for accessing personal photos on
- * device.
+ * device. The defaultDrawable contains the placeholder image drawable, which is used when
+ * thumbAsset is null. If thumbAsset is provided, it will be used instead of defaultDrawable.
  */
-data class ImageCategoryData(val overlayIconDrawable: Drawable?)
+data class ImageCategoryData(val thumbnailAsset: Asset?, val defaultDrawable: Drawable?)

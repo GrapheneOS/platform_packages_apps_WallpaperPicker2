@@ -16,7 +16,6 @@
 
 package com.android.wallpaper.testing
 
-import android.content.Context
 import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 import com.android.wallpaper.model.Category
@@ -53,7 +52,7 @@ class FakeDefaultCategoryFactory @Inject constructor() : CategoryFactory {
         this.resolveInfo = resolveInfo
     }
 
-    override fun getCategoryModel(context: Context, category: Category): CategoryModel {
+    override fun getCategoryModel(category: Category): CategoryModel {
         return CategoryModel(
             commonCategoryData = createCommonCategoryData(category),
             collectionCategoryData = createCollectionsCategoryData(category),
@@ -87,7 +86,7 @@ class FakeDefaultCategoryFactory @Inject constructor() : CategoryFactory {
 
     private fun createImageCategoryData(category: Category): ImageCategoryData? {
         return if (category is ImageCategory) {
-            ImageCategoryData(overlayIconDrawable = overlayIconDrawable)
+            ImageCategoryData(defaultDrawable = null, thumbnailAsset = fakeAsset)
         } else {
             null
         }

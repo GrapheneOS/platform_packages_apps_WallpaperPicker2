@@ -16,7 +16,13 @@
 
 package com.android.wallpaper.picker.category.ui.viewmodel
 
+import android.graphics.drawable.Drawable
 import com.android.wallpaper.asset.Asset
 
 /** This class represents the view model for a single category tile. */
-class TileViewModel(val thumbAsset: Asset?, val text: String, val onClicked: (() -> Unit)? = null)
+class TileViewModel(
+    val defaultDrawable: Drawable?,
+    val thumbnailAsset: Asset?,
+    val text: String,
+    val onClicked: (() -> Unit)? = null
+)

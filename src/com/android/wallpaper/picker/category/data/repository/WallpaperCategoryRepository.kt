@@ -28,4 +28,6 @@ interface WallpaperCategoryRepository {
     val myPhotosCategory: StateFlow<CategoryModel?>
     val onDeviceCategory: StateFlow<CategoryModel?>
     val isDefaultCategoriesFetched: StateFlow<Boolean>
+
+    suspend fun fetchMyPhotosCategory()
 }

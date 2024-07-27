@@ -93,7 +93,10 @@ constructor(
                         null
                     } else {
                         wallpaperModel.commonWallpaperData.exploreActionUrl
-                    }
+                    },
+                    (wallpaperModel as? LiveWallpaperModel)?.let { liveWallpaperModel ->
+                        liveWallpaperModel.liveWallpaperData.contextDescription?.let { it }
+                    },
                 )
             }
         }

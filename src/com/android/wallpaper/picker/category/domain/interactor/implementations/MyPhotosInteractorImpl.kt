@@ -16,30 +16,29 @@
 
 package com.android.wallpaper.picker.category.domain.interactor.implementations
 
+import com.android.wallpaper.picker.category.data.repository.WallpaperCategoryRepository
 import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
 import com.android.wallpaper.picker.data.category.CategoryModel
-import com.android.wallpaper.picker.data.category.CommonCategoryData
+import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
 
 /** This class implements the business logic in assembling my photos category model */
 @Singleton
-class MyPhotosInteractorImpl @Inject constructor() : MyPhotosInteractor {
-    override val category: Flow<CategoryModel> = flow {
-        // TODO: to provide concrete implementation
-        emit(
-            CategoryModel(
-                CommonCategoryData("", "", 1),
-                /* previewImage= */ null,
-                /* previewImageThumbnail= */ null,
-                /* previewImageThumbnailTransformation= */ null,
-            )
-        )
-    }
+class MyPhotosInteractorImpl
+@Inject
+constructor(
+    private val wallpaperCategoryRepository: WallpaperCategoryRepository,
+    @BackgroundDispatcher private val backgroundScope: CoroutineScope
+) : MyPhotosInteractor {
+    override val category: Flow<CategoryModel> =
+        wallpaperCategoryRepository.myPhotosCategory.filterNotNull()
 
     override fun updateMyPhotos() {
-        // TODO: call repo to update my photos category
+        backgroundScope.launch { wallpaperCategoryRepository.fetchMyPhotosCategory() }
     }
 }

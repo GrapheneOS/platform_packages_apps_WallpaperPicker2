@@ -71,7 +71,11 @@ constructor(
                 SectionViewModel(
                     tileViewModels =
                         listOf(
-                            TileViewModel(null, category.commonCategoryData.title) {
+                            TileViewModel(
+                                defaultDrawable = null,
+                                thumbnailAsset = null,
+                                text = category.commonCategoryData.title,
+                            ) {
                                 //  TODO(b/352081782): check if there is a single wallpaper
                                 navigateToWallpaperCollection(
                                     category.commonCategoryData.collectionId
@@ -87,7 +91,11 @@ constructor(
         creativeWallpaperInteractor.categories.map { categories ->
             val tiles =
                 categories.map { category ->
-                    TileViewModel(null, category.commonCategoryData.title)
+                    TileViewModel(
+                        defaultDrawable = null,
+                        thumbnailAsset = null,
+                        text = category.commonCategoryData.title,
+                    )
                 }
             return@map SectionViewModel(tileViewModels = tiles, columnCount = 3)
         }
@@ -97,7 +105,11 @@ constructor(
             SectionViewModel(
                 tileViewModels =
                     listOf(
-                        TileViewModel(null, category.commonCategoryData.title) {
+                        TileViewModel(
+                            defaultDrawable = category.imageCategoryData?.defaultDrawable,
+                            thumbnailAsset = category.imageCategoryData?.thumbnailAsset,
+                            text = category.commonCategoryData.title,
+                        ) {
                             // TODO(b/352081782): trigger the effect with effect controller
                             navigateToPhotosPicker()
                         }

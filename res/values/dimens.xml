@@ -409,7 +409,8 @@
     <!-- Dimensions for the floating tab toolbar -->
     <dimen name="floating_tab_toolbar_padding">8dp</dimen>
     <dimen name="floating_tab_toolbar_tab_horizontal_padding">16dp</dimen>
-    <dimen name="floating_tab_toolbar_tab_vertical_padding">8dp</dimen>
+    <dimen name="floating_tab_toolbar_tab_vertical_padding">10dp</dimen>
+    <dimen name="floating_tab_toolbar_tab_icon_size">20dp</dimen>
     <dimen name="floating_tab_toolbar_tab_icon_margin_end">8dp</dimen>
     <dimen name="floating_tab_toolbar_tab_divider_width">8dp</dimen>
     <dimen name="floating_tab_toolbar_text_max_width">140dp</dimen>

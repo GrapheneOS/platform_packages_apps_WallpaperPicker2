@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.util.converter.category
+package com.android.wallpaper.picker.customization.ui.viewmodel
 
-import com.android.wallpaper.model.Category
-import com.android.wallpaper.picker.data.category.CategoryModel
+import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
 
-/** This is the interface for converting legacy category to the new category model class. */
-interface CategoryFactory {
-    fun getCategoryModel(category: Category): CategoryModel
-}
+data class FloatingToolbarTabViewModel(
+    val icon: Icon,
+    val text: String,
+    val isSelected: Boolean,
+    val onClick: (() -> Unit)?,
+)

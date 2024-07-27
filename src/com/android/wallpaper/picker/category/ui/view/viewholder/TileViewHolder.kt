@@ -26,7 +26,6 @@ import com.android.wallpaper.R
 import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
 import com.android.wallpaper.util.ResourceUtils
 import com.android.wallpaper.util.SizeCalculator
-import com.bumptech.glide.Glide
 
 /** Caches and binds [TileViewHolder] to a [WallpaperTileView] */
 class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -63,18 +62,15 @@ class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             tileSize.y /= 2
         }
         wallpaperCategoryImage.getLayoutParams().height = tileSize.y
-
-        if (item.thumbAsset == null) {
+        if (item.thumbnailAsset != null) {
             val placeHolderColor =
                 ResourceUtils.getColorAttr(context, android.R.attr.colorSecondary)
-            item.thumbAsset?.loadDrawable(context, wallpaperCategoryImage, placeHolderColor)
+            item.thumbnailAsset.loadDrawable(context, wallpaperCategoryImage, placeHolderColor)
         } else {
-            // defaulting to solid color if assets are null
+            wallpaperCategoryImage.setImageDrawable(item.defaultDrawable)
             wallpaperCategoryImage.setBackgroundColor(
-                itemView.context.getResources().getColor(R.color.myphoto_background_color)
+                context.resources.getColor(R.color.myphoto_background_color)
             )
-            val nullObj: Any? = null
-            Glide.with(itemView.context).asDrawable().load(nullObj).into(wallpaperCategoryImage)
         }
         categorySubtitle.text = item.text
 

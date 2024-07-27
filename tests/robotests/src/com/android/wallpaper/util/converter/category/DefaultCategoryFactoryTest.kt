@@ -49,14 +49,14 @@ class DefaultCategoryFactoryTest {
     fun setUp() {
         hiltRule.inject()
         context = ApplicationProvider.getApplicationContext<HiltTestApplication>()
-        mCategoryFactory = DefaultCategoryFactory(wallpaperModelFactory)
+        mCategoryFactory = DefaultCategoryFactory(context, wallpaperModelFactory)
     }
 
     @Test
     fun testGetCategoryModel() {
         val placeholderCategory = PlaceholderCategory(TEST_TITLE, TEST_COLLECTIONID, TEST_PRIORITY)
 
-        val result = mCategoryFactory.getCategoryModel(context, placeholderCategory)
+        val result = mCategoryFactory.getCategoryModel(placeholderCategory)
 
         validateCommonCategoryData(result)
         assertEquals(result.collectionCategoryData, null)
@@ -67,7 +67,7 @@ class DefaultCategoryFactoryTest {
     @Test
     fun testGetImageCategoryModel() {
         val imageCategory = ImageCategory(TEST_TITLE, TEST_COLLECTIONID, TEST_PRIORITY)
-        val result = mCategoryFactory.getCategoryModel(context, imageCategory)
+        val result = mCategoryFactory.getCategoryModel(imageCategory)
         validateCommonCategoryData(result)
     }
 
