@@ -23,7 +23,7 @@ import android.content.IntentFilter
 import android.os.Handler
 import android.os.Looper
 import com.android.systemui.dagger.qualifiers.Main
-import com.android.wallpaper.picker.di.modules.ConcurrencyModule.*
+import com.android.wallpaper.picker.di.modules.SharedAppModule.Companion.BroadcastRunning
 import java.util.concurrent.Executor
 import javax.inject.Inject
 import javax.inject.Singleton

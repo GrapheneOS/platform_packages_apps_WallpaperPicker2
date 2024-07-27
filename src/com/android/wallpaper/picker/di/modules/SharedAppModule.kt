@@ -20,6 +20,10 @@ import android.app.WallpaperManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.Looper
+import android.os.Process
 import com.android.wallpaper.module.DefaultNetworkStatusNotifier
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker
 import com.android.wallpaper.module.MultiPanesChecker
@@ -50,6 +54,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.util.concurrent.Executor
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -103,6 +109,41 @@ abstract class SharedAppModule {
     @Binds @Singleton abstract fun bindWallpaperParser(impl: WallpaperParserImpl): WallpaperParser
 
     companion object {
+
+        @Qualifier
+        @MustBeDocumented
+        @Retention(AnnotationRetention.RUNTIME)
+        annotation class BroadcastRunning
+
+        private const val BROADCAST_SLOW_DISPATCH_THRESHOLD = 1000L
+        private const val BROADCAST_SLOW_DELIVERY_THRESHOLD = 1000L
+
+        /** Provide a BroadcastRunning Executor (for sending and receiving broadcasts). */
+        @Provides
+        @Singleton
+        @BroadcastRunning
+        fun provideBroadcastRunningExecutor(@BroadcastRunning looper: Looper?): Executor {
+            val handler = Handler(looper ?: Looper.getMainLooper())
+            return Executor { command -> handler.post(command) }
+        }
+
+        @Provides
+        @Singleton
+        @BroadcastRunning
+        fun provideBroadcastRunningLooper(): Looper {
+            return HandlerThread(
+                    "BroadcastRunning",
+                    Process.THREAD_PRIORITY_BACKGROUND,
+                )
+                .apply {
+                    start()
+                    looper.setSlowLogThresholdMs(
+                        BROADCAST_SLOW_DISPATCH_THRESHOLD,
+                        BROADCAST_SLOW_DELIVERY_THRESHOLD,
+                    )
+                }
+                .looper
+        }
 
         @Provides
         @Singleton

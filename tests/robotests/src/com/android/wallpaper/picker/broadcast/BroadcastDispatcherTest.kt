@@ -27,7 +27,7 @@ import android.os.Looper
 import android.os.Process
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SmallTest
-import com.android.wallpaper.picker.di.modules.ConcurrencyModule
+import com.android.wallpaper.picker.di.modules.SharedAppModule.Companion.BroadcastRunning
 import com.google.common.truth.Truth.assertThat
 import java.util.concurrent.Executor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -154,16 +154,14 @@ class BroadcastDispatcherTest {
             .looper
     }
 
-    private fun provideBroadcastRunningExecutor(
-        @ConcurrencyModule.BroadcastRunning looper: Looper?
-    ): Executor {
+    private fun provideBroadcastRunningExecutor(@BroadcastRunning looper: Looper?): Executor {
         val handler = Handler(looper ?: Looper.getMainLooper())
         return Executor { command -> handler.post(command) }
     }
 
     companion object {
-        private val BROADCAST_SLOW_DISPATCH_THRESHOLD = 1000L
-        private val BROADCAST_SLOW_DELIVERY_THRESHOLD = 1000L
+        private const val BROADCAST_SLOW_DISPATCH_THRESHOLD = 1000L
+        private const val BROADCAST_SLOW_DELIVERY_THRESHOLD = 1000L
         const val TEST_ACTION = "TEST_ACTION"
         const val TEST_TYPE = "test/type"
     }
