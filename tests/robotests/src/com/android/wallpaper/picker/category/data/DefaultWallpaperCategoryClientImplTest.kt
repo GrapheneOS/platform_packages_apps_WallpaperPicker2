@@ -17,6 +17,10 @@
 package com.android.wallpaper.picker.category.data
 
 import android.content.Context
+import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.pm.ApplicationInfo
+import android.content.pm.ResolveInfo
 import com.android.wallpaper.model.PartnerWallpaperInfo
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.category.client.DefaultWallpaperCategoryClient
@@ -43,6 +47,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
 
 @HiltAndroidTest
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -121,4 +126,45 @@ class DefaultWallpaperCategoryClientImplTest {
             assertThat(categoryModel[0].title).isEqualTo("sample-title-1")
             assertThat(categoryModel[0].collectionId).isEqualTo("sample-collection-id")
         }
+
+    @Test
+    fun getThirdPartyCategory() =
+        testScope.runTest {
+            // Get the shadow package manager
+            val shadowPackageManager = shadowOf(context.packageManager)
+            val fakeThirdPartyApp1 = createFakeResolveInfo("com.example.app1", "ThirdPartyApp1")
+            val fakeThirdPartyApp2 = createFakeResolveInfo("com.example.app2", "ThirdPartyApp2")
+            val fakeImagePickerApp = createFakeResolveInfo("com.example.imagepicker", "ImagePicker")
+            shadowPackageManager.addResolveInfoForIntent(
+                Intent(Intent.ACTION_SET_WALLPAPER),
+                listOf(fakeThirdPartyApp1, fakeThirdPartyApp2, fakeImagePickerApp)
+            )
+            shadowPackageManager.addResolveInfoForIntent(
+                Intent(Intent.ACTION_GET_CONTENT).setType("image/*"),
+                listOf(fakeImagePickerApp)
+            )
+
+            val result = defaultWallpaperCategoryClient.getThirdPartyCategory()
+            assertThat(result).hasSize(2)
+            assertThat(result[0].title).isEqualTo("ThirdPartyApp1")
+            assertThat(result[0].collectionId).contains("com.example.app1")
+            assertThat(result[1].title).isEqualTo("ThirdPartyApp2")
+            assertThat(result[1].collectionId).contains("com.example.app2")
+        }
+
+    private fun createFakeResolveInfo(packageName: String, label: String): ResolveInfo {
+        return ResolveInfo().apply {
+            activityInfo =
+                ActivityInfo().apply {
+                    this.packageName = packageName
+                    name = "${packageName}.MainActivity"
+                    applicationInfo =
+                        ApplicationInfo().apply {
+                            this.packageName = packageName
+                            labelRes = 0
+                            nonLocalizedLabel = label
+                        }
+                }
+        }
+    }
 }

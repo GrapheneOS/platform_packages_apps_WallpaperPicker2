@@ -32,7 +32,12 @@ interface DefaultWallpaperCategoryClient {
     suspend fun getMyPhotosCategory(): Category
 
     /**
-     * This method is used for fetching the on device categories.
+     * This method is used for fetching the pre-loaded on device categories.
      */
     suspend fun getOnDeviceCategory(): Category?
+
+    /**
+     * This method is used for fetching the third party categories.
+     */
+    suspend fun getThirdPartyCategory(): List<Category>
 }

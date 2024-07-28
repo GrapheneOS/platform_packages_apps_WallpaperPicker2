@@ -36,6 +36,9 @@ class FakeDefaultWallpaperCategoryRepository @Inject constructor() : WallpaperCa
     override val onDeviceCategory: StateFlow<CategoryModel?>
         get() = TODO("Not yet implemented")
 
+    override val thirdPartyAppCategory: StateFlow<List<CategoryModel>>
+        get() = TODO("Not yet implemented")
+
     override val isDefaultCategoriesFetched: StateFlow<Boolean>
         get() = TODO("Not yet implemented")
 

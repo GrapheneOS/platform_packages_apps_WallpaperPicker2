@@ -27,6 +27,7 @@ class FakeDefaultWallpaperCategoryClient @Inject constructor() : DefaultWallpape
 
     private var fakeSystemCategories: List<Category> = emptyList()
     private var fakeOnDeviceCategory: Category? = null
+    private var fakeThirdPartyAppCategories: List<Category> = emptyList()
 
     fun setOnDeviceCategory(category: Category?) {
         fakeOnDeviceCategory = category
@@ -34,6 +35,10 @@ class FakeDefaultWallpaperCategoryClient @Inject constructor() : DefaultWallpape
 
     fun setSystemCategories(categories: List<Category>) {
         fakeSystemCategories = categories
+    }
+
+    fun setThirdPartyAppCategories(categories: List<Category>) {
+        fakeThirdPartyAppCategories = categories
     }
 
     override suspend fun getMyPhotosCategory(): Category {
@@ -51,5 +56,9 @@ class FakeDefaultWallpaperCategoryClient @Inject constructor() : DefaultWallpape
 
     override suspend fun getOnDeviceCategory(): Category? {
         return fakeOnDeviceCategory
+    }
+
+    override suspend fun getThirdPartyCategory(): List<Category> {
+        return fakeThirdPartyAppCategories
     }
 }

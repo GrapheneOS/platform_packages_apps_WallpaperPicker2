@@ -91,7 +91,6 @@ class DefaultWallpaperCategoryRepositoryTest {
 
             repository =
                 DefaultWallpaperCategoryRepository(
-                    context,
                     defaultWallpaperCategoryClient,
                     defaultCategoryFactory,
                     testScope
@@ -105,7 +104,6 @@ class DefaultWallpaperCategoryRepositoryTest {
     fun initialStateShouldBeEmpty() = runTest {
         repository =
             DefaultWallpaperCategoryRepository(
-                context,
                 defaultWallpaperCategoryClient,
                 defaultCategoryFactory,
                 testScope
