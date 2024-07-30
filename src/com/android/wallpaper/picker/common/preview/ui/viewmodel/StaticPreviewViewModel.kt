@@ -23,6 +23,7 @@ import androidx.annotation.VisibleForTesting
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.common.preview.domain.interactor.BasePreviewInteractor
+import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
@@ -41,13 +42,15 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 /** View model for static wallpaper preview used in the common [BasePreviewViewModel] */
-// Based on StaticWallpaperPreviewViewModel, mostly unchanged, except updated to use
-// BasePreviewInteractor rather than WallpaperPreviewInteractor, and updated to use AssistedInject
-// rather than a regular Inject with a Factory.
+// Based on StaticWallpaperPreviewViewModel, except updated to use BasePreviewInteractor rather than
+// WallpaperPreviewInteractor, and updated to use AssistedInject rather than a regular Inject with a
+// Factory. Also, crop hints info is now updated based on each new emitted static wallpaper model,
+// rather than set in the activity.
 class StaticPreviewViewModel
 @AssistedInject
 constructor(
@@ -89,10 +92,29 @@ constructor(
         }
 
     val staticWallpaperModel: Flow<StaticWallpaperModel?> =
-        interactor.wallpapers.map { (homeWallpaper, lockWallpaper) ->
-            val wallpaper = if (screen == Screen.HOME_SCREEN) homeWallpaper else lockWallpaper
-            wallpaper as? StaticWallpaperModel
-        }
+        interactor.wallpapers
+            .map { (homeWallpaper, lockWallpaper) ->
+                val wallpaper = if (screen == Screen.HOME_SCREEN) homeWallpaper else lockWallpaper
+                wallpaper as? StaticWallpaperModel
+            }
+            .onEach { wallpaper ->
+                // Update crop hints in view model if crop hints are specified in wallpaper model.
+                if (wallpaper != null && !wallpaper.isDownloadableWallpaper()) {
+                    wallpaper.staticWallpaperData.cropHints?.let { cropHints ->
+                        clearCropHintsInfo()
+                        updateCropHintsInfo(
+                            cropHints.mapValues {
+                                FullPreviewCropModel(
+                                    cropHint = it.value,
+                                    cropSizeModel = null,
+                                )
+                            }
+                        )
+                    }
+                } else {
+                    clearCropHintsInfo()
+                }
+            }
     /** Null indicates the wallpaper has no low res image. */
     val lowResBitmap: Flow<Bitmap?> =
         staticWallpaperModel
@@ -171,6 +193,11 @@ constructor(
         }
     }
 
+    private fun clearCropHintsInfo() {
+        this.cropHintsInfo.value = null
+        this.fullPreviewCropModels.clear()
+    }
+
     // TODO b/296288298 Create a util class for Bitmap and Asset
     private suspend fun Asset.decodeRawDimensions(): Point? =
         suspendCancellableCoroutine { k: CancellableContinuation<Point?> ->
@@ -184,6 +211,12 @@ constructor(
             val callback = Asset.BitmapReceiver { k.resumeWith(Result.success(it)) }
             decodeBitmap(dimensions.x, dimensions.y, /* hardwareBitmapAllowed= */ false, callback)
         }
+
+    companion object {
+        private fun WallpaperModel.isDownloadableWallpaper(): Boolean {
+            return this is StaticWallpaperModel && downloadableWallpaperData != null
+        }
+    }
 
     @ViewModelScoped
     @AssistedFactory

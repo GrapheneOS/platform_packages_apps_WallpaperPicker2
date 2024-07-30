@@ -108,8 +108,6 @@ constructor(
         _wallpaperConnectionColors.value = wallpaperColors
     }
 
-    // TODO (b/348462236): get and set crop hints in activity based on screen
-
     @ViewModelScoped
     @AssistedFactory
     interface Factory {

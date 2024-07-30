@@ -14,33 +14,33 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.di.modules
+package com.android.wallpaper.di.modules
 
 import android.content.Context
-import com.android.wallpaper.R
+import com.android.wallpaper.picker.di.modules.HomeScreenPreviewUtils
+import com.android.wallpaper.picker.di.modules.LockScreenPreviewUtils
+import com.android.wallpaper.picker.di.modules.SharedActivityRetainedModule
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository
-import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepositoryImpl
+import com.android.wallpaper.testing.FakeImageEffectsRepository
 import com.android.wallpaper.util.PreviewUtils
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import javax.inject.Qualifier
-
-@Qualifier @Retention(AnnotationRetention.BINARY) annotation class LockScreenPreviewUtils
-
-@Qualifier @Retention(AnnotationRetention.BINARY) annotation class HomeScreenPreviewUtils
+import dagger.hilt.testing.TestInstallIn
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
-abstract class SharedActivityRetainedModule {
+@TestInstallIn(
+    components = [ActivityRetainedComponent::class],
+    replaces = [SharedActivityRetainedModule::class]
+)
+internal abstract class SharedActivityRetainedTestModule {
 
     @Binds
     abstract fun bindImageEffectsRepository(
-        impl: ImageEffectsRepositoryImpl
+        impl: FakeImageEffectsRepository
     ): ImageEffectsRepository
 
     companion object {
@@ -53,10 +53,7 @@ abstract class SharedActivityRetainedModule {
         ): PreviewUtils {
             return PreviewUtils(
                 context = appContext,
-                authorityMetadataKey =
-                    appContext.getString(
-                        R.string.grid_control_metadata_name,
-                    ),
+                authorityMetadataKey = "test_home_screen_preview_auth",
             )
         }
 
@@ -68,10 +65,7 @@ abstract class SharedActivityRetainedModule {
         ): PreviewUtils {
             return PreviewUtils(
                 context = appContext,
-                authority =
-                    appContext.getString(
-                        R.string.lock_screen_preview_provider_authority,
-                    ),
+                authority = "test_lock_screen_preview_auth",
             )
         }
     }

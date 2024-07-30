@@ -61,7 +61,7 @@ import kotlinx.coroutines.test.TestScope
     components = [SingletonComponent::class],
     replaces = [SharedAppModule::class, DispatchersModule::class]
 )
-internal abstract class SharedTestModule {
+internal abstract class SharedAppTestModule {
 
     // Also use the test dispatcher for work intended for the background thread. This makes tests
     // single-threaded and more deterministic.

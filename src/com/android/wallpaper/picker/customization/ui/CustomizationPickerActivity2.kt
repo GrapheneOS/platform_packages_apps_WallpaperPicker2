@@ -253,7 +253,10 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
                         },
                     deviceDisplayType =
                         displayUtils.getCurrentDisplayType(this@CustomizationPickerActivity2),
-                    displaySize = previewViewModel.wallpaperDisplaySize.value,
+                    displaySize =
+                        if (displayUtils.isOnWallpaperDisplay(this@CustomizationPickerActivity2))
+                            previewViewModel.wallpaperDisplaySize.value
+                        else previewViewModel.smallerDisplaySize,
                     lifecycleOwner = this@CustomizationPickerActivity2,
                     isFirstBinding = isFirstBinding,
                 )

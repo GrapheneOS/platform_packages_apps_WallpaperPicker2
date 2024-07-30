@@ -36,8 +36,10 @@ constructor(
     wallpaperPreviewRepository: WallpaperPreviewRepository,
     wallpaperRepository: WallpaperRepository,
 ) {
-    val previewingWallpaper: StateFlow<WallpaperModel?> = wallpaperPreviewRepository.wallpaperModel
-    val currentWallpapers: Flow<WallpaperModelsPair> = wallpaperRepository.currentWallpaperModels
+    private val previewingWallpaper: StateFlow<WallpaperModel?> =
+        wallpaperPreviewRepository.wallpaperModel
+    private val currentWallpapers: Flow<WallpaperModelsPair> =
+        wallpaperRepository.currentWallpaperModels
 
     val wallpapers: Flow<WallpaperModelsPair> =
         combine(previewingWallpaper, currentWallpapers) { previewingWallpaper, currentWallpapers ->

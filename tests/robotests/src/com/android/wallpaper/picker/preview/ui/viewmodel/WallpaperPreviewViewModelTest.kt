@@ -37,8 +37,8 @@ import com.android.wallpaper.picker.BasePreviewActivity.EXTRA_WALLPAPER_INFO
 import com.android.wallpaper.picker.BasePreviewActivity.IS_ASSET_ID_PRESENT
 import com.android.wallpaper.picker.BasePreviewActivity.IS_NEW_TASK
 import com.android.wallpaper.picker.data.WallpaperModel
-import com.android.wallpaper.picker.di.modules.PreviewUtilsModule.HomeScreenPreviewUtils
-import com.android.wallpaper.picker.di.modules.PreviewUtilsModule.LockScreenPreviewUtils
+import com.android.wallpaper.picker.di.modules.HomeScreenPreviewUtils
+import com.android.wallpaper.picker.di.modules.LockScreenPreviewUtils
 import com.android.wallpaper.picker.preview.PreviewTestActivity
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
