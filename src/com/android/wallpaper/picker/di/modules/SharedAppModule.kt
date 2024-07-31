@@ -57,6 +57,15 @@ import dagger.hilt.components.SingletonComponent
 import java.util.concurrent.Executor
 import javax.inject.Qualifier
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+
+/** Qualifier for main thread [CoroutineDispatcher] bound to app lifecycle. */
+@Qualifier annotation class MainDispatcher
+
+/** Qualifier for background thread [CoroutineDispatcher] for long running and blocking tasks. */
+@Qualifier annotation class BackgroundDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -118,6 +127,14 @@ abstract class SharedAppModule {
         private const val BROADCAST_SLOW_DISPATCH_THRESHOLD = 1000L
         private const val BROADCAST_SLOW_DELIVERY_THRESHOLD = 1000L
 
+        @Provides
+        @BackgroundDispatcher
+        fun provideBackgroundDispatcher(): CoroutineDispatcher = Dispatchers.IO
+
+        @Provides
+        @BackgroundDispatcher
+        fun provideBackgroundScope(): CoroutineScope = CoroutineScope(Dispatchers.IO)
+
         /** Provide a BroadcastRunning Executor (for sending and receiving broadcasts). */
         @Provides
         @Singleton
@@ -144,6 +161,14 @@ abstract class SharedAppModule {
                 }
                 .looper
         }
+
+        @Provides
+        @MainDispatcher
+        fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
+
+        @Provides
+        @MainDispatcher
+        fun provideMainScope(): CoroutineScope = CoroutineScope(Dispatchers.Main)
 
         @Provides
         @Singleton

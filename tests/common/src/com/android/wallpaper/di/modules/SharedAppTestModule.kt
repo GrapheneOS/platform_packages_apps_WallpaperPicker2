@@ -28,7 +28,6 @@ import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryI
 import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
-import com.android.wallpaper.picker.di.modules.DispatchersModule
 import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.di.modules.SharedAppModule
 import com.android.wallpaper.system.UiModeManagerWrapper
@@ -57,10 +56,7 @@ import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.TestScope
 
 @Module
-@TestInstallIn(
-    components = [SingletonComponent::class],
-    replaces = [SharedAppModule::class, DispatchersModule::class]
-)
+@TestInstallIn(components = [SingletonComponent::class], replaces = [SharedAppModule::class])
 internal abstract class SharedAppTestModule {
 
     // Also use the test dispatcher for work intended for the background thread. This makes tests
