@@ -15,65 +15,29 @@
  */
 package com.android.wallpaper.module;
 
-import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
 
 import com.android.wallpaper.asset.Asset;
-import com.android.wallpaper.asset.Asset.BitmapReceiver;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Default implementation of BitmapCropper, which actually crops and scales bitmaps.
  */
 public class DefaultBitmapCropper implements BitmapCropper {
-    private static final ExecutorService sExecutorService = Executors.newSingleThreadExecutor();
-    private static final String TAG = "DefaultBitmapCropper";
-    private static final boolean FILTER_SCALED_BITMAP = true;
 
     @Override
     public void cropAndScaleBitmap(Asset asset, float scale, Rect cropRect,
             boolean isRtl, Callback callback) {
-        // Crop rect in pixels of source image.
-        Rect scaledCropRect = new Rect(
-                (int) Math.floor((float) cropRect.left / scale),
-                (int) Math.floor((float) cropRect.top / scale),
-                (int) Math.floor((float) cropRect.right / scale),
-                (int) Math.floor((float) cropRect.bottom / scale));
-
-        asset.decodeBitmapRegion(scaledCropRect, cropRect.width(), cropRect.height(), isRtl,
-                new BitmapReceiver() {
-                    @Override
-                    public void onBitmapDecoded(Bitmap bitmap) {
-                        if (bitmap == null) {
-                            callback.onError(null);
-                            return;
-                        }
-                        // Asset provides a bitmap which is appropriate for the target width &
-                        // height, but since it does not guarantee an exact size we need to fit
-                        // the bitmap to the cropRect.
-                        sExecutorService.execute(() -> {
-                            try {
-                                // Fit bitmap to exact dimensions of crop rect.
-                                Bitmap result = Bitmap.createScaledBitmap(
-                                        bitmap,
-                                        cropRect.width(),
-                                        cropRect.height(),
-                                        FILTER_SCALED_BITMAP);
-                                new Handler(Looper.getMainLooper()).post(
-                                        () -> callback.onBitmapCropped(result));
-                            } catch (OutOfMemoryError e) {
-                                Log.w(TAG,
-                                        "Not enough memory to fit the final cropped and "
-                                                + "scaled bitmap to size", e);
-                                new Handler(Looper.getMainLooper()).post(() -> callback.onError(e));
-                            }
-                        });
+        int targetWidth = (int) (cropRect.width() / scale);
+        int targetHeight = (int) (cropRect.height() / scale);
+        // Giving the target width and height can down-sample a large bitmap to a smaller target
+        // size, which saves memory use.
+        asset.decodeBitmapRegion(cropRect, targetWidth, targetHeight, isRtl,
+                bitmap -> {
+                    if (bitmap == null) {
+                        callback.onError(null);
+                        return;
                     }
+                    callback.onBitmapCropped(bitmap);
                 });
     }
 }

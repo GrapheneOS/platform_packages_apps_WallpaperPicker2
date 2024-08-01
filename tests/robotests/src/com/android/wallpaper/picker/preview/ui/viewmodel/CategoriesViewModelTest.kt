@@ -229,7 +229,7 @@ class CategoriesViewModelTest {
      * replaced with fakes of the repositories or their data sources.
      */
     companion object {
-        const val EXPECTED_NUMBER_OF_SECTIONS = 19
+        const val EXPECTED_NUMBER_OF_SECTIONS = 21
 
         const val EXPECTED_POSITION_CREATIVE_CATEGORY = 0
         const val EXPECTED_SIZE_CREATIVE_CATEGORY = 2
@@ -244,7 +244,7 @@ class CategoriesViewModelTest {
         const val EXPECTED_TITLE_PHOTO_TILE = "Celestial Dreamscape"
 
         const val EXPECTED_POSITION_SINGLE_CATEGORIES = 2
-        const val EXPECTED_SIZE_SINGLE_CATEGORIES = 17
+        const val EXPECTED_SIZE_SINGLE_CATEGORIES = 19
         const val EXPECTED_SIZE_SINGLE_CATEGORY_TILES = 1
 
         const val CATEGORY_ID_CELESTIAL_DREAMSCAPES = "celestial_dreamscapes"

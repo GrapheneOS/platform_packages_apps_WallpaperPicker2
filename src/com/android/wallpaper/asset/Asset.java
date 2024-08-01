@@ -363,7 +363,6 @@ public abstract class Asset {
                 loadDrawable(activity, imageView, placeholderColor);
                 return;
             }
-
             boolean isRtl = RtlUtils.isRtl(activity);
             Display defaultDisplay = activity.getWindowManager().getDefaultDisplay();
             Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(defaultDisplay);
@@ -381,8 +380,10 @@ public abstract class Asset {
             // TODO(b/264234793): Make offsetToStart general support or for the specific asset.
             adjustCropRect(activity, dimensions, visibleRawWallpaperRect, offsetToStart);
 
+            float scale = (float) visibleRawWallpaperRect.width() / screenSize.x;
+
             BitmapCropper bitmapCropper = InjectorProvider.getInjector().getBitmapCropper();
-            bitmapCropper.cropAndScaleBitmap(this, /* scale= */ 1f, visibleRawWallpaperRect,
+            bitmapCropper.cropAndScaleBitmap(this, scale, visibleRawWallpaperRect,
                     isRtl,
                     new BitmapCropper.Callback() {
                         @Override

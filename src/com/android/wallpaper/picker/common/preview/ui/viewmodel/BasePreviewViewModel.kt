@@ -18,9 +18,13 @@ package com.android.wallpaper.picker.common.preview.ui.viewmodel
 
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.WallpaperModelsPair
+import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.picker.common.preview.domain.interactor.BasePreviewInteractor
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
+import com.android.wallpaper.picker.di.modules.HomeScreenPreviewUtils
+import com.android.wallpaper.picker.di.modules.LockScreenPreviewUtils
 import com.android.wallpaper.util.DisplayUtils
+import com.android.wallpaper.util.PreviewUtils
 import com.android.wallpaper.util.WallpaperConnection
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -48,7 +52,9 @@ class BasePreviewViewModel
 constructor(
     private val interactor: BasePreviewInteractor,
     staticPreviewViewModelFactory: StaticPreviewViewModel.Factory,
-    displayUtils: DisplayUtils,
+    private val displayUtils: DisplayUtils,
+    @HomeScreenPreviewUtils val homePreviewUtils: PreviewUtils,
+    @LockScreenPreviewUtils val lockPreviewUtils: PreviewUtils,
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
     // Don't update smaller display since we always use portrait, always use wallpaper display on
@@ -106,6 +112,20 @@ constructor(
 
     fun setWallpaperConnectionColors(wallpaperColors: WallpaperColorsModel) {
         _wallpaperConnectionColors.value = wallpaperColors
+    }
+
+    fun getDisplayId(deviceDisplayType: DeviceDisplayType): Int {
+        return when (deviceDisplayType) {
+            DeviceDisplayType.SINGLE -> {
+                displayUtils.getWallpaperDisplay().displayId
+            }
+            DeviceDisplayType.FOLDED -> {
+                displayUtils.getSmallerDisplay().displayId
+            }
+            DeviceDisplayType.UNFOLDED -> {
+                displayUtils.getWallpaperDisplay().displayId
+            }
+        }
     }
 
     @ViewModelScoped

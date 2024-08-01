@@ -26,8 +26,8 @@ import android.view.ViewGroup
 /** Util class to generate surface view requests and parse responses */
 object SurfaceViewUtils {
     private const val KEY_HOST_TOKEN = "host_token"
-    private const val KEY_VIEW_WIDTH = "width"
-    private const val KEY_VIEW_HEIGHT = "height"
+    const val KEY_VIEW_WIDTH = "width"
+    const val KEY_VIEW_HEIGHT = "height"
     private const val KEY_SURFACE_PACKAGE = "surface_package"
     private const val KEY_CALLBACK = "callback"
     const val KEY_WALLPAPER_COLORS = "wallpaper_colors"

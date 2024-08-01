@@ -22,8 +22,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.model.CustomizationSectionController
 import com.android.wallpaper.picker.CategorySelectorFragment
+import com.android.wallpaper.picker.category.ui.view.CategoriesFragment
 import com.android.wallpaper.picker.customization.ui.binder.WallpaperQuickSwitchSectionBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperQuickSwitchViewModel
 
@@ -53,7 +55,11 @@ class WallpaperQuickSwitchSectionController(
             lifecycleOwner = lifecycleOwner,
             isThumbnailFadeAnimationEnabled = isThumbnailFadeAnimationEnabled,
             onNavigateToFullWallpaperSelector = {
-                navigator.navigateTo(CategorySelectorFragment())
+                if (BaseFlags.get().isWallpaperCategoryRefactoringEnabled()) {
+                    navigator.navigateTo(CategoriesFragment())
+                } else {
+                    navigator.navigateTo(CategorySelectorFragment())
+                }
             },
         )
         return view
