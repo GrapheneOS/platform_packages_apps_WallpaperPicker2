@@ -311,7 +311,7 @@ open class TestInjector @Inject constructor(private val userEventLogger: UserEve
 
     override fun getWallpaperColorsRepository(): WallpaperColorsRepository {
         return wallpaperColorsRepository
-            ?: WallpaperColorsRepository().also { wallpaperColorsRepository = it }
+            ?: WallpaperColorsRepository(wallpaperClient).also { wallpaperColorsRepository = it }
     }
 
     override fun getMyPhotosIntentProvider(): MyPhotosStarter.MyPhotosIntentProvider {

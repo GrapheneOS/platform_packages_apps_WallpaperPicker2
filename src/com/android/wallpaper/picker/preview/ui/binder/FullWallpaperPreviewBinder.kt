@@ -54,6 +54,7 @@ import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.s
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import java.lang.Integer.min
 import kotlin.math.max
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -69,7 +70,7 @@ object FullWallpaperPreviewBinder {
         displayUtils: DisplayUtils,
         lifecycleOwner: LifecycleOwner,
         savedInstanceState: Bundle?,
-        isFirstBinding: Boolean,
+        isFirstBindingDeferred: CompletableDeferred<Boolean>,
         onWallpaperLoaded: ((Boolean) -> Unit)? = null,
     ) {
         val wallpaperPreviewCrop: FullPreviewFrameLayout =
@@ -171,7 +172,7 @@ object FullWallpaperPreviewBinder {
                         surfaceTouchForwardingLayout = surfaceTouchForwardingLayout,
                         viewModel = viewModel,
                         lifecycleOwner = lifecycleOwner,
-                        isFirstBinding = isFirstBinding,
+                        isFirstBindingDeferred = isFirstBindingDeferred,
                     )
                 surfaceView.setZOrderMediaOverlay(true)
                 surfaceView.holder.addCallback(surfaceCallback)
@@ -195,7 +196,7 @@ object FullWallpaperPreviewBinder {
         surfaceTouchForwardingLayout: TouchForwardingLayout,
         viewModel: WallpaperPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
-        isFirstBinding: Boolean,
+        isFirstBindingDeferred: CompletableDeferred<Boolean>,
     ): SurfaceViewUtils.SurfaceCallback {
         return object : SurfaceViewUtils.SurfaceCallback {
 
@@ -227,7 +228,7 @@ object FullWallpaperPreviewBinder {
                                     viewModel.getWallpaperPreviewSource().toFlag(),
                                     surfaceView,
                                     engineRenderingConfig,
-                                    isFirstBinding,
+                                    isFirstBindingDeferred,
                                 )
                                 surfaceTouchForwardingLayout.initTouchForwarding(surfaceView)
                                 surfaceView.setOnTouchListener { _, event ->

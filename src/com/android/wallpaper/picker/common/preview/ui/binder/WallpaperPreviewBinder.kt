@@ -37,6 +37,7 @@ import com.android.wallpaper.util.SurfaceViewUtils.attachView
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.shouldEnforceSingleEngine
 import com.android.wallpaper.util.wallpaperconnection.WallpaperEngineConnection
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -59,7 +60,7 @@ object WallpaperPreviewBinder {
         displaySize: Point,
         deviceDisplayType: DeviceDisplayType,
         viewLifecycleOwner: LifecycleOwner,
-        isFirstBinding: Boolean,
+        isFirstBindingDeferred: CompletableDeferred<Boolean>,
     ) {
         var surfaceCallback: SurfaceViewUtils.SurfaceCallback? = null
         viewLifecycleOwner.lifecycleScope.launch {
@@ -73,7 +74,7 @@ object WallpaperPreviewBinder {
                         deviceDisplayType = deviceDisplayType,
                         displaySize = displaySize,
                         lifecycleOwner = viewLifecycleOwner,
-                        isFirstBinding = isFirstBinding,
+                        isFirstBindingDeferred = isFirstBindingDeferred,
                     )
                 surfaceView.setZOrderMediaOverlay(true)
                 surfaceCallback?.let { surfaceView.holder.addCallback(it) }
@@ -99,7 +100,7 @@ object WallpaperPreviewBinder {
         deviceDisplayType: DeviceDisplayType,
         displaySize: Point,
         lifecycleOwner: LifecycleOwner,
-        isFirstBinding: Boolean,
+        isFirstBindingDeferred: CompletableDeferred<Boolean>,
     ): SurfaceViewUtils.SurfaceCallback {
 
         return object : SurfaceViewUtils.SurfaceCallback {
@@ -140,7 +141,7 @@ object WallpaperPreviewBinder {
                                     screen.toFlag(),
                                     surfaceView,
                                     engineRenderingConfig,
-                                    isFirstBinding,
+                                    isFirstBindingDeferred,
                                     listener,
                                 )
                             } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {

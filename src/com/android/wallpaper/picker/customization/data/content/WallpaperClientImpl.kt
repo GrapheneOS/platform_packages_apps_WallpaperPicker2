@@ -44,6 +44,7 @@ import com.android.wallpaper.asset.StreamableAsset
 import com.android.wallpaper.model.CreativeCategory
 import com.android.wallpaper.model.CreativeWallpaperInfo
 import com.android.wallpaper.model.LiveWallpaperPrefMetadata
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.StaticWallpaperPrefMetadata
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.model.WallpaperModelsPair
@@ -632,6 +633,16 @@ constructor(
         cropHints: Map<Point, Rect>?
     ): WallpaperColors? {
         return wallpaperManager.getWallpaperColors(bitmap, cropHints)
+    }
+
+    override fun getWallpaperColors(screen: Screen): WallpaperColors? {
+        return wallpaperManager.getWallpaperColors(
+            if (screen == Screen.LOCK_SCREEN) {
+                FLAG_LOCK
+            } else {
+                FLAG_SYSTEM
+            }
+        )
     }
 
     fun WallpaperDestination.asString(): String {

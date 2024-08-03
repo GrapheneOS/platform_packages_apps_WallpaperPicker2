@@ -24,6 +24,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.android.wallpaper.picker.preview.ui.view.PreviewTabs
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import kotlinx.coroutines.CompletableDeferred
 
 /** Binds and synchronizes the tab and preview view pagers. */
 object PreviewSelectorBinder {
@@ -38,7 +39,7 @@ object PreviewSelectorBinder {
         currentNavDestId: Int,
         transition: Transition?,
         transitionConfig: FullPreviewConfigViewModel?,
-        isFirstBinding: Boolean,
+        isFirstBindingDeferred: CompletableDeferred<Boolean>,
         navigate: (View) -> Unit,
     ) {
         // set up previews view pager
@@ -51,7 +52,7 @@ object PreviewSelectorBinder {
             currentNavDestId,
             transition,
             transitionConfig,
-            isFirstBinding,
+            isFirstBindingDeferred,
             navigate,
         )
 

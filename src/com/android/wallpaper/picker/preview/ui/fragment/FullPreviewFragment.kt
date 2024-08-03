@@ -39,6 +39,7 @@ import com.android.wallpaper.util.DisplayUtils
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import kotlinx.coroutines.CompletableDeferred
 
 /** Shows full preview of user selected wallpaper for cropping, zooming and positioning. */
 @AndroidEntryPoint(AppbarFragment::class)
@@ -50,6 +51,8 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
     private lateinit var currentView: View
 
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
+    private val isFirstBindingDeferred = CompletableDeferred<Boolean>()
+
     private var useLightToolbar = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +66,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         currentView = inflater.inflate(R.layout.fragment_full_preview, container, false)
         setUpToolbar(currentView, true, true)
 
@@ -72,6 +75,20 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
             previewCard,
             SmallPreviewFragment.FULL_PREVIEW_SHARED_ELEMENT_ID
         )
+
+        FullWallpaperPreviewBinder.bind(
+            applicationContext = appContext,
+            view = currentView,
+            viewModel = wallpaperPreviewViewModel,
+            transition = sharedElementEnterTransition as? Transition,
+            displayUtils = displayUtils,
+            lifecycleOwner = viewLifecycleOwner,
+            savedInstanceState = savedInstanceState,
+            isFirstBindingDeferred = isFirstBindingDeferred,
+        ) { isFullScreen ->
+            useLightToolbar = isFullScreen
+            setUpToolbar(view)
+        }
 
         CropWallpaperButtonBinder.bind(
             button = currentView.requireViewById(R.id.crop_wallpaper_button),
@@ -98,24 +115,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        var isFirstBinding = false
-        if (savedInstanceState == null) {
-            isFirstBinding = true
-        }
-
-        FullWallpaperPreviewBinder.bind(
-            applicationContext = appContext,
-            view = currentView,
-            viewModel = wallpaperPreviewViewModel,
-            transition = sharedElementEnterTransition as? Transition,
-            displayUtils = displayUtils,
-            lifecycleOwner = viewLifecycleOwner,
-            savedInstanceState = savedInstanceState,
-            isFirstBinding = isFirstBinding,
-        ) { isFullScreen ->
-            useLightToolbar = isFullScreen
-            setUpToolbar(view)
-        }
+        isFirstBindingDeferred.complete(savedInstanceState == null)
     }
 
     // TODO(b/291761856): Use real string

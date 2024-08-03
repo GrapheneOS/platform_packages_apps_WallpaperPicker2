@@ -34,6 +34,7 @@ import com.android.wallpaper.picker.preview.ui.view.adapters.DualPreviewPagerAda
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.RtlUtils
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.launch
 
@@ -48,7 +49,7 @@ object DualPreviewPagerBinder {
         currentNavDestId: Int,
         transition: Transition?,
         transitionConfig: FullPreviewConfigViewModel?,
-        isFirstBinding: Boolean,
+        isFirstBindingDeferred: CompletableDeferred<Boolean>,
         navigate: (View) -> Unit,
     ) {
         // ViewPager & PagerAdapter do not support RTL. Enable RTL compatibility by converting all
@@ -129,7 +130,7 @@ object DualPreviewPagerBinder {
                         currentNavDestId = currentNavDestId,
                         transition = transition,
                         transitionConfig = transitionConfig,
-                        isFirstBinding = isFirstBinding,
+                        isFirstBindingDeferred = isFirstBindingDeferred,
                         navigate = navigate,
                     )
                 }

@@ -16,6 +16,9 @@
 package com.android.wallpaper.picker.customization.data.repository
 
 import android.app.WallpaperColors
+import com.android.wallpaper.config.BaseFlags
+import com.android.wallpaper.model.Screen
+import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,16 +27,35 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 @Singleton
-/** ViewModel class to keep track of WallpaperColors for the current wallpaper */
-class WallpaperColorsRepository @Inject constructor() {
+/** Repository class to keep track of WallpaperColors for the current wallpaper */
+class WallpaperColorsRepository
+@Inject
+constructor(
+    client: WallpaperClient,
+) {
+
+    private val isNewPickerUi = BaseFlags.get().isNewPickerUi()
 
     private val _homeWallpaperColors =
-        MutableStateFlow<WallpaperColorsModel>(WallpaperColorsModel.Loading)
+        if (isNewPickerUi) {
+            MutableStateFlow<WallpaperColorsModel>(
+                WallpaperColorsModel.Loaded(client.getWallpaperColors(Screen.HOME_SCREEN))
+            )
+        } else {
+            MutableStateFlow<WallpaperColorsModel>(WallpaperColorsModel.Loading)
+        }
+
     /** WallpaperColors for the currently set home wallpaper */
     val homeWallpaperColors: StateFlow<WallpaperColorsModel> = _homeWallpaperColors.asStateFlow()
 
     private val _lockWallpaperColors =
-        MutableStateFlow<WallpaperColorsModel>(WallpaperColorsModel.Loading)
+        if (isNewPickerUi) {
+            MutableStateFlow<WallpaperColorsModel>(
+                WallpaperColorsModel.Loaded(client.getWallpaperColors(Screen.LOCK_SCREEN))
+            )
+        } else {
+            MutableStateFlow<WallpaperColorsModel>(WallpaperColorsModel.Loading)
+        }
     /** WallpaperColors for the currently set lock wallpaper */
     val lockWallpaperColors: StateFlow<WallpaperColorsModel> = _lockWallpaperColors.asStateFlow()
 

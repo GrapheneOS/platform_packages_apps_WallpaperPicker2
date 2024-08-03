@@ -52,6 +52,7 @@ import com.android.wallpaper.util.DisplayUtils
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
 
 /**
@@ -70,6 +71,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
     private lateinit var shareActivityResult: ActivityResultLauncher<Intent>
 
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
+    private val isFirstBindingDeferred = CompletableDeferred<Boolean>()
 
     /**
      * True if the view of this fragment is destroyed from the current or previous lifecycle.
@@ -101,6 +103,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 false,
             )
         setUpToolbar(currentView, /* upArrow= */ true, /* transparentToolbar= */ true)
+        bindScreenPreview(currentView, isFirstBindingDeferred)
         bindPreviewActions(currentView)
 
         SetWallpaperButtonBinder.bind(
@@ -147,7 +150,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        bindScreenPreview(currentView, isFirstBinding = savedInstanceState == null)
+        isFirstBindingDeferred.complete(savedInstanceState == null)
     }
 
     override fun onStart() {
@@ -183,7 +186,10 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         return ContextCompat.getColor(requireContext(), R.color.system_on_surface)
     }
 
-    private fun bindScreenPreview(view: View, isFirstBinding: Boolean) {
+    private fun bindScreenPreview(
+        view: View,
+        isFirstBindingDeferred: CompletableDeferred<Boolean>
+    ) {
         val currentNavDestId = checkNotNull(findNavController().currentDestination?.id)
         val tabs = view.requireViewById<PreviewTabs>(preview_tabs_container)
         if (displayUtils.hasMultiInternalDisplays()) {
@@ -199,7 +205,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 currentNavDestId,
                 (reenterTransition as Transition?),
                 wallpaperPreviewViewModel.fullPreviewConfigViewModel.value,
-                isFirstBinding,
+                isFirstBindingDeferred,
             ) { sharedElement ->
                 val extras =
                     FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)
@@ -210,7 +216,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                         resId = R.id.action_smallPreviewFragment_to_fullPreviewFragment,
                         args = null,
                         navOptions = null,
-                        navigatorExtras = extras
+                        navigatorExtras = extras,
                     )
             }
         } else {
@@ -224,7 +230,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 currentNavDestId,
                 (reenterTransition as Transition?),
                 wallpaperPreviewViewModel.fullPreviewConfigViewModel.value,
-                isFirstBinding,
+                isFirstBindingDeferred,
             ) { sharedElement ->
                 val extras =
                     FragmentNavigatorExtras(sharedElement to FULL_PREVIEW_SHARED_ELEMENT_ID)
@@ -235,7 +241,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                         resId = R.id.action_smallPreviewFragment_to_fullPreviewFragment,
                         args = null,
                         navOptions = null,
-                        navigatorExtras = extras
+                        navigatorExtras = extras,
                     )
             }
         }

@@ -25,6 +25,8 @@ import com.android.wallpaper.module.WallpaperPicker2Injector
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.logging.NoOpUserEventLogger
 import com.android.wallpaper.module.logging.UserEventLogger
+import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
+import com.android.wallpaper.picker.category.domain.interactor.implementations.CreativeCategoryInteractorImpl
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
 import com.android.wallpaper.picker.preview.ui.util.DefaultImageEffectDialogUtil
@@ -41,6 +43,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class WallpaperPicker2AppModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindCreativeCategoryInteractor(
+        impl: CreativeCategoryInteractorImpl,
+    ): CreativeCategoryInteractor
 
     @Binds
     @Singleton

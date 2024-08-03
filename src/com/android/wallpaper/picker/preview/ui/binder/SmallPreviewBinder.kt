@@ -34,6 +34,7 @@ import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.picker.preview.ui.fragment.SmallPreviewFragment
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.launch
 
@@ -51,7 +52,7 @@ object SmallPreviewBinder {
         navigate: ((View) -> Unit)? = null,
         transition: Transition? = null,
         transitionConfig: FullPreviewConfigViewModel? = null,
-        isFirstBinding: Boolean,
+        isFirstBindingDeferred: CompletableDeferred<Boolean>,
     ) {
 
         val previewCard: CardView = view.requireViewById(R.id.preview_card)
@@ -199,7 +200,7 @@ object SmallPreviewBinder {
             applicationContext = applicationContext,
             viewLifecycleOwner = viewLifecycleOwner,
             deviceDisplayType = deviceDisplayType,
-            isFirstBinding = isFirstBinding,
+            isFirstBindingDeferred = isFirstBindingDeferred,
         )
     }
 

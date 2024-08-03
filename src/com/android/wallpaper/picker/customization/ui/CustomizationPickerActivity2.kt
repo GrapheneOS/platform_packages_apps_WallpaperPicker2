@@ -61,6 +61,7 @@ import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -258,7 +259,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
                             previewViewModel.wallpaperDisplaySize.value
                         else previewViewModel.smallerDisplaySize,
                     lifecycleOwner = this@CustomizationPickerActivity2,
-                    isFirstBinding = isFirstBinding,
+                    isFirstBindingDeferred = CompletableDeferred(isFirstBinding),
                 )
             }
             // Disable over scroll

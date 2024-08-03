@@ -40,6 +40,7 @@ import com.android.wallpaper.util.DisplayUtils
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import kotlinx.coroutines.CompletableDeferred
 
 /** Shows full preview with an edit activity overlay. */
 @AndroidEntryPoint(AppbarFragment::class)
@@ -137,7 +138,7 @@ class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
             displayUtils = displayUtils,
             lifecycleOwner = viewLifecycleOwner,
             savedInstanceState = savedInstanceState,
-            isFirstBinding = savedInstanceState == null
+            isFirstBindingDeferred = CompletableDeferred(savedInstanceState == null)
         )
     }
 

@@ -35,6 +35,7 @@ import com.android.wallpaper.util.SurfaceViewUtils.attachView
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.shouldEnforceSingleEngine
 import com.android.wallpaper.util.wallpaperconnection.WallpaperEngineConnection.WallpaperEngineConnectionListener
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -55,7 +56,7 @@ object SmallWallpaperPreviewBinder {
         applicationContext: Context,
         viewLifecycleOwner: LifecycleOwner,
         deviceDisplayType: DeviceDisplayType,
-        isFirstBinding: Boolean,
+        isFirstBindingDeferred: CompletableDeferred<Boolean>,
     ) {
         var surfaceCallback: SurfaceViewUtils.SurfaceCallback? = null
         viewLifecycleOwner.lifecycleScope.launch {
@@ -68,7 +69,7 @@ object SmallWallpaperPreviewBinder {
                         deviceDisplayType = deviceDisplayType,
                         displaySize = displaySize,
                         lifecycleOwner = viewLifecycleOwner,
-                        isFirstBinding
+                        isFirstBindingDeferred,
                     )
                 surface.setZOrderMediaOverlay(true)
                 surfaceCallback?.let { surface.holder.addCallback(it) }
@@ -93,7 +94,7 @@ object SmallWallpaperPreviewBinder {
         deviceDisplayType: DeviceDisplayType,
         displaySize: Point,
         lifecycleOwner: LifecycleOwner,
-        isFirstBinding: Boolean,
+        isFirstBindingDeferred: CompletableDeferred<Boolean>,
     ): SurfaceViewUtils.SurfaceCallback {
 
         return object : SurfaceViewUtils.SurfaceCallback {
@@ -118,7 +119,7 @@ object SmallWallpaperPreviewBinder {
                                         viewModel.smallerDisplaySize,
                                         viewModel.wallpaperDisplaySize.value,
                                     ),
-                                    isFirstBinding,
+                                    isFirstBindingDeferred,
                                     object : WallpaperEngineConnectionListener {
                                         override fun onWallpaperColorsChanged(
                                             colors: WallpaperColors?,

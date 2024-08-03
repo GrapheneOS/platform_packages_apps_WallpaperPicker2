@@ -26,6 +26,7 @@ import com.android.wallpaper.util.WallpaperConnection.WhichPreview
 import java.lang.ref.WeakReference
 import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -56,7 +57,7 @@ object WallpaperConnectionUtils {
         destinationFlag: Int,
         surfaceView: SurfaceView,
         engineRenderingConfig: EngineRenderingConfig,
-        isFirstBinding: Boolean,
+        isFirstBindingDeferred: CompletableDeferred<Boolean>,
         listener: WallpaperEngineConnection.WallpaperEngineConnectionListener? = null,
     ) {
         val wallpaperInfo = wallpaperModel.liveWallpaperData.systemWallpaperInfo
@@ -71,7 +72,7 @@ object WallpaperConnectionUtils {
                     mutex.withLock {
                         if (!creativeWallpaperConfigPreviewUriMap.containsKey(uriKey)) {
                             // First time binding wallpaper should initialize wallpaper preview.
-                            if (isFirstBinding) {
+                            if (isFirstBindingDeferred.await()) {
                                 context.contentResolver.update(it, ContentValues(), null)
                             }
                             creativeWallpaperConfigPreviewUriMap[uriKey] = it

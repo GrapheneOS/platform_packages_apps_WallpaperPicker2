@@ -35,11 +35,9 @@ import com.android.wallpaper.picker.category.client.DefaultWallpaperCategoryClie
 import com.android.wallpaper.picker.category.data.repository.DefaultWallpaperCategoryRepository
 import com.android.wallpaper.picker.category.data.repository.WallpaperCategoryRepository
 import com.android.wallpaper.picker.category.domain.interactor.CategoryInteractor
-import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
 import com.android.wallpaper.picker.category.domain.interactor.ThirdPartyCategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.implementations.CategoryInteractorImpl
-import com.android.wallpaper.picker.category.domain.interactor.implementations.CreativeCategoryInteractorImpl
 import com.android.wallpaper.picker.category.domain.interactor.implementations.MyPhotosInteractorImpl
 import com.android.wallpaper.picker.category.domain.interactor.implementations.ThirdPartyCategoryInteractorImpl
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
@@ -80,12 +78,6 @@ abstract class SharedAppModule {
     @Binds
     @Singleton
     abstract fun bindCategoryInteractor(impl: CategoryInteractorImpl): CategoryInteractor
-
-    @Binds
-    @Singleton
-    abstract fun bindCreativeCategoryInteractor(
-        impl: CreativeCategoryInteractorImpl,
-    ): CreativeCategoryInteractor
 
     @Binds
     @Singleton
