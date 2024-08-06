@@ -56,6 +56,7 @@ object SmallPreviewBinder {
     ) {
 
         val previewCard: CardView = view.requireViewById(R.id.preview_card)
+        val cardRadius = previewCard.radius
         val foldedStateDescription =
             when (deviceDisplayType) {
                 DeviceDisplayType.FOLDED ->
@@ -71,7 +72,6 @@ object SmallPreviewBinder {
             )
         val wallpaperSurface: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
         val workspaceSurface: SurfaceView = view.requireViewById(R.id.workspace_surface)
-        var transitionDisposableHandle: DisposableHandle? = null
 
         // Set transition names to enable the small to full preview enter and return shared
         // element transitions.
@@ -98,65 +98,68 @@ object SmallPreviewBinder {
             }
         ViewCompat.setTransitionName(previewCard, transitionName)
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                // All surface views are initially hidden in the XML to enable smoother
-                // transitions. Only show the surface view used in the shared element transition
-                // until the transition ends to avoid issues with multiple surface views
-                // overlapping.
-                if (transition == null || transitionConfig == null) {
-                    // If no enter or re-enter transition, show child surfaces.
-                    wallpaperSurface.isVisible = true
-                    workspaceSurface.isVisible = true
-                } else {
-                    if (
-                        transitionConfig.screen == screen &&
-                            transitionConfig.deviceDisplayType == deviceDisplayType
-                    ) {
-                        // If transitioning to the current small preview, show child surfaces when
-                        // transition starts.
-                        val listener =
-                            object : TransitionListenerAdapter() {
-                                override fun onTransitionStart(transition: Transition) {
-                                    super.onTransitionStart(transition)
-                                    wallpaperSurface.isVisible = true
-                                    workspaceSurface.isVisible = true
-                                    transition.removeListener(this)
-                                    transitionDisposableHandle = null
-                                }
-                            }
-                        transition.addListener(listener)
-                        transitionDisposableHandle = DisposableHandle {
-                            transition.removeListener(listener)
-                        }
-                    } else {
-                        // If transitioning to another small preview, keep child surfaces hidden
-                        // until transition ends.
-                        val listener =
-                            object : TransitionListenerAdapter() {
-                                override fun onTransitionEnd(transition: Transition) {
-                                    super.onTransitionEnd(transition)
-                                    wallpaperSurface.isVisible = true
-                                    workspaceSurface.isVisible = true
-                                    wallpaperSurface.alpha = 0f
-                                    workspaceSurface.alpha = 0f
-
-                                    val mediumAnimTimeMs =
-                                        view.resources
-                                            .getInteger(android.R.integer.config_mediumAnimTime)
-                                            .toLong()
-                                    wallpaperSurface.startFadeInAnimation(mediumAnimTimeMs)
-                                    workspaceSurface.startFadeInAnimation(mediumAnimTimeMs)
-
-                                    transition.removeListener(this)
-                                    transitionDisposableHandle = null
-                                }
-                            }
-                        transition.addListener(listener)
-                        transitionDisposableHandle = DisposableHandle {
-                            transition.removeListener(listener)
+        var transitionDisposableHandle: DisposableHandle? = null
+        val transitionListener =
+            if (transition == null || transitionConfig == null) null
+            else
+                object : TransitionListenerAdapter() {
+                    // All surface views are initially visible in the XML to enable smoother
+                    // transitions. Only hide the surface views not used in the shared element
+                    // transition until the transition ends to avoid issues with multiple surface
+                    // views
+                    // overlapping.
+                    override fun onTransitionStart(transition: Transition) {
+                        super.onTransitionStart(transition)
+                        if (
+                            transitionConfig.screen == screen &&
+                                transitionConfig.deviceDisplayType == deviceDisplayType
+                        ) {
+                            // Put the surface on top for full transition, the card view is behind
+                            // the surface view so we need to apply radius on surface view instead
+                            wallpaperSurface.cornerRadius = cardRadius
+                            wallpaperSurface.setZOrderOnTop(true)
+                            workspaceSurface.setZOrderOnTop(true)
+                        } else {
+                            // If transitioning to another small preview, keep child surfaces hidden
+                            // until transition ends.
+                            wallpaperSurface.isVisible = false
+                            workspaceSurface.isVisible = false
                         }
                     }
+
+                    override fun onTransitionEnd(transition: Transition) {
+                        super.onTransitionEnd(transition)
+                        if (
+                            transitionConfig.screen == screen &&
+                                transitionConfig.deviceDisplayType == deviceDisplayType
+                        ) {
+                            wallpaperSurface.setZOrderMediaOverlay(true)
+                            workspaceSurface.setZOrderMediaOverlay(true)
+                        } else {
+                            wallpaperSurface.isVisible = true
+                            workspaceSurface.isVisible = true
+                            wallpaperSurface.alpha = 0f
+                            workspaceSurface.alpha = 0f
+
+                            val mediumAnimTimeMs =
+                                view.resources
+                                    .getInteger(android.R.integer.config_mediumAnimTime)
+                                    .toLong()
+                            wallpaperSurface.startFadeInAnimation(mediumAnimTimeMs)
+                            workspaceSurface.startFadeInAnimation(mediumAnimTimeMs)
+                        }
+
+                        transition.removeListener(this)
+                        transitionDisposableHandle = null
+                    }
+                }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                transitionListener?.let {
+                    // If transitionListener is not null so do transition and transitionConfig
+                    transition!!.addListener(it)
+                    transitionDisposableHandle = DisposableHandle { transition.removeListener(it) }
                 }
 
                 if (R.id.smallPreviewFragment == currentNavDestId) {
