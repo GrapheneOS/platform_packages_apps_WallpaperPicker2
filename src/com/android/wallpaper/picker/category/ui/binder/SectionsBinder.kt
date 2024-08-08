@@ -36,7 +36,6 @@ object SectionsBinder {
         lifecycleOwner: LifecycleOwner,
     ) {
         sectionsListView.adapter = CategorySectionsAdapter(sectionsViewModel, windowWidth)
-
         val gridLayoutManager =
             GridLayoutManager(sectionsListView.context, DEFAULT_SPAN).apply {
                 spanSizeLookup =

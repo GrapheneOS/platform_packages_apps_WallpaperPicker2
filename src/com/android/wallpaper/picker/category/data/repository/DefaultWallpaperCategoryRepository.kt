@@ -68,10 +68,10 @@ constructor(
             fetchMyPhotosCategory()
             fetchOnDeviceCategory()
             fetchThirdPartyAppCategory()
-            _isDefaultCategoriesFetched.value = true
         } catch (e: Exception) {
             Log.e(TAG, "Error fetching default categories", e)
-            _isDefaultCategoriesFetched.value = false
+        } finally {
+            _isDefaultCategoriesFetched.value = true
         }
     }
 

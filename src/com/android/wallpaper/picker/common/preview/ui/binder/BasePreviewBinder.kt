@@ -18,18 +18,17 @@ package com.android.wallpaper.picker.common.preview.ui.binder
 
 import android.content.Context
 import android.graphics.Point
-import android.view.SurfaceView
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
-import com.android.wallpaper.picker.common.preview.ui.viewmodel.BasePreviewViewModel
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import kotlinx.coroutines.CompletableDeferred
 
 /**
  * Common base preview binder that is only responsible for binding the workspace and wallpaper, and
- * uses the [BasePreviewViewModel].
+ * uses the [CustomizationPickerViewModel2].
  */
 // Based on SmallPreviewBinder, except cleaned up to only bind bind wallpaper and workspace
 // (workspace binding to be added). Also we enable a screen to be defined during binding rather than
@@ -39,20 +38,17 @@ object BasePreviewBinder {
     fun bind(
         applicationContext: Context,
         view: View,
-        viewModel: BasePreviewViewModel,
+        viewModel: CustomizationPickerViewModel2,
         screen: Screen,
         deviceDisplayType: DeviceDisplayType,
         displaySize: Point,
         lifecycleOwner: LifecycleOwner,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
     ) {
-        val wallpaperSurface: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
-        val workspaceSurface: SurfaceView = view.requireViewById(R.id.workspace_surface)
-
         WallpaperPreviewBinder.bind(
             applicationContext = applicationContext,
-            surfaceView = wallpaperSurface,
-            viewModel = viewModel,
+            surfaceView = view.requireViewById(R.id.wallpaper_surface),
+            viewModel = viewModel.basePreviewViewModel,
             screen = screen,
             displaySize = displaySize,
             deviceDisplayType = deviceDisplayType,
@@ -60,20 +56,10 @@ object BasePreviewBinder {
             isFirstBindingDeferred = isFirstBindingDeferred,
         )
 
-        val previewUtils =
-            when (screen) {
-                Screen.HOME_SCREEN -> {
-                    viewModel.homePreviewUtils
-                }
-                Screen.LOCK_SCREEN -> {
-                    viewModel.lockPreviewUtils
-                }
-            }
-
         WorkspacePreviewBinder.bind(
-            surfaceView = workspaceSurface,
+            surfaceView = view.requireViewById(R.id.workspace_surface),
             viewModel = viewModel,
-            previewUtils = previewUtils,
+            screen = screen,
             deviceDisplayType = deviceDisplayType,
             lifecycleOwner = lifecycleOwner,
         )

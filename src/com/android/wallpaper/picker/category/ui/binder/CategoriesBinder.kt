@@ -17,6 +17,7 @@
 package com.android.wallpaper.picker.category.ui.binder
 
 import android.view.View
+import android.widget.ProgressBar
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -39,8 +40,15 @@ object CategoriesBinder {
     ) {
         // instantiate the grid and assign its adapter and layout configuration
         val sectionsListView = categoriesPage.requireViewById<RecyclerView>(R.id.category_grid)
+        val progressBar: ProgressBar = categoriesPage.requireViewById(R.id.loading_indicator)
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.isLoading.collect { isLoading ->
+                        progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+                        sectionsListView.visibility = if (isLoading) View.GONE else View.VISIBLE
+                    }
+                }
 
                 // bind the state for List<SectionsViewModel>
                 launch {

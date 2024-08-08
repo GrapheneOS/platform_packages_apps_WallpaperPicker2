@@ -23,6 +23,7 @@ import com.android.wallpaper.module.LargeScreenMultiPanesChecker
 import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.module.NetworkStatusNotifier
 import com.android.wallpaper.picker.category.data.repository.WallpaperCategoryRepository
+import com.android.wallpaper.picker.category.domain.interactor.CategoriesLoadingStatusInteractor
 import com.android.wallpaper.picker.category.domain.interactor.CategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
@@ -32,6 +33,7 @@ import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.di.modules.SharedAppModule
 import com.android.wallpaper.system.UiModeManagerWrapper
+import com.android.wallpaper.testing.FakeCategoriesLoadingStatusInteractor
 import com.android.wallpaper.testing.FakeCategoryInteractor
 import com.android.wallpaper.testing.FakeCreativeWallpaperInteractor
 import com.android.wallpaper.testing.FakeDefaultCategoryFactory
@@ -91,6 +93,12 @@ internal abstract class SharedAppTestModule {
     abstract fun bindFakeDefaultWallpaperCategoryRepository(
         impl: FakeDefaultWallpaperCategoryRepository
     ): WallpaperCategoryRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindLoadingStatusInteractor(
+        impl: FakeCategoriesLoadingStatusInteractor,
+    ): CategoriesLoadingStatusInteractor
 
     // Use the test dispatcher for work intended for the main thread
     @Binds

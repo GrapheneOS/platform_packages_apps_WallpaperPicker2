@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.interactor
+package com.android.wallpaper.picker.category.interactor
 
 import android.content.Context
-import com.android.wallpaper.picker.category.domain.interactor.implementations.MyPhotosInteractorImpl
+import com.android.wallpaper.picker.category.domain.interactor.implementations.CategoryInteractorImpl
 import com.android.wallpaper.picker.data.category.CategoryModel
+import com.android.wallpaper.picker.data.category.CommonCategoryData
 import com.android.wallpaper.testing.FakeDefaultWallpaperCategoryRepository
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestDispatcher
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -40,37 +35,35 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @HiltAndroidTest
-@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
-class MyPhotosInteractorImplTest {
+class CategoryInteractorImplTest {
 
     @get:Rule var hiltRule = HiltAndroidRule(this)
     @Inject @ApplicationContext lateinit var context: Context
-
-    @Inject lateinit var testDispatcher: TestDispatcher
-    @Inject lateinit var testScope: TestScope
     @Inject
     lateinit var fakeDefaultWallpaperCategoryRepository: FakeDefaultWallpaperCategoryRepository
-    private lateinit var myPhotosInteractorImpl: MyPhotosInteractorImpl
+    private lateinit var categoryInteractorImpl: CategoryInteractorImpl
 
     @Before
     fun setup() {
         hiltRule.inject()
-        Dispatchers.setMain(testDispatcher)
-        myPhotosInteractorImpl =
-            MyPhotosInteractorImpl(fakeDefaultWallpaperCategoryRepository, testScope)
+        categoryInteractorImpl = CategoryInteractorImpl(fakeDefaultWallpaperCategoryRepository)
     }
 
     @Test
-    fun `category flow emits correct values`() = runTest {
-        fakeDefaultWallpaperCategoryRepository.fetchMyPhotosCategory()
+    fun testFetchCategoriesWithValidThirdPartyCategory() = runBlocking {
+        val categories = categoryInteractorImpl.categories.first()
 
-        val emittedCategories = mutableListOf<CategoryModel>()
-        val job = launch { myPhotosInteractorImpl.category.collect { emittedCategories.add(it) } }
-
-        // Wait for the collection to happen
-        advanceUntilIdle()
-        job.cancel()
-        assertThat(emittedCategories[0].commonCategoryData.title).isEqualTo("Fake My Photos")
+        Truth.assertThat(categories.size).isEqualTo(3)
+        Truth.assertThat(
+            categories.contains(
+                CategoryModel(
+                    commonCategoryData = CommonCategoryData("ThirdParty-2", "downloads_id", 3),
+                    thirdPartyCategoryData = null,
+                    imageCategoryData = null,
+                    collectionCategoryData = null
+                )
+            )
+        )
     }
 }

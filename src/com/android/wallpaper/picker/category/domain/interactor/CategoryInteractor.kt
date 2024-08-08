@@ -24,5 +24,5 @@ import kotlinx.coroutines.flow.Flow
  * category models
  */
 interface CategoryInteractor {
-    val categories: Flow<List<CategoryModel>>
+    val categories: Flow<Set<CategoryModel>>
 }

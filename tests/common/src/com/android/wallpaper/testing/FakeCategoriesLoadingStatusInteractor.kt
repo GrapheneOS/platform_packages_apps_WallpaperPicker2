@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.category.domain.interactor.implementations
+package com.android.wallpaper.testing
 
 import com.android.wallpaper.picker.category.data.repository.WallpaperCategoryRepository
-import com.android.wallpaper.picker.category.domain.interactor.ThirdPartyCategoryInteractor
-import com.android.wallpaper.picker.data.category.CategoryModel
+import com.android.wallpaper.picker.category.domain.interactor.CategoriesLoadingStatusInteractor
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 @Singleton
-class ThirdPartyCategoryInteractorImpl
+class FakeCategoriesLoadingStatusInteractor
 @Inject
-constructor(wallpaperCategoryRepository: WallpaperCategoryRepository) :
-    ThirdPartyCategoryInteractor {
-    override val categories: Flow<List<CategoryModel>> =
-        wallpaperCategoryRepository.thirdPartyAppCategory
+constructor(
+    private val wallpaperCategoryRepository: WallpaperCategoryRepository,
+) : CategoriesLoadingStatusInteractor {
+    override val isLoading: Flow<Boolean> =
+        wallpaperCategoryRepository.isDefaultCategoriesFetched.map { isFetched -> !isFetched }
 }

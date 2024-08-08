@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.category.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.wallpaper.picker.category.domain.interactor.CategoriesLoadingStatusInteractor
 import com.android.wallpaper.picker.category.domain.interactor.CategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
@@ -41,6 +42,7 @@ constructor(
     private val creativeWallpaperInteractor: CreativeCategoryInteractor,
     private val myPhotosInteractor: MyPhotosInteractor,
     private val thirdPartyCategoryInteractor: ThirdPartyCategoryInteractor,
+    private val loadindStatusInteractor: CategoriesLoadingStatusInteractor,
 ) : ViewModel() {
 
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
@@ -91,7 +93,7 @@ constructor(
                         listOf(
                             TileViewModel(
                                 defaultDrawable = null,
-                                thumbnailAsset = null,
+                                thumbnailAsset = category.collectionCategoryData?.thumbAsset,
                                 text = category.commonCategoryData.title,
                             ) {
                                 //  TODO(b/352081782): check if there is a single wallpaper
@@ -150,6 +152,8 @@ constructor(
                 addAll(individualViewModels)
             }
         }
+
+    val isLoading: Flow<Boolean> = loadindStatusInteractor.isLoading
 
     /** This method updates the photos category */
     fun updateMyPhotosCategory() {

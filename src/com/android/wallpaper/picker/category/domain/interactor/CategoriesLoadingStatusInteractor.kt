@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.data.category
+package com.android.wallpaper.picker.category.domain.interactor
 
-import com.android.wallpaper.asset.Asset
-import com.android.wallpaper.picker.data.WallpaperModel
+import kotlinx.coroutines.flow.Flow
 
-/** Represents set of attributes that depict a collection of wallpapers. */
-data class CollectionCategoryData(
-    val wallpaperModels: MutableList<WallpaperModel>,
-    val thumbAsset: Asset?,
-    val featuredThumbnailIndex: Int,
-    val isSingleWallpaperCategory: Boolean
-)
+/** This interface manages the loading status of the categories screen */
+interface CategoriesLoadingStatusInteractor {
+    val isLoading: Flow<Boolean>
+}

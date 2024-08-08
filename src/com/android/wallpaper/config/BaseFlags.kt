@@ -33,15 +33,25 @@ import kotlinx.coroutines.runBlocking
 abstract class BaseFlags {
     private var customizationProviderClient: CustomizationProviderClient? = null
     private var cachedFlags: List<CustomizationProviderClient.Flag>? = null
+
     open fun isStagingBackdropContentEnabled() = false
+
     open fun isWallpaperEffectEnabled() = false
+
     open fun isWallpaperEffectModelDownloadEnabled() = true
+
     open fun isInterruptModelDownloadEnabled() = false
+
     open fun isWallpaperRestorerEnabled() = wallpaperRestorerFlag()
+
     open fun isWallpaperCategoryRefactoringEnabled() = refactorWallpaperCategoryFlag()
+
     open fun isColorContrastControlEnabled() = enableColorContrastControl()
+
     open fun isMagicPortraitEnabled() = magicPortraitFlag()
+
     open fun isNewPickerUi() = newPickerUiFlag()
+
     open fun isClockReactiveVariantsEnabled() = clockReactiveVariants()
 
     open fun isMultiCropEnabled() = WallpaperManager.isMultiCropEnabled()

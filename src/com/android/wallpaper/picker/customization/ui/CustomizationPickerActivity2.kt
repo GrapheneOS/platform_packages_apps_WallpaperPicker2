@@ -245,7 +245,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
                 BasePreviewBinder.bind(
                     applicationContext = applicationContext,
                     view = previewCard,
-                    viewModel = previewViewModel,
+                    viewModel = customizationPickerViewModel,
                     screen =
                         if (position == 0) {
                             LOCK_SCREEN
