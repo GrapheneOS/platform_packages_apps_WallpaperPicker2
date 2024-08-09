@@ -338,6 +338,10 @@ public abstract class StreamableAsset extends Asset {
      * Closes the provided InputStream and if there was an error, logs the provided error message.
      */
     private void closeInputStream(InputStream inputStream, String errorMessage) {
+        if (inputStream == null) {
+            return;
+        }
+
         try {
             inputStream.close();
         } catch (IOException e) {
