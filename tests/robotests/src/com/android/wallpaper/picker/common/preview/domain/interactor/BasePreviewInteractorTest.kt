@@ -21,9 +21,9 @@ import android.content.pm.ActivityInfo
 import androidx.test.core.app.ActivityScenario
 import com.android.wallpaper.model.WallpaperModelsPair
 import com.android.wallpaper.module.InjectorProvider
+import com.android.wallpaper.picker.common.preview.data.repository.BasePreviewRepository
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.preview.PreviewTestActivity
-import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestWallpaperPreferences
@@ -58,7 +58,7 @@ class BasePreviewInteractorTest {
     @get:Rule var hiltRule = HiltAndroidRule(this)
 
     private lateinit var scenario: ActivityScenario<PreviewTestActivity>
-    private lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
+    private lateinit var basePreviewRepository: BasePreviewRepository
     private lateinit var wallpaperRepository: WallpaperRepository
     private lateinit var interactor: BasePreviewInteractor
 
@@ -86,7 +86,7 @@ class BasePreviewInteractorTest {
         scenario.onActivity {
             val activityScopeEntryPoint =
                 EntryPointAccessors.fromActivity(it, ActivityScopeEntryPoint::class.java)
-            wallpaperPreviewRepository = activityScopeEntryPoint.wallpaperPreviewRepository()
+            basePreviewRepository = activityScopeEntryPoint.basePreviewRepository()
             wallpaperRepository = activityScopeEntryPoint.wallpaperRepository()
             interactor = activityScopeEntryPoint.basePreviewInteractor()
         }
@@ -95,7 +95,7 @@ class BasePreviewInteractorTest {
     @EntryPoint
     @InstallIn(ActivityComponent::class)
     interface ActivityScopeEntryPoint {
-        fun wallpaperPreviewRepository(): WallpaperPreviewRepository
+        fun basePreviewRepository(): BasePreviewRepository
 
         fun wallpaperRepository(): WallpaperRepository
 
@@ -126,7 +126,7 @@ class BasePreviewInteractorTest {
                 homeStaticWallpaperModel,
                 lockStaticWallpaperModel
             )
-            wallpaperPreviewRepository.setWallpaperModel(previewStaticWallpaperModel)
+            basePreviewRepository.setWallpaperModel(previewStaticWallpaperModel)
 
             val actual = collectLastValue(interactor.wallpapers)()
             assertThat(actual).isNotNull()

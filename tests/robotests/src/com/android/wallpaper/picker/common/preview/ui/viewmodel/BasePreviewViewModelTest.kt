@@ -21,8 +21,8 @@ import android.content.pm.ActivityInfo
 import androidx.test.core.app.ActivityScenario
 import com.android.wallpaper.model.WallpaperModelsPair
 import com.android.wallpaper.module.InjectorProvider
+import com.android.wallpaper.picker.common.preview.data.repository.BasePreviewRepository
 import com.android.wallpaper.picker.preview.PreviewTestActivity
-import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.android.wallpaper.testing.WallpaperModelUtils
@@ -60,7 +60,7 @@ class BasePreviewViewModelTest {
     private lateinit var basePreviewViewModel: BasePreviewViewModel
     private lateinit var staticHomePreviewViewModel: StaticPreviewViewModel
     private lateinit var staticLockPreviewViewModel: StaticPreviewViewModel
-    private lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
+    private lateinit var basePreviewRepository: BasePreviewRepository
     private lateinit var basePreviewViewModelFactory: BasePreviewViewModel.Factory
 
     @Inject @ApplicationContext lateinit var appContext: Context
@@ -86,7 +86,7 @@ class BasePreviewViewModelTest {
         scenario.onActivity {
             val activityScopeEntryPoint =
                 EntryPointAccessors.fromActivity(it, ActivityScopeEntryPoint::class.java)
-            wallpaperPreviewRepository = activityScopeEntryPoint.wallpaperPreviewRepository()
+            basePreviewRepository = activityScopeEntryPoint.basePreviewRepository()
             basePreviewViewModelFactory = activityScopeEntryPoint.basePreviewViewModelFactory()
             basePreviewViewModel = basePreviewViewModelFactory.create(testScope.backgroundScope)
             staticHomePreviewViewModel = basePreviewViewModel.staticHomeWallpaperPreviewViewModel
@@ -97,7 +97,7 @@ class BasePreviewViewModelTest {
     @EntryPoint
     @InstallIn(ActivityComponent::class)
     interface ActivityScopeEntryPoint {
-        fun wallpaperPreviewRepository(): WallpaperPreviewRepository
+        fun basePreviewRepository(): BasePreviewRepository
 
         fun basePreviewViewModelFactory(): BasePreviewViewModel.Factory
     }
@@ -112,7 +112,7 @@ class BasePreviewViewModelTest {
                 )
             val whichPreview = WallpaperConnection.WhichPreview.PREVIEW_CURRENT
 
-            wallpaperPreviewRepository.setWallpaperModel(wallpaperModel)
+            basePreviewRepository.setWallpaperModel(wallpaperModel)
             basePreviewViewModel.setWhichPreview(whichPreview)
 
             val wallpapersAndWhichPreview =

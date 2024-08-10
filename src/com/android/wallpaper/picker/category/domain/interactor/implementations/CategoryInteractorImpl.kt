@@ -23,6 +23,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
 
 /** This class implements the business logic in assembling ungrouped category models */
 @Singleton
@@ -31,15 +33,16 @@ class CategoryInteractorImpl
 constructor(defaultWallpaperCategoryRepository: WallpaperCategoryRepository) : CategoryInteractor {
 
     override val categories: Flow<Set<CategoryModel>> =
-        combine(
-            defaultWallpaperCategoryRepository.thirdPartyAppCategory,
-            defaultWallpaperCategoryRepository.onDeviceCategory,
-            defaultWallpaperCategoryRepository.systemCategories
-        ) { args ->
-            val thirdPartyAppCategory = args[0] as List<CategoryModel>
-            val onDeviceCategory = args[1] as CategoryModel?
-            val systemCategories = args[2] as List<CategoryModel>
-            val combinedSet = (thirdPartyAppCategory + systemCategories).toSet()
-            onDeviceCategory?.let { combinedSet + it } ?: combinedSet
-        }
+        defaultWallpaperCategoryRepository.isDefaultCategoriesFetched
+            .filter { it }
+            .flatMapLatest {
+                combine(
+                    defaultWallpaperCategoryRepository.thirdPartyAppCategory,
+                    defaultWallpaperCategoryRepository.onDeviceCategory,
+                    defaultWallpaperCategoryRepository.systemCategories
+                ) { thirdPartyAppCategory, onDeviceCategory, systemCategories ->
+                    val combinedSet = (thirdPartyAppCategory + systemCategories).toSet()
+                    onDeviceCategory?.let { combinedSet + it } ?: combinedSet
+                }
+            }
 }

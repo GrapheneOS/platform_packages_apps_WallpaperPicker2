@@ -44,7 +44,11 @@ object BasePreviewBinder {
         displaySize: Point,
         lifecycleOwner: LifecycleOwner,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
+        onClick: (() -> Unit)? = null,
     ) {
+        view.isClickable = (onClick != null)
+        onClick?.let { view.setOnClickListener { it() } }
+
         WallpaperPreviewBinder.bind(
             applicationContext = applicationContext,
             surfaceView = view.requireViewById(R.id.wallpaper_surface),

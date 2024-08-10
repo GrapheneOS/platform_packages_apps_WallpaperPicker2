@@ -24,6 +24,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.Toolbar
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -41,7 +42,9 @@ import com.android.wallpaper.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.Screen.HOME_SCREEN
 import com.android.wallpaper.model.Screen.LOCK_SCREEN
+import com.android.wallpaper.module.LargeScreenMultiPanesChecker
 import com.android.wallpaper.module.MultiPanesChecker
+import com.android.wallpaper.picker.common.preview.data.repository.PersistentWallpaperModelRepository
 import com.android.wallpaper.picker.common.preview.ui.binder.BasePreviewBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder2
@@ -52,7 +55,7 @@ import com.android.wallpaper.picker.customization.ui.view.transformer.PreviewPag
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.MainDispatcher
-import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
+import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import com.android.wallpaper.util.ActivityUtils
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.WallpaperConnection
@@ -72,7 +75,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
     @Inject lateinit var customizationOptionUtil: CustomizationOptionUtil
     @Inject lateinit var customizationOptionsBinder: CustomizationOptionsBinder
     @Inject lateinit var wallpaperModelFactory: WallpaperModelFactory
-    @Inject lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
+    @Inject lateinit var persistentWallpaperModelRepository: PersistentWallpaperModelRepository
     @Inject lateinit var displayUtils: DisplayUtils
     @Inject @BackgroundDispatcher lateinit var backgroundScope: CoroutineScope
     @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
@@ -82,6 +85,9 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
 
     private val customizationPickerViewModel: CustomizationPickerViewModel2 by viewModels()
     private var customizationOptionFloatingSheetViewMap: Map<CustomizationOption, View>? = null
+
+    private val startForResult =
+        this.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -241,17 +247,18 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         pager.apply {
             adapter = PreviewPagerAdapter { viewHolder, position ->
                 val previewCard = viewHolder.itemView.requireViewById<View>(R.id.preview_card)
+                val screen =
+                    if (position == 0) {
+                        LOCK_SCREEN
+                    } else {
+                        HOME_SCREEN
+                    }
 
                 BasePreviewBinder.bind(
                     applicationContext = applicationContext,
                     view = previewCard,
                     viewModel = customizationPickerViewModel,
-                    screen =
-                        if (position == 0) {
-                            LOCK_SCREEN
-                        } else {
-                            HOME_SCREEN
-                        },
+                    screen = screen,
                     deviceDisplayType =
                         displayUtils.getCurrentDisplayType(this@CustomizationPickerActivity2),
                     displaySize =
@@ -260,6 +267,24 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
                         else previewViewModel.smallerDisplaySize,
                     lifecycleOwner = this@CustomizationPickerActivity2,
                     isFirstBindingDeferred = CompletableDeferred(isFirstBinding),
+                    onClick = {
+                        previewViewModel.wallpapers.value?.let {
+                            val wallpaper =
+                                if (screen == HOME_SCREEN) it.homeWallpaper
+                                else it.lockWallpaper ?: it.homeWallpaper
+                            persistentWallpaperModelRepository.setWallpaperModel(wallpaper)
+                        }
+                        val multiPanesChecker = LargeScreenMultiPanesChecker()
+                        val isMultiPanel = multiPanesChecker.isMultiPanesEnabled(applicationContext)
+                        startForResult.launch(
+                            WallpaperPreviewActivity.newIntent(
+                                context = applicationContext,
+                                isAssetIdPresent = false,
+                                isViewAsHome = screen == HOME_SCREEN,
+                                isNewTask = isMultiPanel,
+                            )
+                        )
+                    }
                 )
             }
             // Disable over scroll

@@ -23,13 +23,6 @@ flag {
 }
 
 flag {
-    name: "new_picker_ui_flag"
-    namespace: "customization_picker"
-    description: "Enables the BC25 design of the customization picker UI."
-    bug: "339081035"
-}
-
-flag {
    name: "clock_reactive_variants"
    namespace: "systemui"
    description: "Add reactive variant fonts to some clocks"
