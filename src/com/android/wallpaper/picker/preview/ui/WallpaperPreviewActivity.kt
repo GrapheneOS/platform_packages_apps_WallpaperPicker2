@@ -70,6 +70,7 @@ class WallpaperPreviewActivity :
     @Inject lateinit var persistentWallpaperModelRepository: PersistentWallpaperModelRepository
     @Inject lateinit var liveWallpaperDownloader: LiveWallpaperDownloader
     @MainDispatcher @Inject lateinit var mainScope: CoroutineScope
+    @Inject lateinit var wallpaperConnectionUtils: WallpaperConnectionUtils
 
     private val wallpaperPreviewViewModel: WallpaperPreviewViewModel by viewModels()
 
@@ -194,7 +195,7 @@ class WallpaperPreviewActivity :
         // TODO(b/328302105): MainScope ensures the job gets done non-blocking even if the
         //   activity has been destroyed already. Consider making this part of
         //   WallpaperConnectionUtils.
-        mainScope.launch { WallpaperConnectionUtils.disconnectAll(appContext) }
+        mainScope.launch { wallpaperConnectionUtils.disconnectAll(appContext) }
 
         super.onDestroy()
     }

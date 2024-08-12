@@ -33,6 +33,7 @@ import com.android.wallpaper.picker.preview.ui.view.adapters.SinglePreviewPagerA
 import com.android.wallpaper.picker.preview.ui.view.pagetransformers.PreviewCardPageTransformer
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
 
@@ -49,6 +50,7 @@ object PreviewPagerBinder {
         currentNavDestId: Int,
         transition: Transition?,
         transitionConfig: FullPreviewConfigViewModel?,
+        wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
         navigate: (View) -> Unit,
     ) {
@@ -72,6 +74,7 @@ object PreviewPagerBinder {
                     transition = transition,
                     transitionConfig = transitionConfig,
                     isFirstBindingDeferred = isFirstBindingDeferred,
+                    wallpaperConnectionUtils = wallpaperConnectionUtils,
                     navigate = navigate,
                 )
             }

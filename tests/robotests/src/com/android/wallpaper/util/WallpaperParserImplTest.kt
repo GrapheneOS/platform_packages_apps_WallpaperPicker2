@@ -31,7 +31,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.setMain
-import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -101,22 +100,17 @@ class WallpaperParserImplTest {
 
     /**
      * This test uses the file exception_wallpapers.xml that is defined in the resources folder
-     * where if some mandatory attributes aren't defined, an exception will be thrown.
+     * where if some mandatory attributes aren't defined, XMLPullParserException is thrown and empty
+     * list is returned.
      */
     @Test
-    fun parseInvalidXMLForSystemCategories_shouldThrowException() {
+    fun parseInvalidXMLForSystemCategories_shouldReturnEmptyList() {
         @XmlRes
         val wallpapersResId: Int =
             resources.getIdentifier("exception_wallpapers", "xml", packageName)
         assertThat(wallpapersResId).isNotEqualTo(0)
         val parser: XmlResourceParser = resources.getXml(wallpapersResId)
-
-        assertThat(
-                assertThrows(NullPointerException::class.java) {
-                    mWallpaperXMLParserImpl.parseSystemCategories(parser)
-                }
-            )
-            .isNotNull()
+        assertThat(mWallpaperXMLParserImpl.parseSystemCategories(parser)).hasSize(0)
     }
 
     /**

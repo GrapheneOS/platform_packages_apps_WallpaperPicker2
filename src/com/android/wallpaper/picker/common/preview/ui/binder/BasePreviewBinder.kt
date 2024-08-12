@@ -24,6 +24,7 @@ import com.android.wallpaper.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import kotlinx.coroutines.CompletableDeferred
 
 /**
@@ -43,6 +44,7 @@ object BasePreviewBinder {
         deviceDisplayType: DeviceDisplayType,
         displaySize: Point,
         lifecycleOwner: LifecycleOwner,
+        wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
         onClick: (() -> Unit)? = null,
     ) {
@@ -57,6 +59,7 @@ object BasePreviewBinder {
             displaySize = displaySize,
             deviceDisplayType = deviceDisplayType,
             viewLifecycleOwner = lifecycleOwner,
+            wallpaperConnectionUtils = wallpaperConnectionUtils,
             isFirstBindingDeferred = isFirstBindingDeferred,
         )
 

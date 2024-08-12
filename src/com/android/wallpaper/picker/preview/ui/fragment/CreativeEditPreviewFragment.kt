@@ -37,6 +37,7 @@ import com.android.wallpaper.picker.preview.ui.fragment.SmallPreviewFragment.Com
 import com.android.wallpaper.picker.preview.ui.viewmodel.PreviewActionsViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -48,6 +49,7 @@ class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
 
     @Inject @ApplicationContext lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
+    @Inject lateinit var wallpaperConnectionUtils: WallpaperConnectionUtils
 
     private lateinit var currentView: View
 
@@ -138,6 +140,7 @@ class CreativeEditPreviewFragment : Hilt_CreativeEditPreviewFragment() {
             displayUtils = displayUtils,
             lifecycleOwner = viewLifecycleOwner,
             savedInstanceState = savedInstanceState,
+            wallpaperConnectionUtils = wallpaperConnectionUtils,
             isFirstBindingDeferred = CompletableDeferred(savedInstanceState == null)
         )
     }

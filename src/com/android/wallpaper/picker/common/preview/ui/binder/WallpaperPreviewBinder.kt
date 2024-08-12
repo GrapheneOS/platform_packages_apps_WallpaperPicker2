@@ -35,7 +35,7 @@ import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.util.SurfaceViewUtils
 import com.android.wallpaper.util.SurfaceViewUtils.attachView
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
-import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.shouldEnforceSingleEngine
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.Companion.shouldEnforceSingleEngine
 import com.android.wallpaper.util.wallpaperconnection.WallpaperEngineConnection
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
@@ -60,6 +60,7 @@ object WallpaperPreviewBinder {
         displaySize: Point,
         deviceDisplayType: DeviceDisplayType,
         viewLifecycleOwner: LifecycleOwner,
+        wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
     ) {
         var surfaceCallback: SurfaceViewUtils.SurfaceCallback? = null
@@ -74,6 +75,7 @@ object WallpaperPreviewBinder {
                         deviceDisplayType = deviceDisplayType,
                         displaySize = displaySize,
                         lifecycleOwner = viewLifecycleOwner,
+                        wallpaperConnectionUtils = wallpaperConnectionUtils,
                         isFirstBindingDeferred = isFirstBindingDeferred,
                     )
                 surfaceView.setZOrderMediaOverlay(true)
@@ -100,6 +102,7 @@ object WallpaperPreviewBinder {
         deviceDisplayType: DeviceDisplayType,
         displaySize: Point,
         lifecycleOwner: LifecycleOwner,
+        wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
     ): SurfaceViewUtils.SurfaceCallback {
 
@@ -116,7 +119,7 @@ object WallpaperPreviewBinder {
                                 else wallpapers.lockWallpaper ?: wallpapers.homeWallpaper
                             if (wallpaper is WallpaperModel.LiveWallpaperModel) {
                                 val engineRenderingConfig =
-                                    WallpaperConnectionUtils.EngineRenderingConfig(
+                                    WallpaperConnectionUtils.Companion.EngineRenderingConfig(
                                         wallpaper.shouldEnforceSingleEngine(),
                                         deviceDisplayType = deviceDisplayType,
                                         viewModel.smallerDisplaySize,
@@ -134,7 +137,7 @@ object WallpaperPreviewBinder {
                                             )
                                         }
                                     }
-                                WallpaperConnectionUtils.connect(
+                                wallpaperConnectionUtils.connect(
                                     applicationContext,
                                     wallpaper,
                                     whichPreview,

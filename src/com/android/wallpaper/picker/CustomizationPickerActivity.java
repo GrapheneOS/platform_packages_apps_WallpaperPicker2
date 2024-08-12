@@ -114,6 +114,7 @@ public class CustomizationPickerActivity extends Hilt_CustomizationPickerActivit
                 startActivityForResultSafely(this,
                         mMultiPanesChecker.getMultiPanesIntent(intent), /* requestCode= */ 0);
                 finish();
+                return;
             }
         }
 

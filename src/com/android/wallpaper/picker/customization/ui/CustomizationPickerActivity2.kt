@@ -79,6 +79,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
     @Inject lateinit var displayUtils: DisplayUtils
     @Inject @BackgroundDispatcher lateinit var backgroundScope: CoroutineScope
     @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
+    @Inject lateinit var wallpaperConnectionUtils: WallpaperConnectionUtils
 
     private var fullyCollapsed = false
     private var navBarHeight: Int = 0
@@ -266,6 +267,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
                             previewViewModel.wallpaperDisplaySize.value
                         else previewViewModel.smallerDisplaySize,
                     lifecycleOwner = this@CustomizationPickerActivity2,
+                    wallpaperConnectionUtils = wallpaperConnectionUtils,
                     isFirstBindingDeferred = CompletableDeferred(isFirstBinding),
                     onClick = {
                         previewViewModel.wallpapers.value?.let {
@@ -387,7 +389,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         // TODO(b/328302105): MainScope ensures the job gets done non-blocking even if the
         //   activity has been destroyed already. Consider making this part of
         //   WallpaperConnectionUtils.
-        mainScope.launch { WallpaperConnectionUtils.disconnectAll(applicationContext) }
+        mainScope.launch { wallpaperConnectionUtils.disconnectAll(applicationContext) }
 
         super.onDestroy()
     }

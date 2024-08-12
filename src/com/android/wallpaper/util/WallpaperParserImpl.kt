@@ -46,7 +46,7 @@ constructor(
     private val partnerProvider: PartnerProvider
 ) : WallpaperParser {
 
-    /** This method is responsible for generating list of system categories from the XML file. */
+    /** This method is responsible for parsing the XML file for system categories. */
     override fun parseSystemCategories(parser: XmlResourceParser): List<WallpaperCategory> {
         val categories = mutableListOf<WallpaperCategory>()
         try {
@@ -64,11 +64,41 @@ constructor(
                             Xml.asAttributeSet(parser)
                         )
                     categoryBuilder.setPriorityIfEmpty(PRIORITY_SYSTEM + priorityTracker++)
-                    categoryBuilder.addWallpapers(
-                        parseXmlForWallpapersForASingleCategory(parser, categoryBuilder.id)
-                    )
+                    var publishedPlaceholder = false
+                    val categoryDepth = parser.depth
+                    while (
+                        (parser.next().also { type = it } != XmlPullParser.END_TAG ||
+                            parser.depth > categoryDepth) && type != XmlPullParser.END_DOCUMENT
+                    ) {
+                        if (type == XmlPullParser.START_TAG) {
+                            val wallpaper =
+                                if (SystemStaticWallpaperInfo.TAG_NAME == parser.name) {
+                                    SystemStaticWallpaperInfo.fromAttributeSet(
+                                        partnerProvider.packageName,
+                                        categoryBuilder.id,
+                                        Xml.asAttributeSet(parser)
+                                    )
+                                } else if (LiveWallpaperInfo.TAG_NAME == parser.name) {
+                                    LiveWallpaperInfo.fromAttributeSet(
+                                        context,
+                                        categoryBuilder.id,
+                                        Xml.asAttributeSet(parser)
+                                    )
+                                } else {
+                                    null
+                                }
+                            if (wallpaper != null) {
+                                categoryBuilder.addWallpaper(wallpaper)
+                                if (!publishedPlaceholder) {
+                                    publishedPlaceholder = true
+                                }
+                            }
+                        }
+                    }
                     val category = categoryBuilder.build()
-                    category?.let { categories.add(it) }
+                    if (!category.getUnmodifiableWallpapers().isEmpty()) {
+                        categories.add(category)
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -120,46 +150,6 @@ constructor(
         }
 
         return wallpaperInfos
-    }
-
-    /**
-     * This method is responsible for parsing the XML for a single category and returning a list of
-     * WallpaperInfo objects.
-     */
-    private fun parseXmlForWallpapersForASingleCategory(
-        parser: XmlResourceParser,
-        categoryId: String
-    ): List<WallpaperInfo> {
-        val outputWallpaperInfo = mutableListOf<WallpaperInfo>()
-        val categoryDepth = parser.depth
-        var type: Int
-        while (
-            (parser.next().also { type = it } != XmlPullParser.END_TAG ||
-                parser.depth > categoryDepth) && type != XmlPullParser.END_DOCUMENT
-        ) {
-            if (type == XmlPullParser.START_TAG) {
-                var wallpaper: WallpaperInfo? = null
-                if (SystemStaticWallpaperInfo.TAG_NAME == parser.name) {
-                    wallpaper =
-                        SystemStaticWallpaperInfo.fromAttributeSet(
-                            partnerProvider.packageName,
-                            categoryId,
-                            Xml.asAttributeSet(parser)
-                        )
-                } else if (LiveWallpaperInfo.TAG_NAME == parser.name) {
-                    wallpaper =
-                        LiveWallpaperInfo.fromAttributeSet(
-                            context,
-                            categoryId,
-                            Xml.asAttributeSet(parser)
-                        )
-                }
-                if (wallpaper != null) {
-                    outputWallpaperInfo.add(wallpaper)
-                }
-            }
-        }
-        return outputWallpaperInfo
     }
 
     companion object {

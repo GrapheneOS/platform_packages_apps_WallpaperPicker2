@@ -31,6 +31,8 @@ import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryI
 import com.android.wallpaper.picker.category.domain.interactor.implementations.CategoryInteractorImpl
 import com.android.wallpaper.picker.category.domain.interactor.implementations.CreativeCategoryInteractorImpl
 import com.android.wallpaper.picker.category.domain.interactor.implementations.DefaultCategoriesLoadingStatusInteractor
+import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
+import com.android.wallpaper.picker.category.ui.view.providers.implementation.DefaultIndividualPickerFactory
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
 import com.android.wallpaper.picker.preview.ui.util.DefaultImageEffectDialogUtil
@@ -73,6 +75,12 @@ abstract class WallpaperPicker2AppModule {
     abstract fun bindImageEffectDialogUtil(
         impl: DefaultImageEffectDialogUtil
     ): ImageEffectDialogUtil
+
+    @Binds
+    @Singleton
+    abstract fun bindIndividualPickerFactory(
+        impl: DefaultIndividualPickerFactory
+    ): IndividualPickerFactory
 
     @Binds @Singleton abstract fun bindInjector(impl: WallpaperPicker2Injector): Injector
 

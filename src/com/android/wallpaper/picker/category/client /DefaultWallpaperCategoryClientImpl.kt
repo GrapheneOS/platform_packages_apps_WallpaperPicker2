@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.category.client
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import androidx.annotation.XmlRes
 import com.android.wallpaper.R
 import com.android.wallpaper.model.Category
 import com.android.wallpaper.model.DefaultWallpaperInfo
@@ -143,7 +144,7 @@ constructor(
             return listOf()
         }
 
-        val wallpapersResId =
+        @XmlRes val wallpapersResId =
             partnerRes.getIdentifier(PartnerProvider.WALLPAPER_RES_ID, "xml", packageName)
         // Certain partner configurations don't have wallpapers provided, so need to check;
         // return early if they are missing.

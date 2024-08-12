@@ -41,6 +41,7 @@ import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.LaunchSourceUtils.LAUNCH_SOURCE_LAUNCHER
 import com.android.wallpaper.util.LaunchSourceUtils.LAUNCH_SOURCE_SETTINGS_HOMEPAGE
 import com.android.wallpaper.util.LaunchSourceUtils.WALLPAPER_LAUNCH_SOURCE
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -51,6 +52,7 @@ class SetWallpaperDialogFragment : Hilt_SetWallpaperDialogFragment() {
 
     @Inject lateinit var displayUtils: DisplayUtils
     @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
+    @Inject lateinit var wallpaperConnectionUtils: WallpaperConnectionUtils
 
     private val wallpaperPreviewViewModel by activityViewModels<WallpaperPreviewViewModel>()
 
@@ -120,6 +122,7 @@ class SetWallpaperDialogFragment : Hilt_SetWallpaperDialogFragment() {
                 }
             },
             onDismissDialog = { findNavController().popBackStack() },
+            wallpaperConnectionUtils = wallpaperConnectionUtils,
             isFirstBinding = false,
             navigate = null,
         )

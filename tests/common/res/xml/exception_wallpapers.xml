@@ -16,7 +16,7 @@
   -->
 
 <wallpapers>
-    <category title="Category 1"> <!-- Missing 'id' attribute -->
-        <static-wallpaper id="wallpaper1" src="wallpaper1.jpg" />
+    <category id="category1" title="Category 1">
+        <invalid-tag id="wallpaper1" src="wallpaper1.jpg" />
     </category>
 </wallpapers>

@@ -23,8 +23,10 @@ import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
 import com.android.wallpaper.util.WallpaperConnection
 import com.android.wallpaper.util.WallpaperConnection.WhichPreview
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import java.lang.ref.WeakReference
 import java.util.concurrent.ConcurrentHashMap
+import javax.inject.Inject
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
@@ -34,9 +36,8 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-object WallpaperConnectionUtils {
-
-    const val TAG = "WallpaperConnectionUtils"
+@ActivityRetainedScoped
+class WallpaperConnectionUtils @Inject constructor() {
 
     // engineMap and surfaceControlMap are used for disconnecting wallpaper services.
     private val wallpaperConnectionMap = ConcurrentHashMap<String, Deferred<WallpaperConnection>>()
@@ -340,35 +341,39 @@ object WallpaperConnectionUtils {
         }
     }
 
-    data class EngineRenderingConfig(
-        val enforceSingleEngine: Boolean,
-        val deviceDisplayType: DeviceDisplayType,
-        val smallDisplaySize: Point,
-        val wallpaperDisplaySize: Point,
-    ) {
-        fun getEngineDisplaySize(): Point {
-            // If we need to enforce single engine, always return the larger screen's preview
-            return if (enforceSingleEngine) {
-                return wallpaperDisplaySize
-            } else {
-                getPreviewDisplaySize()
+    companion object {
+        const val TAG = "WallpaperConnectionUtils"
+
+        data class EngineRenderingConfig(
+            val enforceSingleEngine: Boolean,
+            val deviceDisplayType: DeviceDisplayType,
+            val smallDisplaySize: Point,
+            val wallpaperDisplaySize: Point,
+        ) {
+            fun getEngineDisplaySize(): Point {
+                // If we need to enforce single engine, always return the larger screen's preview
+                return if (enforceSingleEngine) {
+                    return wallpaperDisplaySize
+                } else {
+                    getPreviewDisplaySize()
+                }
+            }
+
+            private fun getPreviewDisplaySize(): Point {
+                return when (deviceDisplayType) {
+                    DeviceDisplayType.SINGLE -> wallpaperDisplaySize
+                    DeviceDisplayType.FOLDED -> smallDisplaySize
+                    DeviceDisplayType.UNFOLDED -> wallpaperDisplaySize
+                }
             }
         }
 
-        private fun getPreviewDisplaySize(): Point {
-            return when (deviceDisplayType) {
-                DeviceDisplayType.SINGLE -> wallpaperDisplaySize
-                DeviceDisplayType.FOLDED -> smallDisplaySize
-                DeviceDisplayType.UNFOLDED -> wallpaperDisplaySize
+        fun LiveWallpaperModel.shouldEnforceSingleEngine(): Boolean {
+            return when {
+                creativeWallpaperData != null -> false
+                liveWallpaperData.isEffectWallpaper -> false
+                else -> true // Only fallback to single engine rendering for legacy live wallpapers
             }
-        }
-    }
-
-    fun LiveWallpaperModel.shouldEnforceSingleEngine(): Boolean {
-        return when {
-            creativeWallpaperData != null -> false
-            liveWallpaperData.isEffectWallpaper -> false
-            else -> true // Only fallback to single engine rendering for legacy live wallpapers
         }
     }
 }

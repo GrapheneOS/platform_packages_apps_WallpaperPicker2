@@ -31,6 +31,7 @@ import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout.Companion.getViewId
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -53,6 +54,7 @@ object SetWallpaperDialogBinder {
         currentNavDestId: Int,
         onFinishActivity: () -> Unit,
         onDismissDialog: () -> Unit,
+        wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBinding: Boolean,
         navigate: ((View) -> Unit)?,
     ) {
@@ -65,6 +67,7 @@ object SetWallpaperDialogBinder {
                 wallpaperPreviewViewModel,
                 lifecycleOwner,
                 currentNavDestId,
+                wallpaperConnectionUtils,
                 isFirstBinding,
                 navigate,
             )
@@ -75,6 +78,7 @@ object SetWallpaperDialogBinder {
                 handheldDisplaySize,
                 lifecycleOwner,
                 currentNavDestId,
+                wallpaperConnectionUtils,
                 isFirstBinding,
                 navigate,
             )
@@ -128,6 +132,7 @@ object SetWallpaperDialogBinder {
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
         currentNavDestId: Int,
+        wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBinding: Boolean,
         navigate: ((View) -> Unit)?,
     ) {
@@ -158,6 +163,7 @@ object SetWallpaperDialogBinder {
                         displaySize = it,
                         deviceDisplayType = display,
                         currentNavDestId = currentNavDestId,
+                        wallpaperConnectionUtils = wallpaperConnectionUtils,
                         isFirstBindingDeferred = CompletableDeferred(isFirstBinding),
                         navigate = navigate,
                     )
@@ -172,6 +178,7 @@ object SetWallpaperDialogBinder {
         displaySize: Point,
         lifecycleOwner: LifecycleOwner,
         currentNavDestId: Int,
+        wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBinding: Boolean,
         navigate: ((View) -> Unit)?,
     ) {
@@ -191,6 +198,7 @@ object SetWallpaperDialogBinder {
                 viewLifecycleOwner = lifecycleOwner,
                 currentNavDestId = currentNavDestId,
                 isFirstBindingDeferred = CompletableDeferred(isFirstBinding),
+                wallpaperConnectionUtils = wallpaperConnectionUtils,
                 navigate = navigate,
             )
         }

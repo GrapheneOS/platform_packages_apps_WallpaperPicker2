@@ -28,6 +28,8 @@ import com.android.wallpaper.picker.category.domain.interactor.CategoryInteracto
 import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
 import com.android.wallpaper.picker.category.domain.interactor.ThirdPartyCategoryInteractor
+import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
+import com.android.wallpaper.picker.category.ui.view.providers.implementation.DefaultIndividualPickerFactory
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.MainDispatcher
@@ -93,6 +95,12 @@ internal abstract class SharedAppTestModule {
     abstract fun bindFakeDefaultWallpaperCategoryRepository(
         impl: FakeDefaultWallpaperCategoryRepository
     ): WallpaperCategoryRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindIndividualPickerFactoryFragment(
+        impl: DefaultIndividualPickerFactory
+    ): IndividualPickerFactory
 
     @Binds
     @Singleton

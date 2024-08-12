@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.picker.category.ui.viewmodel
 
+import android.content.pm.ResolveInfo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.wallpaper.picker.category.domain.interactor.CategoriesLoadingStatusInteractor
@@ -64,9 +65,9 @@ constructor(
         viewModelScope.launch { _navigationEvents.emit(NavigationEvent.NavigateToPhotosPicker) }
     }
 
-    private fun navigateToThirdPartyApp(componentId: String) {
+    private fun navigateToThirdPartyApp(resolveInfo: ResolveInfo) {
         viewModelScope.launch {
-            _navigationEvents.emit(NavigationEvent.NavigateToThirdParty(componentId))
+            _navigationEvents.emit(NavigationEvent.NavigateToThirdParty(resolveInfo))
         }
     }
 
@@ -77,7 +78,9 @@ constructor(
                     tileViewModels =
                         listOf(
                             TileViewModel(null, null, category.commonCategoryData.title) {
-                                navigateToThirdPartyApp(category.commonCategoryData.collectionId)
+                                category.thirdPartyCategoryData?.resolveInfo?.let {
+                                    navigateToThirdPartyApp(it)
+                                }
                             }
                         ),
                     columnCount = 1
@@ -96,10 +99,18 @@ constructor(
                                 thumbnailAsset = category.collectionCategoryData?.thumbAsset,
                                 text = category.commonCategoryData.title,
                             ) {
-                                //  TODO(b/352081782): check if there is a single wallpaper
-                                navigateToWallpaperCollection(
-                                    category.commonCategoryData.collectionId
-                                )
+                                if (
+                                    category.collectionCategoryData?.isSingleWallpaperCategory ==
+                                        true
+                                ) {
+                                    navigateToPreviewScreen(
+                                        category.commonCategoryData.collectionId
+                                    )
+                                } else {
+                                    navigateToWallpaperCollection(
+                                        category.commonCategoryData.collectionId
+                                    )
+                                }
                             }
                         ),
                     columnCount = 1
@@ -118,7 +129,13 @@ constructor(
                         defaultDrawable = null,
                         thumbnailAsset = category.collectionCategoryData?.thumbAsset,
                         text = category.commonCategoryData.title,
-                    )
+                    ) {
+                        if (category.collectionCategoryData?.isSingleWallpaperCategory == true) {
+                            navigateToPreviewScreen(category.commonCategoryData.collectionId)
+                        } else {
+                            navigateToWallpaperCollection(category.commonCategoryData.collectionId)
+                        }
+                    }
                 }
             return@map SectionViewModel(tileViewModels = tiles, columnCount = 3)
         }
@@ -167,6 +184,6 @@ constructor(
 
         object NavigateToPhotosPicker : NavigationEvent()
 
-        data class NavigateToThirdParty(val component: String) : NavigationEvent()
+        data class NavigateToThirdParty(val resolveInfo: ResolveInfo) : NavigationEvent()
     }
 }
