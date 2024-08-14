@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.picker.category.ui.view.viewholder
 
+import android.graphics.Rect
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -64,11 +65,34 @@ class CategorySectionViewHolder(itemView: View, val windowWidth: Int) :
 
         sectionTiles.layoutManager = layoutManager as RecyclerView.LayoutManager?
 
-        if (item.tileViewModels.size > 1) {
-            sectionTitle.text = "Section title" // TODO: update view model to include section title
+        val itemDecoration =
+            HorizontalSpaceItemDecoration(
+                itemView.context.resources
+                    .getDimension(R.dimen.creative_category_grid_padding_horizontal)
+                    .toInt()
+            )
+        sectionTiles.addItemDecoration(itemDecoration)
+
+        if (item.sectionTitle != null) {
+            sectionTitle.text = item.sectionTitle
             sectionTitle.visibility = View.VISIBLE
         } else {
             sectionTitle.visibility = View.GONE
+        }
+    }
+
+    class HorizontalSpaceItemDecoration(private val horizontalSpace: Int) :
+        RecyclerView.ItemDecoration() {
+
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            if (parent.getChildAdapterPosition(view) != 0) {
+                outRect.left = horizontalSpace
+            }
         }
     }
 }
