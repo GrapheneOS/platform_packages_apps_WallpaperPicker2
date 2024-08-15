@@ -35,9 +35,18 @@ class FakeDefaultWallpaperCategoryRepository @Inject constructor() : WallpaperCa
         get() = MutableStateFlow(emptyList())
 
     override val onDeviceCategory: StateFlow<CategoryModel?>
-        get() = MutableStateFlow(null)
+        get() =
+            MutableStateFlow(
+                CategoryModel(
+                    commonCategoryData =
+                        CommonCategoryData("On-device-category-1", "on_device_sample_id", 2),
+                    thirdPartyCategoryData = null,
+                    imageCategoryData = null,
+                    collectionCategoryData = null
+                )
+            )
 
-    private val _isDefaultCategoriesFetched = MutableStateFlow(false)
+    private val _isDefaultCategoriesFetched = MutableStateFlow(true)
     override val isDefaultCategoriesFetched: StateFlow<Boolean> =
         _isDefaultCategoriesFetched.asStateFlow()
 

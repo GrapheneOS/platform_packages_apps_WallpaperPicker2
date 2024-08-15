@@ -21,13 +21,13 @@ import com.android.wallpaper.picker.category.domain.interactor.implementations.C
 import com.android.wallpaper.picker.data.category.CategoryModel
 import com.android.wallpaper.picker.data.category.CommonCategoryData
 import com.android.wallpaper.testing.FakeDefaultWallpaperCategoryRepository
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -51,11 +51,12 @@ class CategoryInteractorImplTest {
     }
 
     @Test
-    fun testFetchCategoriesWithValidThirdPartyCategory() = runBlocking {
+    fun testFetchCategoriesWithValidThirdPartyCategory() = runTest {
         val categories = categoryInteractorImpl.categories.first()
 
-        Truth.assertThat(categories.size).isEqualTo(3)
-        Truth.assertThat(
+        assertThat(categories.size).isEqualTo(4)
+        assertThat(categories.map { it.commonCategoryData.priority }).isInOrder()
+        assertThat(
             categories.contains(
                 CategoryModel(
                     commonCategoryData = CommonCategoryData("ThirdParty-2", "downloads_id", 3),

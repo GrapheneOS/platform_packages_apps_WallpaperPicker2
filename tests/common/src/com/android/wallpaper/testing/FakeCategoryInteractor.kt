@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.flow
 /** This class implements the business logic in assembling ungrouped category models */
 @Singleton
 class FakeCategoryInteractor @Inject constructor() : CategoryInteractor {
-    override val categories: Flow<Set<CategoryModel>> = flow {
+    override val categories: Flow<List<CategoryModel>> = flow {
         // stubbing the list of single section categories
         val categoryModels =
             generateCategoryData().map { commonCategoryData ->
@@ -40,7 +40,7 @@ class FakeCategoryInteractor @Inject constructor() : CategoryInteractor {
             }
 
         // Emit the list of categories
-        emit(categoryModels.toSet())
+        emit(categoryModels)
     }
 
     private fun generateCategoryData(): List<CommonCategoryData> {

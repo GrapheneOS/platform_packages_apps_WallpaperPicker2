@@ -32,7 +32,7 @@ class CategoryInteractorImpl
 @Inject
 constructor(defaultWallpaperCategoryRepository: WallpaperCategoryRepository) : CategoryInteractor {
 
-    override val categories: Flow<Set<CategoryModel>> =
+    override val categories: Flow<List<CategoryModel>> =
         defaultWallpaperCategoryRepository.isDefaultCategoriesFetched
             .filter { it }
             .flatMapLatest {
@@ -41,8 +41,10 @@ constructor(defaultWallpaperCategoryRepository: WallpaperCategoryRepository) : C
                     defaultWallpaperCategoryRepository.onDeviceCategory,
                     defaultWallpaperCategoryRepository.systemCategories
                 ) { thirdPartyAppCategory, onDeviceCategory, systemCategories ->
-                    val combinedSet = (thirdPartyAppCategory + systemCategories).toSet()
-                    onDeviceCategory?.let { combinedSet + it } ?: combinedSet
+                    val combinedList = (thirdPartyAppCategory + systemCategories)
+                    val finalList = onDeviceCategory?.let { combinedList + it } ?: combinedList
+                    // Sort the categories based on their priority value
+                    finalList.sortedBy { it.commonCategoryData.priority }
                 }
             }
 }
