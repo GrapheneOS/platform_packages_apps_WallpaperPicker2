@@ -26,6 +26,7 @@ import com.android.wallpaper.picker.category.domain.interactor.CategoryInteracto
 import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
 import com.android.wallpaper.picker.category.domain.interactor.ThirdPartyCategoryInteractor
+import com.android.wallpaper.picker.data.WallpaperModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -59,9 +60,9 @@ constructor(
         }
     }
 
-    private fun navigateToPreviewScreen(collectionId: String) {
+    private fun navigateToPreviewScreen(wallpaperModel: WallpaperModel) {
         viewModelScope.launch {
-            _navigationEvents.emit(NavigationEvent.NavigateToPreviewScreen(collectionId))
+            _navigationEvents.emit(NavigationEvent.NavigateToPreviewScreen(wallpaperModel))
         }
     }
 
@@ -109,7 +110,7 @@ constructor(
                                         true
                                 ) {
                                     navigateToPreviewScreen(
-                                        category.commonCategoryData.collectionId
+                                        category.collectionCategoryData.wallpaperModels[0]
                                     )
                                 } else {
                                     navigateToWallpaperCollection(
@@ -137,7 +138,9 @@ constructor(
                         text = category.commonCategoryData.title,
                     ) {
                         if (category.collectionCategoryData?.isSingleWallpaperCategory == true) {
-                            navigateToPreviewScreen(category.commonCategoryData.collectionId)
+                            navigateToPreviewScreen(
+                                category.collectionCategoryData.wallpaperModels[0]
+                            )
                         } else {
                             navigateToWallpaperCollection(category.commonCategoryData.collectionId)
                         }
@@ -191,7 +194,7 @@ constructor(
     sealed class NavigationEvent {
         data class NavigateToWallpaperCollection(val categoryId: String) : NavigationEvent()
 
-        data class NavigateToPreviewScreen(val wallpaperId: String) : NavigationEvent()
+        data class NavigateToPreviewScreen(val wallpaperModel: WallpaperModel) : NavigationEvent()
 
         object NavigateToPhotosPicker : NavigationEvent()
 

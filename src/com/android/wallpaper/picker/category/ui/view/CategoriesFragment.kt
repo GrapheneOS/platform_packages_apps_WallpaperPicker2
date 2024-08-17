@@ -32,12 +32,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
+import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.CategorySelectorFragment.CategorySelectorFragmentHost
 import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener
+import com.android.wallpaper.picker.WallpaperPickerDelegate.PREVIEW_LIVE_WALLPAPER_REQUEST_CODE
 import com.android.wallpaper.picker.category.ui.binder.CategoriesBinder
 import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
 import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
+import com.android.wallpaper.picker.common.preview.data.repository.PersistentWallpaperModelRepository
+import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import com.android.wallpaper.util.ActivityUtils
 import com.android.wallpaper.util.SizeCalculator
 import com.google.android.material.snackbar.Snackbar
@@ -49,6 +53,8 @@ import javax.inject.Inject
 class CategoriesFragment : Hilt_CategoriesFragment() {
 
     @Inject lateinit var individualPickerFactory: IndividualPickerFactory
+    @Inject lateinit var persistentWallpaperModelRepository: PersistentWallpaperModelRepository
+    @Inject lateinit var multiPanesChecker: MultiPanesChecker
 
     // TODO: this may need to be scoped to fragment if the architecture changes
     private val categoriesViewModel by activityViewModels<CategoriesViewModel>()
@@ -99,7 +105,25 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
                         navigationEvent.resolveInfo
                     )
                 }
-                is CategoriesViewModel.NavigationEvent.NavigateToPreviewScreen -> {}
+                is CategoriesViewModel.NavigationEvent.NavigateToPreviewScreen -> {
+                    val appContext = requireContext().applicationContext
+                    persistentWallpaperModelRepository.setWallpaperModel(
+                        navigationEvent.wallpaperModel
+                    )
+                    val isMultiPanel = multiPanesChecker.isMultiPanesEnabled(appContext)
+                    val previewIntent =
+                        WallpaperPreviewActivity.newIntent(
+                            context = appContext,
+                            isAssetIdPresent = true,
+                            isViewAsHome = true,
+                            isNewTask = isMultiPanel,
+                        )
+                    ActivityUtils.startActivityForResultSafely(
+                        requireActivity(),
+                        previewIntent,
+                        PREVIEW_LIVE_WALLPAPER_REQUEST_CODE // TODO: provide correct request code
+                    )
+                }
             }
         }
         return view
