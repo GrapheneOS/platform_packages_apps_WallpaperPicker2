@@ -75,6 +75,8 @@ class WallpaperPreviewActivity :
     private val wallpaperPreviewViewModel: WallpaperPreviewViewModel by viewModels()
 
     private val isNewPickerUi = BaseFlags.get().isNewPickerUi()
+    private val isCategoriesRefactorEnabled =
+        BaseFlags.get().isWallpaperCategoryRefactoringEnabled()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
@@ -87,15 +89,20 @@ class WallpaperPreviewActivity :
         window.navigationBarColor = Color.TRANSPARENT
         window.statusBarColor = Color.TRANSPARENT
         setContentView(R.layout.activity_wallpaper_preview)
-        val wallpaper: WallpaperModel =
-            if (isNewPickerUi) {
-                checkNotNull(persistentWallpaperModelRepository.wallpaperModel.value)
+        val wallpaper: WallpaperModel? =
+            if (isNewPickerUi || isCategoriesRefactorEnabled) {
+                persistentWallpaperModelRepository.wallpaperModel.value
+                    ?: intent
+                        .getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java)
+                        ?.convertToWallpaperModel()
             } else {
-                checkNotNull(
-                        intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java)
-                    )
-                    .convertToWallpaperModel()
+                intent
+                    .getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java)
+                    ?.convertToWallpaperModel()
             }
+
+        wallpaper ?: throw UnsupportedOperationException()
+
         val navController =
             (supportFragmentManager.findFragmentById(R.id.wallpaper_preview_nav_host)
                     as NavHostFragment)
@@ -219,7 +226,10 @@ class WallpaperPreviewActivity :
             isNewTask: Boolean = false,
         ): Intent {
             val isNewPickerUi = BaseFlags.get().isNewPickerUi()
-            if (!isNewPickerUi) throw UnsupportedOperationException()
+            val isCategoriesRefactorEnabled =
+                BaseFlags.get().isWallpaperCategoryRefactoringEnabled()
+            if (!(isNewPickerUi || isCategoriesRefactorEnabled))
+                throw UnsupportedOperationException()
             val intent = Intent(context.applicationContext, WallpaperPreviewActivity::class.java)
             if (isNewTask) {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
