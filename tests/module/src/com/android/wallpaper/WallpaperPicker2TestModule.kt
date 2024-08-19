@@ -25,8 +25,12 @@ import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.modules.WallpaperPicker2AppModule
 import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.category.client.DefaultWallpaperCategoryClient
+import com.android.wallpaper.picker.common.preview.ui.binder.DefaultWorkspaceCallbackBinder
+import com.android.wallpaper.picker.common.preview.ui.binder.WorkspaceCallbackBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
+import com.android.wallpaper.picker.customization.ui.binder.DefaultToolbarBinder
+import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
 import com.android.wallpaper.picker.preview.ui.util.DefaultImageEffectDialogUtil
 import com.android.wallpaper.picker.preview.ui.util.ImageEffectDialogUtil
 import com.android.wallpaper.testing.FakeDefaultRequester
@@ -77,6 +81,8 @@ abstract class WallpaperPicker2TestModule {
 
     @Binds @Singleton abstract fun bindRequester(impl: FakeDefaultRequester): Requester
 
+    @Binds @Singleton abstract fun bindToolbarBinder(impl: DefaultToolbarBinder): ToolbarBinder
+
     @Binds @Singleton abstract fun bindUserEventLogger(impl: TestUserEventLogger): UserEventLogger
 
     @Binds
@@ -88,4 +94,10 @@ abstract class WallpaperPicker2TestModule {
     @Binds
     @Singleton
     abstract fun bindWallpaperPreferences(impl: TestWallpaperPreferences): WallpaperPreferences
+
+    @Binds
+    @Singleton
+    abstract fun bindWorkspaceCallbackBinder(
+        impl: DefaultWorkspaceCallbackBinder
+    ): WorkspaceCallbackBinder
 }

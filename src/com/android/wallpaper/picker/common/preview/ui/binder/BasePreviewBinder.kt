@@ -40,6 +40,7 @@ object BasePreviewBinder {
         applicationContext: Context,
         view: View,
         viewModel: CustomizationPickerViewModel2,
+        workspaceCallbackBinder: WorkspaceCallbackBinder,
         screen: Screen,
         deviceDisplayType: DeviceDisplayType,
         displaySize: Point,
@@ -66,6 +67,7 @@ object BasePreviewBinder {
         WorkspacePreviewBinder.bind(
             surfaceView = view.requireViewById(R.id.workspace_surface),
             viewModel = viewModel,
+            workspaceCallbackBinder = workspaceCallbackBinder,
             screen = screen,
             deviceDisplayType = deviceDisplayType,
             lifecycleOwner = lifecycleOwner,

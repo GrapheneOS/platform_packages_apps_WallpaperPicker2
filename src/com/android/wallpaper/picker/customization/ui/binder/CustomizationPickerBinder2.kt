@@ -57,7 +57,7 @@ object CustomizationPickerBinder2 {
         lifecycleOwner: LifecycleOwner,
         navigateToPrimary: () -> Unit,
         navigateToSecondary: (screen: CustomizationOption) -> Unit,
-    ): () -> Boolean {
+    ) {
         val optionContainer =
             view.requireViewById<MotionLayout>(R.id.customization_option_container)
         val pager = view.requireViewById<ViewPager2>(R.id.preview_pager)
@@ -167,6 +167,5 @@ object CustomizationPickerBinder2 {
             viewModel.customizationOptionsViewModel,
             lifecycleOwner,
         )
-        return { viewModel.onBackPressed() }
     }
 }

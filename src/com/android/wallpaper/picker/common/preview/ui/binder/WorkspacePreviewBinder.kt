@@ -26,10 +26,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_HIGHLIGHT_QUICK_AFFORDANCES
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_INITIALLY_SELECTED_SLOT_ID
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.picker.common.preview.ui.viewmodel.BasePreviewViewModel
-import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import com.android.wallpaper.util.PreviewUtils
 import com.android.wallpaper.util.SurfaceViewUtils
@@ -45,6 +47,7 @@ object WorkspacePreviewBinder {
     fun bind(
         surfaceView: SurfaceView,
         viewModel: CustomizationPickerViewModel2,
+        workspaceCallbackBinder: WorkspaceCallbackBinder,
         screen: Screen,
         deviceDisplayType: DeviceDisplayType,
         lifecycleOwner: LifecycleOwner,
@@ -56,6 +59,7 @@ object WorkspacePreviewBinder {
                     bindSurface(
                         surfaceView = surfaceView,
                         viewModel = viewModel,
+                        workspaceCallbackBinder = workspaceCallbackBinder,
                         previewUtils = getPreviewUtils(screen, viewModel.basePreviewViewModel),
                         deviceDisplayType = deviceDisplayType,
                         lifecycleOwner = lifecycleOwner,
@@ -79,6 +83,7 @@ object WorkspacePreviewBinder {
     private fun bindSurface(
         surfaceView: SurfaceView,
         viewModel: CustomizationPickerViewModel2,
+        workspaceCallbackBinder: WorkspaceCallbackBinder,
         previewUtils: PreviewUtils,
         deviceDisplayType: DeviceDisplayType,
         lifecycleOwner: LifecycleOwner,
@@ -98,10 +103,9 @@ object WorkspacePreviewBinder {
                                     viewModel.basePreviewViewModel.getDisplayId(deviceDisplayType),
                             )
                             ?.let { workspaceCallback ->
-                                bindWorkspaceCallback(
+                                workspaceCallbackBinder.bind(
                                     workspaceCallback = workspaceCallback,
-                                    customizationOptionsViewModel =
-                                        viewModel.customizationOptionsViewModel,
+                                    viewModel = viewModel.customizationOptionsViewModel,
                                     lifecycleOwner = lifecycleOwner,
                                 )
                             }
@@ -115,14 +119,6 @@ object WorkspacePreviewBinder {
                 previewDisposableHandle = null
             }
         }
-    }
-
-    private fun bindWorkspaceCallback(
-        workspaceCallback: Message,
-        customizationOptionsViewModel: CustomizationOptionsViewModel,
-        lifecycleOwner: LifecycleOwner,
-    ) {
-        // TODO (b/350718583): Control the remote view through messages
     }
 
     private suspend fun renderWorkspacePreview(
@@ -143,6 +139,8 @@ object WorkspacePreviewBinder {
                     Pair(SurfaceViewUtils.KEY_DISPLAY_ID, displayId),
                     Pair(SurfaceViewUtils.KEY_VIEW_WIDTH, surfacePosition.width()),
                     Pair(SurfaceViewUtils.KEY_VIEW_HEIGHT, surfacePosition.height()),
+                    Pair(KEY_INITIALLY_SELECTED_SLOT_ID, SLOT_ID_BOTTOM_START),
+                    Pair(KEY_HIGHLIGHT_QUICK_AFFORDANCES, false),
                 )
             wallpaperColors?.let {
                 extras.putParcelable(SurfaceViewUtils.KEY_WALLPAPER_COLORS, wallpaperColors)

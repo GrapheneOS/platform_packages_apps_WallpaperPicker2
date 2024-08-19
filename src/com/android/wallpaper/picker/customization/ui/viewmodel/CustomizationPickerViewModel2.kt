@@ -59,6 +59,4 @@ constructor(
                 Pair(PickerScreen.MAIN, null)
             }
         }
-
-    fun onBackPressed(): Boolean = customizationOptionsViewModel.deselectOption()
 }

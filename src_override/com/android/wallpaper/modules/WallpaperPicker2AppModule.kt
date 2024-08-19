@@ -33,8 +33,12 @@ import com.android.wallpaper.picker.category.domain.interactor.implementations.C
 import com.android.wallpaper.picker.category.domain.interactor.implementations.DefaultCategoriesLoadingStatusInteractor
 import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
 import com.android.wallpaper.picker.category.ui.view.providers.implementation.DefaultIndividualPickerFactory
+import com.android.wallpaper.picker.common.preview.ui.binder.DefaultWorkspaceCallbackBinder
+import com.android.wallpaper.picker.common.preview.ui.binder.WorkspaceCallbackBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
+import com.android.wallpaper.picker.customization.ui.binder.DefaultToolbarBinder
+import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
 import com.android.wallpaper.picker.preview.ui.util.DefaultImageEffectDialogUtil
 import com.android.wallpaper.picker.preview.ui.util.ImageEffectDialogUtil
 import com.android.wallpaper.util.converter.DefaultWallpaperModelFactory
@@ -94,6 +98,8 @@ abstract class WallpaperPicker2AppModule {
     @Singleton
     abstract fun bindPartnerProvider(impl: DefaultPartnerProvider): PartnerProvider
 
+    @Binds @Singleton abstract fun bindToolbarBinder(impl: DefaultToolbarBinder): ToolbarBinder
+
     @Binds
     @Singleton
     abstract fun bindWallpaperModelFactory(
@@ -103,6 +109,12 @@ abstract class WallpaperPicker2AppModule {
     @Binds
     @Singleton
     abstract fun bindWallpaperPreferences(impl: DefaultWallpaperPreferences): WallpaperPreferences
+
+    @Binds
+    @Singleton
+    abstract fun bindWorkspaceCallbackBinder(
+        impl: DefaultWorkspaceCallbackBinder
+    ): WorkspaceCallbackBinder
 
     companion object {
 
