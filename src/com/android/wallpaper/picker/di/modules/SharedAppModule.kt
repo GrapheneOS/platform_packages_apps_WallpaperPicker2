@@ -32,6 +32,8 @@ import com.android.wallpaper.network.Requester
 import com.android.wallpaper.network.WallpaperRequester
 import com.android.wallpaper.picker.category.client.DefaultWallpaperCategoryClient
 import com.android.wallpaper.picker.category.client.DefaultWallpaperCategoryClientImpl
+import com.android.wallpaper.picker.category.client.LiveWallpapersClient
+import com.android.wallpaper.picker.category.client.LiveWallpapersClientImpl
 import com.android.wallpaper.picker.category.data.repository.DefaultWallpaperCategoryRepository
 import com.android.wallpaper.picker.category.data.repository.WallpaperCategoryRepository
 import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
@@ -72,6 +74,10 @@ abstract class SharedAppModule {
     @Binds
     @Singleton
     abstract fun bindCategoryFactory(impl: DefaultCategoryFactory): CategoryFactory
+
+    @Binds
+    @Singleton
+    abstract fun bindLiveWallpapersClient(impl: LiveWallpapersClientImpl): LiveWallpapersClient
 
     @Binds
     @Singleton

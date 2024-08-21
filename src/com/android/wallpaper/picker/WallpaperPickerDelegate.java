@@ -32,6 +32,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.android.wallpaper.R;
+import com.android.wallpaper.config.BaseFlags;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.model.CategoryProvider;
 import com.android.wallpaper.model.CategoryReceiver;
@@ -67,6 +68,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     private final MyPhotosIntentProvider mMyPhotosIntentProvider;
     private WallpaperPreferences mPreferences;
     private PackageStatusNotifier mPackageStatusNotifier;
+    private BaseFlags mFlags;
 
     private List<PermissionChangedListener> mPermissionChangedListeners;
     private PackageStatusNotifier.Listener mLiveWallpaperStatusListener;
@@ -81,7 +83,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
             Injector injector) {
         mContainer = container;
         mActivity = activity;
-
+        mFlags = injector.getFlags();
         mCategoryProvider = injector.getCategoryProvider(activity);
         mPreferences = injector.getPreferences(activity);
 
@@ -115,7 +117,7 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     @Override
     public void requestCustomPhotoPicker(PermissionChangedListener listener) {
         //TODO (b/282073506): Figure out a better way to have better photos experience
-        if (DISABLE_MY_PHOTOS_BLOCK_PREVIEW) {
+        if (mFlags.isWallpaperCategoryRefactoringEnabled()) {
             if (!isReadExternalStoragePermissionGranted()) {
                 PermissionChangedListener wrappedListener = new PermissionChangedListener() {
                     @Override

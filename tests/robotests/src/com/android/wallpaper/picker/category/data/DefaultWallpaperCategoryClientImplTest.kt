@@ -20,11 +20,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import com.android.wallpaper.model.PartnerWallpaperInfo
+import com.android.wallpaper.model.ThirdPartyLiveWallpaperCategory
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.category.client.DefaultWallpaperCategoryClient
 import com.android.wallpaper.picker.category.client.DefaultWallpaperCategoryClientImpl
+import com.android.wallpaper.picker.category.client.LiveWallpapersClient
 import com.android.wallpaper.picker.data.category.CategoryModel
 import com.android.wallpaper.picker.data.category.CommonCategoryData
 import com.android.wallpaper.testing.FakeWallpaperParser
@@ -60,6 +63,7 @@ class DefaultWallpaperCategoryClientImplTest {
     @Inject lateinit var wallpaperXMLParser: FakeWallpaperParser
     @Inject lateinit var testDispatcher: TestDispatcher
     @Inject lateinit var testScope: TestScope
+    @Inject lateinit var liveWallpapersClient: LiveWallpapersClient
 
     private lateinit var defaultWallpaperCategoryClient: DefaultWallpaperCategoryClient
     @Inject lateinit var testInjector: TestInjector
@@ -69,7 +73,12 @@ class DefaultWallpaperCategoryClientImplTest {
         hiltRule.inject()
         Dispatchers.setMain(testDispatcher)
         defaultWallpaperCategoryClient =
-            DefaultWallpaperCategoryClientImpl(context, partnerProvider, wallpaperXMLParser)
+            DefaultWallpaperCategoryClientImpl(
+                context,
+                partnerProvider,
+                wallpaperXMLParser,
+                liveWallpapersClient
+            )
         InjectorProvider.setInjector(testInjector)
         val resources = context.resources
         partnerProvider.resources = resources
@@ -117,6 +126,32 @@ class DefaultWallpaperCategoryClientImplTest {
         }
 
     @Test
+    fun getThirdPartyLiveWallpaperCategory_withFeatureAndLiveWallpapers_returnsCategory() =
+        testScope.runTest {
+            val shadowPackageManager = shadowOf(context.packageManager)
+            shadowPackageManager.setSystemFeature(PackageManager.FEATURE_LIVE_WALLPAPER, true)
+
+            val excludedPackageNames = emptySet<String>()
+            val expectedCategory =
+                ThirdPartyLiveWallpaperCategory(
+                    "Live wallpapers",
+                    "live_wallpapers",
+                    liveWallpapersClient.getAll(emptySet()),
+                    300,
+                    emptySet()
+                )
+
+            val result =
+                defaultWallpaperCategoryClient.getThirdPartyLiveWallpaperCategory(
+                    excludedPackageNames
+                )
+
+            assertThat(result).hasSize(1)
+            assertThat(result[0].title).isEqualTo(expectedCategory.title)
+            assertThat(result[0].collectionId).isEqualTo(expectedCategory.collectionId)
+        }
+
+    @Test
     fun getSystemCategories() =
         testScope.runTest {
             val categoryModel =
@@ -144,7 +179,7 @@ class DefaultWallpaperCategoryClientImplTest {
                 listOf(fakeImagePickerApp)
             )
 
-            val result = defaultWallpaperCategoryClient.getThirdPartyCategory()
+            val result = defaultWallpaperCategoryClient.getThirdPartyCategory(emptyList())
             assertThat(result).hasSize(2)
             assertThat(result[0].title).isEqualTo("ThirdPartyApp1")
             assertThat(result[0].collectionId).contains("com.example.app1")

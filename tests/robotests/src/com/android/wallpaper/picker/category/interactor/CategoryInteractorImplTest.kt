@@ -51,11 +51,26 @@ class CategoryInteractorImplTest {
     }
 
     @Test
-    fun testFetchCategoriesWithValidThirdPartyCategory() = runTest {
+    fun testFetchCategoriesWithValidThirdPartyCategoryAndThirdPartyLiveCategory() = runTest {
         val categories = categoryInteractorImpl.categories.first()
 
-        assertThat(categories.size).isEqualTo(4)
+        // This checks that the total number of categories returned is same as the one defined in
+        // fakes
+        assertThat(categories.size).isEqualTo(NUMBER_OF_FAKE_CATEGORIES_EXCEPT_MY_PHOTOS)
+
+        assertThat(
+            categories.contains(
+                CategoryModel(
+                    commonCategoryData =
+                        CommonCategoryData("ThirdPartyLiveWallpaper-1", "on_device_live_id", 2),
+                    thirdPartyCategoryData = null,
+                    imageCategoryData = null,
+                    collectionCategoryData = null
+                )
+            )
+        )
         assertThat(categories.map { it.commonCategoryData.priority }).isInOrder()
+
         assertThat(
             categories.contains(
                 CategoryModel(
@@ -66,5 +81,9 @@ class CategoryInteractorImplTest {
                 )
             )
         )
+    }
+
+    companion object {
+        private const val NUMBER_OF_FAKE_CATEGORIES_EXCEPT_MY_PHOTOS = 5
     }
 }

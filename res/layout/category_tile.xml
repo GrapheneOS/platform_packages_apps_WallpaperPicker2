@@ -60,5 +60,6 @@
         android:gravity="center"
         android:maxLines="1"
         android:minHeight="@dimen/grid_item_category_label_minimum_height"
+        android:textColor="@color/system_on_surface"
         tools:text="Wallpaper category" />
 </LinearLayout>

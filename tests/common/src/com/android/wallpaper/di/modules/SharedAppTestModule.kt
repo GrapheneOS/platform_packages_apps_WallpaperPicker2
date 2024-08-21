@@ -22,6 +22,7 @@ import android.content.res.Resources
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker
 import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.module.NetworkStatusNotifier
+import com.android.wallpaper.picker.category.client.LiveWallpapersClient
 import com.android.wallpaper.picker.category.data.repository.WallpaperCategoryRepository
 import com.android.wallpaper.picker.category.domain.interactor.CategoriesLoadingStatusInteractor
 import com.android.wallpaper.picker.category.domain.interactor.CategoryInteractor
@@ -40,6 +41,7 @@ import com.android.wallpaper.testing.FakeCategoryInteractor
 import com.android.wallpaper.testing.FakeCreativeWallpaperInteractor
 import com.android.wallpaper.testing.FakeDefaultCategoryFactory
 import com.android.wallpaper.testing.FakeDefaultWallpaperCategoryRepository
+import com.android.wallpaper.testing.FakeLiveWallpaperClientImpl
 import com.android.wallpaper.testing.FakeMyPhotosInteractor
 import com.android.wallpaper.testing.FakeThirdPartyCategoryInteractor
 import com.android.wallpaper.testing.FakeUiModeManager
@@ -101,6 +103,12 @@ internal abstract class SharedAppTestModule {
     abstract fun bindIndividualPickerFactoryFragment(
         impl: DefaultIndividualPickerFactory
     ): IndividualPickerFactory
+
+    @Binds
+    @Singleton
+    abstract fun bindLiveWallpaperClient(
+        impl: FakeLiveWallpaperClientImpl,
+    ): LiveWallpapersClient
 
     @Binds
     @Singleton

@@ -39,5 +39,22 @@ interface DefaultWallpaperCategoryClient {
     /**
      * This method is used for fetching the third party categories.
      */
-    suspend fun getThirdPartyCategory(): List<Category>
+    suspend fun getThirdPartyCategory(excludedPackageNames: List<String>): List<Category>
+
+    /**
+     * This method is used for fetching the package names that should not be included in third
+     * party categories.
+     */
+    fun getExcludedThirdPartyPackageNames(): List<String>
+
+    /**
+     * This method is used for fetching the third party live wallpaper categories.
+     */
+    suspend fun getThirdPartyLiveWallpaperCategory(excludedPackageNames: Set<String>): List<Category>
+
+    /**
+     * This method is used for returning the package names that should not be included
+     * in live wallpaper categories.
+     */
+    fun getExcludedLiveWallpaperPackageNames(): Set<String>
 }

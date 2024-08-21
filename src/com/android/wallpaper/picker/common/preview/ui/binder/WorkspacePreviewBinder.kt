@@ -60,6 +60,7 @@ object WorkspacePreviewBinder {
                         surfaceView = surfaceView,
                         viewModel = viewModel,
                         workspaceCallbackBinder = workspaceCallbackBinder,
+                        screen = screen,
                         previewUtils = getPreviewUtils(screen, viewModel.basePreviewViewModel),
                         deviceDisplayType = deviceDisplayType,
                         lifecycleOwner = lifecycleOwner,
@@ -84,6 +85,7 @@ object WorkspacePreviewBinder {
         surfaceView: SurfaceView,
         viewModel: CustomizationPickerViewModel2,
         workspaceCallbackBinder: WorkspaceCallbackBinder,
+        screen: Screen,
         previewUtils: PreviewUtils,
         deviceDisplayType: DeviceDisplayType,
         lifecycleOwner: LifecycleOwner,
@@ -106,6 +108,7 @@ object WorkspacePreviewBinder {
                                 workspaceCallbackBinder.bind(
                                     workspaceCallback = workspaceCallback,
                                     viewModel = viewModel.customizationOptionsViewModel,
+                                    screen = screen,
                                     lifecycleOwner = lifecycleOwner,
                                 )
                             }

@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.category.repository
 import android.content.Context
 import com.android.wallpaper.model.Category
 import com.android.wallpaper.model.ImageCategory
+import com.android.wallpaper.model.ThirdPartyLiveWallpaperCategory
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.category.data.repository.DefaultWallpaperCategoryRepository
@@ -83,14 +84,27 @@ class DefaultWallpaperCategoryRepositoryTest {
                     1 /* priority */
                 )
 
+            val thirdPartyLiveWallpaperCategory: Category =
+                ThirdPartyLiveWallpaperCategory(
+                    "Third_Party_Title",
+                    "Third_Party_CollectionId",
+                    wallpapers,
+                    1,
+                    emptySet()
+                )
+
             val mCategories = ArrayList<Category>()
             mCategories.add(category1)
             mCategories.add(category2)
 
             defaultWallpaperCategoryClient.setSystemCategories(mCategories)
+            defaultWallpaperCategoryClient.setThirdPartyLiveWallpaperCategories(
+                listOf(thirdPartyLiveWallpaperCategory)
+            )
 
             repository =
                 DefaultWallpaperCategoryRepository(
+                    context,
                     defaultWallpaperCategoryClient,
                     defaultCategoryFactory,
                     testScope
@@ -98,12 +112,14 @@ class DefaultWallpaperCategoryRepositoryTest {
             testScope.advanceUntilIdle()
             assertThat(repository.isDefaultCategoriesFetched.value).isTrue()
             assertThat(repository.systemCategories).isNotNull()
+            assertThat(repository.thirdPartyLiveWallpaperCategory).isNotNull()
         }
 
     @Test
     fun initialStateShouldBeEmpty() = runTest {
         repository =
             DefaultWallpaperCategoryRepository(
+                context,
                 defaultWallpaperCategoryClient,
                 defaultCategoryFactory,
                 testScope

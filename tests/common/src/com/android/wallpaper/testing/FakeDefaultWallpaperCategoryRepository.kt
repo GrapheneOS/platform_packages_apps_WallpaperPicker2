@@ -76,6 +76,20 @@ class FakeDefaultWallpaperCategoryRepository @Inject constructor() : WallpaperCa
                 )
             )
 
+    override val thirdPartyLiveWallpaperCategory: StateFlow<List<CategoryModel>>
+        get() =
+            MutableStateFlow(
+                listOf(
+                    CategoryModel(
+                        commonCategoryData =
+                            CommonCategoryData("ThirdPartyLiveWallpaper-1", "on_device_live_id", 2),
+                        thirdPartyCategoryData = null,
+                        imageCategoryData = null,
+                        collectionCategoryData = null
+                    )
+                )
+            )
+
     override suspend fun fetchMyPhotosCategory() {
         _myPhotosCategory.value =
             CategoryModel(

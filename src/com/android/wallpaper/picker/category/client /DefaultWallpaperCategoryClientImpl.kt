@@ -19,15 +19,19 @@ package com.android.wallpaper.picker.category.client
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.annotation.XmlRes
 import com.android.wallpaper.R
 import com.android.wallpaper.model.Category
 import com.android.wallpaper.model.DefaultWallpaperInfo
 import com.android.wallpaper.model.ImageCategory
 import com.android.wallpaper.model.LegacyPartnerWallpaperInfo
+import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.ThirdPartyAppCategory
+import com.android.wallpaper.model.ThirdPartyLiveWallpaperCategory
 import com.android.wallpaper.model.WallpaperCategory
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.module.DefaultCategoryProvider
 import com.android.wallpaper.module.PartnerProvider
 import com.android.wallpaper.util.WallpaperParser
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -49,8 +53,11 @@ class DefaultWallpaperCategoryClientImpl
 constructor(
     @ApplicationContext val context: Context,
     private val partnerProvider: PartnerProvider,
-    private val wallpaperXMLParser: WallpaperParser
+    private val wallpaperXMLParser: WallpaperParser,
+    private val liveWallpapersClient: LiveWallpapersClient
 ) : DefaultWallpaperCategoryClient {
+
+    private var systemCategories: List<Category>? = null
 
     /** This method is used for fetching and creating the MyPhotos category tile. */
     override suspend fun getMyPhotosCategory(): Category {
@@ -98,12 +105,10 @@ constructor(
             }
     }
 
-    override suspend fun getThirdPartyCategory(): List<Category> {
-
+    override suspend fun getThirdPartyCategory
+                (excludedPackageNames: List<String>): List<Category> {
         val pickWallpaperIntent = Intent(Intent.ACTION_SET_WALLPAPER)
         val apps = context.packageManager.queryIntentActivities(pickWallpaperIntent, 0)
-
-        val excludedPackageNames = getExcludedThirdPartyPackageNames()
 
         // Get list of image picker intents.
         val pickImageIntent = Intent(Intent.ACTION_GET_CONTENT)
@@ -130,7 +135,36 @@ constructor(
         return thirdPartyApps
     }
 
-    private fun getExcludedThirdPartyPackageNames(): List<String> {
+    override suspend fun getThirdPartyLiveWallpaperCategory
+                (excludedPackageNames: Set<String>): List<Category> {
+        if (context.packageManager.hasSystemFeature(PackageManager.FEATURE_LIVE_WALLPAPER)) {
+            val liveWallpapers = liveWallpapersClient.getAll(excludedPackageNames)
+            if (liveWallpapers.isNotEmpty()) {
+                val thirdPartyLiveWallpaperCategory = ThirdPartyLiveWallpaperCategory(
+                    context.getString(R.string.live_wallpapers_category_title),
+                    context.getString(R.string.live_wallpaper_collection_id), liveWallpapers,
+                    PRIORITY_LIVE, getExcludedLiveWallpaperPackageNames())
+                return listOf(thirdPartyLiveWallpaperCategory)
+            }
+        }
+        return listOf()
+    }
+
+    override fun getExcludedLiveWallpaperPackageNames(): Set<String> {
+        val excluded = mutableSetOf<String>()
+        systemCategories?.forEach { category ->
+            if (category is WallpaperCategory) {
+                category.wallpapers.forEach { wallpaperInfo ->
+                    if (wallpaperInfo is LiveWallpaperInfo) {
+                        excluded.add(wallpaperInfo.wallpaperComponent.packageName)
+                    }
+                }
+            }
+        }
+        return excluded
+    }
+
+    override fun getExcludedThirdPartyPackageNames(): List<String> {
         return listOf(
                 LAUNCHER_PACKAGE,  // Legacy launcher
                 LIVE_WALLPAPER_PICKER) // Live wallpaper picker
@@ -138,6 +172,7 @@ constructor(
 
     /** This method is used for fetching the system categories. */
     override suspend fun getSystemCategories(): List<Category> {
+        systemCategories?.let { return it }
         val partnerRes = partnerProvider.resources
         val packageName = partnerProvider.packageName
         if (partnerRes == null || packageName == null) {
@@ -152,9 +187,9 @@ constructor(
             return listOf()
         }
 
-        val categories =
+        systemCategories =
             wallpaperXMLParser.parseSystemCategories(partnerRes.getXml(wallpapersResId))
-        return categories
+        return systemCategories as List<Category>
     }
 
     private fun getLocale(): Locale {
@@ -176,6 +211,7 @@ constructor(
          */
         private const val PRIORITY_MY_PHOTOS_WHEN_CREATIVE_WALLPAPERS_ENABLED = 51
         private const val PRIORITY_ON_DEVICE = 200
+        private const val PRIORITY_LIVE = 300
         private const val PRIORITY_THIRD_PARTY = 400
     }
 }
