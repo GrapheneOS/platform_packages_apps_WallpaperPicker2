@@ -16,6 +16,9 @@
 
 package com.android.wallpaper.picker.customization.ui
 
+import android.annotation.TargetApi
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
@@ -49,6 +52,7 @@ import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.picker.common.preview.data.repository.PersistentWallpaperModelRepository
 import com.android.wallpaper.picker.common.preview.ui.binder.BasePreviewBinder
 import com.android.wallpaper.picker.common.preview.ui.binder.WorkspaceCallbackBinder
+import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder2
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
@@ -56,6 +60,7 @@ import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUti
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.picker.customization.ui.view.adapter.PreviewPagerAdapter
 import com.android.wallpaper.picker.customization.ui.view.transformer.PreviewPagerPageTransformer
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.MainDispatcher
@@ -85,12 +90,14 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
     @Inject @BackgroundDispatcher lateinit var backgroundScope: CoroutineScope
     @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
     @Inject lateinit var wallpaperConnectionUtils: WallpaperConnectionUtils
+    @Inject lateinit var colorUpdateViewModel: ColorUpdateViewModel
 
     private var fullyCollapsed = false
     private var navBarHeight: Int = 0
 
     private val customizationPickerViewModel: CustomizationPickerViewModel2 by viewModels()
     private var customizationOptionFloatingSheetViewMap: Map<CustomizationOption, View>? = null
+    private var configuration: Configuration? = null
 
     private val startForResult =
         this.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
@@ -116,6 +123,8 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
             return
         }
 
+        configuration = Configuration(resources.configuration)
+
         setContentView(R.layout.activity_cusomization_picker2)
         WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
 
@@ -123,6 +132,13 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
             requireViewById(R.id.nav_button),
             requireViewById(R.id.toolbar),
             requireViewById(R.id.apply_button),
+        )
+
+        val view = requireViewById<View>(R.id.root_view)
+        ColorUpdateBinder.bind(
+            setColor = { color -> view.setBackgroundColor(color) },
+            color = colorUpdateViewModel.colorSurfaceContainer,
+            lifecycleOwner = this,
         )
 
         val rootView = requireViewById<MotionLayout>(R.id.picker_motion_layout)
@@ -410,6 +426,19 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         mainScope.launch { wallpaperConnectionUtils.disconnectAll(applicationContext) }
 
         super.onDestroy()
+    }
+
+    @TargetApi(36)
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        configuration?.let {
+            val diff = newConfig.diff(it)
+            val isAssetsPathsChange = diff and ActivityInfo.CONFIG_ASSETS_PATHS != 0
+            if (isAssetsPathsChange) {
+                colorUpdateViewModel.updateColors()
+            }
+        }
+        configuration?.setTo(newConfig)
     }
 
     interface EmptyTransitionListener : TransitionListener {
