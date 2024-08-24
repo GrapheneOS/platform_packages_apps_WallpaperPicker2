@@ -153,7 +153,8 @@ class CategoriesViewModelTest {
                 assertThat(collectedValues[0])
                     .isEqualTo(
                         CategoriesViewModel.NavigationEvent.NavigateToWallpaperCollection(
-                            CATEGORY_ID_CELESTIAL_DREAMSCAPES
+                            CATEGORY_ID_CELESTIAL_DREAMSCAPES,
+                            CategoriesViewModel.CategoryType.DefaultCategories
                         )
                     )
 
@@ -175,7 +176,8 @@ class CategoriesViewModelTest {
                 assertThat(collectedValues[0])
                     .isEqualTo(
                         CategoriesViewModel.NavigationEvent.NavigateToWallpaperCollection(
-                            CATEGORY_ID_CYBERPUNK_CITYSCAPE
+                            CATEGORY_ID_CYBERPUNK_CITYSCAPE,
+                            CategoriesViewModel.CategoryType.DefaultCategories
                         )
                     )
                 job.cancelAndJoin()
@@ -194,7 +196,8 @@ class CategoriesViewModelTest {
                 assertThat(collectedValues[0])
                     .isEqualTo(
                         CategoriesViewModel.NavigationEvent.NavigateToWallpaperCollection(
-                            CATEGORY_ID_COSMIC_NEBULA
+                            CATEGORY_ID_COSMIC_NEBULA,
+                            CategoriesViewModel.CategoryType.DefaultCategories
                         )
                     )
                 job.cancelAndJoin()

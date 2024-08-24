@@ -212,6 +212,24 @@ public abstract class WallpaperInfo implements Parcelable {
                                      int requestCode, boolean isAssetIdPresent);
 
     /**
+     * Shows the appropriate preview activity for this WallpaperInfo.
+     *
+     * @param factory               A factory for showing the inline preview activity for within
+     *                              this app.
+     *                              Only used for certain WallpaperInfo implementations that
+     *                              require
+     *                              an inline preview
+     *                              (as opposed to some external preview activity).
+     * @param requestCode           Request code to pass in when starting the inline preview
+     *                              activity.
+     * @param shouldRefreshCategory category type to pass in when starting the inline preview
+     *                              activity.
+     */
+    public abstract void showPreview(Activity srcActivity, InlinePreviewIntentFactory factory,
+            int requestCode, boolean isAssetIdPresent,
+            boolean shouldRefreshCategory);
+
+    /**
      * Returns a Future to obtain a wallpaper color and a placeholder color calculated in a
      * background thread for this wallpaper's thumbnail.
      * If it's already available, the Future will return the color immediately.

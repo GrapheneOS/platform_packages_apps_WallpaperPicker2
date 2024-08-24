@@ -25,4 +25,6 @@ import kotlinx.coroutines.flow.Flow
  */
 interface CreativeCategoryInteractor {
     val categories: Flow<List<CategoryModel>>
+
+    fun updateCreativeCategories()
 }

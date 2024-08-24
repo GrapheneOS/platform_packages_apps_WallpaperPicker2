@@ -44,7 +44,7 @@ class CategoriesViewModel
 @Inject
 constructor(
     private val singleCategoryInteractor: CategoryInteractor,
-    private val creativeWallpaperInteractor: CreativeCategoryInteractor,
+    private val creativeCategoryInteractor: CreativeCategoryInteractor,
     private val myPhotosInteractor: MyPhotosInteractor,
     private val thirdPartyCategoryInteractor: ThirdPartyCategoryInteractor,
     private val loadindStatusInteractor: CategoriesLoadingStatusInteractor,
@@ -54,15 +54,22 @@ constructor(
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
     val navigationEvents = _navigationEvents.asSharedFlow()
 
-    private fun navigateToWallpaperCollection(collectionId: String) {
+    private fun navigateToWallpaperCollection(collectionId: String, categoryType: CategoryType) {
         viewModelScope.launch {
-            _navigationEvents.emit(NavigationEvent.NavigateToWallpaperCollection(collectionId))
+            _navigationEvents.emit(
+                NavigationEvent.NavigateToWallpaperCollection(collectionId, categoryType)
+            )
         }
     }
 
-    private fun navigateToPreviewScreen(wallpaperModel: WallpaperModel) {
+    private fun navigateToPreviewScreen(
+        wallpaperModel: WallpaperModel,
+        categoryType: CategoryType
+    ) {
         viewModelScope.launch {
-            _navigationEvents.emit(NavigationEvent.NavigateToPreviewScreen(wallpaperModel))
+            _navigationEvents.emit(
+                NavigationEvent.NavigateToPreviewScreen(wallpaperModel, categoryType)
+            )
         }
     }
 
@@ -110,11 +117,13 @@ constructor(
                                         true
                                 ) {
                                     navigateToPreviewScreen(
-                                        category.collectionCategoryData.wallpaperModels[0]
+                                        category.collectionCategoryData.wallpaperModels[0],
+                                        CategoryType.DefaultCategories
                                     )
                                 } else {
                                     navigateToWallpaperCollection(
-                                        category.commonCategoryData.collectionId
+                                        category.commonCategoryData.collectionId,
+                                        CategoryType.DefaultCategories
                                     )
                                 }
                             }
@@ -129,7 +138,7 @@ constructor(
         defaultCategorySections.zip(thirdPartyCategorySections) { list1, list2 -> list1 + list2 }
 
     private val creativeSectionViewModel: Flow<SectionViewModel> =
-        creativeWallpaperInteractor.categories.map { categories ->
+        creativeCategoryInteractor.categories.map { categories ->
             val tiles =
                 categories.map { category ->
                     TileViewModel(
@@ -139,10 +148,14 @@ constructor(
                     ) {
                         if (category.collectionCategoryData?.isSingleWallpaperCategory == true) {
                             navigateToPreviewScreen(
-                                category.collectionCategoryData.wallpaperModels[0]
+                                category.collectionCategoryData.wallpaperModels[0],
+                                CategoryType.CreativeCategories
                             )
                         } else {
-                            navigateToWallpaperCollection(category.commonCategoryData.collectionId)
+                            navigateToWallpaperCollection(
+                                category.commonCategoryData.collectionId,
+                                CategoryType.CreativeCategories
+                            )
                         }
                     }
                 }
@@ -191,10 +204,30 @@ constructor(
         myPhotosInteractor.updateMyPhotos()
     }
 
-    sealed class NavigationEvent {
-        data class NavigateToWallpaperCollection(val categoryId: String) : NavigationEvent()
+    /** This method updates the specified category */
+    fun refreshCategory() {
+        // update creative categories at this time only
+        creativeCategoryInteractor.updateCreativeCategories()
+    }
 
-        data class NavigateToPreviewScreen(val wallpaperModel: WallpaperModel) : NavigationEvent()
+    enum class CategoryType {
+        ThirdPartyCategories,
+        DefaultCategories,
+        CreativeCategories,
+        MyPhotosCategories,
+        Default
+    }
+
+    sealed class NavigationEvent {
+        data class NavigateToWallpaperCollection(
+            val categoryId: String,
+            val categoryType: CategoryType
+        ) : NavigationEvent()
+
+        data class NavigateToPreviewScreen(
+            val wallpaperModel: WallpaperModel,
+            val categoryType: CategoryType
+        ) : NavigationEvent()
 
         object NavigateToPhotosPicker : NavigationEvent()
 

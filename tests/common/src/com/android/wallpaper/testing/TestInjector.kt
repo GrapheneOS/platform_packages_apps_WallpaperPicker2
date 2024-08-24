@@ -60,7 +60,7 @@ import com.android.wallpaper.picker.customization.data.repository.WallpaperColor
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperSnapshotRestorer
-import com.android.wallpaper.picker.individual.IndividualPickerFragment
+import com.android.wallpaper.picker.individual.IndividualPickerFragment2
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import com.android.wallpaper.util.DisplayUtils
@@ -162,8 +162,8 @@ open class TestInjector @Inject constructor(private val userEventLogger: UserEve
     override fun getIndividualPickerFragment(
         context: Context,
         collectionId: String
-    ): IndividualPickerFragment {
-        return IndividualPickerFragment.newInstance(collectionId)
+    ): IndividualPickerFragment2 {
+        return IndividualPickerFragment2.newInstance(collectionId)
     }
 
     override fun getLiveWallpaperInfoFactory(context: Context): LiveWallpaperInfoFactory {

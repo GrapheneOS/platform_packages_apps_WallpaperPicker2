@@ -163,7 +163,18 @@ public class TestStaticWallpaperInfo extends WallpaperInfo {
             InlinePreviewIntentFactory inlinePreviewIntentFactory, int requestCode,
             boolean isAssetIdPresent) {
         srcActivity.startActivityForResult(
-                inlinePreviewIntentFactory.newIntent(srcActivity, this, isAssetIdPresent),
+                inlinePreviewIntentFactory.newIntent(srcActivity, this, isAssetIdPresent,
+                        false),
+                requestCode);
+    }
+
+    @Override
+    public void showPreview(Activity srcActivity,
+            InlinePreviewIntentFactory inlinePreviewIntentFactory, int requestCode,
+            boolean isAssetIdPresent, boolean shouldRefreshCategory) {
+        srcActivity.startActivityForResult(
+                inlinePreviewIntentFactory.newIntent(srcActivity, this, isAssetIdPresent,
+                        shouldRefreshCategory),
                 requestCode);
     }
 

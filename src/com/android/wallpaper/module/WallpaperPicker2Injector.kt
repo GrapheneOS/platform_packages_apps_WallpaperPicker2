@@ -47,7 +47,7 @@ import com.android.wallpaper.picker.customization.data.repository.WallpaperColor
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperSnapshotRestorer
 import com.android.wallpaper.picker.di.modules.MainDispatcher
-import com.android.wallpaper.picker.individual.IndividualPickerFragment
+import com.android.wallpaper.picker.individual.IndividualPickerFragment2
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
 import com.android.wallpaper.system.UiModeManagerWrapper
@@ -171,7 +171,7 @@ constructor(
     }
 
     override fun getIndividualPickerFragment(context: Context, collectionId: String): Fragment {
-        return IndividualPickerFragment.newInstance(collectionId)
+        return IndividualPickerFragment2.newInstance(collectionId)
     }
 
     override fun getLiveWallpaperInfoFactory(context: Context): LiveWallpaperInfoFactory {

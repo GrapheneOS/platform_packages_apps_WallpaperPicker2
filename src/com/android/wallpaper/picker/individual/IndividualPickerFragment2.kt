@@ -16,6 +16,7 @@
 package com.android.wallpaper.picker.individual
 
 import CreativeCategoryHolder
+import android.annotation.MenuRes
 import android.app.Activity
 import android.app.ProgressDialog
 import android.app.WallpaperManager
@@ -67,6 +68,9 @@ import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider
 import com.android.wallpaper.picker.RotationStarter
 import com.android.wallpaper.picker.StartRotationDialogFragment
 import com.android.wallpaper.picker.StartRotationErrorDialogFragment
+import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
+import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel.CategoryType
+import com.android.wallpaper.picker.preview.ui.Hilt_WallpaperPreviewActivity.SHOULD_CATEGORY_REFRESH
 import com.android.wallpaper.util.ActivityUtils
 import com.android.wallpaper.util.LaunchUtils
 import com.android.wallpaper.util.SizeCalculator
@@ -114,6 +118,18 @@ class IndividualPickerFragment2 :
             fragment.arguments = args
             return fragment
         }
+
+        fun newInstance(
+            collectionId: String?,
+            categoryType: CategoriesViewModel.CategoryType
+        ): IndividualPickerFragment2 {
+            val args = Bundle()
+            args.putString(ARG_CATEGORY_COLLECTION_ID, collectionId)
+            args.putSerializable(SHOULD_CATEGORY_REFRESH, categoryType)
+            val fragment = IndividualPickerFragment2()
+            fragment.arguments = args
+            return fragment
+        }
     }
 
     private lateinit var imageGrid: RecyclerView
@@ -133,6 +149,8 @@ class IndividualPickerFragment2 :
     private var appliedWallpaperIds: Set<String> = setOf()
     private var mIsCreativeWallpaperEnabled = false
 
+    private var refreshCreativeCategories: CategoriesViewModel.CategoryType? = null
+
     /**
      * Staged error dialog fragments that were unable to be shown when the activity didn't allow
      * committing fragment transactions.
@@ -148,6 +166,10 @@ class IndividualPickerFragment2 :
         mIsCreativeWallpaperEnabled = injector.getFlags().isAIWallpaperEnabled(appContext)
         wallpaperManager = WallpaperManager.getInstance(appContext)
         packageStatusNotifier = injector.getPackageStatusNotifier(appContext)
+
+        refreshCreativeCategories =
+            arguments?.getSerializable(SHOULD_CATEGORY_REFRESH, CategoryType::class.java)
+                as? CategoryType
         items = ArrayList()
 
         // Clear Glide's cache if night-mode changed to ensure thumbnails are reloaded
@@ -165,7 +187,7 @@ class IndividualPickerFragment2 :
     /** This function handles the result of the fetched categories */
     private fun onCategoryLoaded(category: Category, shouldRegisterPackageListener: Boolean) {
         val fragmentHost = getIndividualPickerFragmentHost()
-        if (fragmentHost.isHostToolbarShown) {
+        if (fragmentHost.isHostToolbarShown()) {
             fragmentHost.setToolbarTitle(category.title)
         } else {
             setTitle(category.title)
@@ -388,7 +410,7 @@ class IndividualPickerFragment2 :
         savedInstanceState: Bundle?
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_individual_picker, container, false)
-        if (getIndividualPickerFragmentHost().isHostToolbarShown) {
+        if (getIndividualPickerFragmentHost().isHostToolbarShown()) {
             view.requireViewById<View>(R.id.header_bar).visibility = View.GONE
             setUpArrowEnabled(/* upArrow= */ true)
             if (isRotationEnabled()) {
@@ -418,13 +440,12 @@ class IndividualPickerFragment2 :
         return view
     }
 
-    private fun getIndividualPickerFragmentHost():
-        IndividualPickerFragment.IndividualPickerFragmentHost {
+    private fun getIndividualPickerFragmentHost(): IndividualPickerFragmentHost {
         val parentFragment = parentFragment
         return if (parentFragment != null) {
-            parentFragment as IndividualPickerFragment.IndividualPickerFragmentHost
+            parentFragment as IndividualPickerFragmentHost
         } else {
-            activity as IndividualPickerFragment.IndividualPickerFragmentHost
+            activity as IndividualPickerFragmentHost
         }
     }
 
@@ -538,7 +559,8 @@ class IndividualPickerFragment2 :
                 isFewerColumnLayout(),
                 getEdgePadding(),
                 imageGrid.paddingTop,
-                imageGrid.paddingBottom
+                imageGrid.paddingBottom,
+                refreshCreativeCategories
             )
         imageGrid.adapter = adapter
 
@@ -786,7 +808,8 @@ class IndividualPickerFragment2 :
         private val isFewerColumnLayout: Boolean,
         private val edgePadding: Int,
         private val bottomPadding: Int,
-        private val topPadding: Int
+        private val topPadding: Int,
+        private val refreshCreativeCategories: CategoryType?
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         companion object {
             const val ITEM_VIEW_TYPE_INDIVIDUAL_WALLPAPER = 2
@@ -854,7 +877,7 @@ class IndividualPickerFragment2 :
         private fun createIndividualHolder(parent: ViewGroup): RecyclerView.ViewHolder {
             val layoutInflater = LayoutInflater.from(activity)
             val view: View = layoutInflater.inflate(R.layout.grid_item_image, parent, false)
-            return PreviewIndividualHolder(activity, tileSizePx.y, view)
+            return PreviewIndividualHolder(activity, tileSizePx.y, view, refreshCreativeCategories)
         }
 
         private fun creativeCategoryHolder(parent: ViewGroup): RecyclerView.ViewHolder {
@@ -967,4 +990,31 @@ class IndividualPickerFragment2 :
     override fun getToolbarTextColor(): Int {
         return ContextCompat.getColor(requireContext(), R.color.system_on_surface)
     }
+}
+
+/**
+ * Interface to be implemented by a Fragment(or an Activity) hosting a [IndividualPickerFragment2].
+ */
+interface IndividualPickerFragmentHost {
+    /**
+     * Indicates if the host has toolbar to show the title. If it does, we should set the title
+     * there.
+     */
+    fun isHostToolbarShown(): Boolean
+
+    /** Sets the title in the host's toolbar. */
+    fun setToolbarTitle(title: CharSequence?)
+
+    /**
+     * Configures the menu in the toolbar.
+     *
+     * @param menuResId the resource id of the menu
+     */
+    fun setToolbarMenu(@MenuRes menuResId: Int)
+
+    /** Removes the menu in the toolbar. */
+    fun removeToolbarMenu()
+
+    /** Moves to the previous fragment. */
+    fun moveToPreviousFragment()
 }

@@ -124,7 +124,7 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
 
         @Override
         public Intent newIntent(Context context, WallpaperInfo wallpaper,
-                boolean isAssetIdPresent) {
+                boolean isAssetIdPresent, boolean shouldRefreshCategory) {
             Context appContext = context.getApplicationContext();
             final BaseFlags flags = InjectorProvider.getInjector().getFlags();
             LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
@@ -132,7 +132,8 @@ public class PreviewActivity extends BasePreviewActivity implements AppbarFragme
 
             if (flags.isMultiCropEnabled()) {
                 return WallpaperPreviewActivity.Companion.newIntent(appContext,
-                        wallpaper, isAssetIdPresent, mIsViewAsHome, /* isNewTask= */ isMultiPanel);
+                        wallpaper, isAssetIdPresent, mIsViewAsHome, /* isNewTask= */ isMultiPanel,
+                        shouldRefreshCategory);
             }
 
             // Launch a full preview activity for devices supporting multipanel mode

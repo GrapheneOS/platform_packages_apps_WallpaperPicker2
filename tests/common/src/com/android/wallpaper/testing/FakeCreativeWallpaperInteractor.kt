@@ -43,6 +43,10 @@ class FakeCreativeWallpaperInteractor @Inject constructor() : CreativeCategoryIn
         emit(categoryModels)
     }
 
+    override fun updateCreativeCategories() {
+        // empty
+    }
+
     private fun generateCategoryData(): List<CommonCategoryData> {
         val dataList =
             listOf(

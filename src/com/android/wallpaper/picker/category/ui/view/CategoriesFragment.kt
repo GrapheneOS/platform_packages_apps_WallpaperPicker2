@@ -87,7 +87,8 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
                 is CategoriesViewModel.NavigationEvent.NavigateToWallpaperCollection -> {
                     switchFragment(
                         individualPickerFactory.getIndividualPickerInstance(
-                            navigationEvent.categoryId
+                            navigationEvent.categoryId,
+                            navigationEvent.categoryType
                         )
                     )
                 }
@@ -127,6 +128,9 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
                             isAssetIdPresent = true,
                             isViewAsHome = true,
                             isNewTask = isMultiPanel,
+                            shouldCategoryRefresh =
+                                (navigationEvent.categoryType ==
+                                    CategoriesViewModel.CategoryType.CreativeCategories)
                         )
                     ActivityUtils.startActivityForResultSafely(
                         requireActivity(),

@@ -105,14 +105,15 @@ public class ViewOnlyPreviewActivity extends BasePreviewActivity implements Appb
 
         @Override
         public Intent newIntent(Context context, WallpaperInfo wallpaper,
-                boolean isAssetIdPresent) {
+                boolean isAssetIdPresent, boolean shouldRefreshCategory) {
             Context appContext = context.getApplicationContext();
             LargeScreenMultiPanesChecker multiPanesChecker = new LargeScreenMultiPanesChecker();
             final boolean isMultiPanel = multiPanesChecker.isMultiPanesEnabled(appContext);
             final BaseFlags flags = InjectorProvider.getInjector().getFlags();
             if (flags.isMultiCropEnabled()) {
                 return WallpaperPreviewActivity.Companion.newIntent(appContext, wallpaper,
-                        isAssetIdPresent, mIsViewAsHome, /* isNewTask= */ isMultiPanel);
+                        isAssetIdPresent, mIsViewAsHome, /* isNewTask= */ isMultiPanel,
+                        shouldRefreshCategory);
             }
 
             // Launch a full preview activity for devices supporting multipanel mode

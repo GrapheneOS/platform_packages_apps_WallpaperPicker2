@@ -28,4 +28,8 @@ import kotlinx.coroutines.flow.emptyFlow
 class CreativeCategoryInteractorImpl @Inject constructor() : CreativeCategoryInteractor {
     // default implementation of creatives is empty in aosp
     override val categories: Flow<List<CategoryModel>> = emptyFlow()
+
+    override fun updateCreativeCategories() {
+        // nothing to update in aosp
+    }
 }

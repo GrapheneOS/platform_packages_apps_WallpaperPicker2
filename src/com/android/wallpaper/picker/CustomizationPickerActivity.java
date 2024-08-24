@@ -35,6 +35,7 @@ import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.config.BaseFlags;
@@ -55,7 +56,8 @@ import com.android.wallpaper.module.logging.UserEventLogger;
 import com.android.wallpaper.picker.AppbarFragment.AppbarFragmentHost;
 import com.android.wallpaper.picker.CategorySelectorFragment.CategorySelectorFragmentHost;
 import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener;
-import com.android.wallpaper.picker.individual.IndividualPickerFragment.IndividualPickerFragmentHost;
+import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel;
+import com.android.wallpaper.picker.individual.IndividualPickerFragmentHost;
 import com.android.wallpaper.util.ActivityUtils;
 import com.android.wallpaper.util.DeepLinkUtils;
 import com.android.wallpaper.util.DisplayUtils;
@@ -88,6 +90,8 @@ public class CustomizationPickerActivity extends Hilt_CustomizationPickerActivit
     private BottomActionBar mBottomActionBar;
     private boolean mIsSafeToCommitFragmentTransaction;
 
+    private CategoriesViewModel mCategoriesViewModel;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         Injector injector = InjectorProvider.getInjector();
@@ -105,6 +109,7 @@ public class CustomizationPickerActivity extends Hilt_CustomizationPickerActivit
 
         // Restore this Activity's state before restoring contained Fragments state.
         super.onCreate(savedInstanceState);
+
         // Trampoline for the two panes
         final MultiPanesChecker mMultiPanesChecker = new LargeScreenMultiPanesChecker();
         if (mMultiPanesChecker.isMultiPanesEnabled(this)) {
@@ -141,8 +146,14 @@ public class CustomizationPickerActivity extends Hilt_CustomizationPickerActivit
                     ? WallpaperOnlyFragment.newInstance()
                     : CustomizationPickerFragment.newInstance(startFromLockScreen));
 
-            // Cache the categories, but only if we're not restoring state (b/276767415).
-            mDelegate.prefetchCategories();
+
+            if (flags.isWallpaperCategoryRefactoringEnabled()) {
+                // initializing the dependency graph for categories
+                mCategoriesViewModel = new ViewModelProvider(this).get(CategoriesViewModel.class);
+            } else {
+                // Cache the categories, but only if we're not restoring state (b/276767415).
+                mDelegate.prefetchCategories();
+            }
         }
 
         if (savedInstanceState == null) {

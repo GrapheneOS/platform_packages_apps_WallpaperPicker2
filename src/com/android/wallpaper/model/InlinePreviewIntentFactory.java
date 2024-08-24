@@ -38,7 +38,8 @@ public interface InlinePreviewIntentFactory {
     }
 
     /** Gets an intent to show the inline preview activity for the given wallpaper. */
-    Intent newIntent(Context ctx, WallpaperInfo wallpaper, boolean isAssetIdPresent);
+    Intent newIntent(Context ctx, WallpaperInfo wallpaper, boolean isAssetIdPresent,
+            boolean shouldRefreshCategory);
 
     /**
      * Sets rendering preview as home or lock screen.
