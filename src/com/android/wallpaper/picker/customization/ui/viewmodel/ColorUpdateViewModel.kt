@@ -26,11 +26,16 @@ import kotlinx.coroutines.flow.asStateFlow
 
 @ActivityScoped
 class ColorUpdateViewModel @Inject constructor(@ApplicationContext private val context: Context) {
+    private val _colorSecondaryContainer =
+        MutableStateFlow(context.getColor(R.color.system_secondary_container))
+    val colorSecondaryContainer = _colorSecondaryContainer.asStateFlow()
+
     private val _colorSurfaceContainer =
         MutableStateFlow(context.getColor(R.color.system_surface_container))
     val colorSurfaceContainer = _colorSurfaceContainer.asStateFlow()
 
     fun updateColors() {
+        _colorSecondaryContainer.value = context.getColor(R.color.system_secondary_container)
         _colorSurfaceContainer.value = context.getColor(R.color.system_surface_container)
     }
 }

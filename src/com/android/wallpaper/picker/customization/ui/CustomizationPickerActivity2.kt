@@ -204,6 +204,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
             homeScreenCustomizationOptionEntries = initCustomizationOptionEntries(HOME_SCREEN),
             customizationOptionFloatingSheetViewMap = customizationOptionFloatingSheetViewMap,
             viewModel = customizationPickerViewModel,
+            colorUpdateViewModel = colorUpdateViewModel,
             customizationOptionsBinder = customizationOptionsBinder,
             lifecycleOwner = this,
             navigateToPrimary = {

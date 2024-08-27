@@ -16,24 +16,34 @@
 
 package com.android.wallpaper.picker.customization.ui.view.adapter
 
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.common.icon.ui.viewbinder.IconViewBinder
 import com.android.wallpaper.picker.common.icon.ui.viewmodel.Icon
+import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.view.animator.TabItemAnimator.Companion.BACKGROUND_ALPHA_MAX
 import com.android.wallpaper.picker.customization.ui.view.animator.TabItemAnimator.Companion.SELECT_ITEM
 import com.android.wallpaper.picker.customization.ui.view.animator.TabItemAnimator.Companion.UNSELECT_ITEM
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
+import java.lang.ref.WeakReference
 
 /** List adapter for the floating toolbar of tabs. */
-class FloatingToolbarTabAdapter :
+class FloatingToolbarTabAdapter(
+    private val colorUpdateViewModel: WeakReference<ColorUpdateViewModel>
+) :
     ListAdapter<FloatingToolbarTabViewModel, FloatingToolbarTabAdapter.TabViewHolder>(
         ProductDiffCallback()
     ) {
@@ -46,7 +56,8 @@ class FloatingToolbarTabAdapter :
                     parent,
                     false,
                 )
-        return TabViewHolder(view)
+        val tabViewHolder = TabViewHolder(view)
+        return tabViewHolder
     }
 
     override fun onBindViewHolder(
@@ -70,6 +81,22 @@ class FloatingToolbarTabAdapter :
     }
 
     override fun onBindViewHolder(holder: TabViewHolder, position: Int) {
+        // Bind tab color in onBindViewHolder and destroy in onViewRecycled. Bind in this
+        // onBindViewHolder instead of the one with payload since this function is generally
+        // called when view holders are created or recycled, ensuring each view holder is only
+        // bound once, whereas the view holder with payload is called not only in the above cases,
+        // but also when the state is changed, which could result in multiple bindings.
+        colorUpdateViewModel.get()?.let {
+            ColorUpdateBinder.bind(
+                setColor = { color ->
+                    holder.itemView.background.colorFilter =
+                        BlendModeColorFilter(color, BlendMode.SRC_ATOP)
+                },
+                color = it.colorSecondaryContainer,
+                lifecycleOwner = holder,
+            )
+        }
+
         val item = getItem(position)
         bindViewHolder(holder, item.icon, item.text, item.isSelected, item.onClick)
     }
@@ -93,10 +120,59 @@ class FloatingToolbarTabAdapter :
         holder.itemView.setOnClickListener { onClick?.invoke() }
     }
 
-    class TabViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    override fun onViewAttachedToWindow(holder: TabViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        holder.onAttachToWindow()
+    }
+
+    override fun onViewDetachedFromWindow(holder: TabViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.onDetachFromWindow()
+    }
+
+    override fun onViewRecycled(holder: TabViewHolder) {
+        super.onViewRecycled(holder)
+        holder.onRecycled()
+    }
+
+    /**
+     * A [RecyclerView.ViewHolder] for the floating tabs recycler view, that also extends
+     * [LifecycleOwner] to enable binding flows and collecting based on lifecycle states. This
+     * optimizes the binding so that view holders that are not visible on screen will not be
+     * actively collecting and updating from a bound flow. The lifecycle state is created when the
+     * ViewHolder is created, then started and stopped in onViewAttachedToWindow and
+     * onViewDetachedFromWindow, and destroyed in onViewRecycled, where a new lifecycle is created.
+     */
+    class TabViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LifecycleOwner {
         val container = itemView.requireViewById<ViewGroup>(R.id.tab_container)
         val icon = itemView.requireViewById<ImageView>(R.id.tab_icon)
         val label = itemView.requireViewById<TextView>(R.id.label_text)
+
+        private lateinit var lifecycleRegistry: LifecycleRegistry
+        override val lifecycle: Lifecycle
+            get() = lifecycleRegistry
+
+        init {
+            initializeRegistry()
+        }
+
+        private fun initializeRegistry() {
+            lifecycleRegistry =
+                LifecycleRegistry(this).also { it.handleLifecycleEvent(Lifecycle.Event.ON_CREATE) }
+        }
+
+        fun onAttachToWindow() {
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
+        }
+
+        fun onDetachFromWindow() {
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
+        }
+
+        fun onRecycled() {
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+            initializeRegistry()
+        }
     }
 
     private class ProductDiffCallback : DiffUtil.ItemCallback<FloatingToolbarTabViewModel>() {

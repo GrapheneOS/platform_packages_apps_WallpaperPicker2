@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.customization.ui.binder
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 
 interface CustomizationOptionsBinder {
@@ -29,6 +30,7 @@ interface CustomizationOptionsBinder {
         homeScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
         customizationOptionFloatingSheetViewMap: Map<CustomizationOption, View>?,
         viewModel: CustomizationOptionsViewModel,
+        colorUpdateViewModel: ColorUpdateViewModel,
         lifecycleOwner: LifecycleOwner,
     )
 }

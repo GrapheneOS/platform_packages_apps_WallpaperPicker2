@@ -24,7 +24,6 @@ import com.android.wallpaper.R
 import com.android.wallpaper.picker.common.ui.view.ItemSpacing
 import com.android.wallpaper.picker.customization.ui.view.adapter.FloatingToolbarTabAdapter
 import com.android.wallpaper.picker.customization.ui.view.animator.TabItemAnimator
-import com.android.wallpaper.picker.customization.ui.viewmodel.FloatingToolbarTabViewModel
 
 class FloatingToolbar(
     context: Context,
@@ -36,21 +35,18 @@ class FloatingToolbar(
     ) {
 
     private val tabList: RecyclerView
-    private val tabAdapter: FloatingToolbarTabAdapter
 
     init {
         inflate(context, R.layout.floating_toolbar, this)
-        tabAdapter = FloatingToolbarTabAdapter()
         tabList =
             requireViewById<RecyclerView>(R.id.tab_list).apply {
-                adapter = tabAdapter
                 itemAnimator = TabItemAnimator()
                 addItemDecoration(ItemSpacing(TAB_SPACE_DP))
             }
     }
 
-    fun setItems(items: List<FloatingToolbarTabViewModel>) {
-        tabAdapter.submitList(items)
+    fun setAdapter(floatingToolbarTabAdapter: FloatingToolbarTabAdapter) {
+        tabList.adapter = floatingToolbarTabAdapter
     }
 
     companion object {

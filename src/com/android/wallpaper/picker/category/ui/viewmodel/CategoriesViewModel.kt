@@ -27,6 +27,7 @@ import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryI
 import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
 import com.android.wallpaper.picker.category.domain.interactor.ThirdPartyCategoryInteractor
 import com.android.wallpaper.picker.data.WallpaperModel
+import com.android.wallpaper.picker.data.category.CategoryModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -34,6 +35,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
@@ -83,91 +85,108 @@ constructor(
         }
     }
 
-    private val thirdPartyCategorySections: Flow<List<SectionViewModel>> =
-        thirdPartyCategoryInteractor.categories.map { categories ->
-            return@map categories.map { category ->
-                SectionViewModel(
-                    tileViewModels =
-                        listOf(
-                            TileViewModel(null, null, category.commonCategoryData.title) {
-                                category.thirdPartyCategoryData?.resolveInfo?.let {
-                                    navigateToThirdPartyApp(it)
-                                }
-                            }
-                        ),
-                    columnCount = 1,
-                    sectionTitle = null
-                )
+    val categoryModelListDifferentiator =
+        { oldList: List<CategoryModel>, newList: List<CategoryModel> ->
+            if (oldList.size != newList.size) {
+                false
+            } else {
+                !oldList.containsAll(newList)
             }
         }
 
-    private val defaultCategorySections: Flow<List<SectionViewModel>> =
-        singleCategoryInteractor.categories.map { categories ->
-            return@map categories.map { category ->
-                SectionViewModel(
-                    tileViewModels =
-                        listOf(
-                            TileViewModel(
-                                defaultDrawable = null,
-                                thumbnailAsset = category.collectionCategoryData?.thumbAsset,
-                                text = category.commonCategoryData.title,
-                            ) {
-                                if (
-                                    category.collectionCategoryData?.isSingleWallpaperCategory ==
-                                        true
-                                ) {
-                                    navigateToPreviewScreen(
-                                        category.collectionCategoryData.wallpaperModels[0],
-                                        CategoryType.DefaultCategories
-                                    )
-                                } else {
-                                    navigateToWallpaperCollection(
-                                        category.commonCategoryData.collectionId,
-                                        CategoryType.DefaultCategories
-                                    )
+    private val thirdPartyCategorySections: Flow<List<SectionViewModel>> =
+        thirdPartyCategoryInteractor.categories
+            .distinctUntilChanged { old, new -> categoryModelListDifferentiator(old, new) }
+            .map { categories ->
+                return@map categories.map { category ->
+                    SectionViewModel(
+                        tileViewModels =
+                            listOf(
+                                TileViewModel(null, null, category.commonCategoryData.title) {
+                                    category.thirdPartyCategoryData?.resolveInfo?.let {
+                                        navigateToThirdPartyApp(it)
+                                    }
                                 }
-                            }
-                        ),
-                    columnCount = 1,
-                    sectionTitle = null
-                )
+                            ),
+                        columnCount = 1,
+                        sectionTitle = null
+                    )
+                }
             }
-        }
+
+    private val defaultCategorySections: Flow<List<SectionViewModel>> =
+        singleCategoryInteractor.categories
+            .distinctUntilChanged { old, new -> categoryModelListDifferentiator(old, new) }
+            .map { categories ->
+                return@map categories.map { category ->
+                    SectionViewModel(
+                        tileViewModels =
+                            listOf(
+                                TileViewModel(
+                                    defaultDrawable = null,
+                                    thumbnailAsset = category.collectionCategoryData?.thumbAsset,
+                                    text = category.commonCategoryData.title,
+                                ) {
+                                    if (
+                                        category.collectionCategoryData
+                                            ?.isSingleWallpaperCategory == true
+                                    ) {
+                                        navigateToPreviewScreen(
+                                            category.collectionCategoryData.wallpaperModels[0],
+                                            CategoryType.DefaultCategories
+                                        )
+                                    } else {
+                                        navigateToWallpaperCollection(
+                                            category.commonCategoryData.collectionId,
+                                            CategoryType.DefaultCategories
+                                        )
+                                    }
+                                }
+                            ),
+                        columnCount = 1,
+                        sectionTitle = null
+                    )
+                }
+            }
 
     private val individualSectionViewModels: Flow<List<SectionViewModel>> =
         defaultCategorySections.zip(thirdPartyCategorySections) { list1, list2 -> list1 + list2 }
 
     private val creativeSectionViewModel: Flow<SectionViewModel> =
-        creativeCategoryInteractor.categories.map { categories ->
-            val tiles =
-                categories.map { category ->
-                    TileViewModel(
-                        defaultDrawable = null,
-                        thumbnailAsset = category.collectionCategoryData?.thumbAsset,
-                        text = category.commonCategoryData.title,
-                    ) {
-                        if (category.collectionCategoryData?.isSingleWallpaperCategory == true) {
-                            navigateToPreviewScreen(
-                                category.collectionCategoryData.wallpaperModels[0],
-                                CategoryType.CreativeCategories
-                            )
-                        } else {
-                            navigateToWallpaperCollection(
-                                category.commonCategoryData.collectionId,
-                                CategoryType.CreativeCategories
-                            )
+        creativeCategoryInteractor.categories
+            .distinctUntilChanged { old, new -> categoryModelListDifferentiator(old, new) }
+            .map { categories ->
+                val tiles =
+                    categories.map { category ->
+                        TileViewModel(
+                            defaultDrawable = null,
+                            thumbnailAsset = category.collectionCategoryData?.thumbAsset,
+                            text = category.commonCategoryData.title,
+                        ) {
+                            if (
+                                category.collectionCategoryData?.isSingleWallpaperCategory == true
+                            ) {
+                                navigateToPreviewScreen(
+                                    category.collectionCategoryData.wallpaperModels[0],
+                                    CategoryType.CreativeCategories
+                                )
+                            } else {
+                                navigateToWallpaperCollection(
+                                    category.commonCategoryData.collectionId,
+                                    CategoryType.CreativeCategories
+                                )
+                            }
                         }
                     }
-                }
-            return@map SectionViewModel(
-                tileViewModels = tiles,
-                columnCount = 3,
-                sectionTitle = context.getString(R.string.creative_wallpaper_title)
-            )
-        }
+                return@map SectionViewModel(
+                    tileViewModels = tiles,
+                    columnCount = 3,
+                    sectionTitle = context.getString(R.string.creative_wallpaper_title)
+                )
+            }
 
     private val myPhotosSectionViewModel: Flow<SectionViewModel> =
-        myPhotosInteractor.category.map { category ->
+        myPhotosInteractor.category.distinctUntilChanged().map { category ->
             SectionViewModel(
                 tileViewModels =
                     listOf(
