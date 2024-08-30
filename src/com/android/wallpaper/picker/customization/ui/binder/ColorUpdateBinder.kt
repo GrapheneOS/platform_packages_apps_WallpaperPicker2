@@ -32,6 +32,7 @@ object ColorUpdateBinder {
     fun bind(
         setColor: (color: Int) -> Unit,
         color: Flow<Int>,
+        shouldAnimate: () -> Boolean = { true },
         lifecycleOwner: LifecycleOwner,
     ) {
         lifecycleOwner.lifecycleScope.launch {
@@ -40,9 +41,7 @@ object ColorUpdateBinder {
                 var animator: Animator? = null
                 color.collect { newColor ->
                     val previousColor = currentColor
-                    if (previousColor == null) {
-                        setColor(newColor)
-                    } else {
+                    if (shouldAnimate() && previousColor != null) {
                         animator?.end()
                         ValueAnimator.ofArgb(
                                 previousColor,
@@ -54,6 +53,8 @@ object ColorUpdateBinder {
                             }
                             .also { animator = it }
                             .start()
+                    } else {
+                        setColor(newColor)
                     }
                     currentColor = newColor
                 }

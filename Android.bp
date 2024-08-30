@@ -61,7 +61,7 @@ android_library {
         "accessibility_settings_flags_lib",
     ],
 
-    resource_dirs: ["res"],
+    resource_dirs: ["res", "res_override"],
 
     srcs: [
         "src/**/*.java",

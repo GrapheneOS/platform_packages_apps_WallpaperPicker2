@@ -42,7 +42,8 @@ import java.lang.ref.WeakReference
 
 /** List adapter for the floating toolbar of tabs. */
 class FloatingToolbarTabAdapter(
-    private val colorUpdateViewModel: WeakReference<ColorUpdateViewModel>
+    private val colorUpdateViewModel: WeakReference<ColorUpdateViewModel>,
+    private val shouldAnimateColor: () -> Boolean,
 ) :
     ListAdapter<FloatingToolbarTabViewModel, FloatingToolbarTabAdapter.TabViewHolder>(
         ProductDiffCallback()
@@ -93,6 +94,7 @@ class FloatingToolbarTabAdapter(
                         BlendModeColorFilter(color, BlendMode.SRC_ATOP)
                 },
                 color = it.colorSecondaryContainer,
+                shouldAnimate = shouldAnimateColor,
                 lifecycleOwner = holder,
             )
         }

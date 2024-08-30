@@ -16,11 +16,17 @@
 
 package com.android.wallpaper.picker.customization.ui.binder
 
+import android.content.res.ColorStateList
 import android.view.View
+import android.widget.TextView
+import androidx.core.widget.TextViewCompat
 import androidx.lifecycle.LifecycleOwner
+import com.android.wallpaper.R
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
+import com.android.wallpaper.picker.customization.ui.util.DefaultCustomizationOptionUtil
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
-import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,8 +38,55 @@ class DefaultCustomizationOptionsBinder @Inject constructor() : CustomizationOpt
         lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
         homeScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
         customizationOptionFloatingSheetViewMap: Map<CustomizationOption, View>?,
-        viewModel: CustomizationOptionsViewModel,
+        viewModel: CustomizationPickerViewModel2,
         colorUpdateViewModel: ColorUpdateViewModel,
-        lifecycleOwner: LifecycleOwner
-    ) {}
+        lifecycleOwner: LifecycleOwner,
+    ) {
+        val optionLockWallpaper =
+            lockScreenCustomizationOptionEntries
+                .find {
+                    it.first ==
+                        DefaultCustomizationOptionUtil.DefaultLockCustomizationOption.WALLPAPER
+                }
+                ?.second
+        val moreWallpapersLock = optionLockWallpaper?.findViewById<TextView>(R.id.more_wallpapers)
+        val optionHomeWallpaper =
+            homeScreenCustomizationOptionEntries
+                .find {
+                    it.first ==
+                        DefaultCustomizationOptionUtil.DefaultHomeCustomizationOption.WALLPAPER
+                }
+                ?.second
+        val moreWallpapersHome = optionHomeWallpaper?.findViewById<TextView>(R.id.more_wallpapers)
+
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                moreWallpapersLock?.apply {
+                    setTextColor(color)
+                    TextViewCompat.setCompoundDrawableTintList(this, ColorStateList.valueOf(color))
+                }
+            },
+            color = colorUpdateViewModel.colorPrimary,
+            shouldAnimate = {
+                viewModel.selectedPreviewScreen.value == Screen.LOCK_SCREEN &&
+                    viewModel.customizationOptionsViewModel.selectedOption.value == null
+            },
+            lifecycleOwner = lifecycleOwner,
+        )
+
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                moreWallpapersHome?.apply {
+                    setTextColor(color)
+                    TextViewCompat.setCompoundDrawableTintList(this, ColorStateList.valueOf(color))
+                }
+            },
+            color = colorUpdateViewModel.colorPrimary,
+            shouldAnimate = {
+                viewModel.selectedPreviewScreen.value == Screen.HOME_SCREEN &&
+                    viewModel.customizationOptionsViewModel.selectedOption.value == null
+            },
+            lifecycleOwner = lifecycleOwner,
+        )
+    }
 }

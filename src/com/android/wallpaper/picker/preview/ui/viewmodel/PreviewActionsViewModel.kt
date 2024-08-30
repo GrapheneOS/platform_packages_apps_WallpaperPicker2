@@ -24,8 +24,11 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.net.wifi.WifiManager
 import android.service.wallpaper.WallpaperSettingsActivity
+import android.util.Log
+import com.android.wallpaper.R
 import com.android.wallpaper.effects.Effect
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
+import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.data.CreativeWallpaperData
 import com.android.wallpaper.picker.data.LiveWallpaperData
 import com.android.wallpaper.picker.data.WallpaperModel
@@ -65,11 +68,14 @@ import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.S
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 /** View model for the preview action buttons */
@@ -81,6 +87,13 @@ constructor(
     liveWallpaperDeleteUtil: LiveWallpaperDeleteUtil,
     @ApplicationContext private val context: Context,
 ) {
+    private var TAG = "PreviewActionsViewModel"
+    private var flags = InjectorProvider.getInjector().getFlags()
+    private var EXTENDED_WALLPAPER_EFFECTS_PACKAGE =
+        context.getString(R.string.extended_wallpaper_effects_package)
+    private var EXTENDED_WALLPAPER_EFFECTS_ACTIVITY =
+        context.getString(R.string.extended_wallpaper_effects_activity)
+
     /** [INFORMATION] */
     private val informationFloatingSheetViewModel: Flow<InformationFloatingSheetViewModel?> =
         interactor.wallpaperModel.map { wallpaperModel ->
@@ -398,19 +411,60 @@ constructor(
     private val _isEffectsChecked: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isEffectsChecked: Flow<Boolean> = _isEffectsChecked.asStateFlow()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val onEffectsClicked: Flow<(() -> Unit)?> =
         combine(isEffectsVisible, isEffectsChecked) { show, isChecked ->
-            if (show) {
-                {
-                    if (!isChecked) {
-                        uncheckAllOthersExcept(EFFECTS)
+                if (show) {
+                    {
+                        if (!isChecked) {
+                            uncheckAllOthersExcept(EFFECTS)
+                        }
+                        _isEffectsChecked.value = !isChecked
                     }
-                    _isEffectsChecked.value = !isChecked
+                } else {
+                    null
                 }
-            } else {
-                null
+            }
+            .flatMapLatest { action ->
+                if (flags.isMagicPortraitEnabled()) {
+                    launchExtendedWallpaperEffects()
+                } else {
+                    flow { action?.let { emit(it) } }
+                }
+            }
+
+    private fun launchExtendedWallpaperEffects(): Flow<() -> Unit> {
+        val previewedWallpaperModel = interactor.wallpaperModel.value
+        var photoUri: Uri? = null
+        if (
+            previewedWallpaperModel is WallpaperModel.StaticWallpaperModel &&
+                previewedWallpaperModel.imageWallpaperData != null
+        ) {
+            photoUri = previewedWallpaperModel.imageWallpaperData.uri
+        }
+
+        return flow {
+            emit {
+                val intent = Intent()
+                intent.component =
+                    ComponentName(
+                        EXTENDED_WALLPAPER_EFFECTS_PACKAGE,
+                        EXTENDED_WALLPAPER_EFFECTS_ACTIVITY
+                    )
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                context.grantUriPermission(
+                    EXTENDED_WALLPAPER_EFFECTS_PACKAGE,
+                    photoUri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+                Log.d(TAG, "PhotoURI is: $photoUri")
+                photoUri?.let { uri ->
+                    intent.putExtra("PHOTO_URI", uri)
+                    context.startActivity(intent)
+                }
             }
         }
+    }
 
     val effectDownloadFailureToastText: Flow<String> =
         interactor.imageEffectsModel

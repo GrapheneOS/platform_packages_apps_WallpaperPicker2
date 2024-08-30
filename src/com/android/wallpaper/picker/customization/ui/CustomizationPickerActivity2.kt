@@ -138,6 +138,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
         ColorUpdateBinder.bind(
             setColor = { color -> view.setBackgroundColor(color) },
             color = colorUpdateViewModel.colorSurfaceContainer,
+            shouldAnimate = { true },
             lifecycleOwner = this,
         )
 

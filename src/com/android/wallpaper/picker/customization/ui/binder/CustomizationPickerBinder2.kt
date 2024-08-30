@@ -166,7 +166,7 @@ object CustomizationPickerBinder2 {
             lockScreenCustomizationOptionEntries,
             homeScreenCustomizationOptionEntries,
             customizationOptionFloatingSheetViewMap,
-            viewModel.customizationOptionsViewModel,
+            viewModel,
             colorUpdateViewModel,
             lifecycleOwner,
         )
