@@ -19,7 +19,7 @@ import android.app.WallpaperManager
 import android.content.Context
 import com.android.settings.accessibility.Flags.enableColorContrastControl
 import com.android.systemui.Flags.clockReactiveVariants
-import com.android.systemui.Flags.newPickerUi
+import com.android.systemui.shared.Flags.newCustomizationPickerUi
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
 import com.android.systemui.shared.customization.data.content.CustomizationProviderContract as Contract
@@ -50,7 +50,7 @@ abstract class BaseFlags {
 
     open fun isMagicPortraitEnabled() = magicPortraitFlag()
 
-    open fun isNewPickerUi() = newPickerUi()
+    open fun isNewPickerUi() = newCustomizationPickerUi()
 
     open fun isClockReactiveVariantsEnabled() = clockReactiveVariants()
 
