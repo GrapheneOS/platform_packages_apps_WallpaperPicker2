@@ -404,6 +404,7 @@
     <dimen name="customization_option_entry_vertical_padding">12dp</dimen>
     <dimen name="customization_option_entry_text_margin_end">16dp</dimen>
     <dimen name="customization_option_entry_icon_size">60dp</dimen>
+    <dimen name="customization_option_entry_icon_padding">8dp</dimen>
     <dimen name="preview_corner_radius">32dp</dimen>
     <dimen name="apply_button_end_margin">16dp</dimen>
     <dimen name="nav_button_start_margin">16dp</dimen>
