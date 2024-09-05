@@ -19,8 +19,7 @@
     android:orientation="vertical"
     android:id="@+id/section_category"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="5dp">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/section_title"
@@ -28,7 +27,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/CategorySectionTitleTextAppearance"
         android:focusable="false"
-        android:layout_gravity="bottom" />
+        android:layout_marginBottom="@dimen/grid_item_category_title_margin_bottom"/>
 
     <!-- Tiles -->
     <androidx.recyclerview.widget.RecyclerView

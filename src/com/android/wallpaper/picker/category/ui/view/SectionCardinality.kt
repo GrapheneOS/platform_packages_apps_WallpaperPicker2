@@ -14,17 +14,11 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.category.ui.viewmodel
+package com.android.wallpaper.picker.category.ui.view
 
-import android.graphics.drawable.Drawable
-import com.android.wallpaper.asset.Asset
-import com.android.wallpaper.picker.category.ui.view.SectionCardinality
-
-/** This class represents the view model for a single category tile. */
-class TileViewModel(
-    val defaultDrawable: Drawable?,
-    val thumbnailAsset: Asset?,
-    val text: String,
-    val maxCategoriesInRow: SectionCardinality = SectionCardinality.Single,
-    val onClicked: (() -> Unit)? = null,
-)
+/** The maximum amount of Categories that a section support */
+enum class SectionCardinality {
+    Single,
+    Double,
+    Triple,
+}

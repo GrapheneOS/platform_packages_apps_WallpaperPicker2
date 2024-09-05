@@ -24,6 +24,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
+import com.android.wallpaper.picker.category.ui.view.SectionCardinality
 import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
 import com.android.wallpaper.util.ResourceUtils
 import com.android.wallpaper.util.SizeCalculator
@@ -59,7 +60,11 @@ class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             // sections that take 1 column and have 1 tile
             tileSize = SizeCalculator.getCategoryTileSize(itemView.context, windowWidth)
             tileRadius = context.resources.getDimension(R.dimen.grid_item_all_radius_small).toInt()
-        } else if (columnCount > 1 && tileCount == 1) {
+        } else if (
+            columnCount > 1 &&
+                tileCount == 1 &&
+                item.maxCategoriesInRow == SectionCardinality.Single
+        ) {
             // sections with more than 1 column and 1 tile
             tileSize = SizeCalculator.getFeaturedCategoryTileSize(itemView.context, windowWidth)
             tileRadius = tileSize.y

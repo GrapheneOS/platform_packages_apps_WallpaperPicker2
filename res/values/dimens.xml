@@ -29,6 +29,7 @@
     <dimen name="grid_item_category_label_minimum_height">16dp</dimen>
     <dimen name="grid_item_category_padding_horizontal">6dp</dimen>
     <dimen name="grid_item_category_padding_bottom">12dp</dimen>
+    <dimen name="grid_item_category_title_margin_bottom">10dp</dimen>
     <dimen name="grid_tile_aspect_height">340dp</dimen>
     <dimen name="grid_tile_aspect_width">182dp</dimen>
     <dimen name="category_grid_edge_space">18dp</dimen>
