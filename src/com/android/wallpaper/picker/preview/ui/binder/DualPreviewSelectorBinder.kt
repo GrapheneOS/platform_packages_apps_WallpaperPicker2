@@ -17,6 +17,7 @@ package com.android.wallpaper.picker.preview.ui.binder
 
 import android.content.Context
 import android.view.View
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.transition.Transition
 import com.android.wallpaper.picker.preview.ui.view.DualPreviewViewPager
@@ -33,8 +34,9 @@ import kotlinx.coroutines.CompletableDeferred
 object DualPreviewSelectorBinder {
 
     fun bind(
-        tabs: PreviewTabs,
+        tabs: PreviewTabs?,
         dualPreviewView: DualPreviewViewPager,
+        motionLayout: MotionLayout?,
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
         applicationContext: Context,
         viewLifecycleOwner: LifecycleOwner,
@@ -48,6 +50,7 @@ object DualPreviewSelectorBinder {
         DualPreviewPagerBinder.bind(
             dualPreviewView,
             wallpaperPreviewViewModel,
+            motionLayout,
             applicationContext,
             viewLifecycleOwner,
             currentNavDestId,
@@ -58,6 +61,6 @@ object DualPreviewSelectorBinder {
             navigate,
         )
 
-        TabsBinder.bind(tabs, wallpaperPreviewViewModel, viewLifecycleOwner)
+        tabs?.let { TabsBinder.bind(it, wallpaperPreviewViewModel, viewLifecycleOwner) }
     }
 }

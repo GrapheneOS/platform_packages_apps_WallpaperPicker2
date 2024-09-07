@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.preview.ui.binder
 import android.content.Context
 import android.graphics.Point
 import android.view.View
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.transition.Transition
 import androidx.viewpager2.widget.ViewPager2
@@ -31,8 +32,9 @@ import kotlinx.coroutines.CompletableDeferred
 object PreviewSelectorBinder {
 
     fun bind(
-        tabs: PreviewTabs,
+        tabs: PreviewTabs?,
         previewsViewPager: ViewPager2,
+        motionLayout: MotionLayout?,
         previewDisplaySize: Point,
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
         applicationContext: Context,
@@ -48,6 +50,7 @@ object PreviewSelectorBinder {
         PreviewPagerBinder.bind(
             applicationContext,
             viewLifecycleOwner,
+            motionLayout,
             previewsViewPager,
             wallpaperPreviewViewModel,
             previewDisplaySize,
@@ -59,6 +62,6 @@ object PreviewSelectorBinder {
             navigate,
         )
 
-        TabsBinder.bind(tabs, wallpaperPreviewViewModel, viewLifecycleOwner)
+        tabs?.let { TabsBinder.bind(it, wallpaperPreviewViewModel, viewLifecycleOwner) }
     }
 }

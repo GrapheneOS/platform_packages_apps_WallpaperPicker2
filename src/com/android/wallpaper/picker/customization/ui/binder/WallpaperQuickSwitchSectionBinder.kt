@@ -53,8 +53,7 @@ object WallpaperQuickSwitchSectionBinder {
         } else {
             optionContainer.visibility = View.VISIBLE
             // We have to wait for the container to be laid out before we can bind it because we
-            // need
-            // its size to calculate the sizes of the option items.
+            // need its size to calculate the sizes of the option items.
             optionContainer.doOnLayout {
                 lifecycleOwner.lifecycleScope.launch {
                     lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

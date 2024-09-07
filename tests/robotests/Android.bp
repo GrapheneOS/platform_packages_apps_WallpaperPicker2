@@ -30,7 +30,9 @@ android_robolectric_test {
     // Do not add picker-related dependencies here. Add them to
     // WallpaperPicker2Shell instead.
     static_libs: [
+        "flag-junit",
         "hilt_android_testing",
+        "platform-test-annotations",
     ],
 
     libs: [

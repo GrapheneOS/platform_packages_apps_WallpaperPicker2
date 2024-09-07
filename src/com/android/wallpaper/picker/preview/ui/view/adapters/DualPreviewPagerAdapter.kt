@@ -21,6 +21,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.android.wallpaper.R
+import com.android.wallpaper.config.BaseFlags
 
 /** This class provides the dual preview views for the small preview screen on foldable devices */
 class DualPreviewPagerAdapter(
@@ -34,13 +35,27 @@ class DualPreviewPagerAdapter(
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val view =
-            LayoutInflater.from(container.context)
-                .inflate(R.layout.small_preview_foldable_card_view, container, false)
-
-        onBindViewHolder.invoke(view, position)
-        container.addView(view)
-        return view
+        if (BaseFlags.get().isNewPickerUi()) {
+            val view =
+                LayoutInflater.from(container.context)
+                    .inflate(R.layout.small_preview_foldable_card_view2, container, false)
+            onBindViewHolder.invoke(view, position)
+            container.addView(
+                view,
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                ),
+            )
+            return view
+        } else {
+            val view =
+                LayoutInflater.from(container.context)
+                    .inflate(R.layout.small_preview_foldable_card_view, container, false)
+            onBindViewHolder.invoke(view, position)
+            container.addView(view)
+            return view
+        }
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {

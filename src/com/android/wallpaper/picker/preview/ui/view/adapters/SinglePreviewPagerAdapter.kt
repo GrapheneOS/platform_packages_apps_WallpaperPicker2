@@ -20,16 +20,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
+import com.android.wallpaper.config.BaseFlags
 
-/** This adapter provides preview views for the small preview fragment */
+/**
+ * This adapter provides preview views for the small preview fragment
+ *
+ * TODO(b/361583350): Use [PreviewPagerAdapter], remove this class once new picker UI is released
+ */
 class SinglePreviewPagerAdapter(
     private val onBindViewHolder: (ViewHolder, Int) -> Unit,
 ) : RecyclerView.Adapter<SinglePreviewPagerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.small_preview_handheld_card_view, parent, false)
+
+        val layout =
+            if (BaseFlags.get().isNewPickerUi()) R.layout.small_preview_handheld_card_view2
+            else R.layout.small_preview_handheld_card_view
+
+        val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
 
         view.setPadding(
             0,

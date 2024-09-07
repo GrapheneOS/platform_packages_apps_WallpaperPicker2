@@ -138,7 +138,16 @@ object SmallWallpaperPreviewBinder {
                                 val staticPreviewView =
                                     LayoutInflater.from(applicationContext)
                                         .inflate(R.layout.fullscreen_wallpaper_preview, null)
-                                surface.attachView(staticPreviewView)
+                                // surfaceView.width and surfaceFrame.width here can be different,
+                                // one represents the size of the view and the other represents the
+                                // size of the surface. When setting a view to the surface host,
+                                // we want to set it based on the surface's size not the view's size
+                                val surfacePosition = surface.holder.surfaceFrame
+                                surface.attachView(
+                                    staticPreviewView,
+                                    surfacePosition.width(),
+                                    surfacePosition.height(),
+                                )
                                 // Bind static wallpaper
                                 StaticWallpaperPreviewBinder.bind(
                                     lowResImageView =

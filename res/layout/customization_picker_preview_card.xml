@@ -20,30 +20,5 @@
     android:clipChildren="false"
     android:clipToPadding="false">
 
-    <com.android.wallpaper.picker.DisplayAspectRatioFrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipChildren="false">
-
-        <com.android.wallpaper.picker.customization.ui.view.PreviewCardView
-            android:id="@+id/preview_card"
-            style="@style/FullContentPreviewCard"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipChildren="true"
-            android:layout_gravity="center"
-            android:contentDescription="@string/wallpaper_preview_card_content_description">
-
-            <com.android.wallpaper.picker.common.preview.ui.view.CustomizationSurfaceView
-                android:id="@+id/wallpaper_surface"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <com.android.wallpaper.picker.common.preview.ui.view.CustomizationSurfaceView
-                android:id="@+id/workspace_surface"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:importantForAccessibility="noHideDescendants" />
-        </com.android.wallpaper.picker.customization.ui.view.PreviewCardView>
-    </com.android.wallpaper.picker.DisplayAspectRatioFrameLayout>
+    <include layout="@layout/wallpaper_preview_card2" />
 </FrameLayout>

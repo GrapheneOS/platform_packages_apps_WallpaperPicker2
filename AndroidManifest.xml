@@ -148,7 +148,7 @@
           android:excludeFromRecents="true"
           android:taskAffinity="@string/multi_crop_task_affinity"
           android:resizeableActivity="true"
-          android:screenOrientation="portrait"
+          android:screenOrientation="locked"
           android:theme="@style/WallpaperTheme.Preview">
       </activity>
 

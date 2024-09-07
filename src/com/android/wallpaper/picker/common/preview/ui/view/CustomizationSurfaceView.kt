@@ -28,12 +28,30 @@ import android.view.SurfaceView
  */
 class CustomizationSurfaceView(context: Context, attrs: AttributeSet? = null) :
     SurfaceView(context, attrs) {
+    private var isTransitioning = false
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
         // TODO (b/348462236): investigate effect on scale transition and touch forwarding layout
         if (oldw == 0 && oldh == 0) {
-            holder.setFixedSize(w, h)
+            // If the view doesn't have a fixed width and height, after the transition the oldw and
+            // oldh will be 0, don't set new size in this case as it will interfere with the
+            // transition. Set the flag back to false once the transition is completed.
+            if (isTransitioning) {
+                isTransitioning = false
+            } else {
+                holder.setFixedSize(w, h)
+            }
         }
+    }
+
+    /**
+     * Indicates the view is transitioning.
+     *
+     * Needed when using WRAP_CONTENT or 0dp for height or weight together with [MotionLayout]
+     */
+    fun setTransitioning() {
+        this.isTransitioning = true
     }
 }

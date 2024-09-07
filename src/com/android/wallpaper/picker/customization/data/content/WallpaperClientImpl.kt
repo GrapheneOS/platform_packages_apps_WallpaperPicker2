@@ -33,7 +33,6 @@ import android.graphics.Color
 import android.graphics.Point
 import android.graphics.Rect
 import android.net.Uri
-import android.os.Looper
 import android.util.Log
 import androidx.exifinterface.media.ExifInterface
 import com.android.app.tracing.TraceUtils.traceAsync
@@ -60,6 +59,7 @@ import com.android.wallpaper.picker.customization.shared.model.WallpaperDestinat
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel as RecentWallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
+import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
 import com.android.wallpaper.util.WallpaperCropUtils
 import com.android.wallpaper.util.converter.WallpaperModelFactory
@@ -68,14 +68,15 @@ import com.android.wallpaper.util.converter.WallpaperModelFactory.Companion.getC
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException
 import java.io.InputStream
-import java.util.EnumMap
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 
@@ -89,20 +90,29 @@ constructor(
     private val wallpaperPreferences: WallpaperPreferences,
     private val wallpaperModelFactory: WallpaperModelFactory,
     private val logger: UserEventLogger,
+    @BackgroundDispatcher val backgroundScope: CoroutineScope,
 ) : WallpaperClient {
 
     private var recentsContentProviderAvailable: Boolean? = null
-    private val cachedRecents: MutableMap<WallpaperDestination, List<RecentWallpaperModel>> =
-        EnumMap(WallpaperDestination::class.java)
+    private val recentHomeWallpapers = MutableStateFlow<List<RecentWallpaperModel>?>(null)
+    private val recentLockWallpapers = MutableStateFlow<List<RecentWallpaperModel>?>(null)
 
     init {
+        backgroundScope.launch {
+            recentHomeWallpapers.value = queryRecentWallpapers(destination = HOME)
+            recentLockWallpapers.value = queryRecentWallpapers(destination = LOCK)
+        }
+
         if (areRecentsAvailable()) {
             context.contentResolver.registerContentObserver(
                 LIST_RECENTS_URI,
                 /* notifyForDescendants= */ true,
                 object : ContentObserver(null) {
                     override fun onChange(selfChange: Boolean) {
-                        cachedRecents.clear()
+                        backgroundScope.launch {
+                            recentHomeWallpapers.value = queryRecentWallpapers(destination = HOME)
+                            recentLockWallpapers.value = queryRecentWallpapers(destination = LOCK)
+                        }
                     }
                 },
             )
@@ -112,42 +122,15 @@ constructor(
     override fun recentWallpapers(
         destination: WallpaperDestination,
         limit: Int,
-    ): Flow<List<RecentWallpaperModel>> {
-        return callbackFlow {
-            // TODO(b/280891780) Remove this check
-            if (Looper.myLooper() == Looper.getMainLooper()) {
-                throw IllegalStateException("Do not call method recentWallpapers() on main thread")
-            }
-            suspend fun queryAndSend(limit: Int) {
-                send(queryRecentWallpapers(destination = destination, limit = limit))
-            }
-
-            val contentObserver =
-                if (areRecentsAvailable()) {
-                        object : ContentObserver(null) {
-                            override fun onChange(selfChange: Boolean) {
-                                launch { queryAndSend(limit = limit) }
-                            }
-                        }
-                    } else {
-                        null
-                    }
-                    ?.also {
-                        context.contentResolver.registerContentObserver(
-                            LIST_RECENTS_URI,
-                            /* notifyForDescendants= */ true,
-                            it,
-                        )
-                    }
-            queryAndSend(limit = limit)
-
-            awaitClose {
-                if (contentObserver != null) {
-                    context.contentResolver.unregisterContentObserver(contentObserver)
-                }
-            }
+    ) =
+        when (destination) {
+            HOME -> recentHomeWallpapers.asStateFlow().filterNotNull().take(limit)
+            LOCK -> recentLockWallpapers.asStateFlow().filterNotNull().take(limit)
+            BOTH ->
+                throw IllegalStateException(
+                    "Destination $destination should not be used for getting recent wallpapers."
+                )
         }
-    }
 
     override suspend fun setStaticWallpaper(
         @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
@@ -477,22 +460,15 @@ constructor(
     }
 
     private suspend fun queryRecentWallpapers(
-        destination: WallpaperDestination,
-        limit: Int,
-    ): List<RecentWallpaperModel> {
-        val recentWallpapers =
-            cachedRecents[destination]
-                ?: if (!areRecentsAvailable()) {
-                    listOf(getCurrentWallpaperFromFactory(destination))
-                } else {
-                    queryAllRecentWallpapers(destination)
-                }
+        destination: WallpaperDestination
+    ): List<RecentWallpaperModel> =
+        if (!areRecentsAvailable()) {
+            listOf(getCurrentWallpaperFromFactory(destination))
+        } else {
+            queryAllRecentWallpapers(destination)
+        }
 
-        cachedRecents[destination] = recentWallpapers
-        return recentWallpapers.take(limit)
-    }
-
-    private suspend fun queryAllRecentWallpapers(
+    private fun queryAllRecentWallpapers(
         destination: WallpaperDestination
     ): List<RecentWallpaperModel> {
         context.contentResolver

@@ -20,6 +20,7 @@ import android.graphics.Point
 import android.view.SurfaceView
 import android.view.View
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -31,6 +32,8 @@ import androidx.transition.TransitionListenerAdapter
 import com.android.wallpaper.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
+import com.android.wallpaper.picker.common.preview.ui.view.CustomizationSurfaceView
+import com.android.wallpaper.picker.customization.ui.CustomizationPickerActivity2
 import com.android.wallpaper.picker.preview.ui.fragment.SmallPreviewFragment
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
@@ -44,6 +47,7 @@ object SmallPreviewBinder {
     fun bind(
         applicationContext: Context,
         view: View,
+        motionLayout: MotionLayout? = null,
         viewModel: WallpaperPreviewViewModel,
         screen: Screen,
         displaySize: Point,
@@ -74,6 +78,19 @@ object SmallPreviewBinder {
             )
         val wallpaperSurface: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
         val workspaceSurface: SurfaceView = view.requireViewById(R.id.workspace_surface)
+
+        motionLayout?.addTransitionListener(
+            object : CustomizationPickerActivity2.EmptyTransitionListener {
+                override fun onTransitionStarted(
+                    motionLayout: MotionLayout?,
+                    startId: Int,
+                    endId: Int
+                ) {
+                    (wallpaperSurface as CustomizationSurfaceView).setTransitioning()
+                    (workspaceSurface as CustomizationSurfaceView).setTransitioning()
+                }
+            }
+        )
 
         // Set transition names to enable the small to full preview enter and return shared
         // element transitions.

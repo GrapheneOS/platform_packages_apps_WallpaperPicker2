@@ -29,6 +29,7 @@ import androidx.slice.Slice
 import androidx.slice.widget.SliceLiveData
 import androidx.slice.widget.SliceView
 import com.android.wallpaper.R
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
 import com.android.wallpaper.model.WallpaperAction
 import com.android.wallpaper.util.SizeCalculator
@@ -53,7 +54,10 @@ class PreviewActionFloatingSheet(context: Context, attrs: AttributeSet?) :
     private var customizeLiveDataAndView: Pair<LiveData<Slice>, SliceView>? = null
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.floating_sheet2, this, true)
+        val layout =
+            if (BaseFlags.get().isNewPickerUi()) R.layout.floating_sheet3
+            else R.layout.floating_sheet2
+        LayoutInflater.from(context).inflate(layout, this, true)
         floatingSheetView = requireViewById(R.id.floating_sheet_content)
         SizeCalculator.adjustBackgroundCornerRadius(floatingSheetView)
         floatingSheetContainer = requireViewById(R.id.floating_sheet_container)

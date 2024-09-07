@@ -24,6 +24,7 @@ import android.widget.ToggleButton
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import com.android.wallpaper.R
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action
 
 /** Custom layout for a group of wallpaper preview actions. */
@@ -40,7 +41,10 @@ class PreviewActionGroup(context: Context, attrs: AttributeSet?) : FrameLayout(c
     private val shareButton: ToggleButton
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.preview_action_group, this, true)
+        val layout =
+            if (BaseFlags.get().isNewPickerUi()) R.layout.preview_action_group2
+            else R.layout.preview_action_group
+        LayoutInflater.from(context).inflate(layout, this, true)
         informationButton = requireViewById(R.id.information_button)
         downloadButton = requireViewById(R.id.download_button)
         downloadButtonToggle = requireViewById(R.id.download_button_toggle)

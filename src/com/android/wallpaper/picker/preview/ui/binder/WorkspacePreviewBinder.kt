@@ -204,7 +204,17 @@ object WorkspacePreviewBinder {
     ): Message? {
         var workspaceCallback: Message? = null
         if (previewUtils.supportsPreview()) {
-            val extras = bundleOf(Pair(SurfaceViewUtils.KEY_DISPLAY_ID, displayId))
+            // surfaceView.width and surfaceFrame.width here can be different, one represents the
+            // size of the view and the other represents the size of the surface. When requesting a
+            // preview, make sure to specify the width and height in the bundle so we are using the
+            // surface size and not the view size.
+            val surfacePosition = surface.holder.surfaceFrame
+            val extras =
+                bundleOf(
+                    Pair(SurfaceViewUtils.KEY_DISPLAY_ID, displayId),
+                    Pair(SurfaceViewUtils.KEY_VIEW_WIDTH, surfacePosition.width()),
+                    Pair(SurfaceViewUtils.KEY_VIEW_HEIGHT, surfacePosition.height()),
+                )
             wallpaperColors?.let {
                 extras.putParcelable(SurfaceViewUtils.KEY_WALLPAPER_COLORS, wallpaperColors)
             }

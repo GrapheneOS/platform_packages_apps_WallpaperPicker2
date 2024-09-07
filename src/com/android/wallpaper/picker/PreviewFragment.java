@@ -75,6 +75,7 @@ import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperSetter;
 import com.android.wallpaper.module.logging.UserEventLogger;
+import com.android.wallpaper.picker.common.preview.ui.binder.DefaultWorkspaceCallbackBinder;
 import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.widget.DuoTabs;
@@ -575,8 +576,8 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
     private void hideBottomRow(boolean hide) {
         if (mWorkspaceSurfaceCallback != null) {
             Bundle data = new Bundle();
-            data.putBoolean(WorkspaceSurfaceHolderCallback.KEY_HIDE_BOTTOM_ROW, hide);
-            mWorkspaceSurfaceCallback.send(WorkspaceSurfaceHolderCallback.MESSAGE_ID_UPDATE_PREVIEW,
+            data.putBoolean(DefaultWorkspaceCallbackBinder.KEY_HIDE_BOTTOM_ROW, hide);
+            mWorkspaceSurfaceCallback.send(DefaultWorkspaceCallbackBinder.MESSAGE_ID_UPDATE_PREVIEW,
                     data);
         }
     }

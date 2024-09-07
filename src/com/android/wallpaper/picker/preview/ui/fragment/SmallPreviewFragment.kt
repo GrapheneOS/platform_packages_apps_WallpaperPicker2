@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
@@ -34,6 +35,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.transition.Transition
 import com.android.wallpaper.R
 import com.android.wallpaper.R.id.preview_tabs_container
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.preview.ui.binder.DualPreviewSelectorBinder
@@ -44,6 +46,7 @@ import com.android.wallpaper.picker.preview.ui.binder.SetWallpaperProgressDialog
 import com.android.wallpaper.picker.preview.ui.util.AnimationUtil
 import com.android.wallpaper.picker.preview.ui.util.ImageEffectDialogUtil
 import com.android.wallpaper.picker.preview.ui.view.DualPreviewViewPager
+import com.android.wallpaper.picker.preview.ui.view.PreviewActionFloatingSheet
 import com.android.wallpaper.picker.preview.ui.view.PreviewActionGroup
 import com.android.wallpaper.picker.preview.ui.view.PreviewTabs
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action
@@ -95,18 +98,28 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        val isFoldable = displayUtils.hasMultiInternalDisplays()
         postponeEnterTransition()
         currentView =
             inflater.inflate(
-                if (displayUtils.hasMultiInternalDisplays())
-                    R.layout.fragment_small_preview_foldable
-                else R.layout.fragment_small_preview_handheld,
+                if (BaseFlags.get().isNewPickerUi()) {
+                    if (isFoldable) R.layout.fragment_small_preview_foldable2
+                    else R.layout.fragment_small_preview_handheld2
+                } else {
+                    if (isFoldable) R.layout.fragment_small_preview_foldable
+                    else R.layout.fragment_small_preview_handheld
+                },
                 container,
-                false,
+                /* attachToRoot= */ false,
             )
+        val motionLayout =
+            if (BaseFlags.get().isNewPickerUi())
+                currentView.findViewById<MotionLayout>(R.id.small_preview_motion_layout)
+            else null
+
         setUpToolbar(currentView, /* upArrow= */ true, /* transparentToolbar= */ true)
-        bindScreenPreview(currentView, isFirstBindingDeferred)
-        bindPreviewActions(currentView)
+        bindScreenPreview(currentView, motionLayout, isFirstBindingDeferred)
+        bindPreviewActions(currentView, motionLayout)
 
         SetWallpaperButtonBinder.bind(
             button = currentView.requireViewById(R.id.button_set_wallpaper),
@@ -163,8 +176,8 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         isViewDestroyed?.let {
             if (!it) {
                 currentView
-                    .requireViewById<PreviewTabs>(preview_tabs_container)
-                    .resetTransition(wallpaperPreviewViewModel.getSmallPreviewTabIndex())
+                    .findViewById<PreviewTabs>(preview_tabs_container)
+                    ?.resetTransition(wallpaperPreviewViewModel.getSmallPreviewTabIndex())
             }
         }
     }
@@ -190,17 +203,18 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
     private fun bindScreenPreview(
         view: View,
+        motionLayout: MotionLayout?,
         isFirstBindingDeferred: CompletableDeferred<Boolean>
     ) {
         val currentNavDestId = checkNotNull(findNavController().currentDestination?.id)
-        val tabs = view.requireViewById<PreviewTabs>(preview_tabs_container)
+        val tabs = view.findViewById<PreviewTabs>(preview_tabs_container)
         if (displayUtils.hasMultiInternalDisplays()) {
-            val dualPreviewView: DualPreviewViewPager =
-                view.requireViewById(R.id.dual_preview_pager)
+            val dualPreviewView: DualPreviewViewPager = view.requireViewById(R.id.pager_previews)
 
             DualPreviewSelectorBinder.bind(
                 tabs,
                 dualPreviewView,
+                motionLayout,
                 wallpaperPreviewViewModel,
                 appContext,
                 viewLifecycleOwner,
@@ -226,6 +240,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             PreviewSelectorBinder.bind(
                 tabs,
                 view.requireViewById(R.id.pager_previews),
+                motionLayout,
                 displayUtils.getRealSize(displayUtils.getWallpaperDisplay()),
                 wallpaperPreviewViewModel,
                 appContext,
@@ -259,10 +274,22 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         }
     }
 
-    private fun bindPreviewActions(view: View) {
+    private fun bindPreviewActions(view: View, motionLayout: MotionLayout?) {
+        val actionButtonGroup = view.findViewById<PreviewActionGroup>(R.id.action_button_group)
+        val floatingSheet = view.findViewById<PreviewActionFloatingSheet>(R.id.floating_sheet)
+        if (actionButtonGroup == null || floatingSheet == null) {
+            return
+        }
+
+        val motionLayout =
+            if (BaseFlags.get().isNewPickerUi())
+                view.findViewById<MotionLayout>(R.id.small_preview_motion_layout)
+            else null
+
         PreviewActionsBinder.bind(
-            actionGroup = view.requireViewById(R.id.action_button_group),
-            floatingSheet = view.requireViewById(R.id.floating_sheet),
+            actionGroup = actionButtonGroup,
+            floatingSheet = floatingSheet,
+            motionLayout = motionLayout,
             previewViewModel = wallpaperPreviewViewModel,
             actionsViewModel = wallpaperPreviewViewModel.previewActionsViewModel,
             deviceDisplayType = displayUtils.getCurrentDisplayType(requireActivity()),

@@ -20,6 +20,7 @@ import android.graphics.Point
 import android.util.AttributeSet
 import androidx.viewpager.widget.ViewPager
 import com.android.wallpaper.R
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 
 /**
@@ -34,7 +35,7 @@ constructor(context: Context, attrs: AttributeSet? = null /* attrs */) : ViewPag
     private var previewDisplaySizes: Map<DeviceDisplayType, Point>? = null
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        if (previewDisplaySizes == null) {
+        if (previewDisplaySizes == null || BaseFlags.get().isNewPickerUi()) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
             return
         }

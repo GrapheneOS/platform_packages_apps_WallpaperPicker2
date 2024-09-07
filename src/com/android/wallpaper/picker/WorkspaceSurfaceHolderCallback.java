@@ -27,6 +27,7 @@ import android.view.SurfaceView;
 
 import androidx.annotation.Nullable;
 
+import com.android.wallpaper.picker.common.preview.ui.binder.DefaultWorkspaceCallbackBinder;
 import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.SurfaceViewUtils;
 
@@ -47,8 +48,6 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
 
     private static final String TAG = "WsSurfaceHolderCallback";
     private static final String KEY_WALLPAPER_COLORS = "wallpaper_colors";
-    public static final int MESSAGE_ID_UPDATE_PREVIEW = 1337;
-    public static final String KEY_HIDE_BOTTOM_ROW = "hide_bottom_row";
     public static final int MESSAGE_ID_COLOR_OVERRIDE = 1234;
     public static final String KEY_COLOR_OVERRIDE = "color_override"; // ColorInt Encoded as string
     private final SurfaceView mWorkspaceSurface;
@@ -259,7 +258,7 @@ public class WorkspaceSurfaceHolderCallback implements SurfaceHolder.Callback {
         if (mWallpaperColors != null) {
             request.putParcelable(KEY_WALLPAPER_COLORS, mWallpaperColors);
         }
-        request.putBoolean(KEY_HIDE_BOTTOM_ROW, mHideBottomRow);
+        request.putBoolean(DefaultWorkspaceCallbackBinder.KEY_HIDE_BOTTOM_ROW, mHideBottomRow);
         mPreviewUtils.renderPreview(request, callback);
     }
 }

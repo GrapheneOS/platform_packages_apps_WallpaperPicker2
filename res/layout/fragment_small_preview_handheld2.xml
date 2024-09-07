@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2023 The Android Open Source Project
+  ~ Copyright (C) 2024 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:fitsSystemWindows="true"
     android:transitionGroup="true"
     android:clipChildren="false"
@@ -29,13 +30,11 @@
     <include
         android:id="@+id/toolbar_container"
         layout="@layout/section_header_content"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_set_wallpaper"
-        app:layout_constraintBottom_toTopOf="@+id/pager_group"
-        app:layout_constraintVertical_chainStyle="spread_inside" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
         android:id="@+id/button_set_wallpaper"
@@ -50,57 +49,40 @@
         android:textColor="@color/system_on_primary"
         android:textAppearance="@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/toolbar_container"
         app:layout_constraintBottom_toBottomOf="@id/toolbar_container"/>
 
-    <!-- Set clipToPadding to false so that during transition scaling, child card view is not
-    clipped to the header bar -->
-    <LinearLayout
-        android:id="@+id/pager_group"
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/small_preview_motion_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingBottom="@dimen/wallpaper_control_button_size"
-        android:gravity="center"
-        android:importantForAccessibility="no"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_container"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:clipChildren="false"
-        android:clipToPadding="false">
-
-        <com.android.wallpaper.picker.preview.ui.view.DualPreviewViewPager
-            android:id="@+id/pager_previews"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom"
-            android:paddingHorizontal="@dimen/small_dual_preview_edge_space"
-            android:clipChildren="false"
-            android:importantForAccessibility="no" />
-
-        <com.android.wallpaper.picker.preview.ui.view.PreviewTabs
-            android:id="@+id/preview_tabs_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_10dp"
-            android:layout_marginBottom="@dimen/spacing_10dp" />
-    </LinearLayout>
-
-    <com.android.wallpaper.picker.preview.ui.view.PreviewActionFloatingSheet
-        android:id="@+id/floating_sheet"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" />
-
-    <com.android.wallpaper.picker.preview.ui.view.PreviewActionGroup
-        android:id="@+id/action_button_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/wallpaper_control_button_group_margin_end"
-        android:layout_marginTop="@dimen/wallpaper_control_button_group_margin_top"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_weight="1" />
+        app:layoutDescription="@xml/small_preview_layout_scene">
 
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager_previews"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <HorizontalScrollView
+            android:id="@+id/preview_action_group_container"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:scrollbars="none">
+
+            <com.android.wallpaper.picker.preview.ui.view.PreviewActionGroup
+                android:id="@+id/action_button_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"/>
+        </HorizontalScrollView>
+
+        <com.android.wallpaper.picker.preview.ui.view.PreviewActionFloatingSheet
+            android:id="@+id/floating_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,7 +21,7 @@ import android.net.Uri
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.view.isInvisible
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -54,6 +54,7 @@ object PreviewActionsBinder {
     fun bind(
         actionGroup: PreviewActionGroup,
         floatingSheet: PreviewActionFloatingSheet,
+        motionLayout: MotionLayout? = null,
         previewViewModel: WallpaperPreviewViewModel,
         actionsViewModel: PreviewActionsViewModel,
         deviceDisplayType: DeviceDisplayType,
@@ -78,15 +79,19 @@ object PreviewActionsBinder {
                     // when the view is not gone.
                     if (newState == STATE_HIDDEN) {
                         actionsViewModel.onFloatingSheetCollapsed()
-                        floatingSheet.isInvisible = true
+                        motionLayout?.transitionToStart()
                     } else {
-                        floatingSheet.isInvisible = false
+                        motionLayout?.transitionToEnd()
                     }
                 }
 
                 override fun onSlide(p0: View, p1: Float) {}
             }
-        floatingSheet.isInvisible = !actionsViewModel.isAnyActionChecked()
+        if (!actionsViewModel.isAnyActionChecked()) {
+            motionLayout?.transitionToStart()
+        } else {
+            motionLayout?.transitionToEnd()
+        }
         floatingSheet.addFloatingSheetCallback(floatingSheetCallback)
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
