@@ -32,4 +32,6 @@ interface WallpaperCategoryRepository {
     val isDefaultCategoriesFetched: StateFlow<Boolean>
 
     suspend fun fetchMyPhotosCategory()
+
+    suspend fun refreshNetworkCategories()
 }

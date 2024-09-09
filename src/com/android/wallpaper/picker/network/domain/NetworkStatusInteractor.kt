@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.category.domain.interactor
+package com.android.wallpaper.picker.network.domain
 
-import com.android.wallpaper.picker.data.category.CategoryModel
 import kotlinx.coroutines.flow.Flow
 
-/**
- * Classes that implement this interface implement the business logic for assembling ungrouped
- * category models
- */
-interface CategoryInteractor {
-    val categories: Flow<List<CategoryModel>>
-
-    fun refreshNetworkCategories()
+interface NetworkStatusInteractor {
+    val isConnectionObtained: Flow<Boolean>
 }

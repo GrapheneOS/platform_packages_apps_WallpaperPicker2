@@ -43,6 +43,10 @@ class FakeCategoryInteractor @Inject constructor() : CategoryInteractor {
         emit(categoryModels)
     }
 
+    override fun refreshNetworkCategories() {
+        // empty
+    }
+
     private fun generateCategoryData(): List<CommonCategoryData> {
         val dataList =
             listOf(

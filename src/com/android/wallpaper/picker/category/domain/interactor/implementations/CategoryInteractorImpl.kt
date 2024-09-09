@@ -30,7 +30,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 @Singleton
 class CategoryInteractorImpl
 @Inject
-constructor(defaultWallpaperCategoryRepository: WallpaperCategoryRepository) : CategoryInteractor {
+constructor(val defaultWallpaperCategoryRepository: WallpaperCategoryRepository) :
+    CategoryInteractor {
 
     override val categories: Flow<List<CategoryModel>> =
         defaultWallpaperCategoryRepository.isDefaultCategoriesFetched
@@ -53,4 +54,6 @@ constructor(defaultWallpaperCategoryRepository: WallpaperCategoryRepository) : C
                     finalList.sortedBy { it.commonCategoryData.priority }
                 }
             }
+
+    override fun refreshNetworkCategories() {}
 }

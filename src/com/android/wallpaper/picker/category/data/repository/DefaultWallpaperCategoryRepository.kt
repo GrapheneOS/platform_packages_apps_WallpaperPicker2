@@ -115,6 +115,8 @@ constructor(
         }
     }
 
+    override suspend fun refreshNetworkCategories() {}
+
     private suspend fun fetchOnDeviceCategory() {
         try {
             val onDevice =

@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.category.domain.interactor
+package com.android.wallpaper.picker.network.domain
 
-import com.android.wallpaper.picker.data.category.CategoryModel
+import com.android.wallpaper.picker.network.data.NetworkStatusRepository
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 
-/**
- * Classes that implement this interface implement the business logic for assembling ungrouped
- * category models
- */
-interface CategoryInteractor {
-    val categories: Flow<List<CategoryModel>>
-
-    fun refreshNetworkCategories()
+@Singleton
+class DefaultNetworkStatusInteractor
+@Inject
+constructor(private val networkStatusRepository: NetworkStatusRepository) :
+    NetworkStatusInteractor {
+    override val isConnectionObtained: Flow<Boolean> = networkStatusRepository.networkStateFlow()
 }

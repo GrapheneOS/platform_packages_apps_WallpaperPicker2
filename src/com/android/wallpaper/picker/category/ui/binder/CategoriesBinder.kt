@@ -58,6 +58,15 @@ object CategoriesBinder {
                 }
 
                 launch {
+                    viewModel.isConnectionObtained.collect { didNetworkGoFromOffToOn ->
+                        // trigger a refresh of the categories only if network is being enabled
+                        if (didNetworkGoFromOffToOn) {
+                            viewModel.refreshNetworkCategories()
+                        }
+                    }
+                }
+
+                launch {
                     viewModel.navigationEvents.collect { navigationEvent ->
                         when (navigationEvent) {
                             is CategoriesViewModel.NavigationEvent.NavigateToWallpaperCollection,

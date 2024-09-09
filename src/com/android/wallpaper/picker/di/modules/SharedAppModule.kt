@@ -42,6 +42,10 @@ import com.android.wallpaper.picker.category.domain.interactor.implementations.M
 import com.android.wallpaper.picker.category.domain.interactor.implementations.ThirdPartyCategoryInteractorImpl
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl
+import com.android.wallpaper.picker.network.data.DefaultNetworkStatusRepository
+import com.android.wallpaper.picker.network.data.NetworkStatusRepository
+import com.android.wallpaper.picker.network.domain.DefaultNetworkStatusInteractor
+import com.android.wallpaper.picker.network.domain.NetworkStatusInteractor
 import com.android.wallpaper.system.UiModeManagerImpl
 import com.android.wallpaper.system.UiModeManagerWrapper
 import com.android.wallpaper.util.WallpaperParser
@@ -82,6 +86,18 @@ abstract class SharedAppModule {
     @Binds
     @Singleton
     abstract fun bindMyPhotosInteractor(impl: MyPhotosInteractorImpl): MyPhotosInteractor
+
+    @Binds
+    @Singleton
+    abstract fun bindNetworkStatusRepository(
+        impl: DefaultNetworkStatusRepository
+    ): NetworkStatusRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNetworkStatusInteractor(
+        impl: DefaultNetworkStatusInteractor
+    ): NetworkStatusInteractor
 
     @Binds
     @Singleton

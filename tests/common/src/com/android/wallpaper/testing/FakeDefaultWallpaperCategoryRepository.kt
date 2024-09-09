@@ -99,4 +99,8 @@ class FakeDefaultWallpaperCategoryRepository @Inject constructor() : WallpaperCa
                 collectionCategoryData = null
             )
     }
+
+    override suspend fun refreshNetworkCategories() {
+        // empty
+    }
 }

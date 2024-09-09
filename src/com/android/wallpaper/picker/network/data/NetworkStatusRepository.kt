@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.category.domain.interactor
+package com.android.wallpaper.picker.network.data
 
-import com.android.wallpaper.picker.data.category.CategoryModel
 import kotlinx.coroutines.flow.Flow
 
-/**
- * Classes that implement this interface implement the business logic for assembling ungrouped
- * category models
- */
-interface CategoryInteractor {
-    val categories: Flow<List<CategoryModel>>
+/** An interface which allows consumers to collect network status information */
+interface NetworkStatusRepository {
 
-    fun refreshNetworkCategories()
+    /**
+     * Returns a [Flow] that emits the current network connectivity status.
+     *
+     * The flow emits `true` when the network is available (connected) after being unavailable and
+     * `false` otherwise
+     *
+     * The emitted values will update whenever the network status changes.
+     *
+     * @return A [Flow] of [Boolean] representing the network connectivity status.
+     */
+    fun networkStateFlow(): Flow<Boolean>
 }

@@ -35,6 +35,10 @@ import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.di.modules.SharedAppModule
+import com.android.wallpaper.picker.network.data.DefaultNetworkStatusRepository
+import com.android.wallpaper.picker.network.data.NetworkStatusRepository
+import com.android.wallpaper.picker.network.domain.DefaultNetworkStatusInteractor
+import com.android.wallpaper.picker.network.domain.NetworkStatusInteractor
 import com.android.wallpaper.system.UiModeManagerWrapper
 import com.android.wallpaper.testing.FakeCategoriesLoadingStatusInteractor
 import com.android.wallpaper.testing.FakeCategoryInteractor
@@ -87,6 +91,18 @@ internal abstract class SharedAppTestModule {
     abstract fun bindCreativeCategoryInteractor(
         impl: FakeCreativeWallpaperInteractor
     ): CreativeCategoryInteractor
+
+    @Binds
+    @Singleton
+    abstract fun bindNetworkStatusRepository(
+        impl: DefaultNetworkStatusRepository
+    ): NetworkStatusRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNetworkStatusInteractor(
+        impl: DefaultNetworkStatusInteractor
+    ): NetworkStatusInteractor
 
     // Dispatcher and Scope injection choices are based on documentation at
     // http://go/android-dev/kotlin/coroutines/test. Most tests will not need to inject anything
