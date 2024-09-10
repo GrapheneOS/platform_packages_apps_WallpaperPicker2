@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
+import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ComponentName
 import android.content.Context
@@ -87,7 +88,7 @@ constructor(
     liveWallpaperDeleteUtil: LiveWallpaperDeleteUtil,
     @ApplicationContext private val context: Context,
 ) {
-    private var TAG = "PreviewActionsViewModel"
+    private val TAG = "PreviewActionsViewModel"
     private var flags = InjectorProvider.getInjector().getFlags()
     private var EXTENDED_WALLPAPER_EFFECTS_PACKAGE =
         context.getString(R.string.extended_wallpaper_effects_package)
@@ -460,7 +461,11 @@ constructor(
                 Log.d(TAG, "PhotoURI is: $photoUri")
                 photoUri?.let { uri ->
                     intent.putExtra("PHOTO_URI", uri)
-                    context.startActivity(intent)
+                    try {
+                        context.startActivity(intent)
+                    } catch (ex: ActivityNotFoundException) {
+                        Log.e(TAG, "Extended Wallpaper Activity is not available", ex)
+                    }
                 }
             }
         }
