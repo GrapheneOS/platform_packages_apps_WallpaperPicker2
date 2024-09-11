@@ -96,21 +96,24 @@ public class WallpaperPickerDelegate implements MyPhotosStarter {
     }
 
     public void initialize(boolean forceCategoryRefresh) {
-        populateCategories(forceCategoryRefresh);
-        mLiveWallpaperStatusListener = this::updateLiveWallpapersCategories;
-        mThirdPartyStatusListener = this::updateThirdPartyCategories;
-        mPackageStatusNotifier.addListener(
-                mLiveWallpaperStatusListener,
-                WallpaperService.SERVICE_INTERFACE);
-        mPackageStatusNotifier.addListener(mThirdPartyStatusListener, Intent.ACTION_SET_WALLPAPER);
-        if (mDownloadableIntentAction != null) {
-            mDownloadableWallpaperStatusListener = (packageName, status) -> {
-                if (status != PackageStatusNotifier.PackageStatus.REMOVED) {
-                    populateCategories(/* forceRefresh= */ true);
-                }
-            };
+        if (!mFlags.isWallpaperCategoryRefactoringEnabled()) {
+            populateCategories(forceCategoryRefresh);
+            mLiveWallpaperStatusListener = this::updateLiveWallpapersCategories;
+            mThirdPartyStatusListener = this::updateThirdPartyCategories;
             mPackageStatusNotifier.addListener(
-                    mDownloadableWallpaperStatusListener, mDownloadableIntentAction);
+                    mLiveWallpaperStatusListener,
+                    WallpaperService.SERVICE_INTERFACE);
+            mPackageStatusNotifier.addListener(mThirdPartyStatusListener,
+                    Intent.ACTION_SET_WALLPAPER);
+            if (mDownloadableIntentAction != null) {
+                mDownloadableWallpaperStatusListener = (packageName, status) -> {
+                    if (status != PackageStatusNotifier.PackageStatus.REMOVED) {
+                        populateCategories(/* forceRefresh= */ true);
+                    }
+                };
+                mPackageStatusNotifier.addListener(
+                        mDownloadableWallpaperStatusListener, mDownloadableIntentAction);
+            }
         }
     }
 

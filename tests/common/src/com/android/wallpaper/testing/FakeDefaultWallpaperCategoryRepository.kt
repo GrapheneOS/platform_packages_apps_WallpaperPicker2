@@ -16,6 +16,8 @@
 
 package com.android.wallpaper.testing
 
+import com.android.wallpaper.model.Category
+import com.android.wallpaper.model.ImageCategory
 import com.android.wallpaper.picker.category.data.repository.WallpaperCategoryRepository
 import com.android.wallpaper.picker.data.category.CategoryModel
 import com.android.wallpaper.picker.data.category.CommonCategoryData
@@ -42,13 +44,33 @@ class FakeDefaultWallpaperCategoryRepository @Inject constructor() : WallpaperCa
                         CommonCategoryData("On-device-category-1", "on_device_sample_id", 2),
                     thirdPartyCategoryData = null,
                     imageCategoryData = null,
-                    collectionCategoryData = null
+                    collectionCategoryData = null,
                 )
             )
 
     private val _isDefaultCategoriesFetched = MutableStateFlow(true)
     override val isDefaultCategoriesFetched: StateFlow<Boolean> =
         _isDefaultCategoriesFetched.asStateFlow()
+
+    override fun getMyPhotosFetchedCategory(): Category {
+        return ImageCategory("MyPhotos", "MyPhotosCollectionId", 4)
+    }
+
+    override fun getOnDeviceFetchedCategories(): Category? {
+        return null
+    }
+
+    override fun getThirdPartyFetchedCategories(): List<Category> {
+        return emptyList()
+    }
+
+    override fun getSystemFetchedCategories(): List<Category> {
+        return emptyList()
+    }
+
+    override fun getThirdPartyLiveWallpaperFetchedCategories(): List<Category> {
+        return emptyList()
+    }
 
     override val thirdPartyAppCategory: StateFlow<List<CategoryModel>>
         get() =
@@ -58,21 +80,21 @@ class FakeDefaultWallpaperCategoryRepository @Inject constructor() : WallpaperCa
                         commonCategoryData = CommonCategoryData("ThirdParty-1", "on_device_id", 2),
                         thirdPartyCategoryData = null,
                         imageCategoryData = null,
-                        collectionCategoryData = null
+                        collectionCategoryData = null,
                     ),
                     CategoryModel(
                         commonCategoryData = CommonCategoryData("ThirdParty-2", "downloads_id", 3),
                         thirdPartyCategoryData = null,
                         imageCategoryData = null,
-                        collectionCategoryData = null
+                        collectionCategoryData = null,
                     ),
                     CategoryModel(
                         commonCategoryData =
                             CommonCategoryData("ThirdParty-3", "screenshots_id", 4),
                         thirdPartyCategoryData = null,
                         imageCategoryData = null,
-                        collectionCategoryData = null
-                    )
+                        collectionCategoryData = null,
+                    ),
                 )
             )
 
@@ -85,7 +107,7 @@ class FakeDefaultWallpaperCategoryRepository @Inject constructor() : WallpaperCa
                             CommonCategoryData("ThirdPartyLiveWallpaper-1", "on_device_live_id", 2),
                         thirdPartyCategoryData = null,
                         imageCategoryData = null,
-                        collectionCategoryData = null
+                        collectionCategoryData = null,
                     )
                 )
             )
@@ -96,7 +118,7 @@ class FakeDefaultWallpaperCategoryRepository @Inject constructor() : WallpaperCa
                 commonCategoryData = CommonCategoryData("Fake My Photos", "fake_my_photos_id", 1),
                 thirdPartyCategoryData = null,
                 imageCategoryData = null,
-                collectionCategoryData = null
+                collectionCategoryData = null,
             )
     }
 

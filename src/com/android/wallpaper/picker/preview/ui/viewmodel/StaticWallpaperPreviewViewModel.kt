@@ -29,6 +29,7 @@ import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.preview.domain.interactor.WallpaperPreviewInteractor
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
+import com.android.wallpaper.util.DisplaysProvider
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
@@ -40,6 +41,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -56,6 +58,7 @@ constructor(
     private val wallpaperPreferences: WallpaperPreferences,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
     viewModelScope: CoroutineScope,
+    displaysProvider: DisplaysProvider,
 ) {
     /**
      * The state of static wallpaper crop in full preview, before user confirmation.
@@ -115,40 +118,47 @@ constructor(
                 } else {
                     val (dimensions, bitmap, asset) = assetDetail
                     bitmap?.let {
-                        FullResWallpaperViewModel(
-                            bitmap,
-                            dimensions,
-                            asset,
-                            cropHintsInfo,
-                        )
+                        FullResWallpaperViewModel(bitmap, dimensions, asset, cropHintsInfo)
                     }
                 }
             }
             .flowOn(bgDispatcher)
     val subsamplingScaleImageViewModel: Flow<FullResWallpaperViewModel> =
         fullResWallpaperViewModel.filterNotNull()
+
+    // At least as many crops as how many displays, it could be more due to the orientation. Or when
+    // no crops ever set, unblocks down stream for default behavior.
+    private val hasAllDisplayCrops: Flow<Boolean> =
+        cropHintsInfo.map { it == null || it.size >= displaysProvider.getInternalDisplays().size }
+
     // TODO (b/315856338): cache wallpaper colors in preferences
     private val storedWallpaperColors: Flow<WallpaperColors?> =
         staticWallpaperModel
             .map { wallpaperPreferences.getWallpaperColors(it.commonWallpaperData.id.uniqueId) }
             .distinctUntilChanged()
     val wallpaperColors: Flow<WallpaperColorsModel> =
-        combine(storedWallpaperColors, subsamplingScaleImageViewModel, cropHints) {
-            storedColors,
-            wallpaperViewModel,
-            cropHints ->
-            WallpaperColorsModel.Loaded(
-                if (cropHints == null) {
-                    storedColors
-                        ?: interactor.getWallpaperColors(
+        combine(
+                storedWallpaperColors,
+                subsamplingScaleImageViewModel,
+                cropHints,
+                hasAllDisplayCrops.filter { it },
+            ) { storedColors, wallpaperViewModel, cropHints, _ ->
+                WallpaperColorsModel.Loaded(
+                    if (cropHints == null) {
+                        storedColors
+                            ?: interactor.getWallpaperColors(
+                                wallpaperViewModel.rawWallpaperBitmap,
+                                null,
+                            )
+                    } else {
+                        interactor.getWallpaperColors(
                             wallpaperViewModel.rawWallpaperBitmap,
-                            null
+                            cropHints,
                         )
-                } else {
-                    interactor.getWallpaperColors(wallpaperViewModel.rawWallpaperBitmap, cropHints)
-                }
-            )
-        }
+                    }
+                )
+            }
+            .distinctUntilChanged()
 
     /**
      * Updates new cropHints per displaySize that's been confirmed by the user or from a new default
@@ -160,7 +170,7 @@ constructor(
      */
     fun updateCropHintsInfo(
         cropHintsInfo: Map<Point, FullPreviewCropModel>,
-        updateDefaultCrop: Boolean = false
+        updateDefaultCrop: Boolean = false,
     ) {
         val newInfo =
             this.cropHintsInfo.value?.let { currentCropHintsInfo ->
@@ -208,6 +218,7 @@ constructor(
         @ApplicationContext private val context: Context,
         private val wallpaperPreferences: WallpaperPreferences,
         @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
+        private val displaysProvider: DisplaysProvider,
     ) {
         fun create(viewModelScope: CoroutineScope): StaticWallpaperPreviewViewModel {
             return StaticWallpaperPreviewViewModel(
@@ -216,6 +227,7 @@ constructor(
                 wallpaperPreferences = wallpaperPreferences,
                 bgDispatcher = bgDispatcher,
                 viewModelScope = viewModelScope,
+                displaysProvider = displaysProvider,
             )
         }
     }

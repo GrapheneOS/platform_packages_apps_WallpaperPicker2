@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.category.data.repository
 import android.content.Context
 import android.util.Log
 import com.android.wallpaper.config.BaseFlags
+import com.android.wallpaper.model.Category
 import com.android.wallpaper.picker.category.client.DefaultWallpaperCategoryClient
 import com.android.wallpaper.picker.data.category.CategoryModel
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
@@ -39,8 +40,34 @@ constructor(
     @ApplicationContext val context: Context,
     private val defaultWallpaperClient: DefaultWallpaperCategoryClient,
     private val categoryFactory: CategoryFactory,
-    @BackgroundDispatcher private val backgroundScope: CoroutineScope
+    @BackgroundDispatcher private val backgroundScope: CoroutineScope,
 ) : WallpaperCategoryRepository {
+
+    private var myPhotosFetchedCategory: Category? = null
+    private var onDeviceFetchedCategory: Category? = null
+    private var thirdPartyFetchedCategory: List<Category> = emptyList()
+    private var systemFetchedCategories: List<Category> = emptyList()
+    private var thirdPartyLiveWallpaperFetchedCategories: List<Category> = emptyList()
+
+    override fun getMyPhotosFetchedCategory(): Category? {
+        return myPhotosFetchedCategory
+    }
+
+    override fun getOnDeviceFetchedCategories(): Category? {
+        return onDeviceFetchedCategory
+    }
+
+    override fun getThirdPartyFetchedCategories(): List<Category> {
+        return thirdPartyFetchedCategory
+    }
+
+    override fun getSystemFetchedCategories(): List<Category> {
+        return systemFetchedCategories
+    }
+
+    override fun getThirdPartyLiveWallpaperFetchedCategories(): List<Category> {
+        return thirdPartyLiveWallpaperFetchedCategories
+    }
 
     private val _systemCategories = MutableStateFlow<List<CategoryModel>>(emptyList())
     override val systemCategories: StateFlow<List<CategoryModel>> = _systemCategories.asStateFlow()
@@ -87,9 +114,12 @@ constructor(
     private suspend fun fetchThirdPartyLiveWallpaperCategory() {
         try {
             val excludedPackageNames = defaultWallpaperClient.getExcludedLiveWallpaperPackageNames()
-            val fetchedCategories =
+            thirdPartyLiveWallpaperFetchedCategories =
                 defaultWallpaperClient.getThirdPartyLiveWallpaperCategory(excludedPackageNames)
-            val processedCategories = fetchedCategories.map { categoryFactory.getCategoryModel(it) }
+            val processedCategories =
+                thirdPartyLiveWallpaperFetchedCategories.map {
+                    categoryFactory.getCategoryModel(it)
+                }
             _thirdPartyLiveWallpaperCategory.value = processedCategories
         } catch (e: Exception) {
             Log.e(TAG, "Error fetching third party live wallpaper categories", e)
@@ -98,8 +128,9 @@ constructor(
 
     private suspend fun fetchSystemCategories() {
         try {
-            val fetchedCategories = defaultWallpaperClient.getSystemCategories()
-            val processedCategories = fetchedCategories.map { categoryFactory.getCategoryModel(it) }
+            systemFetchedCategories = defaultWallpaperClient.getSystemCategories()
+            val processedCategories =
+                systemFetchedCategories.map { categoryFactory.getCategoryModel(it) }
             _systemCategories.value = processedCategories
         } catch (e: Exception) {
             Log.e(TAG, "Error fetching system categories", e)
@@ -108,8 +139,10 @@ constructor(
 
     override suspend fun fetchMyPhotosCategory() {
         try {
-            val myPhotos = defaultWallpaperClient.getMyPhotosCategory()
-            _myPhotosCategory.value = myPhotos.let { categoryFactory.getCategoryModel(it) }
+            myPhotosFetchedCategory = defaultWallpaperClient.getMyPhotosCategory()
+            myPhotosFetchedCategory.let { category ->
+                _myPhotosCategory.value = category?.let { categoryFactory.getCategoryModel(it) }
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error fetching My Photos category", e)
         }
@@ -119,9 +152,10 @@ constructor(
 
     private suspend fun fetchOnDeviceCategory() {
         try {
-            val onDevice =
+            onDeviceFetchedCategory =
                 (defaultWallpaperClient as? DefaultWallpaperCategoryClient)?.getOnDeviceCategory()
-            _onDeviceCategory.value = onDevice?.let { categoryFactory.getCategoryModel(it) }
+            _onDeviceCategory.value =
+                onDeviceFetchedCategory?.let { categoryFactory.getCategoryModel(it) }
         } catch (e: Exception) {
             Log.e(TAG, "Error fetching On Device category", e)
         }
@@ -130,10 +164,12 @@ constructor(
     private suspend fun fetchThirdPartyAppCategory() {
         try {
             val excludedPackageNames = defaultWallpaperClient.getExcludedThirdPartyPackageNames()
-            val fetchedCategories =
+            thirdPartyFetchedCategory =
                 defaultWallpaperClient.getThirdPartyCategory(excludedPackageNames)
             val processedCategories =
-                fetchedCategories.map { category -> categoryFactory.getCategoryModel(category) }
+                thirdPartyFetchedCategory.map { category ->
+                    categoryFactory.getCategoryModel(category)
+                }
             _thirdPartyAppCategory.value = processedCategories
         } catch (e: Exception) {
             Log.e(TAG, "Error fetching third party app categories", e)

@@ -35,7 +35,9 @@ import com.android.wallpaper.picker.preview.PreviewTestActivity
 import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import com.android.wallpaper.picker.preview.domain.interactor.WallpaperPreviewInteractor
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
-import com.android.wallpaper.testing.FakeLiveWallpaperDownloader
+import com.android.wallpaper.testing.FakeDisplaysProvider
+import com.android.wallpaper.testing.FakeDisplaysProvider.Companion.FOLDABLE_FOLDED
+import com.android.wallpaper.testing.FakeDisplaysProvider.Companion.FOLDABLE_UNFOLDED_LAND
 import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.ShadowWallpaperInfo
 import com.android.wallpaper.testing.TestInjector
@@ -85,7 +87,7 @@ class StaticWallpaperPreviewViewModelTest {
     @Inject lateinit var testInjector: TestInjector
     @Inject lateinit var wallpaperPreferences: TestWallpaperPreferences
     @Inject lateinit var wallpaperClient: FakeWallpaperClient
-    @Inject lateinit var liveWallpaperDownloader: FakeLiveWallpaperDownloader
+    @Inject lateinit var fakeDisplaysProvider: FakeDisplaysProvider
 
     @Before
     fun setUp() {
@@ -113,11 +115,7 @@ class StaticWallpaperPreviewViewModelTest {
                 testDispatcher,
             )
         wallpaperPreviewRepository = WallpaperPreviewRepository(wallpaperPreferences)
-        interactor =
-            WallpaperPreviewInteractor(
-                wallpaperPreviewRepository,
-                wallpaperRepository,
-            )
+        interactor = WallpaperPreviewInteractor(wallpaperPreviewRepository, wallpaperRepository)
         viewModel =
             StaticWallpaperPreviewViewModel(
                 interactor,
@@ -125,6 +123,7 @@ class StaticWallpaperPreviewViewModelTest {
                 wallpaperPreferences,
                 testDispatcher,
                 testScope.backgroundScope,
+                fakeDisplaysProvider,
             )
     }
 
@@ -234,8 +233,8 @@ class StaticWallpaperPreviewViewModelTest {
                 mapOf(
                     createPreviewCropModel(
                         displaySize = Point(1000, 1000),
-                        cropHint = Rect(100, 200, 300, 400)
-                    ),
+                        cropHint = Rect(100, 200, 300, 400),
+                    )
                 )
 
             wallpaperPreviewRepository.setWallpaperModel(testStaticWallpaperModel)
@@ -264,8 +263,8 @@ class StaticWallpaperPreviewViewModelTest {
                 mapOf(
                     createPreviewCropModel(
                         displaySize = Point(1000, 1000),
-                        cropHint = Rect(100, 200, 300, 400)
-                    ),
+                        cropHint = Rect(100, 200, 300, 400),
+                    )
                 )
 
             wallpaperPreviewRepository.setWallpaperModel(testStaticWallpaperModel)
@@ -282,6 +281,42 @@ class StaticWallpaperPreviewViewModelTest {
     }
 
     @Test
+    fun wallpaperColors_missingCrops_shouldNotEmit() =
+        testScope.runTest {
+            fakeDisplaysProvider.setDisplays(listOf(FOLDABLE_FOLDED, FOLDABLE_UNFOLDED_LAND))
+            // cropHintsInfo, hasAllDisplayCrops, cropHints
+            val cropHintsInfo =
+                mapOf(
+                    createPreviewCropModel(
+                        displaySize = FOLDABLE_FOLDED.displaySize,
+                        cropHint = Rect(100, 200, 300, 400),
+                    )
+                )
+            // storedWallpaperColors
+            val WALLPAPER_ID = "testWallpaperId"
+            val storedWallpaperColors =
+                WallpaperColors(
+                    Color.valueOf(Color.RED),
+                    Color.valueOf(Color.GREEN),
+                    Color.valueOf(Color.BLUE),
+                )
+            // subsamplingScaleImageViewModel
+            val testStaticWallpaperModel =
+                WallpaperModelUtils.getStaticWallpaperModel(
+                    wallpaperId = WALLPAPER_ID,
+                    collectionId = "testCollection",
+                )
+
+            viewModel.updateCropHintsInfo(cropHintsInfo)
+            wallpaperPreferences.storeWallpaperColors(WALLPAPER_ID, storedWallpaperColors)
+            wallpaperPreviewRepository.setWallpaperModel(testStaticWallpaperModel)
+            // Run TestAsset.decodeRawDimensions & decodeBitmap handler.post to unblock assetDetail
+            ShadowLooper.runUiThreadTasksIncludingDelayedTasks()
+
+            assertThat(collectLastValue(viewModel.wallpaperColors)()).isNull()
+        }
+
+    @Test
     fun wallpaperColors_withStoredColorsAndNullCropHints_returnsColorsStoredInPreferences() {
         testScope.runTest {
             val WALLPAPER_ID = "testWallpaperId"
@@ -289,7 +324,7 @@ class StaticWallpaperPreviewViewModelTest {
                 WallpaperColors(
                     Color.valueOf(Color.RED),
                     Color.valueOf(Color.GREEN),
-                    Color.valueOf(Color.BLUE)
+                    Color.valueOf(Color.BLUE),
                 )
             val wallpaperColors = collectLastValue(viewModel.wallpaperColors)
             val testStaticWallpaperModel =
@@ -324,7 +359,7 @@ class StaticWallpaperPreviewViewModelTest {
                 WallpaperColors(
                     Color.valueOf(Color.CYAN),
                     Color.valueOf(Color.MAGENTA),
-                    Color.valueOf(Color.YELLOW)
+                    Color.valueOf(Color.YELLOW),
                 )
             val wallpaperColors = collectLastValue(viewModel.wallpaperColors)
             val testStaticWallpaperModel =
@@ -358,13 +393,13 @@ class StaticWallpaperPreviewViewModelTest {
                 WallpaperColors(
                     Color.valueOf(Color.RED),
                     Color.valueOf(Color.GREEN),
-                    Color.valueOf(Color.BLUE)
+                    Color.valueOf(Color.BLUE),
                 )
             val clientWallpaperColors =
                 WallpaperColors(
                     Color.valueOf(Color.CYAN),
                     Color.valueOf(Color.MAGENTA),
-                    Color.valueOf(Color.YELLOW)
+                    Color.valueOf(Color.YELLOW),
                 )
             val wallpaperColors = collectLastValue(viewModel.wallpaperColors)
             val testStaticWallpaperModel =
@@ -376,8 +411,8 @@ class StaticWallpaperPreviewViewModelTest {
                 mapOf(
                     createPreviewCropModel(
                         displaySize = Point(1000, 1000),
-                        cropHint = Rect(100, 200, 300, 400)
-                    ),
+                        cropHint = Rect(100, 200, 300, 400),
+                    )
                 )
 
             wallpaperPreferences.storeWallpaperColors(WALLPAPER_ID, storedWallpaperColors)
@@ -406,7 +441,7 @@ class StaticWallpaperPreviewViewModelTest {
                 WallpaperColors(
                     Color.valueOf(Color.CYAN),
                     Color.valueOf(Color.MAGENTA),
-                    Color.valueOf(Color.YELLOW)
+                    Color.valueOf(Color.YELLOW),
                 )
             val wallpaperColors = collectLastValue(viewModel.wallpaperColors)
             val testStaticWallpaperModel =
@@ -418,8 +453,8 @@ class StaticWallpaperPreviewViewModelTest {
                 mapOf(
                     createPreviewCropModel(
                         displaySize = Point(1000, 1000),
-                        cropHint = Rect(100, 200, 300, 400)
-                    ),
+                        cropHint = Rect(100, 200, 300, 400),
+                    )
                 )
 
             wallpaperClient.setWallpaperColors(clientWallpaperColors)
@@ -445,22 +480,22 @@ class StaticWallpaperPreviewViewModelTest {
         val cropHintA =
             createPreviewCropModel(
                 displaySize = Point(1000, 1000),
-                cropHint = Rect(100, 200, 300, 400)
+                cropHint = Rect(100, 200, 300, 400),
             )
         val cropHintB =
             createPreviewCropModel(
                 displaySize = Point(500, 1500),
-                cropHint = Rect(100, 100, 100, 100)
+                cropHint = Rect(100, 100, 100, 100),
             )
         val cropHintB2 =
             createPreviewCropModel(
                 displaySize = Point(500, 1500),
-                cropHint = Rect(400, 300, 200, 100)
+                cropHint = Rect(400, 300, 200, 100),
             )
         val cropHintC =
             createPreviewCropModel(
                 displaySize = Point(400, 600),
-                cropHint = Rect(200, 200, 200, 200)
+                cropHint = Rect(200, 200, 200, 200),
             )
         val cropHintsInfo = mapOf(cropHintA, cropHintB)
         val additionalCropHintsInfo = mapOf(cropHintB2, cropHintC)
@@ -477,22 +512,22 @@ class StaticWallpaperPreviewViewModelTest {
         val cropHintA =
             createPreviewCropModel(
                 displaySize = Point(1000, 1000),
-                cropHint = Rect(100, 200, 300, 400)
+                cropHint = Rect(100, 200, 300, 400),
             )
         val cropHintB =
             createPreviewCropModel(
                 displaySize = Point(500, 1500),
-                cropHint = Rect(100, 100, 100, 100)
+                cropHint = Rect(100, 100, 100, 100),
             )
         val cropHintB2 =
             createPreviewCropModel(
                 displaySize = Point(500, 1500),
-                cropHint = Rect(400, 300, 200, 100)
+                cropHint = Rect(400, 300, 200, 100),
             )
         val cropHintC =
             createPreviewCropModel(
                 displaySize = Point(400, 600),
-                cropHint = Rect(200, 200, 200, 200)
+                cropHint = Rect(200, 200, 200, 200),
             )
         val cropHintsInfo = mapOf(cropHintA, cropHintB)
         val additionalCropHintsInfo = mapOf(cropHintB2, cropHintC)
@@ -509,17 +544,17 @@ class StaticWallpaperPreviewViewModelTest {
         val cropHintA =
             createPreviewCropModel(
                 displaySize = Point(1000, 1000),
-                cropHint = Rect(100, 200, 300, 400)
+                cropHint = Rect(100, 200, 300, 400),
             )
         val cropHintB =
             createPreviewCropModel(
                 displaySize = Point(500, 1500),
-                cropHint = Rect(100, 100, 100, 100)
+                cropHint = Rect(100, 100, 100, 100),
             )
         val cropHintB2 =
             createPreviewCropModel(
                 displaySize = Point(500, 1500),
-                cropHint = Rect(400, 300, 200, 100)
+                cropHint = Rect(400, 300, 200, 100),
             )
         val cropHintsInfo = mapOf(cropHintA, cropHintB)
 
@@ -534,17 +569,17 @@ class StaticWallpaperPreviewViewModelTest {
         val cropHintA =
             createPreviewCropModel(
                 displaySize = Point(1000, 1000),
-                cropHint = Rect(100, 200, 300, 400)
+                cropHint = Rect(100, 200, 300, 400),
             )
         val cropHintB =
             createPreviewCropModel(
                 displaySize = Point(500, 1500),
-                cropHint = Rect(100, 100, 100, 100)
+                cropHint = Rect(100, 100, 100, 100),
             )
         val cropHintC =
             createPreviewCropModel(
                 displaySize = Point(400, 600),
-                cropHint = Rect(200, 200, 200, 200)
+                cropHint = Rect(200, 200, 200, 200),
             )
         val cropHintsInfo = mapOf(cropHintA, cropHintB)
         val expectedCropHintsInfo = mapOf(cropHintA, cropHintB, cropHintC)
@@ -557,14 +592,8 @@ class StaticWallpaperPreviewViewModelTest {
 
     private fun createPreviewCropModel(
         displaySize: Point,
-        cropHint: Rect
+        cropHint: Rect,
     ): Pair<Point, FullPreviewCropModel> {
-        return Pair(
-            displaySize,
-            FullPreviewCropModel(
-                cropHint = cropHint,
-                cropSizeModel = null,
-            ),
-        )
+        return Pair(displaySize, FullPreviewCropModel(cropHint = cropHint, cropSizeModel = null))
     }
 }

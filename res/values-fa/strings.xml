@@ -58,10 +58,10 @@
     <string name="wallpaper_disabled_by_administrator_message" msgid="1551430406714747884">"تنظیم کاغذدیواری توسط سرپرست دستگاهتان غیرفعال شده است"</string>
     <string name="wallpaper_set_successfully_message" msgid="2958998799111688578">"کاغذدیواری باموفقیت تنظیم شد"</string>
     <string name="wallpapers_unavailable_offline_message" msgid="8136405438621689532">"برای دیدن کاغذدیواری‌ها به اتصال اینترنت نیاز دارید. لطفاً به اینترنت متصل شوید و دوباره امتحان کنید."</string>
-    <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"تصویر کوچک کاغذ‌دیواری صفحه اصلی درحال حاضر تنظیم شده است"</string>
-    <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"تصویر کوچک کاغذ‌دیواری صفحه در حالت قفل درحال حاضر تنظیم شده است"</string>
-    <string name="currently_set_wallpaper_thumbnail" msgid="8651887838745545107">"تصویر کوچک کاغذ‌دیواری درحال حاضر تنظیم شده است"</string>
-    <string name="wallpaper_thumbnail" msgid="569931475923605974">"تصویر کوچک کاغذ‌دیواری"</string>
+    <string name="currently_set_home_wallpaper_thumbnail" msgid="4022381436821898917">"ریزعکس کاغذ‌دیواری صفحه اصلی درحال حاضر تنظیم شده است"</string>
+    <string name="currently_set_lock_wallpaper_thumbnail" msgid="2094209303934569997">"ریزعکس کاغذ‌دیواری صفحه در حالت قفل درحال حاضر تنظیم شده است"</string>
+    <string name="currently_set_wallpaper_thumbnail" msgid="8651887838745545107">"ریزعکس کاغذ‌دیواری درحال حاضر تنظیم شده است"</string>
+    <string name="wallpaper_thumbnail" msgid="569931475923605974">"ریزعکس کاغذ‌دیواری"</string>
     <string name="explore_home_screen" msgid="8756346794535765482">"کاوش کاغذ‌دیواری صفحه اصلی"</string>
     <string name="explore_lock_screen" msgid="268938342103703665">"کاوش کاغذ‌دیواری صفحه در حالت قفل"</string>
     <string name="refresh_daily_wallpaper_home_content_description" msgid="2770445044556164259">"بازآوری کاغذدیواری روزانه در صفحه اصلی"</string>

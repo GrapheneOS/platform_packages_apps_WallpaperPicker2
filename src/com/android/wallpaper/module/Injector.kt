@@ -32,6 +32,7 @@ import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
 import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosIntentProvider
+import com.android.wallpaper.picker.category.wrapper.WallpaperCategoryWrapper
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.data.repository.WallpaperColorsRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
@@ -118,9 +119,7 @@ interface Injector {
 
     fun getUndoInteractor(context: Context, lifecycleOwner: LifecycleOwner): UndoInteractor
 
-    fun getSnapshotRestorers(
-        context: Context,
-    ): Map<Int, SnapshotRestorer> {
+    fun getSnapshotRestorers(context: Context): Map<Int, SnapshotRestorer> {
         // Empty because we don't support undoing in WallpaperPicker2.
         return HashMap()
     }
@@ -133,9 +132,11 @@ interface Injector {
 
     fun getWallpaperColorsRepository(): WallpaperColorsRepository
 
+    fun getWallpaperCategoryWrapper(): WallpaperCategoryWrapper
+
     fun getWallpaperColorResources(
         wallpaperColors: WallpaperColors,
-        context: Context
+        context: Context,
     ): WallpaperColorResources
 
     fun getMyPhotosIntentProvider(): MyPhotosIntentProvider
