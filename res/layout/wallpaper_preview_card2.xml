@@ -19,24 +19,39 @@
     android:layout_height="match_parent"
     android:clipChildren="false">
 
-    <com.android.wallpaper.picker.customization.ui.view.PreviewCardView
-        android:id="@+id/preview_card"
-        style="@style/FullContentPreviewCard"
+    <com.android.wallpaper.picker.preview.ui.view.FullPreviewFrameLayout
+        android:id="@+id/wallpaper_preview_crop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipChildren="true"
-        android:layout_gravity="center"
-        android:contentDescription="@string/wallpaper_preview_card_content_description">
+        android:layout_gravity="center">
 
-        <com.android.wallpaper.picker.common.preview.ui.view.CustomizationSurfaceView
-            android:id="@+id/wallpaper_surface"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <com.android.wallpaper.picker.common.preview.ui.view.CustomizationSurfaceView
-            android:id="@+id/workspace_surface"
+        <com.android.wallpaper.picker.customization.ui.view.PreviewCardView
+            android:id="@+id/preview_card"
+            android:importantForAccessibility="no"
+            style="@style/FullContentPreviewCard"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:importantForAccessibility="noHideDescendants" />
-    </com.android.wallpaper.picker.customization.ui.view.PreviewCardView>
+            android:clipChildren="true"
+            android:contentDescription="@string/wallpaper_preview_card_content_description">
+
+            <com.android.wallpaper.picker.common.preview.ui.view.CustomizationSurfaceView
+                android:id="@+id/wallpaper_surface"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <com.android.wallpaper.picker.common.preview.ui.view.CustomizationSurfaceView
+                android:id="@+id/workspace_surface"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="noHideDescendants" />
+
+            <View
+                android:id="@+id/preview_scrim"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_black_scrim"
+                android:importantForAccessibility="noHideDescendants"
+                android:visibility="gone" />
+        </com.android.wallpaper.picker.customization.ui.view.PreviewCardView>
+    </com.android.wallpaper.picker.preview.ui.view.FullPreviewFrameLayout>
 </com.android.wallpaper.picker.DisplayAspectRatioFrameLayout>

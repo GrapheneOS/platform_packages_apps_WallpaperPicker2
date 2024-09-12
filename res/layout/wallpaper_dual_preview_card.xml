@@ -14,12 +14,15 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.wallpaper.picker.preview.ui.view.FullPreviewFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/wallpaper_preview_crop"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/preview_card"
+        android:importantForAccessibility="no"
         style="@style/FullContentPreviewCard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,5 +39,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:importantForAccessibility="noHideDescendants"/>
+
+        <View
+            android:id="@+id/preview_scrim"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_black_scrim"
+            android:importantForAccessibility="noHideDescendants"
+            android:visibility="gone" />
     </androidx.cardview.widget.CardView>
-</FrameLayout>
+</com.android.wallpaper.picker.preview.ui.view.FullPreviewFrameLayout>

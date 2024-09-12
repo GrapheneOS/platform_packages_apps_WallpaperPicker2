@@ -27,7 +27,7 @@ the header bar -->
         layout="@layout/wallpaper_preview_card2" />
 
     <ViewStub
-        android:id="@+id/tooltip_stub"
+        android:id="@+id/small_preview_tooltip_stub"
         android:inflatedId="@+id/tooltip"
         android:layout="@layout/tooltip_small_preview"
         android:layout_height="wrap_content"

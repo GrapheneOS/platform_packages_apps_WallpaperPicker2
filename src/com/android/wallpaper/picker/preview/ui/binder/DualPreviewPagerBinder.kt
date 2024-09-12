@@ -103,7 +103,7 @@ object DualPreviewPagerBinder {
             view.tag = positionLTR
 
             PreviewTooltipBinder.bindSmallPreviewTooltip(
-                tooltipStub = view.requireViewById(R.id.tooltip_stub),
+                tooltipStub = view.requireViewById(R.id.small_preview_tooltip_stub),
                 viewModel = wallpaperPreviewViewModel.smallTooltipViewModel,
                 lifecycleOwner = viewLifecycleOwner,
             )
@@ -155,7 +155,7 @@ object DualPreviewPagerBinder {
                 override fun onPageScrolled(
                     position: Int,
                     positionOffset: Float,
-                    positionOffsetPixels: Int
+                    positionOffsetPixels: Int,
                 ) {}
 
                 override fun onPageScrollStateChanged(state: Int) {}

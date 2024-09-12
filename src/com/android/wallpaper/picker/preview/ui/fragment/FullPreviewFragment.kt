@@ -67,7 +67,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         currentView = inflater.inflate(R.layout.fragment_full_preview, container, false)
         setUpToolbar(currentView, true, true)
@@ -75,7 +75,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
         val previewCard: CardView = currentView.requireViewById(R.id.preview_card)
         ViewCompat.setTransitionName(
             previewCard,
-            SmallPreviewFragment.FULL_PREVIEW_SHARED_ELEMENT_ID
+            SmallPreviewFragment.FULL_PREVIEW_SHARED_ELEMENT_ID,
         )
 
         FullWallpaperPreviewBinder.bind(
@@ -108,7 +108,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
         )
 
         PreviewTooltipBinder.bindFullPreviewTooltip(
-            tooltipStub = currentView.requireViewById(R.id.tooltip_stub),
+            tooltipStub = currentView.requireViewById(R.id.full_preview_tooltip_stub),
             viewModel = wallpaperPreviewViewModel.fullTooltipViewModel,
             lifecycleOwner = viewLifecycleOwner,
         )

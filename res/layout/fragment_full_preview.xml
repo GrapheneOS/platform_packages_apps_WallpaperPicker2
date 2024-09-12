@@ -60,7 +60,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ViewStub
-        android:id="@+id/tooltip_stub"
+        android:id="@+id/full_preview_tooltip_stub"
         android:inflatedId="@+id/tooltip"
         android:layout="@layout/tooltip_full_preview"
         android:layout_height="match_parent"

@@ -15,6 +15,8 @@
  */
 package com.android.wallpaper.picker.preview.ui.fragment
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -131,9 +133,12 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
         SetWallpaperProgressDialogBinder.bind(
             viewModel = wallpaperPreviewViewModel,
-            activity = requireActivity(),
             lifecycleOwner = viewLifecycleOwner,
-        )
+        ) { visible ->
+            activity?.let {
+                createSetWallpaperProgressDialog(it).apply { if (visible) show() else hide() }
+            }
+        }
 
         currentView.doOnPreDraw {
             // FullPreviewConfigViewModel not being null indicates that we are navigated to small
@@ -153,7 +158,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                     override fun parseResult(resultCode: Int, intent: Intent?): Int {
                         return resultCode
                     }
-                },
+                }
             ) {
                 currentView
                     .findViewById<PreviewActionGroup>(R.id.action_button_group)
@@ -201,10 +206,16 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         return ContextCompat.getColor(requireContext(), R.color.system_on_surface)
     }
 
+    private fun createSetWallpaperProgressDialog(activity: Activity): AlertDialog {
+        val dialogView =
+            activity.layoutInflater.inflate(R.layout.set_wallpaper_progress_dialog_view, null)
+        return AlertDialog.Builder(activity).setView(dialogView).create()
+    }
+
     private fun bindScreenPreview(
         view: View,
         motionLayout: MotionLayout?,
-        isFirstBindingDeferred: CompletableDeferred<Boolean>
+        isFirstBindingDeferred: CompletableDeferred<Boolean>,
     ) {
         val currentNavDestId = checkNotNull(findNavController().currentDestination?.id)
         val tabs = view.findViewById<PreviewTabs>(preview_tabs_container)

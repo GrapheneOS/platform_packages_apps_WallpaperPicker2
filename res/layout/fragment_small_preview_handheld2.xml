@@ -45,7 +45,7 @@
         android:elevation="@dimen/wallpaper_preview_buttons_elevation"
         android:gravity="center"
         android:minHeight="@dimen/touch_target_min_height"
-        android:text="@string/set_wallpaper_button_text"
+        android:text="@string/next_page_content_description"
         android:textColor="@color/system_on_primary"
         android:textAppearance="@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps"
         app:layout_constraintEnd_toEndOf="parent"
@@ -85,4 +85,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </androidx.constraintlayout.motion.widget.MotionLayout>
+
+    <ViewStub
+        android:id="@+id/full_preview_tooltip_stub"
+        android:inflatedId="@+id/tooltip"
+        android:layout="@layout/tooltip_full_preview"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
