@@ -42,6 +42,33 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
+    <!-- Main themes for the new customization picker UI -->
+    <style name="WallpaperTheme2" parent="@android:style/Theme.DeviceDefault.Settings">
+        <item name="colorPrimary">?android:colorPrimary</item>
+        <item name="colorControlActivated">?attr/colorPrimary</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarDividerColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <item name="actionBarSize">?android:attr/actionBarSize</item>
+        <item name="homeAsUpIndicator">@drawable/material_ic_arrow_back_black_24</item>
+
+        <item name="selectableItemBackground">?android:attr/selectableItemBackground</item>
+        <item name="dialogPreferredPadding">24dp</item>
+        <item name="colorControlHighlight">@color/ripple_material_dark</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="toolbarNavigationButtonStyle">@android:style/Widget.Toolbar.Button.Navigation
+        </item>
+        <item name="buttonStyle">@style/Widget.AppCompat.Button</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:fitsSystemWindows">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
     <style name="WallpaperTheme.NoBackground">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>

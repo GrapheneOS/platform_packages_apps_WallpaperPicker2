@@ -63,7 +63,6 @@
         android:minHeight="@dimen/touch_target_min_height"
         android:layout_marginEnd="@dimen/apply_button_end_margin"
         android:background="@drawable/apply_button_background_variant"
-        android:gravity="center"
         android:text="@string/apply_btn"
         android:textColor="@color/system_on_primary"
         android:textAppearance="@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps"
