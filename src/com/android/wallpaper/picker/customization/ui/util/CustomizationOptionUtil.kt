@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.customization.ui.util
 
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.android.wallpaper.model.Screen
@@ -36,6 +37,11 @@ interface CustomizationOptionUtil {
 
     fun initFloatingSheet(
         bottomSheetContainer: FrameLayout,
-        layoutInflater: LayoutInflater
+        layoutInflater: LayoutInflater,
     ): Map<CustomizationOption, View>
+
+    fun createClockPreviewAndAddToParent(
+        parentView: ViewGroup,
+        layoutInflater: LayoutInflater,
+    ): View?
 }

@@ -26,6 +26,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.systemui.shared.clocks.shared.model.ClockPreviewConstants
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START
 import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_HIGHLIGHT_QUICK_AFFORDANCES
 import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_INITIALLY_SELECTED_SLOT_ID
@@ -100,6 +101,7 @@ object WorkspacePreviewBinder {
                     lifecycleOwner.lifecycleScope.launch {
                         renderWorkspacePreview(
                                 surfaceView = surfaceView,
+                                screen = screen,
                                 previewUtils = previewUtils,
                                 displayId =
                                     viewModel.basePreviewViewModel.getDisplayId(deviceDisplayType),
@@ -126,6 +128,7 @@ object WorkspacePreviewBinder {
 
     private suspend fun renderWorkspacePreview(
         surfaceView: SurfaceView,
+        screen: Screen,
         previewUtils: PreviewUtils,
         displayId: Int,
         wallpaperColors: WallpaperColors? = null,
@@ -139,20 +142,22 @@ object WorkspacePreviewBinder {
             val surfacePosition = surfaceView.holder.surfaceFrame
             val extras =
                 bundleOf(
-                    Pair(SurfaceViewUtils.KEY_DISPLAY_ID, displayId),
-                    Pair(SurfaceViewUtils.KEY_VIEW_WIDTH, surfacePosition.width()),
-                    Pair(SurfaceViewUtils.KEY_VIEW_HEIGHT, surfacePosition.height()),
-                    Pair(KEY_INITIALLY_SELECTED_SLOT_ID, SLOT_ID_BOTTOM_START),
-                    Pair(KEY_HIGHLIGHT_QUICK_AFFORDANCES, false),
-                )
+                        Pair(SurfaceViewUtils.KEY_DISPLAY_ID, displayId),
+                        Pair(SurfaceViewUtils.KEY_VIEW_WIDTH, surfacePosition.width()),
+                        Pair(SurfaceViewUtils.KEY_VIEW_HEIGHT, surfacePosition.height()),
+                    )
+                    .apply {
+                        if (screen == Screen.LOCK_SCREEN) {
+                            putBoolean(ClockPreviewConstants.KEY_HIDE_CLOCK, true)
+                            putString(KEY_INITIALLY_SELECTED_SLOT_ID, SLOT_ID_BOTTOM_START)
+                            putBoolean(KEY_HIGHLIGHT_QUICK_AFFORDANCES, false)
+                        }
+                    }
+
             wallpaperColors?.let {
                 extras.putParcelable(SurfaceViewUtils.KEY_WALLPAPER_COLORS, wallpaperColors)
             }
-            val request =
-                SurfaceViewUtils.createSurfaceViewRequest(
-                    surfaceView,
-                    extras,
-                )
+            val request = SurfaceViewUtils.createSurfaceViewRequest(surfaceView, extras)
             workspaceCallback = suspendCancellableCoroutine { continuation ->
                 previewUtils.renderPreview(
                     request,
@@ -166,7 +171,7 @@ object WorkspacePreviewBinder {
                                         Log.w(
                                             TAG,
                                             "Result bundle from rendering preview does not contain " +
-                                                "a child surface package."
+                                                "a child surface package.",
                                         )
                                     }
                                 }
@@ -176,7 +181,7 @@ object WorkspacePreviewBinder {
                                 continuation.resume(null)
                             }
                         }
-                    }
+                    },
                 )
             }
         }
@@ -185,7 +190,7 @@ object WorkspacePreviewBinder {
 
     private fun getPreviewUtils(
         screen: Screen,
-        previewViewModel: BasePreviewViewModel
+        previewViewModel: BasePreviewViewModel,
     ): PreviewUtils =
         when (screen) {
             Screen.HOME_SCREEN -> {

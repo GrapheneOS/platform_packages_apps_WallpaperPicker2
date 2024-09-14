@@ -21,6 +21,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.widget.TextViewCompat
 import androidx.lifecycle.LifecycleOwner
+import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.wallpaper.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
@@ -88,5 +89,14 @@ class DefaultCustomizationOptionsBinder @Inject constructor() : CustomizationOpt
             },
             lifecycleOwner = lifecycleOwner,
         )
+    }
+
+    override fun bindClockPreview(
+        clockHostView: View,
+        viewModel: CustomizationPickerViewModel2,
+        lifecycleOwner: LifecycleOwner,
+        clockViewFactory: ClockViewFactory,
+    ) {
+        // Do nothing intended
     }
 }

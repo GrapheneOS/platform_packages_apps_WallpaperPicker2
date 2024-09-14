@@ -23,6 +23,7 @@ import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.Button
 import android.widget.FrameLayout
@@ -43,6 +44,7 @@ import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.wallpaper.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.Screen.HOME_SCREEN
@@ -91,6 +93,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
     @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
     @Inject lateinit var wallpaperConnectionUtils: WallpaperConnectionUtils
     @Inject lateinit var colorUpdateViewModel: ColorUpdateViewModel
+    @Inject lateinit var clockViewFactory: ClockViewFactory
 
     private var fullyCollapsed = false
     private var navBarHeight: Int = 0
@@ -253,7 +256,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
     }
 
     private fun initCustomizationOptionEntries(
-        screen: Screen,
+        screen: Screen
     ): List<Pair<CustomizationOption, View>> {
         val optionEntriesContainer =
             requireViewById<LinearLayout>(
@@ -290,6 +293,24 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
                         HOME_SCREEN
                     }
 
+                if (screen == LOCK_SCREEN) {
+                    val clockHostView =
+                        (previewCard.parent as? ViewGroup)?.let {
+                            customizationOptionUtil.createClockPreviewAndAddToParent(
+                                it,
+                                layoutInflater,
+                            )
+                        }
+                    if (clockHostView != null) {
+                        customizationOptionsBinder.bindClockPreview(
+                            clockHostView = clockHostView,
+                            viewModel = customizationPickerViewModel,
+                            lifecycleOwner = this@CustomizationPickerActivity2,
+                            clockViewFactory = clockViewFactory,
+                        )
+                    }
+                }
+
                 BasePreviewBinder.bind(
                     applicationContext = applicationContext,
                     view = previewCard,
@@ -322,7 +343,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
                                 isNewTask = isMultiPanel,
                             )
                         )
-                    }
+                    },
                 )
             }
             // Disable over scroll
@@ -355,7 +376,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
     private fun setCustomizationOptionFloatingSheet(
         motionContainer: MotionLayout,
         option: CustomizationOption,
-        onComplete: () -> Unit
+        onComplete: () -> Unit,
     ) {
         val view = customizationOptionFloatingSheetViewMap?.get(option) ?: return
 
@@ -372,14 +393,14 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
             motionContainer.getConstraintSet(R.id.expanded_header_primary)?.apply {
                 setTranslationY(
                     R.id.customization_option_floating_sheet_container,
-                    height.toFloat()
+                    height.toFloat(),
                 )
                 setAlpha(R.id.customization_option_floating_sheet_container, 0.0f)
                 connect(
                     R.id.customization_option_floating_sheet_container,
                     ConstraintSet.BOTTOM,
                     R.id.picker_motion_layout,
-                    ConstraintSet.BOTTOM
+                    ConstraintSet.BOTTOM,
                 )
                 constrainHeight(
                     R.id.customization_option_floating_sheet_container,
@@ -389,14 +410,14 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
             motionContainer.getConstraintSet(R.id.collapsed_header_primary)?.apply {
                 setTranslationY(
                     R.id.customization_option_floating_sheet_container,
-                    height.toFloat()
+                    height.toFloat(),
                 )
                 setAlpha(R.id.customization_option_floating_sheet_container, 0.0f)
                 connect(
                     R.id.customization_option_floating_sheet_container,
                     ConstraintSet.BOTTOM,
                     R.id.picker_motion_layout,
-                    ConstraintSet.BOTTOM
+                    ConstraintSet.BOTTOM,
                 )
                 constrainHeight(
                     R.id.customization_option_floating_sheet_container,
@@ -404,10 +425,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
                 )
             }
             motionContainer.getConstraintSet(R.id.secondary)?.apply {
-                setTranslationY(
-                    R.id.customization_option_floating_sheet_container,
-                    0.0f,
-                )
+                setTranslationY(R.id.customization_option_floating_sheet_container, 0.0f)
                 setAlpha(R.id.customization_option_floating_sheet_container, 1.0f)
                 constrainHeight(
                     R.id.customization_option_floating_sheet_container,
@@ -452,7 +470,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
             motionLayout: MotionLayout?,
             startId: Int,
             endId: Int,
-            progress: Float
+            progress: Float,
         ) {
             // Do nothing intended
         }
@@ -465,7 +483,7 @@ class CustomizationPickerActivity2 : Hilt_CustomizationPickerActivity2() {
             motionLayout: MotionLayout?,
             triggerId: Int,
             positive: Boolean,
-            progress: Float
+            progress: Float,
         ) {
             // Do nothing intended
         }

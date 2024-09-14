@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.customization.ui.util
 
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.android.wallpaper.R
@@ -32,14 +33,12 @@ import javax.inject.Inject
 class DefaultCustomizationOptionUtil @Inject constructor() : CustomizationOptionUtil {
 
     enum class DefaultLockCustomizationOption : CustomizationOption {
-        WALLPAPER,
+        WALLPAPER
     }
 
     enum class DefaultHomeCustomizationOption : CustomizationOption {
-        WALLPAPER,
+        WALLPAPER
     }
-
-    private var viewMap: Map<CustomizationOption, View>? = null
 
     override fun getOptionEntries(
         screen: Screen,
@@ -53,7 +52,7 @@ class DefaultCustomizationOptionUtil @Inject constructor() : CustomizationOption
                         layoutInflater.inflate(
                             R.layout.customization_option_entry_wallpaper,
                             optionContainer,
-                            false
+                            false,
                         )
                 )
             HOME_SCREEN ->
@@ -62,7 +61,7 @@ class DefaultCustomizationOptionUtil @Inject constructor() : CustomizationOption
                         layoutInflater.inflate(
                             R.layout.customization_option_entry_wallpaper,
                             optionContainer,
-                            false
+                            false,
                         )
                 )
         }
@@ -71,4 +70,11 @@ class DefaultCustomizationOptionUtil @Inject constructor() : CustomizationOption
         bottomSheetContainer: FrameLayout,
         layoutInflater: LayoutInflater,
     ): Map<CustomizationOption, View> = mapOf()
+
+    override fun createClockPreviewAndAddToParent(
+        parentView: ViewGroup,
+        layoutInflater: LayoutInflater,
+    ): View? {
+        return null
+    }
 }
