@@ -1,5 +1,5 @@
 package: "com.android.wallpaper"
-container: "system_ext"
+container: "system"
 
 flag {
     name: "wallpaper_restorer_flag"

@@ -1,7 +1,7 @@
 aconfig_declarations {
     name: "com_android_wallpaper_flags",
     package: "com.android.wallpaper",
-    container: "system_ext",
+    container: "system",
     srcs: ["customization_picker.aconfig"],
 }
 
