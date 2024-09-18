@@ -29,7 +29,6 @@ import android.util.Log
 import com.android.wallpaper.R
 import com.android.wallpaper.effects.Effect
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
-import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.data.CreativeWallpaperData
 import com.android.wallpaper.picker.data.LiveWallpaperData
 import com.android.wallpaper.picker.data.WallpaperModel
@@ -75,7 +74,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
@@ -89,7 +87,6 @@ constructor(
     @ApplicationContext private val context: Context,
 ) {
     private val TAG = "PreviewActionsViewModel"
-    private var flags = InjectorProvider.getInjector().getFlags()
     private var EXTENDED_WALLPAPER_EFFECTS_PACKAGE =
         context.getString(R.string.extended_wallpaper_effects_package)
     private var EXTENDED_WALLPAPER_EFFECTS_ACTIVITY =
@@ -267,10 +264,7 @@ constructor(
                         null
                     }
                     else -> {
-                        getImageEffectFloatingSheetViewModel(
-                            imageEffect,
-                            imageEffectsModel,
-                        )
+                        getImageEffectFloatingSheetViewModel(imageEffect, imageEffectsModel)
                     }
                 }
             }
@@ -350,7 +344,7 @@ constructor(
             object : EffectSwitchListener {
                 override fun onEffectSwitchChanged(
                     effect: EffectEnumInterface,
-                    isChecked: Boolean
+                    isChecked: Boolean,
                 ) {
                     if (interactor.isTargetEffect(effect)) {
                         if (isChecked) {
@@ -414,27 +408,30 @@ constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val onEffectsClicked: Flow<(() -> Unit)?> =
-        combine(isEffectsVisible, isEffectsChecked) { show, isChecked ->
-                if (show) {
-                    {
+        combine(isEffectsVisible, isEffectsChecked, imageEffectFloatingSheetViewModel) {
+            isVisible,
+            isChecked,
+            imageEffect ->
+            if (isVisible) {
+                val intent = buildExtendedWallpaperIntent()
+                val isIntentValid =
+                    intent.resolveActivityInfo(context.getPackageManager(), 0) != null
+                if (imageEffect != null && isIntentValid) {
+                    { launchExtendedWallpaperEffects() }
+                } else {
+                    fun() {
                         if (!isChecked) {
                             uncheckAllOthersExcept(EFFECTS)
                         }
                         _isEffectsChecked.value = !isChecked
                     }
-                } else {
-                    null
                 }
+            } else {
+                null
             }
-            .flatMapLatest { action ->
-                if (flags.isMagicPortraitEnabled()) {
-                    launchExtendedWallpaperEffects()
-                } else {
-                    flow { action?.let { emit(it) } }
-                }
-            }
+        }
 
-    private fun launchExtendedWallpaperEffects(): Flow<() -> Unit> {
+    private fun launchExtendedWallpaperEffects() {
         val previewedWallpaperModel = interactor.wallpaperModel.value
         var photoUri: Uri? = null
         if (
@@ -444,30 +441,31 @@ constructor(
             photoUri = previewedWallpaperModel.imageWallpaperData.uri
         }
 
-        return flow {
-            emit {
-                val intent = Intent()
-                intent.component =
-                    ComponentName(
-                        EXTENDED_WALLPAPER_EFFECTS_PACKAGE,
-                        EXTENDED_WALLPAPER_EFFECTS_ACTIVITY
-                    )
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                context.grantUriPermission(
-                    EXTENDED_WALLPAPER_EFFECTS_PACKAGE,
-                    photoUri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
-                Log.d(TAG, "PhotoURI is: $photoUri")
-                photoUri?.let { uri ->
-                    intent.putExtra("PHOTO_URI", uri)
-                    try {
-                        context.startActivity(intent)
-                    } catch (ex: ActivityNotFoundException) {
-                        Log.e(TAG, "Extended Wallpaper Activity is not available", ex)
-                    }
-                }
+        val intent = buildExtendedWallpaperIntent()
+        context.grantUriPermission(
+            EXTENDED_WALLPAPER_EFFECTS_PACKAGE,
+            photoUri,
+            Intent.FLAG_GRANT_READ_URI_PERMISSION,
+        )
+        Log.d(TAG, "PhotoURI is: $photoUri")
+        photoUri?.let { uri ->
+            intent.putExtra("PHOTO_URI", uri)
+            try {
+                context.startActivity(intent)
+            } catch (ex: ActivityNotFoundException) {
+                Log.e(TAG, "Extended Wallpaper Activity is not available", ex)
             }
+        }
+    }
+
+    private fun buildExtendedWallpaperIntent(): Intent {
+        return Intent().apply {
+            component =
+                ComponentName(
+                    EXTENDED_WALLPAPER_EFFECTS_PACKAGE,
+                    EXTENDED_WALLPAPER_EFFECTS_ACTIVITY,
+                )
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
     }
 
@@ -637,7 +635,7 @@ constructor(
             flow5: Flow<T5>,
             flow6: Flow<T6>,
             flow7: Flow<T7>,
-            crossinline transform: suspend (T1, T2, T3, T4, T5, T6, T7) -> R
+            crossinline transform: suspend (T1, T2, T3, T4, T5, T6, T7) -> R,
         ): Flow<R> {
             return combine(flow, flow2, flow3, flow4, flow5, flow6, flow7) { args: Array<*> ->
                 @Suppress("UNCHECKED_CAST")
