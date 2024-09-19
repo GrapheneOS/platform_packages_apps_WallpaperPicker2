@@ -15,9 +15,9 @@
  */
 package com.android.wallpaper.util;
 
-import static com.android.wallpaper.util.LaunchSourceUtils.LAUNCH_SETTINGS_SEARCH;
 import static com.android.wallpaper.util.LaunchSourceUtils.LAUNCH_SOURCE_SETTINGS;
 import static com.android.wallpaper.util.LaunchSourceUtils.LAUNCH_SOURCE_SETTINGS_HOMEPAGE;
+import static com.android.wallpaper.util.LaunchSourceUtils.LAUNCH_SOURCE_SETTINGS_SEARCH;
 import static com.android.wallpaper.util.LaunchSourceUtils.WALLPAPER_LAUNCH_SOURCE;
 
 import android.app.Activity;
@@ -28,6 +28,8 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.android.wallpaper.R;
 
@@ -66,6 +68,10 @@ public final class ActivityUtils {
      * @param intent activity intent.
      */
     public static boolean isLaunchedFromSettingsRelated(Intent intent) {
+        if (intent == null) {
+            return false;
+        }
+
         return isLaunchedFromSettings(intent) || isLaunchedFromSettingsSearch(intent);
     }
 
@@ -84,10 +90,11 @@ public final class ActivityUtils {
      *
      * @param intent activity intent.
      */
-    private static boolean isLaunchedFromSettings(Intent intent) {
-        return (intent != null && TextUtils.equals(LAUNCH_SOURCE_SETTINGS,
-                intent.getStringExtra(WALLPAPER_LAUNCH_SOURCE)));
+    private static boolean isLaunchedFromSettings(@NonNull Intent intent) {
+        return TextUtils.equals(LAUNCH_SOURCE_SETTINGS,
+                    intent.getStringExtra(WALLPAPER_LAUNCH_SOURCE));
     }
+
 
     private static boolean isLaunchedFromSettingsHome(Intent intent) {
         return (intent != null && intent.getBooleanExtra(LAUNCH_SOURCE_SETTINGS_HOMEPAGE, false));
@@ -98,9 +105,11 @@ public final class ActivityUtils {
      *
      * @param intent activity intent.
      */
-    public static boolean isLaunchedFromSettingsSearch(Intent intent) {
-        return (intent != null && intent.hasExtra(LAUNCH_SETTINGS_SEARCH));
+    public static boolean isLaunchedFromSettingsSearch(@NonNull Intent intent) {
+        return TextUtils.equals(LAUNCH_SOURCE_SETTINGS_SEARCH,
+                intent.getStringExtra(WALLPAPER_LAUNCH_SOURCE));
     }
+
 
     /**
      * Returns true if wallpaper is in SUW mode.

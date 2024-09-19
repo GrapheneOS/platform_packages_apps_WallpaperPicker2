@@ -17,6 +17,7 @@ package com.android.wallpaper.picker;
 
 import android.app.Activity;
 import android.app.WallpaperManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -210,7 +211,9 @@ public class CustomizationPickerFragment extends AppbarFragment implements
     @Override
     public boolean onBackPressed() {
         // TODO(b/191120122) Improve glitchy animation in Settings.
-        if (ActivityUtils.isLaunchedFromSettingsSearch(getActivity().getIntent())) {
+        Activity activity = getActivity();
+        Intent intent = activity != null ? activity.getIntent() : null;
+        if (intent != null && ActivityUtils.isLaunchedFromSettingsSearch(intent)) {
             mSectionControllers.forEach(CustomizationSectionController::onTransitionOut);
         }
         return super.onBackPressed();

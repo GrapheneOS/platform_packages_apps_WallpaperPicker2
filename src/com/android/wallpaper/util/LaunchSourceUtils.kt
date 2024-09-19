@@ -22,10 +22,10 @@ object LaunchSourceUtils {
     const val WALLPAPER_LAUNCH_SOURCE = "com.android.wallpaper.LAUNCH_SOURCE"
     const val LAUNCH_SOURCE_LAUNCHER = "app_launched_launcher"
     const val LAUNCH_SOURCE_SETTINGS = "app_launched_settings"
+    const val LAUNCH_SOURCE_SETTINGS_SEARCH = "app_launched_settings_search"
     const val LAUNCH_SOURCE_SUW = "app_launched_suw"
     const val LAUNCH_SOURCE_TIPS = "app_launched_tips"
     const val LAUNCH_SOURCE_DEEP_LINK = "app_launched_deeplink"
-    const val LAUNCH_SETTINGS_SEARCH = ":settings:fragment_args_key"
     const val LAUNCH_SOURCE_SETTINGS_HOMEPAGE = "is_from_settings_homepage"
     const val LAUNCH_SOURCE_KEYGUARD = "app_launched_keyguard"
 }
