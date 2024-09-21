@@ -55,6 +55,7 @@ object SurfaceViewUtils {
         return bundle.getParcelable(KEY_CALLBACK)
     }
 
+    /** Removes the view from its parent and attaches to the surface control */
     fun SurfaceView.attachView(view: View, newWidth: Int = width, newHeight: Int = height) {
         // Detach view from its parent, if the view has one
         (view.parent as ViewGroup?)?.removeView(view)

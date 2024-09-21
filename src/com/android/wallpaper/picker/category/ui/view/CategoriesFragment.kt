@@ -68,13 +68,8 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
             inflater.inflate(R.layout.categories_fragment, container, /* attachToRoot= */ false)
 
         getCategorySelectorFragmentHost()?.let { fragmentHost ->
-            if (fragmentHost.isHostToolbarShown) {
-                view.findViewById<View>(R.id.header_bar).visibility = View.GONE
-                fragmentHost.setToolbarTitle(getText(R.string.wallpaper_title))
-            } else {
-                setUpToolbar(view)
-                setTitle(getText(R.string.wallpaper_title))
-            }
+            setUpToolbar(view)
+            setTitle(getText(R.string.wallpaper_title))
         }
 
         CategoriesBinder.bind(
@@ -88,7 +83,7 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
                     switchFragment(
                         individualPickerFactory.getIndividualPickerInstance(
                             navigationEvent.categoryId,
-                            navigationEvent.categoryType
+                            navigationEvent.categoryType,
                         )
                     )
                 }
@@ -113,7 +108,7 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
                     startThirdPartyCategoryActivity(
                         requireActivity(),
                         SHOW_CATEGORY_REQUEST_CODE,
-                        navigationEvent.resolveInfo
+                        navigationEvent.resolveInfo,
                     )
                 }
                 is CategoriesViewModel.NavigationEvent.NavigateToPreviewScreen -> {
@@ -130,12 +125,12 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
                             isNewTask = isMultiPanel,
                             shouldCategoryRefresh =
                                 (navigationEvent.categoryType ==
-                                    CategoriesViewModel.CategoryType.CreativeCategories)
+                                    CategoriesViewModel.CategoryType.CreativeCategories),
                         )
                     ActivityUtils.startActivityForResultSafely(
                         requireActivity(),
                         previewIntent,
-                        PREVIEW_LIVE_WALLPAPER_REQUEST_CODE // TODO: provide correct request code
+                        PREVIEW_LIVE_WALLPAPER_REQUEST_CODE, // TODO: provide correct request code
                     )
                 }
             }
@@ -153,7 +148,7 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
             Snackbar.make(
                 requireView(),
                 R.string.settings_snackbar_description,
-                Snackbar.LENGTH_LONG
+                Snackbar.LENGTH_LONG,
             )
         val layout = snackbar.view as Snackbar.SnackbarLayout
         val textView =
@@ -181,7 +176,7 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
     private fun startThirdPartyCategoryActivity(
         srcActivity: Activity,
         requestCode: Int,
-        resolveInfo: ResolveInfo
+        resolveInfo: ResolveInfo,
     ) {
         val itemComponentName =
             ComponentName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name)

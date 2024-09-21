@@ -23,7 +23,8 @@
         android:id="@+id/wallpaper_preview_crop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:clipChildren="false">
 
         <com.android.wallpaper.picker.customization.ui.view.PreviewCardView
             android:id="@+id/preview_card"

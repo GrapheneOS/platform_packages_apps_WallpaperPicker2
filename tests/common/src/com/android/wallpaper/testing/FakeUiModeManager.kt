@@ -27,10 +27,7 @@ class FakeUiModeManager @Inject constructor() : UiModeManagerWrapper {
     val listeners = mutableListOf<ContrastChangeListener>()
     private var _contrast: Float? = 0.0f
 
-    override fun addContrastChangeListener(
-        executor: Executor,
-        listener: ContrastChangeListener,
-    ) {
+    override fun addContrastChangeListener(executor: Executor, listener: ContrastChangeListener) {
         listeners.add(listener)
     }
 

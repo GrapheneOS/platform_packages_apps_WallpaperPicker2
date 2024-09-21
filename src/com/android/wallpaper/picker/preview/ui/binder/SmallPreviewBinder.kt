@@ -62,7 +62,6 @@ object SmallPreviewBinder {
     ) {
 
         val previewCard: CardView = view.requireViewById(R.id.preview_card)
-        val cardRadius = previewCard.radius
         val foldedStateDescription =
             when (deviceDisplayType) {
                 DeviceDisplayType.FOLDED ->
@@ -74,9 +73,14 @@ object SmallPreviewBinder {
         previewCard.contentDescription =
             view.context.getString(
                 R.string.wallpaper_preview_card_content_description_editable,
-                foldedStateDescription
+                foldedStateDescription,
             )
-        val wallpaperSurface: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
+        val wallpaperSurface =
+            view.requireViewById<SurfaceView>(R.id.wallpaper_surface).apply {
+                // When putting the surface on top for full transition, the card view is behind the
+                // surface view so we need to apply radius on surface view instead
+                cornerRadius = previewCard.radius
+            }
         val workspaceSurface: SurfaceView = view.requireViewById(R.id.workspace_surface)
 
         motionLayout?.addTransitionListener(
@@ -84,7 +88,7 @@ object SmallPreviewBinder {
                 override fun onTransitionStarted(
                     motionLayout: MotionLayout?,
                     startId: Int,
-                    endId: Int
+                    endId: Int,
                 ) {
                     (wallpaperSurface as CustomizationSurfaceView).setTransitioning()
                     (workspaceSurface as CustomizationSurfaceView).setTransitioning()
@@ -133,9 +137,6 @@ object SmallPreviewBinder {
                             transitionConfig.screen == screen &&
                                 transitionConfig.deviceDisplayType == deviceDisplayType
                         ) {
-                            // Put the surface on top for full transition, the card view is behind
-                            // the surface view so we need to apply radius on surface view instead
-                            wallpaperSurface.cornerRadius = cardRadius
                             wallpaperSurface.setZOrderOnTop(true)
                             workspaceSurface.setZOrderOnTop(true)
                         } else {
@@ -208,12 +209,7 @@ object SmallPreviewBinder {
         }
 
         val config = viewModel.getWorkspacePreviewConfig(screen, deviceDisplayType)
-        WorkspacePreviewBinder.bind(
-            workspaceSurface,
-            config,
-            viewModel,
-            viewLifecycleOwner,
-        )
+        WorkspacePreviewBinder.bind(workspaceSurface, config, viewModel, viewLifecycleOwner)
 
         SmallWallpaperPreviewBinder.bind(
             surface = wallpaperSurface,

@@ -23,8 +23,8 @@
     <com.android.wallpaper.picker.TouchForwardingLayout
         android:id="@+id/touch_forwarding_layout"
         android:layout_width="match_parent"
-        android:importantForAccessibility="yes"
         android:layout_height="match_parent"
+        android:importantForAccessibility="yes"
         android:background="@android:color/transparent"
         android:accessibilityTraversalBefore="@id/toolbar"
         android:contentDescription="@string/preview_screen_description"/>

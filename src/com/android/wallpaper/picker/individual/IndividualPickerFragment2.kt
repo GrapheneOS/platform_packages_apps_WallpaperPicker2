@@ -16,7 +16,6 @@
 package com.android.wallpaper.picker.individual
 
 import CreativeCategoryHolder
-import android.annotation.MenuRes
 import android.app.Activity
 import android.app.ProgressDialog
 import android.app.WallpaperManager
@@ -210,7 +209,7 @@ class IndividualPickerFragment2 :
                 )
             }
                 ?: run {
-                    getIndividualPickerFragmentHost().moveToPreviousFragment()
+                    parentFragmentManager.popBackStack()
                     Toast.makeText(context, R.string.collection_not_exist_msg, Toast.LENGTH_SHORT)
                         .show()
                     return
@@ -229,12 +228,7 @@ class IndividualPickerFragment2 :
 
     /** This function handles the result of the fetched categories */
     private fun onCategoryLoaded(category: Category, shouldRegisterPackageListener: Boolean) {
-        val fragmentHost = getIndividualPickerFragmentHost()
-        if (fragmentHost.isHostToolbarShown()) {
-            fragmentHost.setToolbarTitle(category.title)
-        } else {
-            setTitle(category.title)
-        }
+        setTitle(category.title)
         wallpaperRotationInitializer = category.wallpaperRotationInitializer
         if (mToolbar != null && isRotationEnabled()) {
             setUpToolbarMenu(R.menu.individual_picker_menu)
@@ -418,7 +412,7 @@ class IndividualPickerFragment2 :
                     if (fetchedCategory == null) {
                         // The absence of this category in the CategoryProvider indicates a broken
                         // state, see b/38030129. Hence, finish the activity and return.
-                        getIndividualPickerFragmentHost().moveToPreviousFragment()
+                        parentFragmentManager.popBackStack()
                         Toast.makeText(
                                 context,
                                 R.string.collection_not_exist_msg,
@@ -457,19 +451,11 @@ class IndividualPickerFragment2 :
         savedInstanceState: Bundle?,
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_individual_picker, container, false)
-        if (getIndividualPickerFragmentHost().isHostToolbarShown()) {
-            view.requireViewById<View>(R.id.header_bar).visibility = View.GONE
-            setUpArrowEnabled(/* upArrow= */ true)
-            if (isRotationEnabled()) {
-                getIndividualPickerFragmentHost().setToolbarMenu(R.menu.individual_picker_menu)
-            }
-        } else {
-            setUpToolbar(view)
-            if (isRotationEnabled()) {
-                setUpToolbarMenu(R.menu.individual_picker_menu)
-            }
-            setTitle(category?.title)
+        setUpToolbar(view)
+        if (isRotationEnabled()) {
+            setUpToolbarMenu(R.menu.individual_picker_menu)
         }
+        setTitle(category?.title)
         imageGrid = view.requireViewById<View>(R.id.wallpaper_grid) as RecyclerView
         loading = view.requireViewById(R.id.loading_indicator)
         updateLoading()
@@ -485,15 +471,6 @@ class IndividualPickerFragment2 :
             windowInsets.consumeSystemWindowInsets()
         }
         return view
-    }
-
-    private fun getIndividualPickerFragmentHost(): IndividualPickerFragmentHost {
-        val parentFragment = parentFragment
-        return if (parentFragment != null) {
-            parentFragment as IndividualPickerFragmentHost
-        } else {
-            activity as IndividualPickerFragmentHost
-        }
     }
 
     private fun maybeSetUpImageGrid() {
@@ -666,7 +643,6 @@ class IndividualPickerFragment2 :
 
     override fun onDestroyView() {
         super.onDestroyView()
-        getIndividualPickerFragmentHost().removeToolbarMenu()
     }
 
     override fun onDestroy() {
@@ -1033,31 +1009,4 @@ class IndividualPickerFragment2 :
     override fun getToolbarTextColor(): Int {
         return ContextCompat.getColor(requireContext(), R.color.system_on_surface)
     }
-}
-
-/**
- * Interface to be implemented by a Fragment(or an Activity) hosting a [IndividualPickerFragment2].
- */
-interface IndividualPickerFragmentHost {
-    /**
-     * Indicates if the host has toolbar to show the title. If it does, we should set the title
-     * there.
-     */
-    fun isHostToolbarShown(): Boolean
-
-    /** Sets the title in the host's toolbar. */
-    fun setToolbarTitle(title: CharSequence?)
-
-    /**
-     * Configures the menu in the toolbar.
-     *
-     * @param menuResId the resource id of the menu
-     */
-    fun setToolbarMenu(@MenuRes menuResId: Int)
-
-    /** Removes the menu in the toolbar. */
-    fun removeToolbarMenu()
-
-    /** Moves to the previous fragment. */
-    fun moveToPreviousFragment()
 }

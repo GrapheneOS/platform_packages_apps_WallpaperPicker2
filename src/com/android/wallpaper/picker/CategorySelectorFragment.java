@@ -101,18 +101,6 @@ public class CategorySelectorFragment extends AppbarFragment {
          */
         void show(Category category);
 
-
-        /**
-         * Indicates if the host has toolbar to show the title. If it does, we should set the title
-         * there.
-         */
-        boolean isHostToolbarShown();
-
-        /**
-         * Sets the title in the host's toolbar.
-         */
-        void setToolbarTitle(CharSequence title);
-
         /**
          * Fetches the wallpaper categories.
          */
@@ -187,13 +175,9 @@ public class CategorySelectorFragment extends AppbarFragment {
                 new WallpaperPickerRecyclerViewAccessibilityDelegate(
                         mImageGrid, (BottomSheetHost) getParentFragment(), getNumColumns()));
 
-        if (getCategorySelectorFragmentHost().isHostToolbarShown()) {
-            view.findViewById(R.id.header_bar).setVisibility(View.GONE);
-            getCategorySelectorFragmentHost().setToolbarTitle(getText(R.string.wallpaper_title));
-        } else {
-            setUpToolbar(view);
-            setTitle(getText(R.string.wallpaper_title));
-        }
+
+        setUpToolbar(view);
+        setTitle(getText(R.string.wallpaper_title));
 
         if (!DeepLinkUtils.isDeepLink(getActivity().getIntent())) {
             getCategorySelectorFragmentHost().fetchCategories();
