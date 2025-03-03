@@ -17,7 +17,7 @@
 package com.android.wallpaper.picker.customization.ui.binder
 
 import android.content.res.ColorStateList
-import android.widget.TextView
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.TextViewCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -31,6 +31,7 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewMo
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperCarouselViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperCarouselViewModel.NavigationEvent.NavigateToPreviewScreen
+import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperCarouselViewModel.NavigationEvent.NavigateToWallpaperCollection
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
@@ -67,39 +68,49 @@ object WallpaperPickerEntryBinder {
             }
         }
 
-        bindButtonTextColorUpdate(
-            buttonText = view.moreWallpapersButton,
-            viewModel = viewModel,
-            colorUpdateViewModel = colorUpdateViewModel,
-            lifecycleOwner = lifecycleOwner,
-        )
+        val isOnMainScreen = {
+            viewModel.customizationOptionsViewModel.selectedOption.value == null
+        }
 
-        bindButtonTextColorUpdate(
-            buttonText = view.collapsedButton,
-            viewModel = viewModel,
-            colorUpdateViewModel = colorUpdateViewModel,
-            lifecycleOwner = lifecycleOwner,
-        )
-    }
-
-    private fun bindButtonTextColorUpdate(
-        buttonText: TextView,
-        viewModel: CustomizationPickerViewModel2,
-        colorUpdateViewModel: ColorUpdateViewModel,
-        lifecycleOwner: LifecycleOwner,
-    ) {
         ColorUpdateBinder.bind(
             setColor = { color ->
-                buttonText.apply {
-                    setTextColor(color)
-                    TextViewCompat.setCompoundDrawableTintList(this, ColorStateList.valueOf(color))
-                }
+                DrawableCompat.setTint(DrawableCompat.wrap(view.background), color)
+            },
+            color = colorUpdateViewModel.colorSurfaceBright,
+            shouldAnimate = isOnMainScreen,
+            lifecycleOwner = lifecycleOwner,
+        )
+
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                view.moreWallpapersButton.setTextColor(color)
+                view.collapsedButton.setTextColor(color)
             },
             color = colorUpdateViewModel.colorPrimary,
-            shouldAnimate = {
-                viewModel.selectedPreviewScreen.value == Screen.LOCK_SCREEN &&
-                    viewModel.customizationOptionsViewModel.selectedOption.value == null
+            shouldAnimate = isOnMainScreen,
+            lifecycleOwner = lifecycleOwner,
+        )
+
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                TextViewCompat.setCompoundDrawableTintList(
+                    view.moreWallpapersButton,
+                    ColorStateList.valueOf(color),
+                )
+                TextViewCompat.setCompoundDrawableTintList(
+                    view.collapsedButton,
+                    ColorStateList.valueOf(color),
+                )
             },
+            color = colorUpdateViewModel.colorOnPrimaryContainer,
+            shouldAnimate = isOnMainScreen,
+            lifecycleOwner = lifecycleOwner,
+        )
+
+        ColorUpdateBinder.bind(
+            setColor = { color -> view.suggestedPhotosText.setTextColor(color) },
+            color = colorUpdateViewModel.colorSecondary,
+            shouldAnimate = isOnMainScreen,
             lifecycleOwner = lifecycleOwner,
         )
     }
@@ -125,8 +136,13 @@ object WallpaperPickerEntryBinder {
                 }
 
                 launch {
-                    viewModel.navigationEvents.collect { navigationEvent ->
+                    viewModel.navigationEvents.collect {
+                        navigationEvent: WallpaperCarouselViewModel.NavigationEvent ->
                         when (navigationEvent) {
+                            is NavigateToWallpaperCollection -> {
+                                // TODO (b/398250531): implement navigation to creative
+                                // category collection page
+                            }
                             is NavigateToPreviewScreen -> {
                                 navigateToPreviewScreen?.invoke(navigationEvent.wallpaperModel)
                             }

@@ -20,6 +20,7 @@ import android.annotation.TargetApi
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
+import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -30,6 +31,7 @@ import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
 import com.android.wallpaper.picker.common.preview.data.repository.PersistentWallpaperModelRepository
 import com.android.wallpaper.picker.common.preview.ui.binder.WorkspaceCallbackBinder
+import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
@@ -92,6 +94,18 @@ class CustomizationPickerActivity2 :
 
         setContentView(R.layout.activity_cusomization_picker2)
         WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
+
+        ColorUpdateBinder.bind(
+            setColor = { color ->
+                requireViewById<FrameLayout>(R.id.fragment_container).setBackgroundColor(color)
+            },
+            color = colorUpdateViewModel.colorSurfaceContainer,
+            shouldAnimate = {
+                supportFragmentManager.findFragmentById(R.id.fragment_container) is
+                    CustomizationPickerFragment2
+            },
+            lifecycleOwner = this,
+        )
 
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment == null) {

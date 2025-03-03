@@ -142,8 +142,7 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Vil du nulstille ændringerne?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Dine ændringer gemmes ikke"</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"Flere baggrunde"</string>
-    <!-- no translation found for wallpapers (7133442512006469886) -->
-    <skip />
+    <string name="wallpapers" msgid="7133442512006469886">"Baggrunde"</string>
     <string name="recents_wallpaper_label" msgid="8653165542635660222">"%1$s, %2$d"</string>
     <string name="default_wallpaper_title" msgid="2541071182656978180">"Baggrund"</string>
     <string name="small_preview_tooltip" msgid="1920430079013352071">"Tryk for at redigere dit billede"</string>
@@ -151,4 +150,9 @@
     <string name="discard_changes_dialog_message" msgid="8462485277292103457">"Vil du kassere ændringerne?"</string>
     <string name="discard_changes_dialog_button_keep_editing" msgid="9118931326834547216">"Fortsæt redigering"</string>
     <string name="discard_changes_dialog_button_discard" msgid="6585071548322908206">"Kassér"</string>
+    <string name="action_zoom_in" msgid="3326782160671405449">"Zoom ind"</string>
+    <string name="action_zoom_out" msgid="5454911090443175449">"Zoom ud"</string>
+    <string name="zoomed_to_percent" msgid="1243039994190840132">"Zoomet til %d%%"</string>
+    <string name="max_zoom_percentage" msgid="2111670558746866030">"Det er ikke muligt at zoome mere ind"</string>
+    <string name="min_zoom_percentage" msgid="5931879817379214316">"Det er ikke muligt at zoome mere ud"</string>
 </resources>

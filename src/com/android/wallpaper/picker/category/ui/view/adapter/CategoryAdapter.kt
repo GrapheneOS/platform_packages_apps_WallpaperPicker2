@@ -19,14 +19,22 @@ package com.android.wallpaper.picker.category.ui.view.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.category.ui.view.viewholder.TileViewHolder
 import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 
 /** This binds individual wallpaper category tiles to [WallpaperTileView] */
-class CategoryAdapter(var items: List<TileViewModel>, val columns: Int, val windowWidth: Int) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CategoryAdapter(
+    var items: List<TileViewModel>,
+    val columns: Int,
+    val windowWidth: Int,
+    private val colorUpdateViewModel: ColorUpdateViewModel,
+    private val shouldAnimateColor: () -> Boolean,
+    private val lifecycleOwner: LifecycleOwner,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): RecyclerView.ViewHolder {
         return createIndividualHolder(parent)
     }
@@ -42,7 +50,10 @@ class CategoryAdapter(var items: List<TileViewModel>, val columns: Int, val wind
             viewHolder.itemView.context,
             columns,
             items.size,
-            windowWidth
+            windowWidth,
+            colorUpdateViewModel,
+            shouldAnimateColor,
+            lifecycleOwner,
         )
     }
 

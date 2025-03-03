@@ -91,7 +91,7 @@ class ColorUpdateViewModelTest {
             underTest.updateColors()
 
             underTest.setPreviewEnabled(true)
-            underTest.previewColors(54321, Style.VIBRANT)
+            underTest.previewColors(54321, Style.VIBRANT, isDarkMode = false)
 
             assertThat(colorPrimary()).isNotEqualTo(12345)
         }
@@ -111,7 +111,7 @@ class ColorUpdateViewModelTest {
             underTest.updateColors()
 
             underTest.setPreviewEnabled(false)
-            underTest.previewColors(54321, Style.VIBRANT)
+            underTest.previewColors(54321, Style.VIBRANT, isDarkMode = false)
 
             assertThat(colorPrimary()).isEqualTo(12345)
         }
@@ -131,7 +131,7 @@ class ColorUpdateViewModelTest {
             underTest.updateColors()
             assertThat(colorPrimary()).isEqualTo(12345)
 
-            underTest.previewColors(54321, Style.VIBRANT)
+            underTest.previewColors(54321, Style.VIBRANT, isDarkMode = false)
             underTest.resetPreview()
 
             assertThat(colorPrimary()).isEqualTo(12345)

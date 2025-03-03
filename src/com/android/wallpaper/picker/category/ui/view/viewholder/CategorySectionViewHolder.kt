@@ -20,12 +20,16 @@ import android.graphics.Rect
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.picker.category.ui.view.adapter.CategoryAdapter
 import com.android.wallpaper.picker.category.ui.view.adapter.CuratedPhotosAdapter
 import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
 import com.android.wallpaper.picker.category.ui.viewmodel.SectionViewModel
+import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
@@ -44,7 +48,22 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
     private val sectionTitle: TextView = itemView.requireViewById(R.id.section_title)
     private val morePhotosButton: Button = itemView.requireViewById(R.id.more_photos_button)
 
-    fun bind(item: SectionViewModel) {
+    fun bind(
+        item: SectionViewModel,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
+        lifecycleOwner: LifecycleOwner,
+    ) {
+        val isNewPickerUi = BaseFlags.get().isNewPickerUi()
+        if (isNewPickerUi) {
+            ColorUpdateBinder.bind(
+                setColor = { color -> sectionTitle.setTextColor(color) },
+                color = colorUpdateViewModel.colorOnSurface,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
+        }
+
         // TODO: this probably is not necessary but if in the case the sections get updated we
         //  should just update the adapter instead of instantiating a new instance
         when (item.displayType) {
@@ -64,7 +83,14 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
                 morePhotosButton.visibility = View.GONE
 
                 sectionTiles.adapter =
-                    CategoryAdapter(item.tileViewModels, item.columnCount, windowWidth)
+                    CategoryAdapter(
+                        item.tileViewModels,
+                        item.columnCount,
+                        windowWidth,
+                        colorUpdateViewModel,
+                        shouldAnimateColor,
+                        lifecycleOwner,
+                    )
 
                 val layoutManager = FlexboxLayoutManager(itemView.context)
 

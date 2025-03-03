@@ -19,13 +19,20 @@ package com.android.wallpaper.picker.category.ui.view.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.category.ui.view.viewholder.CategorySectionViewHolder
 import com.android.wallpaper.picker.category.ui.viewmodel.SectionViewModel
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 
-class CategorySectionsAdapter(var items: List<SectionViewModel>, private val windowWidth: Int) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CategorySectionsAdapter(
+    var items: List<SectionViewModel>,
+    private val windowWidth: Int,
+    private val colorUpdateViewModel: ColorUpdateViewModel,
+    private val shouldAnimateColor: () -> Boolean,
+    private val lifecycleOwner: LifecycleOwner,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return createIndividualHolder(parent)
@@ -37,7 +44,12 @@ class CategorySectionsAdapter(var items: List<SectionViewModel>, private val win
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val section: SectionViewModel = items[position]
-        (holder as CategorySectionViewHolder?)?.bind(section)
+        (holder as CategorySectionViewHolder?)?.bind(
+            section,
+            colorUpdateViewModel,
+            shouldAnimateColor,
+            lifecycleOwner,
+        )
     }
 
     private fun createIndividualHolder(parent: ViewGroup): RecyclerView.ViewHolder {

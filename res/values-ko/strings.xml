@@ -142,8 +142,7 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"변경사항을 초기화하시겠습니까?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"변경사항이 저장되지 않습니다."</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"배경화면 더보기"</string>
-    <!-- no translation found for wallpapers (7133442512006469886) -->
-    <skip />
+    <string name="wallpapers" msgid="7133442512006469886">"배경화면"</string>
     <string name="recents_wallpaper_label" msgid="8653165542635660222">"%1$s, %2$d"</string>
     <string name="default_wallpaper_title" msgid="2541071182656978180">"배경화면"</string>
     <string name="small_preview_tooltip" msgid="1920430079013352071">"탭하여 사진 수정"</string>
@@ -151,4 +150,9 @@
     <string name="discard_changes_dialog_message" msgid="8462485277292103457">"변경사항을 삭제하시겠습니까?"</string>
     <string name="discard_changes_dialog_button_keep_editing" msgid="9118931326834547216">"계속 수정"</string>
     <string name="discard_changes_dialog_button_discard" msgid="6585071548322908206">"삭제"</string>
+    <string name="action_zoom_in" msgid="3326782160671405449">"확대"</string>
+    <string name="action_zoom_out" msgid="5454911090443175449">"축소"</string>
+    <string name="zoomed_to_percent" msgid="1243039994190840132">"%d%%로 확대/축소됨"</string>
+    <string name="max_zoom_percentage" msgid="2111670558746866030">"최대 확대 수준입니다"</string>
+    <string name="min_zoom_percentage" msgid="5931879817379214316">"최소 축소 수준입니다"</string>
 </resources>

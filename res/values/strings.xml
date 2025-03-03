@@ -601,4 +601,28 @@
     <string name="discard_changes_dialog_button_discard">Discard</string>
 
     <string name="tab_placeholder_text" translatable="false">Tab</string>
+
+    <!-- Label for the "zoom in" accessibility action. This is announced to the user when
+        they can zoom in on an image. [CHAR LIMIT=None] -->
+    <string name="action_zoom_in">Zoom in</string>
+
+    <!-- Label for the "zoom out" accessibility action. This is announced to the user when they
+    can zoom out on an image. [CHAR LIMIT=None] -->
+    <string name="action_zoom_out">Zoom out</string>
+
+    <!--  Dynamic content description: "Zoomed to X%" (X is the zoom percentage).
+         Example: "Zoomed to 200%".  This is read by screen readers to inform the user
+         of the current zoom level. [CHAR LIMIT=None] -->
+    <string name="zoomed_to_percent">Zoomed to %d%%</string>
+
+    <!-- Content description when the image is at its maximum zoom level.
+         This is announced to the user when they try to zoom in further, but the image
+         is already at its maximum zoom. [CHAR LIMIT=None] -->
+    <string name="max_zoom_percentage">Maximum zoom achieved</string>
+
+    <!-- Content description when the image is at its minimum zoom level.
+         This is announced to the user when they try to zoom out further, but the image is
+         already at its minimum zoom. [CHAR LIMIT=None] -->
+    <string name="min_zoom_percentage">Minimum zoom achieved</string>
+
 </resources>

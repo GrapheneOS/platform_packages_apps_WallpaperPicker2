@@ -17,7 +17,9 @@
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import android.content.Context
+import androidx.lifecycle.viewModelScope
 import com.android.wallpaper.asset.ContentUriAsset
+import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.CuratedPhotosInteractor
 import com.android.wallpaper.picker.category.ui.view.SectionCardinality
 import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
@@ -40,6 +42,7 @@ class WallpaperCarouselViewModel
 constructor(
     @ApplicationContext context: Context,
     curatedPhotosInteractor: CuratedPhotosInteractor,
+    creativeCategoryInteractor: CreativeCategoryInteractor,
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
 
@@ -57,14 +60,54 @@ constructor(
                     text = category.categoryModel.commonCategoryData.title,
                     maxCategoriesInRow = SectionCardinality.Single,
                 ) {
-                    navigateToPreviewScreen(wallpaperModel)
+                    navigateToPreviewScreen(wallpaperModel, CategoryType.CuratedPhotos)
                 }
             } ?: emptyList()
         }
+    /**
+     * This [Flow] maps creative categories to [TileViewModel]. This flow is consumed by the
+     * carousel in the case there is an insufficient number of curated photos
+     */
+    private val creativeSectionViewModel: Flow<List<TileViewModel>> =
+        creativeCategoryInteractor.categories.map { categories ->
+            categories.map { category ->
+                TileViewModel(
+                    defaultDrawable = null,
+                    thumbnailAsset = category.collectionCategoryData?.thumbAsset,
+                    text = category.commonCategoryData.title,
+                    maxCategoriesInRow = SectionCardinality.Triple,
+                ) {
+                    if (category.collectionCategoryData?.isSingleWallpaperCategory == true) {
+                        navigateToPreviewScreen(
+                            category.collectionCategoryData.wallpaperModels[0],
+                            CategoryType.CreativeCategories,
+                        )
+                    } else {
+                        navigateToWallpaperCollection(
+                            category.commonCategoryData.collectionId,
+                            CategoryType.CreativeCategories,
+                        )
+                    }
+                }
+            }
+        }
 
-    private fun navigateToPreviewScreen(wallpaperModel: WallpaperModel) {
+    private fun navigateToPreviewScreen(
+        wallpaperModel: WallpaperModel,
+        categoryType: CategoryType,
+    ) {
         viewModelScope.launch {
-            _navigationEvents.emit(NavigationEvent.NavigateToPreviewScreen(wallpaperModel))
+            _navigationEvents.emit(
+                NavigationEvent.NavigateToPreviewScreen(wallpaperModel, categoryType)
+            )
+        }
+    }
+
+    private fun navigateToWallpaperCollection(collectionId: String, categoryType: CategoryType) {
+        viewModelScope.launch {
+            _navigationEvents.emit(
+                NavigationEvent.NavigateToWallpaperCollection(collectionId, categoryType)
+            )
         }
     }
 
@@ -74,9 +117,21 @@ constructor(
         fun create(viewModelScope: CoroutineScope): WallpaperCarouselViewModel
     }
 
+    enum class CategoryType {
+        CreativeCategories,
+        CuratedPhotos,
+        Default,
+    }
+
     sealed class NavigationEvent {
-        data class NavigateToPreviewScreen(val wallpaperModel: WallpaperModel) : NavigationEvent()
-        // in case the carrousel may contain suggestions to navigate to different types of previews
-        // additional cases can be added here
+        data class NavigateToPreviewScreen(
+            val wallpaperModel: WallpaperModel,
+            val categoryType: CategoryType,
+        ) : NavigationEvent()
+
+        data class NavigateToWallpaperCollection(
+            val categoryId: String,
+            val categoryType: CategoryType,
+        ) : NavigationEvent()
     }
 }

@@ -79,7 +79,7 @@
         android:id="@+id/apply_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/apply_button_background_variant"
+        android:background="@drawable/apply_button_background"
         android:gravity="center"
         android:minHeight="@dimen/handheld_apply_wallpaper_preview_button_min_height"
         android:text="@string/apply_btn"

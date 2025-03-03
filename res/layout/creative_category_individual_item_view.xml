@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2024 The Android Open Source Project
+     Copyright (C) 2025 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,22 +15,22 @@
      limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:clipChildren="false"
-    android:clipToPadding="false">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/preview_label"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/customization_picker_preview_label_margin_bottom"
-        android:textColor="@color/system_on_surface"
-        android:text="Placeholder for stable size calculation, please do not remove."
-        tools:ignore="HardcodedText" />
+        android:id="@+id/upper_card"
+        android:layout_marginBottom="@dimen/creative_category_individual_item_view_space">
+        <include layout="@layout/labeled_grid_item_image" />
+    </FrameLayout>
 
-    <include layout="@layout/wallpaper_preview_card2" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lower_card">
+        <include layout="@layout/labeled_grid_item_image" />
+    </FrameLayout>
 </LinearLayout>

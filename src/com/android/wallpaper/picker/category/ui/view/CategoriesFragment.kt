@@ -35,6 +35,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.model.ImageWallpaperInfo
 import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.picker.AppbarFragment
@@ -44,11 +45,14 @@ import com.android.wallpaper.picker.category.ui.binder.CategoriesBinder
 import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
 import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
 import com.android.wallpaper.picker.common.preview.data.repository.PersistentWallpaperModelRepository
+import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import com.android.wallpaper.util.ActivityUtils
 import com.android.wallpaper.util.SizeCalculator
 import com.android.wallpaper.util.converter.WallpaperModelFactory
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -62,6 +66,7 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
     @Inject lateinit var multiPanesChecker: MultiPanesChecker
     @Inject lateinit var myPhotosStarterImpl: MyPhotosStarterImpl
     @Inject lateinit var wallpaperModelFactory: WallpaperModelFactory
+    @Inject lateinit var colorUpdateViewModel: ColorUpdateViewModel
 
     private lateinit var photoPickerLauncher: ActivityResultLauncher<Intent>
 
@@ -97,10 +102,33 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
         setUpToolbar(view)
         setTitle(getText(R.string.wallpaper_title))
 
+        val isNewPickerUi = BaseFlags.get().isNewPickerUi()
+        if (isNewPickerUi) {
+            ColorUpdateBinder.bind(
+                setColor = { _ ->
+                    // There is no way to programmatically set app:liftOnScrollColor in
+                    // AppBarLayout, therefore remove and re-add view to update colors based on new
+                    // context
+                    val contentParent = view.requireViewById<ViewGroup>(R.id.content_parent)
+                    val appBarLayout = view.requireViewById<AppBarLayout>(R.id.app_bar)
+                    contentParent.removeView(appBarLayout)
+                    layoutInflater.inflate(R.layout.section_header_content, contentParent, true)
+                    setUpToolbar(view)
+                    setTitle(getText(R.string.wallpaper_title))
+                    contentParent.requestApplyInsets()
+                },
+                color = colorUpdateViewModel.colorSurfaceContainer,
+                shouldAnimate = { false },
+                lifecycleOwner = viewLifecycleOwner,
+            )
+        }
+
         CategoriesBinder.bind(
             categoriesPage = view.requireViewById<RecyclerView>(R.id.content_parent),
             viewModel = categoriesViewModel,
-            SizeCalculator.getActivityWindowWidthPx(this.activity),
+            windowWidth = SizeCalculator.getActivityWindowWidthPx(this.activity),
+            colorUpdateViewModel = colorUpdateViewModel,
+            shouldAnimateColor = { false },
             lifecycleOwner = viewLifecycleOwner,
         ) { navigationEvent, callback ->
             when (navigationEvent) {

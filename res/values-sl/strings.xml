@@ -142,8 +142,7 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Želite ponastaviti spremembe?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Spremembe ne bodo shranjene."</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"Več zaslonskih ozadij"</string>
-    <!-- no translation found for wallpapers (7133442512006469886) -->
-    <skip />
+    <string name="wallpapers" msgid="7133442512006469886">"Ozadja"</string>
     <string name="recents_wallpaper_label" msgid="8653165542635660222">"%1$s, %2$d"</string>
     <string name="default_wallpaper_title" msgid="2541071182656978180">"Zaslonsko ozadje"</string>
     <string name="small_preview_tooltip" msgid="1920430079013352071">"Dotaknite se urejanje fotografije"</string>
@@ -151,4 +150,9 @@
     <string name="discard_changes_dialog_message" msgid="8462485277292103457">"Želite zavreči spremembe?"</string>
     <string name="discard_changes_dialog_button_keep_editing" msgid="9118931326834547216">"Nadaljuj urejanje"</string>
     <string name="discard_changes_dialog_button_discard" msgid="6585071548322908206">"Zavrzi"</string>
+    <string name="action_zoom_in" msgid="3326782160671405449">"Povečava"</string>
+    <string name="action_zoom_out" msgid="5454911090443175449">"Pomanjšava"</string>
+    <string name="zoomed_to_percent" msgid="1243039994190840132">"Stopnja povečave/pomanjšave: %d %%"</string>
+    <string name="max_zoom_percentage" msgid="2111670558746866030">"Dosežena je največja povečava"</string>
+    <string name="min_zoom_percentage" msgid="5931879817379214316">"Dosežena je najmanjša pomanjšava"</string>
 </resources>

@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.picker.preview.ui.binder
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
@@ -24,8 +25,10 @@ import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
+import android.view.accessibility.AccessibilityManager
 import android.widget.FrameLayout
 import androidx.cardview.widget.CardView
+import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -40,17 +43,21 @@ import com.android.wallpaper.picker.TouchForwardingLayout
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.shared.model.CropSizeModel
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
+import com.android.wallpaper.picker.preview.ui.util.FullResImageViewUtil.getCropRect
 import com.android.wallpaper.picker.preview.ui.util.SubsamplingScaleImageViewUtil.setOnNewCropListener
 import com.android.wallpaper.picker.preview.ui.view.FullPreviewFrameLayout
 import com.android.wallpaper.picker.preview.ui.view.SystemScaledSubsamplingScaleImageView
+import com.android.wallpaper.picker.preview.ui.viewmodel.StaticWallpaperPreviewViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.SurfaceViewUtils
 import com.android.wallpaper.util.WallpaperCropUtils
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.Companion.shouldEnforceSingleEngine
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import java.lang.Integer.min
 import kotlin.math.max
+import kotlin.math.roundToInt
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DisposableHandle
@@ -157,13 +164,9 @@ object FullWallpaperPreviewBinder {
                                 surfaceTouchForwardingLayout.context.getString(
                                     descriptionResourceId
                                 )
-                            val isPreviewEditable =
-                                fullWallpaper.wallpaper is WallpaperModel.StaticWallpaperModel
                             surfaceTouchForwardingLayout.contentDescription =
                                 surfaceTouchForwardingLayout.context.getString(
-                                    if (isPreviewEditable)
-                                        R.string.preview_screen_description_editable
-                                    else R.string.preview_screen_description_non_editable,
+                                    R.string.preview_screen_description_non_editable,
                                     descriptionString,
                                 )
                         }
@@ -177,8 +180,7 @@ object FullWallpaperPreviewBinder {
                             fullWallpaper.wallpaper is WallpaperModel.StaticWallpaperModel
                         surfaceTouchForwardingLayout.contentDescription =
                             surfaceTouchForwardingLayout.context.getString(
-                                if (isPreviewEditable) R.string.preview_screen_description_editable
-                                else R.string.preview_screen_description_non_editable,
+                                R.string.preview_screen_description_non_editable,
                                 "",
                             )
                     }
@@ -208,6 +210,81 @@ object FullWallpaperPreviewBinder {
                 surfaceView.holder.removeCallback(it)
                 surfaceCallback = null
             }
+        }
+    }
+
+    private fun addZoomAccessibilityActions(
+        viewLayout: TouchForwardingLayout,
+        viewModel: StaticWallpaperPreviewViewModel,
+        view: SubsamplingScaleImageView,
+        applicationContext: Context,
+        onZoomChanged: ((crop: android.graphics.Rect, zoom: Float) -> Unit)? = null,
+    ) {
+        ViewCompat.addAccessibilityAction(
+            viewLayout,
+            applicationContext.getString(R.string.action_zoom_in),
+        ) { _, _ ->
+            val zoomFactor = 1.5f // Enables a 50% zoom
+            val maxAvailableScale = viewModel.scaleAndCenter?.maxScale
+            val minAvailableScale = viewModel.scaleAndCenter?.minScale
+            val currentScale = view.scale
+            val currentCenter = viewModel.scaleAndCenter?.center
+
+            if (maxAvailableScale != null && minAvailableScale != null) {
+                val newScale = currentScale * zoomFactor
+                if (newScale > currentScale && newScale <= maxAvailableScale) {
+                    view.setScaleAndCenter(newScale, currentCenter)
+                    val zoomPercentage = ((newScale / minAvailableScale - 1) * 100).roundToInt()
+                    val newDescription =
+                        applicationContext.getString(R.string.zoomed_to_percent, zoomPercentage)
+                    viewLayout.contentDescription = newDescription
+                    //  The `setScaleAndCenter` method requires time to take effect.
+                    //  To ensure accurate crop rectangle retrieval, we use `post` to execute the
+                    //  `getCropRect` call after the scaling is complete. This prevents obtaining
+                    //  an outdated crop rectangle.
+                    view.post {
+                        val crop = view.getCropRect()
+                        onZoomChanged?.invoke(crop, newScale)
+                    }
+                } else {
+                    viewLayout.contentDescription =
+                        applicationContext.getString(R.string.max_zoom_percentage)
+                }
+            }
+            true
+        }
+
+        ViewCompat.addAccessibilityAction(
+            viewLayout,
+            applicationContext.getString(R.string.action_zoom_out),
+        ) { _, _ ->
+            val currentScale = view.scale
+            val minAvailable = viewModel.scaleAndCenter?.minScale
+            val currentCenter = viewModel.scaleAndCenter?.center
+            val zoomFactor = 0.6666667f // 33%
+
+            if (minAvailable != null) {
+                val newScaleValue = currentScale * zoomFactor
+                if (newScaleValue < currentScale && newScaleValue >= minAvailable) {
+                    view.setScaleAndCenter(newScaleValue, currentCenter)
+                    val zoomPercentage = ((newScaleValue / minAvailable - 1) * 100).roundToInt()
+                    val newDescription =
+                        applicationContext.getString(R.string.zoomed_to_percent, zoomPercentage)
+                    viewLayout.contentDescription = newDescription
+                    //  The `setScaleAndCenter` method requires time to take effect.
+                    //  To ensure accurate crop rectangle retrieval, we use `post` to execute the
+                    //  `getCropRect` call after the scaling is complete. This prevents obtaining
+                    //  an outdated crop rectangle.
+                    view.post {
+                        val crop = view.getCropRect()
+                        onZoomChanged?.invoke(crop, newScaleValue)
+                    }
+                } else {
+                    viewLayout.contentDescription =
+                        applicationContext.getString(R.string.min_zoom_percentage)
+                }
+            }
+            true
         }
     }
 
@@ -257,17 +334,19 @@ object FullWallpaperPreviewBinder {
                                     engineRenderingConfig,
                                     isFirstBindingDeferred,
                                 )
-                                surfaceTouchForwardingLayout.initTouchForwarding(surfaceView)
-                                surfaceView.setOnTouchListener { _, event ->
-                                    lifecycleOwner.lifecycleScope.launch {
-                                        wallpaperConnectionUtils.dispatchTouchEvent(
-                                            wallpaper,
-                                            engineRenderingConfig,
-                                            viewModel.getWallpaperPreviewSource().toFlag(),
-                                            event,
-                                        )
+                                if (!isAccessibilityEnabled(applicationContext)) {
+                                    surfaceTouchForwardingLayout.initTouchForwarding(surfaceView)
+                                    surfaceView.setOnTouchListener { _, event ->
+                                        lifecycleOwner.lifecycleScope.launch {
+                                            wallpaperConnectionUtils.dispatchTouchEvent(
+                                                wallpaper,
+                                                engineRenderingConfig,
+                                                viewModel.getWallpaperPreviewSource().toFlag(),
+                                                event,
+                                            )
+                                        }
+                                        false
                                     }
-                                    false
                                 }
                             } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
                                 val preview =
@@ -278,6 +357,39 @@ object FullWallpaperPreviewBinder {
                                     preview.requireViewById<SystemScaledSubsamplingScaleImageView>(
                                         R.id.full_res_image
                                     )
+                                val onZoomChanged:
+                                    ((crop: android.graphics.Rect, zoom: Float) -> Unit) =
+                                    { crop, zoom ->
+                                        val imageSize =
+                                            Point(fullResImageView.width, fullResImageView.height)
+                                        val cropImageSize =
+                                            WallpaperCropUtils.calculateCropSurfaceSize(
+                                                applicationContext.resources,
+                                                max(imageSize.x, imageSize.y),
+                                                min(imageSize.x, imageSize.y),
+                                                imageSize.x,
+                                                imageSize.y,
+                                            )
+                                        viewModel.staticWallpaperPreviewViewModel
+                                            .fullPreviewCropModels[displaySize] =
+                                            FullPreviewCropModel(
+                                                cropHint = crop,
+                                                cropSizeModel =
+                                                    CropSizeModel(
+                                                        wallpaperZoom = zoom,
+                                                        hostViewSize = imageSize,
+                                                        cropViewSize = cropImageSize,
+                                                    ),
+                                            )
+                                    }
+
+                                addZoomAccessibilityActions(
+                                    surfaceTouchForwardingLayout,
+                                    viewModel.staticWallpaperPreviewViewModel,
+                                    fullResImageView,
+                                    applicationContext,
+                                    onZoomChanged,
+                                )
                                 // Bind static wallpaper
                                 StaticWallpaperPreviewBinder.bind(
                                     staticPreviewView = preview,
@@ -312,10 +424,11 @@ object FullWallpaperPreviewBinder {
                                             )
                                     }
                                 }
-
                                 // We do not allow users to pinch to crop if it is a
                                 // downloadable wallpaper.
-                                if (allowUserCropping) {
+                                if (
+                                    allowUserCropping && !isAccessibilityEnabled(applicationContext)
+                                ) {
                                     surfaceTouchForwardingLayout.initTouchForwarding(
                                         fullResImageView
                                     )
@@ -337,6 +450,13 @@ object FullWallpaperPreviewBinder {
                 // wallpaper services, when going back and forth small and full preview.
             }
         }
+    }
+
+    fun isAccessibilityEnabled(context: Context): Boolean {
+        val am = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        val enabledServices =
+            am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
+        return enabledServices.isNotEmpty()
     }
 
     private fun TouchForwardingLayout.initTouchForwarding(targetView: View) {

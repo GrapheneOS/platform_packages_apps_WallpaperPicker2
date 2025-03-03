@@ -55,6 +55,11 @@ object SmallPreviewScreenBinder {
         navigate: (View) -> Unit,
     ) {
         val previewPager = fragmentLayout.requireViewById<ClickableMotionLayout>(R.id.preview_pager)
+        previewPager.jumpToState(
+            if (viewModel.smallPreviewSelectedTab.value == Screen.LOCK_SCREEN)
+                R.id.lock_preview_selected
+            else R.id.home_preview_selected
+        )
         val previewPagerContainer =
             fragmentLayout.requireViewById<MotionLayout>(R.id.small_preview_container)
         val nextButton = fragmentLayout.requireViewById<Button>(R.id.button_next)
@@ -81,20 +86,35 @@ object SmallPreviewScreenBinder {
                             viewModel.currentPreviewScreen,
                             viewModel.smallPreviewSelectedTab,
                             viewModel.previewActionsViewModel.isActionChecked,
-                        ) { screen, tab, actionChecked ->
-                            Triple(screen, tab, actionChecked)
-                        }
-                        .collect { (screen, tab, isActionChecked) ->
+                            viewModel.isSetWallpaperButtonVisible,
+                            viewModel.previewActionsViewModel.isDownloadVisible,
+                            ::Quintuple,
+                        )
+                        .collect { (screen, tab, isActionChecked, isNextVisible, isDownloadEnabled)
+                            ->
                             when (screen) {
                                 PreviewScreen.SMALL_PREVIEW -> {
-                                    fragmentLayout.transitionToState(R.id.show_full_page)
+                                    val endState =
+                                        if (isNextVisible) R.id.small_preview
+                                        else R.id.small_preview_not_downloaded
+                                    if (
+                                        fragmentLayout.endState == R.id.small_preview_no_header &&
+                                            fragmentLayout.startState ==
+                                                R.id.small_preview_not_downloaded &&
+                                            !isDownloadEnabled
+                                    ) {
+                                        // When entering the non downloadable wallpaper preview the
+                                        // first time, use scheduleTransitionTo so the transition
+                                        // is not conflicting with the rest of the transition.
+                                        fragmentLayout.scheduleTransitionTo(endState)
+                                    } else {
+                                        fragmentLayout.transitionToState(endState)
+                                    }
+
                                     previewPagerContainer.transitionToState(
                                         if (isActionChecked) R.id.floating_sheet_visible
                                         else R.id.floating_sheet_gone
                                     )
-                                    // TODO(b/367374790): Use jumpToState for shared element
-                                    //  transition back from PreviewScreen.FULL_PREVIEW, until full
-                                    //  preview fragment is removed.
                                     previewPager.transitionToState(
                                         if (tab == Screen.LOCK_SCREEN) R.id.lock_preview_selected
                                         else R.id.home_preview_selected
@@ -104,7 +124,7 @@ object SmallPreviewScreenBinder {
                                     // TODO(b/367374790): Transition to full preview
                                 }
                                 PreviewScreen.APPLY_WALLPAPER -> {
-                                    fragmentLayout.transitionToState(R.id.hide_page_header)
+                                    fragmentLayout.transitionToState(R.id.small_preview_no_header)
                                     previewPagerContainer.transitionToState(
                                         R.id.show_apply_wallpaper
                                     )
@@ -145,4 +165,12 @@ object SmallPreviewScreenBinder {
             }
         }
     }
+
+    private data class Quintuple<A, B, C, D, E>(
+        val first: A,
+        val second: B,
+        val third: C,
+        val fourth: D,
+        val fifth: E,
+    )
 }

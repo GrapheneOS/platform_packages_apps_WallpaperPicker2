@@ -42,10 +42,11 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
 
     val collapsedButton: TextView
     val moreWallpapersButton: TextView
+    val suggestedPhotosText: TextView
     val wallpaperCarousel: RecyclerView
 
     private val backgroundLayout: FrameLayout
-    private val background: GradientDrawable
+    val background: GradientDrawable
     private val expandedContainer: ConstraintLayout
 
     private val defaultCornerRadius: Float
@@ -62,6 +63,7 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
         collapsedButton =
             requireViewById(R.id.customization_option_entry_wallpaper_collapsed_button)
         moreWallpapersButton = requireViewById(R.id.more_wallpapers_button)
+        suggestedPhotosText = requireViewById(R.id.wallpaper_picker_entry_title)
         wallpaperCarousel = requireViewById(R.id.wallpaper_carousel)
 
         backgroundLayout = requireViewById(R.id.wallpaper_picker_entry_background)

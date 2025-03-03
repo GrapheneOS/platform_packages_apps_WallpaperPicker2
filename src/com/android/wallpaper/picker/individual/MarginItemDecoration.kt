@@ -29,11 +29,8 @@ class MarginItemDecoration(private val spaceSize: Int) : RecyclerView.ItemDecora
         outRect: Rect,
         view: View,
         parent: RecyclerView,
-        state: RecyclerView.State
+        state: RecyclerView.State,
     ) {
-        with(outRect) {
-            right = spaceSize
-            top = spaceSize
-        }
+        with(outRect) { right = spaceSize }
     }
 }

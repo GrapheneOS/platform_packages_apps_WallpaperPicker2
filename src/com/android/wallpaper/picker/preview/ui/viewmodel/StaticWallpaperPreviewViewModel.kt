@@ -29,6 +29,7 @@ import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.preview.domain.interactor.WallpaperPreviewInteractor
 import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
+import com.android.wallpaper.picker.preview.ui.util.FullResImageViewUtil
 import com.android.wallpaper.util.DisplaysProvider
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
@@ -110,6 +111,8 @@ constructor(
             // We only want to decode bitmap every time when wallpaper model is updated, instead of
             // a new subscriber listens to this flow. So we need to use shareIn.
             .shareIn(viewModelScope, SharingStarted.Lazily, 1)
+
+    var scaleAndCenter: FullResImageViewUtil.ScaleAndCenter? = null
 
     val fullResWallpaperViewModel: Flow<FullResWallpaperViewModel?> =
         combine(assetDetail, cropHintsInfo) { assetDetail, cropHintsInfo ->

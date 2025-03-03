@@ -22,10 +22,14 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.picker.category.ui.view.SectionCardinality
 import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
+import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.util.ResourceUtils
 import com.android.wallpaper.util.SizeCalculator
 
@@ -49,9 +53,25 @@ class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         context: Context,
         columnCount: Int,
         tileCount: Int,
-        windowWidth: Int
+        windowWidth: Int,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
+        lifecycleOwner: LifecycleOwner,
     ) {
         title.visibility = View.GONE
+
+        val isNewPickerUi = BaseFlags.get().isNewPickerUi()
+        if (isNewPickerUi) {
+            ColorUpdateBinder.bind(
+                setColor = { color ->
+                    title.setTextColor(color)
+                    categorySubtitle.setTextColor(color)
+                },
+                color = colorUpdateViewModel.colorOnSurface,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
+        }
 
         var tileSize: Point
         var tileRadius: Int

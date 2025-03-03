@@ -46,7 +46,7 @@ import com.android.wallpaper.model.Screen
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.TrampolinePickerActivity
-import com.android.wallpaper.picker.customization.ui.CustomizationPickerFragment2
+import com.android.wallpaper.picker.customization.ui.util.EmptyTransitionListener
 import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import com.android.wallpaper.picker.preview.ui.binder.ApplyWallpaperScreenBinder
@@ -291,7 +291,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
     private fun setUpTransitionListener(previewPager: MotionLayout) {
         previewPager.addTransitionListener(
-            object : CustomizationPickerFragment2.EmptyTransitionListener {
+            object : EmptyTransitionListener {
                 override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
                     if (
                         currentId == R.id.lock_preview_selected ||

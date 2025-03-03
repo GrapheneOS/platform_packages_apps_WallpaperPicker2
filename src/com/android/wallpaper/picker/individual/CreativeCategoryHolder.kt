@@ -15,10 +15,15 @@
  */
 
 import android.app.Activity
+import android.view.LayoutInflater
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
+import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.module.InjectorProvider
+import com.android.wallpaper.picker.WallpaperPickerDelegate
 import com.android.wallpaper.picker.individual.CreativeCategoryAdapter
 import com.android.wallpaper.picker.individual.MarginItemDecoration
 
@@ -27,27 +32,51 @@ import com.android.wallpaper.picker.individual.MarginItemDecoration
  * wallpaper picker grid. This helps us create a different view for the creative category tiles in
  * the individual picker.
  */
-class CreativeCategoryHolder(private val mActivity: Activity, itemView: View) :
+class CreativeCategoryHolder(private val activity: Activity, itemView: View) :
     RecyclerView.ViewHolder(itemView) {
-    private var recyclerViewCreativeCategory: RecyclerView
+
+    private val persister = InjectorProvider.getInjector().getWallpaperPersister(activity)
+
+    private var recyclerViewCreativeCategory: RecyclerView =
+        itemView.requireViewById(R.id.recyclerview_container)
     private var adapter: CreativeCategoryAdapter? = null
 
     init {
-        recyclerViewCreativeCategory = itemView.requireViewById(R.id.recyclerview_container)
+        recyclerViewCreativeCategory.layoutManager =
+            LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false)
         recyclerViewCreativeCategory.addItemDecoration(
             MarginItemDecoration(
-                mActivity.resources.getInteger(R.integer.creative_category_individual_item_padding)
+                activity.resources.getDimensionPixelSize(
+                    R.dimen.creative_category_individual_item_view_space
+                )
             )
         )
     }
 
     fun bind(items: List<WallpaperInfo>, height: Int) {
         if (adapter == null) {
-            adapter = CreativeCategoryAdapter(items, mActivity, height)
+            adapter =
+                CreativeCategoryAdapter(
+                        layoutInflater = LayoutInflater.from(activity),
+                        tileSizePx = height,
+                        onCategoryClicked = { showPreview(it) },
+                    )
+                    .apply { setItems(items) }
             recyclerViewCreativeCategory.adapter = adapter
         } else {
-            adapter?.items = items
-            adapter?.notifyDataSetChanged()
+            adapter?.setItems(items)
         }
+    }
+
+    private fun showPreview(wallpaperInfo: WallpaperInfo) {
+        persister.setWallpaperInfoInPreview(wallpaperInfo)
+        wallpaperInfo.showPreview(
+            activity,
+            InjectorProvider.getInjector().getPreviewActivityIntentFactory(),
+            if (wallpaperInfo is LiveWallpaperInfo)
+                WallpaperPickerDelegate.PREVIEW_LIVE_WALLPAPER_REQUEST_CODE
+            else WallpaperPickerDelegate.PREVIEW_WALLPAPER_REQUEST_CODE,
+            true,
+        )
     }
 }

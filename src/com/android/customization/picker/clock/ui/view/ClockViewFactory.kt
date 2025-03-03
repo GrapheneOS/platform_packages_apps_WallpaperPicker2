@@ -23,7 +23,7 @@ import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 
 interface ClockViewFactory {
 
-    fun getController(clockId: String): ClockController
+    fun getController(clockId: String): ClockController?
 
     /**
      * Reset the large view to its initial state when getting the view. This is because some view

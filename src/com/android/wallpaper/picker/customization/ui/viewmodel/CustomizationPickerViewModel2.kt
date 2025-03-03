@@ -19,14 +19,20 @@ package com.android.wallpaper.picker.customization.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.wallpaper.model.Screen
+import com.android.wallpaper.model.Screen.HOME_SCREEN
 import com.android.wallpaper.model.Screen.LOCK_SCREEN
 import com.android.wallpaper.picker.common.preview.ui.viewmodel.BasePreviewViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 
 @HiltViewModel
 class CustomizationPickerViewModel2
@@ -61,8 +67,47 @@ constructor(
             }
         }
 
+    /** Flow of float that emits to trigger the lock screen preview to animate to an alpha value. */
+    val lockPreviewAnimateToAlpha: Flow<Float> =
+        combine(screen, selectedPreviewScreen, ::Pair)
+            .distinctUntilChangedBy { (screen, _) -> screen.first }
+            .map { (navigationScreen, previewScreen) ->
+                when (navigationScreen.first) {
+                    PickerScreen.MAIN -> PREVIEW_SHOW_ALPHA
+                    PickerScreen.CUSTOMIZATION_OPTION -> {
+                        when (previewScreen) {
+                            LOCK_SCREEN -> PREVIEW_SHOW_ALPHA
+                            HOME_SCREEN -> PREVIEW_HIDE_ALPHA
+                        }
+                    }
+                }
+            }
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
+
+    /** Flow of float that emits to trigger the home screen preview to animate to an alpha value. */
+    val homePreviewAnimateToAlpha: Flow<Float> =
+        combine(screen, selectedPreviewScreen, ::Pair)
+            .distinctUntilChangedBy { (screen, _) -> screen.first }
+            .map { (navigationScreen, previewScreen) ->
+                when (navigationScreen.first) {
+                    PickerScreen.MAIN -> PREVIEW_SHOW_ALPHA
+                    PickerScreen.CUSTOMIZATION_OPTION -> {
+                        when (previewScreen) {
+                            LOCK_SCREEN -> PREVIEW_HIDE_ALPHA
+                            HOME_SCREEN -> PREVIEW_SHOW_ALPHA
+                        }
+                    }
+                }
+            }
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
+
     val isPreviewClickable: Flow<Boolean> = basePreviewViewModel.wallpapers.map { it != null }
 
     val isPagerInteractable: Flow<Boolean> =
         customizationOptionsViewModel.selectedOption.map { it == null }
+
+    companion object {
+        const val PREVIEW_SHOW_ALPHA = 1F
+        const val PREVIEW_HIDE_ALPHA = 0F
+    }
 }

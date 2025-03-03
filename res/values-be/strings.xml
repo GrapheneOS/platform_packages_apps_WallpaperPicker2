@@ -92,7 +92,7 @@
     <string name="tab_customize" msgid="2533745409174959960">"Наладка"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Эфекты"</string>
     <string name="tab_share" msgid="6676269624804601227">"Абагуліць"</string>
-    <string name="my_photos" msgid="8613021349284084982">"Мае фатаграфіі"</string>
+    <string name="my_photos" msgid="8613021349284084982">"Мае фота"</string>
     <string name="configure_wallpaper" msgid="849882179182976621">"Налады…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Выдаліць"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"Змяніць"</string>
@@ -142,8 +142,7 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Скінуць змяненні?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Вашы змяненні не будуць захаваны"</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"Дадатковыя шпалеры"</string>
-    <!-- no translation found for wallpapers (7133442512006469886) -->
-    <skip />
+    <string name="wallpapers" msgid="7133442512006469886">"Шпалеры"</string>
     <string name="recents_wallpaper_label" msgid="8653165542635660222">"%1$s, %2$d"</string>
     <string name="default_wallpaper_title" msgid="2541071182656978180">"Шпалеры"</string>
     <string name="small_preview_tooltip" msgid="1920430079013352071">"Націсніце, каб змяніць фота"</string>
@@ -151,4 +150,9 @@
     <string name="discard_changes_dialog_message" msgid="8462485277292103457">"Адхіліць змяненні?"</string>
     <string name="discard_changes_dialog_button_keep_editing" msgid="9118931326834547216">"Працягнуць рэдагаванне"</string>
     <string name="discard_changes_dialog_button_discard" msgid="6585071548322908206">"Адхіліць"</string>
+    <string name="action_zoom_in" msgid="3326782160671405449">"Павялічыць"</string>
+    <string name="action_zoom_out" msgid="5454911090443175449">"Паменшыць"</string>
+    <string name="zoomed_to_percent" msgid="1243039994190840132">"Павялічана да %d%%"</string>
+    <string name="max_zoom_percentage" msgid="2111670558746866030">"Дасягнуты максімальны маштаб"</string>
+    <string name="min_zoom_percentage" msgid="5931879817379214316">"Дасягнуты мінімальны маштаб"</string>
 </resources>

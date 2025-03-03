@@ -150,4 +150,9 @@
     <string name="discard_changes_dialog_message" msgid="8462485277292103457">"変更内容を破棄しますか？"</string>
     <string name="discard_changes_dialog_button_keep_editing" msgid="9118931326834547216">"編集を続ける"</string>
     <string name="discard_changes_dialog_button_discard" msgid="6585071548322908206">"破棄"</string>
+    <string name="action_zoom_in" msgid="3326782160671405449">"拡大"</string>
+    <string name="action_zoom_out" msgid="5454911090443175449">"縮小"</string>
+    <string name="zoomed_to_percent" msgid="1243039994190840132">"現在のズームレベルは %d%% です"</string>
+    <string name="max_zoom_percentage" msgid="2111670558746866030">"最大ズームに達しました"</string>
+    <string name="min_zoom_percentage" msgid="5931879817379214316">"最小ズームに達しました"</string>
 </resources>

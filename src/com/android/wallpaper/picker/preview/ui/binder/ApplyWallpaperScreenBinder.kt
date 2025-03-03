@@ -19,6 +19,8 @@ package com.android.wallpaper.picker.preview.ui.binder
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -62,8 +64,28 @@ object ApplyWallpaperScreenBinder {
                 launch {
                     viewModel.isApplyButtonEnabled.collect {
                         applyButton.isEnabled = it
-                        if (it) previewPager.addClickableViewId(applyButton.id)
-                        else previewPager.removeClickableViewId(applyButton.id)
+                        if (it) {
+                            applyButton.background.alpha = 255 // 255 for 100% transparent
+                            applyButton.setTextColor(
+                                ContextCompat.getColor(
+                                    applyButton.context,
+                                    R.color.system_on_primary,
+                                )
+                            )
+                            previewPager.addClickableViewId(applyButton.id)
+                        } else {
+                            applyButton.background.alpha = 31 // 31 for 12% transparent
+                            applyButton.setTextColor(
+                                ColorUtils.setAlphaComponent(
+                                    ContextCompat.getColor(
+                                        applyButton.context,
+                                        R.color.system_on_surface,
+                                    ),
+                                    97, // 97 for 38% transparent
+                                )
+                            )
+                            previewPager.removeClickableViewId(applyButton.id)
+                        }
                     }
                 }
 

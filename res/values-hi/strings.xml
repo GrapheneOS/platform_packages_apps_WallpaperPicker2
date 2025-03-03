@@ -142,8 +142,7 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"क्या आपको बदलाव रीसेट करने हैं?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"आपके बदलाव सेव नहीं किए जाएंगे"</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"कुछ और वॉलपेपर"</string>
-    <!-- no translation found for wallpapers (7133442512006469886) -->
-    <skip />
+    <string name="wallpapers" msgid="7133442512006469886">"वॉलपेपर चुनें"</string>
     <string name="recents_wallpaper_label" msgid="8653165542635660222">"%1$s, %2$d"</string>
     <string name="default_wallpaper_title" msgid="2541071182656978180">"वॉलपेपर"</string>
     <string name="small_preview_tooltip" msgid="1920430079013352071">"फ़ोटो में बदलाव करने के लिए उस पर टैप करें"</string>
@@ -151,4 +150,9 @@
     <string name="discard_changes_dialog_message" msgid="8462485277292103457">"क्या आपको बदलाव खारिज करने हैं?"</string>
     <string name="discard_changes_dialog_button_keep_editing" msgid="9118931326834547216">"बदलाव करना जारी रखें"</string>
     <string name="discard_changes_dialog_button_discard" msgid="6585071548322908206">"खारिज करें"</string>
+    <string name="action_zoom_in" msgid="3326782160671405449">"ज़ूम इन करें"</string>
+    <string name="action_zoom_out" msgid="5454911090443175449">"ज़ूम आउट करें"</string>
+    <string name="zoomed_to_percent" msgid="1243039994190840132">"%d%% तक ज़ूम किया गया"</string>
+    <string name="max_zoom_percentage" msgid="2111670558746866030">"इससे ज़्यादा ज़ूम नहीं किया जा सकता"</string>
+    <string name="min_zoom_percentage" msgid="5931879817379214316">"इससे कम ज़ूम नहीं किया जा सकता"</string>
 </resources>

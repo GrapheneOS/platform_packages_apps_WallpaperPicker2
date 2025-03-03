@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
+import android.annotation.ColorInt
 import android.content.Context
 import com.android.systemui.monet.ColorScheme
 import com.android.systemui.monet.Style
@@ -103,6 +104,11 @@ constructor(
         createColorFlow(R.color.system_primary_fixed_dim, MaterialDynamicColors().primaryFixedDim())
     val colorOnPrimary =
         createColorFlow(R.color.system_on_primary, MaterialDynamicColors().onPrimary())
+    val colorOnPrimaryContainer =
+        createColorFlow(
+            R.color.system_on_primary_container,
+            MaterialDynamicColors().onPrimaryContainer(),
+        )
     val colorOnPrimaryFixed =
         createColorFlow(R.color.system_on_primary_fixed, MaterialDynamicColors().onPrimaryFixed())
     val colorOnPrimaryFixedVariant =
@@ -110,6 +116,8 @@ constructor(
             R.color.system_on_primary_fixed_variant,
             MaterialDynamicColors().onPrimaryFixedVariant(),
         )
+    val colorSecondary =
+        createColorFlow(R.color.system_secondary, MaterialDynamicColors().secondary())
     val colorSecondaryContainer =
         createColorFlow(
             R.color.system_secondary_container,
@@ -157,8 +165,7 @@ constructor(
             },
         )
 
-    fun previewColors(colorSeed: Int, @Style.Type style: Int) {
-        val isDarkMode = context.resources.configuration.isNightModeActive
+    fun previewColors(@ColorInt colorSeed: Int, @Style.Type style: Int, isDarkMode: Boolean) {
         previewingColorScheme.value = ColorScheme(colorSeed, isDarkMode, style).materialScheme
     }
 

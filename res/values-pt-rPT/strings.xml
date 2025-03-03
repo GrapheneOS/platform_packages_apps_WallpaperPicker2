@@ -96,7 +96,7 @@
     <string name="configure_wallpaper" msgid="849882179182976621">"Definições…"</string>
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Eliminar"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"Editar"</string>
-    <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Apagar esta imagem de fundo do dispositivo?"</string>
+    <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Eliminar esta imagem de fundo do dispositivo?"</string>
     <string name="bottom_action_bar_back" msgid="2620581414970740784">"Navegar para cima"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Editar"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Transferir"</string>
@@ -150,4 +150,9 @@
     <string name="discard_changes_dialog_message" msgid="8462485277292103457">"Rejeitar alterações?"</string>
     <string name="discard_changes_dialog_button_keep_editing" msgid="9118931326834547216">"Continuar a editar"</string>
     <string name="discard_changes_dialog_button_discard" msgid="6585071548322908206">"Rejeitar"</string>
+    <string name="action_zoom_in" msgid="3326782160671405449">"Aumentar zoom"</string>
+    <string name="action_zoom_out" msgid="5454911090443175449">"Diminuir zoom"</string>
+    <string name="zoomed_to_percent" msgid="1243039994190840132">"Zoom aumentado para %d%%"</string>
+    <string name="max_zoom_percentage" msgid="2111670558746866030">"Zoom máximo alcançado"</string>
+    <string name="min_zoom_percentage" msgid="5931879817379214316">"Zoom mínimo alcançado"</string>
 </resources>

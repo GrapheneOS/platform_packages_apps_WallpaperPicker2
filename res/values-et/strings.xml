@@ -150,4 +150,9 @@
     <string name="discard_changes_dialog_message" msgid="8462485277292103457">"Kas soovite muudatustest loobuda?"</string>
     <string name="discard_changes_dialog_button_keep_editing" msgid="9118931326834547216">"Jätka muutmist"</string>
     <string name="discard_changes_dialog_button_discard" msgid="6585071548322908206">"Loobu"</string>
+    <string name="action_zoom_in" msgid="3326782160671405449">"Suumi sisse"</string>
+    <string name="action_zoom_out" msgid="5454911090443175449">"Suumi välja"</string>
+    <string name="zoomed_to_percent" msgid="1243039994190840132">"Suumitud tasemele %d%%"</string>
+    <string name="max_zoom_percentage" msgid="2111670558746866030">"Maksimaalne suumitase on saavutatud"</string>
+    <string name="min_zoom_percentage" msgid="5931879817379214316">"Minimaalne suumitase on saavutatud"</string>
 </resources>

@@ -106,7 +106,9 @@ object WallpaperQuickSwitchOptionBinder {
             launch {
                 viewModel.isSelectionIndicatorVisible.distinctUntilChanged().collect { isSelected ->
                     // Update the content description to announce the selection status
+                    view.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
                     view.isSelected = isSelected
+                    view.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
                 }
             }
 
@@ -155,11 +157,7 @@ object WallpaperQuickSwitchOptionBinder {
      * @param targetWidthPx The width we want the view to have.
      * @param animate Whether the update should be animated.
      */
-    private fun updateWidth(
-        view: View,
-        targetWidthPx: Int,
-        animate: Boolean,
-    ) {
+    private fun updateWidth(view: View, targetWidthPx: Int, animate: Boolean) {
         fun setWidth(widthPx: Int) {
             view.updateLayoutParams { width = widthPx }
         }
@@ -169,19 +167,13 @@ object WallpaperQuickSwitchOptionBinder {
             return
         }
 
-        ValueAnimator.ofInt(
-                view.width,
-                targetWidthPx,
-            )
-            .apply {
-                addUpdateListener { setWidth(it.animatedValue as Int) }
-                start()
-            }
+        ValueAnimator.ofInt(view.width, targetWidthPx).apply {
+            addUpdateListener { setWidth(it.animatedValue as Int) }
+            start()
+        }
     }
 
-    private fun View.animatedVisibility(
-        isVisible: Boolean,
-    ) {
+    private fun View.animatedVisibility(isVisible: Boolean) {
         if (isVisible) {
             fadeIn()
         } else {

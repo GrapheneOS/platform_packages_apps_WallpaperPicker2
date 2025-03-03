@@ -142,8 +142,7 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Resetezi modificările?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Modificările nu se vor salva"</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"Mai multe imagini de fundal"</string>
-    <!-- no translation found for wallpapers (7133442512006469886) -->
-    <skip />
+    <string name="wallpapers" msgid="7133442512006469886">"Imagini de fundal"</string>
     <string name="recents_wallpaper_label" msgid="8653165542635660222">"%1$s, %2$d"</string>
     <string name="default_wallpaper_title" msgid="2541071182656978180">"Imaginea de fundal"</string>
     <string name="small_preview_tooltip" msgid="1920430079013352071">"Atinge pentru a edita fotografia"</string>
@@ -151,4 +150,9 @@
     <string name="discard_changes_dialog_message" msgid="8462485277292103457">"Renunți la modificări?"</string>
     <string name="discard_changes_dialog_button_keep_editing" msgid="9118931326834547216">"Continuă editarea"</string>
     <string name="discard_changes_dialog_button_discard" msgid="6585071548322908206">"Renunță"</string>
+    <string name="action_zoom_in" msgid="3326782160671405449">"Mărește"</string>
+    <string name="action_zoom_out" msgid="5454911090443175449">"Micșorează"</string>
+    <string name="zoomed_to_percent" msgid="1243039994190840132">"S-a mărit la %d%%"</string>
+    <string name="max_zoom_percentage" msgid="2111670558746866030">"S-a atins dimensiunea maximă de zoom"</string>
+    <string name="min_zoom_percentage" msgid="5931879817379214316">"S-a atins dimensiunea minimă de zoom"</string>
 </resources>

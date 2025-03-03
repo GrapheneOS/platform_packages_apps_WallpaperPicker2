@@ -72,7 +72,7 @@
     <string name="preview_screen_description_editable" msgid="5558037286562127705">"Fon rasmi eskizi: %1$s. Ikki barmoq bilan yaqindan razm solish mumkin"</string>
     <string name="preview_screen_description_non_editable" msgid="5861996326502454566">"Fon rasmi eskizi: %1$s"</string>
     <string name="folded_device_state_description" msgid="4972608448265616264">"Buklangan"</string>
-    <string name="unfolded_device_state_description" msgid="3071975681472460627">"Buklanmagan"</string>
+    <string name="unfolded_device_state_description" msgid="3071975681472460627">"Yoyib ochilgan"</string>
     <string name="full_preview_check_button_description" msgid="700484353763952975">"Fon rasmi tahririni yakunlash"</string>
     <string name="refreshing_daily_wallpaper_dialog_message" msgid="1975910873362855761">"Kunlik fon rasmi yangilanmoqda…"</string>
     <string name="refresh_daily_wallpaper_failed_message" msgid="4749879993812557166">"Kunlik fon rasmi yangilanmadi. Internet aloqasini tekshiring va qaytadan urining."</string>
@@ -150,4 +150,9 @@
     <string name="discard_changes_dialog_message" msgid="8462485277292103457">"Oʻzgarishlar bekor qilinsinmi?"</string>
     <string name="discard_changes_dialog_button_keep_editing" msgid="9118931326834547216">"Tahrirlashda davom etish"</string>
     <string name="discard_changes_dialog_button_discard" msgid="6585071548322908206">"Bekor qilish"</string>
+    <string name="action_zoom_in" msgid="3326782160671405449">"Yaqinlashtirish"</string>
+    <string name="action_zoom_out" msgid="5454911090443175449">"Uzoqlashtirish"</string>
+    <string name="zoomed_to_percent" msgid="1243039994190840132">"%d%% zum"</string>
+    <string name="max_zoom_percentage" msgid="2111670558746866030">"Maksimal yaqinlikda"</string>
+    <string name="min_zoom_percentage" msgid="5931879817379214316">"Minimal uzoqlikda"</string>
 </resources>

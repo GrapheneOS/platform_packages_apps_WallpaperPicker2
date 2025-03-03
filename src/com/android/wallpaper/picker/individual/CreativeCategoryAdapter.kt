@@ -16,7 +16,6 @@
 
 package com.android.wallpaper.picker.individual
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,29 +29,51 @@ import com.android.wallpaper.model.WallpaperInfo
  * internally creates the CreativeCategoryIndividualHolder instance for the tile .
  */
 class CreativeCategoryAdapter(
-    var items: List<WallpaperInfo>,
-    private val activity: Activity,
+    private val layoutInflater: LayoutInflater,
     private val tileSizePx: Int,
+    private val onCategoryClicked: (wallpaper: WallpaperInfo) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var listItems: List<Pair<WallpaperInfo, WallpaperInfo?>> = emptyList()
+
+    fun setItems(items: List<WallpaperInfo>) {
+        listItems = items.toPairs()
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return createIndividualHolder(parent)
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return listItems.size
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val wallpaperInfo = items[position] as LiveWallpaperInfo
-        wallpaperInfo.setVisibleTitle(true)
-        (holder as CreativeCategoryIndividualHolder?)?.bindWallpaper(wallpaperInfo)
+        val wallpaperInfoPair = listItems[position]
+        (wallpaperInfoPair.first as? LiveWallpaperInfo)?.isVisibleTitle = true
+        (wallpaperInfoPair.second as? LiveWallpaperInfo)?.isVisibleTitle = true
+        val creativeCategoryViewHolder = holder as? CreativeCategoryIndividualHolder2 ?: return
+        creativeCategoryViewHolder.bind(
+            wallpaperInfoPair.first,
+            wallpaperInfoPair.second,
+            onCategoryClicked,
+        )
+    }
+
+    private fun List<WallpaperInfo>.toPairs(): List<Pair<WallpaperInfo, WallpaperInfo?>> {
+        val result = mutableListOf<Pair<WallpaperInfo, WallpaperInfo?>>()
+        for (i in indices step 2) {
+            val first = this[i]
+            val second = if (i + 1 < size) this[i + 1] else null
+            result.add(Pair(first, second))
+        }
+        return result
     }
 
     private fun createIndividualHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        val layoutInflater = LayoutInflater.from(activity)
-        val view: View = layoutInflater.inflate(R.layout.labeled_grid_item_image, parent, false)
-
-        return CreativeCategoryIndividualHolder(activity, tileSizePx, view)
+        val view: View =
+            layoutInflater.inflate(R.layout.creative_category_individual_item_view, parent, false)
+        return CreativeCategoryIndividualHolder2(tileSizePx, view)
     }
 }

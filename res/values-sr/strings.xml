@@ -150,4 +150,9 @@
     <string name="discard_changes_dialog_message" msgid="8462485277292103457">"Желите да одбаците промене?"</string>
     <string name="discard_changes_dialog_button_keep_editing" msgid="9118931326834547216">"Настави са изменама"</string>
     <string name="discard_changes_dialog_button_discard" msgid="6585071548322908206">"Одбаци"</string>
+    <string name="action_zoom_in" msgid="3326782160671405449">"Увећајте"</string>
+    <string name="action_zoom_out" msgid="5454911090443175449">"Умањите"</string>
+    <string name="zoomed_to_percent" msgid="1243039994190840132">"Зумирано је на %d%%"</string>
+    <string name="max_zoom_percentage" msgid="2111670558746866030">"Достигнуто је максимално зумирање"</string>
+    <string name="min_zoom_percentage" msgid="5931879817379214316">"Достигнуто је минимално зумирање"</string>
 </resources>

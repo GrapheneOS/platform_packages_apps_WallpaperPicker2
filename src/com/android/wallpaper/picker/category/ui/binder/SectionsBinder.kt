@@ -23,6 +23,7 @@ import com.android.wallpaper.R
 import com.android.wallpaper.picker.category.ui.view.adapter.CategorySectionsAdapter
 import com.android.wallpaper.picker.category.ui.view.decoration.CategoriesGridPaddingDecoration
 import com.android.wallpaper.picker.category.ui.viewmodel.SectionViewModel
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 
 /** Binds the collection of SectionViewModel to a section */
 object SectionsBinder {
@@ -33,9 +34,18 @@ object SectionsBinder {
         sectionsViewModelList:
             List<SectionViewModel>, // TODO: this should not be a list rather a simple view model
         windowWidth: Int,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
     ) {
-        sectionsListView.adapter = CategorySectionsAdapter(sectionsViewModelList, windowWidth)
+        sectionsListView.adapter =
+            CategorySectionsAdapter(
+                sectionsViewModelList,
+                windowWidth,
+                colorUpdateViewModel,
+                shouldAnimateColor,
+                lifecycleOwner,
+            )
         val gridLayoutManager =
             GridLayoutManager(sectionsListView.context, DEFAULT_SPAN).apply {
                 spanSizeLookup =
