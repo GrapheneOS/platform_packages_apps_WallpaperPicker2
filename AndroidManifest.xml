@@ -55,6 +55,9 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.HOME" />
         </intent>
+      <intent>
+          <action android:name="com.android.photopicker.core.embedded.EmbeddedService.BIND" />
+      </intent>
   </queries>
 
   <application

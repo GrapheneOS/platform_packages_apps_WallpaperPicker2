@@ -113,7 +113,7 @@
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"پیش‌نمای کاغذدیواری صفحه قفل"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"پیش‌نمای کاغذدیواری صفحه اصلی"</string>
     <string name="collection_not_exist_msg" msgid="3504852962885064842">"مجموعه وجود ندارد"</string>
-    <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"لطفاً از حالت صفحه تقسیم‌شده خارج شوید و دوباره امتحان کنید"</string>
+    <string name="wallpaper_exit_split_screen" msgid="1928870664619591636">"لطفاً از حالت صفحه دونیمه خارج شوید و دوباره امتحان کنید"</string>
     <string name="set_wallpaper_dialog_set_button" msgid="5760149969510325088">"تنظیم"</string>
     <string name="cancel" msgid="4970902691067201584">"لغو"</string>
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"پنهان کردن پیش‌نمای رابط کاربری"</string>

@@ -34,6 +34,10 @@
     <!-- Label for a button which lets user try to set the wallpaper again. [CHAR LIMIT=30] -->
     <string name="try_again">Try again</string>
 
+    <!-- Header for the screen where user can select a custom photo to be set as wallpaper
+         [CHAR LIMIT=30] -->
+    <string name="select_a_photo">Select a photo</string>
+
     <!-- Error message indicating the app could not successfully set an image as the device
          wallpaper. [CHAR LIMIT=100] -->
     <string name="set_wallpaper_error_message">Unable to set wallpaper.</string>

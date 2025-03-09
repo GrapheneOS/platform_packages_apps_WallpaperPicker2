@@ -17,10 +17,10 @@
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import android.content.Context
-import androidx.lifecycle.viewModelScope
 import com.android.wallpaper.asset.ContentUriAsset
 import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.CuratedPhotosInteractor
+import com.android.wallpaper.picker.category.domain.interactor.OnDeviceWallpapersInteractor
 import com.android.wallpaper.picker.category.ui.view.SectionCardinality
 import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
 import com.android.wallpaper.picker.data.WallpaperModel
@@ -43,13 +43,14 @@ constructor(
     @ApplicationContext context: Context,
     curatedPhotosInteractor: CuratedPhotosInteractor,
     creativeCategoryInteractor: CreativeCategoryInteractor,
+    onDeviceWallpapersInteractor: OnDeviceWallpapersInteractor,
     @Assisted private val viewModelScope: CoroutineScope,
 ) {
 
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
     val navigationEvents = _navigationEvents.asSharedFlow()
 
-    val wallpaperCarouselItems: Flow<List<TileViewModel>> =
+    val curatedPhotoCarouselItems: Flow<List<TileViewModel>> =
         curatedPhotosInteractor.category.distinctUntilChanged().map { category ->
             category.categoryModel.collectionCategoryData?.wallpaperModels?.map { wallpaperModel ->
                 val staticWallpaperModel = wallpaperModel as? WallpaperModel.StaticWallpaperModel
@@ -64,6 +65,29 @@ constructor(
                 }
             } ?: emptyList()
         }
+
+    val wallpaperCarouselItems: Flow<List<TileViewModel>> = curatedPhotoCarouselItems
+
+    /**
+     * This [Flow] maps on device [WallpaperModel] to [TileViewModel]. It is consumed by the
+     * carousel in the case there is an insufficient number of curated photos
+     */
+    val defaultWallpapersTileVieModels: Flow<List<TileViewModel>> =
+        onDeviceWallpapersInteractor.defaultWallpapers.distinctUntilChanged().map {
+            wallpaperModelList ->
+            wallpaperModelList.map { wallpaperModel ->
+                val staticWallpaperModel = wallpaperModel as? WallpaperModel.StaticWallpaperModel
+                TileViewModel(
+                    defaultDrawable = null,
+                    thumbnailAsset = staticWallpaperModel?.commonWallpaperData?.thumbAsset,
+                    text = wallpaperModel.commonWallpaperData.title ?: "",
+                    maxCategoriesInRow = SectionCardinality.Single,
+                ) {
+                    navigateToPreviewScreen(wallpaperModel, CategoryType.Default)
+                }
+            } ?: emptyList()
+        }
+
     /**
      * This [Flow] maps creative categories to [TileViewModel]. This flow is consumed by the
      * carousel in the case there is an insufficient number of curated photos

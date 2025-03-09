@@ -226,7 +226,7 @@ class IndividualPickerFragment2 :
                     // TODO (b/385059403): Remove these log lines once the bug is fixed
                     if (arguments == null) {
                         Log.w(TAG, "Arguments are null!")
-                    } else if (arguments.getString(ARG_CATEGORY_COLLECTION_ID) == null) {
+                    } else if (arguments?.getString(ARG_CATEGORY_COLLECTION_ID) == null) {
                         Log.w(TAG, "Category Collection ID is null or missing in arguments.")
                     }
                     parentFragmentManager.popBackStack()

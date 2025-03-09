@@ -102,16 +102,14 @@ object CustomizationPickerBinder2 {
                         when (it) {
                             LOCK_SCREEN -> {
                                 if (previewPager.currentState != R.id.lock_preview_selected) {
-                                    previewPager.setTransitionDuration(0)
-                                    previewPager.transitionToState(R.id.lock_preview_selected)
+                                    previewPager.jumpToState(R.id.lock_preview_selected)
                                 }
                                 lockCustomizationOptionContainer.isInvisible = false
                                 homeCustomizationOptionContainer.isInvisible = true
                             }
                             HOME_SCREEN -> {
                                 if (previewPager.currentState != R.id.home_preview_selected) {
-                                    previewPager.setTransitionDuration(0)
-                                    previewPager.transitionToState(R.id.home_preview_selected)
+                                    previewPager.jumpToState(R.id.home_preview_selected)
                                 }
                                 lockCustomizationOptionContainer.isInvisible = true
                                 homeCustomizationOptionContainer.isInvisible = false

@@ -104,26 +104,42 @@
                     android:text="Placeholder for the previews to position below it"
                     tools:ignore="HardcodedText" />
 
-                <TextView
-                    android:id="@+id/lock_preview_label"
+                <FrameLayout
+                    android:id="@+id/lock_preview_label_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom"
-                    android:gravity="center"
-                    android:textColor="@color/system_on_surface"
-                    android:text="@string/lock_screen_tab" />
+                    android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom">
+
+                    <TextView
+                        android:id="@+id/lock_preview_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:textColor="@color/system_on_surface"
+                        android:text="@string/lock_screen_tab" />
+                </FrameLayout>
 
                 <include layout="@layout/wallpaper_preview_card2"
                     android:id="@+id/lock_preview" />
 
-                <TextView
-                    android:id="@+id/home_preview_label"
+                <FrameLayout
+                    android:id="@+id/home_preview_label_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom"
-                    android:gravity="center"
-                    android:textColor="@color/system_on_surface"
-                    android:text="@string/home_screen_tab" />
+                    android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom">
+
+                    <TextView
+                        android:id="@+id/home_preview_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:textColor="@color/system_on_surface"
+                        android:text="@string/home_screen_tab" />
+                </FrameLayout>
+
 
                 <include layout="@layout/wallpaper_preview_card2"
                     android:id="@+id/home_preview" />

@@ -28,9 +28,7 @@ import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.wallpaper.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.Screen.HOME_SCREEN
-import com.android.wallpaper.model.Screen.LOCK_SCREEN
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
-import com.android.wallpaper.picker.customization.ui.util.ViewAlphaAnimator.animateToAlpha
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import com.android.wallpaper.picker.data.WallpaperModel
@@ -50,6 +48,7 @@ import kotlinx.coroutines.launch
 // (workspace binding to be added). Also we enable a screen to be defined during binding rather than
 // reading from viewModel.isViewAsHome.
 object BasePreviewBinder {
+
     fun bind(
         applicationContext: Context,
         view: View,
@@ -90,16 +89,6 @@ object BasePreviewBinder {
                                 view.setOnClickListener { onTransitionToScreen?.invoke(screen) }
                             }
                         }
-                }
-
-                launch {
-                    when (screen) {
-                        LOCK_SCREEN -> viewModel.lockPreviewAnimateToAlpha
-                        HOME_SCREEN -> viewModel.homePreviewAnimateToAlpha
-                    }.collect {
-                        wallpaperSurface.animateToAlpha(it)
-                        workspaceSurface.animateToAlpha(it)
-                    }
                 }
             }
         }

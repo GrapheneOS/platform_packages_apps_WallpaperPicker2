@@ -38,7 +38,7 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <Constraint
-            android:id="@+id/lock_preview_label"
+            android:id="@+id/lock_preview_label_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom"
@@ -50,14 +50,13 @@
             android:id="@+id/lock_preview"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:alpha="1.0"
             app:layout_constraintTop_toBottomOf="@+id/label_placeholder"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline_center"
             app:layout_constraintEnd_toEndOf="@+id/guideline_center" />
 
         <Constraint
-            android:id="@+id/home_preview_label"
+            android:id="@+id/home_preview_label_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom"
@@ -69,7 +68,6 @@
             android:id="@+id/home_preview"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:alpha="0.4"
             android:layout_marginStart="@dimen/handheld_small_preview_space_between_preview"
             app:layout_constraintTop_toBottomOf="@+id/label_placeholder"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -88,7 +86,7 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <Constraint
-            android:id="@+id/lock_preview_label"
+            android:id="@+id/lock_preview_label_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom"
@@ -101,13 +99,12 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="@dimen/handheld_small_preview_space_between_preview"
-            android:alpha="0.4"
             app:layout_constraintTop_toBottomOf="@+id/label_placeholder"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/home_preview" />
 
         <Constraint
-            android:id="@+id/home_preview_label"
+            android:id="@+id/home_preview_label_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom"
@@ -119,7 +116,6 @@
             android:id="@+id/home_preview"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:alpha="1.0"
             app:layout_constraintTop_toBottomOf="@+id/label_placeholder"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline_center"
