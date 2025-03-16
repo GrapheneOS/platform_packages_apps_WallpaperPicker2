@@ -24,8 +24,7 @@ import com.android.systemui.surfaceeffects.shaderutil.ShaderUtilLibrary
  * - Clouds
  * - Displacement map
  */
-// TODO (b/281878827): remove this and use loading animation in SystemUIShaderLib when available
-class CompositeLoadingShader : RuntimeShader(LOADING_SHADER) {
+class CompositeLoadingShader(type: Type) : RuntimeShader(getShader(type)) {
     // language=AGSL
     companion object {
         private const val UNIFORMS =
@@ -37,7 +36,7 @@ class CompositeLoadingShader : RuntimeShader(LOADING_SHADER) {
             layout(color) uniform vec4 in_screenColor;
         """
 
-        private const val MAIN_SHADER =
+        private const val SPARKLE_TURBULENCE_SHADER =
             """ vec4 main(vec2 p) {
             half4 bgColor = in_background.eval(p);
             half3 sparkleMask = in_sparkleMask.eval(p).rgb;
@@ -50,7 +49,30 @@ class CompositeLoadingShader : RuntimeShader(LOADING_SHADER) {
         }
         """
 
-        private const val LOADING_SHADER = UNIFORMS + ShaderUtilLibrary.SHADER_LIB + MAIN_SHADER
+        private const val SURFACE_TURBULENCE_SHADER =
+            """ vec4 main(vec2 p) {
+            half4 bgColor = in_background.eval(p);
+            half4 colorMask = in_colorMask.eval(p);
+
+            // Apply src_over blend mode
+            half4 effect = half4(mix(bgColor.rgb, colorMask.rgb, colorMask.a), 1.0);
+            return mix(bgColor, effect, in_alpha);
+        }
+        """
+
+        enum class Type {
+            SPARKLE_TURBULENCE,
+            SURFACE_TURBULENCE,
+        }
+
+        fun getShader(type: Type): String {
+            return when (type) {
+                Type.SPARKLE_TURBULENCE ->
+                    UNIFORMS + ShaderUtilLibrary.SHADER_LIB + SPARKLE_TURBULENCE_SHADER
+                Type.SURFACE_TURBULENCE ->
+                    UNIFORMS + ShaderUtilLibrary.SHADER_LIB + SURFACE_TURBULENCE_SHADER
+            }
+        }
     }
 
     /** Sets the overall opacity of the effect. */

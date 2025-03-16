@@ -21,7 +21,9 @@ import android.util.SparseIntArray
 import android.widget.RemoteViews.ColorResources
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
+import com.android.customization.picker.mode.data.repository.DarkModeStateRepository
 import com.android.systemui.monet.Style
+import com.android.wallpaper.system.UiModeManagerWrapper
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.internal.lifecycle.RetainedLifecycleImpl
@@ -45,13 +47,15 @@ class ColorUpdateViewModelTest {
     private lateinit var context: Context
     private lateinit var underTest: ColorUpdateViewModel
     @Inject lateinit var testScope: TestScope
+    @Inject lateinit var uiModeManager: UiModeManagerWrapper
+    @Inject lateinit var darkModeStateRepository: DarkModeStateRepository
 
     @Before
     fun setUp() {
         hiltRule.inject()
 
         context = InstrumentationRegistry.getInstrumentation().targetContext
-        underTest = ColorUpdateViewModel(context, RetainedLifecycleImpl())
+        underTest = ColorUpdateViewModel(context, RetainedLifecycleImpl(), darkModeStateRepository)
     }
 
     private fun overlayColors(context: Context, colorMapping: SparseIntArray) {
@@ -74,6 +78,22 @@ class ColorUpdateViewModelTest {
             underTest.updateColors()
 
             assertThat(colorPrimary()).isEqualTo(12345)
+        }
+    }
+
+    @Test
+    fun updateTheme_darkMode() {
+        testScope.runTest {
+            // Turn off dark mode
+            uiModeManager.setNightModeActivated(false)
+            val isDarkMode = collectLastValue(underTest.isDarkMode)
+            assertThat(isDarkMode()).isFalse()
+
+            // Turn on dark mode
+            uiModeManager.setNightModeActivated(true)
+            underTest.updateDarkModeAndColors()
+
+            assertThat(isDarkMode()).isTrue()
         }
     }
 

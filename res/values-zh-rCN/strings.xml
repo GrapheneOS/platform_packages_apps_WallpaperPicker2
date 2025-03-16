@@ -24,6 +24,8 @@
     <string name="set_wallpaper_button_text" msgid="5445978864530156290">"设为壁纸"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"正在设置壁纸…"</string>
     <string name="try_again" msgid="8278874823700921234">"重试"</string>
+    <!-- no translation found for select_a_photo (7273925950262860696) -->
+    <skip />
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"无法设置壁纸。"</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"无法加载壁纸。图片已损坏或不可用。"</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"当前设置的壁纸"</string>

@@ -33,20 +33,25 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import com.android.wallpaper.module.DrawableLayerResolver;
 import com.android.wallpaper.module.InjectorProvider;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.Key;
 import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -205,6 +210,47 @@ public class LiveWallpaperThumbAsset extends Asset {
                 .load(LiveWallpaperThumbAsset.this)
                 .apply(reqOptions)
                 .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageView);
+    }
+
+    @Override
+    public void loadDrawableWithTransition(Context context, ImageView imageView,
+            final int transitionDurationMillis,
+            @Nullable final DrawableLoadedListener drawableLoadedListener,
+            int placeholderColor) {
+        RequestOptions reqOptions;
+        if (mUri != null) {
+            reqOptions = RequestOptions.centerCropTransform().apply(RequestOptions
+                            .diskCacheStrategyOf(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true))
+                    .placeholder(new ColorDrawable(placeholderColor));
+        } else {
+            reqOptions = RequestOptions.centerCropTransform()
+                    .placeholder(new ColorDrawable(placeholderColor));
+        }
+        imageView.setBackgroundColor(placeholderColor);
+        Glide.with(context)
+                .asDrawable()
+                .load(LiveWallpaperThumbAsset.this)
+                .apply(reqOptions)
+                .transition(DrawableTransitionOptions.withCrossFade(transitionDurationMillis))
+                .addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model,
+                            Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model,
+                            Target<Drawable> target, DataSource dataSource,
+                            boolean isFirstResource) {
+                        if (drawableLoadedListener != null) {
+                            drawableLoadedListener.onDrawableLoaded();
+                        }
+                        return false;
+                    }
+                })
                 .into(imageView);
     }
 

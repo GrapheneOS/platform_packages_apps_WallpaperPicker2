@@ -20,7 +20,10 @@ import static android.app.WallpaperManager.SetWallpaperFlags;
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Parcel;
+
+import androidx.annotation.Nullable;
 
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.BuiltInWallpaperAsset;
@@ -49,11 +52,12 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
                     return new CurrentWallpaperInfo[size];
                 }
             };
-    private static final String TAG = "CurrentWallpaperInfoVN";
     private final List<String> mAttributions;
     private Asset mAsset;
     private final String mActionUrl;
     private final String mCollectionId;
+    @Nullable
+    private final Uri mImageWallpaperUri;
     @SetWallpaperFlags
     private final int mWallpaperManagerFlag;
     public static final String UNKNOWN_CURRENT_WALLPAPER_ID = "unknown_current_wallpaper_id";
@@ -65,11 +69,12 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
      *                             represents.
      */
     public CurrentWallpaperInfo(List<String> attributions, String actionUrl, String collectionId,
-            @SetWallpaperFlags int wallpaperManagerFlag) {
+            @SetWallpaperFlags int wallpaperManagerFlag, @Nullable Uri imageWallpaperUri) {
         mAttributions = attributions;
         mWallpaperManagerFlag = wallpaperManagerFlag;
         mActionUrl = actionUrl;
         mCollectionId = collectionId;
+        mImageWallpaperUri = imageWallpaperUri;
     }
 
     private CurrentWallpaperInfo(Parcel in) {
@@ -81,6 +86,13 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
         mActionUrl = in.readString();
         mCollectionId = in.readString();
         mCropHints.putAll(in.readSerializable(HashMap.class.getClassLoader(), HashMap.class));
+        mImageWallpaperUri = in.readParcelable(Uri.class.getClassLoader(), Uri.class);
+    }
+
+    @Nullable
+    @Override
+    public Uri getImageWallpaperUri() {
+        return mImageWallpaperUri;
     }
 
     @Override

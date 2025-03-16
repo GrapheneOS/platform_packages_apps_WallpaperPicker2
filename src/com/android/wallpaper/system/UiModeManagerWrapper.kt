@@ -29,5 +29,10 @@ interface UiModeManagerWrapper {
 
     fun getIsNightModeActivated(): Boolean
 
-    fun setNightModeActivated(isActive: Boolean)
+    /**
+     * Activating night mode for the current user
+     *
+     * @return if the change is successful
+     */
+    fun setNightModeActivated(isActive: Boolean): Boolean
 }

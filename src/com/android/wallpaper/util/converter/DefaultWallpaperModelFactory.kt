@@ -18,7 +18,6 @@ package com.android.wallpaper.util.converter
 
 import android.content.Context
 import com.android.wallpaper.model.CreativeWallpaperInfo
-import com.android.wallpaper.model.ImageWallpaperInfo
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.picker.data.StaticWallpaperData
@@ -48,10 +47,9 @@ class DefaultWallpaperModelFactory @Inject constructor() : WallpaperModelFactory
                 staticWallpaperData =
                     StaticWallpaperData(
                         asset = wallpaperInfo.getAsset(context),
-                        cropHints = wallpaperInfo.wallpaperCropHints
+                        cropHints = wallpaperInfo.wallpaperCropHints,
                     ),
-                imageWallpaperData =
-                    (wallpaperInfo as? ImageWallpaperInfo)?.getImageWallpaperData(),
+                imageWallpaperData = wallpaperInfo.getImageWallpaperData(),
                 networkWallpaperData = null,
                 downloadableWallpaperData = null,
             )

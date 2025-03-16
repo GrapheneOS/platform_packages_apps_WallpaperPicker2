@@ -41,6 +41,8 @@ abstract class BaseFlags {
 
     open fun isWallpaperEffectEnabled() = false
 
+    open fun isPackThemeEnabled() = false
+
     open fun isWallpaperEffectModelDownloadEnabled() = true
 
     open fun isInterruptModelDownloadEnabled() = false

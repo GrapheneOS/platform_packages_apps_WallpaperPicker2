@@ -102,6 +102,8 @@
                     android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom"
                     android:visibility="invisible"
                     android:text="Placeholder for the previews to position below it"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     tools:ignore="HardcodedText" />
 
                 <FrameLayout
@@ -118,6 +120,8 @@
                         android:gravity="center"
                         android:layout_gravity="center"
                         android:textColor="@color/system_on_surface"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:text="@string/lock_screen_tab" />
                 </FrameLayout>
 
@@ -137,6 +141,8 @@
                         android:gravity="center"
                         android:layout_gravity="center"
                         android:textColor="@color/system_on_surface"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:text="@string/home_screen_tab" />
                 </FrameLayout>
 

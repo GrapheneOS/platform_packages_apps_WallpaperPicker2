@@ -17,8 +17,10 @@ package com.android.wallpaper
 
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.effects.FakeEffectsController
+import com.android.wallpaper.module.DefaultRecentWallpaperManager
 import com.android.wallpaper.module.Injector
 import com.android.wallpaper.module.PartnerProvider
+import com.android.wallpaper.module.RecentWallpaperManager
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.logging.TestUserEventLogger
 import com.android.wallpaper.module.logging.UserEventLogger
@@ -154,4 +156,10 @@ abstract class WallpaperPicker2TestModule {
     abstract fun bindWorkspaceCallbackBinder(
         impl: DefaultWorkspaceCallbackBinder
     ): WorkspaceCallbackBinder
+
+    @Binds
+    @Singleton
+    abstract fun bindRecentWallpaperManager(
+        impl: DefaultRecentWallpaperManager
+    ): RecentWallpaperManager
 }

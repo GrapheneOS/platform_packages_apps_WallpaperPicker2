@@ -37,6 +37,7 @@ import com.android.wallpaper.picker.data.CreativeWallpaperData
 import com.android.wallpaper.picker.data.LiveWallpaperData
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
+import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_APPLIED
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_APPLY_FAILED
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_APPLY_IN_PROGRESS
@@ -272,13 +273,13 @@ constructor(
             imageEffectsModel,
             imageEffect ->
             imageEffect?.let {
-                when (imageEffectsModel.status) {
-                    EFFECT_DISABLE -> {
-                        null
-                    }
-                    else -> {
-                        getImageEffectFloatingSheetViewModel(imageEffect, imageEffectsModel)
-                    }
+                if (
+                    !flags.isExtendedWallpaperEnabled() &&
+                        imageEffectsModel.status == EFFECT_DISABLE
+                ) {
+                    null
+                } else {
+                    getImageEffectFloatingSheetViewModel(imageEffect, imageEffectsModel)
                 }
             }
         }
@@ -444,13 +445,10 @@ constructor(
         }
 
     private val isExtendedEffectAvailable: Flow<Boolean> =
-        combine(imageEffectFloatingSheetViewModel, wallpaperPreviewInteractor.wallpaperModel) {
-            imageEffect,
-            wallpaperModel ->
+        wallpaperPreviewInteractor.wallpaperModel.map {
             flags.isExtendedWallpaperEnabled() &&
-                (imageEffect != null ||
-                    (wallpaperModel is LiveWallpaperModel &&
-                        wallpaperModel.liveWallpaperData.isEffectWallpaper)) &&
+                ((it is StaticWallpaperModel && it.imageWallpaperData?.uri != null) ||
+                    (it is LiveWallpaperModel && it.liveWallpaperData.isEffectWallpaper)) &&
                 extendedWallpaperIntent.resolveActivityInfo(context.packageManager, 0) != null
         }
 
@@ -484,8 +482,7 @@ constructor(
                 (wallpaperModel as LiveWallpaperModel).liveWallpaperData.description,
             )
         } else {
-            val photoUri =
-                (wallpaperModel as? WallpaperModel.StaticWallpaperModel)?.imageWallpaperData?.uri
+            val photoUri = (wallpaperModel as? StaticWallpaperModel)?.imageWallpaperData?.uri
             Log.d(TAG, "PhotoURI is: $photoUri")
             photoUri?.let {
                 context.grantUriPermission(

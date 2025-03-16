@@ -49,7 +49,7 @@ class UiModeManagerImpl @Inject constructor(@ApplicationContext private val cont
         return context.resources.configuration.uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
     }
 
-    override fun setNightModeActivated(isActive: Boolean) {
-        uiModeManager?.setNightModeActivated(isActive)
+    override fun setNightModeActivated(isActive: Boolean): Boolean {
+        return uiModeManager?.setNightModeActivated(isActive) ?: false
     }
 }

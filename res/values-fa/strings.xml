@@ -24,6 +24,7 @@
     <string name="set_wallpaper_button_text" msgid="5445978864530156290">"تنظیم کاغذدیواری"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"در حال تنظیم کاغذدیواری..."</string>
     <string name="try_again" msgid="8278874823700921234">"امتحان مجدد"</string>
+    <string name="select_a_photo" msgid="7273925950262860696">"عکسی انتخاب کنید"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"کاغذ‌دیواری تنظیم نشد."</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"کاغذدیواری باز نشد. تصویر خراب است یا دردسترس نیست."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"درحال حاضر تنظیم‌ شده است"</string>

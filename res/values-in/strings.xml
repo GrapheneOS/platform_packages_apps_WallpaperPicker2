@@ -24,6 +24,7 @@
     <string name="set_wallpaper_button_text" msgid="5445978864530156290">"Setel wallpaper"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Menyetel wallpaper…"</string>
     <string name="try_again" msgid="8278874823700921234">"Coba lagi"</string>
+    <string name="select_a_photo" msgid="7273925950262860696">"Pilih foto"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Tidak dapat menyetel wallpaper."</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Tidak dapat memuat wallpaper. Gambar sudah rusak atau tidak tersedia."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Yang disetel saat ini"</string>

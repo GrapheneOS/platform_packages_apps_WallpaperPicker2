@@ -26,7 +26,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.category.ui.view.adapter.CuratedPhotosAdapter
+import com.android.wallpaper.picker.category.ui.view.adapter.LoadingAnimationAdapter
 import com.android.wallpaper.picker.customization.ui.view.WallpaperPickerEntry
+import com.android.wallpaper.picker.customization.ui.view.listener.WallpaperCarouselScrollListener
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperCarouselViewModel
@@ -47,10 +49,15 @@ object WallpaperPickerEntryBinder {
         navigateToWallpaperCategoriesScreen: (screen: Screen) -> Unit,
         navigateToPreviewScreen: ((wallpaperModel: WallpaperModel) -> Unit)?,
     ) {
+        val isOnMainScreen = {
+            viewModel.customizationOptionsViewModel.selectedOption.value == null
+        }
 
         bindWallpaperCarousel(
             wallpaperCarousel = view.wallpaperCarousel,
             viewModel = viewModel.customizationOptionsViewModel.wallpaperCarouselViewModel,
+            colorUpdateViewModel = colorUpdateViewModel,
+            shouldAnimateColor = isOnMainScreen,
             lifecycleOwner = lifecycleOwner,
             navigateToPreviewScreen = navigateToPreviewScreen,
         )
@@ -66,10 +73,6 @@ object WallpaperPickerEntryBinder {
                     }
                 }
             }
-        }
-
-        val isOnMainScreen = {
-            viewModel.customizationOptionsViewModel.selectedOption.value == null
         }
 
         ColorUpdateBinder.bind(
@@ -118,17 +121,46 @@ object WallpaperPickerEntryBinder {
     private fun bindWallpaperCarousel(
         wallpaperCarousel: RecyclerView,
         viewModel: WallpaperCarouselViewModel,
+        colorUpdateViewModel: ColorUpdateViewModel,
+        shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
         navigateToPreviewScreen: ((wallpaperModel: WallpaperModel) -> Unit)?,
     ) {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.wallpaperCarouselItems.collect {
-                        wallpaperCarousel.apply {
-                            adapter = CuratedPhotosAdapter(it)
-                            layoutManager = CarouselLayoutManager()
+                    val loadingAnimationAdapter =
+                        LoadingAnimationAdapter(
+                            size = 3,
+                            colorUpdateViewModel = colorUpdateViewModel,
+                            shouldAnimateColor = shouldAnimateColor,
+                            lifecycleOwner = lifecycleOwner,
+                        )
+                    /** Custom layout manager that allows disabling scrolling when loading */
+                    val customLayoutManager =
+                        object : CarouselLayoutManager() {
+                            private var isScrollable = false
+
+                            override fun canScrollHorizontally(): Boolean {
+                                return if (isScrollable) super.canScrollHorizontally() else false
+                            }
+
+                            fun setIsScrollable(isScrollable: Boolean) {
+                                this.isScrollable = isScrollable
+                            }
                         }
+                    wallpaperCarousel.apply {
+                        adapter = loadingAnimationAdapter
+                        layoutManager = customLayoutManager
+                    }
+                    viewModel.wallpaperCarouselItems.collect {
+                        wallpaperCarousel.swapAdapter(
+                            CuratedPhotosAdapter(it),
+                            /** removeAndRecycleExistingViews= */
+                            false,
+                        )
+                        customLayoutManager.setIsScrollable(true)
+                        wallpaperCarousel.addOnScrollListener(WallpaperCarouselScrollListener())
                         if (wallpaperCarousel.onFlingListener == null) {
                             CarouselSnapHelper().attachToRecyclerView(wallpaperCarousel)
                         }

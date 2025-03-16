@@ -24,6 +24,7 @@
     <string name="set_wallpaper_button_text" msgid="5445978864530156290">"वालपेपर राख्नुहोस्"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"वालपेपर सेट गर्दै…"</string>
     <string name="try_again" msgid="8278874823700921234">"फेरि प्रयास गर्नुहोस्‌"</string>
+    <string name="select_a_photo" msgid="7273925950262860696">"कुनै फोटो चयन गर्नुहोस्"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"वालपेपर सेट गर्न सकिएन।"</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"वालपेपर लोड गर्न सकिएन। फोटो या त त्रुटिपूर्ण छ वा उपलब्ध छैन।"</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"हाल सेट गरिएको"</string>

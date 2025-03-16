@@ -17,11 +17,10 @@
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
 import android.content.Context
-import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
-import com.android.wallpaper.picker.category.domain.interactor.CuratedPhotosInteractor
-import com.android.wallpaper.picker.category.domain.interactor.OnDeviceWallpapersInteractor
 import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperCarouselViewModel
+import com.android.wallpaper.testing.FakeCreativeWallpaperInteractor
+import com.android.wallpaper.testing.FakeCuratedPhotosInteractorImpl
 import com.android.wallpaper.testing.FakeOnDeviceWallpapersInteractor
 import com.android.wallpaper.testing.collectLastValue
 import com.google.common.truth.Truth.assertThat
@@ -52,9 +51,9 @@ class WallpaperCarouselViewModelTest {
     @Inject @ApplicationContext lateinit var context: Context
     @Inject lateinit var testDispatcher: TestDispatcher
     @Inject lateinit var testScope: TestScope
-    @Inject lateinit var onDeviceWallpapersInteractor: OnDeviceWallpapersInteractor
-    @Inject lateinit var curatedPhotosInteractor: CuratedPhotosInteractor
-    @Inject lateinit var creativeCategoryInteractor: CreativeCategoryInteractor
+    @Inject lateinit var onDeviceWallpapersInteractor: FakeOnDeviceWallpapersInteractor
+    @Inject lateinit var curatedPhotosInteractor: FakeCuratedPhotosInteractorImpl
+    @Inject lateinit var creativeCategoryInteractor: FakeCreativeWallpaperInteractor
     private lateinit var underTest: WallpaperCarouselViewModel
 
     @Before
@@ -78,10 +77,53 @@ class WallpaperCarouselViewModelTest {
     }
 
     @Test
-    fun selectedTab_whenClickOnTabStyle() = runTest {
+    fun wallpaperCarousel_checkNotEmpty() = runTest {
         val tileViewModels =
             collectLastValue<List<TileViewModel>>(underTest.defaultWallpapersTileVieModels).invoke()
         assertThat(tileViewModels?.size)
             .isEqualTo(FakeOnDeviceWallpapersInteractor.fakeOnDeviceWallpapers.size)
+    }
+
+    @Test
+    fun wallpaperCarousel_showCuratedPhotosWhenMoreThanMinimum() = runTest {
+        curatedPhotosInteractor.setCategory(FakeCuratedPhotosInteractorImpl.threeCuratedPhotos)
+        val tileViewModels =
+            collectLastValue<List<TileViewModel>>(underTest.wallpaperCarouselItems).invoke()
+        assertThat(tileViewModels?.get(0)?.text)
+            .isEqualTo(FakeCuratedPhotosInteractorImpl.curatedPhotosTitle)
+    }
+
+    @Test
+    fun wallpaperCarousel_showCreativesWhenMinimumAndCuratedLessThanMinimum() = runTest {
+        creativeCategoryInteractor.setCreativeCategories(
+            FakeCreativeWallpaperInteractor.dataListMinumumOrMore
+        )
+        curatedPhotosInteractor.setCategory(FakeCuratedPhotosInteractorImpl.twoCuratedPhotos)
+        val tileViewModels =
+            collectLastValue<List<TileViewModel>>(underTest.wallpaperCarouselItems).invoke()
+        assertThat(tileViewModels?.get(0)?.text)
+            .isEqualTo(
+                FakeCreativeWallpaperInteractor.dataListMinumumOrMore
+                    .get(0)
+                    .commonCategoryData
+                    .title
+            )
+    }
+
+    @Test
+    fun wallpaperCarousel_showDefaultsWhenCuratedAndCreativesLessThanMinimum() = runTest {
+        curatedPhotosInteractor.setCategory(FakeCuratedPhotosInteractorImpl.twoCuratedPhotos)
+        creativeCategoryInteractor.setCreativeCategories(
+            FakeCreativeWallpaperInteractor.dataListLessThanMinimum
+        )
+        val tileViewModels =
+            collectLastValue<List<TileViewModel>>(underTest.wallpaperCarouselItems).invoke()
+        assertThat(tileViewModels?.get(0)?.text)
+            .isEqualTo(
+                FakeOnDeviceWallpapersInteractor.fakeOnDeviceWallpapers
+                    .get(0)
+                    .commonWallpaperData
+                    .title
+            )
     }
 }

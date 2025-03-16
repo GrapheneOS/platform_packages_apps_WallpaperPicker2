@@ -27,12 +27,14 @@ public class WallpaperPreferenceKeys {
     public static final String KEY_HOME_WALLPAPER_ACTION_URL = "home_wallpaper_action_url";
     public static final String KEY_HOME_WALLPAPER_COLLECTION_ID = "home_wallpaper_collection_id";
     public static final String KEY_HOME_WALLPAPER_HASH_CODE = "home_wallpaper_hash_code";
+    public static final String KEY_HOME_WALLPAPER_IMAGE_URI = "home_wallpaper_image_uri";
 
     public static final String KEY_LOCK_WALLPAPER_ATTRIB_1 = "lock_wallpaper_attribution_line_1";
     public static final String KEY_LOCK_WALLPAPER_ATTRIB_2 = "lock_wallpaper_attribution_line_2";
     public static final String KEY_LOCK_WALLPAPER_ATTRIB_3 = "lock_wallpaper_attribution_line_3";
     public static final String KEY_LOCK_WALLPAPER_ACTION_URL = "lock_wallpaper_action_url";
     public static final String KEY_LOCK_WALLPAPER_HASH_CODE = "lock_wallpaper_hash_code";
+    public static final String KEY_LOCK_WALLPAPER_IMAGE_URI = "lock_wallpaper_image_uri";
     public static final String KEY_LOCK_WALLPAPER_COLLECTION_ID = "lock_wallpaper_collection_id";
     public static final String KEY_HAS_SMALL_PREVIEW_TOOLTIP_BEEN_SHOWN =
             "has_small_preview_tooltip_been_shown";

@@ -27,6 +27,7 @@ import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
 /** Custom adaptor for curated photos carousel in the categories page. */
 class CuratedPhotosAdapter(val items: List<TileViewModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var visiblePosition = -1 // Track the position of the visible TextView
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return createIndividualHolder(parent)
@@ -38,12 +39,25 @@ class CuratedPhotosAdapter(val items: List<TileViewModel>) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val tile: TileViewModel = items[position]
-        (holder as CuratedPhotoHolder?)?.bind(tile, holder.itemView.context)
+        (holder as CuratedPhotoHolder?)?.bind(
+            tile,
+            holder.itemView.context,
+            this.visiblePosition == position,
+        )
     }
 
     private fun createIndividualHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view: View = layoutInflater.inflate(R.layout.curated_photo_tile, parent, false)
         return CuratedPhotoHolder(view)
+    }
+
+    fun setVisiblePosition(position: Int) {
+        val previousPosition = this.visiblePosition
+        this.visiblePosition = position
+        if (previousPosition != -1) {
+            notifyItemChanged(previousPosition)
+        }
+        notifyItemChanged(position)
     }
 }

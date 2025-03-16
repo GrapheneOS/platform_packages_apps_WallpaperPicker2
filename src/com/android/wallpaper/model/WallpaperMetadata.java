@@ -18,6 +18,7 @@ package com.android.wallpaper.model;
 import android.app.WallpaperInfo;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.net.Uri;
 
 import androidx.annotation.Nullable;
 
@@ -33,15 +34,18 @@ public class WallpaperMetadata {
     private final String mActionUrl;
     private final String mCollectionId;
     @Nullable private final Map<Point, Rect> mCropHints;
+    @Nullable private final Uri mImageUri;
     protected final android.app.WallpaperInfo mWallpaperComponent;
 
     public WallpaperMetadata(List<String> attributions, String actionUrl, String collectionId,
-            android.app.WallpaperInfo wallpaperComponent, Map<Point, Rect> cropHints) {
+            android.app.WallpaperInfo wallpaperComponent, @Nullable Map<Point, Rect> cropHints,
+            @Nullable Uri imageUri) {
         mAttributions = attributions;
         mActionUrl = actionUrl;
         mCollectionId = collectionId;
         mWallpaperComponent = wallpaperComponent;
         mCropHints = cropHints;
+        mImageUri = imageUri;
     }
 
     /**
@@ -81,5 +85,15 @@ public class WallpaperMetadata {
     @Nullable
     public Map<Point, Rect> getWallpaperCropHints() {
         return mCropHints;
+    }
+
+    /**
+     * Returns the uri of the wallpaper image file.
+     *
+     * <p>Live wallpaper metadata should return null.
+     */
+    @Nullable
+    public Uri getWallpaperImageUri() {
+        return mImageUri;
     }
 }

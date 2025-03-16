@@ -113,7 +113,8 @@ public abstract class WallpaperInfo implements Parcelable {
     }
 
     /** Returns the URI corresponding to the wallpaper, or null if none exists. */
-    public Uri getUri() {
+    @Nullable
+    public Uri getImageWallpaperUri() {
         return null;
     }
 

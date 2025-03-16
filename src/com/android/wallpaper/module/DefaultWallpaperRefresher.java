@@ -143,7 +143,8 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                         mWallpaperPreferences.getHomeWallpaperActionUrl(),
                         mWallpaperPreferences.getHomeWallpaperCollectionId(),
                         /* wallpaperComponent= */ null,
-                        getCurrentWallpaperCropHints(FLAG_SYSTEM)));
+                        getCurrentWallpaperCropHints(FLAG_SYSTEM),
+                        mWallpaperPreferences.getHomeWallpaperImageUri()));
             } else {
                 Uri previewUri = mCreativeHelper.getCreativePreviewUri(mAppContext, homeInfo,
                         WallpaperDestination.HOME);
@@ -189,7 +190,8 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                         mWallpaperPreferences.getLockWallpaperActionUrl(),
                         mWallpaperPreferences.getLockWallpaperCollectionId(),
                         /* wallpaperComponent= */ null,
-                        getCurrentWallpaperCropHints(FLAG_LOCK)));
+                        getCurrentWallpaperCropHints(FLAG_LOCK),
+                        mWallpaperPreferences.getLockWallpaperImageUri()));
             } else {
                 Uri previewUri = mCreativeHelper.getCreativePreviewUri(mAppContext, lockInfo,
                         WallpaperDestination.LOCK);

@@ -25,6 +25,7 @@ class TileViewModel(
     val defaultDrawable: Drawable?,
     val thumbnailAsset: Asset?,
     val text: String,
+    val showTitle: Boolean = true,
     val maxCategoriesInRow: SectionCardinality = SectionCardinality.Single,
     val onClicked: (() -> Unit)? = null,
 )

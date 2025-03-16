@@ -25,8 +25,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 @Singleton
 class FakeOnDeviceWallpapersInteractor @Inject constructor() : OnDeviceWallpapersInteractor {
+    private val _defaultWallpapers = MutableStateFlow(fakeOnDeviceWallpapers)
+
     override val defaultWallpapers: Flow<List<WallpaperModel>>
-        get() = MutableStateFlow(fakeOnDeviceWallpapers)
+        get() = _defaultWallpapers
+
+    fun setDefaultWallpapers(newWallpapers: List<WallpaperModel.StaticWallpaperModel>) {
+        _defaultWallpapers.value = newWallpapers
+    }
 
     companion object {
         val fakeOnDeviceWallpapers =
@@ -34,14 +40,17 @@ class FakeOnDeviceWallpapersInteractor @Inject constructor() : OnDeviceWallpaper
                 WallpaperModelUtils.getStaticWallpaperModel(
                     wallpaperId = "testId1",
                     collectionId = "testCollection1",
+                    title = "onDeviceTitle1",
                 ),
                 WallpaperModelUtils.getStaticWallpaperModel(
                     wallpaperId = "testId2",
                     collectionId = "testCollection3",
+                    title = "onDeviceTitle2",
                 ),
                 WallpaperModelUtils.getStaticWallpaperModel(
                     wallpaperId = "testId3",
                     collectionId = "testCollection3",
+                    title = "onDeviceTitle3",
                 ),
             )
     }

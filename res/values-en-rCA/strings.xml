@@ -24,6 +24,7 @@
     <string name="set_wallpaper_button_text" msgid="5445978864530156290">"Set wallpaper"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Setting wallpaper…"</string>
     <string name="try_again" msgid="8278874823700921234">"Try again"</string>
+    <string name="select_a_photo" msgid="7273925950262860696">"Select a photo"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Unable to set wallpaper."</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Unable to load wallpaper. The image is either corrupted or unavailable."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Currently set"</string>

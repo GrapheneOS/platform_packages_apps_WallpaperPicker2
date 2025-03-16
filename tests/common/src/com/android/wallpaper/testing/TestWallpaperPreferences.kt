@@ -20,6 +20,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.Rect
+import android.net.Uri
 import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.LiveWallpaperPrefMetadata
 import com.android.wallpaper.model.StaticWallpaperPrefMetadata
@@ -196,6 +197,10 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
         mHomeWallpaperEffects = wallpaperEffects
     }
 
+    override fun getHomeWallpaperImageUri(): Uri? {
+        return mHomeStaticWallpaperPrefMetadata?.imageUri
+    }
+
     override fun getLockWallpaperAttributions(): List<String?>? {
         return lockScreenAttributions
     }
@@ -281,6 +286,10 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
 
     override fun setLockWallpaperEffects(wallpaperEffects: String?) {
         mLockWallpaperEffects = wallpaperEffects
+    }
+
+    override fun getLockWallpaperImageUri(): Uri? {
+        return mLockStaticWallpaperPrefMetadata?.imageUri
     }
 
     override fun addDailyRotation(timestamp: Long) {
@@ -380,7 +389,7 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
 
     override fun storeWallpaperColors(
         storedWallpaperId: String?,
-        wallpaperColors: WallpaperColors?
+        wallpaperColors: WallpaperColors?,
     ) {
         if (storedWallpaperId == null || wallpaperColors == null) {
             return
@@ -421,14 +430,14 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
             colorPrimary,
             colorSecondary,
             colorTerTiary,
-            WallpaperColors.HINT_FROM_BITMAP
+            WallpaperColors.HINT_FROM_BITMAP,
         )
     }
 
     override fun updateDailyWallpaperSet(
         @WallpaperPersister.Destination destination: Int,
         collectionId: String?,
-        wallpaperId: String?
+        wallpaperId: String?,
     ) {
         // Assign wallpaper info by destination.
         when (destination) {
@@ -453,7 +462,7 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
         which: Int,
         wallpaperId: String,
         wallpaper: LiveWallpaperInfo,
-        colors: WallpaperColors
+        colors: WallpaperColors,
     ) {}
 
     override fun storeLatestWallpaper(
@@ -461,7 +470,7 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
         wallpaperId: String,
         wallpaper: WallpaperInfo,
         croppedWallpaperBitmap: Bitmap,
-        colors: WallpaperColors
+        colors: WallpaperColors,
     ) {}
 
     override fun storeLatestWallpaper(
@@ -471,7 +480,7 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
         actionUrl: String?,
         collectionId: String?,
         croppedWallpaperBitmap: Bitmap,
-        colors: WallpaperColors
+        colors: WallpaperColors,
     ) {}
 
     override suspend fun addStaticWallpaperToRecentWallpapers(
@@ -483,7 +492,7 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
 
     override suspend fun addLiveWallpaperToRecentWallpapers(
         destination: WallpaperDestination,
-        wallpaperModel: WallpaperModel.LiveWallpaperModel
+        wallpaperModel: WallpaperModel.LiveWallpaperModel,
     ) {}
 
     override fun setHasSmallPreviewTooltipBeenShown(hasTooltipBeenShown: Boolean) {

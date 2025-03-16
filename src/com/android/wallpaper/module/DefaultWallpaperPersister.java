@@ -30,6 +30,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
@@ -749,6 +750,12 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
 
         private void setStaticWallpaperMetadataToPreferences(@Destination int destination,
                 int wallpaperId, long bitmapHash, WallpaperColors colors) {
+            Uri imageUri;
+            if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
+                imageUri = mWallpaperPreferences.getHomeWallpaperImageUri();
+            } else {
+                imageUri = mWallpaperPreferences.getLockWallpaperImageUri();
+            }
             saveStaticWallpaperToPreferences(
                     destination,
                     new StaticWallpaperPrefMetadata(
@@ -759,7 +766,8 @@ public class DefaultWallpaperPersister implements WallpaperPersister {
                             mWallpaper.getCollectionId(mAppContext),
                             bitmapHash,
                             wallpaperId,
-                            mWallpaper.getWallpaperId()));
+                            mWallpaper.getWallpaperId(),
+                            imageUri));
 
             if (destination == DEST_HOME_SCREEN || destination == DEST_BOTH) {
                 mWallpaperPreferences.storeLatestWallpaper(

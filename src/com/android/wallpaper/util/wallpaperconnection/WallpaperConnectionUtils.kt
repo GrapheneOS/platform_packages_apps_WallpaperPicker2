@@ -20,6 +20,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceControl
 import android.view.SurfaceView
+import android.view.View
 import com.android.app.tracing.TraceUtils.traceAsync
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
@@ -266,7 +267,14 @@ constructor(@ApplicationContext private val context: Context) {
         val engineConnection = WallpaperEngineConnection(displayMetrics, whichPreview)
         listener?.let { engineConnection.setListener(it) }
         // Attach wallpaper connection to service and get wallpaper engine
-        engineConnection.getEngine(wallpaperService, destinationFlag, surfaceView, description)
+        engineConnection
+            .getEngine(wallpaperService, destinationFlag, surfaceView, description)
+            .apply {
+                surfaceView.viewTreeObserver.addOnWindowVisibilityChangeListener { visibility ->
+                    setVisibility(visibility == View.VISIBLE)
+                }
+            }
+
         return WallpaperConnection(
             WeakReference(engineConnection),
             WeakReference(serviceConnection),

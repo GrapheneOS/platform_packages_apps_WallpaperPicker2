@@ -18,8 +18,8 @@ package com.android.customization.picker.clock.ui.view
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.lifecycle.LifecycleOwner
+import com.android.systemui.plugins.clocks.ClockAxisStyle
 import com.android.systemui.plugins.clocks.ClockController
-import com.android.systemui.plugins.clocks.ClockFontAxisSetting
 
 interface ClockViewFactory {
 
@@ -41,7 +41,7 @@ interface ClockViewFactory {
 
     fun updateColor(clockId: String, @ColorInt seedColor: Int?)
 
-    fun updateFontAxes(clockId: String, settings: List<ClockFontAxisSetting>)
+    fun updateFontAxes(clockId: String, settings: ClockAxisStyle)
 
     fun updateRegionDarkness()
 

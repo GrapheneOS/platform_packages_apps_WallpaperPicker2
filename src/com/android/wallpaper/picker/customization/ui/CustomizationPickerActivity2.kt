@@ -89,7 +89,7 @@ class CustomizationPickerActivity2 :
         }
         categoriesViewModel.initialize()
         configuration = Configuration(resources.configuration)
-        colorUpdateViewModel.updateColors()
+        colorUpdateViewModel.updateDarkModeAndColors()
         colorUpdateViewModel.setPreviewEnabled(!displayUtils.isLargeScreenOrUnfoldedDisplay(this))
 
         setContentView(R.layout.activity_cusomization_picker2)
@@ -130,8 +130,12 @@ class CustomizationPickerActivity2 :
         configuration?.let {
             val diff = newConfig.diff(it)
             val isAssetsPathsChange = diff and ActivityInfo.CONFIG_ASSETS_PATHS != 0
+            val isUiModeChange = diff and ActivityInfo.CONFIG_UI_MODE != 0
             if (isAssetsPathsChange) {
                 colorUpdateViewModel.updateColors()
+            }
+            if (isUiModeChange) {
+                colorUpdateViewModel.updateDarkModeAndColors()
             }
         }
         configuration?.setTo(newConfig)

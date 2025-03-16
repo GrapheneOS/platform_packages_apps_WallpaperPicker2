@@ -78,10 +78,10 @@ import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.WallpaperConnection
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint(AppbarFragment::class)
 class CustomizationPickerFragment2 : Hilt_CustomizationPickerFragment2() {
@@ -105,7 +105,6 @@ class CustomizationPickerFragment2 : Hilt_CustomizationPickerFragment2() {
     }
 
     private var fullyCollapsed = false
-    private var navBarHeight: Int = 0
 
     private var onBackPressedCallback: OnBackPressedCallback? = null
 
@@ -135,31 +134,44 @@ class CustomizationPickerFragment2 : Hilt_CustomizationPickerFragment2() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_customization_picker2, container, false)
 
+        val toolbar: Toolbar = view.requireViewById(R.id.toolbar) // Toolbar at screen top
         setupToolbar(
             view.requireViewById(R.id.nav_button),
-            view.requireViewById(R.id.toolbar),
+            toolbar,
             view.requireViewById(R.id.apply_button),
         )
 
         val pickerMotionContainer: MotionLayout = view.requireViewById(R.id.picker_motion_layout)
+        val optionContainer: ConstraintLayout =
+            view.requireViewById(R.id.customization_option_container)
+        val customizationFloatingSheetContainer: FrameLayout =
+            view.requireViewById(R.id.customization_option_floating_sheet_container)
         ViewCompat.setOnApplyWindowInsetsListener(pickerMotionContainer) { _, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            navBarHeight = insets.bottom
-            view
-                .requireViewById<FrameLayout>(R.id.customization_option_floating_sheet_container)
-                .setPaddingRelative(0, 0, 0, navBarHeight)
+            val navBarHeight = insets.bottom
+
+            val horizontalPadding =
+                resources.getDimensionPixelSize(
+                    R.dimen.customization_option_container_horizontal_padding
+                )
+            optionContainer.setPaddingRelative(
+                horizontalPadding,
+                0,
+                horizontalPadding,
+                navBarHeight,
+            )
+
+            customizationFloatingSheetContainer.setPaddingRelative(0, 0, 0, navBarHeight)
+
             val statusBarHeight = insets.top
-            val params =
-                view.requireViewById<Toolbar>(R.id.toolbar).layoutParams as MarginLayoutParams
-            params.setMargins(0, statusBarHeight, 0, 0)
+            (toolbar.layoutParams as MarginLayoutParams).setMargins(0, statusBarHeight, 0, 0)
+
             WindowInsetsCompat.CONSUMED
         }
 
         val customizationOptionFloatingSheetViewMap =
             customizationOptionUtil.initFloatingSheet(
-                pickerMotionContainer.requireViewById(
-                    R.id.customization_option_floating_sheet_container
-                ),
+                customizationFloatingSheetContainer,
                 layoutInflater,
             )
 
@@ -174,35 +186,49 @@ class CustomizationPickerFragment2 : Hilt_CustomizationPickerFragment2() {
             isFirstBinding = savedInstanceState == null,
         )
 
-        val optionContainer: ConstraintLayout =
-            view.requireViewById(R.id.customization_option_container)
         val wallpaperPickerEntry: WallpaperPickerEntry =
             view.requireViewById(R.id.wallpaper_picker_entry)
+        val previewLabelPlaceHolder: View = view.requireViewById(R.id.label_placeholder)
         view.post {
             val wallpaperPickerEntryExpandedHeight = wallpaperPickerEntry.height
             val wallpaperPickerEntryCollapsedHeight = wallpaperPickerEntry.collapsedButton.height
+            val previewLabelHeight = previewLabelPlaceHolder.height
+            val minCollapsedPreviewHeight =
+                resources.getDimensionPixelSize(
+                    R.dimen.customization_picker_min_preview_collapsed_height
+                )
+            val minCollapsedPagerHeight = minCollapsedPreviewHeight + previewLabelHeight
+            val minExpandedPreviewHeight =
+                resources.getDimensionPixelSize(
+                    R.dimen.customization_picker_min_preview_expanded_height
+                )
+            val minExpandedPagerHeight = minExpandedPreviewHeight + previewLabelHeight
+
+            // For collapsed, it needs to show the all option entries, with the collapsed wallpaper
+            // entry, which shows as a single button.
+            val collapsedHeaderHeight =
+                (pickerMotionContainer.height -
+                        (optionContainer.height -
+                            (wallpaperPickerEntryExpandedHeight -
+                                wallpaperPickerEntryCollapsedHeight)))
+                    .coerceAtLeast(minCollapsedPagerHeight)
+            pickerMotionContainer
+                .getConstraintSet(R.id.collapsed_header_primary)
+                ?.constrainHeight(R.id.preview_header, collapsedHeaderHeight)
+
             // The expanded / collapsed header height should be updated when optionContainer
             // height is known.
             // For expanded, it needs to show at least half of the entry view below the wallpaper
             // entry.
             val expandedHeaderHeight =
-                pickerMotionContainer.height -
-                    wallpaperPickerEntryExpandedHeight -
-                    resources.getDimensionPixelSize(R.dimen.customization_option_entry_height) / 2
+                (pickerMotionContainer.height -
+                        wallpaperPickerEntryExpandedHeight -
+                        resources.getDimensionPixelSize(R.dimen.customization_option_entry_height) /
+                            2)
+                    .coerceAtLeast(minExpandedPagerHeight)
             pickerMotionContainer
                 .getConstraintSet(R.id.expanded_header_primary)
                 ?.constrainHeight(R.id.preview_header, expandedHeaderHeight)
-            // For collapsed, it needs to show the all option entries, with the collapsed wallpaper
-            // entry, which shows as a single button.
-            val collapsedHeaderHeight =
-                pickerMotionContainer.height -
-                    (optionContainer.height -
-                        (wallpaperPickerEntryExpandedHeight -
-                            wallpaperPickerEntryCollapsedHeight)) -
-                    navBarHeight
-            pickerMotionContainer
-                .getConstraintSet(R.id.collapsed_header_primary)
-                ?.constrainHeight(R.id.preview_header, collapsedHeaderHeight)
 
             // Transition listener handle 2 things
             // 1. Expand and collapse the wallpaper entry
@@ -239,7 +265,10 @@ class CustomizationPickerFragment2 : Hilt_CustomizationPickerFragment2() {
                                 currentId == R.id.collapsed_header_primary
                         ) {
                             // This is when we complete the transition back to the primary screen
-                            pickerMotionContainer.setTransition(R.id.transition_primary)
+                            // Post to let this transition fully complete first
+                            pickerMotionContainer.post {
+                                pickerMotionContainer.setTransition(R.id.transition_primary)
+                            }
                             // Reset the preview only after the transition is completed, because the
                             // reset will trigger the animation of the UI components in the floating
                             // sheet content, which can possibly be interrupted by the floating
@@ -276,10 +305,7 @@ class CustomizationPickerFragment2 : Hilt_CustomizationPickerFragment2() {
                     customizationOptionFloatingSheetViewMap[screen]?.let { floatingSheetView ->
                         setCustomizationOptionFloatingSheet(
                             floatingSheetViewContent = floatingSheetView,
-                            floatingSheetContainer =
-                                view.requireViewById(
-                                    R.id.customization_option_floating_sheet_container
-                                ),
+                            floatingSheetContainer = customizationFloatingSheetContainer,
                             motionContainer = pickerMotionContainer,
                             onComplete = {
                                 // Transition to secondary screen after content is set
@@ -552,14 +578,14 @@ class CustomizationPickerFragment2 : Hilt_CustomizationPickerFragment2() {
         floatingSheetContainer.addView(floatingSheetViewContent)
 
         floatingSheetViewContent.doOnPreDraw {
-            val height = floatingSheetViewContent.height + navBarHeight
+            val translationY = floatingSheetViewContent.height
             floatingSheetContainer.translationY = 0.0f
             floatingSheetContainer.alpha = 0.0f
             // Update the motion container
             motionContainer.getConstraintSet(R.id.expanded_header_primary)?.apply {
                 setTranslationY(
                     R.id.customization_option_floating_sheet_container,
-                    height.toFloat(),
+                    translationY.toFloat(),
                 )
                 setAlpha(R.id.customization_option_floating_sheet_container, 0.0f)
                 connect(
@@ -576,7 +602,7 @@ class CustomizationPickerFragment2 : Hilt_CustomizationPickerFragment2() {
             motionContainer.getConstraintSet(R.id.collapsed_header_primary)?.apply {
                 setTranslationY(
                     R.id.customization_option_floating_sheet_container,
-                    height.toFloat(),
+                    translationY.toFloat(),
                 )
                 setAlpha(R.id.customization_option_floating_sheet_container, 0.0f)
                 connect(

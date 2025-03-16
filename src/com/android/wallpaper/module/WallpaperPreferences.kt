@@ -20,6 +20,7 @@ import android.app.WallpaperManager.SetWallpaperFlags
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
+import android.net.Uri
 import android.text.TextUtils
 import androidx.annotation.IntDef
 import com.android.wallpaper.model.LiveWallpaperInfo
@@ -113,6 +114,9 @@ interface WallpaperPreferences {
     /** Sets the home wallpaper's effects to SharedPreferences. */
     fun setHomeWallpaperEffects(wallpaperEffects: String?)
 
+    /** Gets the home wallpaper's image uri. */
+    fun getHomeWallpaperImageUri(): Uri?
+
     /** Returns the lock screen attributions as a list. */
     fun getLockWallpaperAttributions(): List<String?>?
 
@@ -187,6 +191,9 @@ interface WallpaperPreferences {
 
     /** Sets the lock wallpaper's effects to SharedPreferences. */
     fun setLockWallpaperEffects(wallpaperEffects: String?)
+
+    /** Gets the lock wallpaper's image uri. */
+    fun getLockWallpaperImageUri(): Uri?
 
     /** Persists the timestamp of a daily wallpaper rotation that just occurred. */
     fun addDailyRotation(timestamp: Long)
@@ -275,7 +282,7 @@ interface WallpaperPreferences {
      * before returning.
      */
     fun setPendingDailyWallpaperUpdateStatusSync(
-        @PendingDailyWallpaperUpdateStatus updateStatus: Int,
+        @PendingDailyWallpaperUpdateStatus updateStatus: Int
     )
 
     /** Returns whether a daily wallpaper update is pending. */

@@ -42,7 +42,7 @@ class LoadingAnimation(
      * Amount of time before the loading animation times out and plays reveal animation, null
      * represents no time out
      */
-    private val timeOutDuration: Long? = null
+    private val timeOutDuration: Long? = null,
 ) {
 
     /** Type representing the reveal animation to be played in [LoadingAnimation] */
@@ -56,12 +56,13 @@ class LoadingAnimation(
          * Reveal animation that fades out the animation effects on the loading view, leaving the
          * original loading view visible
          */
-        FADE
+        FADE,
     }
 
     private val pixelDensity = revealOverlay.resources.displayMetrics.density
 
-    private val loadingShader = CompositeLoadingShader()
+    private val loadingShader =
+        CompositeLoadingShader(type = CompositeLoadingShader.Companion.Type.SPARKLE_TURBULENCE)
     private val colorTurbulenceNoiseShader =
         TurbulenceNoiseShader().apply {
             setPixelDensity(pixelDensity)
@@ -93,7 +94,7 @@ class LoadingAnimation(
         RenderEffect.createBlurEffect(
             blurRadius * pixelDensity,
             blurRadius * pixelDensity,
-            Shader.TileMode.CLAMP
+            Shader.TileMode.CLAMP,
         )
 
     fun playLoadingAnimation(seed: Long? = null) {
@@ -314,7 +315,7 @@ class LoadingAnimation(
                 RenderEffect.createBlurEffect(
                     blurRadius * pixelDensity,
                     blurRadius * pixelDensity,
-                    Shader.TileMode.MIRROR
+                    Shader.TileMode.MIRROR,
                 )
         }
 
@@ -331,7 +332,7 @@ class LoadingAnimation(
             revealOverlay.setRenderEffect(
                 RenderEffect.createChainEffect(
                     RenderEffect.createRuntimeShaderEffect(revealShader, "in_src"),
-                    RenderEffect.createChainEffect(renderEffect, blurEffect)
+                    RenderEffect.createChainEffect(renderEffect, blurEffect),
                 )
             )
         } else {
@@ -379,7 +380,7 @@ class LoadingAnimation(
             RenderEffect.createBlurEffect(
                 blurRadius * pixelDensity,
                 blurRadius * pixelDensity,
-                Shader.TileMode.MIRROR
+                Shader.TileMode.MIRROR,
             )
         animationState = AnimationState.FADE_IN_PLAYED
         loadingShader.setAlpha(transitionProgress)
@@ -420,6 +421,6 @@ class LoadingAnimation(
         FADE_OUT_PLAYING,
         FADE_OUT_PLAYED,
         REVEAL_PLAYING,
-        REVEAL_PLAYED
+        REVEAL_PLAYED,
     }
 }

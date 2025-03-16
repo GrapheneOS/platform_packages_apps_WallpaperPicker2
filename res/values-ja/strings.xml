@@ -24,6 +24,7 @@
     <string name="set_wallpaper_button_text" msgid="5445978864530156290">"壁紙に設定"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"壁紙を設定しています…"</string>
     <string name="try_again" msgid="8278874823700921234">"再試行"</string>
+    <string name="select_a_photo" msgid="7273925950262860696">"写真を選択"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"壁紙を設定できませんでした。"</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"壁紙を読み込めません。画像が破損しているか、使用できません。"</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"現在の設定"</string>

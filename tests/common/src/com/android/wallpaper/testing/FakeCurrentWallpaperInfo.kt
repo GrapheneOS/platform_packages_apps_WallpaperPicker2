@@ -17,6 +17,7 @@ package com.android.wallpaper.testing
 
 import android.app.WallpaperManager
 import android.content.Context
+import android.net.Uri
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.model.CurrentWallpaperInfo
 import java.util.concurrent.atomic.AtomicReference
@@ -32,7 +33,15 @@ class FakeCurrentWallpaperInfo(
     @WallpaperManager.SetWallpaperFlags wallpaperManagerFlag: Int,
     private val pixelColor: Int,
     private val id: String,
-) : CurrentWallpaperInfo(attributions, actionUrl, collectionId, wallpaperManagerFlag) {
+    imageWallpaperUri: Uri? = null,
+) :
+    CurrentWallpaperInfo(
+        attributions,
+        actionUrl,
+        collectionId,
+        wallpaperManagerFlag,
+        imageWallpaperUri,
+    ) {
     private var asset = AtomicReference<TestAsset>()
 
     constructor(

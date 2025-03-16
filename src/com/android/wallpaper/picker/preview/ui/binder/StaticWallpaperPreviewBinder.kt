@@ -97,18 +97,17 @@ object StaticWallpaperPreviewBinder {
                 viewModel.subsamplingScaleImageViewModel.collect { imageModel ->
                     trace(TAG) {
                         val cropHint = imageModel.fullPreviewCropModels?.get(displaySize)?.cropHint
-                        val scaleAndCenter =
-                            fullResImageView.fetchScaleAndCenter(
-                                imageModel.rawWallpaperSize,
-                                displaySize,
-                                cropHint,
-                                RtlUtils.isRtl(lowResImageView.context),
-                            )
                         fullResImageView.setFullResImage(
+                            viewModel,
                             ImageSource.cachedBitmap(imageModel.rawWallpaperBitmap),
-                            scaleAndCenter,
+                            imageModel.rawWallpaperSize,
+                            displaySize,
+                            cropHint,
+                            RtlUtils.isRtl(lowResImageView.context),
                         )
-                        viewModel.scaleAndCenter = scaleAndCenter
+
+                        // Fill in the default crop region if the displaySize for this preview
+                        // is missing.
                         val imageSize = Point(fullResImageView.width, fullResImageView.height)
                         viewModel.updateDefaultPreviewCropModel(
                             displaySize,
@@ -163,32 +162,31 @@ object StaticWallpaperPreviewBinder {
     }
 
     private fun SubsamplingScaleImageView.setFullResImage(
+        viewModel: StaticWallpaperPreviewViewModel,
         imageSource: ImageSource,
-        scaleAndCenter: FullResImageViewUtil.ScaleAndCenter,
+        rawWallpaperSize: Point,
+        displaySize: Point,
+        cropHint: Rect?,
+        isRtl: Boolean,
     ) {
         // Set the full res image
         setImage(imageSource)
         // Calculate the scale and the center point for the full res image
         doOnLayout {
-            minScale = scaleAndCenter.minScale
-            maxScale = scaleAndCenter.maxScale
-            setScaleAndCenter(scaleAndCenter.defaultScale, scaleAndCenter.center)
+            FullResImageViewUtil.getScaleAndCenter(
+                    Point(measuredWidth, measuredHeight),
+                    rawWallpaperSize,
+                    displaySize,
+                    cropHint,
+                    isRtl,
+                )
+                .let { scaleAndCenter ->
+                    viewModel.scaleAndCenter = scaleAndCenter
+                    minScale = scaleAndCenter.minScale
+                    maxScale = scaleAndCenter.maxScale
+                    setScaleAndCenter(scaleAndCenter.defaultScale, scaleAndCenter.center)
+                }
         }
-    }
-
-    private fun SubsamplingScaleImageView.fetchScaleAndCenter(
-        rawWallpaperSize: Point,
-        displaySize: Point,
-        cropHint: Rect?,
-        isRtl: Boolean,
-    ): FullResImageViewUtil.ScaleAndCenter {
-        return FullResImageViewUtil.getScaleAndCenter(
-            Point(measuredWidth, measuredHeight),
-            rawWallpaperSize,
-            displaySize,
-            cropHint,
-            isRtl,
-        )
     }
 
     private fun crossFadeInFullResImageView(lowResImageView: ImageView, fullResImageView: View) {

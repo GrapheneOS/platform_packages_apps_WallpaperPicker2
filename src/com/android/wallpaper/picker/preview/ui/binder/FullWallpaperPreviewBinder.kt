@@ -100,7 +100,7 @@ object FullWallpaperPreviewBinder {
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.fullWallpaper.collect { (wallpaper, _, displaySize, _) ->
+                viewModel.fullWallpaper.collect { (_, _, displaySize, _) ->
                     val currentSize = displayUtils.getRealSize(checkNotNull(view.context.display))
                     wallpaperPreviewCrop.setCurrentAndTargetDisplaySize(currentSize, displaySize)
                     val isPreviewingFullScreen = displaySize == currentSize
@@ -329,7 +329,7 @@ object FullWallpaperPreviewBinder {
                                     applicationContext,
                                     wallpaper,
                                     whichPreview,
-                                    viewModel.getWallpaperPreviewSource().toFlag(),
+                                    config.screen.toFlag(),
                                     surfaceView,
                                     engineRenderingConfig,
                                     isFirstBindingDeferred,
@@ -341,7 +341,7 @@ object FullWallpaperPreviewBinder {
                                             wallpaperConnectionUtils.dispatchTouchEvent(
                                                 wallpaper,
                                                 engineRenderingConfig,
-                                                viewModel.getWallpaperPreviewSource().toFlag(),
+                                                config.screen.toFlag(),
                                                 event,
                                             )
                                         }

@@ -39,6 +39,7 @@ class FakeWallpaperRefresher @Inject constructor(private val prefs: WallpaperPre
                     prefs.getHomeWallpaperCollectionId(), /* wallpaperComponent */
                     null,
                     /* cropHints= */ null,
+                    /* imageUri= */ null,
                 ),
                 WallpaperMetadata(
                     prefs.getLockWallpaperAttributions(),
@@ -46,6 +47,7 @@ class FakeWallpaperRefresher @Inject constructor(private val prefs: WallpaperPre
                     prefs.getLockWallpaperCollectionId(), /* wallpaperComponent */
                     null,
                     /* cropHints= */ null,
+                    /* imageUri= */ null,
                 ),
                 prefs.getWallpaperPresentationMode(),
             )
@@ -57,6 +59,7 @@ class FakeWallpaperRefresher @Inject constructor(private val prefs: WallpaperPre
                     prefs.getHomeWallpaperCollectionId(), /* wallpaperComponent */
                     null,
                     /* cropHints= */ null,
+                    /* imageUri= */ null,
                 ),
                 null,
                 prefs.getWallpaperPresentationMode(),

@@ -31,4 +31,17 @@
         android:importantForAccessibility="no"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/carousel_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/system_primary"
+        android:textSize="14sp"
+        android:background="@android:color/transparent"
+        android:padding="4dp"/>
+
 </com.google.android.material.carousel.MaskableFrameLayout>

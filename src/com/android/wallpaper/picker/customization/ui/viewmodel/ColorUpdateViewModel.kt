@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import android.annotation.ColorInt
 import android.content.Context
+import com.android.customization.picker.mode.data.repository.DarkModeStateRepository
 import com.android.systemui.monet.ColorScheme
 import com.android.systemui.monet.Style
 import com.android.wallpaper.R
@@ -39,6 +40,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 @ActivityRetainedScoped
@@ -47,6 +49,7 @@ class ColorUpdateViewModel
 constructor(
     @ApplicationContext private val context: Context,
     activityRetainedLifecycle: ActivityRetainedLifecycle,
+    private val darkModeStateRepository: DarkModeStateRepository,
 ) {
     private val coroutineScope = RetainedLifecycleCoroutineScope(activityRetainedLifecycle)
 
@@ -67,8 +70,19 @@ constructor(
     private val _systemColorsUpdatedNoReplay: MutableSharedFlow<Unit> = MutableSharedFlow()
     val systemColorsUpdatedNoReplay = _systemColorsUpdatedNoReplay.asSharedFlow()
 
-    private val previewingColorScheme: MutableStateFlow<DynamicScheme?> = MutableStateFlow(null)
+    private val previewingIsDarkMode: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    private val systemIsDarkMode = darkModeStateRepository.isDarkMode
+    val isDarkMode =
+        combine(previewingIsDarkMode, systemIsDarkMode, isPreviewEnabled) {
+                previewingIsDarkMode,
+                systemIsDarkMode,
+                isPreviewEnabled ->
+                if (previewingIsDarkMode != null && isPreviewEnabled) previewingIsDarkMode
+                else systemIsDarkMode
+            }
+            .distinctUntilChanged()
 
+    private val previewingColorScheme: MutableStateFlow<DynamicScheme?> = MutableStateFlow(null)
     private val colors: MutableList<Color> = mutableListOf()
 
     private inner class Color(private val colorResId: Int, dynamicColor: DynamicColor) {
@@ -167,10 +181,12 @@ constructor(
 
     fun previewColors(@ColorInt colorSeed: Int, @Style.Type style: Int, isDarkMode: Boolean) {
         previewingColorScheme.value = ColorScheme(colorSeed, isDarkMode, style).materialScheme
+        previewingIsDarkMode.value = isDarkMode
     }
 
     fun resetPreview() {
         previewingColorScheme.value = null
+        previewingIsDarkMode.value = null
     }
 
     fun setPreviewEnabled(isEnabled: Boolean) {
@@ -185,6 +201,12 @@ constructor(
             _systemColorsUpdatedNoReplay.emit(Unit)
         }
         colors.forEach { it.update() }
+    }
+
+    fun updateDarkModeAndColors() {
+        darkModeStateRepository.refreshIsDarkMode()
+        // Colors always need an update when dark mode is updated
+        updateColors()
     }
 
     class RetainedLifecycleCoroutineScope(val lifecycle: RetainedLifecycle) :

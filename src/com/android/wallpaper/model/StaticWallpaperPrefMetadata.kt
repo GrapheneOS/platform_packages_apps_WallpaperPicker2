@@ -15,6 +15,8 @@
  */
 package com.android.wallpaper.model
 
+import android.net.Uri
+
 /** Metadata for the static image wallpaper to be saved to the system preferences. */
 data class StaticWallpaperPrefMetadata(
     val attributions: List<String>?,
@@ -23,4 +25,5 @@ data class StaticWallpaperPrefMetadata(
     val hashCode: Long?,
     val managerId: Int,
     val remoteId: String,
+    val imageUri: Uri?,
 )

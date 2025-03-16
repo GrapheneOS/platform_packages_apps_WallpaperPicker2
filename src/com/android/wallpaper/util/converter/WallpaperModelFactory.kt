@@ -83,7 +83,7 @@ interface WallpaperModelFactory {
                     componentName = componentName,
                     uniqueId =
                         if (this is ImageWallpaperInfo && getWallpaperId() == null)
-                            "${uri.hashCode()}"
+                            "${imageWallpaperUri.hashCode()}"
                         else wallpaperId,
                     // TODO(b/308800470): Figure out the use of collection ID
                     collectionId = getCollectionId(context) ?: UNKNOWN_COLLECTION_ID,
@@ -163,8 +163,7 @@ interface WallpaperModelFactory {
             )
         }
 
-        fun ImageWallpaperInfo.getImageWallpaperData(): ImageWallpaperData {
-            return ImageWallpaperData(uri)
-        }
+        fun WallpaperInfo.getImageWallpaperData(): ImageWallpaperData? =
+            imageWallpaperUri?.let { ImageWallpaperData(it) }
     }
 }

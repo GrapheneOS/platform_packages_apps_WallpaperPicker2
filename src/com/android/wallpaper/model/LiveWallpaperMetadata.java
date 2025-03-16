@@ -43,7 +43,7 @@ public class LiveWallpaperMetadata extends WallpaperMetadata {
 
     public LiveWallpaperMetadata(android.app.WallpaperInfo wallpaperComponent,
             @Nullable Uri previewUri, @NonNull WallpaperDescription description) {
-        super(null, null, null, wallpaperComponent, null);
+        super(null, null, null, wallpaperComponent, null, null);
         mPreviewUri = previewUri;
         mDescription = description;
     }
@@ -71,6 +71,12 @@ public class LiveWallpaperMetadata extends WallpaperMetadata {
     @Nullable
     @Override
     public Map<Point, Rect> getWallpaperCropHints() {
+        throw new UnsupportedOperationException("Not implemented for live wallpapers");
+    }
+
+    @Nullable
+    @Override
+    public Uri getWallpaperImageUri() {
         throw new UnsupportedOperationException("Not implemented for live wallpapers");
     }
 

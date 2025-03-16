@@ -55,6 +55,7 @@ class WallpaperModelUtils {
         fun getStaticWallpaperModel(
             wallpaperId: String,
             collectionId: String,
+            title: String = SAMPLE_TITLE1,
             placeholderColor: Int = DEFAULT_PLACEHOLDER_COLOR,
             attribution: List<String>? = emptyList(),
             actionUrl: String? = DEFAULT_ACTION_URL,
@@ -76,7 +77,7 @@ class WallpaperModelUtils {
                                 wallpaperId,
                                 collectionId,
                             ),
-                        title = SAMPLE_TITLE1,
+                        title = title,
                         attributions = attribution,
                         exploreActionUrl = actionUrl,
                         thumbAsset = asset,

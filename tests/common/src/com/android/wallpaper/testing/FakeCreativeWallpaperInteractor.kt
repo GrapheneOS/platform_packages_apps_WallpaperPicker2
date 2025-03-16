@@ -22,37 +22,38 @@ import com.android.wallpaper.picker.data.category.CommonCategoryData
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 /** This class implements the business logic in assembling creative category models */
 @Singleton
 class FakeCreativeWallpaperInteractor @Inject constructor() : CreativeCategoryInteractor {
-    override val categories: Flow<List<CategoryModel>> = flow {
-        // stubbing the list of single section categories
-        val categoryModels =
-            generateCategoryData().map { commonCategoryData ->
-                CategoryModel(
-                    commonCategoryData,
-                    null,
-                    null,
-                    null,
-                )
-            }
+    private val _categories = MutableStateFlow(dataListLessThanMinimum)
 
-        // Emit the list of categories
-        emit(categoryModels)
+    override val categories: Flow<List<CategoryModel>>
+        get() = _categories
+
+    fun setCreativeCategories(newCategories: List<CategoryModel>) {
+        _categories.value = newCategories
     }
 
     override fun updateCreativeCategories() {
         // empty
     }
 
-    private fun generateCategoryData(): List<CommonCategoryData> {
-        val dataList =
+    companion object {
+        val dataListLessThanMinimum =
             listOf(
-                CommonCategoryData("Emoji", "emoji_wallpapers", 1),
-                CommonCategoryData("A.I.", "ai_wallpapers", 2),
-            )
-        return dataList
+                    CommonCategoryData("Emoji", "emoji_wallpapers", 1),
+                    CommonCategoryData("A.I.", "ai_wallpapers", 2),
+                )
+                .map { commonCategoryData -> CategoryModel(commonCategoryData, null, null, null) }
+
+        val dataListMinumumOrMore =
+            listOf(
+                    CommonCategoryData("Emoji", "emoji_wallpapers", 1),
+                    CommonCategoryData("A.I.", "ai_wallpapers", 2),
+                    CommonCategoryData("Magic Portrait", "magic_portrait", 2),
+                )
+                .map { commonCategoryData -> CategoryModel(commonCategoryData, null, null, null) }
     }
 }

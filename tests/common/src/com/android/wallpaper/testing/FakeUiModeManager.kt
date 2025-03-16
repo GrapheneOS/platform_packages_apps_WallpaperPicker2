@@ -49,7 +49,8 @@ class FakeUiModeManager @Inject constructor() : UiModeManagerWrapper {
         return isNightModeActivated
     }
 
-    override fun setNightModeActivated(isActive: Boolean) {
+    override fun setNightModeActivated(isActive: Boolean): Boolean {
         isNightModeActivated = isActive
+        return true
     }
 }

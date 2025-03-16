@@ -39,12 +39,12 @@
 
         <Constraint
             android:id="@+id/lock_preview_label_container"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline_center"
-            app:layout_constraintEnd_toEndOf="@+id/guideline_center" />
+            app:layout_constraintStart_toStartOf="@+id/lock_preview"
+            app:layout_constraintEnd_toEndOf="@+id/lock_preview" />
 
         <Constraint
             android:id="@+id/lock_preview"
@@ -105,12 +105,12 @@
 
         <Constraint
             android:id="@+id/home_preview_label_container"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline_center"
-            app:layout_constraintEnd_toEndOf="@+id/guideline_center" />
+            app:layout_constraintStart_toStartOf="@+id/home_preview"
+            app:layout_constraintEnd_toEndOf="@+id/home_preview" />
 
         <Constraint
             android:id="@+id/home_preview"

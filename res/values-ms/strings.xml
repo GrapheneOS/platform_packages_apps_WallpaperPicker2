@@ -24,6 +24,7 @@
     <string name="set_wallpaper_button_text" msgid="5445978864530156290">"Tetapkan hiasan latar"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Menetapkan kertas dinding…"</string>
     <string name="try_again" msgid="8278874823700921234">"Cuba lagi"</string>
+    <string name="select_a_photo" msgid="7273925950262860696">"Pilih foto"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Tidak dapat menetapkan kertas dinding."</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Tidak dapat memuatkan kertas dinding. Imej rosak atau tidak tersedia."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Ditetapkan pada masa ini"</string>

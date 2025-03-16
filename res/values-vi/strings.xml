@@ -24,6 +24,7 @@
     <string name="set_wallpaper_button_text" msgid="5445978864530156290">"Đặt làm hình nền"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Đang đặt hình nền..."</string>
     <string name="try_again" msgid="8278874823700921234">"Thử lại"</string>
+    <string name="select_a_photo" msgid="7273925950262860696">"Chọn một ảnh"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Không thể đặt hình nền."</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Không thể tải hình nền. Hình ảnh bị hỏng hoặc không có sẵn."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Hình nền hiện tại"</string>

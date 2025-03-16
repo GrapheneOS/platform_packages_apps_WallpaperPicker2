@@ -22,6 +22,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.exifinterface.media.ExifInterface;
 
 import com.android.wallpaper.R;
@@ -77,8 +78,9 @@ public class ImageWallpaperInfo extends WallpaperInfo {
         mUri = Uri.parse(in.readString());
     }
 
+    @Nullable
     @Override
-    public Uri getUri() {
+    public Uri getImageWallpaperUri() {
         return mUri;
     }
 

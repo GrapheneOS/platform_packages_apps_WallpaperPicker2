@@ -33,6 +33,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -59,14 +60,13 @@ constructor(
                     thumbnailAsset =
                         ContentUriAsset(context, staticWallpaperModel?.imageWallpaperData?.uri),
                     text = category.categoryModel.commonCategoryData.title,
+                    showTitle = false,
                     maxCategoriesInRow = SectionCardinality.Single,
                 ) {
                     navigateToPreviewScreen(wallpaperModel, CategoryType.CuratedPhotos)
                 }
             } ?: emptyList()
         }
-
-    val wallpaperCarouselItems: Flow<List<TileViewModel>> = curatedPhotoCarouselItems
 
     /**
      * This [Flow] maps on device [WallpaperModel] to [TileViewModel]. It is consumed by the
@@ -81,6 +81,7 @@ constructor(
                     defaultDrawable = null,
                     thumbnailAsset = staticWallpaperModel?.commonWallpaperData?.thumbAsset,
                     text = wallpaperModel.commonWallpaperData.title ?: "",
+                    showTitle = false,
                     maxCategoriesInRow = SectionCardinality.Single,
                 ) {
                     navigateToPreviewScreen(wallpaperModel, CategoryType.Default)
@@ -99,6 +100,7 @@ constructor(
                     defaultDrawable = null,
                     thumbnailAsset = category.collectionCategoryData?.thumbAsset,
                     text = category.commonCategoryData.title,
+                    showTitle = true,
                     maxCategoriesInRow = SectionCardinality.Triple,
                 ) {
                     if (category.collectionCategoryData?.isSingleWallpaperCategory == true) {
@@ -113,6 +115,31 @@ constructor(
                         )
                     }
                 }
+            }
+        }
+
+    /**
+     * This [Flow] emits the desired [TileViewModel] collection based on the number of individual
+     * curated photos, on-device wallpapers and creative wallpapers
+     */
+    val wallpaperCarouselItems: Flow<List<TileViewModel>> =
+        combine(
+            curatedPhotoCarouselItems,
+            defaultWallpapersTileVieModels,
+            creativeSectionViewModel,
+        ) {
+            curatedPhotos: List<TileViewModel>,
+            defaultWallpapers: List<TileViewModel>,
+            creatives: List<TileViewModel> ->
+            // if more than 3 curated photos return only curated photos
+            if (curatedPhotos.size > CAROUSEL_ITEMS_THRESHOLD) {
+                return@combine curatedPhotos
+            } else if (creatives.size >= CAROUSEL_ITEMS_THRESHOLD) {
+                // if creatives more or equal to 3 than return only creatives
+                return@combine creatives
+            } else {
+                // otherwise just return on-device wallpapers
+                return@combine defaultWallpapers
             }
         }
 
@@ -157,5 +184,9 @@ constructor(
             val categoryId: String,
             val categoryType: CategoryType,
         ) : NavigationEvent()
+    }
+
+    companion object {
+        const val CAROUSEL_ITEMS_THRESHOLD = 3
     }
 }

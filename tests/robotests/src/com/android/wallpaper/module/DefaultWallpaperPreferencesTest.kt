@@ -16,9 +16,12 @@
 package com.android.wallpaper.module
 
 import android.content.Context
+import android.net.Uri
 import androidx.test.core.app.ApplicationProvider
 import com.android.wallpaper.model.LiveWallpaperPrefMetadata
 import com.android.wallpaper.model.StaticWallpaperPrefMetadata
+import com.android.wallpaper.module.WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_IMAGE_URI
+import com.android.wallpaper.module.WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_IMAGE_URI
 import com.android.wallpaper.module.WallpaperPreferenceKeys.NoBackupKeys
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
@@ -33,6 +36,7 @@ class DefaultWallpaperPreferencesTest {
 
     @Test
     fun setHomeStaticImageWallpaperMetadata_metadataShouldBeSavedToPreferences() {
+        val imageUriString = "content://com.example.fake/files/wallpaper.png"
         wallpaperPreferences.setHomeStaticImageWallpaperMetadata(
             StaticWallpaperPrefMetadata(
                 attributions = listOf("attr1", "attr2"),
@@ -41,13 +45,14 @@ class DefaultWallpaperPreferencesTest {
                 hashCode = 10013L,
                 managerId = 3,
                 remoteId = "ocean",
+                imageUri = Uri.parse(imageUriString),
             )
         )
 
         val sharedPref =
             (ApplicationProvider.getApplicationContext() as Context).getSharedPreferences(
                 DefaultWallpaperPreferences.PREFS_NAME,
-                Context.MODE_PRIVATE
+                Context.MODE_PRIVATE,
             )
         assertThat(sharedPref.getString(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_1, null))
             .isEqualTo("attr1")
@@ -63,10 +68,12 @@ class DefaultWallpaperPreferencesTest {
             .isEqualTo("cultural_events")
         assertThat(sharedPref.getLong(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_HASH_CODE, 0L))
             .isEqualTo(10013)
+        assertThat(sharedPref.getString(KEY_HOME_WALLPAPER_IMAGE_URI, null))
+            .isEqualTo(imageUriString)
         val noBackupPref =
             (ApplicationProvider.getApplicationContext() as Context).getSharedPreferences(
                 DefaultWallpaperPreferences.NO_BACKUP_PREFS_NAME,
-                Context.MODE_PRIVATE
+                Context.MODE_PRIVATE,
             )
         assertThat(noBackupPref.getInt(NoBackupKeys.KEY_HOME_WALLPAPER_MANAGER_ID, 0)).isEqualTo(3)
         assertThat(noBackupPref.getString(NoBackupKeys.KEY_HOME_WALLPAPER_REMOTE_ID, null))
@@ -89,7 +96,7 @@ class DefaultWallpaperPreferencesTest {
         val sharedPref =
             (ApplicationProvider.getApplicationContext() as Context).getSharedPreferences(
                 DefaultWallpaperPreferences.PREFS_NAME,
-                Context.MODE_PRIVATE
+                Context.MODE_PRIVATE,
             )
         assertThat(sharedPref.getString(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ATTRIB_1, null))
             .isEqualTo("attr1")
@@ -102,7 +109,7 @@ class DefaultWallpaperPreferencesTest {
         val noBackupPref =
             (ApplicationProvider.getApplicationContext() as Context).getSharedPreferences(
                 DefaultWallpaperPreferences.NO_BACKUP_PREFS_NAME,
-                Context.MODE_PRIVATE
+                Context.MODE_PRIVATE,
             )
         assertThat(noBackupPref.getString(NoBackupKeys.KEY_HOME_WALLPAPER_SERVICE_NAME, null))
             .isEqualTo("com.google.pixel.livewallpaper.dioramas.fiji.wallpapers.FijiWallpaper")
@@ -113,6 +120,7 @@ class DefaultWallpaperPreferencesTest {
 
     @Test
     fun setLockStaticImageWallpaperMetadata_metadataShouldBeSavedToPreferences() {
+        val imageUriString = "content://com.example.fake/files/wallpaper.png"
         wallpaperPreferences.setLockStaticImageWallpaperMetadata(
             StaticWallpaperPrefMetadata(
                 attributions = listOf("attr1", "attr2"),
@@ -121,13 +129,14 @@ class DefaultWallpaperPreferencesTest {
                 hashCode = 10013L,
                 managerId = 3,
                 remoteId = "ocean",
+                imageUri = Uri.parse(imageUriString),
             )
         )
 
         val sharedPref =
             (ApplicationProvider.getApplicationContext() as Context).getSharedPreferences(
                 DefaultWallpaperPreferences.PREFS_NAME,
-                Context.MODE_PRIVATE
+                Context.MODE_PRIVATE,
             )
         assertThat(sharedPref.getString(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_1, null))
             .isEqualTo("attr1")
@@ -143,10 +152,12 @@ class DefaultWallpaperPreferencesTest {
             .isEqualTo("cultural_events")
         assertThat(sharedPref.getLong(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_HASH_CODE, 0L))
             .isEqualTo(10013)
+        assertThat(sharedPref.getString(KEY_LOCK_WALLPAPER_IMAGE_URI, null))
+            .isEqualTo(imageUriString)
         val noBackupPref =
             (ApplicationProvider.getApplicationContext() as Context).getSharedPreferences(
                 DefaultWallpaperPreferences.NO_BACKUP_PREFS_NAME,
-                Context.MODE_PRIVATE
+                Context.MODE_PRIVATE,
             )
         assertThat(noBackupPref.getInt(NoBackupKeys.KEY_LOCK_WALLPAPER_MANAGER_ID, 0)).isEqualTo(3)
         assertThat(noBackupPref.getString(NoBackupKeys.KEY_LOCK_WALLPAPER_REMOTE_ID, null))
@@ -169,7 +180,7 @@ class DefaultWallpaperPreferencesTest {
         val sharedPref =
             (ApplicationProvider.getApplicationContext() as Context).getSharedPreferences(
                 DefaultWallpaperPreferences.PREFS_NAME,
-                Context.MODE_PRIVATE
+                Context.MODE_PRIVATE,
             )
         assertThat(sharedPref.getString(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ATTRIB_1, null))
             .isEqualTo("attr1")
@@ -182,7 +193,7 @@ class DefaultWallpaperPreferencesTest {
         val noBackupPref =
             (ApplicationProvider.getApplicationContext() as Context).getSharedPreferences(
                 DefaultWallpaperPreferences.NO_BACKUP_PREFS_NAME,
-                Context.MODE_PRIVATE
+                Context.MODE_PRIVATE,
             )
         assertThat(noBackupPref.getString(NoBackupKeys.KEY_LOCK_WALLPAPER_SERVICE_NAME, null))
             .isEqualTo("com.google.pixel.livewallpaper.dioramas.fiji.wallpapers.FijiWallpaper")

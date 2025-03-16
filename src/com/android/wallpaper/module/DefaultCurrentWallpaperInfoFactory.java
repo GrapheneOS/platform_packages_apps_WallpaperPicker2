@@ -21,6 +21,7 @@ import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.Point;
+import android.net.Uri;
 
 import androidx.annotation.Nullable;
 
@@ -131,11 +132,13 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                         }
                         updateIfCreative(homeWallpaper, homeWallpaperMetadata);
                     } else {
+                        Uri imageUri = homeWallpaperMetadata.getWallpaperImageUri();
                         homeWallpaper = new CurrentWallpaperInfo(
                                 homeWallpaperMetadata.getAttributions(),
                                 homeWallpaperMetadata.getActionUrl(),
                                 homeWallpaperMetadata.getCollectionId(),
-                                WallpaperManager.FLAG_SYSTEM);
+                                WallpaperManager.FLAG_SYSTEM,
+                                imageUri);
                         if (isMultiCropEnabled) {
                             homeWallpaper.setWallpaperCropHints(
                                     homeWallpaperMetadata.getWallpaperCropHints());
@@ -159,11 +162,13 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                             if (isLockWallpaperBuiltIn(context)) {
                                 lockWallpaper = new DefaultWallpaperInfo();
                             } else {
+                                Uri imageUri = lockWallpaperMetadata.getWallpaperImageUri();
                                 lockWallpaper = new CurrentWallpaperInfo(
                                         lockWallpaperMetadata.getAttributions(),
                                         lockWallpaperMetadata.getActionUrl(),
                                         lockWallpaperMetadata.getCollectionId(),
-                                        WallpaperManager.FLAG_LOCK);
+                                        WallpaperManager.FLAG_LOCK,
+                                        imageUri);
                             }
 
                             if (isMultiCropEnabled) {
