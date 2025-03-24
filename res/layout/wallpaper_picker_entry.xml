@@ -109,6 +109,7 @@
         android:textColor="@color/system_primary"
         android:textSize="@dimen/wallpaper_header_text_size"
         android:alpha="0.0"
+        android:visibility="invisible"
         app:drawableStartCompat="@drawable/ic_nav_wallpaper"
         app:drawableTint="@color/system_primary"
         android:clickable="true" />

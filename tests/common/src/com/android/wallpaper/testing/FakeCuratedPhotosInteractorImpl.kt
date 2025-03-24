@@ -26,6 +26,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Singleton
 class FakeCuratedPhotosInteractorImpl @Inject constructor() : CuratedPhotosInteractor {
@@ -33,6 +34,13 @@ class FakeCuratedPhotosInteractorImpl @Inject constructor() : CuratedPhotosInter
 
     override val category: Flow<PhotoCategoryModel>
         get() = _category
+
+    override val dismissBanner: StateFlow<Boolean>
+        get() = TODO("Not yet implemented")
+
+    override fun setBannerDismissed(dismissed: Boolean) {
+        TODO("Not yet implemented")
+    }
 
     fun setCategory(newCategory: PhotoCategoryModel) {
         _category.value = newCategory
@@ -63,6 +71,7 @@ class FakeCuratedPhotosInteractorImpl @Inject constructor() : CuratedPhotosInter
                         ),
                 ),
                 PhotosErrorData.OK,
+                null,
             )
 
         val threeCuratedPhotos =
@@ -104,6 +113,7 @@ class FakeCuratedPhotosInteractorImpl @Inject constructor() : CuratedPhotosInter
                         ),
                 ),
                 PhotosErrorData.OK,
+                null,
             )
     }
 }

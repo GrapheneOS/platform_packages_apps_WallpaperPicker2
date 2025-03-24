@@ -22,7 +22,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
+import com.android.wallpaper.picker.category.ui.binder.BannerProvider
 import com.android.wallpaper.picker.category.ui.view.viewholder.CategorySectionViewHolder
+import com.android.wallpaper.picker.category.ui.viewmodel.PhotosViewModel
 import com.android.wallpaper.picker.category.ui.viewmodel.SectionViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 
@@ -32,10 +34,12 @@ class CategorySectionsAdapter(
     private val colorUpdateViewModel: ColorUpdateViewModel,
     private val shouldAnimateColor: () -> Boolean,
     private val lifecycleOwner: LifecycleOwner,
+    private val onSignInBannerDismissed: (dismissed: Boolean) -> Unit,
+    private var bannerProvider: BannerProvider,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return createIndividualHolder(parent)
+        return createIndividualHolder(parent, viewType)
     }
 
     override fun getItemCount(): Int {
@@ -44,18 +48,31 @@ class CategorySectionsAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val section: SectionViewModel = items[position]
-        (holder as CategorySectionViewHolder?)?.bind(
-            section,
-            colorUpdateViewModel,
-            shouldAnimateColor,
-            lifecycleOwner,
-        )
+        if (section is PhotosViewModel) {
+            (holder as CategorySectionViewHolder?)?.bind(
+                item = section,
+                colorUpdateViewModel = colorUpdateViewModel,
+                shouldAnimateColor = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+                bannerProvider = bannerProvider,
+                isSignInBannerVisible = section.isDismissed,
+                onSignInBannerDismissed = onSignInBannerDismissed,
+            )
+        } else {
+            (holder as CategorySectionViewHolder?)?.bind(
+                item = section,
+                colorUpdateViewModel = colorUpdateViewModel,
+                shouldAnimateColor = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+                bannerProvider = null,
+                isSignInBannerVisible = false,
+            )
+        }
     }
 
-    private fun createIndividualHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+    private fun createIndividualHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view: View = layoutInflater.inflate(R.layout.category_section_view, parent, false)
-
         return CategorySectionViewHolder(view, windowWidth)
     }
 }

@@ -23,11 +23,11 @@ import com.android.wallpaper.picker.data.PhotosErrorData
  * This class represents the view model for a single section that can contain a number of individual
  * tiles.
  */
-class SectionViewModel(
-    val tileViewModels: List<TileViewModel>,
-    val columnCount: Int,
-    val sectionTitle: String? = null,
-    val displayType: DisplayType = DisplayType.Default,
-    val status: PhotosErrorData? = null,
-    val onSectionClicked: (() -> Unit)? = null,
+open class SectionViewModel(
+    open val tileViewModels: List<TileViewModel>,
+    open val columnCount: Int,
+    open val sectionTitle: String? = null,
+    open val displayType: DisplayType = DisplayType.Default,
+    open val status: PhotosErrorData? = null,
+    open val onSectionClicked: (() -> Unit)? = null,
 )

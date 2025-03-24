@@ -86,7 +86,7 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
         mActionUrl = in.readString();
         mCollectionId = in.readString();
         mCropHints.putAll(in.readSerializable(HashMap.class.getClassLoader(), HashMap.class));
-        mImageWallpaperUri = in.readParcelable(Uri.class.getClassLoader(), Uri.class);
+        mImageWallpaperUri = Uri.CREATOR.createFromParcel(in);
     }
 
     @Nullable
@@ -155,6 +155,7 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
         parcel.writeString(mActionUrl);
         parcel.writeString(mCollectionId);
         parcel.writeSerializable(mCropHints);
+        Uri.writeToParcel(parcel, mImageWallpaperUri);
     }
 
     @Override

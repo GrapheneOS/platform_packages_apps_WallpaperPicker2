@@ -23,6 +23,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 
 /** This class implements the business logic in assembling creative category models */
 @Singleton
@@ -31,6 +32,8 @@ class FakeCreativeWallpaperInteractor @Inject constructor() : CreativeCategoryIn
 
     override val categories: Flow<List<CategoryModel>>
         get() = _categories
+
+    override val standaloneCategories: Flow<List<CategoryModel>> = flowOf(emptyList())
 
     fun setCreativeCategories(newCategories: List<CategoryModel>) {
         _categories.value = newCategories

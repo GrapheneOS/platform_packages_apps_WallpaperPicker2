@@ -24,6 +24,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.os.Process
+import com.android.wallpaper.binder.FakeBannerProvider
 import com.android.wallpaper.module.CreativeHelper
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker
 import com.android.wallpaper.module.MultiPanesChecker
@@ -35,6 +36,7 @@ import com.android.wallpaper.picker.category.data.repository.WallpaperCategoryRe
 import com.android.wallpaper.picker.category.domain.interactor.CategoriesLoadingStatusInteractor
 import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
+import com.android.wallpaper.picker.category.ui.binder.BannerProvider
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.MainDispatcher
@@ -82,6 +84,8 @@ import kotlinx.coroutines.test.TestScope
 @Module
 @TestInstallIn(components = [SingletonComponent::class], replaces = [SharedAppModule::class])
 internal abstract class SharedAppTestModule {
+
+    @Binds @Singleton abstract fun bindBannerBinder(impl: FakeBannerProvider): BannerProvider
 
     // Also use the test dispatcher for work intended for the background thread. This makes tests
     // single-threaded and more deterministic.

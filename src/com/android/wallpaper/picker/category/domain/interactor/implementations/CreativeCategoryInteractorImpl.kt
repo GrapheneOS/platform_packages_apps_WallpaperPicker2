@@ -29,6 +29,8 @@ class CreativeCategoryInteractorImpl @Inject constructor() : CreativeCategoryInt
     // default implementation of creatives is empty in aosp
     override val categories: Flow<List<CategoryModel>> = flowOf(emptyList())
 
+    override val standaloneCategories: Flow<List<CategoryModel>> = flowOf(emptyList())
+
     override fun updateCreativeCategories() {
         // nothing to update in aosp
     }

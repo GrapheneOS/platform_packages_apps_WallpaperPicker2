@@ -164,6 +164,13 @@
                 android:layout_height="match_parent"
                 android:visibility="gone"
                 android:clickable="true" />
+
+            <View
+                android:id="@+id/clock_face_click_delegate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:clickable="true" />
         </FrameLayout>
 
         <androidx.core.widget.NestedScrollView

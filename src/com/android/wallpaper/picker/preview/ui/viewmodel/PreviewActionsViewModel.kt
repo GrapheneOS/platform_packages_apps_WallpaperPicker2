@@ -63,7 +63,6 @@ import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.Customize
 import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.ImageEffectFloatingSheetViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.InformationFloatingSheetViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.PreviewFloatingSheetViewModel
-import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils.Companion.isExtendedEffectWallpaper
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.EffectDownloadClickListener
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.EffectSwitchListener
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.Status.DOWNLOADING
@@ -273,13 +272,13 @@ constructor(
             imageEffectsModel,
             imageEffect ->
             imageEffect?.let {
-                if (
-                    !flags.isExtendedWallpaperEnabled() &&
-                        imageEffectsModel.status == EFFECT_DISABLE
-                ) {
-                    null
-                } else {
-                    getImageEffectFloatingSheetViewModel(imageEffect, imageEffectsModel)
+                when (imageEffectsModel.status) {
+                    EFFECT_DISABLE -> {
+                        null
+                    }
+                    else -> {
+                        getImageEffectFloatingSheetViewModel(imageEffect, imageEffectsModel)
+                    }
                 }
             }
         }
@@ -415,26 +414,6 @@ constructor(
         }
     }
 
-    val isEffectsVisible: Flow<Boolean> =
-        combine(
-            imageEffectFloatingSheetViewModel,
-            creativeEffectFloatingSheetViewModel,
-            wallpaperPreviewInteractor.wallpaperModel,
-        ) { imageEffect, creativeEffect, wallpaperModel ->
-            isExtendedWallpaperEffectAvailable(wallpaperModel) ||
-                imageEffect != null ||
-                creativeEffect != null
-        }
-
-    private fun isExtendedWallpaperEffectAvailable(model: WallpaperModel?) =
-        flags.isExtendedWallpaperEnabled() &&
-            model is LiveWallpaperModel &&
-            model.liveWallpaperData.isEffectWallpaper &&
-            isExtendedEffectWallpaper(
-                context,
-                model.liveWallpaperData.systemWallpaperInfo.component,
-            )
-
     private val _isEffectsChecked: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isEffectsChecked: Flow<Boolean> = _isEffectsChecked.asStateFlow()
 
@@ -450,6 +429,15 @@ constructor(
                 ((it is StaticWallpaperModel && it.imageWallpaperData?.uri != null) ||
                     (it is LiveWallpaperModel && it.liveWallpaperData.isEffectWallpaper)) &&
                 extendedWallpaperIntent.resolveActivityInfo(context.packageManager, 0) != null
+        }
+
+    val isEffectsVisible: Flow<Boolean> =
+        combine(
+            imageEffectFloatingSheetViewModel,
+            creativeEffectFloatingSheetViewModel,
+            isExtendedEffectAvailable,
+        ) { imageEffect, creativeEffect, isExtendedEffect ->
+            isExtendedEffect || imageEffect != null || creativeEffect != null
         }
 
     val onEffectsClicked: Flow<((ActivityResultLauncher<Intent>) -> Unit)?> =

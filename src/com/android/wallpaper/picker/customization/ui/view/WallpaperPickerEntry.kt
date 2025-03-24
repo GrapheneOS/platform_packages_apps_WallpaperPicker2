@@ -25,6 +25,7 @@ import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
 
@@ -123,6 +124,7 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
      */
     fun setProgress(progress: Float) {
         collapsedButton.alpha = progress
+        collapsedButton.isVisible = progress > 0
         expandedContainer.alpha = 1 - progress
         val radii = background.cornerRadii ?: FloatArray(8)
         val topCornerRadius =

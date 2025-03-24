@@ -37,6 +37,8 @@ object SectionsBinder {
         colorUpdateViewModel: ColorUpdateViewModel,
         shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
+        onSignInBannerDismissed: (dismissed: Boolean) -> Unit,
+        bannerProvider: BannerProvider,
     ) {
         sectionsListView.adapter =
             CategorySectionsAdapter(
@@ -45,6 +47,8 @@ object SectionsBinder {
                 colorUpdateViewModel,
                 shouldAnimateColor,
                 lifecycleOwner,
+                onSignInBannerDismissed,
+                bannerProvider,
             )
         val gridLayoutManager =
             GridLayoutManager(sectionsListView.context, DEFAULT_SPAN).apply {

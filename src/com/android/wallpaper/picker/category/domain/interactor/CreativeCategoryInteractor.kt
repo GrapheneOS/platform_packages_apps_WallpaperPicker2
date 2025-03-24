@@ -24,7 +24,15 @@ import kotlinx.coroutines.flow.Flow
  * category models
  */
 interface CreativeCategoryInteractor {
+
+    /** This flow emits the standard creative categories which may logically be grouped together. */
     val categories: Flow<List<CategoryModel>>
+
+    /**
+     * This flow emits the creative categories which are considered to be stand alone an not
+     * logically grouped with other such categories.
+     */
+    val standaloneCategories: Flow<List<CategoryModel>>
 
     fun updateCreativeCategories()
 }

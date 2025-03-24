@@ -21,10 +21,22 @@ import com.android.wallpaper.picker.data.category.PhotoCategoryModel
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 
 /** This is the default implementation for fetching curated photos. */
 @Singleton
 class DefaultCuratedPhotosInteractorImpl @Inject constructor() : CuratedPhotosInteractor {
     override val category: Flow<PhotoCategoryModel> = emptyFlow()
+
+    private val _dismissBanner = MutableStateFlow(false)
+
+    override val dismissBanner: StateFlow<Boolean>
+        get() = _dismissBanner.asStateFlow()
+
+    override fun setBannerDismissed(dismissed: Boolean) {
+        TODO("Not yet implemented")
+    }
 }

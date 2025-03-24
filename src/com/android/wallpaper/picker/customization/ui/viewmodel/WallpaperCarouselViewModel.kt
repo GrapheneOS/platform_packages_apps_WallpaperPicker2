@@ -93,9 +93,13 @@ constructor(
      * This [Flow] maps creative categories to [TileViewModel]. This flow is consumed by the
      * carousel in the case there is an insufficient number of curated photos
      */
-    private val creativeSectionViewModel: Flow<List<TileViewModel>> =
-        creativeCategoryInteractor.categories.map { categories ->
-            categories.map { category ->
+    val creativeSectionViewModel: Flow<List<TileViewModel>> =
+        combine(
+            creativeCategoryInteractor.categories,
+            creativeCategoryInteractor.standaloneCategories,
+        ) { categories, standAlone ->
+            val combinedList = categories + standAlone
+            combinedList.map { category ->
                 TileViewModel(
                     defaultDrawable = null,
                     thumbnailAsset = category.collectionCategoryData?.thumbAsset,

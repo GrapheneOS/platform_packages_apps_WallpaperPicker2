@@ -75,6 +75,10 @@ public class WallpaperCategory extends Category {
         mThumbAsset = thumbAsset;
     }
 
+    public WallpaperCategory(String title, String collectionId, Asset thumbAsset, int priority) {
+        this(title, collectionId, thumbAsset, null, priority);
+    }
+
     /**
      * Fetches wallpapers for this category and passes them to the receiver. Subclasses may use a
      * context to fetch wallpaper info.

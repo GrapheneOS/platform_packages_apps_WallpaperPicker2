@@ -22,6 +22,7 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
+        android:id="@+id/category_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -46,6 +47,13 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="@dimen/grid_item_category_title_margin_bottom"/>
+
+        <ViewStub
+            android:id="@+id/sign_in_banner_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/more_photos_button"
+        />
     </RelativeLayout>
 
     <!-- Tiles -->

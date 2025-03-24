@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.data.category
+package com.android.wallpaper.picker.category.ui.binder
 
-import android.app.PendingIntent
-import com.android.wallpaper.picker.data.PhotosErrorData
+import android.view.View
 
-/**
- * This is a wrapper class around photos category since we also need to take into account
- * 1. status: Different status code returned by the PhotosClient API
- * 2. pendingIntent: Intent that allows user to sign in to GooglePhotos
- */
-class PhotoCategoryModel(
-    val categoryModel: CategoryModel,
-    val status: PhotosErrorData,
-    val pendingIntent: PendingIntent?,
-)
+/** This is the binder interface for providing custom banner views. */
+interface BannerProvider {
+    fun getSignInBanner(): View?
+}

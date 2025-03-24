@@ -228,6 +228,32 @@ constructor(
             list1 + list2
         }
 
+    private val standaloneCreativeSectionViewModel: Flow<SectionViewModel?> =
+        creativeCategoryInteractor.standaloneCategories
+            .distinctUntilChanged { old, new -> categoryModelListDifferentiator(old, new) }
+            .map { categories ->
+                val tiles =
+                    categories.map { category ->
+                        TileViewModel(
+                            defaultDrawable = null,
+                            thumbnailAsset = category.collectionCategoryData?.thumbAsset,
+                            text = category.commonCategoryData.title,
+                            maxCategoriesInRow = SectionCardinality.Single,
+                        ) {
+                            // TODO: implement navigation for standalone creative category
+                        }
+                    }
+
+                if (tiles.isEmpty()) {
+                    return@map null
+                }
+                return@map SectionViewModel(
+                    tileViewModels = tiles,
+                    columnCount = 3,
+                    sectionTitle = "",
+                )
+            }
+
     private val creativeSectionViewModel: Flow<SectionViewModel?> =
         creativeCategoryInteractor.categories
             .distinctUntilChanged { old, new -> categoryModelListDifferentiator(old, new) }
@@ -272,7 +298,7 @@ constructor(
     private val myPhotosSectionViewModel: Flow<SectionViewModel> =
         if (BaseFlags.get().isNewPickerUi()) {
                 curatedPhotosInteractor.category.distinctUntilChanged().map { category ->
-                    SectionViewModel(
+                    PhotosViewModel(
                         tileViewModels =
                             category.categoryModel.collectionCategoryData?.wallpaperModels?.map {
                                 wallpaperModel ->
@@ -299,6 +325,8 @@ constructor(
                             context.getString(R.string.choose_a_curated_photo_section_title),
                         displayType = DisplayType.Carousel,
                         status = category.status,
+                        isDismissed = curatedPhotosInteractor.dismissBanner.value,
+                        pendingIntent = category.pendingIntent,
                     ) {
                         navigateToPhotosPicker(null)
                     }
@@ -336,14 +364,20 @@ constructor(
     // The ordering of addition of viewModels here decides the final ordering how sections would
     // appear in the categories page.
     val sections: Flow<List<SectionViewModel>> =
-        combine(individualSectionViewModels, creativeSectionViewModel, myPhotosSectionViewModel) {
-            individualViewModels,
-            creativeViewModel,
-            myPhotosViewModel ->
+        combine(
+            individualSectionViewModels,
+            creativeSectionViewModel,
+            myPhotosSectionViewModel,
+            standaloneCreativeSectionViewModel,
+        ) { individualViewModels, creativeViewModel, myPhotosViewModel, standaloneCreativeViewModel
+            ->
             buildList {
                 if (BaseFlags.get().isNewPickerUi()) {
-                    add(myPhotosViewModel)
                     creativeViewModel?.let { add(it) }
+                    add(myPhotosViewModel)
+                    if (false) {
+                        standaloneCreativeViewModel?.let { add(it) }
+                    }
                 } else {
                     creativeViewModel?.let { add(it) }
                     add(myPhotosViewModel)
@@ -395,6 +429,11 @@ constructor(
                 }
             }
         }
+
+    /** This method sets whether the banner is dismissed by the user. */
+    fun setBannerDismissed(dismissed: Boolean) {
+        curatedPhotosInteractor.setBannerDismissed(dismissed)
+    }
 
     /** This method updates network categories */
     fun refreshNetworkCategories() {

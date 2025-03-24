@@ -24,8 +24,7 @@
     <string name="set_wallpaper_button_text" msgid="5445978864530156290">"ওয়ালপেপার সেট করুন"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"ওয়ালপেপার সেট করা হচ্ছে…"</string>
     <string name="try_again" msgid="8278874823700921234">"আবার চেষ্টা করুন"</string>
-    <!-- no translation found for select_a_photo (7273925950262860696) -->
-    <skip />
+    <string name="select_a_photo" msgid="7273925950262860696">"কোনও ফটো বেছে নিন"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"ওয়ালপেপার সেট করা গেল না।"</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"ওয়ালপেপার লোড করা গেল না। ছবিটি হয়ত খারাপ হয়ে গেছে বা সেটি উপলভ্য নয়।"</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"বর্তমানে সেট করা রয়েছে"</string>

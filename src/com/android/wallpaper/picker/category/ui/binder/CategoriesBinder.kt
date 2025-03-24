@@ -37,6 +37,7 @@ object CategoriesBinder {
         windowWidth: Int,
         colorUpdateViewModel: ColorUpdateViewModel,
         shouldAnimateColor: () -> Boolean,
+        bannerProvider: BannerProvider,
         lifecycleOwner: LifecycleOwner,
         navigationHandler:
             (navigationEvent: CategoriesViewModel.NavigationEvent, navLogic: (() -> Unit)?) -> Unit,
@@ -63,6 +64,10 @@ object CategoriesBinder {
                             colorUpdateViewModel,
                             shouldAnimateColor,
                             lifecycleOwner,
+                            onSignInBannerDismissed = { dismissed ->
+                                viewModel.setBannerDismissed(dismissed)
+                            },
+                            bannerProvider,
                         )
                     }
                 }

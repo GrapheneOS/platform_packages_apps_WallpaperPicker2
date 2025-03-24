@@ -43,6 +43,7 @@ import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.MyPhotosStarter
 import com.android.wallpaper.picker.WallpaperPickerDelegate.VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE
+import com.android.wallpaper.picker.category.ui.binder.BannerProvider
 import com.android.wallpaper.picker.category.ui.binder.CategoriesBinder
 import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
 import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
@@ -69,7 +70,7 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
     @Inject lateinit var myPhotosStarterImpl: MyPhotosStarterImpl
     @Inject lateinit var wallpaperModelFactory: WallpaperModelFactory
     @Inject lateinit var colorUpdateViewModel: ColorUpdateViewModel
-
+    @Inject lateinit var bannerProvider: BannerProvider
     private lateinit var photoPickerLauncher: ActivityResultLauncher<Intent>
 
     // TODO: this may need to be scoped to fragment if the architecture changes
@@ -131,6 +132,7 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
             windowWidth = SizeCalculator.getActivityWindowWidthPx(this.activity),
             colorUpdateViewModel = colorUpdateViewModel,
             shouldAnimateColor = { false },
+            bannerProvider = bannerProvider,
             lifecycleOwner = viewLifecycleOwner,
         ) { navigationEvent, callback ->
             when (navigationEvent) {

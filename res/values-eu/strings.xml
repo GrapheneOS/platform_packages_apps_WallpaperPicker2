@@ -24,8 +24,7 @@
     <string name="set_wallpaper_button_text" msgid="5445978864530156290">"Ezarri horma-papera"</string>
     <string name="set_wallpaper_progress_message" msgid="7986528287618716715">"Horma-papera ezartzen…"</string>
     <string name="try_again" msgid="8278874823700921234">"Saiatu berriro"</string>
-    <!-- no translation found for select_a_photo (7273925950262860696) -->
-    <skip />
+    <string name="select_a_photo" msgid="7273925950262860696">"Hautatu argazki bat"</string>
     <string name="set_wallpaper_error_message" msgid="6819986999041085130">"Ezin da ezarri horma-papera."</string>
     <string name="load_wallpaper_error_message" msgid="7913278480467707374">"Ezin da kargatu horma-papera. Irudia hondatuta dago edo ezin da eskuratu."</string>
     <string name="static_wallpaper_presentation_mode_message" msgid="417940227049360906">"Hau dago ezarrita:"</string>

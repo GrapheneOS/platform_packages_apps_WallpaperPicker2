@@ -50,6 +50,14 @@ import kotlinx.coroutines.CoroutineScope
 class CustomizationPickerActivity2 :
     Hilt_CustomizationPickerActivity2(), AppbarFragment.AppbarFragmentHost {
 
+    interface ActivityEnterAnimationCallback {
+        /**
+         * The callback is called when Fragment's parent Activity is the first time created and the
+         * enter animation is completed.
+         */
+        fun onEnterAnimationCompleteAfterActivityCreated()
+    }
+
     @Inject lateinit var multiPanesChecker: MultiPanesChecker
     @Inject lateinit var customizationOptionUtil: CustomizationOptionUtil
     @Inject lateinit var customizationOptionsBinder: CustomizationOptionsBinder
@@ -66,9 +74,16 @@ class CustomizationPickerActivity2 :
 
     private var configuration: Configuration? = null
     private val categoriesViewModel: CategoriesViewModel by viewModels()
+    private var isInitialCreation = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (savedInstanceState != null) {
+            // Activity is being restored, not initial creation
+            isInitialCreation = false
+        }
+
         if (
             multiPanesChecker.isMultiPanesEnabled(this) &&
                 !ActivityUtils.isLaunchedFromSettingsTrampoline(intent) &&
@@ -113,6 +128,17 @@ class CustomizationPickerActivity2 :
                 .beginTransaction()
                 .add(R.id.fragment_container, CustomizationPickerFragment2())
                 .commit()
+        }
+    }
+
+    override fun onEnterAnimationComplete() {
+        super.onEnterAnimationComplete()
+        if (isInitialCreation) {
+            val fragment =
+                supportFragmentManager.findFragmentById(R.id.fragment_container)
+                    as? CustomizationPickerFragment2
+            fragment?.onEnterAnimationCompleteAfterActivityCreated()
+            isInitialCreation = false
         }
     }
 

@@ -110,6 +110,15 @@ public class CreativeCategory extends WallpaperCategory {
         mWallpaperInfo = wallpaperInfo;
     }
 
+    public CreativeCategory(Context context, String title, String collectionId, Uri thumbUri,
+            int priority, android.app.WallpaperInfo wallpaperInfo) {
+        super(title,
+                collectionId,
+                new CreativeWallpaperThumbAsset(context, wallpaperInfo, thumbUri),
+                priority);
+        mWallpaperInfo = wallpaperInfo;
+    }
+
     @Override
     public boolean supportsWallpaperSetUpdates() {
         return true;

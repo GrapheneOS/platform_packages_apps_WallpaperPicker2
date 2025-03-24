@@ -16,12 +16,14 @@
 
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.app.WallpaperInfo
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Rect
+import android.view.accessibility.AccessibilityManager
 import androidx.activity.viewModels
 import androidx.test.core.app.ActivityScenario
 import com.android.wallpaper.effects.FakeEffectsController
@@ -77,6 +79,9 @@ import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito.spy
+import org.mockito.Mockito.verify
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 import org.robolectric.annotation.Config
@@ -96,6 +101,8 @@ class WallpaperPreviewViewModelTest {
     private lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
     private lateinit var startActivityIntent: Intent
     private lateinit var effectsWallpaperInfo: WallpaperInfo
+    private lateinit var accessibilityManager: AccessibilityManager
+
     @HomeScreenPreviewUtils private lateinit var homePreviewUtils: PreviewUtils
     @LockScreenPreviewUtils private lateinit var lockPreviewUtils: PreviewUtils
     @Inject lateinit var testDispatcher: TestDispatcher
@@ -124,6 +131,8 @@ class WallpaperPreviewViewModelTest {
                 packageName = appContext.packageName
             }
         pm.addOrUpdateActivity(activityInfo)
+
+        accessibilityManager = spy(appContext.getSystemService(AccessibilityManager::class.java))!!
 
         // Register a fake the content provider
         ShadowContentResolver.registerProviderInternal(
@@ -453,6 +462,20 @@ class WallpaperPreviewViewModelTest {
             val showDialog = collectLastValue(wallpaperPreviewViewModel.showSetWallpaperDialog)()
             assertThat(showDialog).isTrue()
         }
+
+    @Test
+    fun accessibilityEnabled_ignoresGeneric() {
+        testScope.runTest {
+            val feedbackTypeCaptor = ArgumentCaptor.forClass(Int::class.java)
+            val enabled = wallpaperPreviewViewModel.isAccessibilityEnabled(accessibilityManager)
+            verify(accessibilityManager)
+                .getEnabledAccessibilityServiceList(feedbackTypeCaptor.capture())
+            // Verify that we don't include FEEDBACK_GENERIC when asking about A11y services
+            assertThat(feedbackTypeCaptor.value and AccessibilityServiceInfo.FEEDBACK_GENERIC)
+                .isEqualTo(0)
+            assertThat(enabled).isFalse()
+        }
+    }
 
     /**
      * Updates all upstream flows of [WallpaperPreviewViewModel.fullWallpaper] except

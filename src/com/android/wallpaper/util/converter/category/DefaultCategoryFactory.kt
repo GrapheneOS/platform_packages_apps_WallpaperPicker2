@@ -58,7 +58,10 @@ constructor(
         )
     }
 
-    private fun WallpaperCategory.getCollectionsCategoryData(): CollectionCategoryData {
+    private fun WallpaperCategory.getCollectionsCategoryData(): CollectionCategoryData? {
+        if (wallpapers == null) {
+            return null
+        }
         val wallpaperModelList =
             wallpapers
                 .map { wallpaperInfo ->

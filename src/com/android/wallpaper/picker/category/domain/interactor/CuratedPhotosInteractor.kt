@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.category.domain.interactor
 
 import com.android.wallpaper.picker.data.category.PhotoCategoryModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * Classes that implement this interface implement the business logic in assembling curated photos
@@ -25,4 +26,11 @@ import kotlinx.coroutines.flow.Flow
  */
 interface CuratedPhotosInteractor {
     val category: Flow<PhotoCategoryModel>
+    val dismissBanner: StateFlow<Boolean>
+
+    /**
+     * This methods is responsible for setting the value of dismiss button which controls the
+     * visibility of sign in banner.
+     */
+    fun setBannerDismissed(dismissed: Boolean)
 }

@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package com.android.wallpaper.picker.data.category
+package com.android.wallpaper.binder
 
-import android.app.PendingIntent
-import com.android.wallpaper.picker.data.PhotosErrorData
+import android.view.View
+import com.android.wallpaper.picker.category.ui.binder.BannerProvider
+import javax.inject.Inject
+import javax.inject.Singleton
 
-/**
- * This is a wrapper class around photos category since we also need to take into account
- * 1. status: Different status code returned by the PhotosClient API
- * 2. pendingIntent: Intent that allows user to sign in to GooglePhotos
- */
-class PhotoCategoryModel(
-    val categoryModel: CategoryModel,
-    val status: PhotosErrorData,
-    val pendingIntent: PendingIntent?,
-)
+@Singleton
+class FakeBannerProvider @Inject constructor() : BannerProvider {
+    override fun getSignInBanner(): View? {
+        return null
+    }
+}

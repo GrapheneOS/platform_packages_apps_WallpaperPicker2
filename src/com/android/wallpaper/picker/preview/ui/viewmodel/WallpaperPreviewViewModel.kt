@@ -15,9 +15,13 @@
  */
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
+import android.accessibilityservice.AccessibilityServiceInfo
+import android.content.Context
 import android.graphics.Point
 import android.graphics.Rect
 import android.stats.style.StyleEnums
+import android.view.accessibility.AccessibilityManager
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,6 +46,7 @@ import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
 import com.android.wallpaper.util.WallpaperConnection.WhichPreview
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.EnumSet
 import javax.inject.Inject
 import kotlinx.coroutines.delay
@@ -70,6 +75,7 @@ constructor(
     private val displayUtils: DisplayUtils,
     @HomeScreenPreviewUtils private val homePreviewUtils: PreviewUtils,
     @LockScreenPreviewUtils private val lockPreviewUtils: PreviewUtils,
+    @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -499,6 +505,25 @@ constructor(
 
     fun resetFullPreviewConfigViewModel() {
         _fullPreviewConfigViewModel.value = null
+    }
+
+    fun isAccessibilityEnabled(): Boolean {
+        return isAccessibilityEnabled(
+            context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        )
+    }
+
+    @VisibleForTesting
+    fun isAccessibilityEnabled(am: AccessibilityManager): Boolean {
+        val enabledServices =
+            am.getEnabledAccessibilityServiceList(
+                AccessibilityServiceInfo.FEEDBACK_AUDIBLE or
+                    AccessibilityServiceInfo.FEEDBACK_SPOKEN or
+                    AccessibilityServiceInfo.FEEDBACK_VISUAL or
+                    AccessibilityServiceInfo.FEEDBACK_HAPTIC or
+                    AccessibilityServiceInfo.FEEDBACK_BRAILLE
+            )
+        return enabledServices.isNotEmpty()
     }
 
     companion object {

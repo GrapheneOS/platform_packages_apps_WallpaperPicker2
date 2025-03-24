@@ -39,6 +39,8 @@ import com.android.wallpaper.picker.category.domain.interactor.implementations.D
 import com.android.wallpaper.picker.category.domain.interactor.implementations.DefaultCuratedPhotosInteractorImpl
 import com.android.wallpaper.picker.category.domain.interactor.implementations.DefaultOnDeviceWallpapersInteractor
 import com.android.wallpaper.picker.category.domain.interactor.implementations.ThirdPartyCategoryInteractorImpl
+import com.android.wallpaper.picker.category.ui.binder.BannerProvider
+import com.android.wallpaper.picker.category.ui.binder.DefaultBannerProvider
 import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
 import com.android.wallpaper.picker.category.ui.view.providers.implementation.DefaultIndividualPickerFactory
 import com.android.wallpaper.picker.category.wrapper.DefaultWallpaperCategoryWrapper
@@ -65,6 +67,8 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class WallpaperPicker2AppModule {
+
+    @Binds @Singleton abstract fun bindBannerProvider(impl: DefaultBannerProvider): BannerProvider
 
     @Binds
     @Singleton
