@@ -113,6 +113,7 @@ object WallpaperPreviewBinder {
         return object : SurfaceViewUtils.SurfaceCallback {
 
             var job: Job? = null
+            var currentWallpaper: String? = null
 
             override fun surfaceCreated(holder: SurfaceHolder) {
                 job =
@@ -135,7 +136,7 @@ object WallpaperPreviewBinder {
                                         WallpaperEngineConnection.WallpaperEngineConnectionListener {
                                         override fun onWallpaperColorsChanged(
                                             colors: WallpaperColors?,
-                                            displayId: Int
+                                            displayId: Int,
                                         ) {
                                             viewModel.setWallpaperConnectionColors(
                                                 WallpaperColorsModel.Loaded(colors)
@@ -153,6 +154,12 @@ object WallpaperPreviewBinder {
                                     listener,
                                 )
                             } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
+                                if (
+                                    currentWallpaper == wallpaper.commonWallpaperData.id.wallpaperId
+                                ) {
+                                    return@collect
+                                }
+                                currentWallpaper = wallpaper.commonWallpaperData.id.wallpaperId
                                 val staticPreviewView =
                                     LayoutInflater.from(applicationContext)
                                         .inflate(R.layout.fullscreen_wallpaper_preview, null)
@@ -164,7 +171,7 @@ object WallpaperPreviewBinder {
                                 surfaceView.attachView(
                                     staticPreviewView,
                                     surfacePosition.width(),
-                                    surfacePosition.height()
+                                    surfacePosition.height(),
                                 )
                                 // Bind static wallpaper
                                 StaticPreviewBinder.bind(
