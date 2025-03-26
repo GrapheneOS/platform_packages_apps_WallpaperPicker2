@@ -19,6 +19,8 @@ import android.content.Context
 import android.graphics.Point
 import android.view.Display
 import android.view.DisplayInfo
+import android.view.Surface.ROTATION_0
+import android.view.Surface.ROTATION_180
 import android.view.Surface.ROTATION_270
 import android.view.Surface.ROTATION_90
 import com.android.systemui.shared.recents.utilities.Utilities
@@ -40,11 +42,23 @@ class DisplayUtils
 @Inject
 constructor(
     @ApplicationContext private val appContext: Context,
-    private val displaysProvider: DisplaysProvider
+    private val displaysProvider: DisplaysProvider,
 ) {
     companion object {
         private val ROTATION_HORIZONTAL_HINGE = setOf(ROTATION_90, ROTATION_270)
         private const val TABLET_MIN_DPS = 600f // See Sysui's Utilities.TABLET_MIN_DPS
+    }
+
+    /**
+     * Returns true if the display is large, the only display on device, and in portrait rotation.
+     */
+    fun isLargeScreenSingleDisplayPortrait(): Boolean {
+        val internalDisplays = displaysProvider.getInternalDisplays()
+        if (internalDisplays.size != 1) {
+            return false
+        }
+        val isDisplayPortrait = (internalDisplays[0].rotation in setOf(ROTATION_0, ROTATION_180))
+        return isLargeScreenDevice() && !hasMultiInternalDisplays() && isDisplayPortrait
     }
 
     fun hasMultiInternalDisplays(): Boolean {
@@ -129,7 +143,7 @@ constructor(
         val smallestWidth = min(maxDisplaysDimension.x, maxDisplaysDimension.y)
         return Utilities.dpiFromPx(
             smallestWidth.toFloat(),
-            appContext.resources.configuration.densityDpi
+            appContext.resources.configuration.densityDpi,
         ) >= TABLET_MIN_DPS
     }
 
@@ -191,9 +205,7 @@ constructor(
         return displayInfo.logicalHeight * displayInfo.logicalWidth
     }
 
-    fun getInternalDisplaySizes(
-        allDimensions: Boolean = false,
-    ): List<Point> {
+    fun getInternalDisplaySizes(allDimensions: Boolean = false): List<Point> {
         return displaysProvider
             .getInternalDisplays()
             .map { getRealSize(it) }

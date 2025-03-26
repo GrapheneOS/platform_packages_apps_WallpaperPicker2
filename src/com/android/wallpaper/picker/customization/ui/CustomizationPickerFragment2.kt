@@ -211,8 +211,13 @@ class CustomizationPickerFragment2 :
             view.requireViewById(R.id.wallpaper_picker_entry)
         val previewLabelPlaceHolder: View = view.requireViewById(R.id.label_placeholder)
         view.post {
+            val isLargeScreenSingleDisplayPortrait =
+                displayUtils.isLargeScreenSingleDisplayPortrait()
             val wallpaperPickerEntryExpandedHeight = wallpaperPickerEntry.height
-            val wallpaperPickerEntryCollapsedHeight = wallpaperPickerEntry.collapsedButton.height
+            // Do not collapse the wallpaper entry when isLargeScreenSingleDisplayPortrait
+            val wallpaperPickerEntryCollapsedHeight =
+                if (isLargeScreenSingleDisplayPortrait) wallpaperPickerEntryExpandedHeight
+                else wallpaperPickerEntry.collapsedButton.height
             val previewLabelHeight = previewLabelPlaceHolder.height
             val minCollapsedPreviewHeight =
                 resources.getDimensionPixelSize(
@@ -223,7 +228,12 @@ class CustomizationPickerFragment2 :
                 resources.getDimensionPixelSize(
                     R.dimen.customization_picker_min_preview_expanded_height
                 )
+            val maxExpandedPreviewHeight =
+                resources.getDimensionPixelSize(
+                    R.dimen.customization_picker_max_preview_expanded_height
+                )
             val minExpandedPagerHeight = minExpandedPreviewHeight + previewLabelHeight
+            val maxExpandedPagerHeight = maxExpandedPreviewHeight + previewLabelHeight
 
             // For collapsed, it needs to show the all option entries, with the collapsed wallpaper
             // entry, which shows as a single button.
@@ -236,7 +246,6 @@ class CustomizationPickerFragment2 :
             pickerMotionContainer
                 .getConstraintSet(R.id.collapsed_header_primary)
                 ?.constrainHeight(R.id.preview_header, collapsedHeaderHeight)
-
             // The expanded / collapsed header height should be updated when optionContainer
             // height is known.
             // For expanded, it needs to show at least half of the entry view below the wallpaper
@@ -246,6 +255,7 @@ class CustomizationPickerFragment2 :
                         wallpaperPickerEntryExpandedHeight -
                         resources.getDimensionPixelSize(R.dimen.customization_option_entry_height) /
                             2)
+                    .coerceAtMost(maxExpandedPagerHeight)
                     .coerceAtLeast(minExpandedPagerHeight)
             pickerMotionContainer
                 .getConstraintSet(R.id.expanded_header_primary)
@@ -267,7 +277,11 @@ class CustomizationPickerFragment2 :
                             startId == R.id.expanded_header_primary &&
                                 endId == R.id.collapsed_header_primary
                         ) {
-                            wallpaperPickerEntry.setProgress(progress)
+                            // Do not collapse or expand the wallpaper entry when
+                            // isLargeScreenSingleDisplayPortrait is true
+                            if (!isLargeScreenSingleDisplayPortrait) {
+                                wallpaperPickerEntry.setProgress(progress)
+                            }
                         }
                     }
 
@@ -276,9 +290,17 @@ class CustomizationPickerFragment2 :
                         currentId: Int,
                     ) {
                         if (currentId == R.id.expanded_header_primary) {
-                            wallpaperPickerEntry.setProgress(0f)
+                            // Do not collapse or expand the wallpaper entry when
+                            // isLargeScreenSingleDisplayPortrait is true
+                            if (!isLargeScreenSingleDisplayPortrait) {
+                                wallpaperPickerEntry.setProgress(0f)
+                            }
                         } else if (currentId == R.id.collapsed_header_primary) {
-                            wallpaperPickerEntry.setProgress(1f)
+                            // Do not collapse or expand the wallpaper entry when
+                            // isLargeScreenSingleDisplayPortrait is true
+                            if (!isLargeScreenSingleDisplayPortrait) {
+                                wallpaperPickerEntry.setProgress(1f)
+                            }
                         }
 
                         if (

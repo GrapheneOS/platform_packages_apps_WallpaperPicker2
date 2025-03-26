@@ -32,7 +32,6 @@ import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.picker.category.ui.binder.BannerProvider
 import com.android.wallpaper.picker.category.ui.view.adapter.CategoryAdapter
 import com.android.wallpaper.picker.category.ui.view.adapter.CuratedPhotosAdapter
-import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
 import com.android.wallpaper.picker.category.ui.viewmodel.PhotosViewModel
 import com.android.wallpaper.picker.category.ui.viewmodel.SectionViewModel
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
@@ -76,24 +75,27 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
             )
         }
 
+        if (item.sectionTitle != null && item.tileViewModels.isNotEmpty()) {
+            sectionTitle.text = item.sectionTitle
+            sectionTitle.visibility = View.VISIBLE
+        } else {
+            sectionTitle.visibility = View.GONE
+        }
+
         // TODO: this probably is not necessary but if in the case the sections get updated we
         //  should just update the adapter instead of instantiating a new instance
-        when (item.displayType) {
+        when (item) {
             // This is the display type for suggested photos carousel
-            CategoriesViewModel.DisplayType.Carousel -> {
-                sectionTiles.adapter = CuratedPhotosAdapter(item.tileViewModels)
-                val layoutManagerCuratedPhotos = CarouselLayoutManager()
-                sectionTiles.layoutManager = layoutManagerCuratedPhotos
-                val snapHelper = CarouselSnapHelper()
-
-                // in case there are no suggested photos
-                if (item.tileViewModels.isEmpty()) {
+            is PhotosViewModel -> {
+                // in case there are no suggested photos or suggested photos are less than 3
+                if (!item.isSuggestedPhotoCarouselVisible) {
                     val signInBannerView = bannerProvider?.getSignInBanner()
                     val layoutParams = morePhotosButton.layoutParams as RelativeLayout.LayoutParams
                     layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_END)
                     layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL)
                     morePhotosButton.layoutParams = layoutParams
-                    val pendingIntentForPhotos = (item as PhotosViewModel).pendingIntent
+                    morePhotosButton.setOnClickListener { _ -> item.onSectionClicked?.invoke() }
+                    val pendingIntentForPhotos = item.pendingIntent
 
                     if (item.status == PhotosErrorData.UNAUTHENTICATED && !isSignInBannerVisible) {
                         val viewStub = categoryHeader.findViewById<ViewStub>(R.id.sign_in_banner_id)
@@ -129,9 +131,16 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
                             Log.e(TAG, "PendingIntent was canceled: $e")
                         }
                     })
+                    // we hide the title called suggested photos in this case
+                    sectionTitle.visibility = View.GONE
+                } else {
+                    sectionTiles.adapter = CuratedPhotosAdapter(item.tileViewModels)
+                    val layoutManagerCuratedPhotos = CarouselLayoutManager()
+                    sectionTiles.layoutManager = layoutManagerCuratedPhotos
+                    val snapHelper = CarouselSnapHelper()
+                    snapHelper.attachToRecyclerView(sectionTiles)
+                    morePhotosButton.setOnClickListener { _ -> item.onSectionClicked?.invoke() }
                 }
-                snapHelper.attachToRecyclerView(sectionTiles)
-                morePhotosButton.setOnClickListener { _ -> item.onSectionClicked?.invoke() }
             }
             else -> {
                 morePhotosButton.visibility = View.GONE
@@ -169,13 +178,6 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
                     )
                 sectionTiles.addItemDecoration(itemDecoration)
             }
-        }
-
-        if (item.sectionTitle != null && item.tileViewModels.isNotEmpty()) {
-            sectionTitle.text = item.sectionTitle
-            sectionTitle.visibility = View.VISIBLE
-        } else {
-            sectionTitle.visibility = View.GONE
         }
     }
 

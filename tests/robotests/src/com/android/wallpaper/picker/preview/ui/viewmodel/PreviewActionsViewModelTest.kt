@@ -24,6 +24,7 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.content.pm.ServiceInfo
 import android.net.Uri
+import android.platform.test.annotations.EnableFlags
 import androidx.activity.result.ActivityResultLauncher
 import androidx.test.core.app.ActivityScenario
 import com.android.wallpaper.effects.Effect
@@ -168,6 +169,24 @@ class PreviewActionsViewModelTest {
                 "testId",
                 "testCollection",
                 actionUrl = null,
+            )
+        )
+        assertThat(isInformationButtonVisible()).isFalse()
+    }
+
+    @Test
+    @EnableFlags(com.android.systemui.shared.Flags.FLAG_EXTENDED_WALLPAPER_EFFECTS)
+    fun isInformationVisible_invisibleWhenValidUri() = runTest {
+        val model = WallpaperModelUtils.getStaticWallpaperModel("testId", "testCollection")
+        wallpaperPreviewRepository.setWallpaperModel(model)
+
+        val isInformationButtonVisible = collectLastValue(underTest.isInformationVisible)
+
+        wallpaperPreviewRepository.setWallpaperModel(
+            WallpaperModelUtils.getStaticWallpaperModel(
+                "testId",
+                "testCollection",
+                imageWallpaperUri = Uri.parse("test"),
             )
         )
         assertThat(isInformationButtonVisible()).isFalse()

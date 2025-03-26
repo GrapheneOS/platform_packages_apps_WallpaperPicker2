@@ -121,7 +121,22 @@ constructor(
             }
         }
 
-    val isInformationVisible: Flow<Boolean> = informationFloatingSheetViewModel.map { it != null }
+    val isInformationVisible: Flow<Boolean> =
+        combine(
+            informationFloatingSheetViewModel.map { it != null },
+            previewActionsInteractor.wallpaperModel,
+        ) { floatingSheetViewModelAvailable, wallpaper ->
+            if (
+                flags.isExtendedWallpaperEnabled() &&
+                    (wallpaper is StaticWallpaperModel &&
+                        wallpaper.imageWallpaperData?.uri != null &&
+                        wallpaper.imageWallpaperData.uri != Uri.EMPTY)
+            ) {
+                false
+            } else {
+                floatingSheetViewModelAvailable
+            }
+        }
 
     private val _isInformationChecked: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isInformationChecked: Flow<Boolean> = _isInformationChecked.asStateFlow()
