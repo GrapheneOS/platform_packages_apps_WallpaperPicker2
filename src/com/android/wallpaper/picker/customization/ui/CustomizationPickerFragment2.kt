@@ -16,7 +16,6 @@
 
 package com.android.wallpaper.picker.customization.ui
 
-import android.content.ComponentName
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -382,7 +381,7 @@ class CustomizationPickerFragment2 :
                 // navigate to standard preview screen
                 startWallpaperPreviewActivity(wallpaperModel, false)
             },
-            navigateToPackThemeActivity = { startPackThemeActivity() },
+            navigateToPackThemeActivity = { intent -> context?.let { it.startActivity(intent) } },
         )
 
         customizationOptionsBinder.bindDiscardChangesDialog(
@@ -709,13 +708,6 @@ class CustomizationPickerFragment2 :
             previewIntent,
             VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE,
         )
-    }
-
-    private fun startPackThemeActivity() {
-        val componentName = ComponentName(PACK_THEME_PACKAGE_NAME, PACK_THEME_SERVICE_NAME)
-        val intent = Intent()
-        intent.setComponent(componentName)
-        startActivity(intent)
     }
 
     companion object {

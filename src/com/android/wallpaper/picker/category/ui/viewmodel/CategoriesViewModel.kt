@@ -292,9 +292,6 @@ constructor(
                 )
             }
 
-    // Handles the MyPhotos block case. In case there is nothing returned from the PhotosApp,
-    // we emit an empty value so it can be filtered out from the categories screen.
-    // TODO: Handle the case when user isn't logged into GooglePhotos
     private val myPhotosSectionViewModel: Flow<SectionViewModel> =
         if (BaseFlags.get().isNewPickerUi()) {
                 curatedPhotosInteractor.category.distinctUntilChanged().map { category ->
@@ -367,6 +364,8 @@ constructor(
 
     // The ordering of addition of viewModels here decides the final ordering how sections would
     // appear in the categories page.
+    // TODO (b/406526975): Improve the ordering of sections based on priority values instead
+    //  of relying on order of addition here.
     val sections: Flow<List<SectionViewModel>> =
         combine(
             individualSectionViewModels,
@@ -377,11 +376,11 @@ constructor(
             ->
             buildList {
                 if (BaseFlags.get().isNewPickerUi()) {
-                    creativeViewModel?.let { add(it) }
                     add(myPhotosViewModel)
                     if (false) {
                         standaloneCreativeViewModel?.let { add(it) }
                     }
+                    creativeViewModel?.let { add(it) }
                 } else {
                     creativeViewModel?.let { add(it) }
                     add(myPhotosViewModel)

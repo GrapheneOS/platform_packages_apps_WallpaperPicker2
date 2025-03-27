@@ -24,7 +24,8 @@
     <RelativeLayout
         android:id="@+id/category_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/photos_carousel_padding">
 
         <TextView
             android:id="@+id/section_title"
@@ -38,7 +39,7 @@
 
         <Button
             android:id="@+id/more_photos_button"
-            android:layout_width="@dimen/more_photos_button_length"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@string/more_photos"
@@ -46,7 +47,12 @@
             android:background="@drawable/button_rounded_corners"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="@dimen/grid_item_category_title_margin_bottom"/>
+            android:layout_marginBottom="@dimen/grid_item_category_title_margin_bottom"
+            android:drawableStart="@drawable/photo_library_24px"
+            android:drawablePadding="@dimen/photos_carousel_padding"
+            android:gravity="center_vertical|start"
+            android:paddingHorizontal="@dimen/more_photos_button_padding"
+            />
 
         <ViewStub
             android:id="@+id/sign_in_banner_id"

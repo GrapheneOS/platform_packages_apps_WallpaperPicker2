@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.customization.ui.binder
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
@@ -46,7 +47,7 @@ interface CustomizationOptionsBinder {
         navigateToMoreLockScreenSettingsActivity: () -> Unit,
         navigateToColorContrastSettingsActivity: () -> Unit,
         navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
-        navigateToPackThemeActivity: () -> Unit,
+        navigateToPackThemeActivity: (Intent) -> Unit,
     )
 
     fun bindClockPreview(

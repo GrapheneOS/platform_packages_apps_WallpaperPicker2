@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.category.ui.view.viewholder
 
 import android.app.ActivityOptions
 import android.app.PendingIntent
+import android.content.res.ColorStateList
 import android.graphics.Rect
 import android.util.Log
 import android.view.View
@@ -25,6 +26,8 @@ import android.view.ViewStub
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.widget.TextViewCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
@@ -73,6 +76,37 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
                 shouldAnimate = shouldAnimateColor,
                 lifecycleOwner = lifecycleOwner,
             )
+
+            // setting the icon color of the button
+            ColorUpdateBinder.bind(
+                setColor = { color ->
+                    TextViewCompat.setCompoundDrawableTintList(
+                        morePhotosButton,
+                        ColorStateList.valueOf(color),
+                    )
+                },
+                color = colorUpdateViewModel.colorOnPrimary,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
+
+            // setting the text color of the button
+            ColorUpdateBinder.bind(
+                setColor = { color -> morePhotosButton.setTextColor(color) },
+                color = colorUpdateViewModel.colorOnPrimary,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
+
+            // setting background of the button
+            ColorUpdateBinder.bind(
+                setColor = { color ->
+                    DrawableCompat.setTint(DrawableCompat.wrap(morePhotosButton.background), color)
+                },
+                color = colorUpdateViewModel.colorPrimary,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
         }
 
         if (item.sectionTitle != null && item.tileViewModels.isNotEmpty()) {
@@ -94,6 +128,7 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
                     layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_END)
                     layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL)
                     morePhotosButton.layoutParams = layoutParams
+                    morePhotosButton.text = itemView.context.getString(R.string.choose_a_photo)
                     morePhotosButton.setOnClickListener { _ -> item.onSectionClicked?.invoke() }
                     val pendingIntentForPhotos = item.pendingIntent
 

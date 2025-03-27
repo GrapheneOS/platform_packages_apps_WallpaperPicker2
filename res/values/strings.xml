@@ -64,6 +64,7 @@
          wallpaper in the WallpaperPicker screen [CHAR LIMIT=100] -->
     <string name="choose_a_wallpaper_section_title">Choose a Wallpaper</string>
 
+
     <!-- Label indicating the title for block that allows user to select a curated photo
      to be set as a wallpaper in the WallpaperPicker screen [CHAR LIMIT=100] -->
     <string name="choose_a_curated_photo_section_title">Suggested photos</string>
@@ -133,6 +134,10 @@
     <!-- Label that is present on the More Photos button in the category picker page.
      [CHAR LIMIT=30] -->
     <string name="more_photos">More Photos</string>
+
+    <!-- Label that is present in the category picker page for selecting other photos when no
+       suggested photos are present. [CHAR LIMIT=30] -->
+    <string name="choose_a_photo">Choose a photo</string>
 
     <!-- Title of a feature where the wallpaper changes on a daily basis. [CHAR LIMIT=50] -->
     <string name="daily_refresh_tile_title">Daily wallpaper</string>

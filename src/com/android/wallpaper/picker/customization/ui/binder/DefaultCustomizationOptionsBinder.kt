@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.customization.ui.binder
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -48,7 +49,7 @@ class DefaultCustomizationOptionsBinder @Inject constructor() : CustomizationOpt
         navigateToMoreLockScreenSettingsActivity: () -> Unit,
         navigateToColorContrastSettingsActivity: () -> Unit,
         navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
-        navigateToPackThemeActivity: () -> Unit,
+        navigateToPackThemeActivity: (Intent) -> Unit,
     ) {
         // Do nothing intended
     }

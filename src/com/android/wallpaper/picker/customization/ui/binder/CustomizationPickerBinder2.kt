@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.picker.customization.ui.binder
 
+import android.content.Intent
 import android.view.View
 import android.widget.LinearLayout
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -65,7 +66,7 @@ object CustomizationPickerBinder2 {
         navigateToColorContrastSettingsActivity: () -> Unit,
         navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
         navigateToPreviewScreen: ((wallpaperModel: WallpaperModel) -> Unit)?,
-        navigateToPackThemeActivity: () -> Unit,
+        navigateToPackThemeActivity: (Intent) -> Unit,
     ) {
         val lockCustomizationOptionContainer: LinearLayout =
             view.requireViewById(R.id.lock_customization_option_container)
