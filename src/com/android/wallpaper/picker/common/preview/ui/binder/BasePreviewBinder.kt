@@ -64,6 +64,8 @@ object BasePreviewBinder {
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
         onLaunchPreview: ((WallpaperModel) -> Unit)? = null,
         onTransitionToScreen: ((Screen) -> Unit)? = null,
+        onPreviewReady: ((Screen) -> Unit)? = null,
+        onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
         clockViewFactory: ClockViewFactory,
     ) {
         val wallpaperSurface: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
@@ -104,6 +106,8 @@ object BasePreviewBinder {
             viewLifecycleOwner = lifecycleOwner,
             wallpaperConnectionUtils = wallpaperConnectionUtils,
             isFirstBindingDeferred = isFirstBindingDeferred,
+            onPreviewReady = onPreviewReady,
+            onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
         )
 
         WorkspacePreviewBinder.bind(

@@ -16,7 +16,6 @@
 
 package com.android.wallpaper.picker.common.preview.ui.binder
 
-import android.view.SurfaceView
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -28,8 +27,9 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPick
 import kotlinx.coroutines.launch
 
 /**
- * Animates the preview to a targeted alpha. The timing to call bind() is critical. Avoid calling it
- * during Activity or Fragment transition that also takes care of the alpha fade of the screen.
+ * Animates the preview and the preview label to a target alpha. The timing to call bind() is
+ * critical. Avoid calling it during Activity or Fragment transition that also takes care of the
+ * alpha fade of the screen.
  */
 object PreviewAlphaAnimationBinder {
 
@@ -39,26 +39,37 @@ object PreviewAlphaAnimationBinder {
         lifecycleOwner: LifecycleOwner,
     ) {
         val lockPreview: View = previewPager.requireViewById(R.id.lock_preview)
+        val lockPreviewLabel: View = previewPager.requireViewById(R.id.lock_preview_label)
+        val lockPreviewShade: View = lockPreview.requireViewById(R.id.preview_shade)
         val homePreview: View = previewPager.requireViewById(R.id.home_preview)
-
-        val lockWallpaperSurface: SurfaceView = lockPreview.requireViewById(R.id.wallpaper_surface)
-        val lockWorkspaceSurface: SurfaceView = lockPreview.requireViewById(R.id.workspace_surface)
-        val homeWallpaperSurface: SurfaceView = homePreview.requireViewById(R.id.wallpaper_surface)
-        val homeWorkspaceSurface: SurfaceView = homePreview.requireViewById(R.id.workspace_surface)
+        val homePreviewLabel: View = previewPager.requireViewById(R.id.home_preview_label)
+        val homePreviewShade: View = homePreview.requireViewById(R.id.preview_shade)
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.lockPreviewAnimateToAlpha.collect {
-                        lockWallpaperSurface.animateToAlpha(it)
-                        lockWorkspaceSurface.animateToAlpha(it)
+                    viewModel.lockPreviewAlpha.collect { (alpha, shouldAnimate) ->
+                        val shadeAlpha = 1 - alpha
+                        if (shouldAnimate) {
+                            lockPreviewLabel.animateToAlpha(alpha)
+                            lockPreviewShade.animateToAlpha(shadeAlpha)
+                        } else {
+                            lockPreviewLabel.alpha = alpha
+                            lockPreviewShade.alpha = shadeAlpha
+                        }
                     }
                 }
 
                 launch {
-                    viewModel.homePreviewAnimateToAlpha.collect {
-                        homeWallpaperSurface.animateToAlpha(it)
-                        homeWorkspaceSurface.animateToAlpha(it)
+                    viewModel.homePreviewAlpha.collect { (alpha, shouldAnimate) ->
+                        val shadeAlpha = 1 - alpha
+                        if (shouldAnimate) {
+                            homePreviewLabel.animateToAlpha(alpha)
+                            homePreviewShade.animateToAlpha(shadeAlpha)
+                        } else {
+                            homePreviewLabel.alpha = alpha
+                            homePreviewShade.alpha = shadeAlpha
+                        }
                     }
                 }
             }

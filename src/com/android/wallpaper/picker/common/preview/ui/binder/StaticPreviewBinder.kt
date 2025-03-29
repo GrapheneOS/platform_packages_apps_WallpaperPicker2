@@ -56,6 +56,7 @@ object StaticPreviewBinder {
         displaySize: Point,
         parentCoroutineScope: CoroutineScope,
         isFullScreen: Boolean = false,
+        onPreviewReady: (() -> Unit)? = null,
     ) {
         lowResImageView.initLowResImageView()
         fullResImageView.initFullResImageView()
@@ -68,6 +69,7 @@ object StaticPreviewBinder {
                         it?.let {
                             lowResImageView.setImageBitmap(it)
                             lowResImageView.isVisible = true
+                            onPreviewReady?.invoke()
                         }
                     }
                 }
@@ -117,7 +119,11 @@ object StaticPreviewBinder {
                             ),
                         )
 
-                        crossFadeInFullResImageView(lowResImageView, fullResImageView)
+                        if (lowResImageView.isVisible) {
+                            crossFadeInFullResImageView(lowResImageView, fullResImageView)
+                        } else {
+                            onPreviewReady?.invoke()
+                        }
                     }
                 }
             }

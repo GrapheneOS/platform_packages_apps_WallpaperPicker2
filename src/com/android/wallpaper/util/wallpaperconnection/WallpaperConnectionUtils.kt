@@ -70,6 +70,7 @@ constructor(@ApplicationContext private val context: Context) {
         engineRenderingConfig: EngineRenderingConfig,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
         listener: WallpaperEngineConnection.WallpaperEngineConnectionListener? = null,
+        onPreviewReady: (() -> Unit)? = null,
     ) {
         val wallpaperInfo = wallpaperModel.liveWallpaperData.systemWallpaperInfo
         val engineDisplaySize = engineRenderingConfig.getEngineDisplaySize()
@@ -143,6 +144,7 @@ constructor(@ApplicationContext private val context: Context) {
                         engineRenderingConfig.getEngineDisplaySize(),
                         engineRenderingConfig.enforceSingleEngine,
                     )
+                    onPreviewReady?.invoke()
                 }
             }
         }

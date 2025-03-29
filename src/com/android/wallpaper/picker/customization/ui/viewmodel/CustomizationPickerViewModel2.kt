@@ -66,41 +66,78 @@ constructor(
             }
         }
 
+    private val isLockPreviewReady: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val isHomePreviewReady: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+    fun setPreviewReady(screen: Screen, isReady: Boolean) {
+        when (screen) {
+            LOCK_SCREEN -> isLockPreviewReady.value = isReady
+            HOME_SCREEN -> isHomePreviewReady.value = isReady
+        }
+    }
+
     /** Flow of float that emits to trigger the lock screen preview to animate to an alpha value. */
-    val lockPreviewAnimateToAlpha: Flow<Float> =
-        combine(screen, selectedPreviewScreen, ::Pair)
-            .map { (navigationScreen, previewScreen) ->
-                when (navigationScreen.first) {
-                    PickerScreen.MAIN ->
-                        if (previewScreen == LOCK_SCREEN) PREVIEW_SHOW_ALPHA else PREVIEW_FADE_ALPHA
-                    PickerScreen.CUSTOMIZATION_OPTION -> {
-                        when (previewScreen) {
-                            LOCK_SCREEN -> PREVIEW_SHOW_ALPHA
-                            HOME_SCREEN -> PREVIEW_HIDE_ALPHA
-                        }
-                    }
-                }
+    val lockPreviewAlpha: Flow<PreviewAlpha> =
+        combine(isLockPreviewReady, screen, selectedPreviewScreen) {
+                isPreviewReady,
+                navigationScreen,
+                previewScreen ->
+                getPreviewAlpha(
+                    isPreviewReady = isPreviewReady,
+                    navigationScreen = navigationScreen.first,
+                    previewScreen = previewScreen,
+                    targetScreen = LOCK_SCREEN,
+                )
             }
             .distinctUntilChanged()
             .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
 
     /** Flow of float that emits to trigger the home screen preview to animate to an alpha value. */
-    val homePreviewAnimateToAlpha: Flow<Float> =
-        combine(screen, selectedPreviewScreen, ::Pair)
-            .map { (navigationScreen, previewScreen) ->
-                when (navigationScreen.first) {
-                    PickerScreen.MAIN ->
-                        if (previewScreen == HOME_SCREEN) PREVIEW_SHOW_ALPHA else PREVIEW_FADE_ALPHA
-                    PickerScreen.CUSTOMIZATION_OPTION -> {
-                        when (previewScreen) {
-                            LOCK_SCREEN -> PREVIEW_HIDE_ALPHA
-                            HOME_SCREEN -> PREVIEW_SHOW_ALPHA
-                        }
-                    }
-                }
+    val homePreviewAlpha: Flow<PreviewAlpha> =
+        combine(isHomePreviewReady, screen, selectedPreviewScreen) {
+                isPreviewReady,
+                navigationScreen,
+                previewScreen ->
+                getPreviewAlpha(
+                    isPreviewReady = isPreviewReady,
+                    navigationScreen = navigationScreen.first,
+                    previewScreen = previewScreen,
+                    targetScreen = HOME_SCREEN,
+                )
             }
             .distinctUntilChanged()
             .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
+
+    /**
+     * Get the preview's target alpha value to animate or set to.
+     *
+     * @return [PreviewAlpha] contains the target alpha value and shouldAnimate. If shouldAnimate is
+     *   true, the view should animate to the target alpha; otherwise, directly set to the alpha.
+     */
+    private fun getPreviewAlpha(
+        isPreviewReady: Boolean,
+        navigationScreen: PickerScreen,
+        previewScreen: Screen,
+        targetScreen: Screen,
+    ): PreviewAlpha {
+        return if (isPreviewReady) {
+            when (navigationScreen) {
+                PickerScreen.MAIN ->
+                    if (previewScreen == targetScreen)
+                        PreviewAlpha(alpha = PREVIEW_SHOW_ALPHA, shouldAnimate = true)
+                    else PreviewAlpha(alpha = PREVIEW_FADE_ALPHA, shouldAnimate = true)
+                PickerScreen.CUSTOMIZATION_OPTION -> {
+                    when (previewScreen) {
+                        targetScreen ->
+                            PreviewAlpha(alpha = PREVIEW_SHOW_ALPHA, shouldAnimate = true)
+                        else -> PreviewAlpha(alpha = PREVIEW_HIDE_ALPHA, shouldAnimate = true)
+                    }
+                }
+            }
+        } else {
+            PreviewAlpha(alpha = PREVIEW_HIDE_ALPHA, shouldAnimate = false)
+        }
+    }
 
     val isPreviewClickable: Flow<Boolean> = basePreviewViewModel.wallpapers.map { it != null }
 

@@ -28,7 +28,6 @@ import android.view.ViewGroup.MarginLayoutParams
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toolbar
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
@@ -62,11 +61,11 @@ import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder2
 import com.android.wallpaper.picker.customization.ui.binder.PagerTouchInterceptorBinder
-import com.android.wallpaper.picker.customization.ui.binder.PreviewLabelBinder
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.picker.customization.ui.util.EmptyTransitionListener
+import com.android.wallpaper.picker.customization.ui.view.PreviewPagerViews
 import com.android.wallpaper.picker.customization.ui.view.WallpaperPickerEntry
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
@@ -190,20 +189,35 @@ class CustomizationPickerFragment2 :
         previewViewModel.setIsWallpaperColorPreviewEnabled(false)
 
         val previewPager: ClickableMotionLayout = view.requireViewById(R.id.preview_pager)
-        initPreviewPager(
-            pagerTouchInterceptor = view.requireViewById(R.id.pager_touch_interceptor),
-            clockFaceClickDelegateView = view.requireViewById(R.id.clock_face_click_delegate),
-            previewPager = view.requireViewById(R.id.preview_pager),
+
+        val previewPagerViews: PreviewPagerViews =
+            initPreviewPager(rootView = view, previewPager = previewPager)
+        bindPreviewPager(
+            previewPagerViews = previewPagerViews,
             isFirstBinding = savedInstanceState == null,
         )
 
-        if (isInitialCreation) {
-            // If the fragment is created the first time, hide the preview pager. This is to prevent
-            // preview surface views from triggering surfaceCreated too early and binding the
-            // wallpaper and workspace surface. This can potentially block the initiation of the app
-            // start, e.g. Activity's enter animation.
-            // The preview pager will show again when onEnterAnimationCompleteAfterActivityCreated
+        if (isInitialCreation || isReenterAfterExit) {
+            // 1. If the fragment is created the first time, hide the preview pager. This is to
+            // prevent preview surface views from triggering surfaceCreated too early and binding
+            // the wallpaper and workspace surface. This can potentially block the initiation of the
+            // app start, e.g. Activity's enter animation. We need to hide the preview pager and
+            // delay PreviewAlphaAnimationBinder.bind() until the callback
+            // onEnterAnimationCompleteAfterActivityCreated().
+            //
+            // 2. If isReenterAfterExit true, it means that it is a fragment reenter after a
+            // fragment exit. To avoid unnecessary flashes, we need to hide the preview pager and
+            // delay PreviewAlphaAnimationBinder.bind() until the reenter onTransitionEnd() is
+            // called.
             setPreviewPagerVisible(previewPager = previewPager, isVisible = false)
+            isReenterAfterExit = false
+        } else {
+            // In general cases, we bind the animation when onViewCreated()
+            PreviewAlphaAnimationBinder.bind(
+                previewPager = previewPager,
+                viewModel = customizationPickerViewModel,
+                lifecycleOwner = viewLifecycleOwner,
+            )
         }
 
         val wallpaperPickerEntry: WallpaperPickerEntry =
@@ -412,6 +426,11 @@ class CustomizationPickerFragment2 :
             // invisible, making it visible will trigger the surface view's surfaceCreated callback,
             // as well as the binding of the wallpaper preview and workspace preview.
             setPreviewPagerVisible(previewPager = previewPager, isVisible = true)
+            PreviewAlphaAnimationBinder.bind(
+                previewPager = previewPager,
+                viewModel = customizationPickerViewModel,
+                lifecycleOwner = viewLifecycleOwner,
+            )
             isInitialCreation = false
         }
     }
@@ -449,79 +468,116 @@ class CustomizationPickerFragment2 :
     }
 
     private fun initPreviewPager(
-        pagerTouchInterceptor: View,
-        clockFaceClickDelegateView: View,
+        rootView: View,
         previewPager: ClickableMotionLayout,
-        isFirstBinding: Boolean,
-    ) {
+    ): PreviewPagerViews {
+        previewPager.addClickableViewId(R.id.preview_card)
+
+        // Inflate the clock and attach to the lock preview and bind clock view
+        val lockPreview: View = previewPager.requireViewById(R.id.lock_preview)
+        val lockPreviewContainer: ViewGroup =
+            lockPreview.requireViewById(R.id.wallpaper_preview_crop)
+        val clockHostView =
+            customizationOptionUtil.createClockPreviewAndAddToParent(
+                lockPreviewContainer,
+                layoutInflater,
+            )
+        // The shade covers the two surface views of the preview and reveals when the preview is
+        // ready to show.
+        val lockPreviewShade =
+            layoutInflater.inflate(R.layout.preview_shade, lockPreviewContainer, false)
+        lockPreviewContainer.addView(lockPreviewShade)
+
+        val homePreview: View = previewPager.requireViewById(R.id.home_preview)
+        val homePreviewContainer: ViewGroup =
+            homePreview.requireViewById(R.id.wallpaper_preview_crop)
+        // The shade covers the two surface views of the preview and reveals when the preview is
+        // ready to show.
+        val homePreviewShade =
+            layoutInflater.inflate(R.layout.preview_shade, homePreviewContainer, false)
+        homePreviewContainer.addView(homePreviewShade)
+
+        return PreviewPagerViews(
+            previewPager = previewPager,
+            pagerTouchInterceptor = rootView.requireViewById(R.id.pager_touch_interceptor),
+            lockPreviewLabel = previewPager.requireViewById(R.id.lock_preview_label),
+            homePreviewLabel = previewPager.requireViewById(R.id.home_preview_label),
+            lockPreview = previewPager.requireViewById(R.id.lock_preview),
+            homePreview = previewPager.requireViewById(R.id.home_preview),
+            lockPreviewShade = lockPreviewShade,
+            homePreviewShade = homePreviewShade,
+            clockHostView = clockHostView,
+            clockFaceClickDelegateView = rootView.requireViewById(R.id.clock_face_click_delegate),
+        )
+    }
+
+    private fun bindPreviewPager(previewPagerViews: PreviewPagerViews, isFirstBinding: Boolean) {
         PagerTouchInterceptorBinder.bind(
-            pagerTouchInterceptor,
+            previewPagerViews.pagerTouchInterceptor,
             customizationPickerViewModel,
             viewLifecycleOwner,
         )
-        previewPager.addClickableViewId(R.id.preview_card)
 
-        val lockPreviewLabel: TextView = previewPager.requireViewById(R.id.lock_preview_label)
-        PreviewLabelBinder.bind(
-            previewLabel = lockPreviewLabel,
-            screen = LOCK_SCREEN,
-            viewModel = customizationPickerViewModel,
-            lifecycleOwner = viewLifecycleOwner,
-        )
         ColorUpdateBinder.bind(
-            setColor = { color -> lockPreviewLabel.setTextColor(color) },
-            color = colorUpdateViewModel.colorOnSurface,
-            shouldAnimate = isOnMainScreen,
-            lifecycleOwner = viewLifecycleOwner,
-        )
-        val homePreviewLabel: TextView = previewPager.requireViewById(R.id.home_preview_label)
-        PreviewLabelBinder.bind(
-            previewLabel = homePreviewLabel,
-            screen = HOME_SCREEN,
-            viewModel = customizationPickerViewModel,
-            lifecycleOwner = viewLifecycleOwner,
-        )
-        ColorUpdateBinder.bind(
-            setColor = { color -> homePreviewLabel.setTextColor(color) },
+            setColor = { color -> previewPagerViews.lockPreviewLabel.setTextColor(color) },
             color = colorUpdateViewModel.colorOnSurface,
             shouldAnimate = isOnMainScreen,
             lifecycleOwner = viewLifecycleOwner,
         )
 
-        bindPreview(
-            screen = LOCK_SCREEN,
-            clockFaceClickDelegateView = clockFaceClickDelegateView,
-            previewPager = previewPager,
-            preview = previewPager.requireViewById(R.id.lock_preview),
-            isFirstBinding = isFirstBinding,
+        ColorUpdateBinder.bind(
+            setColor = { color -> previewPagerViews.homePreviewLabel.setTextColor(color) },
+            color = colorUpdateViewModel.colorOnSurface,
+            shouldAnimate = isOnMainScreen,
+            lifecycleOwner = viewLifecycleOwner,
         )
 
-        bindPreview(
-            screen = HOME_SCREEN,
-            clockFaceClickDelegateView = clockFaceClickDelegateView,
-            previewPager = previewPager,
-            preview = previewPager.requireViewById(R.id.home_preview),
-            isFirstBinding = isFirstBinding,
+        ColorUpdateBinder.bind(
+            setColor = { color -> previewPagerViews.lockPreviewShade.setBackgroundColor(color) },
+            color = colorUpdateViewModel.colorSurfaceContainer,
+            shouldAnimate = { previewPagerViews.lockPreviewShade.alpha != 0F },
+            lifecycleOwner = viewLifecycleOwner,
         )
 
-        if (isReenterAfterExit) {
-            // If isReenterAfterExit true, it means that it is a fragment reenter after a fragment
-            // exit. Delay PreviewAlphaAnimationBinder.bind() until the reenter onTransitionEnd()
-            // is called.
-            isReenterAfterExit = false
-        } else {
-            // In generally cases, we will bind the animation when onViewCreated()
-            PreviewAlphaAnimationBinder.bind(
-                previewPager = previewPager,
-                customizationPickerViewModel,
-                viewLifecycleOwner,
+        ColorUpdateBinder.bind(
+            setColor = { color -> previewPagerViews.homePreviewShade.setBackgroundColor(color) },
+            color = colorUpdateViewModel.colorSurfaceContainer,
+            shouldAnimate = { previewPagerViews.homePreviewShade.alpha != 0F },
+            lifecycleOwner = viewLifecycleOwner,
+        )
+
+        // Bind the clock view if nonnull
+        val clockHostView = previewPagerViews.clockHostView
+        val clockFaceClickDelegateView = previewPagerViews.clockFaceClickDelegateView
+        if (clockHostView != null && clockFaceClickDelegateView != null) {
+            customizationOptionsBinder.bindClockPreview(
+                context = requireContext(),
+                clockHostView = clockHostView,
+                clockFaceClickDelegateView = clockFaceClickDelegateView,
+                viewModel = customizationPickerViewModel,
+                colorUpdateViewModel = colorUpdateViewModel,
+                lifecycleOwner = viewLifecycleOwner,
+                clockViewFactory = clockViewFactory,
             )
         }
+
+        bindPreview(
+            screen = LOCK_SCREEN,
+            previewPager = previewPagerViews.previewPager,
+            preview = previewPagerViews.lockPreview,
+            isFirstBinding = isFirstBinding,
+        )
+
+        bindPreview(
+            screen = HOME_SCREEN,
+            previewPager = previewPagerViews.previewPager,
+            preview = previewPagerViews.homePreview,
+            isFirstBinding = isFirstBinding,
+        )
     }
 
     private fun bindPreview(
         screen: Screen,
-        clockFaceClickDelegateView: View,
         previewPager: ClickableMotionLayout,
         preview: View,
         isFirstBinding: Boolean,
@@ -531,24 +587,6 @@ class CustomizationPickerFragment2 :
         val previewViewModel = customizationPickerViewModel.basePreviewViewModel
 
         val previewCard: View = preview.requireViewById(R.id.preview_card)
-
-        if (screen == LOCK_SCREEN) {
-            val clockHostView =
-                (previewCard.parent as? ViewGroup)?.let {
-                    customizationOptionUtil.createClockPreviewAndAddToParent(it, layoutInflater)
-                }
-            if (clockHostView != null) {
-                customizationOptionsBinder.bindClockPreview(
-                    context = requireContext(),
-                    clockHostView = clockHostView,
-                    clockFaceClickDelegateView = clockFaceClickDelegateView,
-                    viewModel = customizationPickerViewModel,
-                    colorUpdateViewModel = colorUpdateViewModel,
-                    lifecycleOwner = viewLifecycleOwner,
-                    clockViewFactory = clockViewFactory,
-                )
-            }
-        }
 
         BasePreviewBinder.bind(
             applicationContext = appContext,
@@ -592,6 +630,12 @@ class CustomizationPickerFragment2 :
                             ANIMATION_DURATION,
                         )
                 }
+            },
+            onPreviewReady = { previewScreen ->
+                customizationPickerViewModel.setPreviewReady(previewScreen, true)
+            },
+            onPreviewSurfaceDestroyed = { previewScreen ->
+                customizationPickerViewModel.setPreviewReady(previewScreen, false)
             },
             clockViewFactory = clockViewFactory,
         )
@@ -754,10 +798,12 @@ class CustomizationPickerFragment2 :
 
                 override fun onTransitionEnd(transition: Transition) {
                     val rootView = view ?: return
+                    val previewPager: View = rootView.requireViewById(R.id.preview_pager)
+                    setPreviewPagerVisible(previewPager = previewPager, isVisible = true)
                     PreviewAlphaAnimationBinder.bind(
-                        rootView.requireViewById(R.id.preview_pager),
-                        customizationPickerViewModel,
-                        viewLifecycleOwner,
+                        previewPager = previewPager,
+                        viewModel = customizationPickerViewModel,
+                        lifecycleOwner = viewLifecycleOwner,
                     )
                 }
 
@@ -777,14 +823,18 @@ class CustomizationPickerFragment2 :
      * onSurfaceDestroyed, during Fragment transition.
      */
     private fun setPreviewPagerVisible(previewPager: View, isVisible: Boolean) {
+        val lockPreviewLabel: View = previewPager.requireViewById(R.id.lock_preview_label)
+        val homePreviewLabel: View = previewPager.requireViewById(R.id.home_preview_label)
         val lockPreview: View = previewPager.requireViewById(R.id.lock_preview)
         val homePreview: View = previewPager.requireViewById(R.id.home_preview)
         val lockWallpaperSurface: SurfaceView = lockPreview.requireViewById(R.id.wallpaper_surface)
         val lockWorkspaceSurface: SurfaceView = lockPreview.requireViewById(R.id.workspace_surface)
         val homeWallpaperSurface: SurfaceView = homePreview.requireViewById(R.id.wallpaper_surface)
         val homeWorkspaceSurface: SurfaceView = homePreview.requireViewById(R.id.workspace_surface)
+        lockPreviewLabel.visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
         lockWallpaperSurface.visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
         lockWorkspaceSurface.visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
+        homePreviewLabel.visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
         homeWallpaperSurface.visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
         homeWorkspaceSurface.visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
     }
