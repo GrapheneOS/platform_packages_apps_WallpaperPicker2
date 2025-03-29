@@ -101,7 +101,7 @@ constructor(
             val combinedList = categories + standAlone
             combinedList.map { category ->
                 TileViewModel(
-                    defaultDrawable = null,
+                    defaultDrawable = category.commonCategoryData?.thumbnailDrawable,
                     thumbnailAsset = category.collectionCategoryData?.thumbAsset,
                     text = category.commonCategoryData.title,
                     showTitle = true,

@@ -46,6 +46,8 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Dozvoli pristup"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Usluga žive pozadinske slike za smjenjivanje pozadinskih slika"</string>
     <string name="more_photos" msgid="2183343115041498453">"Više fotografija"</string>
+    <!-- no translation found for choose_a_photo (7641781242539912127) -->
+    <skip />
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Dnevna pozadinska slika"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Dodirnite da uključite"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Pozadinska slika će se automatski mijenjati svakodnevno. Da završite postavljanje, na sljedećem ekranu dodirnite &lt;strong&gt;Postavi pozadinsku sliku&lt;/strong&gt;."</string>

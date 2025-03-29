@@ -46,6 +46,8 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"အသုံးပြုခွင့်ပေးရန်"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"နောက်ခံများ လှည့်ရန်အတွက် သက်ဝင်နောက်ခံ ဝန်ဆောင်မှု"</string>
     <string name="more_photos" msgid="2183343115041498453">"နောက်ထပ်ဓာတ်ပုံများ"</string>
+    <!-- no translation found for choose_a_photo (7641781242539912127) -->
+    <skip />
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"နေ့စဉ် နောက်ခံ"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"ဖွင့်ရန်တို့ပါ"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"နောက်ခံသည် နေ့စဉ်အလိုအလျောက် ပြောင်းပါမည်။ စနစ်ထည့်သွင်းမှုကို အဆုံးသတ်ရန် နောက်လာမည့် မျက်နှာပြင်တွင် &lt;strong&gt;နောက်ခံ သတ်မှတ်ရန်&lt;/strong&gt; ကို တို့ပါ။"</string>

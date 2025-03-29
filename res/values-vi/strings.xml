@@ -46,6 +46,8 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Cho phép truy cập"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Dịch vụ hình nền động để xoay vòng hình nền"</string>
     <string name="more_photos" msgid="2183343115041498453">"Ảnh khác"</string>
+    <!-- no translation found for choose_a_photo (7641781242539912127) -->
+    <skip />
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Hình nền hàng ngày"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Nhấn để bật"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Hình nền sẽ tự động thay đổi hàng ngày. Để hoàn tất thiết lập, hãy nhấn vào tùy chọn &lt;strong&gt;Đặt hình nền&lt;/strong&gt; trên màn hình tiếp theo."</string>

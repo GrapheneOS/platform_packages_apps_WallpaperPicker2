@@ -20,9 +20,9 @@ package com.android.wallpaper.picker.data.category
  * Represents the model class that would be used for instantiating any type of category in the
  * picker. Only commonCategory is mandatory while others are optional.
  */
-class CategoryModel(
+data class CategoryModel(
     val commonCategoryData: CommonCategoryData,
     val thirdPartyCategoryData: ThirdPartyCategoryData? = null,
     val imageCategoryData: ImageCategoryData? = null,
-    val collectionCategoryData: CollectionCategoryData? = null
+    val collectionCategoryData: CollectionCategoryData? = null,
 )

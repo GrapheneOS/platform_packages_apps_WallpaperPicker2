@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.data.category
 import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 
+// TODO(b/406555816): Consolidate asset and drawable into a single data class
 /**
  * Represents set of attributes required for displaying a 3rd party wallpaper app installed on
  * device.

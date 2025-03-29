@@ -32,6 +32,7 @@ import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.util.ResourceUtils
 import com.android.wallpaper.util.SizeCalculator
+import com.bumptech.glide.Glide
 
 /** Caches and binds [TileViewHolder] to a [WallpaperTileView] */
 class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -103,10 +104,15 @@ class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 ResourceUtils.getColorAttr(context, android.R.attr.colorSecondary)
             item.thumbnailAsset.loadDrawable(context, wallpaperCategoryImage, placeHolderColor)
         } else {
-            wallpaperCategoryImage.setImageDrawable(item.defaultDrawable)
-            wallpaperCategoryImage.setBackgroundColor(
-                context.resources.getColor(R.color.myphoto_background_color)
-            )
+            if (item.defaultDrawable == null) {
+                wallpaperCategoryImage.setBackgroundColor(
+                    ResourceUtils.getColorAttr(context, R.color.myphoto_background_color)
+                )
+            } else {
+                item.defaultDrawable?.let {
+                    Glide.with(itemView.context).load(it).into(wallpaperCategoryImage)
+                }
+            }
         }
         categorySubtitle.text = item.text
 

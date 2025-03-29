@@ -46,6 +46,8 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Povoliť prístup"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Služba dynamickej tapety na striedanie tapiet"</string>
     <string name="more_photos" msgid="2183343115041498453">"Ďalšie fotky"</string>
+    <!-- no translation found for choose_a_photo (7641781242539912127) -->
+    <skip />
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Denná tapeta"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Zapnite klepnutím"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Tapeta sa bude automaticky meniť každý deň. Nastavenie dokončíte tak, že na ďalšej obrazovke klepnete na možnosť &lt;strong&gt;Nastaviť tapetu&lt;/strong&gt;."</string>

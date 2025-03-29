@@ -46,6 +46,8 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"מתן גישה"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"שירות טפט דינמי לסבב של טפטים"</string>
     <string name="more_photos" msgid="2183343115041498453">"עוד תמונות"</string>
+    <!-- no translation found for choose_a_photo (7641781242539912127) -->
+    <skip />
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"טפט יומי"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"לחיצה כדי להפעיל"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"‏הטפט יתחלף מדי יום באופן אוטומטי. כדי לסיים את ההגדרה, יש ללחוץ על &lt;strong&gt;הגדרת טפט&lt;/strong&gt; במסך הבא."</string>

@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.data.category
 import android.graphics.drawable.Drawable
 import com.android.wallpaper.asset.Asset
 
+// TODO(b/406555816): Consolidate asset and drawable into a single data class
 /**
  * Represents set of attributes for depicting the block used for accessing personal photos on
  * device. The defaultDrawable contains the placeholder image drawable, which is used when

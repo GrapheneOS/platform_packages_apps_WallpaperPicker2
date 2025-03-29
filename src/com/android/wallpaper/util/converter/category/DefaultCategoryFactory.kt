@@ -68,6 +68,7 @@ constructor(
                     wallpaperModelFactory.getWallpaperModel(context, wallpaperInfo)
                 }
                 .toMutableList()
+
         return CollectionCategoryData(
             wallpaperModels = wallpaperModelList,
             thumbAsset = getThumbnail(context),

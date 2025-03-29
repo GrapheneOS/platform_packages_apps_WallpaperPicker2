@@ -46,6 +46,8 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Izinkan akses"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Layanan wallpaper animasi untuk memutar wallpaper"</string>
     <string name="more_photos" msgid="2183343115041498453">"Foto Lainnya"</string>
+    <!-- no translation found for choose_a_photo (7641781242539912127) -->
+    <skip />
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Wallpaper harian"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Ketuk untuk mengaktifkan"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Wallpaper akan otomatis berubah setiap hari. Untuk menyelesaikan penyiapan, ketuk &lt;strong&gt;Setel wallpaper&lt;/strong&gt; di layar selanjutnya."</string>

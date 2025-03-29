@@ -46,6 +46,8 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"アクセスを許可"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"画像が切り替わるライブ壁紙サービス"</string>
     <string name="more_photos" msgid="2183343115041498453">"写真をもっと見る"</string>
+    <!-- no translation found for choose_a_photo (7641781242539912127) -->
+    <skip />
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"日替わり壁紙"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"タップすると有効になります"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"毎日、壁紙が自動的に変わります。設定を完了するには、次の画面で [&lt;strong&gt;壁紙を設定&lt;/strong&gt;] をタップします。"</string>

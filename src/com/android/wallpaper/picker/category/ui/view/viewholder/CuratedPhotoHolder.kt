@@ -17,6 +17,7 @@
 package com.android.wallpaper.picker.category.ui.view.viewholder
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -25,6 +26,11 @@ import com.android.wallpaper.R
 import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
 import com.android.wallpaper.picker.customization.animation.view.LoadingAnimation2
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 
 class CuratedPhotoHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -34,19 +40,61 @@ class CuratedPhotoHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val curatedPhotoTitle: TextView = itemView.requireViewById(R.id.carousel_text_view)
 
     fun bind(item: TileViewModel, context: Context, isFirst: Boolean) {
-        item.thumbnailAsset?.loadDrawableWithTransition(
-            context,
-            curatedPhotoImage,
-            context.resources.getInteger(android.R.integer.config_mediumAnimTime),
-            {
-                loadingAnimation?.playRevealAnimation {
-                    loadingAnimation = null
-                    backgroundColorBinding?.destroy()
-                    backgroundColorBinding = null
-                }
-            },
-            context.getColor(R.color.system_surface_bright),
-        )
+        item.thumbnailAsset?.let { asset ->
+            asset.loadDrawableWithTransition(
+                context,
+                curatedPhotoImage,
+                context.resources.getInteger(android.R.integer.config_mediumAnimTime),
+                {
+                    loadingAnimation?.playRevealAnimation {
+                        loadingAnimation = null
+                        backgroundColorBinding?.destroy()
+                        backgroundColorBinding = null
+                    }
+                },
+                context.getColor(R.color.system_surface_bright),
+            )
+        }
+            ?: run {
+                // Glide will render the gif and on completion or failure will dismiss the
+                // place-holder animation
+                Glide.with(itemView.context)
+                    .load(item.defaultDrawable)
+                    .addListener(
+                        object : RequestListener<Drawable> {
+                            override fun onResourceReady(
+                                resource: Drawable,
+                                model: Any,
+                                target: Target<Drawable>,
+                                dataSource: DataSource,
+                                isFirstResource: Boolean,
+                            ): Boolean {
+                                loadingAnimation?.playRevealAnimation {
+                                    loadingAnimation = null
+                                    backgroundColorBinding?.destroy()
+                                    backgroundColorBinding = null
+                                }
+                                return false
+                            }
+
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>,
+                                isFirstResource: Boolean,
+                            ): Boolean {
+                                // TODO(b/406560705): define behaviour if gif loading fails
+                                loadingAnimation?.playRevealAnimation {
+                                    loadingAnimation = null
+                                    backgroundColorBinding?.destroy()
+                                    backgroundColorBinding = null
+                                }
+                                return false
+                            }
+                        }
+                    )
+                    .into(curatedPhotoImage)
+            }
         curatedPhotoImage.layoutParams.height =
             context.resources.getDimension(R.dimen.curated_photo_height).toInt()
 

@@ -46,6 +46,8 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Permitir acesso"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Serviço de plano de fundo interativo para rotação de planos de fundo"</string>
     <string name="more_photos" msgid="2183343115041498453">"Mais fotos"</string>
+    <!-- no translation found for choose_a_photo (7641781242539912127) -->
+    <skip />
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Plano de fundo diário"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Toque para ativar"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"O plano de fundo será alterado automaticamente todos os dias. Para concluir a configuração, toque em &lt;strong&gt;Definir plano de fundo&lt;/strong&gt; na próxima tela."</string>

@@ -46,6 +46,8 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"መዳረሻን ፍቀድ"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"የሕያው ልጣፍ አገልግሎት ለተሽከርካሪ ልጣፎች"</string>
     <string name="more_photos" msgid="2183343115041498453">"ተጨማሪ ፎቶዎች"</string>
+    <!-- no translation found for choose_a_photo (7641781242539912127) -->
+    <skip />
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"ዕለታዊ ልጣፍ"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"ለማብራት ነካ ያድርጉ"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"ልጣፍ በየቀኑ በራስ-ሰር ይቀየራል። ማዋቀርን ለመጨረሽ በሚቀጥለው ማያ ገፅ ላይ &lt;strong&gt;ልጣፍ አዘጋጅ&gt;/strong&gt;ን መታ ያድርጉ።"</string>

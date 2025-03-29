@@ -46,6 +46,8 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"ਪਹੁੰਚ ਕਰਨ ਦਿਓ"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"ਬਦਲਣ ਵਾਲੇ ਚਿੱਤਰ ਵਾਲਪੇਪਰਾਂ ਲਈ ਲਾਈਵ ਵਾਲਪੇਪਰ ਸੇਵਾ"</string>
     <string name="more_photos" msgid="2183343115041498453">"ਹੋਰ ਫ਼ੋਟੋਆਂ"</string>
+    <!-- no translation found for choose_a_photo (7641781242539912127) -->
+    <skip />
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"ਰੋਜ਼ਾਨਾ ਵਾਲਪੇਪਰ"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"ਚਾਲੂ ਕਰਨ ਲਈ ਟੈਪ ਕਰੋ"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"ਵਾਲਪੇਪਰ ਸਵੈਚਲਿਤ ਤੌਰ \'ਤੇ ਹਰ ਦਿਨ ਬਦਲੇਗਾ। ਸੈੱਟਅੱਪ ਪੂਰਾ ਕਰਨ ਲਈ, ਅਗਲੀ ਸਕ੍ਰੀਨ \'ਤੇ &lt;strong&gt;ਵਾਲਪੇਪਰ ਸੈੱਟ ਕਰੋ&lt;/strong&gt; \'ਤੇ ਟੈਪ ਕਰੋ।"</string>

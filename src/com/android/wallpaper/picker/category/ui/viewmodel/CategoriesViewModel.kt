@@ -235,7 +235,7 @@ constructor(
                 val tiles =
                     categories.map { category ->
                         TileViewModel(
-                            defaultDrawable = null,
+                            defaultDrawable = category.commonCategoryData?.thumbnailDrawable,
                             thumbnailAsset = category.collectionCategoryData?.thumbAsset,
                             text = category.commonCategoryData.title,
                             maxCategoriesInRow = SectionCardinality.Single,
