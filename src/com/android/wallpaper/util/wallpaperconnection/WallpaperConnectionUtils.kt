@@ -150,7 +150,7 @@ constructor(@ApplicationContext private val context: Context) {
         }
     }
 
-    suspend fun disconnectAll(context: Context) {
+    suspend fun disconnectAll() {
         surfaceControlMap.keys.map { key ->
             mutex.withLock {
                 surfaceControlMap[key]?.let { surfaceControls ->
@@ -160,7 +160,23 @@ constructor(@ApplicationContext private val context: Context) {
             }
         }
         surfaceControlMap.clear()
-        disconnectAllServices(context)
+        disconnectAllServices()
+    }
+
+    suspend fun disconnect(packageName: String) {
+        mutex.withLock {
+            surfaceControlMap.apply {
+                filterKeys { key -> key.startsWith(packageName) }
+                    .keys
+                    .forEach { engineKey ->
+                        remove(engineKey)?.let { surfaceControls ->
+                            surfaceControls.forEach { it.release() }
+                            surfaceControls.clear()
+                        }
+                        wallpaperConnectionMap.remove(engineKey)?.await()?.disconnect(context)
+                    }
+            }
+        }
     }
 
     /**
@@ -171,7 +187,7 @@ constructor(@ApplicationContext private val context: Context) {
      * clear the surface controls yet, because we will need them to render the live wallpapers again
      * when switching from static to live wallpapers again.
      */
-    suspend fun disconnectAllServices(context: Context) {
+    suspend fun disconnectAllServices() {
         wallpaperConnectionMap.keys.map { key ->
             mutex.withLock { wallpaperConnectionMap.remove(key)?.await()?.disconnect(context) }
         }

@@ -51,6 +51,8 @@ import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptions
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultToolbarBinder
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
+import com.android.wallpaper.picker.preview.ui.binder.ApplyWallpaperOptionsProvider
+import com.android.wallpaper.picker.preview.ui.binder.DefaultApplyWallpaperOptionsProvider
 import com.android.wallpaper.picker.preview.ui.util.DefaultImageEffectDialogUtil
 import com.android.wallpaper.picker.preview.ui.util.ImageEffectDialogUtil
 import com.android.wallpaper.util.converter.DefaultPhotosErrorConvertor
@@ -165,6 +167,12 @@ abstract class WallpaperPicker2AppModule {
     abstract fun bindRecentWallpaperManager(
         impl: DefaultRecentWallpaperManager
     ): RecentWallpaperManager
+
+    @Binds
+    @Singleton
+    abstract fun bindApplyWallpaperOptionsProvider(
+        impl: DefaultApplyWallpaperOptionsProvider
+    ): ApplyWallpaperOptionsProvider
 
     companion object {
 

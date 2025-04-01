@@ -164,10 +164,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             checkNotNull(previewPager)
             ApplyWallpaperScreenBinder.bind(
                 previewPager = previewPager,
-                applyButton = previewPager.requireViewById(R.id.apply_button),
-                cancelButton = previewPager.requireViewById(R.id.cancel_button),
-                homeCheckbox = previewPager.requireViewById(R.id.home_checkbox),
-                lockCheckbox = previewPager.requireViewById(R.id.lock_checkbox),
                 viewModel = wallpaperPreviewViewModel,
                 lifecycleOwner = viewLifecycleOwner,
                 mainScope = mainScope,

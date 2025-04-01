@@ -165,7 +165,7 @@ object SmallWallpaperPreviewBinder {
                                 )
                                 // This is to possibly shut down all live wallpaper services
                                 // if they exist; otherwise static wallpaper can not show up.
-                                wallpaperConnectionUtils.disconnectAllServices(applicationContext)
+                                wallpaperConnectionUtils.disconnectAllServices()
 
                                 loadingAnimationBinding =
                                     PreviewEffectsLoadingBinder.bind(

@@ -38,6 +38,7 @@ import com.android.wallpaper.picker.data.LiveWallpaperData
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
+import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_APPLIED
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_APPLY_FAILED
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository.EffectStatus.EFFECT_APPLY_IN_PROGRESS
@@ -63,6 +64,7 @@ import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.Customize
 import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.ImageEffectFloatingSheetViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.InformationFloatingSheetViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.floatingSheet.PreviewFloatingSheetViewModel
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.EffectDownloadClickListener
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.EffectSwitchListener
 import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.Status.DOWNLOADING
@@ -74,12 +76,14 @@ import com.android.wallpaper.widget.floatingsheetcontent.WallpaperEffectsView2.S
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 /** View model for the preview action buttons */
 @ViewModelScoped
@@ -87,9 +91,11 @@ class PreviewActionsViewModel
 @Inject
 constructor(
     private val previewActionsInteractor: PreviewActionsInteractor,
+    private val wallpaperConnectionUtils: WallpaperConnectionUtils,
     wallpaperPreviewInteractor: WallpaperPreviewInteractor,
     liveWallpaperDeleteUtil: LiveWallpaperDeleteUtil,
     @ApplicationContext private val context: Context,
+    @MainDispatcher private val mainScope: CoroutineScope,
 ) {
     private val flags = InjectorProvider.getInjector().getFlags()
     private val extendedWallpaperEffectPkgName =
@@ -456,13 +462,35 @@ constructor(
         }
 
     val onEffectsClicked: Flow<((ActivityResultLauncher<Intent>) -> Unit)?> =
-        combine(isEffectsVisible, isEffectsChecked, isExtendedEffectAvailable) {
-            isVisible,
-            isChecked,
-            extendedEffectAvailable ->
+        combine(
+            isEffectsVisible,
+            isEffectsChecked,
+            isExtendedEffectAvailable,
+            previewActionsInteractor.wallpaperModel.filterNotNull(),
+        ) { isVisible, isChecked, extendedEffectAvailable, wallpaper ->
             if (isVisible) {
                 if (extendedEffectAvailable) {
-                    { launcher -> launchExtendedWallpaperEffects(launcher) }
+                    // Could be static wallpaper with uri or actual extended effect wallpaper
+                    { launcher ->
+                        val isExtendedEffectWallpaper = isExtendedEffectWallpaperModel(wallpaper)
+                        mainScope.launch {
+                            launchExtendedWallpaperEffects(
+                                wallpaper,
+                                launcher,
+                                isExtendedEffectWallpaper,
+                            )
+                            if (isExtendedEffectWallpaper) {
+                                // Disconnect engine if it's live extended effect wallpaper
+                                wallpaperConnectionUtils.disconnect(
+                                    (wallpaper as LiveWallpaperModel)
+                                        .liveWallpaperData
+                                        .systemWallpaperInfo
+                                        .component
+                                        .packageName
+                                )
+                            }
+                        }
+                    }
                 } else {
                     fun(_: ActivityResultLauncher<Intent>) {
                         if (!isChecked) {
@@ -476,16 +504,19 @@ constructor(
             }
         }
 
-    private fun launchExtendedWallpaperEffects(launcher: ActivityResultLauncher<Intent>) {
-        val wallpaperModel = previewActionsInteractor.wallpaperModel.value
-        if (isExtendedEffectWallpaperModel(wallpaperModel)) {
+    private fun launchExtendedWallpaperEffects(
+        wallpaper: WallpaperModel,
+        launcher: ActivityResultLauncher<Intent>,
+        isExtendedEffect: Boolean,
+    ) {
+        if (isExtendedEffect) {
             // Extended effect wallpaper, launch with description
             extendedWallpaperIntent.putExtra(
                 WALLPAPER_DESCRIPTION_CONTENT_HANDLING,
-                (wallpaperModel as LiveWallpaperModel).liveWallpaperData.description,
+                (wallpaper as LiveWallpaperModel).liveWallpaperData.description,
             )
         } else {
-            val photoUri = (wallpaperModel as? StaticWallpaperModel)?.imageWallpaperData?.uri
+            val photoUri = (wallpaper as StaticWallpaperModel).imageWallpaperData?.uri
             Log.d(TAG, "PhotoURI is: $photoUri")
             photoUri?.let {
                 context.grantUriPermission(
@@ -623,7 +654,11 @@ constructor(
     private fun isExtendedEffectWallpaperModel(model: WallpaperModel?): Boolean =
         flags.isExtendedWallpaperEnabled() &&
             model is LiveWallpaperModel &&
-            model.liveWallpaperData.isEffectWallpaper
+            model.liveWallpaperData.isEffectWallpaper &&
+            WallpaperConnectionUtils.isExtendedEffectWallpaper(
+                context,
+                model.liveWallpaperData.systemWallpaperInfo.component,
+            )
 
     companion object {
         private const val TAG = "PreviewActionsViewModel"

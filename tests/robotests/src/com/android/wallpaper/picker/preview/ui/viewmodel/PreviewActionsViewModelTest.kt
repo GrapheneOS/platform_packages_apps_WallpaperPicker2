@@ -47,6 +47,7 @@ import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestWallpaperPreferences
 import com.android.wallpaper.testing.WallpaperModelUtils
 import com.android.wallpaper.testing.collectLastValue
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -59,6 +60,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
@@ -81,7 +83,6 @@ class PreviewActionsViewModelTest {
     private lateinit var underTest: PreviewActionsViewModel
     private lateinit var scenario: ActivityScenario<PreviewTestActivity>
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
-    private lateinit var wallpaperPreviewInteractor: WallpaperPreviewInteractor
 
     @Inject lateinit var testDispatcher: TestDispatcher
     @Inject lateinit var wallpaperPreferences: TestWallpaperPreferences
@@ -115,6 +116,8 @@ class PreviewActionsViewModelTest {
     @InstallIn(ActivityComponent::class)
     interface ActivityScopeEntryPoint {
         fun interactor(): WallpaperPreviewInteractor
+
+        fun wallpaperConnectionUtils(): WallpaperConnectionUtils
     }
 
     private fun setEverything(activity: PreviewTestActivity) {
@@ -130,9 +133,11 @@ class PreviewActionsViewModelTest {
                     CreativeEffectsRepository(appContext, testDispatcher),
                     DownloadableWallpaperRepository(liveWallpaperDownloader),
                 ),
+                activityScopeEntryPoint.wallpaperConnectionUtils(),
                 activityScopeEntryPoint.interactor(),
                 liveWallpaperDeleteUtil,
                 appContext,
+                TestScope(testDispatcher),
             )
     }
 

@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.preview.ui.binder
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.Lifecycle
@@ -43,18 +44,21 @@ object ApplyWallpaperScreenBinder {
 
     fun bind(
         previewPager: ClickableMotionLayout,
-        applyButton: Button,
-        cancelButton: Button,
-        homeCheckbox: CheckBox,
-        lockCheckbox: CheckBox,
         viewModel: WallpaperPreviewViewModel,
         lifecycleOwner: LifecycleOwner,
         @MainDispatcher mainScope: CoroutineScope,
         isFoldable: Boolean,
         onWallpaperSet: () -> Unit,
     ) {
+        val applyButton = previewPager.requireViewById<Button>(R.id.apply_button)
+        val cancelButton = previewPager.requireViewById<Button>(R.id.cancel_button)
+        val homeCheckbox = previewPager.requireViewById<CheckBox>(R.id.home_checkbox)
+        val lockCheckbox = previewPager.requireViewById<CheckBox>(R.id.lock_checkbox)
+        val subTitle = previewPager.requireViewById<TextView>(R.id.apply_wallpaper_description)
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.applyWallpaperSubTitle.collect { subTitle.text = it } }
+
                 launch {
                     viewModel.onCancelButtonClicked.collect { onClicked ->
                         cancelButton.setOnClickListener { onClicked() }
@@ -123,6 +127,20 @@ object ApplyWallpaperScreenBinder {
                                 )
                             }
                         }
+                }
+
+                launch {
+                    viewModel.hasSuggestedWallpaperDestination.collect {
+                        homeCheckbox.isEnabled = !it
+                        lockCheckbox.isEnabled = !it
+                        if (it) {
+                            previewPager.removeClickableViewId(homeCheckbox.id)
+                            previewPager.removeClickableViewId(lockCheckbox.id)
+                        } else {
+                            previewPager.addClickableViewId(homeCheckbox.id)
+                            previewPager.addClickableViewId(lockCheckbox.id)
+                        }
+                    }
                 }
 
                 launch {
