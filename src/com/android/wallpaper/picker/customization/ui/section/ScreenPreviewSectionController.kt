@@ -28,7 +28,7 @@ import android.widget.FrameLayout
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.android.systemui.shared.clocks.shared.model.ClockPreviewConstants
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants
 import com.android.wallpaper.R
 import com.android.wallpaper.model.CustomizationSectionController
 import com.android.wallpaper.model.Screen
@@ -93,10 +93,7 @@ open class ScreenPreviewSectionController(
     ): ScreenPreviewView {
         val view =
             LayoutInflater.from(context)
-                .inflate(
-                    R.layout.screen_preview_section,
-                    /* parent= */ null,
-                ) as ScreenPreviewView
+                .inflate(R.layout.screen_preview_section, /* parent= */ null) as ScreenPreviewView
 
         if (isTwoPaneAndSmallWidth) {
             val previewHost =
@@ -154,35 +151,30 @@ open class ScreenPreviewSectionController(
                     PreviewUtils(
                         context = context,
                         authority =
-                            context.getString(
-                                R.string.lock_screen_preview_provider_authority,
-                            ),
+                            context.getString(R.string.lock_screen_preview_provider_authority),
+                        screen = screen,
                     )
                 } else {
                     PreviewUtils(
                         context = context,
                         authorityMetadataKey =
-                            context.getString(
-                                R.string.grid_control_metadata_name,
-                            ),
+                            context.getString(R.string.grid_control_metadata_name),
+                        screen = screen,
                     )
                 },
             wallpaperInfoProvider = { forceReload ->
                 suspendCancellableCoroutine { continuation ->
-                    wallpaperInfoFactory.createCurrentWallpaperInfos(
-                        context,
-                        forceReload,
-                    ) { homeWallpaper, lockWallpaper, _ ->
+                    wallpaperInfoFactory.createCurrentWallpaperInfos(context, forceReload) {
+                        homeWallpaper,
+                        lockWallpaper,
+                        _ ->
                         val wallpaper =
                             if (isOnLockScreen) {
                                 lockWallpaper ?: homeWallpaper
                             } else {
                                 homeWallpaper ?: lockWallpaper
                             }
-                        loadInitialColors(
-                            context = context,
-                            screen = screen,
-                        )
+                        loadInitialColors(context = context, screen = screen)
                         continuation.resume(wallpaper, null)
                     }
                 }
@@ -200,10 +192,7 @@ open class ScreenPreviewSectionController(
         )
     }
 
-    protected fun loadInitialColors(
-        context: Context,
-        screen: Screen,
-    ) {
+    protected fun loadInitialColors(context: Context, screen: Screen) {
         lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val colors =
                 wallpaperManager.getWallpaperColors(
@@ -227,17 +216,17 @@ open class ScreenPreviewSectionController(
 
     private suspend fun getWallpaperInfo(context: Context): WallpaperInfo? {
         return suspendCancellableCoroutine { continuation ->
-            wallpaperInfoFactory.createCurrentWallpaperInfos(
-                context,
-                true,
-            ) { homeWallpaper, lockWallpaper, _ ->
+            wallpaperInfoFactory.createCurrentWallpaperInfos(context, true) {
+                homeWallpaper,
+                lockWallpaper,
+                _ ->
                 continuation.resume(
                     if (isOnLockScreen) {
                         lockWallpaper ?: homeWallpaper
                     } else {
                         homeWallpaper
                     },
-                    null
+                    null,
                 )
             }
         }
@@ -248,10 +237,7 @@ open class ScreenPreviewSectionController(
             Bundle().apply {
                 // Hide the clock from the system UI rendered preview so we can
                 // place the carousel on top of it.
-                putBoolean(
-                    ClockPreviewConstants.KEY_HIDE_CLOCK,
-                    hideLockScreenClockPreview,
-                )
+                putBoolean(KeyguardPreviewConstants.KEY_HIDE_CLOCK, hideLockScreenClockPreview)
             }
         } else {
             null

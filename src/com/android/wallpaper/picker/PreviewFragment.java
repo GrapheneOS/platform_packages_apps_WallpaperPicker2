@@ -68,6 +68,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.LiveWallpaperInfo;
+import com.android.wallpaper.model.Screen;
 import com.android.wallpaper.model.SetWallpaperViewModel;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.Injector;
@@ -281,7 +282,8 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
                 mWorkspaceSurface,
                 new PreviewUtils(
                         requireContext(),
-                        getString(R.string.grid_control_metadata_name)),
+                        getString(R.string.grid_control_metadata_name),
+                        Screen.HOME_SCREEN),
                 shouldApplyWallpaperColors());
         // Hide the work space's bottom row initially to avoid overlapping with the overlay tabs.
         mWorkspaceSurfaceCallback.setHideBottomRow(true);
@@ -291,7 +293,8 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
                 new PreviewUtils(
                         requireContext().getApplicationContext(),
                         null,
-                        getString(R.string.lock_screen_preview_provider_authority)),
+                        getString(R.string.lock_screen_preview_provider_authority),
+                        Screen.LOCK_SCREEN),
                 shouldApplyWallpaperColors());
         setUpScreenPreviewOverlay();
         // Set wallpaper button

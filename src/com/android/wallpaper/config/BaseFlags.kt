@@ -37,6 +37,9 @@ abstract class BaseFlags {
     private var customizationProviderClient: CustomizationProviderClient? = null
     private var cachedFlags: List<CustomizationProviderClient.Flag>? = null
 
+    // local flag to gate the entry points for magic portrait
+    open fun isMagicPortraitEntryPointsEnabled() = false
+
     open fun isStagingBackdropContentEnabled() = false
 
     open fun isWallpaperEffectEnabled() = false

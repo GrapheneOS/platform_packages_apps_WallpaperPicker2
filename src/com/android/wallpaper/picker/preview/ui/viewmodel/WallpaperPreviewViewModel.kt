@@ -25,6 +25,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.customization.picker.clock.shared.ClockSize
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
@@ -99,6 +100,8 @@ constructor(
         if (isViewAsHome) Screen.HOME_SCREEN else Screen.LOCK_SCREEN
 
     val wallpaper: StateFlow<WallpaperModel?> = interactor.wallpaperModel
+
+    val preferredClockSize: Flow<ClockSize?> = interactor.preferredClockSize
 
     fun setPreviewWallpaperModel(wallpaperModel: WallpaperModel) {
         interactor.setPreviewWallpaper(wallpaperModel)

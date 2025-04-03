@@ -26,6 +26,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.customization.picker.clock.shared.ClockSize
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.CLOCK_SIZE_DYNAMIC
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.CLOCK_SIZE_SMALL
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_CLOCK_SIZE
+import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.MESSAGE_ID_PREVIEW_CLOCK_SIZE
+import com.android.wallpaper.model.Screen
+import com.android.wallpaper.picker.common.preview.ui.binder.WorkspaceCallbackBinder.Companion.sendMessage
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WorkspacePreviewConfigViewModel
@@ -85,23 +92,31 @@ object WorkspacePreviewBinder {
             override fun surfaceCreated(holder: SurfaceHolder) {
                 job =
                     lifecycleOwner.lifecycleScope.launch {
-                        viewModel.wallpaperColorsModel.collect {
-                            if (it is WallpaperColorsModel.Loaded) {
-                                val workspaceCallback =
-                                    renderWorkspacePreview(
-                                        surface = surface,
-                                        previewUtils = config.previewUtils,
-                                        displayId =
-                                            viewModel.getDisplayId(config.deviceDisplayType),
-                                        wallpaperColors = it.colors,
-                                    )
-                                // Dispose the previous preview on the renderer side.
-                                previewDisposableHandle?.dispose()
-                                previewDisposableHandle = DisposableHandle {
-                                    config.previewUtils.cleanUp(workspaceCallback)
+                        combine(
+                                viewModel.wallpaperColorsModel,
+                                viewModel.preferredClockSize,
+                                ::Pair,
+                            )
+                            .collect { (colorsModel, preferredClockSize) ->
+                                if (colorsModel is WallpaperColorsModel.Loaded) {
+                                    val workspaceCallback =
+                                        renderWorkspacePreview(
+                                            surface = surface,
+                                            previewUtils = config.previewUtils,
+                                            displayId =
+                                                viewModel.getDisplayId(config.deviceDisplayType),
+                                            wallpaperColors = colorsModel.colors,
+                                            preferredClockSize = preferredClockSize,
+                                            screen = config.previewUtils.screen,
+                                        )
+
+                                    // Dispose the previous preview on the renderer side.
+                                    previewDisposableHandle?.dispose()
+                                    previewDisposableHandle = DisposableHandle {
+                                        config.previewUtils.cleanUp(workspaceCallback)
+                                    }
                                 }
                             }
-                        }
                     }
             }
 
@@ -164,10 +179,10 @@ object WorkspacePreviewBinder {
                         combine(
                                 viewModel.fullWorkspacePreviewConfigViewModel,
                                 viewModel.wallpaperColorsModel,
-                            ) { config, colorsModel ->
-                                config to colorsModel
-                            }
-                            .collect { (config, colorsModel) ->
+                                viewModel.preferredClockSize,
+                                ::Triple,
+                            )
+                            .collect { (config, colorsModel, preferredClockSize) ->
                                 if (colorsModel is WallpaperColorsModel.Loaded) {
                                     val workspaceCallback =
                                         renderWorkspacePreview(
@@ -176,6 +191,8 @@ object WorkspacePreviewBinder {
                                             displayId =
                                                 viewModel.getDisplayId(config.deviceDisplayType),
                                             wallpaperColors = colorsModel.colors,
+                                            preferredClockSize = preferredClockSize,
+                                            screen = config.previewUtils.screen,
                                         )
                                     // Dispose the previous preview on the renderer side.
                                     previewDisposableHandle?.dispose()
@@ -201,6 +218,8 @@ object WorkspacePreviewBinder {
         previewUtils: PreviewUtils,
         displayId: Int,
         wallpaperColors: WallpaperColors? = null,
+        preferredClockSize: ClockSize?,
+        screen: Screen,
     ): Message? {
         var workspaceCallback: Message? = null
         if (previewUtils.supportsPreview()) {
@@ -244,6 +263,23 @@ object WorkspacePreviewBinder {
                         }
                     },
                 )
+            }
+
+            if (screen == Screen.LOCK_SCREEN) {
+                if (preferredClockSize != null) {
+                    workspaceCallback?.sendMessage(
+                        MESSAGE_ID_PREVIEW_CLOCK_SIZE,
+                        Bundle().apply {
+                            putString(
+                                KEY_CLOCK_SIZE,
+                                when (preferredClockSize) {
+                                    ClockSize.DYNAMIC -> CLOCK_SIZE_DYNAMIC
+                                    ClockSize.SMALL -> CLOCK_SIZE_SMALL
+                                },
+                            )
+                        },
+                    )
+                }
             }
         }
         return workspaceCallback

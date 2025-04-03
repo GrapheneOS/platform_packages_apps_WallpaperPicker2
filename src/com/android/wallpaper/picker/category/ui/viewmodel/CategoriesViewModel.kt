@@ -377,7 +377,7 @@ constructor(
             buildList {
                 if (BaseFlags.get().isNewPickerUi()) {
                     add(myPhotosViewModel)
-                    if (false) {
+                    if (BaseFlags.get().isMagicPortraitEntryPointsEnabled()) {
                         standaloneCreativeViewModel?.let { add(it) }
                     }
                     creativeViewModel?.let { add(it) }

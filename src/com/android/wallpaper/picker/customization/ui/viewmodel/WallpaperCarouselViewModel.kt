@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import android.content.Context
 import com.android.wallpaper.asset.ContentUriAsset
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.picker.category.domain.interactor.CreativeCategoryInteractor
 import com.android.wallpaper.picker.category.domain.interactor.CuratedPhotosInteractor
 import com.android.wallpaper.picker.category.domain.interactor.OnDeviceWallpapersInteractor
@@ -98,7 +99,13 @@ constructor(
             creativeCategoryInteractor.categories,
             creativeCategoryInteractor.standaloneCategories,
         ) { categories, standAlone ->
-            val combinedList = categories + standAlone
+            val combinedList =
+                if (BaseFlags.get().isMagicPortraitEntryPointsEnabled()) {
+                    categories + standAlone
+                } else {
+                    categories
+                }
+
             combinedList.map { category ->
                 TileViewModel(
                     defaultDrawable = category.commonCategoryData?.thumbnailDrawable,

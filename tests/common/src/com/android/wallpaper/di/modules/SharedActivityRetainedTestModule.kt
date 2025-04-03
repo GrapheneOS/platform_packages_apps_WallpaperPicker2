@@ -17,6 +17,7 @@
 package com.android.wallpaper.di.modules
 
 import android.content.Context
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.di.modules.HomeScreenPreviewUtils
 import com.android.wallpaper.picker.di.modules.LockScreenPreviewUtils
 import com.android.wallpaper.picker.di.modules.SharedActivityRetainedModule
@@ -34,7 +35,7 @@ import dagger.hilt.testing.TestInstallIn
 @Module
 @TestInstallIn(
     components = [ActivityRetainedComponent::class],
-    replaces = [SharedActivityRetainedModule::class]
+    replaces = [SharedActivityRetainedModule::class],
 )
 internal abstract class SharedActivityRetainedTestModule {
 
@@ -44,28 +45,25 @@ internal abstract class SharedActivityRetainedTestModule {
     ): ImageEffectsRepository
 
     companion object {
-
         @HomeScreenPreviewUtils
         @ActivityRetainedScoped
         @Provides
-        fun provideHomeScreenPreviewUtils(
-            @ApplicationContext appContext: Context,
-        ): PreviewUtils {
+        fun provideHomeScreenPreviewUtils(@ApplicationContext appContext: Context): PreviewUtils {
             return PreviewUtils(
                 context = appContext,
                 authorityMetadataKey = "test_home_screen_preview_auth",
+                screen = Screen.HOME_SCREEN,
             )
         }
 
         @LockScreenPreviewUtils
         @ActivityRetainedScoped
         @Provides
-        fun provideLockScreenPreviewUtils(
-            @ApplicationContext appContext: Context,
-        ): PreviewUtils {
+        fun provideLockScreenPreviewUtils(@ApplicationContext appContext: Context): PreviewUtils {
             return PreviewUtils(
                 context = appContext,
                 authority = "test_lock_screen_preview_auth",
+                screen = Screen.LOCK_SCREEN,
             )
         }
     }

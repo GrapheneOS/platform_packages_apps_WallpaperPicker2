@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.di.modules
 
 import android.content.Context
 import com.android.wallpaper.R
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepository
 import com.android.wallpaper.picker.preview.data.repository.ImageEffectsRepositoryImpl
 import com.android.wallpaper.util.PreviewUtils
@@ -48,30 +49,22 @@ abstract class SharedActivityRetainedModule {
         @HomeScreenPreviewUtils
         @ActivityRetainedScoped
         @Provides
-        fun provideHomeScreenPreviewUtils(
-            @ApplicationContext appContext: Context,
-        ): PreviewUtils {
+        fun provideHomeScreenPreviewUtils(@ApplicationContext appContext: Context): PreviewUtils {
             return PreviewUtils(
                 context = appContext,
-                authorityMetadataKey =
-                    appContext.getString(
-                        R.string.grid_control_metadata_name,
-                    ),
+                authorityMetadataKey = appContext.getString(R.string.grid_control_metadata_name),
+                screen = Screen.HOME_SCREEN,
             )
         }
 
         @LockScreenPreviewUtils
         @ActivityRetainedScoped
         @Provides
-        fun provideLockScreenPreviewUtils(
-            @ApplicationContext appContext: Context,
-        ): PreviewUtils {
+        fun provideLockScreenPreviewUtils(@ApplicationContext appContext: Context): PreviewUtils {
             return PreviewUtils(
                 context = appContext,
-                authority =
-                    appContext.getString(
-                        R.string.lock_screen_preview_provider_authority,
-                    ),
+                authority = appContext.getString(R.string.lock_screen_preview_provider_authority),
+                screen = Screen.LOCK_SCREEN,
             )
         }
     }

@@ -22,7 +22,6 @@ package com.android.wallpaper.picker.data
  * the specific type of wallpaper, the individual fields could be null or not null.
  */
 sealed class WallpaperModel {
-
     /**
      * All [WallpaperModel] data classes contain commonWallpaperData property which contains common
      * data amongst all [WallpaperModel] classes.

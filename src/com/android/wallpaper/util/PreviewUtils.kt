@@ -26,6 +26,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
+import com.android.wallpaper.model.Screen
 import java.util.concurrent.Executors
 
 /** Util class for wallpaper preview. */
@@ -33,6 +34,7 @@ class PreviewUtils(
     private val context: Context,
     authorityMetadataKey: String? = null,
     authority: String? = null,
+    val screen: Screen,
 ) {
     /** Callback for a call to the provider to render preview */
     interface WorkspacePreviewCallback {
@@ -45,10 +47,12 @@ class PreviewUtils(
     constructor(
         context: Context,
         authorityMetadataKey: String,
+        screen: Screen,
     ) : this(
         context = context.applicationContext,
         authorityMetadataKey = authorityMetadataKey,
         authority = null,
+        screen = screen,
     )
 
     init {
@@ -57,10 +61,7 @@ class PreviewUtils(
 
         providerInfo =
             if (!TextUtils.isEmpty(providerAuthority)) {
-                context.packageManager.resolveContentProvider(
-                    providerAuthority,
-                    0,
-                )
+                context.packageManager.resolveContentProvider(providerAuthority, 0)
             } else {
                 null
             }
@@ -86,12 +87,7 @@ class PreviewUtils(
     fun renderPreview(bundle: Bundle?, callback: WorkspacePreviewCallback) {
         EXECUTOR_SERVICE.submit {
             val result =
-                context.contentResolver.call(
-                    getUri(PREVIEW),
-                    METHOD_GET_PREVIEW,
-                    null,
-                    bundle,
-                )
+                context.contentResolver.call(getUri(PREVIEW), METHOD_GET_PREVIEW, null, bundle)
             Handler(Looper.getMainLooper()).post { callback.onPreviewRendered(result) }
         }
     }
