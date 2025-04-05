@@ -21,22 +21,10 @@ import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import com.android.wallpaper.picker.common.text.ui.viewmodel.Text
 
-sealed class Icon(
-    open val contentDescription: Text?,
-) {
-    data class Resource(
-        @DrawableRes val res: Int,
-        override val contentDescription: Text?,
-    ) :
-        Icon(
-            contentDescription = contentDescription,
-        )
+sealed class Icon(open val contentDescription: Text?) {
+    data class Resource(@DrawableRes val res: Int, override val contentDescription: Text?) :
+        Icon(contentDescription = contentDescription)
 
-    data class Loaded(
-        val drawable: Drawable,
-        override val contentDescription: Text?,
-    ) :
-        Icon(
-            contentDescription = contentDescription,
-        )
+    data class Loaded(val drawable: Drawable, override val contentDescription: Text?) :
+        Icon(contentDescription = contentDescription)
 }

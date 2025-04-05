@@ -69,6 +69,10 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
+    <style name="ShapeAppearance.Wallpaper.Corner.ExtraLarge" parent="">
+        <item name="cornerSize">@dimen/m3_sys_shape_corner_value_extra_large</item>
+    </style>
+
     <style name="WallpaperTheme.NoBackground">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>

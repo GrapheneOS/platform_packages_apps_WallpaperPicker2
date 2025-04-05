@@ -19,15 +19,13 @@ package com.android.wallpaper.picker.common.text.ui.viewmodel
 
 import android.content.Context
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 
 sealed class Text {
-    data class Resource(
-        @StringRes val res: Int,
-    ) : Text()
+    data class Resource(@StringRes val res: Int) : Text()
 
-    data class Loaded(
-        val text: String,
-    ) : Text()
+    data class Loaded(val text: String) : Text()
 
     fun asString(context: Context): String {
         return when (this) {
@@ -36,15 +34,19 @@ sealed class Text {
         }
     }
 
+    @Composable
+    fun asComposeString(): String {
+        return when (this) {
+            is Text.Loaded -> this.text
+            is Text.Resource -> stringResource(this.res)
+        }
+    }
+
     companion object {
         /**
          * Returns `true` if the given [Text] instances evaluate to the values; `false` otherwise.
          */
-        fun evaluationEquals(
-            context: Context,
-            first: Text?,
-            second: Text?,
-        ): Boolean {
+        fun evaluationEquals(context: Context, first: Text?, second: Text?): Boolean {
             return first?.asString(context) == second?.asString(context)
         }
     }

@@ -23,7 +23,7 @@
     android:layout_marginEnd="@dimen/curated_photo_horizontal_margin"
     android:layout_height="match_parent"
     android:foreground="?attr/selectableItemBackground"
-    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.ExtraLarge">
+    app:shapeAppearance="@style/ShapeAppearance.Wallpaper.Corner.ExtraLarge">
 
     <ImageView
         android:id="@+id/carousel_image_view"
