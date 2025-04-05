@@ -55,9 +55,12 @@ class CuratedPhotosAdapter(val items: List<TileViewModel>) :
     fun setVisiblePosition(position: Int) {
         val previousPosition = this.visiblePosition
         this.visiblePosition = position
-        if (previousPosition != -1) {
-            notifyItemChanged(previousPosition)
+        // only need to refresh list items if they have visible titles
+        if (items[position].showTitle) {
+            if (previousPosition != -1) {
+                notifyItemChanged(previousPosition)
+            }
+            notifyItemChanged(position)
         }
-        notifyItemChanged(position)
     }
 }
