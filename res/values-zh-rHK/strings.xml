@@ -46,8 +46,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"允許存取"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"動態桌布服務可輪替顯示桌布"</string>
     <string name="more_photos" msgid="2183343115041498453">"更多相片"</string>
-    <!-- no translation found for choose_a_photo (7641781242539912127) -->
-    <skip />
+    <string name="choose_a_photo" msgid="7641781242539912127">"選擇相片"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"每日桌布"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"輕按即可啟用"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"系統會每日自動變更桌布。如要完成設定，請在下一個畫面輕按 [設定桌布]&lt;strong&gt;&lt;/strong&gt;。"</string>

@@ -46,8 +46,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"पहुँच राख्न दिनुहोस्"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"परिवर्तन हुने वालपेपरसम्बन्धी सेवाका लागि लाइभ वालपेपरहरू"</string>
     <string name="more_photos" msgid="2183343115041498453">"थप फोटोहरू"</string>
-    <!-- no translation found for choose_a_photo (7641781242539912127) -->
-    <skip />
+    <string name="choose_a_photo" msgid="7641781242539912127">"कुनै फोटो छनौट गर्नुहोस्"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"दैनिक वालपेपर"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"सक्रिय गर्न ट्याप गर्नुहोस्"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"वालपेपर हरेक दिन स्वतः परिवर्तन हुने छ। सेटअप सम्पन्न गर्न अर्को स्क्रिनमा &lt;strong&gt;वालपेपर सेट गर्नुहोस्‌&lt;/strong&gt;लाई ट्याप गर्नुहोस्।"</string>

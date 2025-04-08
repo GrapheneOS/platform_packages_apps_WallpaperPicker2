@@ -46,8 +46,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Eman baimena"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Txandakako irudietarako horma-paper dinamikoen zerbitzua"</string>
     <string name="more_photos" msgid="2183343115041498453">"Argazki gehiago"</string>
-    <!-- no translation found for choose_a_photo (7641781242539912127) -->
-    <skip />
+    <string name="choose_a_photo" msgid="7641781242539912127">"Aukeratu argazki bat"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Eguneko horma-papera"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Sakatu aktibatzeko"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Horma-papera automatikoki aldatuko da egunero. Konfiguratzen amaitzeko, hurrengo pantailan, sakatu &lt;strong&gt;Ezarri horma-papera&lt;/strong&gt;."</string>

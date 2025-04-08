@@ -31,8 +31,6 @@ import com.android.wallpaper.model.LiveWallpaperInfo
 import com.android.wallpaper.model.LiveWallpaperPrefMetadata
 import com.android.wallpaper.model.StaticWallpaperPrefMetadata
 import com.android.wallpaper.model.WallpaperInfo
-import com.android.wallpaper.module.WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_IMAGE_URI
-import com.android.wallpaper.module.WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_IMAGE_URI
 import com.android.wallpaper.module.WallpaperPreferenceKeys.NoBackupKeys
 import com.android.wallpaper.module.WallpaperPreferences.Companion.generateRecentsKey
 import com.android.wallpaper.module.WallpaperPreferences.PendingDailyWallpaperUpdateStatus
@@ -281,6 +279,7 @@ constructor(@ApplicationContext private val context: Context) : WallpaperPrefere
             .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_ACTION_URL)
             .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_COLLECTION_ID)
             .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_HASH_CODE)
+            .remove(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_IMAGE_URI)
             .apply()
         noBackupPrefs
             .edit()
@@ -452,7 +451,9 @@ constructor(@ApplicationContext private val context: Context) : WallpaperPrefere
     }
 
     override fun getHomeWallpaperImageUri(): Uri? {
-        return sharedPrefs.getString(KEY_HOME_WALLPAPER_IMAGE_URI, null)?.let { Uri.parse(it) }
+        return sharedPrefs
+            .getString(WallpaperPreferenceKeys.KEY_HOME_WALLPAPER_IMAGE_URI, null)
+            ?.let { Uri.parse(it) }
     }
 
     override fun getLockWallpaperAttributions(): List<String?>? {
@@ -509,6 +510,7 @@ constructor(@ApplicationContext private val context: Context) : WallpaperPrefere
             .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_ACTION_URL)
             .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_COLLECTION_ID)
             .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_HASH_CODE)
+            .remove(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_IMAGE_URI)
             .apply()
         noBackupPrefs
             .edit()
@@ -678,7 +680,9 @@ constructor(@ApplicationContext private val context: Context) : WallpaperPrefere
     }
 
     override fun getLockWallpaperImageUri(): Uri? {
-        return sharedPrefs.getString(KEY_LOCK_WALLPAPER_IMAGE_URI, null)?.let { Uri.parse(it) }
+        return sharedPrefs
+            .getString(WallpaperPreferenceKeys.KEY_LOCK_WALLPAPER_IMAGE_URI, null)
+            ?.let { Uri.parse(it) }
     }
 
     override fun addDailyRotation(timestamp: Long) {

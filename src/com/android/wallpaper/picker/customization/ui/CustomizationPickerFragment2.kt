@@ -41,6 +41,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.transition.Transition
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.wallpaper.R
@@ -68,6 +69,7 @@ import com.android.wallpaper.picker.customization.ui.util.EmptyTransitionListene
 import com.android.wallpaper.picker.customization.ui.view.PreviewPagerViews
 import com.android.wallpaper.picker.customization.ui.view.WallpaperPickerEntry
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.di.modules.MainDispatcher
@@ -81,6 +83,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint(AppbarFragment::class)
@@ -142,7 +145,7 @@ class CustomizationPickerFragment2 :
     ): View {
         val view = inflater.inflate(R.layout.fragment_customization_picker2, container, false)
 
-        val toolbar: Toolbar = view.requireViewById(R.id.toolbar) // Toolbar at screen top
+        val toolbar: Toolbar = view.requireViewById(R.id.toolbar)
         setupToolbar(
             view.requireViewById(R.id.nav_button),
             toolbar,
@@ -154,34 +157,65 @@ class CustomizationPickerFragment2 :
             view.requireViewById(R.id.customization_option_container)
         val customizationFloatingSheetContainer: FrameLayout =
             view.requireViewById(R.id.customization_option_floating_sheet_container)
+        // Listen to the window's bottom nav bar height and the top status bar height and update the
+        // layout padding accordingly.
         ViewCompat.setOnApplyWindowInsetsListener(pickerMotionContainer) { _, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val navBarHeight = insets.bottom
-
-            val horizontalPadding =
-                resources.getDimensionPixelSize(
-                    R.dimen.customization_option_container_horizontal_padding
-                )
-            optionContainer.setPaddingRelative(
-                horizontalPadding,
-                0,
-                horizontalPadding,
-                navBarHeight,
+            applySystemBarInsets(
+                toolbar = toolbar,
+                optionContainer = optionContainer,
+                customizationFloatingSheetContainer = customizationFloatingSheetContainer,
+                statusBarHeight = insets.top,
+                navBarHeight = insets.bottom,
             )
-
-            customizationFloatingSheetContainer.setPaddingRelative(0, 0, 0, navBarHeight)
-
-            val statusBarHeight = insets.top
-            (toolbar.layoutParams as MarginLayoutParams).setMargins(0, statusBarHeight, 0, 0)
-
             WindowInsetsCompat.CONSUMED
         }
+        // Inflate the views of customization options only when options data is ready.
+        viewLifecycleOwner.lifecycleScope.launch {
+            // Wait and collect only the first emission. Note that customizationOptionsData is
+            // expected to stay the same across the Fragment lifecycle.
+            val customizationOptionsData =
+                customizationPickerViewModel.customizationOptionsViewModel.customizationOptionsData
+                    .first()
 
-        val customizationOptionFloatingSheetViewMap =
-            customizationOptionUtil.initFloatingSheet(
-                customizationFloatingSheetContainer,
-                layoutInflater,
+            val lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>> =
+                initCustomizationOptionEntries(
+                    customizationOptionsData = customizationOptionsData,
+                    view = view,
+                    screen = LOCK_SCREEN,
+                )
+            val homeScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>> =
+                initCustomizationOptionEntries(
+                    customizationOptionsData = customizationOptionsData,
+                    view = view,
+                    screen = HOME_SCREEN,
+                )
+            val customizationOptionFloatingSheetViewMap: Map<CustomizationOption, View> =
+                customizationOptionUtil.initFloatingSheet(
+                    customizationOptionsData,
+                    customizationFloatingSheetContainer,
+                    layoutInflater,
+                )
+
+            view.post {
+                // Post to wait for the essential view dimensions to be obtained, to
+                // further calculate the motion scene dimensions.
+                configurePickerMotionConstraints(
+                    pickerMotionContainer = pickerMotionContainer,
+                    wallpaperPickerEntry = view.requireViewById(R.id.wallpaper_picker_entry),
+                    previewLabelHeight = view.requireViewById<View>(R.id.label_placeholder).height,
+                    optionContainerHeight = optionContainer.height,
+                )
+            }
+
+            bindCustomizationPicker(
+                pickerMotionContainer = pickerMotionContainer,
+                lockScreenCustomizationOptionEntries = lockScreenCustomizationOptionEntries,
+                homeScreenCustomizationOptionEntries = homeScreenCustomizationOptionEntries,
+                customizationOptionFloatingSheetViewMap = customizationOptionFloatingSheetViewMap,
+                customizationFloatingSheetContainer = customizationFloatingSheetContainer,
             )
+        }
 
         val previewViewModel = customizationPickerViewModel.basePreviewViewModel
         previewViewModel.setWhichPreview(WallpaperConnection.WhichPreview.PREVIEW_CURRENT)
@@ -189,7 +223,6 @@ class CustomizationPickerFragment2 :
         previewViewModel.setIsWallpaperColorPreviewEnabled(false)
 
         val previewPager: ClickableMotionLayout = view.requireViewById(R.id.preview_pager)
-
         val previewPagerViews: PreviewPagerViews =
             initPreviewPager(rootView = view, previewPager = previewPager)
         bindPreviewPager(
@@ -220,129 +253,165 @@ class CustomizationPickerFragment2 :
             )
         }
 
-        val wallpaperPickerEntry: WallpaperPickerEntry =
-            view.requireViewById(R.id.wallpaper_picker_entry)
-        val previewLabelPlaceHolder: View = view.requireViewById(R.id.label_placeholder)
-        view.post {
-            val isLargeScreenSingleDisplayPortrait =
-                displayUtils.isLargeScreenSingleDisplayPortrait()
-            val wallpaperPickerEntryExpandedHeight = wallpaperPickerEntry.height
-            // Do not collapse the wallpaper entry when isLargeScreenSingleDisplayPortrait
-            val wallpaperPickerEntryCollapsedHeight =
-                if (isLargeScreenSingleDisplayPortrait) wallpaperPickerEntryExpandedHeight
-                else wallpaperPickerEntry.collapsedButton.height
-            val previewLabelHeight = previewLabelPlaceHolder.height
-            val minCollapsedPreviewHeight =
-                resources.getDimensionPixelSize(
-                    R.dimen.customization_picker_min_preview_collapsed_height
-                )
-            val minCollapsedPagerHeight = minCollapsedPreviewHeight + previewLabelHeight
-            val minExpandedPreviewHeight =
-                resources.getDimensionPixelSize(
-                    R.dimen.customization_picker_min_preview_expanded_height
-                )
-            val maxExpandedPreviewHeight =
-                resources.getDimensionPixelSize(
-                    R.dimen.customization_picker_max_preview_expanded_height
-                )
-            val minExpandedPagerHeight = minExpandedPreviewHeight + previewLabelHeight
-            val maxExpandedPagerHeight = maxExpandedPreviewHeight + previewLabelHeight
+        customizationOptionsBinder.bindDiscardChangesDialog(
+            customizationOptionsViewModel =
+                customizationPickerViewModel.customizationOptionsViewModel,
+            lifecycleOwner = viewLifecycleOwner,
+            activity = requireActivity(),
+        )
 
-            // For collapsed, it needs to show the all option entries, with the collapsed wallpaper
-            // entry, which shows as a single button.
-            val collapsedHeaderHeight =
-                (pickerMotionContainer.height -
-                        (optionContainer.height -
-                            (wallpaperPickerEntryExpandedHeight -
-                                wallpaperPickerEntryCollapsedHeight)))
-                    .coerceAtLeast(minCollapsedPagerHeight)
-            pickerMotionContainer
-                .getConstraintSet(R.id.collapsed_header_primary)
-                ?.constrainHeight(R.id.preview_header, collapsedHeaderHeight)
-            // The expanded / collapsed header height should be updated when optionContainer
-            // height is known.
-            // For expanded, it needs to show at least half of the entry view below the wallpaper
-            // entry.
-            val expandedHeaderHeight =
-                (pickerMotionContainer.height -
-                        wallpaperPickerEntryExpandedHeight -
-                        resources.getDimensionPixelSize(R.dimen.customization_option_entry_height) /
-                            2)
-                    .coerceAtMost(maxExpandedPagerHeight)
-                    .coerceAtLeast(minExpandedPagerHeight)
-            pickerMotionContainer
-                .getConstraintSet(R.id.expanded_header_primary)
-                ?.constrainHeight(R.id.preview_header, expandedHeaderHeight)
+        activity?.onBackPressedDispatcher?.let {
+            it.addCallback {
+                    isEnabled =
+                        customizationPickerViewModel.customizationOptionsViewModel
+                            .handleBackPressed()
+                    if (!isEnabled) it.onBackPressed()
+                }
+                .also { callback -> onBackPressedCallback = callback }
+        }
 
-            // Transition listener handle 2 things
-            // 1. Expand and collapse the wallpaper entry
-            // 2. Reset the transition and preview when transition back to the primary screen
-            pickerMotionContainer.setTransitionListener(
-                object : EmptyTransitionListener {
+        (view as ViewGroup).isTransitionGroup = true
+        return view
+    }
 
-                    override fun onTransitionChange(
-                        motionLayout: MotionLayout?,
-                        startId: Int,
-                        endId: Int,
-                        progress: Float,
+    private fun applySystemBarInsets(
+        toolbar: Toolbar,
+        optionContainer: ConstraintLayout,
+        customizationFloatingSheetContainer: FrameLayout,
+        statusBarHeight: Int,
+        navBarHeight: Int,
+    ) {
+        (toolbar.layoutParams as MarginLayoutParams).setMargins(0, statusBarHeight, 0, 0)
+
+        val horizontalPadding =
+            resources.getDimensionPixelSize(
+                R.dimen.customization_option_container_horizontal_padding
+            )
+        optionContainer.setPaddingRelative(horizontalPadding, 0, horizontalPadding, navBarHeight)
+
+        customizationFloatingSheetContainer.setPaddingRelative(0, 0, 0, navBarHeight)
+    }
+
+    private fun configurePickerMotionConstraints(
+        pickerMotionContainer: MotionLayout,
+        wallpaperPickerEntry: WallpaperPickerEntry,
+        previewLabelHeight: Int,
+        optionContainerHeight: Int,
+    ) {
+        val isLargeScreenSingleDisplayPortrait = displayUtils.isLargeScreenSingleDisplayPortrait()
+        val wallpaperPickerEntryExpandedHeight = wallpaperPickerEntry.height
+        // Do not collapse the wallpaper entry when isLargeScreenSingleDisplayPortrait
+        val wallpaperPickerEntryCollapsedHeight =
+            if (isLargeScreenSingleDisplayPortrait) wallpaperPickerEntryExpandedHeight
+            else wallpaperPickerEntry.collapsedButton.height
+        val minCollapsedPreviewHeight =
+            resources.getDimensionPixelSize(
+                R.dimen.customization_picker_min_preview_collapsed_height
+            )
+        val minCollapsedPagerHeight = minCollapsedPreviewHeight + previewLabelHeight
+        val minExpandedPreviewHeight =
+            resources.getDimensionPixelSize(
+                R.dimen.customization_picker_min_preview_expanded_height
+            )
+        val maxExpandedPreviewHeight =
+            resources.getDimensionPixelSize(
+                R.dimen.customization_picker_max_preview_expanded_height
+            )
+        val minExpandedPagerHeight = minExpandedPreviewHeight + previewLabelHeight
+        val maxExpandedPagerHeight = maxExpandedPreviewHeight + previewLabelHeight
+
+        // For collapsed, it needs to show the all option entries, with the collapsed wallpaper
+        // entry, which shows as a single button.
+        val collapsedHeaderHeight =
+            (pickerMotionContainer.height -
+                    (optionContainerHeight -
+                        (wallpaperPickerEntryExpandedHeight - wallpaperPickerEntryCollapsedHeight)))
+                .coerceAtLeast(minCollapsedPagerHeight)
+        pickerMotionContainer
+            .getConstraintSet(R.id.collapsed_header_primary)
+            ?.constrainHeight(R.id.preview_header, collapsedHeaderHeight)
+        // For expanded, it needs to show at least half of the entry view below the wallpaper entry.
+        val expandedHeaderHeight =
+            (pickerMotionContainer.height -
+                    wallpaperPickerEntryExpandedHeight -
+                    resources.getDimensionPixelSize(R.dimen.customization_option_entry_height) / 2)
+                .coerceAtMost(maxExpandedPagerHeight)
+                .coerceAtLeast(minExpandedPagerHeight)
+        pickerMotionContainer
+            .getConstraintSet(R.id.expanded_header_primary)
+            ?.constrainHeight(R.id.preview_header, expandedHeaderHeight)
+
+        // Transition listener handle 2 things
+        // 1. Expand and collapse the wallpaper entry
+        // 2. Reset the transition and preview when transition back to the primary
+        // screen
+        pickerMotionContainer.setTransitionListener(
+            object : EmptyTransitionListener {
+
+                override fun onTransitionChange(
+                    motionLayout: MotionLayout?,
+                    startId: Int,
+                    endId: Int,
+                    progress: Float,
+                ) {
+                    if (
+                        startId == R.id.expanded_header_primary &&
+                            endId == R.id.collapsed_header_primary
                     ) {
-                        if (
-                            startId == R.id.expanded_header_primary &&
-                                endId == R.id.collapsed_header_primary
-                        ) {
-                            // Do not collapse or expand the wallpaper entry when
-                            // isLargeScreenSingleDisplayPortrait is true
-                            if (!isLargeScreenSingleDisplayPortrait) {
-                                wallpaperPickerEntry.setProgress(progress)
-                            }
-                        }
-                    }
-
-                    override fun onTransitionCompleted(
-                        motionLayout: MotionLayout?,
-                        currentId: Int,
-                    ) {
-                        if (currentId == R.id.expanded_header_primary) {
-                            // Do not collapse or expand the wallpaper entry when
-                            // isLargeScreenSingleDisplayPortrait is true
-                            if (!isLargeScreenSingleDisplayPortrait) {
-                                wallpaperPickerEntry.setProgress(0f)
-                            }
-                        } else if (currentId == R.id.collapsed_header_primary) {
-                            // Do not collapse or expand the wallpaper entry when
-                            // isLargeScreenSingleDisplayPortrait is true
-                            if (!isLargeScreenSingleDisplayPortrait) {
-                                wallpaperPickerEntry.setProgress(1f)
-                            }
-                        }
-
-                        if (
-                            currentId == R.id.expanded_header_primary ||
-                                currentId == R.id.collapsed_header_primary
-                        ) {
-                            // This is when we complete the transition back to the primary screen
-                            // Post to let this transition fully complete first
-                            pickerMotionContainer.post {
-                                pickerMotionContainer.setTransition(R.id.transition_primary)
-                            }
-                            // Reset the preview only after the transition is completed, because the
-                            // reset will trigger the animation of the UI components in the floating
-                            // sheet content, which can possibly be interrupted by the floating
-                            // sheet translating down.
-                            customizationPickerViewModel.customizationOptionsViewModel
-                                .resetPreview()
+                        // Do not collapse or expand the wallpaper entry when
+                        // isLargeScreenSingleDisplayPortrait is true
+                        if (!isLargeScreenSingleDisplayPortrait) {
+                            wallpaperPickerEntry.setProgress(progress)
                         }
                     }
                 }
-            )
-        }
 
+                override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
+                    if (currentId == R.id.expanded_header_primary) {
+                        // Do not collapse or expand the wallpaper entry when
+                        // isLargeScreenSingleDisplayPortrait is true
+                        if (!isLargeScreenSingleDisplayPortrait) {
+                            wallpaperPickerEntry.setProgress(0f)
+                        }
+                    } else if (currentId == R.id.collapsed_header_primary) {
+                        // Do not collapse or expand the wallpaper entry when
+                        // isLargeScreenSingleDisplayPortrait is true
+                        if (!isLargeScreenSingleDisplayPortrait) {
+                            wallpaperPickerEntry.setProgress(1f)
+                        }
+                    }
+
+                    if (
+                        currentId == R.id.expanded_header_primary ||
+                            currentId == R.id.collapsed_header_primary
+                    ) {
+                        // This is when we complete the transition back to the primary screen. Post
+                        // to let this transition fully complete first
+                        pickerMotionContainer.post {
+                            pickerMotionContainer.setTransition(R.id.transition_primary)
+                        }
+                        // Reset the preview only after the transition is completed, because the
+                        // reset will trigger the animation of the UI components in the floating
+                        // sheet content, which can possibly be interrupted by the floating sheet
+                        // translating down.
+                        customizationPickerViewModel.customizationOptionsViewModel.resetPreview()
+                    }
+                }
+            }
+        )
+    }
+
+    private fun bindCustomizationPicker(
+        pickerMotionContainer: MotionLayout,
+        lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
+        homeScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
+        customizationOptionFloatingSheetViewMap: Map<CustomizationOption, View>,
+        customizationFloatingSheetContainer: FrameLayout,
+    ) {
         CustomizationPickerBinder2.bind(
             view = pickerMotionContainer,
-            lockScreenCustomizationOptionEntries =
-                initCustomizationOptionEntries(view, LOCK_SCREEN),
-            homeScreenCustomizationOptionEntries =
-                initCustomizationOptionEntries(view, HOME_SCREEN),
+            lockScreenCustomizationOptionEntries = lockScreenCustomizationOptionEntries,
+            homeScreenCustomizationOptionEntries = homeScreenCustomizationOptionEntries,
             customizationOptionFloatingSheetViewMap = customizationOptionFloatingSheetViewMap,
             viewModel = customizationPickerViewModel,
             colorUpdateViewModel = colorUpdateViewModel,
@@ -395,28 +464,8 @@ class CustomizationPickerFragment2 :
                 // navigate to standard preview screen
                 startWallpaperPreviewActivity(wallpaperModel, false)
             },
-            navigateToPackThemeActivity = { intent -> context?.let { it.startActivity(intent) } },
+            navigateToPackThemeActivity = { intent -> context?.startActivity(intent) },
         )
-
-        customizationOptionsBinder.bindDiscardChangesDialog(
-            customizationOptionsViewModel =
-                customizationPickerViewModel.customizationOptionsViewModel,
-            lifecycleOwner = viewLifecycleOwner,
-            activity = requireActivity(),
-        )
-
-        activity?.onBackPressedDispatcher?.let {
-            it.addCallback {
-                    isEnabled =
-                        customizationPickerViewModel.customizationOptionsViewModel
-                            .handleBackPressed()
-                    if (!isEnabled) it.onBackPressed()
-                }
-                .also { callback -> onBackPressedCallback = callback }
-        }
-
-        (view as ViewGroup).isTransitionGroup = true
-        return view
     }
 
     override fun onEnterAnimationCompleteAfterActivityCreated() {
@@ -642,6 +691,7 @@ class CustomizationPickerFragment2 :
     }
 
     private fun initCustomizationOptionEntries(
+        customizationOptionsData: CustomizationOptionsData,
         view: View,
         screen: Screen,
     ): List<Pair<CustomizationOption, View>> {
@@ -653,7 +703,12 @@ class CustomizationPickerFragment2 :
                 }
             )
         val optionEntries =
-            customizationOptionUtil.getOptionEntries(screen, optionEntriesContainer, layoutInflater)
+            customizationOptionUtil.getOptionEntries(
+                customizationOptionsData = customizationOptionsData,
+                screen = screen,
+                optionContainer = optionEntriesContainer,
+                layoutInflater = layoutInflater,
+            )
         optionEntries.onEachIndexed { index, (_, view) ->
             val isFirst = index == 0
             val isLast = index == optionEntries.size - 1

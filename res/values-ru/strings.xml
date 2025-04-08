@@ -46,8 +46,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Предоставить доступ"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Сервис, позволяющий автоматически менять обои"</string>
     <string name="more_photos" msgid="2183343115041498453">"Ещё фото"</string>
-    <!-- no translation found for choose_a_photo (7641781242539912127) -->
-    <skip />
+    <string name="choose_a_photo" msgid="7641781242539912127">"Выбрать фото"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Обои на каждый день"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Нажмите, чтобы включить"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Обои будут автоматически меняться каждый день. Чтобы завершить настройку, нажмите &lt;strong&gt;Установить как обои&lt;/strong&gt; в следующем окне."</string>
@@ -107,8 +106,8 @@
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Начать слайд-шоу обоев"</string>
     <string name="bottom_action_bar_apply" msgid="2983308349819178932">"Применить"</string>
     <string name="accessibility_preview_pager" msgid="1839869637405028575">"Страница <xliff:g id="ID_1">%1$d</xliff:g> из <xliff:g id="ID_2">%2$d</xliff:g>"</string>
-    <string name="next_page_content_description" msgid="6268461446679584152">"Следующая страница"</string>
-    <string name="previous_page_content_description" msgid="1138597031571078429">"Предыдущая страница"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"Далее"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"Назад"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Обои"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Предварительный просмотр обоев"</string>
     <string name="wallpaper_preview_card_content_description_editable" msgid="8147628993184862003">"%1$s: предварительный просмотр обоев (%2$s). Чтобы отредактировать фото, нажмите дважды."</string>
@@ -151,8 +150,8 @@
     <string name="small_preview_tooltip" msgid="1920430079013352071">"Нажмите, чтобы изменить фотографию"</string>
     <string name="full_preview_tooltip" msgid="4648994028015322759">"Положение, масштаб и угол наклона фото можно изменить"</string>
     <string name="discard_changes_dialog_message" msgid="8462485277292103457">"Отменить изменения?"</string>
-    <string name="discard_changes_dialog_button_keep_editing" msgid="9118931326834547216">"Продолжить редактирование"</string>
-    <string name="discard_changes_dialog_button_discard" msgid="6585071548322908206">"Отменить изменения"</string>
+    <string name="discard_changes_dialog_button_keep_editing" msgid="9118931326834547216">"Продолжить"</string>
+    <string name="discard_changes_dialog_button_discard" msgid="6585071548322908206">"Отменить"</string>
     <string name="action_zoom_in" msgid="3326782160671405449">"Увеличить"</string>
     <string name="action_zoom_out" msgid="5454911090443175449">"Уменьшить"</string>
     <string name="zoomed_to_percent" msgid="1243039994190840132">"Масштаб: %d %%"</string>

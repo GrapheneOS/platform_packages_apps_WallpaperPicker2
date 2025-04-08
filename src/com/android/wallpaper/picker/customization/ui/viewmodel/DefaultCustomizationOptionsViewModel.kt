@@ -25,6 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flowOf
 
 class DefaultCustomizationOptionsViewModel
 @AssistedInject
@@ -32,6 +33,9 @@ constructor(
     wallpaperCarouselViewModelFactory: WallpaperCarouselViewModel.Factory,
     @Assisted viewModelScope: CoroutineScope,
 ) : CustomizationOptionsViewModel {
+
+    override val customizationOptionsData: Flow<CustomizationOptionsData> =
+        flowOf(DefaultCustomizationOptionsData())
 
     override val wallpaperCarouselViewModel =
         wallpaperCarouselViewModelFactory.create(viewModelScope)

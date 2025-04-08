@@ -46,8 +46,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Permitir acceso"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Servicio de fondo animado para fondos cambiantes"</string>
     <string name="more_photos" msgid="2183343115041498453">"Más fotos"</string>
-    <!-- no translation found for choose_a_photo (7641781242539912127) -->
-    <skip />
+    <string name="choose_a_photo" msgid="7641781242539912127">"Elegir una foto"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Fondo de pantalla diario"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Toca para activar"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"El fondo de pantalla cambiará automáticamente todos los días. Para finalizar la configuración, toca &lt;strong&gt;Establecer fondo de pantalla&lt;/strong&gt; en la siguiente pantalla."</string>
@@ -155,9 +154,7 @@
     <string name="discard_changes_dialog_button_discard" msgid="6585071548322908206">"Descartar"</string>
     <string name="action_zoom_in" msgid="3326782160671405449">"Ampliar"</string>
     <string name="action_zoom_out" msgid="5454911090443175449">"Reducir"</string>
-    <!-- String.format failed for translation -->
-    <!-- no translation found for zoomed_to_percent (1243039994190840132) -->
-    <skip />
+    <string name="zoomed_to_percent" msgid="1243039994190840132">"Zoom al %d%%"</string>
     <string name="max_zoom_percentage" msgid="2111670558746866030">"Zoom máximo alcanzado"</string>
     <string name="min_zoom_percentage" msgid="5931879817379214316">"Zoom mínimo alcanzado"</string>
 </resources>

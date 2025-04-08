@@ -46,8 +46,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"அணுகலை அனுமதி"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"சுழலும் வால்பேப்பர்களுக்கான லைவ் வால்பேப்பர் சேவை"</string>
     <string name="more_photos" msgid="2183343115041498453">"மேலும் படங்கள்"</string>
-    <!-- no translation found for choose_a_photo (7641781242539912127) -->
-    <skip />
+    <string name="choose_a_photo" msgid="7641781242539912127">"படத்தைத் தேர்வுசெய்யுங்கள்"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"தினசரி வால்பேப்பர்"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"ஆன் செய்ய, தட்டவும்"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"ஒவ்வொரு நாளும் வால்பேப்பர் தானாகவே மாறும். அமைவை முடிக்க, அடுத்த திரையிலுள்ள &lt;strong&gt;வால்பேப்பரை அமை&lt;/strong&gt; என்பதைத் தட்டவும்."</string>
@@ -107,7 +106,7 @@
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"ஸ்லைடுகாட்சி வால்பேப்பர்"</string>
     <string name="bottom_action_bar_apply" msgid="2983308349819178932">"பயன்படுத்துவதற்கான பட்டன்"</string>
     <string name="accessibility_preview_pager" msgid="1839869637405028575">"பக்கம் <xliff:g id="ID_1">%1$d</xliff:g> / <xliff:g id="ID_2">%2$d</xliff:g>"</string>
-    <string name="next_page_content_description" msgid="6268461446679584152">"அடுத்த பக்கத்திற்குச் செல்வதற்கான பட்டன்"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"அடுத்து"</string>
     <string name="previous_page_content_description" msgid="1138597031571078429">"முந்தைய பக்கத்திற்குச் செல்வதற்கான பட்டன்"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"வால்பேப்பர்"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"வால்பேப்பர் மாதிரிக்காட்சி"</string>

@@ -46,8 +46,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"ॲक्सेस द्या"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"फिरत्या वॉलपेपरसाठी लाइव्ह वॉलपेपर सेवा"</string>
     <string name="more_photos" msgid="2183343115041498453">"आणखी फोटो"</string>
-    <!-- no translation found for choose_a_photo (7641781242539912127) -->
-    <skip />
+    <string name="choose_a_photo" msgid="7641781242539912127">"फोटो निवडा"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"दैनिक वॉलपेपर"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"सुरू करण्यासाठी टॅप करा"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"वॉलपेपर दररोज आपोआप बदलेल. सेटअप पूर्ण करण्यासाठी, पुढील स्क्रीनवर &lt;strong&gt;वॉलपेपर सेट करा&lt;/strong&gt; वर टॅप करा."</string>
@@ -130,7 +129,7 @@
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"UI पूर्वावलोकनात दाखवले आहे. लपवण्यासाठी डबल टॅप करा"</string>
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"वॉलपेपर बदला"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"लॉकस्क्रीनच्या वॉलपेपरचे पूर्वावलोकन"</string>
-    <string name="apply_btn" msgid="5764555565943538528">"अर्ज करा"</string>
+    <string name="apply_btn" msgid="5764555565943538528">"लागू करा"</string>
     <string name="apply_wallpaper_title_text" msgid="2100301064316744087">"वॉलपेपर लागू करायचा आहे का?"</string>
     <string name="accessibility_customize_hidden" msgid="6320568529768181691">"कस्टमाइझ पॅनल लपवले आहे"</string>
     <string name="accessibility_customize_shown" msgid="590964727831547651">"कस्टमाइझ पॅनल दाखवले आहे"</string>

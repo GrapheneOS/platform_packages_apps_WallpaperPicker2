@@ -23,6 +23,8 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface CustomizationOptionsViewModel {
 
+    val customizationOptionsData: Flow<CustomizationOptionsData>
+
     val wallpaperCarouselViewModel: WallpaperCarouselViewModel
 
     val selectedOption: StateFlow<CustomizationOptionUtil.CustomizationOption?>

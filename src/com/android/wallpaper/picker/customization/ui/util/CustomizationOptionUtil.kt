@@ -22,6 +22,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.android.wallpaper.model.Screen
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
 
 /** This util creates the views for customization options. */
 interface CustomizationOptionUtil {
@@ -30,12 +31,14 @@ interface CustomizationOptionUtil {
     interface CustomizationOption
 
     fun getOptionEntries(
+        customizationOptionsData: CustomizationOptionsData,
         screen: Screen,
         optionContainer: LinearLayout,
         layoutInflater: LayoutInflater,
     ): List<Pair<CustomizationOption, View>>
 
     fun initFloatingSheet(
+        customizationOptionsData: CustomizationOptionsData,
         bottomSheetContainer: FrameLayout,
         layoutInflater: LayoutInflater,
     ): Map<CustomizationOption, View>

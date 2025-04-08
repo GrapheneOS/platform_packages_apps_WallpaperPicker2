@@ -46,8 +46,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Consenti accesso"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Servizio di sfondi animati per sfondi a rotazione"</string>
     <string name="more_photos" msgid="2183343115041498453">"Altre foto"</string>
-    <!-- no translation found for choose_a_photo (7641781242539912127) -->
-    <skip />
+    <string name="choose_a_photo" msgid="7641781242539912127">"Scegli una foto"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Sfondo giornaliero"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Tocca per attivare"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Lo sfondo cambierà automaticamente ogni giorno. Per terminare la configurazione, tocca &lt;strong&gt;Imposta sfondo&lt;/strong&gt; nella prossima schermata."</string>

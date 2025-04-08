@@ -46,8 +46,7 @@
     <string name="permission_needed_allow_access_button_label" msgid="1943133660612924306">"Toa idhini ya ufikiaji"</string>
     <string name="no_backup_image_wallpaper_description" msgid="8303268619408738057">"Huduma ya mandhari hai kwa ajili ya mandhari yanayozunguka"</string>
     <string name="more_photos" msgid="2183343115041498453">"Picha Zaidi"</string>
-    <!-- no translation found for choose_a_photo (7641781242539912127) -->
-    <skip />
+    <string name="choose_a_photo" msgid="7641781242539912127">"Chagua picha"</string>
     <string name="daily_refresh_tile_title" msgid="3270456074558525091">"Mandhari ya kila siku"</string>
     <string name="daily_refresh_tile_subtitle" msgid="3976682014885446443">"Gusa ili uwashe"</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed" msgid="5132580257563846082">"Mandhari yatabadilika kiotomatiki kila siku. Ili ukamilishe kuweka mipangilio, gusa &lt;strong&gt;Weka mandhari&lt;/strong&gt; kwenye skrini inayofuata."</string>
