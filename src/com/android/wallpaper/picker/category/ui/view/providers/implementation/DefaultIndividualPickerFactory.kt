@@ -18,7 +18,7 @@ package com.android.wallpaper.picker.category.ui.view.providers.implementation
 
 import androidx.fragment.app.Fragment
 import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
-import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
+import com.android.wallpaper.picker.customization.shared.model.CategoryType
 import com.android.wallpaper.picker.individual.IndividualPickerFragment2
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,7 +32,7 @@ class DefaultIndividualPickerFactory @Inject constructor() : IndividualPickerFac
 
     override fun getIndividualPickerInstance(
         collectionId: String,
-        categoryType: CategoriesViewModel.CategoryType
+        categoryType: CategoryType,
     ): Fragment {
         return IndividualPickerFragment2.newInstance(collectionId)
     }

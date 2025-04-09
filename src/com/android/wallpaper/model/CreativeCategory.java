@@ -154,6 +154,9 @@ public class CreativeCategory extends WallpaperCategory {
             String collectionId, android.app.WallpaperInfo wallpaperInfo) {
         List<WallpaperInfo> wallpapers = new ArrayList<>();
         Bundle metaData = wallpaperInfo.getServiceInfo().metaData;
+        if (metaData.get(KEY_WALLPAPER_CREATIVE_WALLPAPERS) == null) {
+            return null;
+        }
         Uri wallpapersUri = Uri.parse((String) metaData.get(KEY_WALLPAPER_CREATIVE_WALLPAPERS));
         try (ContentProviderClient client =
                      context.getContentResolver().acquireContentProviderClient(

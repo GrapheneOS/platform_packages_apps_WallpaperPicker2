@@ -72,6 +72,7 @@
             android:textSize="@dimen/wallpaper_header_text_size"
             android:ellipsize="end"
             android:singleLine="true"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/wallpaper_carousel_container"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

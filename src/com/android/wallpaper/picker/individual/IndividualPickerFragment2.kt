@@ -67,9 +67,8 @@ import com.android.wallpaper.picker.MyPhotosStarter.MyPhotosStarterProvider
 import com.android.wallpaper.picker.RotationStarter
 import com.android.wallpaper.picker.StartRotationDialogFragment
 import com.android.wallpaper.picker.StartRotationErrorDialogFragment
-import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
-import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel.CategoryType
 import com.android.wallpaper.picker.category.wrapper.WallpaperCategoryWrapper
+import com.android.wallpaper.picker.customization.shared.model.CategoryType
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.util.ActivityUtils
@@ -127,7 +126,7 @@ class IndividualPickerFragment2 :
 
         fun newInstance(
             collectionId: String?,
-            categoryType: CategoriesViewModel.CategoryType,
+            categoryType: CategoryType,
         ): IndividualPickerFragment2 {
             val args = Bundle()
             args.putString(ARG_CATEGORY_COLLECTION_ID, collectionId)
@@ -160,7 +159,7 @@ class IndividualPickerFragment2 :
     private var categoryRefactorFlag = false
     private var isNewPickerUi = false
 
-    private var refreshCreativeCategories: CategoriesViewModel.CategoryType? = null
+    private var refreshCreativeCategories: CategoryType? = null
 
     /**
      * Staged error dialog fragments that were unable to be shown when the activity didn't allow

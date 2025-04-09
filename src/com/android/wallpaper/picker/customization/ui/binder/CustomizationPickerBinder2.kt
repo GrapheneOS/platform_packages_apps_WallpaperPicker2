@@ -29,6 +29,7 @@ import com.android.wallpaper.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.Screen.HOME_SCREEN
 import com.android.wallpaper.model.Screen.LOCK_SCREEN
+import com.android.wallpaper.picker.customization.shared.model.CategoryType
 import com.android.wallpaper.picker.customization.ui.CustomizationPickerActivity2
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.picker.customization.ui.util.EmptyTransitionListener
@@ -67,6 +68,8 @@ object CustomizationPickerBinder2 {
         navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
         navigateToPreviewScreen: ((wallpaperModel: WallpaperModel) -> Unit)?,
         navigateToPackThemeActivity: (Intent) -> Unit,
+        navigateToWallpaperCollectionScreen:
+            ((collectionId: String, categoryType: CategoryType) -> Unit)?,
     ) {
         val lockCustomizationOptionContainer: LinearLayout =
             view.requireViewById(R.id.lock_customization_option_container)
@@ -129,6 +132,7 @@ object CustomizationPickerBinder2 {
             lifecycleOwner = lifecycleOwner,
             navigateToWallpaperCategoriesScreen = navigateToWallpaperCategoriesScreen,
             navigateToPreviewScreen = navigateToPreviewScreen,
+            navigateToWallpaperCollectionScreen = navigateToWallpaperCollectionScreen,
         )
 
         customizationOptionsBinder.bind(

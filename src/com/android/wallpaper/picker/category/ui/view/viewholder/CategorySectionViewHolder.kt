@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.category.ui.view.viewholder
 import android.app.ActivityOptions
 import android.app.PendingIntent
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.Rect
 import android.util.Log
 import android.view.View
@@ -131,6 +132,8 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
                     morePhotosButton.text = itemView.context.getString(R.string.choose_a_photo)
                     morePhotosButton.setOnClickListener { _ -> item.onSectionClicked?.invoke() }
                     val pendingIntentForPhotos = item.pendingIntent
+                    val dismissButton = bannerProvider?.getDismissButton(signInBannerView)
+                    val signInButton = bannerProvider?.getSignInButton(signInBannerView)
 
                     if (item.status == PhotosErrorData.UNAUTHENTICATED && !isSignInBannerVisible) {
                         val viewStub = categoryHeader.findViewById<ViewStub>(R.id.sign_in_banner_id)
@@ -139,6 +142,91 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
                         categoryHeader.removeView(viewStub)
                         signInBannerView?.layoutParams = viewStubLayoutParams
                         categoryHeader.addView(signInBannerView, index)
+
+                        val bannerTitle = bannerProvider?.getBannerTitle(signInBannerView)
+                        val bannerDescription =
+                            bannerProvider?.getBannerDescription(signInBannerView)
+                        val photoIcon = bannerProvider?.getIcon(signInBannerView)
+                        dismissButton?.setBackgroundColor(Color.TRANSPARENT)
+
+                        // setting background for the overall sign in banner
+                        ColorUpdateBinder.bind(
+                            setColor = { color ->
+                                signInBannerView
+                                    ?.background
+                                    ?.let { DrawableCompat.wrap(it) }
+                                    ?.let { DrawableCompat.setTint(it, color) }
+                            },
+                            color = colorUpdateViewModel.colorSurfaceContainerHigh,
+                            shouldAnimate = shouldAnimateColor,
+                            lifecycleOwner = lifecycleOwner,
+                        )
+
+                        // setting text color of the banner title
+                        ColorUpdateBinder.bind(
+                            setColor = { color -> bannerTitle?.setTextColor(color) },
+                            color = colorUpdateViewModel.colorOnSurfaceVariant,
+                            shouldAnimate = shouldAnimateColor,
+                            lifecycleOwner = lifecycleOwner,
+                        )
+
+                        // setting text color of the banner description
+                        ColorUpdateBinder.bind(
+                            setColor = { color -> bannerDescription?.setTextColor(color) },
+                            color = colorUpdateViewModel.colorOnSurfaceVariant,
+                            shouldAnimate = shouldAnimateColor,
+                            lifecycleOwner = lifecycleOwner,
+                        )
+
+                        // setting color of the icon itself
+                        ColorUpdateBinder.bind(
+                            setColor = { color -> photoIcon?.setColorFilter(color) },
+                            color = colorUpdateViewModel.colorOnPrimary,
+                            shouldAnimate = shouldAnimateColor,
+                            lifecycleOwner = lifecycleOwner,
+                        )
+
+                        // setting background of the photos icon
+                        ColorUpdateBinder.bind(
+                            setColor = { color ->
+                                photoIcon
+                                    ?.background
+                                    ?.let { DrawableCompat.wrap(it) }
+                                    ?.let { DrawableCompat.setTint(it, color) }
+                            },
+                            color = colorUpdateViewModel.colorPrimary,
+                            shouldAnimate = shouldAnimateColor,
+                            lifecycleOwner = lifecycleOwner,
+                        )
+
+                        // setting background for the sign in Button
+                        ColorUpdateBinder.bind(
+                            setColor = { color ->
+                                signInButton
+                                    ?.background
+                                    ?.let { DrawableCompat.wrap(it) }
+                                    ?.let { DrawableCompat.setTint(it, color) }
+                            },
+                            color = colorUpdateViewModel.colorPrimary,
+                            shouldAnimate = shouldAnimateColor,
+                            lifecycleOwner = lifecycleOwner,
+                        )
+
+                        // setting text color for the dismiss Button
+                        ColorUpdateBinder.bind(
+                            setColor = { color -> dismissButton?.setTextColor(color) },
+                            color = colorUpdateViewModel.colorPrimary,
+                            shouldAnimate = shouldAnimateColor,
+                            lifecycleOwner = lifecycleOwner,
+                        )
+
+                        // setting text color for the sign in Button
+                        ColorUpdateBinder.bind(
+                            setColor = { color -> signInButton?.setTextColor(color) },
+                            color = colorUpdateViewModel.colorOnPrimary,
+                            shouldAnimate = shouldAnimateColor,
+                            lifecycleOwner = lifecycleOwner,
+                        )
                     }
 
                     // This is needed in order to allow activity starts using pending intent
@@ -150,13 +238,10 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
                     )
                     val bundle = options.toBundle()
 
-                    val dismissButton: Button? = signInBannerView?.findViewById(R.id.dismiss_button)
-                    val signInButton: Button? = signInBannerView?.findViewById(R.id.sign_in_button)
-
-                    dismissButton?.setOnClickListener({ _ ->
-                        signInBannerView.visibility = View.GONE
+                    dismissButton?.setOnClickListener { _ ->
+                        signInBannerView?.visibility = View.GONE
                         onSignInBannerDismissed(true)
-                    })
+                    }
 
                     signInButton?.setOnClickListener({ _ ->
                         try {

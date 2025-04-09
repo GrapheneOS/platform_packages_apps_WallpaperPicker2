@@ -17,6 +17,9 @@
 package com.android.wallpaper.binder
 
 import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import com.android.wallpaper.picker.category.ui.binder.BannerProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,6 +27,26 @@ import javax.inject.Singleton
 @Singleton
 class FakeBannerProvider @Inject constructor() : BannerProvider {
     override fun getSignInBanner(): View? {
+        return null
+    }
+
+    override fun getIcon(view: View?): ImageView? {
+        return null
+    }
+
+    override fun getDismissButton(view: View?): Button? {
+        return null
+    }
+
+    override fun getSignInButton(view: View?): Button? {
+        return null
+    }
+
+    override fun getBannerTitle(view: View?): TextView? {
+        return null
+    }
+
+    override fun getBannerDescription(view: View?): TextView? {
         return null
     }
 }

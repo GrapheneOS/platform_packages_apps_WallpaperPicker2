@@ -48,6 +48,7 @@ import com.android.wallpaper.picker.category.ui.binder.CategoriesBinder
 import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
 import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
 import com.android.wallpaper.picker.common.preview.data.repository.PersistentWallpaperModelRepository
+import com.android.wallpaper.picker.customization.shared.model.CategoryType
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.data.WallpaperModel
@@ -179,8 +180,7 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
                 is CategoriesViewModel.NavigationEvent.NavigateToPreviewScreen -> {
                     startWallpaperPreviewActivity(
                         navigationEvent.wallpaperModel,
-                        navigationEvent.categoryType ==
-                            CategoriesViewModel.CategoryType.CreativeCategories,
+                        navigationEvent.categoryType == CategoryType.CreativeCategories,
                     )
                 }
             }

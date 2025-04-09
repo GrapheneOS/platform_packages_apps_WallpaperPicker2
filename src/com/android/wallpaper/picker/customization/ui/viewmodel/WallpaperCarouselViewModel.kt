@@ -24,6 +24,7 @@ import com.android.wallpaper.picker.category.domain.interactor.CuratedPhotosInte
 import com.android.wallpaper.picker.category.domain.interactor.OnDeviceWallpapersInteractor
 import com.android.wallpaper.picker.category.ui.view.SectionCardinality
 import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
+import com.android.wallpaper.picker.customization.shared.model.CategoryType
 import com.android.wallpaper.picker.data.WallpaperModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -95,18 +96,8 @@ constructor(
      * carousel in the case there is an insufficient number of curated photos
      */
     val creativeSectionViewModel: Flow<List<TileViewModel>> =
-        combine(
-            creativeCategoryInteractor.categories,
-            creativeCategoryInteractor.standaloneCategories,
-        ) { categories, standAlone ->
-            val combinedList =
-                if (BaseFlags.get().isMagicPortraitEntryPointsEnabled()) {
-                    categories + standAlone
-                } else {
-                    categories
-                }
-
-            combinedList.map { category ->
+        creativeCategoryInteractor.categories.map { categories ->
+            categories.map { category ->
                 TileViewModel(
                     defaultDrawable = category.commonCategoryData?.thumbnailDrawable,
                     thumbnailAsset = category.collectionCategoryData?.thumbAsset,
@@ -129,6 +120,20 @@ constructor(
             }
         }
 
+    /** This [Flow] maps standalone creative categories to [TileViewModel]. */
+    val standaloneSectionViewModel: Flow<List<TileViewModel>> =
+        creativeCategoryInteractor.standaloneCategories.map { categories ->
+            categories.map { category ->
+                TileViewModel(
+                    defaultDrawable = category.commonCategoryData?.thumbnailDrawable,
+                    thumbnailAsset = category.collectionCategoryData?.thumbAsset,
+                    text = category.commonCategoryData.title,
+                    showTitle = true,
+                    maxCategoriesInRow = SectionCardinality.Triple,
+                ) {}
+            }
+        }
+
     /**
      * This [Flow] emits the desired [TileViewModel] collection based on the number of individual
      * curated photos, on-device wallpapers and creative wallpapers
@@ -138,20 +143,37 @@ constructor(
             curatedPhotoCarouselItems,
             defaultWallpapersTileVieModels,
             creativeSectionViewModel,
+            standaloneSectionViewModel,
         ) {
             curatedPhotos: List<TileViewModel>,
             defaultWallpapers: List<TileViewModel>,
-            creatives: List<TileViewModel> ->
+            creatives: List<TileViewModel>,
+            standAlone: List<TileViewModel> ->
+            val creativeCategories =
+                if (BaseFlags.get().isMagicPortraitEntryPointsEnabled()) {
+                    creatives + standAlone
+                } else {
+                    creatives
+                }
             // if more than 3 curated photos return only curated photos
             if (curatedPhotos.size > CAROUSEL_ITEMS_THRESHOLD) {
                 return@combine curatedPhotos
-            } else if (creatives.size >= CAROUSEL_ITEMS_THRESHOLD) {
+            } else if (creativeCategories.size >= CAROUSEL_ITEMS_THRESHOLD) {
                 // if creatives more or equal to 3 than return only creatives
-                return@combine creatives
+                return@combine creativeCategories
             } else {
                 // otherwise just return on-device wallpapers
                 return@combine defaultWallpapers
             }
+        }
+
+    /**
+     * This [Flow] emits a [Boolean] which signifies whether the suggested photos label should be
+     * visible
+     */
+    val shouldShowSuggestedPhotosLabel: Flow<Boolean> =
+        curatedPhotoCarouselItems.map { curatedPhotos: List<TileViewModel> ->
+            return@map curatedPhotos.size > CAROUSEL_ITEMS_THRESHOLD
         }
 
     private fun navigateToPreviewScreen(
@@ -177,12 +199,6 @@ constructor(
     @AssistedFactory
     interface Factory {
         fun create(viewModelScope: CoroutineScope): WallpaperCarouselViewModel
-    }
-
-    enum class CategoryType {
-        CreativeCategories,
-        CuratedPhotos,
-        Default,
     }
 
     sealed class NavigationEvent {

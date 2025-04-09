@@ -17,7 +17,7 @@
 package com.android.wallpaper.picker.category.ui.view.providers
 
 import androidx.fragment.app.Fragment
-import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
+import com.android.wallpaper.picker.customization.shared.model.CategoryType
 
 /**
  * This interface provides the signature to classes to provide the correct IndividualPickerFragment
@@ -25,8 +25,5 @@ import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
 interface IndividualPickerFactory {
     fun getIndividualPickerInstance(collectionId: String): Fragment
 
-    fun getIndividualPickerInstance(
-        collectionId: String,
-        categoryType: CategoriesViewModel.CategoryType
-    ): Fragment
+    fun getIndividualPickerInstance(collectionId: String, categoryType: CategoryType): Fragment
 }

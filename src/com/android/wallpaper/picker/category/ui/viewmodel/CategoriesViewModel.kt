@@ -35,6 +35,7 @@ import com.android.wallpaper.picker.category.domain.interactor.CuratedPhotosInte
 import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteractor
 import com.android.wallpaper.picker.category.domain.interactor.ThirdPartyCategoryInteractor
 import com.android.wallpaper.picker.category.ui.view.SectionCardinality
+import com.android.wallpaper.picker.customization.shared.model.CategoryType
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.data.category.CategoryModel
 import com.android.wallpaper.picker.network.domain.NetworkStatusInteractor
@@ -452,14 +453,6 @@ constructor(
     fun refreshCategory() {
         // update creative categories at this time only
         creativeCategoryInteractor.updateCreativeCategories()
-    }
-
-    enum class CategoryType {
-        ThirdPartyCategories,
-        DefaultCategories,
-        CreativeCategories,
-        MyPhotosCategories,
-        Default,
     }
 
     enum class DisplayType {

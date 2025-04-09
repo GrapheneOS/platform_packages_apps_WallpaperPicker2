@@ -38,6 +38,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnPreDraw
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
@@ -53,6 +54,7 @@ import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.WallpaperPickerDelegate.VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE
 import com.android.wallpaper.picker.category.ui.view.CategoriesFragment
+import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
 import com.android.wallpaper.picker.common.preview.data.repository.PersistentWallpaperModelRepository
 import com.android.wallpaper.picker.common.preview.ui.binder.BasePreviewBinder
 import com.android.wallpaper.picker.common.preview.ui.binder.PreviewAlphaAnimationBinder
@@ -101,6 +103,7 @@ class CustomizationPickerFragment2 :
     @Inject lateinit var persistentWallpaperModelRepository: PersistentWallpaperModelRepository
     @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
     @Inject lateinit var multiPanesChecker: MultiPanesChecker
+    @Inject lateinit var individualPickerFactory: IndividualPickerFactory
 
     private val customizationPickerViewModel: CustomizationPickerViewModel2 by viewModels()
 
@@ -441,14 +444,7 @@ class CustomizationPickerFragment2 :
                     }
                 }
             },
-            navigateToWallpaperCategoriesScreen = { _ ->
-                if (isAdded) {
-                    parentFragmentManager.commit {
-                        replace<CategoriesFragment>(R.id.fragment_container)
-                        addToBackStack(null)
-                    }
-                }
-            },
+            navigateToWallpaperCategoriesScreen = { _ -> switchFragment(CategoriesFragment()) },
             navigateToMoreLockScreenSettingsActivity = {
                 activity?.startActivity(Intent(Settings.ACTION_LOCKSCREEN_SETTINGS))
             },
@@ -465,7 +461,28 @@ class CustomizationPickerFragment2 :
                 startWallpaperPreviewActivity(wallpaperModel, false)
             },
             navigateToPackThemeActivity = { intent -> context?.startActivity(intent) },
+            navigateToWallpaperCollectionScreen = { categoryId, categoryType ->
+                switchFragment(
+                    individualPickerFactory.getIndividualPickerInstance(categoryId, categoryType)
+                )
+            },
         )
+
+        customizationOptionsBinder.bindDiscardChangesDialog(
+            customizationOptionsViewModel =
+                customizationPickerViewModel.customizationOptionsViewModel,
+            lifecycleOwner = viewLifecycleOwner,
+            activity = requireActivity(),
+        )
+    }
+
+    private fun switchFragment(fragment: Fragment) {
+        if (isAdded) {
+            parentFragmentManager.commit {
+                replace(R.id.fragment_container, fragment)
+                addToBackStack(null)
+            }
+        }
     }
 
     override fun onEnterAnimationCompleteAfterActivityCreated() {

@@ -25,6 +25,7 @@ import androidx.test.core.app.ActivityScenario
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.module.NetworkStatusNotifier
 import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
+import com.android.wallpaper.picker.customization.shared.model.CategoryType
 import com.android.wallpaper.picker.preview.PreviewTestActivity
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestNetworkStatusNotifier
@@ -166,7 +167,7 @@ class CategoriesViewModelTest {
                     .isEqualTo(
                         CategoriesViewModel.NavigationEvent.NavigateToWallpaperCollection(
                             CATEGORY_ID_CELESTIAL_DREAMSCAPES,
-                            CategoriesViewModel.CategoryType.DefaultCategories,
+                            CategoryType.DefaultCategories,
                         )
                     )
 
@@ -189,7 +190,7 @@ class CategoriesViewModelTest {
                     .isEqualTo(
                         CategoriesViewModel.NavigationEvent.NavigateToWallpaperCollection(
                             CATEGORY_ID_CYBERPUNK_CITYSCAPE,
-                            CategoriesViewModel.CategoryType.DefaultCategories,
+                            CategoryType.DefaultCategories,
                         )
                     )
                 job.cancelAndJoin()
@@ -209,7 +210,7 @@ class CategoriesViewModelTest {
                     .isEqualTo(
                         CategoriesViewModel.NavigationEvent.NavigateToWallpaperCollection(
                             CATEGORY_ID_COSMIC_NEBULA,
-                            CategoriesViewModel.CategoryType.DefaultCategories,
+                            CategoryType.DefaultCategories,
                         )
                     )
                 job.cancelAndJoin()

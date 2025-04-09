@@ -17,8 +17,21 @@
 package com.android.wallpaper.picker.category.ui.binder
 
 import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 
 /** This is the binder interface for providing custom banner views. */
 interface BannerProvider {
     fun getSignInBanner(): View?
+
+    fun getIcon(view: View?): ImageView?
+
+    fun getDismissButton(view: View?): Button?
+
+    fun getSignInButton(view: View?): Button?
+
+    fun getBannerTitle(view: View?): TextView?
+
+    fun getBannerDescription(view: View?): TextView?
 }

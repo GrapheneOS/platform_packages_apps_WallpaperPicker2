@@ -17,13 +17,24 @@
 package com.android.wallpaper.picker.category.ui.binder
 
 import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /** This is the default implementation for providing any default banner. */
 @Singleton
 class DefaultBannerProvider @Inject constructor() : BannerProvider {
-    override fun getSignInBanner(): View? {
-        return null
-    }
+    override fun getSignInBanner(): View? = null
+
+    override fun getIcon(view: View?): ImageView? = null
+
+    override fun getDismissButton(view: View?): Button? = null
+
+    override fun getSignInButton(view: View?): Button? = null
+
+    override fun getBannerTitle(view: View?): TextView? = null
+
+    override fun getBannerDescription(view: View?): TextView? = null
 }
