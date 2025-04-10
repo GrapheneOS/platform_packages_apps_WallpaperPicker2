@@ -34,6 +34,7 @@ import com.android.wallpaper.picker.customization.ui.CustomizationPickerActivity
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.picker.customization.ui.util.EmptyTransitionListener
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.PickerScreen.CUSTOMIZATION_OPTION
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.PickerScreen.MAIN
@@ -52,6 +53,7 @@ object CustomizationPickerBinder2 {
      *   need this callback to handle the back navigation in [CustomizationPickerActivity2].
      */
     fun bind(
+        customizationOptionsData: CustomizationOptionsData,
         view: View,
         lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
         homeScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
@@ -136,6 +138,7 @@ object CustomizationPickerBinder2 {
         )
 
         customizationOptionsBinder.bind(
+            customizationOptionsData,
             view,
             lockScreenCustomizationOptionEntries,
             homeScreenCustomizationOptionEntries,

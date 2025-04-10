@@ -212,6 +212,7 @@ class CustomizationPickerFragment2 :
             }
 
             bindCustomizationPicker(
+                customizationOptionsData = customizationOptionsData,
                 pickerMotionContainer = pickerMotionContainer,
                 lockScreenCustomizationOptionEntries = lockScreenCustomizationOptionEntries,
                 homeScreenCustomizationOptionEntries = homeScreenCustomizationOptionEntries,
@@ -405,6 +406,7 @@ class CustomizationPickerFragment2 :
     }
 
     private fun bindCustomizationPicker(
+        customizationOptionsData: CustomizationOptionsData,
         pickerMotionContainer: MotionLayout,
         lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
         homeScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>>,
@@ -412,6 +414,7 @@ class CustomizationPickerFragment2 :
         customizationFloatingSheetContainer: FrameLayout,
     ) {
         CustomizationPickerBinder2.bind(
+            customizationOptionsData = customizationOptionsData,
             view = pickerMotionContainer,
             lockScreenCustomizationOptionEntries = lockScreenCustomizationOptionEntries,
             homeScreenCustomizationOptionEntries = homeScreenCustomizationOptionEntries,
