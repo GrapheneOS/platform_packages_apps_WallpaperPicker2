@@ -21,7 +21,7 @@
     android:layout_height="match_parent"
     android:clipChildren="false">
 
-    <androidx.cardview.widget.CardView
+    <com.android.wallpaper.picker.customization.ui.view.PreviewCardView
         android:id="@+id/preview_card"
         android:importantForAccessibility="no"
         style="@style/FullContentPreviewCard"
@@ -49,7 +49,7 @@
             android:background="@drawable/gradient_black_scrim"
             android:importantForAccessibility="noHideDescendants"
             android:visibility="gone" />
-    </androidx.cardview.widget.CardView>
+    </com.android.wallpaper.picker.customization.ui.view.PreviewCardView>
 
 
 </com.android.wallpaper.picker.preview.ui.view.FullPreviewFrameLayout>

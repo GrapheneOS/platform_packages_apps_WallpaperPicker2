@@ -17,6 +17,7 @@
 package com.android.wallpaper.picker.common.preview.ui.binder
 
 import android.view.View
+import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -39,10 +40,10 @@ object PreviewAlphaAnimationBinder {
         lifecycleOwner: LifecycleOwner,
     ) {
         val lockPreview: View = previewPager.requireViewById(R.id.lock_preview)
-        val lockPreviewLabel: View = previewPager.requireViewById(R.id.lock_preview_label)
+        val lockPreviewLabel: TextView = previewPager.requireViewById(R.id.lock_preview_label)
         val lockPreviewShade: View = lockPreview.requireViewById(R.id.preview_shade)
         val homePreview: View = previewPager.requireViewById(R.id.home_preview)
-        val homePreviewLabel: View = previewPager.requireViewById(R.id.home_preview_label)
+        val homePreviewLabel: TextView = previewPager.requireViewById(R.id.home_preview_label)
         val homePreviewShade: View = homePreview.requireViewById(R.id.preview_shade)
 
         lifecycleOwner.lifecycleScope.launch {
@@ -70,6 +71,18 @@ object PreviewAlphaAnimationBinder {
                             homePreviewLabel.alpha = alpha
                             homePreviewShade.alpha = shadeAlpha
                         }
+                    }
+                }
+
+                launch {
+                    viewModel.lockPreviewLabelTextAppearance.collect {
+                        lockPreviewLabel.setTextAppearance(it)
+                    }
+                }
+
+                launch {
+                    viewModel.homePreviewLabelTextAppearance.collect {
+                        homePreviewLabel.setTextAppearance(it)
                     }
                 }
             }

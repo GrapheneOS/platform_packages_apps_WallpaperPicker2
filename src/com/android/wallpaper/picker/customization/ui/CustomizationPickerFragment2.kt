@@ -40,7 +40,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.Transition
@@ -362,10 +361,16 @@ class CustomizationPickerFragment2 :
                         startId == R.id.expanded_header_primary &&
                             endId == R.id.collapsed_header_primary
                     ) {
-                        // Do not collapse or expand the wallpaper entry when
-                        // isLargeScreenSingleDisplayPortrait is true
-                        if (!isLargeScreenSingleDisplayPortrait) {
-                            wallpaperPickerEntry.setProgress(progress)
+                        val shouldCollapse =
+                            wallpaperPickerEntry.getState() ==
+                                WallpaperPickerEntry.State.EXPANDED &&
+                                progress > WALLPAPER_ENTRY_EARLY_COLLAPSE_PROGRESS_THRESHOLD
+                        if (shouldCollapse) {
+                            // Do not collapse or expand the wallpaper entry when
+                            // isLargeScreenSingleDisplayPortrait is true
+                            if (!isLargeScreenSingleDisplayPortrait) {
+                                wallpaperPickerEntry.animateToCollapsed()
+                            }
                         }
                     }
                 }
@@ -375,13 +380,27 @@ class CustomizationPickerFragment2 :
                         // Do not collapse or expand the wallpaper entry when
                         // isLargeScreenSingleDisplayPortrait is true
                         if (!isLargeScreenSingleDisplayPortrait) {
-                            wallpaperPickerEntry.setProgress(0f)
+                            val shouldExpand =
+                                wallpaperPickerEntry.getState() ==
+                                    WallpaperPickerEntry.State.COLLAPSING ||
+                                    wallpaperPickerEntry.getState() ==
+                                        WallpaperPickerEntry.State.COLLAPSED
+                            if (shouldExpand) {
+                                wallpaperPickerEntry.animateToExpanded()
+                            }
                         }
                     } else if (currentId == R.id.collapsed_header_primary) {
                         // Do not collapse or expand the wallpaper entry when
                         // isLargeScreenSingleDisplayPortrait is true
                         if (!isLargeScreenSingleDisplayPortrait) {
-                            wallpaperPickerEntry.setProgress(1f)
+                            val shouldCollapse =
+                                wallpaperPickerEntry.getState() ==
+                                    WallpaperPickerEntry.State.EXPANDING ||
+                                    wallpaperPickerEntry.getState() ==
+                                        WallpaperPickerEntry.State.EXPANDED
+                            if (shouldCollapse) {
+                                wallpaperPickerEntry.animateToCollapsed()
+                            }
                         }
                     }
 
@@ -830,6 +849,7 @@ class CustomizationPickerFragment2 :
     }
 
     companion object {
+        private const val WALLPAPER_ENTRY_EARLY_COLLAPSE_PROGRESS_THRESHOLD = 0.25f
         private const val ANIMATION_DURATION = 200
         private const val PACK_THEME_PACKAGE_NAME =
             "com.google.android.apps.pixel.customizationbundle"

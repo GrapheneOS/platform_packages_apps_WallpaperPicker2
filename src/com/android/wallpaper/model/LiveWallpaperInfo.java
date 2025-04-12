@@ -76,6 +76,8 @@ public class LiveWallpaperInfo extends WallpaperInfo {
     public static final String ATTR_ID = "id";
     public static final String ATTR_PACKAGE = "package";
     public static final String ATTR_SERVICE = "service";
+    public static final String MULTIPLE_ENGINE_METADATA_NAME =
+            "com.android.wallpaper.supports_multiple_engines";
 
     /**
      * Creates a new {@link LiveWallpaperInfo} from an XML {@link AttributeSet}

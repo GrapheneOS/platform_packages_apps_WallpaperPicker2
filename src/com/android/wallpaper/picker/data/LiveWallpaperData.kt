@@ -30,4 +30,5 @@ data class LiveWallpaperData(
     val contextDescription: CharSequence? = null,
     val description: WallpaperDescription =
         WallpaperDescription.Builder().setComponent(systemWallpaperInfo.component).build(),
+    val supportsMultipleEngines: Boolean = false,
 )

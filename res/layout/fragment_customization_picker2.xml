@@ -41,20 +41,12 @@
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="?android:attr/actionBarSize"
-        android:theme="?android:attr/actionBarTheme"
+        style="@style/ToolbarTheme"
         android:importantForAccessibility="yes"
         android:layout_gravity="top"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@+id/nav_button"
-        app:layout_constraintEnd_toStartOf="@+id/apply_button">
-        <TextView
-            android:id="@+id/custom_toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="@style/CollapsingToolbar.Collapsed"/>
-    </Toolbar>
+        app:layout_constraintEnd_toStartOf="@+id/apply_button" />
 
     <Button
         android:id="@+id/apply_button"
@@ -108,13 +100,13 @@
 
                 <FrameLayout
                     android:id="@+id/lock_preview_label_container"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom">
 
                     <TextView
                         android:id="@+id/lock_preview_label"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom"
                         android:gravity="center"
@@ -130,13 +122,13 @@
 
                 <FrameLayout
                     android:id="@+id/home_preview_label_container"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/customization_picker_preview_label_padding_bottom">
 
                     <TextView
                         android:id="@+id/home_preview_label"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:layout_gravity="center"

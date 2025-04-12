@@ -57,6 +57,7 @@ public class TestLiveWallpaperInfo extends LiveWallpaperInfo {
     private String mWallpaperId;
     private boolean mIsAssetCorrupt;
     private int mBackupPermission;
+    private String mTitle;
 
     /** Constructs a test WallpaperInfo object representing a 1x1 wallpaper of the given color. */
     public TestLiveWallpaperInfo(int pixelColor) {
@@ -143,6 +144,17 @@ public class TestLiveWallpaperInfo extends LiveWallpaperInfo {
         return mWallpaperId;
 
     }
+
+    @Override
+    public String getTitle(Context unused) {
+        return mTitle;
+    }
+
+    /** Sets the title for this wallpaper. */
+    public void setTitle(String title) {
+        mTitle = title;
+    }
+
     /** Sets the ID for this wallpaper. */
     public void setWallpaperId(String wallpaperId) {
         mWallpaperId = wallpaperId;

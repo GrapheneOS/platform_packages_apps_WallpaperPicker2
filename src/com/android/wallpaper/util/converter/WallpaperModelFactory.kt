@@ -126,6 +126,11 @@ interface WallpaperModelFactory {
                 effectNames = effectNames,
                 contextDescription = contextDescription,
                 description = wallpaperDescription,
+                supportsMultipleEngines =
+                    info.serviceInfo.metaData?.getBoolean(
+                        LiveWallpaperInfo.MULTIPLE_ENGINE_METADATA_NAME,
+                        false,
+                    ) ?: false,
             )
         }
 

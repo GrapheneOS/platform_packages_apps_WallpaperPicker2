@@ -169,6 +169,7 @@ object ContentHandlingUtil {
                     description =
                         description
                             ?: WallpaperDescription.Builder().setComponent(componentName).build(),
+                    supportsMultipleEngines = true,
                 )
             return LiveWallpaperModel(
                 commonWallpaperData = commonWallpaperData,

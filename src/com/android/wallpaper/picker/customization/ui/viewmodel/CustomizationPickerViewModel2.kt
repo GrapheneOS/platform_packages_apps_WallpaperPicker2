@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.wallpaper.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.Screen.HOME_SCREEN
 import com.android.wallpaper.model.Screen.LOCK_SCREEN
@@ -92,6 +93,16 @@ constructor(
             .distinctUntilChanged()
             .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
 
+    /** Flow of a style res Id that represents the home preview label text appearance. */
+    val lockPreviewLabelTextAppearance: Flow<Int> =
+        selectedPreviewScreen.map {
+            if (it == LOCK_SCREEN) {
+                R.style.TextAppearance_DeviceDefault_Small_TitleMediumEmphasized
+            } else {
+                R.style.TextAppearance_DeviceDefault_Small_TitleMedium
+            }
+        }
+
     /** Flow of float that emits to trigger the home screen preview to animate to an alpha value. */
     val homePreviewAlpha: Flow<PreviewAlpha> =
         combine(isHomePreviewReady, screen, selectedPreviewScreen) {
@@ -107,6 +118,16 @@ constructor(
             }
             .distinctUntilChanged()
             .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
+
+    /** Flow of a style res Id that represents the home preview label text appearance. */
+    val homePreviewLabelTextAppearance: Flow<Int> =
+        selectedPreviewScreen.map {
+            if (it == HOME_SCREEN) {
+                R.style.TextAppearance_DeviceDefault_Small_TitleMediumEmphasized
+            } else {
+                R.style.TextAppearance_DeviceDefault_Small_TitleMedium
+            }
+        }
 
     /**
      * Get the preview's target alpha value to animate or set to.

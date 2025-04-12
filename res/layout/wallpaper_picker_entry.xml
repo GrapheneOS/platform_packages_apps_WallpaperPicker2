@@ -68,7 +68,7 @@
             android:minHeight="@dimen/accessibility_min_height"
             android:gravity="start|center_vertical"
             android:text="@string/choose_a_curated_photo_section_title"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+            android:textAppearance="@style/TextAppearance.DeviceDefault.Small.LabelLargeEmphasized"
             android:textSize="@dimen/wallpaper_header_text_size"
             android:ellipsize="end"
             android:singleLine="true"

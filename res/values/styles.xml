@@ -14,7 +14,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Main themes -->
     <style name="WallpaperTheme" parent="@android:style/Theme.DeviceDefault.Settings">
@@ -154,6 +154,8 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textFontWeight">500</item>
     </style>
+
+    <style name="CategorySectionTitleTextAppearance.TitleMediumEmphasized" />
 
     <!-- Individual components / Widgets -->
     <style name="OutlinedButtonStyle"  parent="@android:style/Widget.DeviceDefault.Button">
@@ -312,5 +314,23 @@
         <item name="android:gravity">center</item>
         <item name="android:textAlignment">center</item>
         <item name="android:paddingVertical">8dp</item>
+    </style>
+
+    <!-- Main page font styles -->
+    <style name="TextAppearance.DeviceDefault.Small"
+        parent="@android:style/TextAppearance.DeviceDefault.Small" />
+
+    <style name="TextAppearance.DeviceDefault.Small.LabelLargeEmphasized" />
+
+    <style name="TextAppearance.DeviceDefault.Small.TitleMedium" />
+
+    <style name="TextAppearance.DeviceDefault.Small.TitleMediumEmphasized" />
+
+    <style name="TextAppearance.DeviceDefault.Large" parent="@android:style/TextAppearance.DeviceDefault.Large" />
+
+    <style name="TextAppearance.DeviceDefault.Large.TitleLargeEmphasized" />
+
+    <style name="ToolbarTheme">
+        <item name="android:titleTextAppearance">@style/TextAppearance.DeviceDefault.Large.TitleLargeEmphasized</item>
     </style>
 </resources>

@@ -161,5 +161,6 @@ class ContentHandlingUtilTest {
         assertThat(liveData.isEffectWallpaper).isEqualTo(isEffectWallpaper)
         assertThat(liveData.effectNames).isEqualTo(effectNames)
         assertThat(liveData.description).isEqualTo(description)
+        assertThat(liveData.supportsMultipleEngines).isTrue()
     }
 }
