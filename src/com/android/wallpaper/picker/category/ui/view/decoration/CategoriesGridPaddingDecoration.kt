@@ -54,6 +54,11 @@ class CategoriesGridPaddingDecoration(
         }
 
         val columnCount = columnCalculator(position)
+        if (sectionViewModelList[position].tileViewModels.isEmpty()) {
+            outRect.bottom = 0
+            return
+        }
+
         if (columnCount > 1) {
             outRect.bottom =
                 parent.context.resources.getDimensionPixelSize(

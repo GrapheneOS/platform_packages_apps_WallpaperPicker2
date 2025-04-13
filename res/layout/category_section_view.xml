@@ -21,6 +21,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <TextView
+        android:id="@+id/section_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/CategorySectionTitleTextAppearance.TitleMediumEmphasized"
+        android:focusable="false"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/grid_item_category_title_margin_bottom"/>
+
     <RelativeLayout
         android:id="@+id/category_header"
         android:layout_width="match_parent"
@@ -28,10 +37,10 @@
         android:layout_marginBottom="@dimen/photos_carousel_padding">
 
         <TextView
-            android:id="@+id/section_title"
+            android:id="@+id/more_photos_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/CategorySectionTitleTextAppearance"
+            android:textAppearance="@style/CategorySectionTitleTextAppearance.TitleMediumEmphasized"
             android:focusable="false"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/more_photos_button"

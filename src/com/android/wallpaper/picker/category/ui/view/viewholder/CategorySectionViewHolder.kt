@@ -28,6 +28,7 @@ import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
@@ -49,6 +50,7 @@ import com.google.android.flexbox.JustifyContent
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
 
+// TODO (b/409841415): Decouple this view holder from suggested photos logic
 /** This view holder caches reference to pertinent views in a list of section view */
 class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
     RecyclerView.ViewHolder(itemView) {
@@ -59,6 +61,8 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
     private val sectionTitle: TextView = itemView.requireViewById(R.id.section_title)
     private val morePhotosButton: Button = itemView.requireViewById(R.id.more_photos_button)
     private val categoryHeader: RelativeLayout = itemView.requireViewById(R.id.category_header)
+
+    private val morePhotosLabel: TextView = itemView.requireViewById(R.id.more_photos_label)
 
     fun bind(
         item: SectionViewModel,
@@ -110,11 +114,14 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
             )
         }
 
-        if (item.sectionTitle != null && item.tileViewModels.isNotEmpty()) {
+        if (item.sectionTitle != null) {
             sectionTitle.text = item.sectionTitle
+            morePhotosLabel.text = item.sectionTitle
             sectionTitle.visibility = View.VISIBLE
+            morePhotosLabel.visibility = View.VISIBLE
         } else {
             sectionTitle.visibility = View.GONE
+            morePhotosLabel.visibility = View.GONE
         }
 
         // TODO: this probably is not necessary but if in the case the sections get updated we
@@ -122,6 +129,7 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
         when (item) {
             // This is the display type for suggested photos carousel
             is PhotosViewModel -> {
+                sectionTitle.visibility = View.GONE
                 // in case there are no suggested photos or suggested photos are less than 3
                 if (!item.isSuggestedPhotoCarouselVisible) {
                     val signInBannerView = bannerProvider?.getSignInBanner()
@@ -252,8 +260,9 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
                         }
                     })
                     // we hide the title called suggested photos in this case
-                    sectionTitle.visibility = View.GONE
+                    morePhotosLabel.visibility = View.GONE
                 } else {
+                    morePhotosLabel.visibility = View.VISIBLE
                     sectionTiles.adapter = CuratedPhotosAdapter(item.tileViewModels)
                     val layoutManagerCuratedPhotos = CarouselLayoutManager()
                     sectionTiles.layoutManager = layoutManagerCuratedPhotos
@@ -263,7 +272,19 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
                 }
             }
             else -> {
+                morePhotosLabel.visibility = View.GONE
                 morePhotosButton.visibility = View.GONE
+
+                if (item.tileViewModels.isEmpty()) {
+                    sectionTiles.isVisible = false
+                    categoryHeader.visibility = View.GONE
+                    sectionTitle.visibility = View.GONE
+                    return
+                } else {
+                    sectionTiles.isVisible = true
+                    categoryHeader.visibility = View.VISIBLE
+                }
+
                 sectionTiles.adapter =
                     CategoryAdapter(
                         item.tileViewModels,

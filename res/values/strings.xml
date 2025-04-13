@@ -634,4 +634,7 @@
          already at its minimum zoom. [CHAR LIMIT=None] -->
     <string name="min_zoom_percentage">Minimum zoom achieved</string>
 
+    <!-- Label for the collection title on the categories screen [CHAR LIMIT=None] -->
+    <string name="categories_collection_label">Collection</string>
+
 </resources>

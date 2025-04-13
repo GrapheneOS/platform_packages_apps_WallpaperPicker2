@@ -226,7 +226,13 @@ constructor(
 
     private val individualSectionViewModels: Flow<List<SectionViewModel>> =
         combine(defaultCategorySections, thirdPartyCategorySections) { list1, list2 ->
-            list1 + list2
+            listOf(
+                SectionViewModel(
+                    tileViewModels = listOf(),
+                    columnCount = 3,
+                    sectionTitle = context.getString(R.string.categories_collection_label),
+                )
+            ) + list1 + list2
         }
 
     private val standaloneCreativeSectionViewModel: Flow<SectionViewModel?> =
