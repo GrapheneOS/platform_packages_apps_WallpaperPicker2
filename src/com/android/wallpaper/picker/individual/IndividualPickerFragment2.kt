@@ -518,11 +518,7 @@ class IndividualPickerFragment2 :
         if (!this::imageGrid.isInitialized) {
             return
         }
-        // Skip if category hasn't loaded yet
-        if (category == null) {
-            return
-        }
-        if (context == null) {
+        if (category == null || activity == null || context == null) {
             return
         }
         // Wallpaper count could change, so we may need to change the layout(2 or 3 columns layout)
