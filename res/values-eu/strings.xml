@@ -89,7 +89,7 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"Erdian"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"Erdian, moztuta"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"Pantailara egokituta"</string>
-    <string name="preview" msgid="1774602101743861071">"Aurreikusi"</string>
+    <string name="preview" msgid="1774602101743861071">"Aurrebista"</string>
     <string name="tab_info" msgid="818614080690111416">"Informazioa"</string>
     <string name="tab_customize" msgid="2533745409174959960">"Pertsonalizatu"</string>
     <string name="tab_effects" msgid="3213606157589233901">"Efektuak"</string>
@@ -157,4 +157,6 @@
     <string name="zoomed_to_percent" msgid="1243039994190840132">"Zoom-maila: %% %d"</string>
     <string name="max_zoom_percentage" msgid="2111670558746866030">"Ezin da handitu gehiago"</string>
     <string name="min_zoom_percentage" msgid="5931879817379214316">"Ezin da txikitu gehiago"</string>
+    <!-- no translation found for categories_collection_label (6863200447424250097) -->
+    <skip />
 </resources>

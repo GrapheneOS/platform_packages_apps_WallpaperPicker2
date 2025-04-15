@@ -157,4 +157,6 @@
     <string name="zoomed_to_percent" msgid="1243039994190840132">"已缩放至 %d%%"</string>
     <string name="max_zoom_percentage" msgid="2111670558746866030">"已达到最大缩放比例"</string>
     <string name="min_zoom_percentage" msgid="5931879817379214316">"已达到最小缩放比例"</string>
+    <!-- no translation found for categories_collection_label (6863200447424250097) -->
+    <skip />
 </resources>

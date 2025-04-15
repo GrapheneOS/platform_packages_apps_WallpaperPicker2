@@ -24,20 +24,12 @@ class PhotosViewModel(
     val isDismissed: Boolean,
     val isSuggestedPhotoCarouselVisible: Boolean,
     // This pending intent initiates the Google Photos sign-in process.
+    val status: PhotosErrorData? = null,
     val pendingIntent: PendingIntent?,
     override val tileViewModels: List<TileViewModel>,
     override val columnCount: Int,
     override val sectionTitle: String? = null,
     override val displayType: CategoriesViewModel.DisplayType =
         CategoriesViewModel.DisplayType.Default,
-    override val status: PhotosErrorData? = null,
     override val onSectionClicked: (() -> Unit)? = null,
-) :
-    SectionViewModel(
-        tileViewModels,
-        columnCount,
-        sectionTitle,
-        displayType,
-        status,
-        onSectionClicked,
-    )
+) : SectionViewModel(tileViewModels, columnCount, sectionTitle, displayType, onSectionClicked)

@@ -130,7 +130,7 @@
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Cambiar fondo de pantalla"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Vista del fondo de pantalla de bloqueo"</string>
     <string name="apply_btn" msgid="5764555565943538528">"Aplicar"</string>
-    <string name="apply_wallpaper_title_text" msgid="2100301064316744087">"¿Deseas aplicar un fondo de pantalla?"</string>
+    <string name="apply_wallpaper_title_text" msgid="2100301064316744087">"¿Deseas aplicar el fondo de pantalla?"</string>
     <string name="accessibility_customize_hidden" msgid="6320568529768181691">"Panel Personalizar oculto"</string>
     <string name="accessibility_customize_shown" msgid="590964727831547651">"Panel Personalizar visible"</string>
     <string name="accessibility_info_hidden" msgid="2288603712350168107">"Panel Información oculto"</string>
@@ -157,4 +157,6 @@
     <string name="zoomed_to_percent" msgid="1243039994190840132">"Zoom al %d%%"</string>
     <string name="max_zoom_percentage" msgid="2111670558746866030">"Se alcanzó el zoom máximo"</string>
     <string name="min_zoom_percentage" msgid="5931879817379214316">"Se alcanzó el zoom mínimo"</string>
+    <!-- no translation found for categories_collection_label (6863200447424250097) -->
+    <skip />
 </resources>

@@ -106,8 +106,8 @@
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Тапет со приказ на слајдови"</string>
     <string name="bottom_action_bar_apply" msgid="2983308349819178932">"Примени"</string>
     <string name="accessibility_preview_pager" msgid="1839869637405028575">"Страница <xliff:g id="ID_1">%1$d</xliff:g> од <xliff:g id="ID_2">%2$d</xliff:g>"</string>
-    <string name="next_page_content_description" msgid="6268461446679584152">"Следнa"</string>
-    <string name="previous_page_content_description" msgid="1138597031571078429">"Претходна"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"Следно"</string>
+    <string name="previous_page_content_description" msgid="1138597031571078429">"Претходно"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Тапет"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Преглед на тапет"</string>
     <string name="wallpaper_preview_card_content_description_editable" msgid="8147628993184862003">"Преглед на тапет на %1$s: %2$s, допрете двапати за да ја измените фотографијата"</string>
@@ -157,4 +157,6 @@
     <string name="zoomed_to_percent" msgid="1243039994190840132">"Зумирано до %d%%"</string>
     <string name="max_zoom_percentage" msgid="2111670558746866030">"Максималното зумирање е достигнато"</string>
     <string name="min_zoom_percentage" msgid="5931879817379214316">"Минималното зумирање е достигнато"</string>
+    <!-- no translation found for categories_collection_label (6863200447424250097) -->
+    <skip />
 </resources>

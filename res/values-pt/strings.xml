@@ -106,7 +106,7 @@
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Fundo da apresent. de slides"</string>
     <string name="bottom_action_bar_apply" msgid="2983308349819178932">"Aplicar"</string>
     <string name="accessibility_preview_pager" msgid="1839869637405028575">"Página <xliff:g id="ID_1">%1$d</xliff:g> de <xliff:g id="ID_2">%2$d</xliff:g>"</string>
-    <string name="next_page_content_description" msgid="6268461446679584152">"Próxima"</string>
+    <string name="next_page_content_description" msgid="6268461446679584152">"Avançar"</string>
     <string name="previous_page_content_description" msgid="1138597031571078429">"Anterior"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Plano de fundo"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Visualização do plano de fundo"</string>
@@ -157,4 +157,6 @@
     <string name="zoomed_to_percent" msgid="1243039994190840132">"Zoom em %d%%"</string>
     <string name="max_zoom_percentage" msgid="2111670558746866030">"O zoom está no máximo"</string>
     <string name="min_zoom_percentage" msgid="5931879817379214316">"O zoom está no mínimo"</string>
+    <!-- no translation found for categories_collection_label (6863200447424250097) -->
+    <skip />
 </resources>

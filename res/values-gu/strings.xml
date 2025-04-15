@@ -89,7 +89,7 @@
     <string name="center_wallpaper_position" msgid="4166894762352288883">"મધ્ય"</string>
     <string name="center_crop_wallpaper_position" msgid="1681980019815343348">"મધ્યમાંથી કાપેલ"</string>
     <string name="stretch_wallpaper_position" msgid="5002680983147456935">"ખેંચેલ"</string>
-    <string name="preview" msgid="1774602101743861071">"પ્રીવ્યૂ કરો"</string>
+    <string name="preview" msgid="1774602101743861071">"પ્રીવ્યૂ"</string>
     <string name="tab_info" msgid="818614080690111416">"માહિતી"</string>
     <string name="tab_customize" msgid="2533745409174959960">"કસ્ટમાઇઝ કરો"</string>
     <string name="tab_effects" msgid="3213606157589233901">"ઇફેક્ટ"</string>
@@ -157,4 +157,6 @@
     <string name="zoomed_to_percent" msgid="1243039994190840132">"%d%% પર નાનું-મોટું કર્યું"</string>
     <string name="max_zoom_percentage" msgid="2111670558746866030">"મહત્તમ ઝૂમ હાંસલ કર્યું"</string>
     <string name="min_zoom_percentage" msgid="5931879817379214316">"ન્યૂનતમ ઝૂમ હાંસલ કર્યું"</string>
+    <!-- no translation found for categories_collection_label (6863200447424250097) -->
+    <skip />
 </resources>
