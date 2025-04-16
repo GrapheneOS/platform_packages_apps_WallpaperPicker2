@@ -26,10 +26,12 @@ import com.android.systemui.shared.customization.data.content.CustomizationProvi
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
 import com.android.systemui.shared.customization.data.content.CustomizationProviderContract as Contract
 import com.android.wallpaper.Flags.composeRefactorFlag
+import com.android.wallpaper.Flags.fullscreenPreviewFlag
 import com.android.wallpaper.Flags.newCreativeWallpaperCategory
 import com.android.wallpaper.Flags.refactorWallpaperCategoryFlag
 import com.android.wallpaper.Flags.wallpaperRestorerFlag
 import com.android.wallpaper.module.InjectorProvider
+import com.android.wm.shell.shared.desktopmode.DesktopState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
@@ -143,6 +145,12 @@ abstract class BaseFlags {
         return cachedFlags
             ?: runBlocking { getCustomizationProviderClient(context).queryFlags() }
                 .also { cachedFlags = it }
+    }
+
+    open fun isFullscreenPreviewEnabled(context: Context): Boolean {
+        return fullscreenPreviewFlag() &&
+            isNewPickerUi() &&
+            DesktopState.fromContext(context).canEnterDesktopMode
     }
 
     companion object {

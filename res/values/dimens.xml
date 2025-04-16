@@ -33,7 +33,7 @@
     <dimen name="grid_tile_aspect_height">340dp</dimen>
     <dimen name="grid_tile_aspect_width">182dp</dimen>
     <dimen name="category_grid_edge_space">18dp</dimen>
-    <dimen name="category_grid_padding_top">32dp</dimen>
+    <dimen name="category_grid_padding_top">16dp</dimen>
 
     <!-- Dimensions for creative categoriy tiles. -->
     <dimen name="creative_category_grid_padding_horizontal">8dp</dimen>

@@ -15,12 +15,15 @@
  */
 package com.android.wallpaper.picker.preview.ui
 
+import android.app.Activity.FULLSCREEN_MODE_REQUEST_ENTER
 import android.app.WindowConfiguration.WINDOWING_MODE_FREEFORM
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
+import android.os.OutcomeReceiver
+import android.util.Log
 import android.view.Window
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -82,7 +85,11 @@ class WallpaperPreviewActivity :
     private val isCategoriesRefactorEnabled =
         BaseFlags.get().isWallpaperCategoryRefactoringEnabled()
 
+    private var isFirstRun = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        isFirstRun = savedInstanceState == null
+
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
         super.onCreate(savedInstanceState)
         enforcePortraitForHandheldAndFoldedDisplay()
@@ -101,7 +108,7 @@ class WallpaperPreviewActivity :
         val wallpaper: WallpaperModel =
             if (isNewPickerUi || isCategoriesRefactorEnabled) {
                 val model =
-                    if (savedInstanceState != null) {
+                    if (!isFirstRun) {
                         wallpaperPreviewViewModel.wallpaper.value
                     } else {
                         persistentWallpaperModelRepository.wallpaperModel.value
@@ -116,8 +123,23 @@ class WallpaperPreviewActivity :
                     .getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java)
                     ?.convertToWallpaperModel()
             } ?: throw IllegalStateException("No wallpaper for previewing")
-        if (savedInstanceState == null) {
+        if (isFirstRun) {
             wallpaperPreviewRepository.setWallpaperModel(wallpaper)
+        }
+
+        if (isFirstRun && isInMultiWindowMode && isFullscreenPreviewEnabled()) {
+            requestFullscreenMode(
+                FULLSCREEN_MODE_REQUEST_ENTER,
+                object : OutcomeReceiver<Void, Throwable> {
+                    override fun onResult(result: Void) {}
+
+                    override fun onError(t: Throwable) {
+                        Log.e(TAG, "Error requesting fullscreen mode", t)
+                        onBackPressedWithToast()
+                    }
+                },
+            )
+            return
         }
 
         val navController =
@@ -194,11 +216,19 @@ class WallpaperPreviewActivity :
 
     override fun onResume() {
         super.onResume()
-        val isWindowingModeFreeform =
-            resources.configuration.windowConfiguration.windowingMode == WINDOWING_MODE_FREEFORM
-        if (isInMultiWindowMode && !isWindowingModeFreeform) {
-            Toast.makeText(this, R.string.wallpaper_exit_split_screen, Toast.LENGTH_SHORT).show()
-            onBackPressedDispatcher.onBackPressed()
+        if (isInMultiWindowMode) {
+            val isWindowingModeFreeform =
+                resources.configuration.windowConfiguration.windowingMode == WINDOWING_MODE_FREEFORM
+            if (isWindowingModeFreeform && !isFullscreenPreviewEnabled()) {
+                // Allow current devices in freeform mode to continue while fullscreen preview rolls
+                // out.
+                return
+            }
+            if (isFirstRun && isFullscreenPreviewEnabled()) {
+                // Don't dismiss the preview right away while it is still switching to fullscreen.
+                return
+            }
+            onBackPressedWithToast()
         }
     }
 
@@ -245,7 +275,17 @@ class WallpaperPreviewActivity :
         return wallpaperModelFactory.getWallpaperModel(appContext, this)
     }
 
+    private fun onBackPressedWithToast() {
+        // TODO(b/409622144) re-evaluate this string for freeform mode.
+        Toast.makeText(this, R.string.wallpaper_exit_split_screen, Toast.LENGTH_SHORT).show()
+        onBackPressedDispatcher.onBackPressed()
+    }
+
+    private fun isFullscreenPreviewEnabled() = BaseFlags.get().isFullscreenPreviewEnabled(this)
+
     companion object {
+        private const val TAG = "WallpaperPreviewActivity"
+
         /**
          * Returns a new [Intent] for the new picker UI that can be used to start
          * [WallpaperPreviewActivity].

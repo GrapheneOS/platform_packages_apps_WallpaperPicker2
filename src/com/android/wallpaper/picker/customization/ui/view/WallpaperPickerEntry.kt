@@ -139,6 +139,7 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
         collapsedButton.alpha = 1 - progress
         collapsedButton.isInvisible = progress == 1f
         expandedContainer.alpha = progress
+        expandedContainer.isInvisible = progress == 0f
         val radii = background.cornerRadii ?: FloatArray(8)
         val topCornerRadius =
             defaultCornerRadius +

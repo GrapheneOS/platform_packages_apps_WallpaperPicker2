@@ -232,6 +232,7 @@ constructor(
             .combine(_wallpaperConnectionColors) { _, wallpaperConnectionColors ->
                 wallpaperConnectionColors
             }
+            .distinctUntilChanged()
     val wallpaperColorsModel: Flow<WallpaperColorsModel> =
         merge(liveWallpaperColors, staticWallpaperPreviewViewModel.wallpaperColors).combine(
             isWallpaperColorPreviewEnabled
@@ -448,8 +449,22 @@ constructor(
         _showSetWallpaperDialog.value = false
     }
 
-    fun setWallpaperConnectionColors(wallpaperColors: WallpaperColorsModel) {
-        _wallpaperConnectionColors.value = wallpaperColors
+    fun setWallpaperConnectionColors(wallpaperColors: WallpaperColorsModel.Loaded) {
+        // Don't update the color if:
+        // 1. It's still loading and the update is null
+        // 2. It already had a color and the new color is null
+        if (
+            wallpaperColors.colors == null &&
+                (_wallpaperConnectionColors.value is WallpaperColorsModel.Loading ||
+                    (_wallpaperConnectionColors.value as? WallpaperColorsModel.Loaded)?.colors !=
+                        null)
+        ) {
+            return
+        }
+
+        if (_wallpaperConnectionColors.value != wallpaperColors) {
+            _wallpaperConnectionColors.value = wallpaperColors
+        }
     }
 
     fun getWorkspacePreviewConfig(

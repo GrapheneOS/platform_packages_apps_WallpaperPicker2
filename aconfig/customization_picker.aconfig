@@ -28,3 +28,10 @@ flag {
    description: "Refactor pieces of picker UI into compose."
    bug: "391918848"
 }
+
+flag {
+    name: "fullscreen_preview_flag"
+    namespace: "customization_picker"
+    description: "Enables full screen wallpaper preview"
+    bug: "409100074"
+}

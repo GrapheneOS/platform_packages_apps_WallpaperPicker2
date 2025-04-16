@@ -59,6 +59,7 @@ android_library {
         "flexbox",
         "hilt_android",
         "accessibility_settings_flags_lib",
+        "WindowManager-Shell-shared-AOSP",
         // Compose
         "PlatformComposeCore",
         "androidx.activity_activity-compose",
