@@ -58,6 +58,8 @@ class FloatingToolbarTabAdapter(
         return tabViewHolder
     }
 
+    // This function is called when tab view holders are binded after they are created or recycled,
+    // and whenever the tab's isSelected state is changed.
     override fun onBindViewHolder(
         holder: TabViewHolder,
         position: Int,
@@ -65,6 +67,7 @@ class FloatingToolbarTabAdapter(
     ) {
         val payload = if (payloads.isNotEmpty()) payloads[0] as? Int else null
         val item = getItem(position)
+        bindLabelColor(holder, item.isSelected)
         when (payload) {
             SELECT_ITEM -> {
                 // When transition from unselected to selected, initial state should be unselected
@@ -74,16 +77,16 @@ class FloatingToolbarTabAdapter(
                 // When transition from selected to unselected, initial state should be selected
                 bindViewHolder(holder, item.icon, item.text, true, item.onClick)
             }
-            else -> super.onBindViewHolder(holder, position, payloads)
+            else -> {
+                super.onBindViewHolder(holder, position, payloads)
+            }
         }
     }
 
+    // This function is called when tab view holders are binded after they are created or recycled.
     override fun onBindViewHolder(holder: TabViewHolder, position: Int) {
-        // Bind tab color in onBindViewHolder and destroy in onViewRecycled. Bind in this
-        // onBindViewHolder instead of the one with payload since this function is generally
-        // called when view holders are created or recycled, ensuring each view holder is only
-        // bound once, whereas the view holder with payload is called not only in the above cases,
-        // but also when the state is changed, which could result in multiple bindings.
+        // Bind tab color when view holder is binded. Set the holder as the lifecycle owner so the
+        // binding is destroyed when the holder is recycled.
         colorUpdateViewModel.get()?.let {
             ColorUpdateBinder.bind(
                 setColor = { color ->
@@ -91,15 +94,6 @@ class FloatingToolbarTabAdapter(
                         BlendModeColorFilter(color, BlendMode.SRC_ATOP)
                 },
                 color = it.colorSecondaryContainer,
-                shouldAnimate = shouldAnimateColor,
-                lifecycleOwner = holder,
-            )
-            ColorUpdateBinder.bind(
-                setColor = { color ->
-                    holder.icon.imageTintList = ColorStateList.valueOf(color)
-                    holder.label.setTextColor(color)
-                },
-                color = it.colorOnSecondaryContainer,
                 shouldAnimate = shouldAnimateColor,
                 lifecycleOwner = holder,
             )
@@ -126,6 +120,27 @@ class FloatingToolbarTabAdapter(
             holder.icon.layoutParams.apply { width = if (isSelected) iconSize else 0 }
         holder.container.background.alpha = if (isSelected) BACKGROUND_ALPHA_MAX else 0
         holder.itemView.setOnClickListener { onClick?.invoke() }
+    }
+
+    private fun bindLabelColor(holder: TabViewHolder, isSelected: Boolean) {
+        holder.labelColorBinding?.destroy()
+        holder.labelColorBinding =
+            colorUpdateViewModel.get()?.let {
+                ColorUpdateBinder.bind(
+                    setColor = { color ->
+                        holder.icon.imageTintList = ColorStateList.valueOf(color)
+                        holder.label.setTextColor(color)
+                    },
+                    color =
+                        if (isSelected) {
+                            it.colorOnSecondaryContainer
+                        } else {
+                            it.colorOnSurfaceVariant
+                        },
+                    shouldAnimate = shouldAnimateColor,
+                    lifecycleOwner = holder,
+                )
+            }
     }
 
     override fun onViewAttachedToWindow(holder: TabViewHolder) {
@@ -155,6 +170,7 @@ class FloatingToolbarTabAdapter(
         val container = itemView.requireViewById<ViewGroup>(R.id.tab_container)
         val icon = itemView.requireViewById<ImageView>(R.id.tab_icon)
         val label = itemView.requireViewById<TextView>(R.id.label_text)
+        var labelColorBinding: ColorUpdateBinder.Binding? = null
 
         private lateinit var lifecycleRegistry: LifecycleRegistry
         override val lifecycle: Lifecycle

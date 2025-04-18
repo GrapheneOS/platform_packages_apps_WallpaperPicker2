@@ -145,96 +145,98 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
 
                     if (item.status == PhotosErrorData.UNAUTHENTICATED && !isSignInBannerVisible) {
                         val viewStub = categoryHeader.findViewById<ViewStub>(R.id.sign_in_banner_id)
-                        val viewStubLayoutParams = viewStub.layoutParams
-                        val index = categoryHeader.indexOfChild(viewStub)
-                        categoryHeader.removeView(viewStub)
-                        signInBannerView?.layoutParams = viewStubLayoutParams
-                        categoryHeader.addView(signInBannerView, index)
+                        if (viewStub != null) {
+                            val viewStubLayoutParams = viewStub.layoutParams
+                            val index = categoryHeader.indexOfChild(viewStub)
+                            categoryHeader.removeView(viewStub)
+                            signInBannerView?.layoutParams = viewStubLayoutParams
+                            categoryHeader.addView(signInBannerView, index)
 
-                        val bannerTitle = bannerProvider?.getBannerTitle(signInBannerView)
-                        val bannerDescription =
-                            bannerProvider?.getBannerDescription(signInBannerView)
-                        val photoIcon = bannerProvider?.getIcon(signInBannerView)
-                        dismissButton?.setBackgroundColor(Color.TRANSPARENT)
+                            val bannerTitle = bannerProvider?.getBannerTitle(signInBannerView)
+                            val bannerDescription =
+                                bannerProvider?.getBannerDescription(signInBannerView)
+                            val photoIcon = bannerProvider?.getIcon(signInBannerView)
+                            dismissButton?.setBackgroundColor(Color.TRANSPARENT)
 
-                        // setting background for the overall sign in banner
-                        ColorUpdateBinder.bind(
-                            setColor = { color ->
-                                signInBannerView
-                                    ?.background
-                                    ?.let { DrawableCompat.wrap(it) }
-                                    ?.let { DrawableCompat.setTint(it, color) }
-                            },
-                            color = colorUpdateViewModel.colorSurfaceContainerHigh,
-                            shouldAnimate = shouldAnimateColor,
-                            lifecycleOwner = lifecycleOwner,
-                        )
+                            // setting background for the overall sign in banner
+                            ColorUpdateBinder.bind(
+                                setColor = { color ->
+                                    signInBannerView
+                                        ?.background
+                                        ?.let { DrawableCompat.wrap(it) }
+                                        ?.let { DrawableCompat.setTint(it, color) }
+                                },
+                                color = colorUpdateViewModel.colorSurfaceContainerHigh,
+                                shouldAnimate = shouldAnimateColor,
+                                lifecycleOwner = lifecycleOwner,
+                            )
 
-                        // setting text color of the banner title
-                        ColorUpdateBinder.bind(
-                            setColor = { color -> bannerTitle?.setTextColor(color) },
-                            color = colorUpdateViewModel.colorOnSurfaceVariant,
-                            shouldAnimate = shouldAnimateColor,
-                            lifecycleOwner = lifecycleOwner,
-                        )
+                            // setting text color of the banner title
+                            ColorUpdateBinder.bind(
+                                setColor = { color -> bannerTitle?.setTextColor(color) },
+                                color = colorUpdateViewModel.colorOnSurfaceVariant,
+                                shouldAnimate = shouldAnimateColor,
+                                lifecycleOwner = lifecycleOwner,
+                            )
 
-                        // setting text color of the banner description
-                        ColorUpdateBinder.bind(
-                            setColor = { color -> bannerDescription?.setTextColor(color) },
-                            color = colorUpdateViewModel.colorOnSurfaceVariant,
-                            shouldAnimate = shouldAnimateColor,
-                            lifecycleOwner = lifecycleOwner,
-                        )
+                            // setting text color of the banner description
+                            ColorUpdateBinder.bind(
+                                setColor = { color -> bannerDescription?.setTextColor(color) },
+                                color = colorUpdateViewModel.colorOnSurfaceVariant,
+                                shouldAnimate = shouldAnimateColor,
+                                lifecycleOwner = lifecycleOwner,
+                            )
 
-                        // setting color of the icon itself
-                        ColorUpdateBinder.bind(
-                            setColor = { color -> photoIcon?.setColorFilter(color) },
-                            color = colorUpdateViewModel.colorOnPrimary,
-                            shouldAnimate = shouldAnimateColor,
-                            lifecycleOwner = lifecycleOwner,
-                        )
+                            // setting color of the icon itself
+                            ColorUpdateBinder.bind(
+                                setColor = { color -> photoIcon?.setColorFilter(color) },
+                                color = colorUpdateViewModel.colorOnPrimary,
+                                shouldAnimate = shouldAnimateColor,
+                                lifecycleOwner = lifecycleOwner,
+                            )
 
-                        // setting background of the photos icon
-                        ColorUpdateBinder.bind(
-                            setColor = { color ->
-                                photoIcon
-                                    ?.background
-                                    ?.let { DrawableCompat.wrap(it) }
-                                    ?.let { DrawableCompat.setTint(it, color) }
-                            },
-                            color = colorUpdateViewModel.colorPrimary,
-                            shouldAnimate = shouldAnimateColor,
-                            lifecycleOwner = lifecycleOwner,
-                        )
+                            // setting background of the photos icon
+                            ColorUpdateBinder.bind(
+                                setColor = { color ->
+                                    photoIcon
+                                        ?.background
+                                        ?.let { DrawableCompat.wrap(it) }
+                                        ?.let { DrawableCompat.setTint(it, color) }
+                                },
+                                color = colorUpdateViewModel.colorPrimary,
+                                shouldAnimate = shouldAnimateColor,
+                                lifecycleOwner = lifecycleOwner,
+                            )
 
-                        // setting background for the sign in Button
-                        ColorUpdateBinder.bind(
-                            setColor = { color ->
-                                signInButton
-                                    ?.background
-                                    ?.let { DrawableCompat.wrap(it) }
-                                    ?.let { DrawableCompat.setTint(it, color) }
-                            },
-                            color = colorUpdateViewModel.colorPrimary,
-                            shouldAnimate = shouldAnimateColor,
-                            lifecycleOwner = lifecycleOwner,
-                        )
+                            // setting background for the sign in Button
+                            ColorUpdateBinder.bind(
+                                setColor = { color ->
+                                    signInButton
+                                        ?.background
+                                        ?.let { DrawableCompat.wrap(it) }
+                                        ?.let { DrawableCompat.setTint(it, color) }
+                                },
+                                color = colorUpdateViewModel.colorPrimary,
+                                shouldAnimate = shouldAnimateColor,
+                                lifecycleOwner = lifecycleOwner,
+                            )
 
-                        // setting text color for the dismiss Button
-                        ColorUpdateBinder.bind(
-                            setColor = { color -> dismissButton?.setTextColor(color) },
-                            color = colorUpdateViewModel.colorPrimary,
-                            shouldAnimate = shouldAnimateColor,
-                            lifecycleOwner = lifecycleOwner,
-                        )
+                            // setting text color for the dismiss Button
+                            ColorUpdateBinder.bind(
+                                setColor = { color -> dismissButton?.setTextColor(color) },
+                                color = colorUpdateViewModel.colorPrimary,
+                                shouldAnimate = shouldAnimateColor,
+                                lifecycleOwner = lifecycleOwner,
+                            )
 
-                        // setting text color for the sign in Button
-                        ColorUpdateBinder.bind(
-                            setColor = { color -> signInButton?.setTextColor(color) },
-                            color = colorUpdateViewModel.colorOnPrimary,
-                            shouldAnimate = shouldAnimateColor,
-                            lifecycleOwner = lifecycleOwner,
-                        )
+                            // setting text color for the sign in Button
+                            ColorUpdateBinder.bind(
+                                setColor = { color -> signInButton?.setTextColor(color) },
+                                color = colorUpdateViewModel.colorOnPrimary,
+                                shouldAnimate = shouldAnimateColor,
+                                lifecycleOwner = lifecycleOwner,
+                            )
+                        }
                     }
 
                     // This is needed in order to allow activity starts using pending intent

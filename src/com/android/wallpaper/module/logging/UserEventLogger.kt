@@ -63,6 +63,41 @@ interface UserEventLogger {
     /** Logs when clicking the explore button in the wallpaper information dialog. */
     fun logWallpaperExploreButtonClicked()
 
+    /** Log when entering a screen */
+    fun logEnterScreen(@CustomizationPickerScreen screen: Int)
+
+    @IntDef(
+        StyleEnums.LOCATION_PREFERENCE_UNSPECIFIED,
+        StyleEnums.LOCATION_UNAVAILABLE,
+        StyleEnums.LOCATION_CURRENT,
+        StyleEnums.LOCATION_MANUAL,
+    )
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class LocationPreference
+
+    @IntDef(
+        StyleEnums.DATE_PREFERENCE_UNSPECIFIED,
+        StyleEnums.DATE_UNAVAILABLE,
+        StyleEnums.DATE_MANUAL,
+    )
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class DatePreference
+
+    @IntDef(
+        StyleEnums.LAUNCHED_PREFERENCE_UNSPECIFIED,
+        StyleEnums.LAUNCHED_LAUNCHER,
+        StyleEnums.LAUNCHED_SETTINGS,
+        StyleEnums.LAUNCHED_SUW,
+        StyleEnums.LAUNCHED_TIPS,
+        StyleEnums.LAUNCHED_LAUNCH_ICON,
+        StyleEnums.LAUNCHED_CROP_AND_SET_ACTION,
+        StyleEnums.LAUNCHED_DEEP_LINK,
+        StyleEnums.LAUNCHED_SETTINGS_SEARCH,
+        StyleEnums.LAUNCHED_KEYGUARD,
+    )
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class LaunchedPreference
+
     /**
      * Possible actions for cinematic effect. These actions would be used for effect apply, effect
      * probe, effect download.
@@ -73,7 +108,7 @@ interface UserEventLogger {
         StyleEnums.EFFECT_APPLIED_ON_FAILED,
         StyleEnums.EFFECT_APPLIED_OFF,
         StyleEnums.EFFECT_APPLIED_ABORTED,
-        StyleEnums.EFFECT_APPLIED_STARTED
+        StyleEnums.EFFECT_APPLIED_STARTED,
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class EffectStatus
@@ -102,6 +137,17 @@ interface UserEventLogger {
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class WallpaperDestination
+
+    @IntDef(
+        StyleEnums.SCREEN_UNSPECIFIED,
+        StyleEnums.SCREEN_COLORS,
+        StyleEnums.SCREEN_ICONS,
+        StyleEnums.SCREEN_LAYOUT,
+        StyleEnums.SCREEN_CLOCK,
+        StyleEnums.SCREEN_SHORTCUTS,
+    )
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class CustomizationPickerScreen
 
     companion object {
         @WallpaperDestination

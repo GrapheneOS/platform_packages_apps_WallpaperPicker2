@@ -52,4 +52,6 @@ open class NoOpUserEventLogger : UserEventLogger {
     override fun logResetApplied() {}
 
     override fun logWallpaperExploreButtonClicked() {}
+
+    override fun logEnterScreen(screen: Int) {}
 }

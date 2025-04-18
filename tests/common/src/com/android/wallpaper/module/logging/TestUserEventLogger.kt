@@ -46,7 +46,7 @@ open class TestUserEventLogger @Inject constructor() : UserEventLogger {
         effect: String,
         status: Int,
         timeElapsedMillis: Long,
-        resultCode: Int
+        resultCode: Int,
     ) {}
 
     override fun logEffectProbe(effect: String, @EffectStatus status: Int) {}
@@ -60,4 +60,6 @@ open class TestUserEventLogger @Inject constructor() : UserEventLogger {
     override fun logResetApplied() {}
 
     override fun logWallpaperExploreButtonClicked() {}
+
+    override fun logEnterScreen(screen: Int) {}
 }

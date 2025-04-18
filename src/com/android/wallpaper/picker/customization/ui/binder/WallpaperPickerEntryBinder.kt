@@ -98,16 +98,6 @@ object WallpaperPickerEntryBinder {
 
         ColorUpdateBinder.bind(
             setColor = { color ->
-                view.moreWallpapersButton.setTextColor(color)
-                view.collapsedButton.setTextColor(color)
-            },
-            color = colorUpdateViewModel.colorPrimary,
-            shouldAnimate = isOnMainScreen,
-            lifecycleOwner = lifecycleOwner,
-        )
-
-        ColorUpdateBinder.bind(
-            setColor = { color ->
                 TextViewCompat.setCompoundDrawableTintList(
                     view.moreWallpapersButton,
                     ColorStateList.valueOf(color),
@@ -116,8 +106,10 @@ object WallpaperPickerEntryBinder {
                     view.collapsedButton,
                     ColorStateList.valueOf(color),
                 )
+                view.moreWallpapersButton.setTextColor(color)
+                view.collapsedButton.setTextColor(color)
             },
-            color = colorUpdateViewModel.colorOnPrimaryContainer,
+            color = colorUpdateViewModel.colorPrimary,
             shouldAnimate = isOnMainScreen,
             lifecycleOwner = lifecycleOwner,
         )
