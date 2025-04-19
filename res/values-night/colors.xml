@@ -51,5 +51,9 @@
     <color name="picker_fragment_background">@color/system_surface_container_high</color>
     <color name="floating_toolbar_background">@color/system_surface_container_high</color>
 
+    <!-- Icon preview color -->
+    <color name="themed_icon_color">@android:color/system_accent1_200</color>
+    <color name="themed_icon_background_color">@android:color/system_accent2_800</color>
+
     <color name="ripple_material">#33ffffff</color>
 </resources>

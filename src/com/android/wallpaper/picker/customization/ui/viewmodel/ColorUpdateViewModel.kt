@@ -20,6 +20,7 @@ import android.annotation.ColorInt
 import android.content.Context
 import com.android.customization.picker.mode.data.repository.DarkModeStateRepository
 import com.android.systemui.monet.ColorScheme
+import com.android.systemui.monet.CustomDynamicColors
 import com.android.systemui.monet.Style
 import com.android.wallpaper.R
 import com.google.ux.material.libmonet.dynamiccolor.DynamicColor
@@ -178,6 +179,12 @@ constructor(
                 MaterialDynamicColors().surfaceContainerHigh()
             },
         )
+
+    // Custom colors
+    val themedIconColor =
+        createColorFlow(R.color.themed_icon_color, CustomDynamicColors().onThemeApp())
+    val themedIconBackgroundColor =
+        createColorFlow(R.color.themed_icon_background_color, CustomDynamicColors().themeApp())
 
     fun previewColors(@ColorInt colorSeed: Int, @Style.Type style: Int, isDarkMode: Boolean) {
         previewingColorScheme.value = ColorScheme(colorSeed, isDarkMode, style).materialScheme

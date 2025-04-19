@@ -280,7 +280,6 @@
             android:alpha="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/lock_preview"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Constraint
