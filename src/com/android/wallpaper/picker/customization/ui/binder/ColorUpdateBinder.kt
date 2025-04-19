@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 
 object ColorUpdateBinder {
 
-    private const val COLOR_ANIMATION_DURATION_MILLIS = 1500L
+    const val COLOR_ANIMATION_DURATION_MILLIS = 1500L
 
     interface Binding {
         /** Destroys the binding in spite of lifecycle state. */

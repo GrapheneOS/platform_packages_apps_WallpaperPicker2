@@ -190,6 +190,10 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
+    <style name="WallpaperPicker.Preview.TextAppearance.NoAllCaps.LabelLarge" />
+
+    <style name="WallpaperPicker.Preview.TextAppearance.NoAllCaps.LabelLargeEmphasized" />
+
     <!-- Set wallpaper destination item -->
     <!-- Studio can't directly reference ?androidprv:attr/textColorOnAccent here,
      so we set the text color on the dialog items instead. -->
@@ -319,6 +323,10 @@
     <!-- Main page font styles -->
     <style name="TextAppearance.DeviceDefault.Small"
         parent="@android:style/TextAppearance.DeviceDefault.Small" />
+
+    <style name="TextAppearance.DeviceDefault.Small.LabelMedium" />
+
+    <style name="TextAppearance.DeviceDefault.Small.LabelMediumEmphasized" />
 
     <style name="TextAppearance.DeviceDefault.Small.LabelLargeEmphasized" />
 

@@ -67,7 +67,12 @@ class FloatingToolbarTabAdapter(
     ) {
         val payload = if (payloads.isNotEmpty()) payloads[0] as? Int else null
         val item = getItem(position)
-        bindLabelColor(holder, item.isSelected)
+        bindLabelContentColor(holder, item.isSelected)
+        holder.label.setTextAppearance(
+            if (item.isSelected)
+                R.style.WallpaperPicker_Preview_TextAppearance_NoAllCaps_LabelLargeEmphasized
+            else R.style.WallpaperPicker_Preview_TextAppearance_NoAllCaps_LabelLarge
+        )
         when (payload) {
             SELECT_ITEM -> {
                 // When transition from unselected to selected, initial state should be unselected
@@ -122,7 +127,7 @@ class FloatingToolbarTabAdapter(
         holder.itemView.setOnClickListener { onClick?.invoke() }
     }
 
-    private fun bindLabelColor(holder: TabViewHolder, isSelected: Boolean) {
+    private fun bindLabelContentColor(holder: TabViewHolder, isSelected: Boolean) {
         holder.labelColorBinding?.destroy()
         holder.labelColorBinding =
             colorUpdateViewModel.get()?.let {
