@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.category.ui.binder.BannerProvider
 import com.android.wallpaper.picker.category.ui.view.viewholder.CategorySectionViewHolder
+import com.android.wallpaper.picker.category.ui.view.viewholder.CuratedPhotoSectionViewHolder
 import com.android.wallpaper.picker.category.ui.viewmodel.PhotosViewModel
 import com.android.wallpaper.picker.category.ui.viewmodel.SectionViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
@@ -46,33 +47,61 @@ class CategorySectionsAdapter(
         return items.size
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return when (items[position]) {
+            is PhotosViewModel -> SectionViewType.PHOTOS.value
+            is SectionViewModel -> SectionViewType.CATEGORY.value
+            else ->
+                throw IllegalStateException(
+                    "Unsupported view model type found at position $position" +
+                        "Adapter only handles PhotosViewModel and SectionViewModel."
+                )
+        }
+    }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val section: SectionViewModel = items[position]
-        if (section is PhotosViewModel) {
-            (holder as CategorySectionViewHolder?)?.bind(
-                item = section,
-                colorUpdateViewModel = colorUpdateViewModel,
-                shouldAnimateColor = shouldAnimateColor,
-                lifecycleOwner = lifecycleOwner,
-                bannerProvider = bannerProvider,
-                isSignInBannerVisible = section.isDismissed,
-                onSignInBannerDismissed = onSignInBannerDismissed,
-            )
-        } else {
-            (holder as CategorySectionViewHolder?)?.bind(
-                item = section,
-                colorUpdateViewModel = colorUpdateViewModel,
-                shouldAnimateColor = shouldAnimateColor,
-                lifecycleOwner = lifecycleOwner,
-                bannerProvider = null,
-                isSignInBannerVisible = false,
-            )
+        when (holder) {
+            is CuratedPhotoSectionViewHolder ->
+                holder.bind(
+                    item = (section as PhotosViewModel),
+                    colorUpdateViewModel = colorUpdateViewModel,
+                    shouldAnimateColor = shouldAnimateColor,
+                    lifecycleOwner = lifecycleOwner,
+                    bannerProvider = bannerProvider,
+                    isSignInBannerVisible = (section as PhotosViewModel).isDismissed,
+                    onSignInBannerDismissed = onSignInBannerDismissed,
+                )
+            is CategorySectionViewHolder ->
+                holder.bind(
+                    item = section,
+                    colorUpdateViewModel = colorUpdateViewModel,
+                    shouldAnimateColor = shouldAnimateColor,
+                    lifecycleOwner = lifecycleOwner,
+                )
         }
     }
 
     private fun createIndividualHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view: View = layoutInflater.inflate(R.layout.category_section_view, parent, false)
-        return CategorySectionViewHolder(view, windowWidth)
+        return when (viewType) {
+            SectionViewType.PHOTOS.value -> {
+                CuratedPhotoSectionViewHolder(view, windowWidth)
+            }
+            SectionViewType.CATEGORY.value -> {
+                CategorySectionViewHolder(view, windowWidth)
+            }
+            else -> throw IllegalArgumentException("Invalid view type: $viewType")
+        }
+    }
+
+    enum class SectionViewType(val value: Int) {
+        CATEGORY(1),
+        PHOTOS(2),
+    }
+
+    companion object {
+        private const val TAG = "CategorySectionsAdapter"
     }
 }

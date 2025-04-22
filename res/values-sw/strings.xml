@@ -130,7 +130,7 @@
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Badilisha mandhari"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Onyesho la kukagua mandhari kwenye skrini iliyofungwa"</string>
     <string name="apply_btn" msgid="5764555565943538528">"Tumia"</string>
-    <string name="apply_wallpaper_title_text" msgid="2100301064316744087">"Ungependa kutumia kama mandhari?"</string>
+    <string name="apply_wallpaper_title_text" msgid="2100301064316744087">"Ungependa kutumia mandhari?"</string>
     <string name="accessibility_customize_hidden" msgid="6320568529768181691">"Kidirisha cha kuweka mapendeleo kimefichwa"</string>
     <string name="accessibility_customize_shown" msgid="590964727831547651">"Kidirisha cha kuweka mapendeleo kinaonyeshwa"</string>
     <string name="accessibility_info_hidden" msgid="2288603712350168107">"Maelezo yamefichwa"</string>
@@ -157,6 +157,5 @@
     <string name="zoomed_to_percent" msgid="1243039994190840132">"Umekuza hadi %d%%"</string>
     <string name="max_zoom_percentage" msgid="2111670558746866030">"Umefikia asilimia ya juu zaidi ya kukuza"</string>
     <string name="min_zoom_percentage" msgid="5931879817379214316">"Umefikia asilimia ya chini zaidi ya kukuza"</string>
-    <!-- no translation found for categories_collection_label (6863200447424250097) -->
-    <skip />
+    <string name="categories_collection_label" msgid="6863200447424250097">"Mkusanyiko"</string>
 </resources>

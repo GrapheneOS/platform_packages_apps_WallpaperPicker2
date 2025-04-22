@@ -17,7 +17,11 @@
 
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
+import android.content.Context
+import android.os.Looper
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SmallTest
+import com.android.wallpaper.picker.broadcast.BroadcastDispatcher
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -55,6 +59,7 @@ class WallpaperQuickSwitchViewModelTest {
     fun setUp() {
         client = FakeWallpaperClient()
 
+        val context: Context = ApplicationProvider.getApplicationContext()
         val testDispatcher = StandardTestDispatcher()
         Dispatchers.setMain(testDispatcher)
         testScope = TestScope(testDispatcher)
@@ -66,7 +71,8 @@ class WallpaperQuickSwitchViewModelTest {
                         client = client,
                         wallpaperPreferences = TestWallpaperPreferences(),
                         backgroundDispatcher = testDispatcher,
-                    ),
+                        broadcastDispatcher = BroadcastDispatcher(context, Looper.getMainLooper()),
+                    )
             )
         underTest =
             WallpaperQuickSwitchViewModel(
@@ -86,10 +92,7 @@ class WallpaperQuickSwitchViewModelTest {
     fun `initial options`() =
         testScope.runTest {
             val options = collectLastValue(underTest.options)
-            assertOptions(
-                observed = options(),
-                expected = expectations(),
-            )
+            assertOptions(observed = options(), expected = expectations())
         }
 
     @Test
@@ -99,31 +102,13 @@ class WallpaperQuickSwitchViewModelTest {
 
             val models =
                 listOf(
-                    WallpaperModel(
-                        wallpaperId = "aaa",
-                        placeholderColor = 1200,
-                        title = "title1",
-                    ),
-                    WallpaperModel(
-                        wallpaperId = "bbb",
-                        placeholderColor = 1300,
-                        title = "title2",
-                    ),
-                    WallpaperModel(
-                        wallpaperId = "ccc",
-                        placeholderColor = 1400,
-                        title = "title3",
-                    ),
+                    WallpaperModel(wallpaperId = "aaa", placeholderColor = 1200, title = "title1"),
+                    WallpaperModel(wallpaperId = "bbb", placeholderColor = 1300, title = "title2"),
+                    WallpaperModel(wallpaperId = "ccc", placeholderColor = 1400, title = "title3"),
                 )
             client.setRecentWallpapers(buildMap { put(WallpaperDestination.HOME, models) })
 
-            assertOptions(
-                observed = options(),
-                expected =
-                    expectations(
-                        models = models,
-                    ),
-            )
+            assertOptions(observed = options(), expected = expectations(models = models))
         }
 
     @Test
@@ -137,18 +122,12 @@ class WallpaperQuickSwitchViewModelTest {
                         wallpaperId = wp.wallpaperId,
                         placeholderColor = wp.placeholderColor,
                         lastUpdated = if (idx == 0) 100 else wp.lastUpdated,
-                        title = "title1"
+                        title = "title1",
                     )
                 }
             client.setRecentWallpapers(buildMap { put(WallpaperDestination.HOME, models) })
 
-            assertOptions(
-                observed = options(),
-                expected =
-                    expectations(
-                        models = models,
-                    ),
-            )
+            assertOptions(observed = options(), expected = expectations(models = models))
         }
 
     @Test
@@ -165,10 +144,7 @@ class WallpaperQuickSwitchViewModelTest {
 
             assertOptions(
                 observed = options(),
-                expected =
-                    expectations(
-                        selectingIndex = selectedIndex,
-                    ),
+                expected = expectations(selectingIndex = selectedIndex),
             )
 
             // Unpause the client so we can examine the final state.
@@ -176,10 +152,7 @@ class WallpaperQuickSwitchViewModelTest {
             runCurrent()
             assertOptions(
                 observed = options(),
-                expected =
-                    expectations(
-                        selectedIndex = selectedIndex,
-                    ),
+                expected = expectations(selectedIndex = selectedIndex),
             )
         }
 

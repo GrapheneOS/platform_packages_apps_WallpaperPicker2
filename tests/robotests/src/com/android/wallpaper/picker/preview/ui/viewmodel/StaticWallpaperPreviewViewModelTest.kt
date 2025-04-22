@@ -27,8 +27,10 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.Rect
+import android.os.Looper
 import androidx.test.core.app.ActivityScenario
 import com.android.wallpaper.module.InjectorProvider
+import com.android.wallpaper.picker.broadcast.BroadcastDispatcher
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import com.android.wallpaper.picker.preview.PreviewTestActivity
@@ -126,6 +128,7 @@ class StaticWallpaperPreviewViewModelTest {
                 wallpaperClient,
                 wallpaperPreferences,
                 testDispatcher,
+                BroadcastDispatcher(appContext, Looper.getMainLooper()),
             )
         wallpaperPreviewRepository = WallpaperPreviewRepository(wallpaperPreferences)
         interactor =

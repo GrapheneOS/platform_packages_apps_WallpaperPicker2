@@ -491,4 +491,13 @@
     <!-- Dimensions for the icon on the Choose Photos button -->
     <dimen name="choose_photo_icon_width">24dp</dimen>
     <dimen name="choose_photo_icon_height">24dp</dimen>
+
+    <!-- Dimensions for the suggested chip -->
+    <dimen name="suggested_chip_background_radius">24dp</dimen>
+    <dimen name="suggested_chip_button_height">48dp</dimen>
+    <dimen name="suggested_chip_button_padding_bottom">10dp</dimen>
+    <dimen name="suggested_chip_icon_padding">12dp</dimen>
+    <dimen name="suggested_chip_text_size">14sp</dimen>
+    <dimen name="suggested_chip_image_size">24dp</dimen>
+    <dimen name="suggested_chip_cancel_button_size">20dp</dimen>
 </resources>

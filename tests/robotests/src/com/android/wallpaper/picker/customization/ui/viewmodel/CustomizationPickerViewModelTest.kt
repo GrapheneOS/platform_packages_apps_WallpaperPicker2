@@ -17,9 +17,13 @@
 
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
+import android.content.Context
+import android.os.Looper
 import androidx.lifecycle.SavedStateHandle
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SmallTest
 import com.android.wallpaper.module.logging.TestUserEventLogger
+import com.android.wallpaper.picker.broadcast.BroadcastDispatcher
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
@@ -53,6 +57,7 @@ class CustomizationPickerViewModelTest {
 
     @Before
     fun setUp() {
+        val context: Context = ApplicationProvider.getApplicationContext()
         val testDispatcher = StandardTestDispatcher()
         testScope = TestScope(testDispatcher)
         savedStateHandle = SavedStateHandle()
@@ -70,7 +75,8 @@ class CustomizationPickerViewModelTest {
                         client = FakeWallpaperClient(),
                         wallpaperPreferences = TestWallpaperPreferences(),
                         backgroundDispatcher = testDispatcher,
-                    ),
+                        broadcastDispatcher = BroadcastDispatcher(context, Looper.getMainLooper()),
+                    )
             )
 
         underTest =

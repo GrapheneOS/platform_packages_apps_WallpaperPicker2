@@ -17,8 +17,12 @@
 
 package com.android.wallpaper.picker.customization.domain.interactor
 
+import android.content.Context
+import android.os.Looper
 import android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_RESET
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SmallTest
+import com.android.wallpaper.picker.broadcast.BroadcastDispatcher
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -35,11 +39,11 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.robolectric.RobolectricTestRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
-@RunWith(JUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class WallpaperSnapshotRestorerTest {
 
     private lateinit var underTest: WallpaperSnapshotRestorer
@@ -65,6 +69,7 @@ class WallpaperSnapshotRestorerTest {
                 }
             }
 
+        val context: Context = ApplicationProvider.getApplicationContext()
         underTest =
             WallpaperSnapshotRestorer(
                 scope = testScope.backgroundScope,
@@ -76,8 +81,10 @@ class WallpaperSnapshotRestorerTest {
                                 client = wallpaperClient,
                                 wallpaperPreferences = TestWallpaperPreferences(),
                                 backgroundDispatcher = testDispatcher,
-                            ),
-                    )
+                                broadcastDispatcher =
+                                    BroadcastDispatcher(context, Looper.getMainLooper()),
+                            )
+                    ),
             )
     }
 

@@ -180,11 +180,21 @@
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/customization_option_container_horizontal_padding">
 
+                <ViewStub
+                    android:id="@+id/stub_pack_theme_suggested_chip"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:inflatedId="@+id/stub_pack_theme_suggested_chip"
+                    android:layout="@layout/stub_pack_theme_suggested_chip"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <com.android.wallpaper.picker.customization.ui.view.WallpaperPickerEntry
                     android:id="@+id/wallpaper_picker_entry"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/stub_pack_theme_suggested_chip"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 

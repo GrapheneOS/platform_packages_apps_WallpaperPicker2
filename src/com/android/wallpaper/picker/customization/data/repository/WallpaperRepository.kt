@@ -18,6 +18,8 @@
 package com.android.wallpaper.picker.customization.data.repository
 
 import android.app.WallpaperColors
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
@@ -25,6 +27,7 @@ import android.util.LruCache
 import com.android.wallpaper.asset.Asset
 import com.android.wallpaper.module.WallpaperPreferences
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
+import com.android.wallpaper.picker.broadcast.BroadcastDispatcher
 import com.android.wallpaper.picker.customization.data.content.WallpaperClient
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -41,8 +44,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 
@@ -55,16 +61,32 @@ constructor(
     private val client: WallpaperClient,
     private val wallpaperPreferences: WallpaperPreferences,
     @BackgroundDispatcher private val backgroundDispatcher: CoroutineDispatcher,
+    broadcastDispatcher: BroadcastDispatcher,
 ) {
     val maxOptions = MAX_OPTIONS
 
     private val thumbnailCache = LruCache<String, Bitmap>(maxOptions)
 
+    private val wallpaperChanged =
+        broadcastDispatcher.broadcastFlow(IntentFilter(Intent.ACTION_WALLPAPER_CHANGED)).onStart {
+            emit(Unit)
+        }
+
     /** The ID of the currently-selected wallpaper. */
     fun selectedWallpaperId(destination: WallpaperDestination): StateFlow<String> {
-        return client
-            .recentWallpapers(destination = destination, limit = 1)
+        // TODO(b/395679036) Switch to wallpaper changed intent and WallpaperInstance
+        // WallpaperClient#recentWallpapers is mostly used to detect when wallpaper changes, with
+        // the actual value coming from preferences - see `currentWallpaperKey()`. Flow
+        // `wallpaperChanged` was added as an additional means of detecting change since some
+        // recent wallpapers do not cause the recentWallpapers flow to emit (b/411633819).
+        return combine(
+                wallpaperChanged,
+                client.recentWallpapers(destination = destination, limit = 1),
+            ) { _, wallpaperId ->
+                wallpaperId
+            }
             .map { previews -> currentWallpaperKey(destination, previews) }
+            .distinctUntilChanged()
             .flowOn(backgroundDispatcher)
             .stateIn(
                 scope = scope,
@@ -73,6 +95,11 @@ constructor(
             )
     }
 
+    /**
+     * Returns the key used as an index into the recent wallpapers list for the current wallpaper.
+     * Typically this comes from wallpaper preferences; [previews] is only used as a fallback.
+     */
+    // TODO(b/395679036) Remove the use of local preferences
     private fun currentWallpaperKey(
         destination: WallpaperDestination,
         previews: List<WallpaperModel>?,
@@ -90,6 +117,7 @@ constructor(
 
     private val _selectingWallpaperId =
         MutableStateFlow<Map<WallpaperDestination, String?>>(emptyMap())
+
     /**
      * The ID of the wallpaper that is in the process of becoming the selected wallpaper or `null`
      * if no such transaction is currently taking place.
@@ -182,6 +210,7 @@ constructor(
 
     companion object {
         const val DEFAULT_KEY = "default_missing_key"
+
         /** The maximum number of options to show, including the currently-selected one. */
         private const val MAX_OPTIONS = 5
     }

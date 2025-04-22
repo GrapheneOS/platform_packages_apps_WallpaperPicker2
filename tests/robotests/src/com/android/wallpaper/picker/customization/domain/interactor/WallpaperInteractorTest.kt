@@ -17,9 +17,13 @@
 
 package com.android.wallpaper.picker.customization.domain.interactor
 
+import android.content.Context
+import android.os.Looper
 import android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SmallTest
 import com.android.wallpaper.model.Screen
+import com.android.wallpaper.picker.broadcast.BroadcastDispatcher
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
@@ -34,11 +38,11 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.robolectric.RobolectricTestRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
-@RunWith(JUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class WallpaperInteractorTest {
 
     private lateinit var underTest: WallpaperInteractor
@@ -50,6 +54,7 @@ class WallpaperInteractorTest {
     fun setUp() {
         client = FakeWallpaperClient()
 
+        val context: Context = ApplicationProvider.getApplicationContext()
         val testDispatcher = StandardTestDispatcher()
         testScope = TestScope(testDispatcher)
         underTest =
@@ -60,7 +65,8 @@ class WallpaperInteractorTest {
                         client = client,
                         wallpaperPreferences = TestWallpaperPreferences(),
                         backgroundDispatcher = testDispatcher,
-                    ),
+                        broadcastDispatcher = BroadcastDispatcher(context, Looper.getMainLooper()),
+                    )
             )
     }
 
@@ -71,7 +77,7 @@ class WallpaperInteractorTest {
                 collectLastValue(
                     underTest.previews(
                         destination = WallpaperDestination.HOME,
-                        maxResults = FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.size - 1
+                        maxResults = FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.size - 1,
                     )
                 )
 
@@ -111,12 +117,12 @@ class WallpaperInteractorTest {
             underTest.setRecentWallpaper(
                 SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
                 WallpaperDestination.HOME,
-                homeWallpaperId1
+                homeWallpaperId1,
             )
             underTest.setRecentWallpaper(
                 SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
                 WallpaperDestination.LOCK,
-                lockWallpaperId1
+                lockWallpaperId1,
             )
             assertThat(homeWallpaperUpdateEvents()).isNotEqualTo(homeWallpaperUpdateOutput1)
             assertThat(lockWallpaperUpdateEvents()).isNotEqualTo(lockWallpaperUpdateOutput1)
@@ -128,12 +134,12 @@ class WallpaperInteractorTest {
             underTest.setRecentWallpaper(
                 SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
                 WallpaperDestination.HOME,
-                homeWallpaperId2
+                homeWallpaperId2,
             )
             underTest.setRecentWallpaper(
                 SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
                 WallpaperDestination.LOCK,
-                lockWallpaperId2
+                lockWallpaperId2,
             )
             assertThat(homeWallpaperUpdateEvents()).isNotEqualTo(homeWallpaperUpdateOutput2)
             assertThat(lockWallpaperUpdateEvents()).isEqualTo(lockWallpaperUpdateOutput2)
@@ -146,14 +152,14 @@ class WallpaperInteractorTest {
                 collectLastValue(
                     underTest.previews(
                         destination = WallpaperDestination.HOME,
-                        maxResults = FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.size
+                        maxResults = FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.size,
                     )
                 )
             val lockPreviews =
                 collectLastValue(
                     underTest.previews(
                         destination = WallpaperDestination.LOCK,
-                        maxResults = FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.size
+                        maxResults = FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.size,
                     )
                 )
             val selectedHomeWallpaperId =
@@ -180,12 +186,12 @@ class WallpaperInteractorTest {
             underTest.setRecentWallpaper(
                 SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
                 WallpaperDestination.HOME,
-                homeWallpaperId
+                homeWallpaperId,
             )
             underTest.setRecentWallpaper(
                 SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
                 WallpaperDestination.LOCK,
-                lockWallpaperId
+                lockWallpaperId,
             )
             assertThat(homePreviews()).isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS)
             assertThat(lockPreviews()).isEqualTo(FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS)

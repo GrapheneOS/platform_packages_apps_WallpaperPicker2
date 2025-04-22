@@ -26,6 +26,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
+import com.android.wallpaper.config.BaseFlags.Companion.get
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.Screen.HOME_SCREEN
 import com.android.wallpaper.model.Screen.LOCK_SCREEN
@@ -33,6 +34,7 @@ import com.android.wallpaper.picker.customization.shared.model.CategoryType
 import com.android.wallpaper.picker.customization.ui.CustomizationPickerActivity2
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.picker.customization.ui.util.EmptyTransitionListener
+import com.android.wallpaper.picker.customization.ui.view.PackThemeSuggestedChip
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
@@ -72,6 +74,7 @@ object CustomizationPickerBinder2 {
         navigateToPackThemeActivity: (Intent) -> Unit,
         navigateToWallpaperCollectionScreen:
             ((collectionId: String, categoryType: CategoryType) -> Unit)?,
+        packThemeSuggestedChip: PackThemeSuggestedChip?,
     ) {
         val lockCustomizationOptionContainer: LinearLayout =
             view.requireViewById(R.id.lock_customization_option_container)
@@ -124,6 +127,17 @@ object CustomizationPickerBinder2 {
                         }
                     }
                 }
+            }
+        }
+
+        if (get().isPackThemeEnabled()) {
+            packThemeSuggestedChip?.let {
+                SuggestedEntryBinder.bind(
+                    view = it,
+                    viewModel = viewModel,
+                    colorUpdateViewModel = colorUpdateViewModel,
+                    lifecycleOwner = lifecycleOwner,
+                )
             }
         }
 

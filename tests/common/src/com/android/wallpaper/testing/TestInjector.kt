@@ -56,6 +56,7 @@ import com.android.wallpaper.picker.MyPhotosStarter
 import com.android.wallpaper.picker.PreviewActivity
 import com.android.wallpaper.picker.PreviewFragment
 import com.android.wallpaper.picker.ViewOnlyPreviewActivity
+import com.android.wallpaper.picker.broadcast.BroadcastDispatcher
 import com.android.wallpaper.picker.category.wrapper.WallpaperCategoryWrapper
 import com.android.wallpaper.picker.customization.data.repository.WallpaperColorsRepository
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
@@ -87,6 +88,7 @@ constructor(
     private val testStatusNotifier: TestPackageStatusNotifier,
     private val currentWallpaperInfoFactory: FakeCurrentWallpaperInfoFactory,
     private val wallpaperRefresher: FakeWallpaperRefresher,
+    private val broadcastDispatcher: BroadcastDispatcher,
 ) : Injector {
     private var appScope: CoroutineScope? = null
     private var alarmManagerWrapper: AlarmManagerWrapper? = null
@@ -290,6 +292,7 @@ constructor(
                             client = getWallpaperClient(context),
                             wallpaperPreferences = getPreferences(context = context),
                             backgroundDispatcher = Dispatchers.IO,
+                            broadcastDispatcher = broadcastDispatcher,
                         )
                 )
                 .also { wallpaperInteractor = it }

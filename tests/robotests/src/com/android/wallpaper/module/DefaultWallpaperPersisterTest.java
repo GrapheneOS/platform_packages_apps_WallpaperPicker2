@@ -32,6 +32,7 @@ import static org.robolectric.shadows.ShadowLooper.shadowMainLooper;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -42,6 +43,7 @@ import com.android.wallpaper.module.DefaultWallpaperPersisterTest.TestSetWallpap
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
 import com.android.wallpaper.module.logging.TestUserEventLogger;
 import com.android.wallpaper.network.Requester;
+import com.android.wallpaper.picker.broadcast.BroadcastDispatcher;
 import com.android.wallpaper.picker.category.wrapper.WallpaperCategoryWrapper;
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository;
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor;
@@ -104,13 +106,16 @@ public class DefaultWallpaperPersisterTest {
         TestDispatcher testDispatcher = StandardTestDispatcher(null, null);
         TestScope testScope = TestScopeKt.TestScope(testDispatcher);
         mTestPackageStatusNotifier = new TestPackageStatusNotifier();
+        BroadcastDispatcher broadcastDispatcher = new BroadcastDispatcher(mContext,
+                Looper.getMainLooper());
         WallpaperInteractor wallpaperInteractor =
                 new WallpaperInteractor(
                         new WallpaperRepository(
                                 testScope.getBackgroundScope(),
                                 new FakeWallpaperClient(),
                                 new TestWallpaperPreferences(),
-                                testDispatcher
+                                testDispatcher,
+                                broadcastDispatcher
                         )
                 );
         FakeWallpaperRefresher refresher = new FakeWallpaperRefresher(mPrefs);
@@ -129,7 +134,8 @@ public class DefaultWallpaperPersisterTest {
                 mock(WallpaperCategoryWrapper.class),
                 mTestPackageStatusNotifier,
                 wallpaperInfoFactory,
-                refresher
+                refresher,
+                broadcastDispatcher
         ));
 
 

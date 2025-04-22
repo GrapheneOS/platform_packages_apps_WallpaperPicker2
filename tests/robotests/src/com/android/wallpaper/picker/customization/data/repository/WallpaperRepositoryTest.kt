@@ -17,8 +17,12 @@
 
 package com.android.wallpaper.picker.customization.data.repository
 
+import android.content.Context
+import android.os.Looper
 import android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SmallTest
+import com.android.wallpaper.picker.broadcast.BroadcastDispatcher
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.testing.FakeWallpaperClient
 import com.android.wallpaper.testing.TestWallpaperPreferences
@@ -32,11 +36,11 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.robolectric.RobolectricTestRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
-@RunWith(JUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class WallpaperRepositoryTest {
 
     private lateinit var underTest: WallpaperRepository
@@ -49,6 +53,7 @@ class WallpaperRepositoryTest {
     fun setUp() {
         client = FakeWallpaperClient()
 
+        val context: Context = ApplicationProvider.getApplicationContext()
         val testDispatcher = StandardTestDispatcher()
         testScope = TestScope(testDispatcher)
         underTest =
@@ -57,6 +62,7 @@ class WallpaperRepositoryTest {
                 client = client,
                 wallpaperPreferences = prefs,
                 backgroundDispatcher = testDispatcher,
+                broadcastDispatcher = BroadcastDispatcher(context, Looper.getMainLooper()),
             )
     }
 
