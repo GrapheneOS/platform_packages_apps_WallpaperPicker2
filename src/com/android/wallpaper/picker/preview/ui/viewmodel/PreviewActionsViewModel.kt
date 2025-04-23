@@ -17,7 +17,6 @@
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
 import android.app.Flags.liveWallpaperContentHandling
-import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ComponentName
 import android.content.Context
@@ -26,12 +25,10 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.net.wifi.WifiManager
 import android.service.wallpaper.WallpaperSettingsActivity
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import com.android.wallpaper.R
 import com.android.wallpaper.effects.Effect
 import com.android.wallpaper.effects.EffectsController.EffectEnumInterface
-import com.android.wallpaper.model.WallpaperInfoContract.WALLPAPER_DESCRIPTION_CONTENT_HANDLING
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.data.CreativeWallpaperData
 import com.android.wallpaper.picker.data.LiveWallpaperData
@@ -51,6 +48,7 @@ import com.android.wallpaper.picker.preview.domain.interactor.PreviewActionsInte
 import com.android.wallpaper.picker.preview.domain.interactor.WallpaperPreviewInteractor
 import com.android.wallpaper.picker.preview.shared.model.DownloadStatus
 import com.android.wallpaper.picker.preview.shared.model.ImageEffectsModel
+import com.android.wallpaper.picker.preview.ui.util.ExtendedWallpaperEffectsUtils
 import com.android.wallpaper.picker.preview.ui.util.LiveWallpaperDeleteUtil
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.CUSTOMIZE
 import com.android.wallpaper.picker.preview.ui.viewmodel.Action.DELETE
@@ -472,23 +470,14 @@ constructor(
                 if (extendedEffectAvailable) {
                     // Could be static wallpaper with uri or actual extended effect wallpaper
                     { launcher ->
-                        val isExtendedEffectWallpaper = isExtendedEffectWallpaperModel(wallpaper)
                         mainScope.launch {
-                            launchExtendedWallpaperEffects(
+                            ExtendedWallpaperEffectsUtils.startExtendedWallpaperEffects(
                                 wallpaper,
                                 launcher,
-                                isExtendedEffectWallpaper,
+                                context,
+                                wallpaperConnectionUtils,
+                                flags,
                             )
-                            if (isExtendedEffectWallpaper) {
-                                // Disconnect engine if it's live extended effect wallpaper
-                                wallpaperConnectionUtils.disconnect(
-                                    (wallpaper as LiveWallpaperModel)
-                                        .liveWallpaperData
-                                        .systemWallpaperInfo
-                                        .component
-                                        .packageName
-                                )
-                            }
                         }
                     }
                 } else {
@@ -503,37 +492,6 @@ constructor(
                 null
             }
         }
-
-    private fun launchExtendedWallpaperEffects(
-        wallpaper: WallpaperModel,
-        launcher: ActivityResultLauncher<Intent>,
-        isExtendedEffect: Boolean,
-    ) {
-        if (isExtendedEffect) {
-            // Extended effect wallpaper, launch with description
-            extendedWallpaperIntent.putExtra(
-                WALLPAPER_DESCRIPTION_CONTENT_HANDLING,
-                (wallpaper as LiveWallpaperModel).liveWallpaperData.description,
-            )
-        } else {
-            val photoUri = (wallpaper as StaticWallpaperModel).imageWallpaperData?.uri
-            Log.d(TAG, "PhotoURI is: $photoUri")
-            photoUri?.let {
-                context.grantUriPermission(
-                    extendedWallpaperEffectPkgName,
-                    photoUri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION,
-                )
-                extendedWallpaperIntent.putExtra("PHOTO_URI", it)
-            }
-        }
-
-        try {
-            launcher.launch(extendedWallpaperIntent)
-        } catch (ex: ActivityNotFoundException) {
-            Log.e(TAG, "Extended Wallpaper Activity is not available", ex)
-        }
-    }
 
     val effectDownloadFailureToastText: Flow<String> =
         previewActionsInteractor.imageEffectsModel

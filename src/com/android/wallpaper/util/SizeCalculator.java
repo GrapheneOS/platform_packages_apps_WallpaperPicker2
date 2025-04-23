@@ -73,7 +73,7 @@ public class SizeCalculator {
      * The number of columns for a "more columns" configuration of the individual wallpaper tiles
      * grid.
      */
-    private static final int INDIVIDUAL_MORE_COLUMNS = 4;
+    private static final int INDIVIDUAL_MORE_COLUMNS = 3;
 
     /**
      * The number of columns for a "fewer columns" configuration of the featured individual

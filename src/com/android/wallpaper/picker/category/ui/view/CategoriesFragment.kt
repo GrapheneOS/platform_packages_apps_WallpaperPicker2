@@ -34,7 +34,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
 import com.android.wallpaper.config.BaseFlags
@@ -148,7 +147,12 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
                 is CategoriesViewModel.NavigationEvent.NavigateToPhotosPicker -> {
                     if (BaseFlags.get().isPhotoPickerEnabled()) {
                         parentFragmentManager.commit {
-                            replace<PhotoPickerFragment>(R.id.fragment_container)
+                            replace(
+                                R.id.fragment_container,
+                                PhotoPickerFragment.newInstance(
+                                    shouldNavigateToExtendedWallpaperEffects = false
+                                ),
+                            )
                             addToBackStack(null)
                         }
                     } else {
@@ -182,6 +186,17 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
                         navigationEvent.wallpaperModel,
                         navigationEvent.categoryType == CategoryType.CreativeCategories,
                     )
+                }
+                is CategoriesViewModel.NavigationEvent.NavigateToExtendedWallpaperEffects -> {
+                    parentFragmentManager.commit {
+                        replace(
+                            R.id.fragment_container,
+                            PhotoPickerFragment.newInstance(
+                                shouldNavigateToExtendedWallpaperEffects = true
+                            ),
+                        )
+                        addToBackStack(null)
+                    }
                 }
             }
         }

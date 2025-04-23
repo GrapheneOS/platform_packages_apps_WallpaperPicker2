@@ -16,6 +16,7 @@
 package com.android.wallpaper.picker.preview.ui.fragment
 
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.app.ActivityOptions
 import android.app.AlertDialog
 import android.content.Context
@@ -43,6 +44,7 @@ import androidx.transition.Transition
 import com.android.wallpaper.R
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.model.Screen
+import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.TrampolinePickerActivity
@@ -57,6 +59,7 @@ import com.android.wallpaper.picker.preview.ui.binder.SetWallpaperButtonBinder
 import com.android.wallpaper.picker.preview.ui.binder.SetWallpaperProgressDialogBinder
 import com.android.wallpaper.picker.preview.ui.binder.SmallPreviewScreenBinder
 import com.android.wallpaper.picker.preview.ui.util.AnimationUtil
+import com.android.wallpaper.picker.preview.ui.util.ExtendedWallpaperEffectsUtils
 import com.android.wallpaper.picker.preview.ui.util.ImageEffectDialogUtil
 import com.android.wallpaper.picker.preview.ui.view.ClickableMotionLayout
 import com.android.wallpaper.picker.preview.ui.view.DualPreviewViewPager
@@ -90,6 +93,8 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
     @Inject lateinit var logger: UserEventLogger
     @Inject lateinit var imageEffectDialogUtil: ImageEffectDialogUtil
     @Inject lateinit var wallpaperConnectionUtils: WallpaperConnectionUtils
+
+    private val flags = InjectorProvider.getInjector().getFlags()
 
     private lateinit var currentView: View
     private lateinit var shareActivityResult: ActivityResultLauncher<Intent>
@@ -242,6 +247,30 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                     .findViewById<PreviewActionGroup>(R.id.action_button_group)
                     ?.setIsChecked(Action.SHARE, false)
             }
+
+        if (arguments?.getBoolean(SHOULD_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS) == true) {
+            wallpaperPreviewViewModel.wallpaper.value?.let { wallpaperModel ->
+                ExtendedWallpaperEffectsUtils.registerExtendedWallpaperEffectsActivityLauncher(
+                        activity = activity,
+                        lifecycleOwner = viewLifecycleOwner,
+                        wallpaperPreviewViewModel = wallpaperPreviewViewModel,
+                        context = context,
+                    )
+                    ?.let { launcher ->
+                        mainScope.launch {
+                            context?.let { unwrappedContext ->
+                                ExtendedWallpaperEffectsUtils.startExtendedWallpaperEffects(
+                                    wallpaperModel,
+                                    launcher,
+                                    unwrappedContext,
+                                    wallpaperConnectionUtils,
+                                    flags,
+                                )
+                            }
+                        }
+                    }
+            }
+        }
 
         return currentView
     }
@@ -459,5 +488,9 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         const val SMALL_PREVIEW_LOCK_UNFOLDED_SHARED_ELEMENT_ID = "small_preview_lock_unfolded"
         const val FULL_PREVIEW_SHARED_ELEMENT_ID = "full_preview"
         const val ARG_EDIT_INTENT = "arg_edit_intent"
+        const val PREVIEW_RESULT_REGISTRY = "preview_result_registry"
+        const val SHOULD_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS =
+            "should_navigate_to_extended_wallpaper_effects"
+        const val TAG = "SmallPreviewFragment"
     }
 }

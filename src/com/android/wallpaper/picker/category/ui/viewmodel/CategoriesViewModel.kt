@@ -145,6 +145,12 @@ constructor(
         }
     }
 
+    private fun navigateToExtendedWallpaperEffects() {
+        viewModelScope.launch {
+            _navigationEvents.emit(NavigationEvent.NavigateToExtendedWallpaperEffects(null))
+        }
+    }
+
     private fun navigateToThirdPartyApp(resolveInfo: ResolveInfo) {
         viewModelScope.launch {
             _navigationEvents.emit(NavigationEvent.NavigateToThirdParty(resolveInfo))
@@ -247,7 +253,7 @@ constructor(
                             text = category.commonCategoryData.title,
                             maxCategoriesInRow = SectionCardinality.Single,
                         ) {
-                            // TODO: implement navigation for standalone creative category
+                            navigateToExtendedWallpaperEffects()
                         }
                     }
 
@@ -480,6 +486,9 @@ constructor(
         data class NavigateToPhotosPicker(val wallpaperModel: WallpaperModel?) : NavigationEvent()
 
         data class NavigateToThirdParty(val resolveInfo: ResolveInfo) : NavigationEvent()
+
+        data class NavigateToExtendedWallpaperEffects(val wallpaperModel: WallpaperModel?) :
+            NavigationEvent()
     }
 
     companion object {

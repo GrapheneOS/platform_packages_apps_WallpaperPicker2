@@ -81,6 +81,7 @@ object CategoriesBinder {
                 launch {
                     viewModel.navigationEvents.collect { navigationEvent ->
                         when (navigationEvent) {
+                            is CategoriesViewModel.NavigationEvent.NavigateToExtendedWallpaperEffects,
                             is CategoriesViewModel.NavigationEvent.NavigateToWallpaperCollection,
                             is CategoriesViewModel.NavigationEvent.NavigateToPreviewScreen,
                             is CategoriesViewModel.NavigationEvent.NavigateToThirdParty -> {

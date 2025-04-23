@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.picker.preview.ui
 
-import android.app.Activity.FULLSCREEN_MODE_REQUEST_ENTER
 import android.app.WindowConfiguration.WINDOWING_MODE_FREEFORM
 import android.content.Context
 import android.content.Intent
@@ -86,6 +85,7 @@ class WallpaperPreviewActivity :
         BaseFlags.get().isWallpaperCategoryRefactoringEnabled()
 
     private var isFirstRun = false
+    private var navigateToExtendedWallpaperEffects: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         isFirstRun = savedInstanceState == null
@@ -100,6 +100,9 @@ class WallpaperPreviewActivity :
         window.navigationBarColor = Color.TRANSPARENT
         window.statusBarColor = Color.TRANSPARENT
         setContentView(R.layout.activity_wallpaper_preview)
+
+        navigateToExtendedWallpaperEffects =
+            intent.getBooleanExtra(SHOULD_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS, false)
 
         if (isCategoriesRefactorEnabled) {
             refreshCreativeCategories = intent.getBooleanExtra(SHOULD_CATEGORY_REFRESH, false)
@@ -148,15 +151,25 @@ class WallpaperPreviewActivity :
                 .navController
         val graph = navController.navInflater.inflate(R.navigation.wallpaper_preview_nav_graph)
         val startDestinationArgs: Bundle? =
-            (wallpaper as? WallpaperModel.LiveWallpaperModel)
-                ?.let {
-                    if (it.isNewCreativeWallpaper()) it.getNewCreativeWallpaperArgs() else null
+            if (navigateToExtendedWallpaperEffects == true) {
+                Bundle().apply {
+                    putBoolean(
+                        SHOULD_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS,
+                        navigateToExtendedWallpaperEffects ?: false,
+                    )
                 }
-                ?.also {
-                    // For creating a new creative wallpaper, replace the default start destination
-                    // with CreativeEditPreviewFragment.
-                    graph.setStartDestination(R.id.creativeEditPreviewFragment)
-                }
+            } else
+                (wallpaper as? WallpaperModel.LiveWallpaperModel)
+                    ?.let {
+                        if (it.isNewCreativeWallpaper()) it.getNewCreativeWallpaperArgs() else null
+                    }
+                    ?.also {
+                        // For creating a new creative wallpaper, replace the default start
+                        // destination
+                        // with CreativeEditPreviewFragment.
+                        graph.setStartDestination(R.id.creativeEditPreviewFragment)
+                    }
+
         navController.setGraph(graph, startDestinationArgs)
         // Fits screen to navbar and statusbar
         WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
@@ -284,6 +297,8 @@ class WallpaperPreviewActivity :
     private fun isFullscreenPreviewEnabled() = BaseFlags.get().isFullscreenPreviewEnabled(this)
 
     companion object {
+        private const val SHOULD_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS =
+            "should_navigate_to_extended_wallpaper_effects"
         private const val TAG = "WallpaperPreviewActivity"
 
         /**
@@ -328,6 +343,7 @@ class WallpaperPreviewActivity :
             isViewAsHome: Boolean = false,
             isNewTask: Boolean = false,
             shouldCategoryRefresh: Boolean,
+            shouldNavigateToExtendedWallpaperEffects: Boolean = false,
         ): Intent {
             val isNewPickerUi = BaseFlags.get().isNewPickerUi()
             val isCategoriesRefactorEnabled =
@@ -338,6 +354,10 @@ class WallpaperPreviewActivity :
             if (isNewTask) {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             }
+            intent.putExtra(
+                SHOULD_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS,
+                shouldNavigateToExtendedWallpaperEffects,
+            )
             intent.putExtra(IS_ASSET_ID_PRESENT, isAssetIdPresent)
             intent.putExtra(EXTRA_VIEW_AS_HOME, isViewAsHome)
             intent.putExtra(IS_NEW_TASK, isNewTask)

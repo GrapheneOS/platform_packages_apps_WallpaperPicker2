@@ -77,7 +77,6 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
 
         if (item.tileViewModels.isEmpty()) {
             sectionTiles.isVisible = false
-            sectionTitle.visibility = View.GONE
             return
         } else {
             sectionTiles.isVisible = true

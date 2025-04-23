@@ -66,6 +66,8 @@ class PhotoPickerFragment : Hilt_PhotoPickerFragment() {
     private var session: EmbeddedPhotoPickerSession? = null
     private var view: View? = null
 
+    var navigateToExtendedWallpaperEffects: Boolean? = null
+
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,6 +75,8 @@ class PhotoPickerFragment : Hilt_PhotoPickerFragment() {
         savedInstanceState: Bundle?,
     ): View? {
         view = inflater.inflate(R.layout.fragment_photo_picker, container, false)
+        navigateToExtendedWallpaperEffects =
+            arguments?.getBoolean(ARG_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS) ?: false
         setUpToolbar(view)
         setTitle(getText(R.string.select_a_photo))
         return view
@@ -158,9 +162,13 @@ class PhotoPickerFragment : Hilt_PhotoPickerFragment() {
         }
 
         override fun onUriPermissionGranted(uris: List<Uri>) {
-            val imageWallpaperInfo = ImageWallpaperInfo(uris.get(0))
+            if (uris.isEmpty()) {
+                return
+            }
+            val imageWallpaperInfo = ImageWallpaperInfo(uris[0])
             val wallpaperModel =
                 context?.let { wallpaperModelFactory.getWallpaperModel(it, imageWallpaperInfo) }
+
             if (wallpaperModel != null) {
                 startWallpaperPreviewActivity(wallpaperModel, false)
             }
@@ -189,6 +197,8 @@ class PhotoPickerFragment : Hilt_PhotoPickerFragment() {
                 isViewAsHome = true,
                 isNewTask = isMultiPanel,
                 shouldCategoryRefresh = isCreativeCategories,
+                shouldNavigateToExtendedWallpaperEffects =
+                    navigateToExtendedWallpaperEffects ?: false,
             )
         ActivityUtils.startActivityForResultSafely(
             activity,
@@ -207,5 +217,19 @@ class PhotoPickerFragment : Hilt_PhotoPickerFragment() {
 
     companion object {
         private const val TAG = "PhotoPickerFragment"
+
+        private const val ARG_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS =
+            "navigate_to_extended_wallpaper_effects"
+
+        fun newInstance(shouldNavigateToExtendedWallpaperEffects: Boolean): PhotoPickerFragment {
+            val fragment = PhotoPickerFragment()
+            val args = Bundle()
+            args.putBoolean(
+                ARG_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS,
+                shouldNavigateToExtendedWallpaperEffects,
+            )
+            fragment.arguments = args
+            return fragment
+        }
     }
 }
