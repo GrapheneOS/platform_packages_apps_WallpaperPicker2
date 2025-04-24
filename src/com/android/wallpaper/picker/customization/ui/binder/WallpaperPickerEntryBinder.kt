@@ -31,7 +31,8 @@ import com.android.wallpaper.picker.category.ui.view.adapter.CuratedPhotosAdapte
 import com.android.wallpaper.picker.category.ui.view.adapter.LoadingAnimationAdapter
 import com.android.wallpaper.picker.customization.shared.model.CategoryType
 import com.android.wallpaper.picker.customization.ui.view.WallpaperPickerEntry
-import com.android.wallpaper.picker.customization.ui.view.listener.WallpaperCarouselScrollListener
+import com.android.wallpaper.picker.customization.ui.view.listener.CarouselHorizontalScrollEnforcer
+import com.android.wallpaper.picker.customization.ui.view.listener.WallpaperTitleScrollListener
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperCarouselViewModel
@@ -59,7 +60,7 @@ object WallpaperPickerEntryBinder {
         }
 
         bindWallpaperCarousel(
-            wallpaperCarousel = view.wallpaperCarousel,
+            wallpaperPickerEntryView = view,
             viewModel = viewModel.customizationOptionsViewModel.wallpaperCarouselViewModel,
             colorUpdateViewModel = colorUpdateViewModel,
             shouldAnimateColor = isOnMainScreen,
@@ -123,7 +124,7 @@ object WallpaperPickerEntryBinder {
     }
 
     private fun bindWallpaperCarousel(
-        wallpaperCarousel: RecyclerView,
+        wallpaperPickerEntryView: WallpaperPickerEntry,
         viewModel: WallpaperCarouselViewModel,
         colorUpdateViewModel: ColorUpdateViewModel,
         shouldAnimateColor: () -> Boolean,
@@ -132,6 +133,7 @@ object WallpaperPickerEntryBinder {
         navigateToWallpaperCollectionScreen:
             ((collectionId: String, categoryType: CategoryType) -> Unit)?,
     ) {
+        val wallpaperCarousel: RecyclerView = wallpaperPickerEntryView.wallpaperCarousel
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -151,6 +153,10 @@ object WallpaperPickerEntryBinder {
                                 return if (isScrollable) super.canScrollHorizontally() else false
                             }
 
+                            override fun canScrollVertically(): Boolean {
+                                return false
+                            }
+
                             fun setIsScrollable(isScrollable: Boolean) {
                                 this.isScrollable = isScrollable
                             }
@@ -161,15 +167,26 @@ object WallpaperPickerEntryBinder {
                         if (wallpaperCarousel.onFlingListener == null) {
                             CarouselSnapHelper().attachToRecyclerView(this)
                         }
+                        val horizontalScrollEnforcer =
+                            CarouselHorizontalScrollEnforcer(wallpaperCarousel.context)
+                        addOnScrollListener(horizontalScrollEnforcer)
+                        addOnItemTouchListener(horizontalScrollEnforcer)
+                        isNestedScrollingEnabled = false
                     }
                     viewModel.wallpaperCarouselItems.collect {
+                        if (it.isEmpty()) {
+                            wallpaperPickerEntryView.animateToCollapsed()
+                        } else {
+                            wallpaperPickerEntryView.animateToExpanded()
+                        }
+
                         wallpaperCarousel.swapAdapter(
                             CuratedPhotosAdapter(it),
                             /** removeAndRecycleExistingViews= */
                             false,
                         )
                         customLayoutManager.setIsScrollable(true)
-                        wallpaperCarousel.addOnScrollListener(WallpaperCarouselScrollListener())
+                        wallpaperCarousel.addOnScrollListener(WallpaperTitleScrollListener())
                     }
                 }
 

@@ -275,6 +275,9 @@
     <!-- Apply button -->
     <dimen name="apply_button_corner_radius">100dp</dimen>
     <dimen name="apply_button_width">70dp</dimen>
+    <dimen name="apply_button_progress_indicator_size">24dp</dimen>
+    <dimen name="apply_button_progress_track_size">2dp</dimen>
+    <dimen name="apply_button_horizontal_padding">16dp</dimen>
 
     <!-- Set wallpaper button -->
     <dimen name="set_wallpaper_button_horizontal_padding">18dp</dimen>

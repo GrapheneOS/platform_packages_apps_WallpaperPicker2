@@ -24,6 +24,18 @@
     android:fitsSystemWindows="true"
     android:transitionGroup="true">
 
+    <ImageView
+        android:id="@+id/categories_header_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/categories_background"
+        android:fitsSystemWindows="true"
+        android:layout_gravity="top"
+        android:adjustViewBounds="true"
+        android:importantForAccessibility="no"
+        android:focusable="false"
+        android:contentDescription="@null"/>
+
     <include
         android:id="@+id/header_bar"
         layout="@layout/section_header" />

@@ -341,4 +341,13 @@
     <style name="ToolbarTheme">
         <item name="android:titleTextAppearance">@style/TextAppearance.DeviceDefault.Large.TitleLargeEmphasized</item>
     </style>
+
+    <style name="CircularProgressIndicator">
+        <item name="trackThickness">@dimen/apply_button_progress_track_size</item>
+        <item name="indicatorSize">@dimen/apply_button_progress_indicator_size</item>
+        <item name="indicatorColor">@color/system_on_primary</item>
+        <item name="trackCornerRadius">50%</item>
+        <item name="indicatorTrackGapSize">@dimen/apply_button_progress_track_size</item>
+        <item name="indeterminateTrackVisible">false</item>
+    </style>
 </resources>

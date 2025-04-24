@@ -24,7 +24,7 @@ import com.google.android.material.carousel.CarouselLayoutManager
  * This scroll listener implementation finds the positions of the first visible carousel item, and
  * updates the [CuratedPhotosAdapter] with that position
  */
-class WallpaperCarouselScrollListener : RecyclerView.OnScrollListener() {
+class WallpaperTitleScrollListener : RecyclerView.OnScrollListener() {
     private var lastScrollState = RecyclerView.NO_POSITION
 
     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

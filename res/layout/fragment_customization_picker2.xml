@@ -48,19 +48,15 @@
         app:layout_constraintStart_toEndOf="@+id/nav_button"
         app:layout_constraintEnd_toStartOf="@+id/apply_button" />
 
-    <Button
+    <com.android.wallpaper.picker.customization.ui.view.ApplyButton
         android:id="@+id/apply_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/touch_target_min_height"
         android:layout_marginEnd="@dimen/apply_button_end_margin"
-        android:background="@drawable/apply_button_background"
-        android:text="@string/apply_btn"
-        android:textColor="@color/system_on_primary"
-        android:textAppearance="@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar"/>
+        app:layout_constraintBottom_toBottomOf="@id/toolbar" />
 
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/picker_motion_layout"

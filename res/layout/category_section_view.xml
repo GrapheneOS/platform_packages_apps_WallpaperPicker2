@@ -79,7 +79,7 @@
         android:clipToPadding="false"
         android:clipChildren="false"
         android:orientation="horizontal"
-        android:nestedScrollingEnabled="true"
+        android:nestedScrollingEnabled="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </LinearLayout>

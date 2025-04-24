@@ -37,6 +37,7 @@ import com.android.wallpaper.picker.category.ui.binder.BannerProvider
 import com.android.wallpaper.picker.category.ui.view.adapter.CuratedPhotosAdapter
 import com.android.wallpaper.picker.category.ui.viewmodel.PhotosViewModel
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
+import com.android.wallpaper.picker.customization.ui.view.listener.CarouselHorizontalScrollEnforcer
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.data.PhotosErrorData
 import com.google.android.material.carousel.CarouselLayoutManager
@@ -261,6 +262,10 @@ class CuratedPhotoSectionViewHolder(itemView: View, private val windowWidth: Int
                 sectionTiles.adapter = CuratedPhotosAdapter(item.tileViewModels)
                 val layoutManagerCuratedPhotos = CarouselLayoutManager()
                 sectionTiles.layoutManager = layoutManagerCuratedPhotos
+                val horizontalScrollEnforcer = CarouselHorizontalScrollEnforcer(itemView.context)
+                sectionTiles.clearOnScrollListeners()
+                sectionTiles.addOnScrollListener(horizontalScrollEnforcer)
+                sectionTiles.addOnItemTouchListener(horizontalScrollEnforcer)
                 morePhotosButton.setOnClickListener { _ -> item.onSectionClicked?.invoke() }
             }
         }

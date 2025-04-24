@@ -26,7 +26,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewStub
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.Toolbar
@@ -69,6 +68,7 @@ import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.picker.customization.ui.util.EmptyTransitionListener
+import com.android.wallpaper.picker.customization.ui.view.ApplyButton
 import com.android.wallpaper.picker.customization.ui.view.PackThemeSuggestedChip
 import com.android.wallpaper.picker.customization.ui.view.PreviewPagerViews
 import com.android.wallpaper.picker.customization.ui.view.WallpaperPickerEntry
@@ -559,7 +559,7 @@ class CustomizationPickerFragment2 :
         onBackPressedCallback?.remove()
     }
 
-    private fun setupToolbar(navButton: FrameLayout, toolbar: Toolbar, applyButton: Button) {
+    private fun setupToolbar(navButton: FrameLayout, toolbar: Toolbar, applyButton: ApplyButton) {
         toolbar.title = getString(R.string.app_name)
         toolbar.setBackgroundColor(Color.TRANSPARENT)
         toolbarBinder.bind(

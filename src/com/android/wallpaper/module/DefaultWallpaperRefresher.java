@@ -28,7 +28,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
@@ -112,7 +111,6 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
         private final RefreshListener mListener;
         private final WallpaperManager mWallpaperManager;
 
-        private long mCurrentHomeWallpaperHashCode;
         private long mCurrentLockWallpaperHashCode;
         private String mSystemWallpaperServiceName;
 
@@ -294,24 +292,6 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                     && homeScreenAttributions.get(2) == null;
         }
 
-        private long getCurrentHomeWallpaperHashCode() {
-            if (mCurrentHomeWallpaperHashCode == 0) {
-                BitmapDrawable wallpaperDrawable = (BitmapDrawable) mWallpaperManager.getDrawable();
-                // wallpaperDrawable should always be non-null, unless if there's a error in
-                // WallpaperManager's state, in which case we'll consider the hashcode as unset.
-                Bitmap wallpaperBitmap = wallpaperDrawable != null ? wallpaperDrawable.getBitmap()
-                        : null;
-                mCurrentHomeWallpaperHashCode =
-                        wallpaperBitmap != null ? BitmapUtils.generateHashCode(wallpaperBitmap) : 0;
-
-                // Manually request that WallpaperManager loses its reference to the current
-                // wallpaper bitmap, which can occupy a large memory allocation for the lifetime of
-                // the app.
-                mWallpaperManager.forgetLoadedWallpaper();
-            }
-            return mCurrentHomeWallpaperHashCode;
-        }
-
         private long getCurrentLockWallpaperHashCode() {
             if (mCurrentLockWallpaperHashCode == 0
                     && mWallpaperStatusChecker.isLockWallpaperSet()) {
@@ -332,7 +312,7 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
         private Bitmap getLockWallpaperBitmap() {
             Bitmap lockBitmap = null;
 
-            ParcelFileDescriptor pfd = mWallpaperManager.getWallpaperFile(FLAG_LOCK);
+            ParcelFileDescriptor pfd = mWallpaperManager.getWallpaperFile(FLAG_LOCK, false);
             // getWallpaperFile returns null if the lock screen isn't explicitly set, so need this
             // check.
             if (pfd != null) {

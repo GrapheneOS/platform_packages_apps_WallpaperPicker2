@@ -16,10 +16,10 @@
 
 package com.android.wallpaper.picker.customization.ui.binder
 
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Toolbar
 import androidx.lifecycle.LifecycleOwner
+import com.android.wallpaper.picker.customization.ui.view.ApplyButton
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsViewModel
 
@@ -28,7 +28,7 @@ interface ToolbarBinder {
     fun bind(
         navButton: FrameLayout,
         toolbar: Toolbar,
-        applyButton: Button,
+        applyButton: ApplyButton,
         viewModel: CustomizationOptionsViewModel,
         colorUpdateViewModel: ColorUpdateViewModel,
         lifecycleOwner: LifecycleOwner,
