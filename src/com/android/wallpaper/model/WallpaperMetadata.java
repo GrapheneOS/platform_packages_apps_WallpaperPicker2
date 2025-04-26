@@ -35,17 +35,20 @@ public class WallpaperMetadata {
     private final String mCollectionId;
     @Nullable private final Map<Point, Rect> mCropHints;
     @Nullable private final Uri mImageUri;
+    @Nullable private final String mId;
+
     protected final android.app.WallpaperInfo mWallpaperComponent;
 
     public WallpaperMetadata(List<String> attributions, String actionUrl, String collectionId,
             android.app.WallpaperInfo wallpaperComponent, @Nullable Map<Point, Rect> cropHints,
-            @Nullable Uri imageUri) {
+            @Nullable Uri imageUri, @Nullable String id) {
         mAttributions = attributions;
         mActionUrl = actionUrl;
         mCollectionId = collectionId;
         mWallpaperComponent = wallpaperComponent;
         mCropHints = cropHints;
         mImageUri = imageUri;
+        mId = id;
     }
 
     /**
@@ -95,5 +98,10 @@ public class WallpaperMetadata {
     @Nullable
     public Uri getWallpaperImageUri() {
         return mImageUri;
+    }
+
+    @Nullable
+    public String getId() {
+        return mId;
     }
 }

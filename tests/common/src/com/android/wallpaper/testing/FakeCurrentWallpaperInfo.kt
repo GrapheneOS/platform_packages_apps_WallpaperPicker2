@@ -41,6 +41,7 @@ class FakeCurrentWallpaperInfo(
         collectionId,
         wallpaperManagerFlag,
         imageWallpaperUri,
+        id,
     ) {
     private var asset = AtomicReference<TestAsset>()
 

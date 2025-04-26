@@ -138,7 +138,8 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                                 homeWallpaperMetadata.getActionUrl(),
                                 homeWallpaperMetadata.getCollectionId(),
                                 WallpaperManager.FLAG_SYSTEM,
-                                imageUri);
+                                imageUri,
+                                homeWallpaperMetadata.getId());
                         if (isMultiCropEnabled) {
                             homeWallpaper.setWallpaperCropHints(
                                     homeWallpaperMetadata.getWallpaperCropHints());
@@ -168,7 +169,8 @@ public class DefaultCurrentWallpaperInfoFactory implements CurrentWallpaperInfoF
                                         lockWallpaperMetadata.getActionUrl(),
                                         lockWallpaperMetadata.getCollectionId(),
                                         WallpaperManager.FLAG_LOCK,
-                                        imageUri);
+                                        imageUri,
+                                        lockWallpaperMetadata.getId());
                             }
 
                             if (isMultiCropEnabled) {

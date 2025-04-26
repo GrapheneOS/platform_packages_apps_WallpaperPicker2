@@ -36,6 +36,7 @@ import com.android.wallpaper.picker.customization.ui.view.listener.WallpaperTitl
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperCarouselViewModel
+import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperCarouselViewModel.NavigationEvent.NavigateToExtendedWallpaperEffects
 import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperCarouselViewModel.NavigationEvent.NavigateToPreviewScreen
 import com.android.wallpaper.picker.customization.ui.viewmodel.WallpaperCarouselViewModel.NavigationEvent.NavigateToWallpaperCollection
 import com.android.wallpaper.picker.data.WallpaperModel
@@ -54,6 +55,7 @@ object WallpaperPickerEntryBinder {
         navigateToPreviewScreen: ((wallpaperModel: WallpaperModel) -> Unit)?,
         navigateToWallpaperCollectionScreen:
             ((collectionId: String, categoryType: CategoryType) -> Unit)?,
+        navigateToExtendedWallpaperEffects: (() -> Unit)?,
     ) {
         val isOnMainScreen = {
             viewModel.customizationOptionsViewModel.selectedOption.value == null
@@ -67,6 +69,7 @@ object WallpaperPickerEntryBinder {
             lifecycleOwner = lifecycleOwner,
             navigateToPreviewScreen = navigateToPreviewScreen,
             navigateToWallpaperCollectionScreen = navigateToWallpaperCollectionScreen,
+            navigateToExtendedWallpaperEffects = navigateToExtendedWallpaperEffects,
         )
 
         bindWallpaperPickerEntryLabels(
@@ -132,6 +135,7 @@ object WallpaperPickerEntryBinder {
         navigateToPreviewScreen: ((wallpaperModel: WallpaperModel) -> Unit)?,
         navigateToWallpaperCollectionScreen:
             ((collectionId: String, categoryType: CategoryType) -> Unit)?,
+        navigateToExtendedWallpaperEffects: (() -> Unit)?,
     ) {
         val wallpaperCarousel: RecyclerView = wallpaperPickerEntryView.wallpaperCarousel
         lifecycleOwner.lifecycleScope.launch {
@@ -202,6 +206,9 @@ object WallpaperPickerEntryBinder {
                             }
                             is NavigateToPreviewScreen -> {
                                 navigateToPreviewScreen?.invoke(navigationEvent.wallpaperModel)
+                            }
+                            is NavigateToExtendedWallpaperEffects -> {
+                                navigateToExtendedWallpaperEffects?.invoke()
                             }
                         }
                     }

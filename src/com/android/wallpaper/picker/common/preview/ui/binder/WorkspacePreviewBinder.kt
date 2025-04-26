@@ -107,22 +107,28 @@ object WorkspacePreviewBinder {
             override fun surfaceCreated(holder: SurfaceHolder) {
                 job =
                     lifecycleOwner.lifecycleScope.launch {
-                        renderWorkspacePreview(
+                        val workspaceCallback =
+                            renderWorkspacePreview(
                                 surfaceView = surfaceView,
                                 screen = screen,
                                 previewUtils = previewUtils,
                                 displayId =
                                     viewModel.basePreviewViewModel.getDisplayId(deviceDisplayType),
                             )
-                            ?.let { workspaceCallback ->
-                                workspaceCallbackBinder.bind(
-                                    workspaceCallback = workspaceCallback,
-                                    viewModel = viewModel.customizationOptionsViewModel,
-                                    colorUpdateViewModel = colorUpdateViewModel,
-                                    screen = screen,
-                                    clockViewFactory = clockViewFactory,
-                                )
+                        if (workspaceCallback != null) {
+                            workspaceCallbackBinder.bind(
+                                workspaceCallback = workspaceCallback,
+                                viewModel = viewModel.customizationOptionsViewModel,
+                                colorUpdateViewModel = colorUpdateViewModel,
+                                screen = screen,
+                                clockViewFactory = clockViewFactory,
+                                lifecycleOwner = lifecycleOwner,
+                            )
+                            previewDisposableHandle?.dispose()
+                            previewDisposableHandle = DisposableHandle {
+                                previewUtils.cleanUp(workspaceCallback)
                             }
+                        }
                     }
             }
 

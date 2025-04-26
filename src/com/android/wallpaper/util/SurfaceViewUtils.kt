@@ -56,12 +56,17 @@ object SurfaceViewUtils {
     }
 
     /** Removes the view from its parent and attaches to the surface control */
-    fun SurfaceView.attachView(view: View, newWidth: Int = width, newHeight: Int = height) {
+    fun SurfaceView.attachView(
+        view: View,
+        newWidth: Int = width,
+        newHeight: Int = height,
+    ): SurfaceControlViewHost {
         // Detach view from its parent, if the view has one
         (view.parent as ViewGroup?)?.removeView(view)
         val host = SurfaceControlViewHost(context, display, hostToken)
         host.setView(view, newWidth, newHeight)
         setChildSurfacePackage(checkNotNull(host.surfacePackage))
+        return host
     }
 
     interface SurfaceCallback : SurfaceHolder.Callback {

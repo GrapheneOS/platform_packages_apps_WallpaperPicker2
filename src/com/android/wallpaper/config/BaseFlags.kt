@@ -72,7 +72,7 @@ abstract class BaseFlags {
 
     // This is just a local flag in order to ensure right behaviour in case
     // something goes wrong with PhotoPicker integration.
-    open fun isPhotoPickerEnabled() = false
+    open fun isPhotoPickerEnabled() = true
 
     open fun isKeyguardQuickAffordanceEnabled(context: Context): Boolean {
         return getCachedFlags(context)

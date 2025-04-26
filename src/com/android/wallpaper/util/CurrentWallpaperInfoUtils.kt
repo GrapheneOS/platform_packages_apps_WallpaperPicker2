@@ -108,6 +108,7 @@ object CurrentWallpaperInfoUtils {
                     getCollectionId(context),
                     screen.toFlag(),
                     sharableUri,
+                    wallpaperId,
                 ) {
                 override fun getWallpaperId(): String {
                     if (!updateRecents) {

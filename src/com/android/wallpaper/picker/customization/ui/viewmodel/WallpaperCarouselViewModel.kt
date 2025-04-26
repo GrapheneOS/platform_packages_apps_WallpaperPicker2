@@ -130,7 +130,9 @@ constructor(
                     text = category.commonCategoryData.title,
                     showTitle = true,
                     maxCategoriesInRow = SectionCardinality.Triple,
-                ) {}
+                ) {
+                    navigateToExtendedWallpaperEffects()
+                }
             }
         }
 
@@ -195,6 +197,12 @@ constructor(
         }
     }
 
+    private fun navigateToExtendedWallpaperEffects() {
+        viewModelScope.launch {
+            _navigationEvents.emit(NavigationEvent.NavigateToExtendedWallpaperEffects(null))
+        }
+    }
+
     @ViewModelScoped
     @AssistedFactory
     interface Factory {
@@ -211,6 +219,9 @@ constructor(
             val categoryId: String,
             val categoryType: CategoryType,
         ) : NavigationEvent()
+
+        data class NavigateToExtendedWallpaperEffects(val wallpaperModel: WallpaperModel?) :
+            NavigationEvent()
     }
 
     companion object {

@@ -43,7 +43,7 @@ public class LiveWallpaperMetadata extends WallpaperMetadata {
 
     public LiveWallpaperMetadata(android.app.WallpaperInfo wallpaperComponent,
             @Nullable Uri previewUri, @NonNull WallpaperDescription description) {
-        super(null, null, null, wallpaperComponent, null, null);
+        super(null, null, null, wallpaperComponent, null, null, null);
         mPreviewUri = previewUri;
         mDescription = description;
     }

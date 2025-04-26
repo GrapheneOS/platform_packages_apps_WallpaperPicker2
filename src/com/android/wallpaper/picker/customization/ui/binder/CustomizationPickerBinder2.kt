@@ -74,6 +74,7 @@ object CustomizationPickerBinder2 {
         navigateToPackThemeActivity: (Intent) -> Unit,
         navigateToWallpaperCollectionScreen:
             ((collectionId: String, categoryType: CategoryType) -> Unit)?,
+        navigateToExtendedWallpaperEffects: (() -> Unit)?,
         packThemeSuggestedChip: PackThemeSuggestedChip?,
     ) {
         val lockCustomizationOptionContainer: LinearLayout =
@@ -149,6 +150,7 @@ object CustomizationPickerBinder2 {
             navigateToWallpaperCategoriesScreen = navigateToWallpaperCategoriesScreen,
             navigateToPreviewScreen = navigateToPreviewScreen,
             navigateToWallpaperCollectionScreen = navigateToWallpaperCollectionScreen,
+            navigateToExtendedWallpaperEffects = navigateToExtendedWallpaperEffects,
         )
 
         customizationOptionsBinder.bind(

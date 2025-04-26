@@ -20,6 +20,7 @@ import android.app.WallpaperColors
 import android.content.Context
 import android.graphics.Point
 import android.view.LayoutInflater
+import android.view.SurfaceControlViewHost
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.lifecycle.Lifecycle
@@ -120,6 +121,7 @@ object WallpaperPreviewBinder {
 
             var job: Job? = null
             var currentWallpaper: String? = null
+            var surfaceControlViewHost: SurfaceControlViewHost? = null
 
             override fun surfaceCreated(holder: SurfaceHolder) {
                 job =
@@ -176,11 +178,13 @@ object WallpaperPreviewBinder {
                                 // size of the surface. When setting a view to the surface host,
                                 // we want to set it based on the surface's size not the view's size
                                 val surfacePosition = surfaceView.holder.surfaceFrame
-                                surfaceView.attachView(
-                                    staticPreviewView,
-                                    surfacePosition.width(),
-                                    surfacePosition.height(),
-                                )
+                                surfaceControlViewHost?.release()
+                                surfaceControlViewHost =
+                                    surfaceView.attachView(
+                                        staticPreviewView,
+                                        surfacePosition.width(),
+                                        surfacePosition.height(),
+                                    )
                                 // Bind static wallpaper
                                 StaticPreviewBinder.bind(
                                     lowResImageView =
@@ -218,6 +222,8 @@ object WallpaperPreviewBinder {
             override fun surfaceDestroyed(holder: SurfaceHolder) {
                 job?.cancel()
                 job = null
+                surfaceControlViewHost?.release()
+                surfaceControlViewHost = null
                 onPreviewSurfaceDestroyed?.invoke(screen)
                 // Note that we disconnect wallpaper connection for live wallpapers in
                 // WallpaperPreviewActivity's onDestroy().

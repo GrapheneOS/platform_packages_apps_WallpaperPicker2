@@ -25,6 +25,7 @@ import android.os.Parcel;
 
 import androidx.annotation.Nullable;
 
+import com.android.systemui.shared.Flags;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.asset.BuiltInWallpaperAsset;
 import com.android.wallpaper.asset.CurrentWallpaperAsset;
@@ -39,9 +40,10 @@ import java.util.List;
  * Represents the currently set wallpaper on N+ devices. Should not be used to set a new wallpaper.
  */
 public class CurrentWallpaperInfo extends WallpaperInfo {
+    public static final String UNKNOWN_CURRENT_WALLPAPER_ID = "unknown_current_wallpaper_id";
 
     public static final Creator<CurrentWallpaperInfo> CREATOR =
-            new Creator<CurrentWallpaperInfo>() {
+            new Creator<>() {
                 @Override
                 public CurrentWallpaperInfo createFromParcel(Parcel source) {
                     return new CurrentWallpaperInfo(source);
@@ -52,6 +54,7 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
                     return new CurrentWallpaperInfo[size];
                 }
             };
+
     private final List<String> mAttributions;
     private Asset mAsset;
     private final String mActionUrl;
@@ -60,7 +63,8 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
     private final Uri mImageWallpaperUri;
     @SetWallpaperFlags
     private final int mWallpaperManagerFlag;
-    public static final String UNKNOWN_CURRENT_WALLPAPER_ID = "unknown_current_wallpaper_id";
+    @Nullable
+    private final String mWallpaperId;
 
     /**
      * Constructs a new instance of this class.
@@ -69,12 +73,14 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
      *                             represents.
      */
     public CurrentWallpaperInfo(List<String> attributions, String actionUrl, String collectionId,
-            @SetWallpaperFlags int wallpaperManagerFlag, @Nullable Uri imageWallpaperUri) {
+            @SetWallpaperFlags int wallpaperManagerFlag, @Nullable Uri imageWallpaperUri,
+            @Nullable String wallpaperId) {
         mAttributions = attributions;
         mWallpaperManagerFlag = wallpaperManagerFlag;
         mActionUrl = actionUrl;
         mCollectionId = collectionId;
         mImageWallpaperUri = imageWallpaperUri;
+        mWallpaperId = wallpaperId;
     }
 
     private CurrentWallpaperInfo(Parcel in) {
@@ -87,6 +93,7 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
         mCollectionId = in.readString();
         mCropHints.putAll(in.readSerializable(HashMap.class.getClassLoader(), HashMap.class));
         mImageWallpaperUri = Uri.CREATOR.createFromParcel(in);
+        mWallpaperId = in.readString();
     }
 
     @Nullable
@@ -97,7 +104,11 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
 
     @Override
     public String getWallpaperId() {
-        return UNKNOWN_CURRENT_WALLPAPER_ID + mWallpaperManagerFlag;
+        if (Flags.newCustomizationPickerUi() && mWallpaperId != null) {
+            return mWallpaperId;
+        } else {
+            return UNKNOWN_CURRENT_WALLPAPER_ID + mWallpaperManagerFlag;
+        }
     }
 
     @Override
@@ -156,6 +167,7 @@ public class CurrentWallpaperInfo extends WallpaperInfo {
         parcel.writeString(mCollectionId);
         parcel.writeSerializable(mCropHints);
         Uri.writeToParcel(parcel, mImageWallpaperUri);
+        parcel.writeString(mWallpaperId);
     }
 
     @Override

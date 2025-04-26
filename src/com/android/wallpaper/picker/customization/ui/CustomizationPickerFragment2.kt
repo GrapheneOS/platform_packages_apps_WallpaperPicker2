@@ -54,6 +54,7 @@ import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.WallpaperPickerDelegate.VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE
 import com.android.wallpaper.picker.category.ui.view.CategoriesFragment
+import com.android.wallpaper.picker.category.ui.view.PhotoPickerFragment
 import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
 import com.android.wallpaper.picker.common.preview.data.repository.PersistentWallpaperModelRepository
 import com.android.wallpaper.picker.common.preview.ui.binder.BasePreviewBinder
@@ -504,6 +505,11 @@ class CustomizationPickerFragment2 :
             navigateToWallpaperCollectionScreen = { categoryId, categoryType ->
                 switchFragment(
                     individualPickerFactory.getIndividualPickerInstance(categoryId, categoryType)
+                )
+            },
+            navigateToExtendedWallpaperEffects = {
+                switchFragment(
+                    PhotoPickerFragment.newInstance(shouldNavigateToExtendedWallpaperEffects = true)
                 )
             },
             packThemeSuggestedChip = packThemeSuggestedChip,

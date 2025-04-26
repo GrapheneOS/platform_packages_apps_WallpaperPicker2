@@ -50,8 +50,9 @@ public class CurrentWallpaperInfoTest {
         final String collectionId = "collection1";
         final @SetWallpaperFlags int flag = WallpaperManager.FLAG_SYSTEM;
         final Uri imageWallpaperUri = Uri.parse("content://my/content");
+        final String id = "bogus_id_1";
         CurrentWallpaperInfo saved = new CurrentWallpaperInfo(attributions, actionUrl, collectionId,
-                flag, imageWallpaperUri);
+                flag, imageWallpaperUri, id);
 
         Parcel parcel = Parcel.obtain();
         saved.writeToParcel(parcel, 0);
@@ -65,6 +66,7 @@ public class CurrentWallpaperInfoTest {
         assertThat(restored.getCollectionId(mContext)).isEqualTo(collectionId);
         assertThat(restored.getWallpaperManagerFlag()).isEqualTo(flag);
         assertThat(restored.getImageWallpaperUri()).isEqualTo(imageWallpaperUri);
+        assertThat(restored.getWallpaperId()).isEqualTo(id);
     }
 
     @Test
@@ -76,7 +78,7 @@ public class CurrentWallpaperInfoTest {
         final @SetWallpaperFlags int flag = WallpaperManager.FLAG_SYSTEM;
         final Uri imageWallpaperUri = null;
         CurrentWallpaperInfo saved = new CurrentWallpaperInfo(attributions, actionUrl, collectionId,
-                flag, imageWallpaperUri);
+                flag, imageWallpaperUri, null);
 
         Parcel parcel = Parcel.obtain();
         saved.writeToParcel(parcel, 0);
@@ -90,5 +92,6 @@ public class CurrentWallpaperInfoTest {
         assertThat(restored.getCollectionId(mContext)).isEqualTo(collectionId);
         assertThat(restored.getWallpaperManagerFlag()).isEqualTo(flag);
         assertThat(restored.getImageWallpaperUri()).isEqualTo(imageWallpaperUri);
+        assertThat(restored.getWallpaperId()).isNotNull();
     }
 }
