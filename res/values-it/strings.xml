@@ -157,5 +157,6 @@
     <string name="zoomed_to_percent" msgid="1243039994190840132">"Zoom impostato su %d%%"</string>
     <string name="max_zoom_percentage" msgid="2111670558746866030">"Zoom massimo raggiunto"</string>
     <string name="min_zoom_percentage" msgid="5931879817379214316">"Zoom minimo raggiunto"</string>
-    <string name="categories_collection_label" msgid="6863200447424250097">"Raccolta"</string>
+    <!-- no translation found for categories_collection_label (319541962984573943) -->
+    <skip />
 </resources>

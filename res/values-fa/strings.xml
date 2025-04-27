@@ -157,5 +157,6 @@
     <string name="zoomed_to_percent" msgid="1243039994190840132">"‏‫%%d٪ بزرگ‌نمایی شده"</string>
     <string name="max_zoom_percentage" msgid="2111670558746866030">"به حداکثر بزرگ‌نمایی رسیدید"</string>
     <string name="min_zoom_percentage" msgid="5931879817379214316">"به حداقل بزرگ‌نمایی رسیدید"</string>
-    <string name="categories_collection_label" msgid="6863200447424250097">"مجموعه"</string>
+    <!-- no translation found for categories_collection_label (319541962984573943) -->
+    <skip />
 </resources>
