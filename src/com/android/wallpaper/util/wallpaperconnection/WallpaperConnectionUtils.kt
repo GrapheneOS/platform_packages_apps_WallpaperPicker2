@@ -27,6 +27,7 @@ import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination.Companion.toSetWallpaperFlags
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
+import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.util.WallpaperConnection.WhichPreview
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -35,7 +36,9 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -45,7 +48,10 @@ import kotlinx.coroutines.sync.withLock
 @ActivityRetainedScoped
 class WallpaperConnectionUtils
 @Inject
-constructor(@ApplicationContext private val context: Context) {
+constructor(
+    @ApplicationContext private val context: Context,
+    @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
+) {
 
     // The engineMap and the surfaceControlMap are used for disconnecting wallpaper services.
     private val wallpaperConnectionMap = ConcurrentHashMap<String, Deferred<WallpaperConnection>>()
@@ -143,8 +149,8 @@ constructor(@ApplicationContext private val context: Context) {
                         surfaceView,
                         engineRenderingConfig.getEngineDisplaySize(),
                         engineRenderingConfig.enforceSingleEngine,
+                        onPreviewReady,
                     )
-                    onPreviewReady?.invoke()
                 }
             }
         }
@@ -373,6 +379,7 @@ constructor(@ApplicationContext private val context: Context) {
         parentSurface: SurfaceView,
         displayMetrics: Point,
         enforceSingleEngine: Boolean,
+        onPreviewReady: (() -> Unit)?,
     ) {
         fun logError(e: Exception) {
             Log.e(WallpaperConnection::class.simpleName, "Fail to reparent wallpaper surface", e)
@@ -387,15 +394,19 @@ constructor(@ApplicationContext private val context: Context) {
             val values = getScale(parentSurface, displayMetrics)
             SurfaceControl.Transaction().use { t ->
                 t.setMatrix(
-                    wallpaperSurfaceControl,
-                    if (enforceSingleEngine) values[Matrix.MSCALE_Y] else values[Matrix.MSCALE_X],
-                    values[Matrix.MSKEW_X],
-                    values[Matrix.MSKEW_Y],
-                    values[Matrix.MSCALE_Y],
-                )
-                t.reparent(wallpaperSurfaceControl, parentSurfaceControl)
-                t.show(wallpaperSurfaceControl)
-                t.apply()
+                        wallpaperSurfaceControl,
+                        if (enforceSingleEngine) values[Matrix.MSCALE_Y]
+                        else values[Matrix.MSCALE_X],
+                        values[Matrix.MSKEW_X],
+                        values[Matrix.MSKEW_Y],
+                        values[Matrix.MSCALE_Y],
+                    )
+                    .reparent(wallpaperSurfaceControl, parentSurfaceControl)
+                    .show(wallpaperSurfaceControl)
+                    .addTransactionCompletedListener(bgDispatcher.asExecutor()) { _ ->
+                        onPreviewReady?.invoke()
+                    }
+                    .apply()
             }
         } catch (e: RemoteException) {
             logError(e)

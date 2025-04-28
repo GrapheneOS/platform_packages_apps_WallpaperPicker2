@@ -61,6 +61,8 @@ object SmallPreviewBinder {
         transitionConfig: FullPreviewConfigViewModel? = null,
         wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
+        onPreviewReady: ((Screen) -> Unit)? = null,
+        onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
     ) {
 
         val previewCard: CardView = view.requireViewById(R.id.preview_card)
@@ -255,6 +257,8 @@ object SmallPreviewBinder {
             deviceDisplayType = deviceDisplayType,
             wallpaperConnectionUtils = wallpaperConnectionUtils,
             isFirstBindingDeferred = isFirstBindingDeferred,
+            onPreviewReady = onPreviewReady,
+            onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
         )
     }
 

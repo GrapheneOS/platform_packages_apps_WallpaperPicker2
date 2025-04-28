@@ -45,10 +45,6 @@ import com.android.wallpaper.picker.preview.ui.view.ClickableMotionLayout
 import kotlinx.coroutines.launch
 
 object CustomizationPickerBinder2 {
-
-    const val ALPHA_SELECTED_PREVIEW = 1f
-    const val ALPHA_NON_SELECTED_PREVIEW = 0.4f
-
     /**
      * @return Callback for the [CustomizationPickerActivity2] to set
      *   [CustomizationPickerViewModel2]'s screen state to null, which infers to the main screen. We

@@ -62,6 +62,8 @@ object SmallWallpaperPreviewBinder {
         deviceDisplayType: DeviceDisplayType,
         wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
+        onPreviewReady: ((Screen) -> Unit)? = null,
+        onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
     ) {
         var surfaceCallback: SurfaceViewUtils.SurfaceCallback? = null
         viewLifecycleOwner.lifecycleScope.launch {
@@ -77,7 +79,9 @@ object SmallWallpaperPreviewBinder {
                         mainScope = mainScope,
                         lifecycleOwner = viewLifecycleOwner,
                         wallpaperConnectionUtils = wallpaperConnectionUtils,
-                        isFirstBindingDeferred,
+                        isFirstBindingDeferred = isFirstBindingDeferred,
+                        onPreviewReady = onPreviewReady,
+                        onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
                     )
                 surface.setZOrderMediaOverlay(true)
                 surfaceCallback?.let { surface.holder.addCallback(it) }
@@ -106,6 +110,8 @@ object SmallWallpaperPreviewBinder {
         lifecycleOwner: LifecycleOwner,
         wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
+        onPreviewReady: ((Screen) -> Unit)? = null,
+        onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
     ): SurfaceViewUtils.SurfaceCallback {
 
         return object : SurfaceViewUtils.SurfaceCallback {
@@ -142,6 +148,7 @@ object SmallWallpaperPreviewBinder {
                                             )
                                         }
                                     },
+                                    onPreviewReady = { onPreviewReady?.invoke(screen) },
                                 )
                             } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
                                 val staticPreviewView =
@@ -162,6 +169,7 @@ object SmallWallpaperPreviewBinder {
                                     viewModel = viewModel.staticWallpaperPreviewViewModel,
                                     displaySize = displaySize,
                                     parentCoroutineScope = this,
+                                    onPreviewReady = { onPreviewReady?.invoke(screen) },
                                 )
                                 // This is to possibly shut down all live wallpaper services
                                 // if they exist; otherwise static wallpaper can not show up.
@@ -183,6 +191,7 @@ object SmallWallpaperPreviewBinder {
                 job = null
                 loadingAnimationBinding?.destroy()
                 loadingAnimationBinding = null
+                onPreviewSurfaceDestroyed?.invoke(screen)
                 // Note that we disconnect wallpaper connection for live wallpapers in
                 // WallpaperPreviewActivity's onDestroy().
                 // This is to reduce multiple times of connecting and disconnecting live

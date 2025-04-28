@@ -58,6 +58,7 @@ object StaticWallpaperPreviewBinder {
         displaySize: Point,
         parentCoroutineScope: CoroutineScope,
         isFullScreen: Boolean = false,
+        onPreviewReady: (() -> Unit)? = null,
     ) {
         val fullResImageView =
             staticPreviewView.requireViewById<SystemScaledSubsamplingScaleImageView>(
@@ -88,6 +89,7 @@ object StaticWallpaperPreviewBinder {
                         it?.let {
                             lowResImageView.setImageBitmap(it)
                             lowResImageView.isVisible = true
+                            onPreviewReady?.invoke()
                         }
                     }
                 }
@@ -139,6 +141,8 @@ object StaticWallpaperPreviewBinder {
 
                         if (lowResImageView.isVisible) {
                             crossFadeInFullResImageView(lowResImageView, fullResImageView)
+                        } else {
+                            onPreviewReady?.invoke()
                         }
                     }
                 }

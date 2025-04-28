@@ -52,6 +52,8 @@ object SmallPreviewScreenBinder {
         wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
         isFoldable: Boolean,
+        onPreviewReady: ((Screen) -> Unit)? = null,
+        onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
         navigate: (View) -> Unit,
     ) {
         val previewPager = fragmentLayout.requireViewById<ClickableMotionLayout>(R.id.preview_pager)
@@ -76,6 +78,8 @@ object SmallPreviewScreenBinder {
             wallpaperConnectionUtils,
             isFirstBindingDeferred,
             isFoldable,
+            onPreviewReady,
+            onPreviewSurfaceDestroyed,
             navigate,
         )
 

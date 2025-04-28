@@ -28,8 +28,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType.Companion.FOLDABLE_DISPLAY_TYPES
-import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder2.ALPHA_NON_SELECTED_PREVIEW
-import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder2.ALPHA_SELECTED_PREVIEW
+import com.android.wallpaper.picker.customization.ui.util.ViewAlphaAnimator.animateToAlpha
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.Companion.PREVIEW_FADE_ALPHA
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.Companion.PREVIEW_SHOW_ALPHA
 import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.ui.view.ClickableMotionLayout
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout.Companion.getViewId
@@ -182,12 +183,7 @@ object ApplyWallpaperScreenBinder {
         setOf(R.id.wallpaper_surface, R.id.workspace_surface).forEach {
             parent
                 .requireViewById<View>(it)
-                .animate()
-                .alpha(if (checked) ALPHA_SELECTED_PREVIEW else ALPHA_NON_SELECTED_PREVIEW)
-                .setDuration(
-                    parent.resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
-                )
-                .start()
+                .animateToAlpha(if (checked) PREVIEW_SHOW_ALPHA else PREVIEW_FADE_ALPHA)
         }
     }
 }

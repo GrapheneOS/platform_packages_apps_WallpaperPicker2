@@ -32,6 +32,10 @@ import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.picker.BasePreviewActivity.EXTRA_VIEW_AS_HOME
 import com.android.wallpaper.picker.customization.shared.model.WallpaperColorsModel
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.Companion.PREVIEW_FADE_ALPHA
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.Companion.PREVIEW_HIDE_ALPHA
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.Companion.PREVIEW_SHOW_ALPHA
+import com.android.wallpaper.picker.customization.ui.viewmodel.PreviewAlpha
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.StaticWallpaperModel
@@ -126,6 +130,59 @@ constructor(
     val smallPreviewSelectedTab = _smallPreviewSelectedTab.asStateFlow()
 
     val smallPreviewSelectedTabIndex = smallPreviewSelectedTab.map { smallPreviewTabs.indexOf(it) }
+
+    private val isLockPreviewReady: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val isHomePreviewReady: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+    fun setPreviewReady(screen: Screen, isReady: Boolean) {
+        when (screen) {
+            Screen.LOCK_SCREEN -> isLockPreviewReady.value = isReady
+            Screen.HOME_SCREEN -> isHomePreviewReady.value = isReady
+        }
+    }
+
+    /** Flow of float that emits to trigger the lock screen preview to animate to an alpha value. */
+    val smallLockPreviewAlpha: Flow<PreviewAlpha?> =
+        combine(isLockPreviewReady, currentPreviewScreen, smallPreviewSelectedTab) {
+            isPreviewReady,
+            previewScreen,
+            selectedTab ->
+            if (previewScreen == PreviewScreen.SMALL_PREVIEW) {
+                getPreviewAlpha(
+                    isPreviewReady = isPreviewReady,
+                    isSelectedPreview = selectedTab == Screen.LOCK_SCREEN,
+                )
+            } else {
+                null
+            }
+        }
+
+    /** Flow of float that emits to trigger the home screen preview to animate to an alpha value. */
+    val smallHomePreviewAlpha: Flow<PreviewAlpha?> =
+        combine(isHomePreviewReady, currentPreviewScreen, smallPreviewSelectedTab) {
+            isPreviewReady,
+            previewScreen,
+            selectedTab ->
+            if (previewScreen == PreviewScreen.SMALL_PREVIEW) {
+                getPreviewAlpha(
+                    isPreviewReady = isPreviewReady,
+                    isSelectedPreview = selectedTab == Screen.HOME_SCREEN,
+                )
+            } else {
+                null
+            }
+        }
+
+    private fun getPreviewAlpha(isPreviewReady: Boolean, isSelectedPreview: Boolean): PreviewAlpha {
+        return if (isPreviewReady) {
+            PreviewAlpha(
+                alpha = if (isSelectedPreview) PREVIEW_SHOW_ALPHA else PREVIEW_FADE_ALPHA,
+                shouldAnimate = true,
+            )
+        } else {
+            PreviewAlpha(alpha = PREVIEW_HIDE_ALPHA, shouldAnimate = false)
+        }
+    }
 
     /**
      * Returns true if back pressed is handled due to conditions like users at a secondary screen.

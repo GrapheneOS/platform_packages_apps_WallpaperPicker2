@@ -18,28 +18,19 @@ package com.android.wallpaper.picker.preview.ui.binder
 import android.content.Context
 import android.graphics.Point
 import android.view.View
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.transition.Transition
 import com.android.wallpaper.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
-import com.android.wallpaper.model.wallpaper.DeviceDisplayType.Companion.FOLDABLE_DISPLAY_TYPES
-import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder2.ALPHA_NON_SELECTED_PREVIEW
-import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder2.ALPHA_SELECTED_PREVIEW
 import com.android.wallpaper.picker.preview.ui.view.ClickableMotionLayout
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout.Companion.getViewId
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout2
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
-import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel.Companion.PreviewScreen
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 
 /** Binds single preview home screen and lock screen tabs view pager. */
 object PreviewPagerBinder2 {
@@ -60,6 +51,8 @@ object PreviewPagerBinder2 {
         wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
         isFoldable: Boolean,
+        onPreviewReady: ((Screen) -> Unit)? = null,
+        onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
         navigate: (View) -> Unit,
     ) {
         pagerItems.forEach { item ->
@@ -102,6 +95,11 @@ object PreviewPagerBinder2 {
                             wallpaperConnectionUtils = wallpaperConnectionUtils,
                             isFirstBindingDeferred = isFirstBindingDeferred,
                             navigate = navigate,
+                            onPreviewReady =
+                                // Only report onPreviewReady for UNFOLDED preview as it loads
+                                // longer than the FOLDED preview
+                                if (display == DeviceDisplayType.UNFOLDED) onPreviewReady else null,
+                            onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
                         )
                     }
                 }
@@ -123,57 +121,10 @@ object PreviewPagerBinder2 {
                     wallpaperConnectionUtils = wallpaperConnectionUtils,
                     isFirstBindingDeferred = isFirstBindingDeferred,
                     navigate = navigate,
+                    onPreviewReady = onPreviewReady,
+                    onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
                 )
             }
-        }
-
-        lifecycleOwner.lifecycleScope.launch {
-            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                combine(viewModel.currentPreviewScreen, viewModel.smallPreviewSelectedTab) {
-                        previewScreen,
-                        selectedTab ->
-                        previewScreen to selectedTab
-                    }
-                    .collect { (previewScreen, selectedTab) ->
-                        if (previewScreen == PreviewScreen.SMALL_PREVIEW) {
-                            Screen.entries.forEach { screen ->
-                                val screenView =
-                                    previewPager.requireViewById<View>(
-                                        pagerItems.elementAt(screen.ordinal)
-                                    )
-                                if (isFoldable) {
-                                    FOLDABLE_DISPLAY_TYPES.map {
-                                            screenView.requireViewById<View>(it.getViewId())
-                                        }
-                                        .forEach {
-                                            animatePreviewAlpha(
-                                                parent = it,
-                                                selected = selectedTab == screen,
-                                            )
-                                        }
-                                } else {
-                                    animatePreviewAlpha(
-                                        parent = screenView,
-                                        selected = selectedTab == screen,
-                                    )
-                                }
-                            }
-                        }
-                    }
-            }
-        }
-    }
-
-    private fun animatePreviewAlpha(parent: View, selected: Boolean) {
-        setOf(R.id.wallpaper_surface, R.id.workspace_surface).forEach {
-            parent
-                .requireViewById<View>(it)
-                .animate()
-                .alpha(if (selected) ALPHA_SELECTED_PREVIEW else ALPHA_NON_SELECTED_PREVIEW)
-                .setDuration(
-                    parent.resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
-                )
-                .start()
         }
     }
 }

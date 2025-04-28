@@ -162,6 +162,8 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
     }
 
     fun animateToExpanded() {
+        if (wallpaperCarousel.adapter?.itemCount == 0) return
+
         if (state == State.EXPANDED || state == State.EXPANDING) {
             return
         }

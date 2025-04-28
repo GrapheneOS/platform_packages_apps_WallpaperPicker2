@@ -47,18 +47,21 @@ class ApplyButton(context: Context, attrs: AttributeSet?) : FrameLayout(context,
     fun setApplyButtonState(state: ApplyButtonState) {
         when (state) {
             ApplyButtonState.APPLY_BUTTON_ENABLED -> {
+                isEnabled = true
                 applyButtonBackground.isEnabled = true
                 applyButtonBackground.background.alpha = 255 // 255 for 100% transparent
                 text.isInvisible = false
                 progressIndicator.isInvisible = true
             }
             ApplyButtonState.APPLY_BUTTON_DISABLED -> {
+                isEnabled = false
                 applyButtonBackground.isEnabled = false
                 applyButtonBackground.background.alpha = 31 // 31 for 12% transparent
                 text.isInvisible = false
                 progressIndicator.isInvisible = true
             }
             ApplyButtonState.APPLY_BUTTON_IN_PROGRESS -> {
+                isEnabled = false
                 applyButtonBackground.isEnabled = true
                 applyButtonBackground.background.alpha = 255 // 255 for 100% transparent
                 text.isInvisible = true
