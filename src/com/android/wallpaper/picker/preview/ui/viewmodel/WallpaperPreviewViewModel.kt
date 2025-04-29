@@ -129,6 +129,9 @@ constructor(
     private val _smallPreviewSelectedTab = MutableStateFlow(getWallpaperPreviewSource())
     val smallPreviewSelectedTab = _smallPreviewSelectedTab.asStateFlow()
 
+    private val _applyWallpaperPreviewSelectedTab = MutableStateFlow<Screen?>(null)
+    val applyWallpaperPreviewSelectedTab = _applyWallpaperPreviewSelectedTab.asStateFlow()
+
     val smallPreviewSelectedTabIndex = smallPreviewSelectedTab.map { smallPreviewTabs.indexOf(it) }
 
     private val isLockPreviewReady: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -201,6 +204,10 @@ constructor(
 
     fun getSmallPreviewTabIndex(): Int {
         return smallPreviewTabs.indexOf(smallPreviewSelectedTab.value)
+    }
+
+    fun setApplyWallpaperPreviewSelectedTab(screen: Screen?) {
+        _applyWallpaperPreviewSelectedTab.value = screen
     }
 
     fun setSmallPreviewSelectedTab(screen: Screen) {
@@ -385,11 +392,15 @@ constructor(
     val onNextButtonClicked: Flow<(() -> Unit)?> =
         isSetWallpaperButtonEnabled.map {
             if (it) {
-                { _currentPreviewScreen.value = PreviewScreen.APPLY_WALLPAPER }
+                {
+                    setApplyWallpaperPreviewSelectedTab(smallPreviewSelectedTab.value)
+                    _currentPreviewScreen.value = PreviewScreen.APPLY_WALLPAPER
+                }
             } else null
         }
 
     val onCancelButtonClicked: Flow<() -> Unit> = flowOf {
+        applyWallpaperPreviewSelectedTab.value?.let { setSmallPreviewSelectedTab(it) }
         _currentPreviewScreen.value = PreviewScreen.SMALL_PREVIEW
     }
 

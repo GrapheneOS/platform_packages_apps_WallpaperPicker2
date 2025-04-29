@@ -151,14 +151,14 @@ object WallpaperPreviewBinder {
                                         }
                                     }
                                 wallpaperConnectionUtils.connect(
-                                    applicationContext,
-                                    wallpaper,
-                                    whichPreview,
-                                    screen.toFlag(),
-                                    surfaceView,
-                                    engineRenderingConfig,
-                                    isFirstBindingDeferred,
-                                    listener,
+                                    context = applicationContext,
+                                    wallpaperModel = wallpaper,
+                                    whichPreview = whichPreview,
+                                    destinationFlag = screen.toFlag(),
+                                    surfaceView = surfaceView,
+                                    engineRenderingConfig = engineRenderingConfig,
+                                    isFirstBindingDeferred = isFirstBindingDeferred,
+                                    listener = listener,
                                     onPreviewReady = { onPreviewReady?.invoke(screen) },
                                 )
                             } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {

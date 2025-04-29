@@ -163,9 +163,11 @@ constructor(
             } else if (creativeCategories.size >= CAROUSEL_ITEMS_THRESHOLD) {
                 // if creatives more or equal to 3 than return only creatives
                 return@combine creativeCategories
-            } else {
+            } else if (defaultWallpapers.size >= CAROUSEL_ITEMS_THRESHOLD) {
                 // otherwise just return on-device wallpapers
                 return@combine defaultWallpapers
+            } else {
+                return@combine emptyList()
             }
         }
 

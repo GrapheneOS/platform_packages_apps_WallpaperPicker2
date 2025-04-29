@@ -466,8 +466,9 @@
     <dimen name="foldable_apply_wallpaper_preview_button_min_height">@dimen/handheld_apply_wallpaper_preview_button_min_height</dimen>
     <dimen name="foldable_apply_wallpaper_preview_button_min_width">178dp</dimen>
 
-    <!-- Height for curated photo tile. -->
-    <dimen name="curated_photo_height">205dp</dimen>
+    <!-- Height for curated photo tile. This height is actually set on horizontal RecyclerView
+     which sets it for the curated photos. -->
+    <dimen name="curated_photo_height">132dp</dimen>
     <dimen name="curated_photo_horizontal_margin">4dp</dimen>
     <dimen name="curated_photo_tile_width">172dp</dimen>
 

@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.picker.preview.ui.fragment
 
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.ActivityOptions
 import android.app.AlertDialog
@@ -256,6 +255,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 lifecycleOwner = viewLifecycleOwner,
                 mainScope = mainScope,
                 isFoldable = isFoldable,
+                wallpaperConnectionUtils = wallpaperConnectionUtils,
             ) {
                 Toast.makeText(
                         context,
@@ -281,7 +281,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                                 .toBundle(),
                         )
                     } else {
-                        activityReference.setResult(Activity.RESULT_OK)
+                        activityReference.setResult(RESULT_OK)
                     }
                     activityReference.finish()
                 }
@@ -416,6 +416,15 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                         // always proceed to transition to the apply wallpaper all state to also
                         // fade in the action buttons at the bottom.
                         previewPager.transitionToState(R.id.apply_wallpaper_all)
+                    } else if (
+                        currentId == R.id.apply_wallpaper_lock_preview_selected ||
+                            currentId == R.id.apply_wallpaper_home_preview_selected
+                    ) {
+                        wallpaperPreviewViewModel.setApplyWallpaperPreviewSelectedTab(
+                            if (currentId == R.id.apply_wallpaper_lock_preview_selected)
+                                Screen.LOCK_SCREEN
+                            else Screen.HOME_SCREEN
+                        )
                     }
                 }
             }

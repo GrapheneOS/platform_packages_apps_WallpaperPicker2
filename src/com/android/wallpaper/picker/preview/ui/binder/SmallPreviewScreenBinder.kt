@@ -29,6 +29,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.transition.Transition
 import com.android.wallpaper.R
 import com.android.wallpaper.model.Screen
+import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.ui.view.ClickableMotionLayout
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewConfigViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
@@ -86,6 +87,23 @@ object SmallPreviewScreenBinder {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
+                    combine(viewModel.smallPreviewSelectedTab, viewModel.wallpaper, ::Pair)
+                        .collect { (tab, wallpaper) ->
+                            if (wallpaper is WallpaperModel.LiveWallpaperModel && isFoldable) {
+                                Screen.entries.forEach { screen ->
+                                    wallpaperConnectionUtils.setEngineVisibility(
+                                        packageName =
+                                            wallpaper.liveWallpaperData.systemWallpaperInfo
+                                                .packageName,
+                                        screen = screen,
+                                        isVisible = tab == screen,
+                                    )
+                                }
+                            }
+                        }
+                }
+
+                launch {
                     combine(
                             viewModel.currentPreviewScreen,
                             viewModel.smallPreviewSelectedTab,
@@ -131,10 +149,6 @@ object SmallPreviewScreenBinder {
                                     fragmentLayout.transitionToState(R.id.small_preview_no_header)
                                     previewPagerContainer.transitionToState(
                                         R.id.show_apply_wallpaper
-                                    )
-                                    previewPager.transitionToState(
-                                        if (isFoldable) R.id.apply_wallpaper_lock_preview_selected
-                                        else R.id.apply_wallpaper_preview_only
                                     )
                                 }
                             }

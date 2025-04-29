@@ -130,7 +130,7 @@
     <string name="wallpaper_picker_entry_title" msgid="5185793991582084891">"Mudar plano de fundo"</string>
     <string name="lockscreen_wallpaper_preview_card_content_description" msgid="2244890820627302245">"Plano de fundo da tela de bloqueio"</string>
     <string name="apply_btn" msgid="5764555565943538528">"Aplicar"</string>
-    <string name="apply_wallpaper_title_text" msgid="2100301064316744087">"Aplicar plano de fundo?"</string>
+    <string name="apply_wallpaper_title_text" msgid="2100301064316744087">"Usar plano de fundo?"</string>
     <string name="accessibility_customize_hidden" msgid="6320568529768181691">"O painel \"Personalizar\" foi ocultado"</string>
     <string name="accessibility_customize_shown" msgid="590964727831547651">"O painel \"Personalizar\" está em exibição"</string>
     <string name="accessibility_info_hidden" msgid="2288603712350168107">"O painel \"Informações\" foi ocultado"</string>

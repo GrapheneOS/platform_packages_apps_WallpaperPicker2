@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.picker.common.preview.ui.viewmodel
 
+import android.graphics.Point
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.WallpaperModelsPair
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
@@ -126,6 +127,10 @@ constructor(
                 displayUtils.getWallpaperDisplay().displayId
             }
         }
+    }
+
+    fun updateDisplayConfiguration(size: Point) {
+        _wallpaperDisplaySize.value = size
     }
 
     @ViewModelScoped

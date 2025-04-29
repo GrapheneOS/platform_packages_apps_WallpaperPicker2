@@ -48,13 +48,13 @@
             <include
                 layout="@layout/curated_photo_tile"
                 android:layout_width="@dimen/curated_photo_tile_width"
-                android:layout_height="@dimen/curated_photo_height"
+                android:layout_height="match_parent"
                 android:visibility="invisible" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/wallpaper_carousel"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/curated_photo_height"
                 android:clipToPadding="false"
                 android:clipChildren="false"
                 android:orientation="horizontal"

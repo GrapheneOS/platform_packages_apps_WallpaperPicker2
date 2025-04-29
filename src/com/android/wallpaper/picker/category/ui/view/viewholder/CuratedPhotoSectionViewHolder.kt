@@ -74,8 +74,18 @@ class CuratedPhotoSectionViewHolder(itemView: View, private val windowWidth: Int
     ) {
         val isNewPickerUi = BaseFlags.get().isNewPickerUi()
         if (isNewPickerUi) {
+
+            // setting the color for section title
             ColorUpdateBinder.bind(
                 setColor = { color -> sectionTitle.setTextColor(color) },
+                color = colorUpdateViewModel.colorOnSurface,
+                shouldAnimate = shouldAnimateColor,
+                lifecycleOwner = lifecycleOwner,
+            )
+
+            // setting the color for more photo label
+            ColorUpdateBinder.bind(
+                setColor = { color -> morePhotosLabel.setTextColor(color) },
                 color = colorUpdateViewModel.colorOnSurface,
                 shouldAnimate = shouldAnimateColor,
                 lifecycleOwner = lifecycleOwner,
@@ -260,6 +270,12 @@ class CuratedPhotoSectionViewHolder(itemView: View, private val windowWidth: Int
             } else {
                 morePhotosLabel.visibility = View.VISIBLE
                 sectionTiles.adapter = CuratedPhotosAdapter(item.tileViewModels)
+                val currentParams = sectionTiles.layoutParams
+                currentParams.height =
+                    sectionTiles.context.resources
+                        .getDimension(R.dimen.curated_photo_height)
+                        .toInt()
+                sectionTiles.layoutParams = currentParams
                 val layoutManagerCuratedPhotos = CarouselLayoutManager()
                 sectionTiles.layoutManager = layoutManagerCuratedPhotos
                 val horizontalScrollEnforcer = CarouselHorizontalScrollEnforcer(itemView.context)

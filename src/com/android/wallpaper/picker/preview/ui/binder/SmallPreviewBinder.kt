@@ -46,6 +46,7 @@ import kotlinx.coroutines.launch
 
 object SmallPreviewBinder {
 
+    // TODO(b/339081035): Remove null case for isFoldable with the flag
     fun bind(
         applicationContext: Context,
         view: View,
@@ -63,6 +64,7 @@ object SmallPreviewBinder {
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
         onPreviewReady: ((Screen) -> Unit)? = null,
         onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
+        isFoldable: Boolean? = null,
     ) {
 
         val previewCard: CardView = view.requireViewById(R.id.preview_card)
@@ -259,6 +261,7 @@ object SmallPreviewBinder {
             isFirstBindingDeferred = isFirstBindingDeferred,
             onPreviewReady = onPreviewReady,
             onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
+            isFoldable = isFoldable,
         )
     }
 

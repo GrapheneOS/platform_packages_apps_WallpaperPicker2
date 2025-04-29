@@ -27,17 +27,21 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.wallpaper.R
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType.Companion.FOLDABLE_DISPLAY_TYPES
 import com.android.wallpaper.picker.customization.ui.util.ViewAlphaAnimator.animateToAlpha
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.Companion.PREVIEW_FADE_ALPHA
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.Companion.PREVIEW_SHOW_ALPHA
+import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.ui.view.ClickableMotionLayout
 import com.android.wallpaper.picker.preview.ui.view.DualDisplayAspectRatioLayout.Companion.getViewId
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel.Companion.PreviewScreen
+import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 /** Binds the set wallpaper button on small preview. */
@@ -49,6 +53,7 @@ object ApplyWallpaperScreenBinder {
         lifecycleOwner: LifecycleOwner,
         @MainDispatcher mainScope: CoroutineScope,
         isFoldable: Boolean,
+        wallpaperConnectionUtils: WallpaperConnectionUtils,
         onWallpaperSet: () -> Unit,
     ) {
         val applyButton = previewPager.requireViewById<Button>(R.id.apply_button)
@@ -58,6 +63,50 @@ object ApplyWallpaperScreenBinder {
         val subTitle = previewPager.requireViewById<TextView>(R.id.apply_wallpaper_description)
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    combine(
+                            viewModel.applyWallpaperPreviewSelectedTab.filterNotNull(),
+                            viewModel.wallpaper,
+                            ::Pair,
+                        )
+                        .collect { (tab, wallpaper) ->
+                            if (wallpaper is WallpaperModel.LiveWallpaperModel && isFoldable) {
+                                Screen.entries.forEach { screen ->
+                                    wallpaperConnectionUtils.setEngineVisibility(
+                                        packageName =
+                                            wallpaper.liveWallpaperData.systemWallpaperInfo
+                                                .packageName,
+                                        screen = screen,
+                                        isVisible = tab == screen,
+                                    )
+                                }
+                            }
+                        }
+                }
+
+                launch {
+                    combine(
+                            viewModel.currentPreviewScreen,
+                            viewModel.applyWallpaperPreviewSelectedTab,
+                            ::Pair,
+                        )
+                        .collect { (screen, tab) ->
+                            if (screen == PreviewScreen.APPLY_WALLPAPER) {
+                                if (isFoldable) {
+                                    previewPager.transitionToState(
+                                        if (tab == Screen.LOCK_SCREEN)
+                                            R.id.apply_wallpaper_lock_preview_selected
+                                        else R.id.apply_wallpaper_home_preview_selected
+                                    )
+                                } else {
+                                    previewPager.transitionToState(
+                                        R.id.apply_wallpaper_preview_only
+                                    )
+                                }
+                            }
+                        }
+                }
+
                 launch { viewModel.applyWallpaperSubTitle.collect { subTitle.text = it } }
 
                 launch {

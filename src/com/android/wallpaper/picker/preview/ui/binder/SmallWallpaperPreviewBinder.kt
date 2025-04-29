@@ -46,11 +46,15 @@ import kotlinx.coroutines.launch
  * preview, with regard to its underlying [WallpaperModel].
  */
 object SmallWallpaperPreviewBinder {
+    private const val HANDHELD_CONNECTION_NUM = 2
+    private const val FOLDABLE_CONNECTION_NUM = 4
+
     /**
      * @param onFullResImageViewCreated This callback is only used when the wallpaperModel is a
      *   [WallpaperModel.StaticWallpaperModel]. [FullWallpaperPreviewBinder] needs the callback to
      *   further delegate the touch events and set the state change listener.
      */
+    // TODO(b/339081035): Remove null case for isFoldable with the flag
     fun bind(
         surface: SurfaceView,
         viewModel: WallpaperPreviewViewModel,
@@ -64,6 +68,7 @@ object SmallWallpaperPreviewBinder {
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
         onPreviewReady: ((Screen) -> Unit)? = null,
         onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
+        isFoldable: Boolean? = null,
     ) {
         var surfaceCallback: SurfaceViewUtils.SurfaceCallback? = null
         viewLifecycleOwner.lifecycleScope.launch {
@@ -82,6 +87,7 @@ object SmallWallpaperPreviewBinder {
                         isFirstBindingDeferred = isFirstBindingDeferred,
                         onPreviewReady = onPreviewReady,
                         onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
+                        isFoldable = isFoldable,
                     )
                 surface.setZOrderMediaOverlay(true)
                 surfaceCallback?.let { surface.holder.addCallback(it) }
@@ -112,6 +118,7 @@ object SmallWallpaperPreviewBinder {
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
         onPreviewReady: ((Screen) -> Unit)? = null,
         onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
+        isFoldable: Boolean?,
     ): SurfaceViewUtils.SurfaceCallback {
 
         return object : SurfaceViewUtils.SurfaceCallback {
@@ -138,6 +145,14 @@ object SmallWallpaperPreviewBinder {
                                         viewModel.wallpaperDisplaySize.value,
                                     ),
                                     isFirstBindingDeferred,
+                                    totalEngineNum =
+                                        isFoldable?.let {
+                                            if (it) {
+                                                FOLDABLE_CONNECTION_NUM
+                                            } else {
+                                                HANDHELD_CONNECTION_NUM
+                                            }
+                                        } ?: 1,
                                     object : WallpaperEngineConnectionListener {
                                         override fun onWallpaperColorsChanged(
                                             colors: WallpaperColors?,

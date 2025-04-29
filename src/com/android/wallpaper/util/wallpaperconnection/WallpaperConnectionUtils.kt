@@ -23,6 +23,7 @@ import android.view.SurfaceView
 import android.view.View
 import com.android.app.tracing.TraceUtils.traceAsync
 import com.android.wallpaper.R
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination.Companion.toSetWallpaperFlags
@@ -63,10 +64,16 @@ constructor(
     // Track the currently used creative wallpaper config preview URI to avoid unnecessary multiple
     // update queries for the same preview.
     private val creativeWallpaperConfigPreviewUriMap = mutableMapOf<String, Uri>()
+    private val isPreviewEnginesConnected = CompletableDeferred<Boolean>()
 
     private val mutex = Mutex()
 
-    /** Only call this function when the surface view is attached. */
+    /**
+     * Only call this function when the surface view is attached.
+     *
+     * @param totalEngineNum numbers of engines that should be considered connected when all of them
+     *   are connected via [isPreviewEnginesConnected].
+     */
     suspend fun connect(
         context: Context,
         wallpaperModel: LiveWallpaperModel,
@@ -75,6 +82,7 @@ constructor(
         surfaceView: SurfaceView,
         engineRenderingConfig: EngineRenderingConfig,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
+        totalEngineNum: Int = 1,
         listener: WallpaperEngineConnection.WallpaperEngineConnectionListener? = null,
         onPreviewReady: (() -> Unit)? = null,
     ) {
@@ -115,8 +123,8 @@ constructor(
             if (!wallpaperConnectionMap.containsKey(engineKey)) {
                 mutex.withLock {
                     if (!wallpaperConnectionMap.containsKey(engineKey)) {
-                        wallpaperConnectionMap[engineKey] = coroutineScope {
-                            async {
+                        coroutineScope {
+                            wallpaperConnectionMap[engineKey] = async {
                                 initEngine(
                                     context,
                                     wallpaperModel.getWallpaperServiceIntent(),
@@ -127,6 +135,10 @@ constructor(
                                     listener,
                                     wallpaperModel.liveWallpaperData.description,
                                 )
+                            }
+
+                            if (wallpaperConnectionMap.size == totalEngineNum) {
+                                isPreviewEnginesConnected.complete(true)
                             }
                         }
                     }
@@ -180,6 +192,25 @@ constructor(
                             surfaceControls.clear()
                         }
                         wallpaperConnectionMap.remove(engineKey)?.await()?.disconnect(context)
+                    }
+            }
+        }
+    }
+
+    suspend fun setEngineVisibility(packageName: String, screen: Screen, isVisible: Boolean) {
+        if (isPreviewEnginesConnected.await()) {
+            mutex.withLock {
+                wallpaperConnectionMap
+                    .filterKeys { key ->
+                        key.startsWith(packageName) && key.contains(":${screen.toFlag()}:")
+                    }
+                    .values
+                    .forEach {
+                        try {
+                            it.await().engineConnection.get()?.engine?.setVisibility(isVisible)
+                        } catch (e: RemoteException) {
+                            Log.w(TAG, "Error setting engine visibility", e)
+                        }
                     }
             }
         }

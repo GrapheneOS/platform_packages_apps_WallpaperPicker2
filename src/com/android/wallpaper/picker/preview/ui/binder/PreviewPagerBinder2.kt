@@ -100,6 +100,7 @@ object PreviewPagerBinder2 {
                                 // longer than the FOLDED preview
                                 if (display == DeviceDisplayType.UNFOLDED) onPreviewReady else null,
                             onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
+                            isFoldable = isFoldable,
                         )
                     }
                 }
@@ -123,6 +124,7 @@ object PreviewPagerBinder2 {
                     navigate = navigate,
                     onPreviewReady = onPreviewReady,
                     onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
+                    isFoldable = isFoldable,
                 )
             }
         }

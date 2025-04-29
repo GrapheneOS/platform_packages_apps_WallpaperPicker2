@@ -199,6 +199,24 @@ constructor(
         }
     }
 
+    /**
+     * Gets the size of the currently active display.
+     *
+     * @param context Must be a context that is associated with a display, such as an Activity or a
+     *   context created via createDisplayContext(android.view.Display).
+     */
+    fun getActiveDisplaySize(context: Context): Point {
+        return when (getCurrentDisplayType(context)) {
+            DeviceDisplayType.SINGLE,
+            DeviceDisplayType.UNFOLDED -> {
+                getWallpaperDisplay()
+            }
+            DeviceDisplayType.FOLDED -> {
+                getSmallerDisplay()
+            }
+        }.let { getRealSize(it) }
+    }
+
     private fun getRealArea(display: Display): Int {
         val displayInfo = DisplayInfo()
         display.getDisplayInfo(displayInfo)

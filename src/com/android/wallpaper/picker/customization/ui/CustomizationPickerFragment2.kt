@@ -237,6 +237,10 @@ class CustomizationPickerFragment2 :
         previewViewModel.setWhichPreview(WallpaperConnection.WhichPreview.PREVIEW_CURRENT)
         // TODO (b/348462236): adjust flow so this is always false when previewing current wallpaper
         previewViewModel.setIsWallpaperColorPreviewEnabled(false)
+        activity?.let {
+            val size = displayUtils.getActiveDisplaySize(it)
+            previewViewModel.updateDisplayConfiguration(size)
+        }
 
         val previewPager: ClickableMotionLayout = view.requireViewById(R.id.preview_pager)
         val previewPagerViews: PreviewPagerViews =
