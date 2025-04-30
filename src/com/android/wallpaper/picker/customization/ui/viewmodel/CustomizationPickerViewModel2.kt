@@ -28,11 +28,13 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
 class CustomizationPickerViewModel2
@@ -59,13 +61,19 @@ constructor(
     }
 
     val screen =
-        customizationOptionsViewModel.selectedOption.map {
-            if (it != null) {
-                Pair(PickerScreen.CUSTOMIZATION_OPTION, it)
-            } else {
-                Pair(PickerScreen.MAIN, null)
+        customizationOptionsViewModel.selectedOption
+            .map {
+                if (it != null) {
+                    Pair(PickerScreen.CUSTOMIZATION_OPTION, it)
+                } else {
+                    Pair(PickerScreen.MAIN, null)
+                }
             }
-        }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(),
+                Pair(PickerScreen.MAIN, null),
+            )
 
     private val isLockPreviewReady: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val isHomePreviewReady: MutableStateFlow<Boolean> = MutableStateFlow(false)

@@ -16,40 +16,23 @@
 
 package com.android.wallpaper.picker.customization.ui.binder
 
-import androidx.core.graphics.drawable.DrawableCompat
+import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.picker.customization.ui.view.PackThemeSuggestedChip
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object SuggestedEntryBinder {
-    fun bind(
+@Singleton
+class DefaultPackThemeSuggestedEntryBinder @Inject constructor() : PackThemeSuggestedEntryBinder {
+    override fun bind(
         view: PackThemeSuggestedChip,
         viewModel: CustomizationPickerViewModel2,
         colorUpdateViewModel: ColorUpdateViewModel,
         lifecycleOwner: LifecycleOwner,
+        navigateToPackThemeActivity: (Intent) -> Unit,
     ) {
-        val isOnMainScreen = {
-            viewModel.customizationOptionsViewModel.selectedOption.value == null
-        }
-
-        ColorUpdateBinder.bind(
-            setColor = { color ->
-                DrawableCompat.setTint(DrawableCompat.wrap(view.suggestedChip.background), color)
-            },
-            color = colorUpdateViewModel.colorSecondaryContainer,
-            shouldAnimate = isOnMainScreen,
-            lifecycleOwner = lifecycleOwner,
-        )
-        ColorUpdateBinder.bind(
-            setColor = { color ->
-                DrawableCompat.setTint(DrawableCompat.wrap(view.cancelButton.background), color)
-                DrawableCompat.setTint(DrawableCompat.wrap(view.icon.background), color)
-                view.suggestedChipText.setTextColor(color)
-            },
-            color = colorUpdateViewModel.colorOnPrimaryContainer,
-            shouldAnimate = isOnMainScreen,
-            lifecycleOwner = lifecycleOwner,
-        )
+        // Do nothing intended
     }
 }

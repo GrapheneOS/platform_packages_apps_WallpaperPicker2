@@ -49,7 +49,9 @@ import com.android.wallpaper.picker.common.preview.ui.binder.DefaultWorkspaceCal
 import com.android.wallpaper.picker.common.preview.ui.binder.WorkspaceCallbackBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultCustomizationOptionsBinder
+import com.android.wallpaper.picker.customization.ui.binder.DefaultPackThemeSuggestedEntryBinder
 import com.android.wallpaper.picker.customization.ui.binder.DefaultToolbarBinder
+import com.android.wallpaper.picker.customization.ui.binder.PackThemeSuggestedEntryBinder
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
 import com.android.wallpaper.picker.preview.ui.binder.ApplyWallpaperOptionsProvider
 import com.android.wallpaper.picker.preview.ui.binder.DefaultApplyWallpaperOptionsProvider
@@ -123,6 +125,12 @@ abstract class WallpaperPicker2AppModule {
     abstract fun bindLoadingStatusInteractor(
         impl: DefaultCategoriesLoadingStatusInteractor
     ): CategoriesLoadingStatusInteractor
+
+    @Binds
+    @Singleton
+    abstract fun bindPackThemeSuggestedEntryBinder(
+        impl: DefaultPackThemeSuggestedEntryBinder
+    ): PackThemeSuggestedEntryBinder
 
     @Binds
     @Singleton

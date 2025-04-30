@@ -20,7 +20,6 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageButton
@@ -61,7 +60,6 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
 
     init {
         inflate(context, R.layout.pack_theme_suggested_chip, this)
-
         suggestedChip = requireViewById(R.id.theme_pack_entry)
         expandedContainer = requireViewById(R.id.suggested_chip_expanded_container)
         suggestedChipText = requireViewById(R.id.suggested_chip_text)
@@ -69,12 +67,6 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
         cancelButton = requireViewById(R.id.suggested_chip_cancel_button)
 
         post {
-            // Make fixed width and height of the container, so it does not shrink with parent.
-            expandedContainer.layoutParams =
-                LayoutParams(expandedContainer.width, expandedContainer.height).apply {
-                    gravity = Gravity.CENTER
-                }
-
             expandedWidth = width
             expandedHeight = height
         }

@@ -181,8 +181,6 @@ object WallpaperPickerEntryBinder {
                         wallpaperPickerEntryView.post {
                             if (it.isEmpty()) {
                                 wallpaperPickerEntryView.animateToCollapsed()
-                            } else {
-                                wallpaperPickerEntryView.animateToExpanded()
                             }
                         }
 

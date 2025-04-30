@@ -72,6 +72,7 @@ object CustomizationPickerBinder2 {
             ((collectionId: String, categoryType: CategoryType) -> Unit)?,
         navigateToExtendedWallpaperEffects: (() -> Unit)?,
         packThemeSuggestedChip: PackThemeSuggestedChip?,
+        packThemeSuggestedEntryBinder: PackThemeSuggestedEntryBinder,
     ) {
         val lockCustomizationOptionContainer: LinearLayout =
             view.requireViewById(R.id.lock_customization_option_container)
@@ -129,11 +130,12 @@ object CustomizationPickerBinder2 {
 
         if (get().isPackThemeEnabled()) {
             packThemeSuggestedChip?.let {
-                SuggestedEntryBinder.bind(
+                packThemeSuggestedEntryBinder.bind(
                     view = it,
                     viewModel = viewModel,
                     colorUpdateViewModel = colorUpdateViewModel,
                     lifecycleOwner = lifecycleOwner,
+                    navigateToPackThemeActivity = navigateToPackThemeActivity,
                 )
             }
         }

@@ -67,6 +67,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.launch
 
 /** Top level [ViewModel] for [WallpaperPreviewActivity] and its fragments */
@@ -120,6 +121,12 @@ constructor(
 
     private val _currentPreviewScreen = MutableStateFlow(PreviewScreen.SMALL_PREVIEW)
     val currentPreviewScreen = _currentPreviewScreen.asStateFlow()
+    val previousAndCurrentPreviewScreen =
+        currentPreviewScreen.runningFold<PreviewScreen, Pair<PreviewScreen?, PreviewScreen?>>(
+            null to null
+        ) { accumulator, currentValue ->
+            accumulator.second to currentValue
+        }
 
     val shouldEnableClickOnPager: Flow<Boolean> =
         _currentPreviewScreen.map { it != PreviewScreen.FULL_PREVIEW }

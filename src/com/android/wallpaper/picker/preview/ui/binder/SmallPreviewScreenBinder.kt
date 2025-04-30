@@ -112,22 +112,33 @@ object SmallPreviewScreenBinder {
                             viewModel.previewActionsViewModel.isDownloadVisible,
                             ::Quintuple,
                         )
-                        .collect { (screen, tab, isActionChecked, isNextVisible, isDownloadEnabled)
+                        .collect { (screen, tab, isActionChecked, isNextVisible, isDownloadVisible)
                             ->
                             when (screen) {
                                 PreviewScreen.SMALL_PREVIEW -> {
                                     val endState =
                                         if (isNextVisible) R.id.small_preview
                                         else R.id.small_preview_not_downloaded
-                                    if (
+                                    val isInitialTransitionState =
                                         fragmentLayout.endState == R.id.small_preview_no_header &&
                                             fragmentLayout.startState ==
-                                                R.id.small_preview_not_downloaded &&
-                                            !isDownloadEnabled
+                                                R.id.small_preview_not_downloaded
+                                    val isApplyWallpaperStates =
+                                        setOf(
+                                                R.id.apply_wallpaper_all,
+                                                R.id.apply_wallpaper_home_preview_selected,
+                                                R.id.apply_wallpaper_lock_preview_selected,
+                                            )
+                                            .contains(previewPager.currentState)
+                                    if (
+                                        isInitialTransitionState &&
+                                            !isDownloadVisible &&
+                                            !isApplyWallpaperStates
                                     ) {
                                         // When entering the non downloadable wallpaper preview the
-                                        // first time, use scheduleTransitionTo so the transition
-                                        // is not conflicting with the rest of the transition.
+                                        // first time and not coming from the apply wallpaper screen
+                                        // , use scheduleTransitionTo so the transition is not
+                                        // conflicting with the rest of the transition.
                                         fragmentLayout.scheduleTransitionTo(endState)
                                     } else {
                                         fragmentLayout.transitionToState(endState)

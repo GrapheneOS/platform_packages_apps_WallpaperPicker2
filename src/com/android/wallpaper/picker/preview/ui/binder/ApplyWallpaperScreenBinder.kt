@@ -86,22 +86,31 @@ object ApplyWallpaperScreenBinder {
 
                 launch {
                     combine(
-                            viewModel.currentPreviewScreen,
+                            viewModel.previousAndCurrentPreviewScreen,
                             viewModel.applyWallpaperPreviewSelectedTab,
                             ::Pair,
                         )
-                        .collect { (screen, tab) ->
-                            if (screen == PreviewScreen.APPLY_WALLPAPER) {
-                                if (isFoldable) {
-                                    previewPager.transitionToState(
-                                        if (tab == Screen.LOCK_SCREEN)
-                                            R.id.apply_wallpaper_lock_preview_selected
-                                        else R.id.apply_wallpaper_home_preview_selected
-                                    )
-                                } else {
-                                    previewPager.transitionToState(
-                                        R.id.apply_wallpaper_preview_only
-                                    )
+                        .collect { (screens, tab) ->
+                            val (previousScreen, currentScreen) = screens
+                            currentScreen?.let {
+                                if (it == PreviewScreen.APPLY_WALLPAPER) {
+                                    if (isFoldable) {
+                                        previewPager.transitionToState(
+                                            if (tab == Screen.LOCK_SCREEN)
+                                                R.id.apply_wallpaper_lock_preview_selected
+                                            else R.id.apply_wallpaper_home_preview_selected
+                                        )
+                                    } else {
+                                        // Transition to final apply wallpaper screen state if
+                                        // previous screen is not small preview
+                                        previewPager.transitionToState(
+                                            if (previousScreen == PreviewScreen.SMALL_PREVIEW) {
+                                                R.id.apply_wallpaper_preview_only
+                                            } else {
+                                                R.id.apply_wallpaper_all
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
