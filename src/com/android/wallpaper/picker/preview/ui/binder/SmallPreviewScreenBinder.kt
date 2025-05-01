@@ -54,6 +54,7 @@ object SmallPreviewScreenBinder {
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
         isFoldable: Boolean,
         onPreviewReady: ((Screen) -> Unit)? = null,
+        onStartTransition: (() -> Unit)? = null,
         onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
         navigate: (View) -> Unit,
     ) {
@@ -80,6 +81,7 @@ object SmallPreviewScreenBinder {
             isFirstBindingDeferred,
             isFoldable,
             onPreviewReady,
+            onStartTransition,
             onPreviewSurfaceDestroyed,
             navigate,
         )

@@ -78,6 +78,7 @@ object FullWallpaperPreviewBinder {
         savedInstanceState: Bundle?,
         wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
+        onStartTransition: (() -> Unit)? = null,
         onWallpaperLoaded: ((Boolean) -> Unit)? = null,
     ) {
         val wallpaperSurface: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
@@ -219,6 +220,7 @@ object FullWallpaperPreviewBinder {
                         lifecycleOwner = lifecycleOwner,
                         wallpaperConnectionUtils = wallpaperConnectionUtils,
                         isFirstBindingDeferred = isFirstBindingDeferred,
+                        onStartTransition = onStartTransition,
                     )
                 if (!BaseFlags.get().isNewPickerUi()) {
                     wallpaperSurface.setZOrderMediaOverlay(true)
@@ -322,6 +324,7 @@ object FullWallpaperPreviewBinder {
         lifecycleOwner: LifecycleOwner,
         wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
+        onStartTransition: (() -> Unit)?,
     ): SurfaceViewUtils.SurfaceCallback {
         return object : SurfaceViewUtils.SurfaceCallback {
 
@@ -353,6 +356,7 @@ object FullWallpaperPreviewBinder {
                                     surfaceView,
                                     engineRenderingConfig,
                                     isFirstBindingDeferred,
+                                    onPreviewReady = { onStartTransition?.invoke() },
                                 )
                                 if (!viewModel.isAccessibilityEnabled()) {
                                     surfaceTouchForwardingLayout.initTouchForwarding(surfaceView)
@@ -418,6 +422,7 @@ object FullWallpaperPreviewBinder {
                                     displaySize = displaySize,
                                     parentCoroutineScope = this,
                                     isFullScreen = true,
+                                    onStartTransition = { onStartTransition?.invoke() },
                                 )
                                 fullResImageView.doOnLayout {
                                     val imageSize =

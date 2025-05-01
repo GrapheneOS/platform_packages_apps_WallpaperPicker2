@@ -52,6 +52,7 @@ object PreviewPagerBinder2 {
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
         isFoldable: Boolean,
         onPreviewReady: ((Screen) -> Unit)? = null,
+        onStartTransition: (() -> Unit)? = null,
         onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
         navigate: (View) -> Unit,
     ) {
@@ -99,6 +100,7 @@ object PreviewPagerBinder2 {
                                 // Only report onPreviewReady for UNFOLDED preview as it loads
                                 // longer than the FOLDED preview
                                 if (display == DeviceDisplayType.UNFOLDED) onPreviewReady else null,
+                            onStartTransition = onStartTransition,
                             onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
                             isFoldable = isFoldable,
                         )
@@ -123,6 +125,7 @@ object PreviewPagerBinder2 {
                     isFirstBindingDeferred = isFirstBindingDeferred,
                     navigate = navigate,
                     onPreviewReady = onPreviewReady,
+                    onStartTransition = onStartTransition,
                     onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
                     isFoldable = isFoldable,
                 )

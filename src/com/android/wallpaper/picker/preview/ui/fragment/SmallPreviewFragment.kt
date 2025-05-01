@@ -128,9 +128,9 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        postponeEnterTransition()
         val isNewPickerUi = BaseFlags.get().isNewPickerUi()
         val isFoldable = displayUtils.hasMultiInternalDisplays()
-        postponeEnterTransition()
         currentView =
             inflater.inflate(
                 if (isNewPickerUi) {
@@ -235,6 +235,11 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             onPreviewReady = { previewScreen ->
                 wallpaperPreviewViewModel.setPreviewReady(previewScreen, true)
             },
+            onStartTransition = {
+                if (isNewPickerUi) {
+                    startPostponedEnterTransition()
+                }
+            },
             onPreviewSurfaceDestroyed = { previewScreen ->
                 wallpaperPreviewViewModel.setPreviewReady(previewScreen, false)
             },
@@ -311,7 +316,9 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             // preview from the full preview, and therefore should play the shared element re-enter
             // animation. Reset it after views are finished binding.
             wallpaperPreviewViewModel.resetFullPreviewConfigViewModel()
-            startPostponedEnterTransition()
+            if (!isNewPickerUi) {
+                startPostponedEnterTransition()
+            }
         }
 
         shareActivityResult =
@@ -439,6 +446,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         lockPreviewShades: List<View>?,
         homePreviewShades: List<View>?,
         onPreviewReady: ((Screen) -> Unit)? = null,
+        onStartTransition: (() -> Unit)? = null,
         onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
     ) {
         val tabs = view.findViewById<PreviewTabs>(R.id.preview_tabs_container)
@@ -457,6 +465,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 isFirstBindingDeferred = isFirstBindingDeferred,
                 isFoldable = isFoldable,
                 onPreviewReady = onPreviewReady,
+                onStartTransition = onStartTransition,
                 onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
             ) { sharedElement ->
                 lockPreviewShades?.forEach { it.isGone = true }

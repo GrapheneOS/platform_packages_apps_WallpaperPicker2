@@ -66,6 +66,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        postponeEnterTransition()
         enterTransition = AnimationUtil.getFastFadeInTransition()
         returnTransition = AnimationUtil.getFastFadeOutTransition()
         sharedElementEnterTransition = ChangeScaleAndPosition()
@@ -117,6 +118,7 @@ class FullPreviewFragment : Hilt_FullPreviewFragment() {
             savedInstanceState = savedInstanceState,
             wallpaperConnectionUtils = wallpaperConnectionUtils,
             isFirstBindingDeferred = isFirstBindingDeferred,
+            onStartTransition = { startPostponedEnterTransition() },
         ) { isFullScreen ->
             useLightToolbarOverride = isFullScreen
             setUpToolbar(view)

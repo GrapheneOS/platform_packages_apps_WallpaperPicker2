@@ -16,9 +16,12 @@
 package com.android.wallpaper.module.logging
 
 import android.content.Intent
+import android.stats.style.StyleEnums.SCREEN_UNSPECIFIED
+import com.android.wallpaper.module.logging.UserEventLogger.CustomizationPickerScreen
 import com.android.wallpaper.module.logging.UserEventLogger.EffectStatus
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.module.logging.UserEventLogger.WallpaperDestination
+import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -62,4 +65,11 @@ open class TestUserEventLogger @Inject constructor() : UserEventLogger {
     override fun logWallpaperExploreButtonClicked() {}
 
     override fun logEnterScreen(screen: Int) {}
+
+    @CustomizationPickerScreen
+    override fun transformCustomizationOptionToScreenForLogging(
+        customizationOption: CustomizationOption
+    ): Int {
+        return SCREEN_UNSPECIFIED
+    }
 }

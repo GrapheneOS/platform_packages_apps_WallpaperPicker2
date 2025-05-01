@@ -20,6 +20,8 @@ import android.stats.style.StyleEnums
 import androidx.annotation.IntDef
 import com.android.wallpaper.module.WallpaperPersister
 import com.android.wallpaper.module.WallpaperPersister.Destination
+import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
+import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 
 /** Interface for logging user events in the wallpaper picker. */
 interface UserEventLogger {
@@ -65,6 +67,12 @@ interface UserEventLogger {
 
     /** Log when entering a screen */
     fun logEnterScreen(@CustomizationPickerScreen screen: Int)
+
+    /** Map a [CustomizationOptionUtil.CustomizationOption] to a picker screen. */
+    @CustomizationPickerScreen
+    fun transformCustomizationOptionToScreenForLogging(
+        customizationOption: CustomizationOption
+    ): Int
 
     @IntDef(
         StyleEnums.LOCATION_PREFERENCE_UNSPECIFIED,

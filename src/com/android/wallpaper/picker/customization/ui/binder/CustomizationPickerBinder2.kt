@@ -61,7 +61,7 @@ object CustomizationPickerBinder2 {
         customizationOptionsBinder: CustomizationOptionsBinder,
         lifecycleOwner: LifecycleOwner,
         navigateToPrimary: () -> Unit,
-        navigateToSecondary: (screen: CustomizationOption) -> Unit,
+        navigateToSecondary: (option: CustomizationOption) -> Unit,
         navigateToWallpaperCategoriesScreen: (screen: Screen) -> Unit,
         navigateToMoreLockScreenSettingsActivity: () -> Unit,
         navigateToColorContrastSettingsActivity: () -> Unit,

@@ -52,6 +52,7 @@ import com.android.wallpaper.model.Screen.HOME_SCREEN
 import com.android.wallpaper.model.Screen.LOCK_SCREEN
 import com.android.wallpaper.module.LargeScreenMultiPanesChecker
 import com.android.wallpaper.module.MultiPanesChecker
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.WallpaperPickerDelegate.VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE
 import com.android.wallpaper.picker.category.ui.view.CategoriesFragment
@@ -110,6 +111,7 @@ class CustomizationPickerFragment2 :
     @Inject @MainDispatcher lateinit var mainScope: CoroutineScope
     @Inject lateinit var multiPanesChecker: MultiPanesChecker
     @Inject lateinit var individualPickerFactory: IndividualPickerFactory
+    @Inject lateinit var userEventLogger: UserEventLogger
 
     private val customizationPickerViewModel: CustomizationPickerViewModel2 by viewModels()
 
@@ -496,14 +498,19 @@ class CustomizationPickerFragment2 :
                     )
                 }
             },
-            navigateToSecondary = { screen ->
+            navigateToSecondary = { option ->
                 if (pickerMotionContainer.currentState != R.id.secondary) {
-                    customizationOptionFloatingSheetViewMap[screen]?.let { floatingSheetView ->
+                    customizationOptionFloatingSheetViewMap[option]?.let { floatingSheetView ->
                         setCustomizationOptionFloatingSheet(
                             floatingSheetViewContent = floatingSheetView,
                             floatingSheetContainer = customizationFloatingSheetContainer,
                             motionContainer = pickerMotionContainer,
                             onComplete = {
+                                userEventLogger.logEnterScreen(
+                                    userEventLogger.transformCustomizationOptionToScreenForLogging(
+                                        option
+                                    )
+                                )
                                 // Transition to secondary screen after content is set
                                 fullyCollapsed = pickerMotionContainer.progress == 1.0f
                                 pickerMotionContainer.transitionToState(R.id.secondary)

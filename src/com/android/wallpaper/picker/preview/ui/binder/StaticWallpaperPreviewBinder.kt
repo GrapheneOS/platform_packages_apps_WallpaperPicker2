@@ -59,6 +59,7 @@ object StaticWallpaperPreviewBinder {
         parentCoroutineScope: CoroutineScope,
         isFullScreen: Boolean = false,
         onPreviewReady: (() -> Unit)? = null,
+        onStartTransition: (() -> Unit)? = null,
     ) {
         val fullResImageView =
             staticPreviewView.requireViewById<SystemScaledSubsamplingScaleImageView>(
@@ -144,6 +145,7 @@ object StaticWallpaperPreviewBinder {
                         } else {
                             onPreviewReady?.invoke()
                         }
+                        onStartTransition?.invoke()
                     }
                 }
             }

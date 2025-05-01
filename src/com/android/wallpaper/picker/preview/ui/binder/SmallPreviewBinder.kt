@@ -63,6 +63,7 @@ object SmallPreviewBinder {
         wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
         onPreviewReady: ((Screen) -> Unit)? = null,
+        onStartTransition: (() -> Unit)? = null,
         onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
         isFoldable: Boolean? = null,
     ) {
@@ -260,6 +261,7 @@ object SmallPreviewBinder {
             wallpaperConnectionUtils = wallpaperConnectionUtils,
             isFirstBindingDeferred = isFirstBindingDeferred,
             onPreviewReady = onPreviewReady,
+            onStartTransition = onStartTransition,
             onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
             isFoldable = isFoldable,
         )

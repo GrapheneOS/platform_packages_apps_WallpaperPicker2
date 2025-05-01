@@ -67,6 +67,7 @@ object SmallWallpaperPreviewBinder {
         wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
         onPreviewReady: ((Screen) -> Unit)? = null,
+        onStartTransition: (() -> Unit)? = null,
         onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
         isFoldable: Boolean? = null,
     ) {
@@ -86,6 +87,7 @@ object SmallWallpaperPreviewBinder {
                         wallpaperConnectionUtils = wallpaperConnectionUtils,
                         isFirstBindingDeferred = isFirstBindingDeferred,
                         onPreviewReady = onPreviewReady,
+                        onStartTransition = onStartTransition,
                         onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
                         isFoldable = isFoldable,
                     )
@@ -117,6 +119,7 @@ object SmallWallpaperPreviewBinder {
         wallpaperConnectionUtils: WallpaperConnectionUtils,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
         onPreviewReady: ((Screen) -> Unit)? = null,
+        onStartTransition: (() -> Unit)? = null,
         onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
         isFoldable: Boolean?,
     ): SurfaceViewUtils.SurfaceCallback {
@@ -163,7 +166,10 @@ object SmallWallpaperPreviewBinder {
                                             )
                                         }
                                     },
-                                    onPreviewReady = { onPreviewReady?.invoke(screen) },
+                                    onPreviewReady = {
+                                        onPreviewReady?.invoke(screen)
+                                        onStartTransition?.invoke()
+                                    },
                                 )
                             } else if (wallpaper is WallpaperModel.StaticWallpaperModel) {
                                 val staticPreviewView =
@@ -185,6 +191,7 @@ object SmallWallpaperPreviewBinder {
                                     displaySize = displaySize,
                                     parentCoroutineScope = this,
                                     onPreviewReady = { onPreviewReady?.invoke(screen) },
+                                    onStartTransition = { onStartTransition?.invoke() },
                                 )
                                 // This is to possibly shut down all live wallpaper services
                                 // if they exist; otherwise static wallpaper can not show up.
