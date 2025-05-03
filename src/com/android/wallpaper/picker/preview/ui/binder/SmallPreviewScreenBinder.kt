@@ -27,8 +27,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.transition.Transition
+import com.android.customization.picker.clock.shared.ClockSize
 import com.android.wallpaper.R
 import com.android.wallpaper.model.Screen
+import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.ui.view.ClickableMotionLayout
 import com.android.wallpaper.picker.preview.ui.viewmodel.FullPreviewConfigViewModel
@@ -38,6 +40,7 @@ import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 object SmallPreviewScreenBinder {
@@ -88,6 +91,26 @@ object SmallPreviewScreenBinder {
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    combine(
+                            viewModel.shouldUpdateSelectedPreviewTab,
+                            viewModel.suggestedWallpaperDestination,
+                            viewModel.preferredClockSize.filterNotNull(),
+                            ::Triple,
+                        )
+                        .collect { (shouldUpdate, dest, clockSize) ->
+                            if (
+                                shouldUpdate &&
+                                    (dest == WallpaperDestination.BOTH) &&
+                                    clockSize == ClockSize.SMALL
+                            ) {
+                                previewPager.jumpToState(R.id.lock_preview_selected)
+                                viewModel.setSmallPreviewSelectedTab(Screen.LOCK_SCREEN)
+                            }
+                            viewModel.setShouldUpdateSelectedPreviewTab(false)
+                        }
+                }
+
                 launch {
                     combine(viewModel.smallPreviewSelectedTab, viewModel.wallpaper, ::Pair)
                         .collect { (tab, wallpaper) ->

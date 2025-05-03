@@ -189,7 +189,7 @@ object ApplyWallpaperScreenBinder {
                 }
 
                 launch {
-                    viewModel.hasSuggestedWallpaperDestination.collect {
+                    viewModel.disableApplyWallpaperSelectionCheckBox.collect {
                         homeCheckbox.isEnabled = !it
                         lockCheckbox.isEnabled = !it
                         if (it) {

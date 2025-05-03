@@ -59,6 +59,8 @@ class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         shouldAnimateColor: () -> Boolean,
         lifecycleOwner: LifecycleOwner,
     ) {
+        wallpaperCategoryImage.contentDescription = item.contentDescription
+
         title.visibility = View.GONE
 
         val isNewPickerUi = BaseFlags.get().isNewPickerUi()

@@ -637,4 +637,17 @@
     <!-- Label for the collection title on the categories screen [CHAR LIMIT=None] -->
     <string name="categories_collection_label">Collections</string>
 
+    <!-- Content description for photos in the carousel view
+        The first parameter represents the index of the photo in the collection
+        The second parameter represents the total number of photos in the collection
+        [CHAR LIMIT=None] -->
+    <string name="carousel_content_description_photos">Photo %1$d of %2$d</string>
+
+    <!-- Content description for default wallpaper in the carousel view
+        Default wallpapers are shown when photos are not available.
+        The first parameter represents the index of the default wallpaper in the collection
+        The second parameter represents the total number of default wallpapers in the collection
+        [CHAR LIMIT=None] -->
+    <string name="carousel_content_description_default_wallpapers">Default wallpaper %1$d of %2$d</string>
+
 </resources>

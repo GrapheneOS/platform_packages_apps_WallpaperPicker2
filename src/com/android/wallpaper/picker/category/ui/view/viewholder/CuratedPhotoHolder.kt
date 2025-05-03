@@ -40,6 +40,7 @@ class CuratedPhotoHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val curatedPhotoTitle: TextView = itemView.requireViewById(R.id.carousel_text_view)
 
     fun bind(item: TileViewModel, context: Context, isFirst: Boolean) {
+        curatedPhotoImage.contentDescription = item.contentDescription
         item.thumbnailAsset?.let { asset ->
             asset.loadDrawableWithTransition(
                 context,

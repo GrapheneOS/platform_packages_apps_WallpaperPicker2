@@ -29,5 +29,6 @@ class TileViewModel(
     val text: String,
     val showTitle: Boolean = true,
     val maxCategoriesInRow: SectionCardinality = SectionCardinality.Single,
+    val contentDescription: String? = null,
     val onClicked: (() -> Unit)? = null,
 )

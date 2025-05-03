@@ -136,6 +136,13 @@ constructor(
     private val _smallPreviewSelectedTab = MutableStateFlow(getWallpaperPreviewSource())
     val smallPreviewSelectedTab = _smallPreviewSelectedTab.asStateFlow()
 
+    private val _shouldUpdateSelectedPreviewTab = MutableStateFlow(false)
+    val shouldUpdateSelectedPreviewTab = _shouldUpdateSelectedPreviewTab.asStateFlow()
+
+    fun setShouldUpdateSelectedPreviewTab(shouldUpdate: Boolean) {
+        _shouldUpdateSelectedPreviewTab.value = shouldUpdate
+    }
+
     private val _applyWallpaperPreviewSelectedTab = MutableStateFlow<Screen?>(null)
     val applyWallpaperPreviewSelectedTab = _applyWallpaperPreviewSelectedTab.asStateFlow()
 
@@ -422,12 +429,15 @@ constructor(
     val isApplyButtonEnabled: Flow<Boolean> =
         setWallpaperDialogSelectedScreens.map { it.isNotEmpty() }
 
-    val hasSuggestedWallpaperDestination: Flow<Boolean> =
+    val suggestedWallpaperDestination: Flow<WallpaperDestination?> =
         wallpaper.map { model ->
             (model as? LiveWallpaperModel)?.liveWallpaperData?.description?.let {
                 applyWallpaperOptionsProvider.getSuggestedWallpaperDestination(it)
-            } != null
+            }
         }
+
+    val disableApplyWallpaperSelectionCheckBox: Flow<Boolean> =
+        suggestedWallpaperDestination.map { it == WallpaperDestination.BOTH }
 
     val applyWallpaperSubTitle: Flow<String?> =
         wallpaper.map { model ->

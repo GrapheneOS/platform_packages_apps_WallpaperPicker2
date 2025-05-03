@@ -30,7 +30,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import com.android.wallpaper.R
 import com.android.wallpaper.config.BaseFlags
-import com.android.wallpaper.model.WallpaperInfoContract
 import com.android.wallpaper.model.WallpaperInfoContract.WALLPAPER_DESCRIPTION_CONTENT_HANDLING
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
@@ -42,7 +41,7 @@ import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 /** This class provides utility methods to facilitate the extended wallpaper effects flow */
 object ExtendedWallpaperEffectsUtils {
 
-    public fun registerExtendedWallpaperEffectsActivityLauncher(
+    fun registerExtendedWallpaperEffectsActivityLauncher(
         activity: FragmentActivity?,
         lifecycleOwner: LifecycleOwner,
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
@@ -69,11 +68,13 @@ object ExtendedWallpaperEffectsUtils {
                                             intent
                                                 ?.extras
                                                 ?.getParcelable(
-                                                    WallpaperInfoContract
-                                                        .WALLPAPER_DESCRIPTION_CONTENT_HANDLING,
+                                                    WALLPAPER_DESCRIPTION_CONTENT_HANDLING,
                                                     WallpaperDescription::class.java,
                                                 ),
                                     ) { wallpaperModel ->
+                                        wallpaperPreviewViewModel.setShouldUpdateSelectedPreviewTab(
+                                            true
+                                        )
                                         wallpaperPreviewViewModel.setPreviewWallpaperModel(
                                             wallpaperModel
                                         )

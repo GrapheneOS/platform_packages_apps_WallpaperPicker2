@@ -309,26 +309,37 @@ constructor(
         if (BaseFlags.get().isNewPickerUi()) {
                 curatedPhotosInteractor.category.distinctUntilChanged().map { category ->
                     val tileViewModels =
-                        category.categoryModel.collectionCategoryData?.wallpaperModels?.map {
-                            wallpaperModel ->
-                            val staticWallpaperModel =
-                                wallpaperModel as? WallpaperModel.StaticWallpaperModel
-                            TileViewModel(
-                                defaultDrawable = null,
-                                thumbnailAsset =
-                                    ContentUriAsset(
-                                        context,
-                                        staticWallpaperModel?.imageWallpaperData?.uri,
-                                    ),
-                                text = category.categoryModel.commonCategoryData.title,
-                                maxCategoriesInRow = SectionCardinality.Single,
-                            ) {
-                                navigateToPreviewScreen(
-                                    wallpaperModel,
-                                    CategoryType.MyPhotosCategories,
-                                )
-                            }
-                        } ?: emptyList()
+                        category.categoryModel.collectionCategoryData
+                            ?.wallpaperModels
+                            ?.withIndex()
+                            ?.map { wallpaperModel ->
+                                val staticWallpaperModel =
+                                    wallpaperModel.value as? WallpaperModel.StaticWallpaperModel
+                                val total =
+                                    category.categoryModel.collectionCategoryData.wallpaperModels
+                                        .size
+                                TileViewModel(
+                                    defaultDrawable = null,
+                                    thumbnailAsset =
+                                        ContentUriAsset(
+                                            context,
+                                            staticWallpaperModel?.imageWallpaperData?.uri,
+                                        ),
+                                    text = category.categoryModel.commonCategoryData.title,
+                                    maxCategoriesInRow = SectionCardinality.Single,
+                                    contentDescription =
+                                        context.getString(
+                                            R.string.carousel_content_description_photos,
+                                            wallpaperModel.index + 1,
+                                            total,
+                                        ),
+                                ) {
+                                    navigateToPreviewScreen(
+                                        wallpaperModel.value,
+                                        CategoryType.MyPhotosCategories,
+                                    )
+                                }
+                            } ?: emptyList()
 
                     val isSuggestedPhotoCarouselVisible = tileViewModels.size >= 3
                     PhotosViewModel(
