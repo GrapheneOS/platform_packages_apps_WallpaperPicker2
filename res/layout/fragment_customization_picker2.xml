@@ -26,6 +26,7 @@
         android:layout_height="@dimen/wallpaper_control_button_size"
         android:background="@drawable/nav_button_background"
         android:layout_marginStart="@dimen/nav_button_start_margin"
+        android:contentDescription="@string/bottom_action_bar_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="@id/toolbar">
