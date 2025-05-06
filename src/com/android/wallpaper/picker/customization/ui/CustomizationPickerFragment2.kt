@@ -166,9 +166,14 @@ class CustomizationPickerFragment2 :
             view.requireViewById(R.id.apply_button),
         )
 
-        // TODO(b/412547250): Manage the suggested button by the settings.secure.
+        val showSuggestedChip =
+            Settings.Secure.getInt(
+                view.context.contentResolver,
+                Settings.Secure.SUGGESTED_THEME_FEATURE_ENABLED,
+                /* def= */ 0,
+            ) == 1
         val packThemeSuggestedChip: PackThemeSuggestedChip? =
-            if (BaseFlags.get().isPackThemeEnabled()) {
+            if (BaseFlags.get().isPackThemeEnabled() && showSuggestedChip) {
                 val stubView: ViewStub = view.requireViewById(R.id.stub_pack_theme_suggested_chip)
                 stubView.inflate() as PackThemeSuggestedChip
             } else null
