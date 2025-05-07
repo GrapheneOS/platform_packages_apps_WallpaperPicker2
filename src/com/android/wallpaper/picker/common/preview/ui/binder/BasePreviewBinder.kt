@@ -18,8 +18,12 @@ package com.android.wallpaper.picker.common.preview.ui.binder
 
 import android.content.Context
 import android.graphics.Point
+import android.os.Bundle
 import android.view.SurfaceView
 import android.view.View
+import androidx.core.view.AccessibilityDelegateCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -67,6 +71,7 @@ object BasePreviewBinder {
         onPreviewReady: ((Screen) -> Unit)? = null,
         onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
         clockViewFactory: ClockViewFactory,
+        previewTextLabel: View? = null,
     ) {
         val wallpaperSurface: SurfaceView = view.requireViewById(R.id.wallpaper_surface)
         val workspaceSurface: SurfaceView = view.requireViewById(R.id.workspace_surface)
@@ -89,6 +94,46 @@ object BasePreviewBinder {
                                 view.setOnClickListener { onLaunchPreview?.invoke(wallpaper) }
                             } else {
                                 view.setOnClickListener { onTransitionToScreen?.invoke(screen) }
+                            }
+                            previewTextLabel?.let {
+                                ViewCompat.setAccessibilityDelegate(
+                                    it,
+                                    object : AccessibilityDelegateCompat() {
+                                        override fun onInitializeAccessibilityNodeInfo(
+                                            host: View,
+                                            info: AccessibilityNodeInfoCompat,
+                                        ) {
+                                            super.onInitializeAccessibilityNodeInfo(host, info)
+                                            info.addAction(
+                                                AccessibilityNodeInfoCompat
+                                                    .AccessibilityActionCompat
+                                                    .ACTION_CLICK
+                                            )
+                                        }
+
+                                        override fun performAccessibilityAction(
+                                            host: View,
+                                            action: Int,
+                                            args: Bundle?,
+                                        ): Boolean {
+                                            if (
+                                                action ==
+                                                    AccessibilityNodeInfoCompat
+                                                        .AccessibilityActionCompat
+                                                        .ACTION_CLICK
+                                                        .id
+                                            ) {
+                                                onTransitionToScreen?.invoke(screen)
+                                                return true
+                                            }
+                                            return super.performAccessibilityAction(
+                                                host,
+                                                action,
+                                                args,
+                                            )
+                                        }
+                                    },
+                                )
                             }
                         }
                 }

@@ -66,6 +66,7 @@ import com.android.wallpaper.picker.customization.ui.CustomizationPickerActivity
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder2
+import com.android.wallpaper.picker.customization.ui.binder.DarkModeUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.PackThemeSuggestedEntryBinder
 import com.android.wallpaper.picker.customization.ui.binder.PagerTouchInterceptorBinder
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
@@ -189,6 +190,7 @@ class CustomizationPickerFragment2 :
             pickerMotionContainer.isInvisible = true
         }
 
+        var isMotionContainerInitialized = false
         val optionContainer: ConstraintLayout =
             view.requireViewById(R.id.customization_option_container)
         val customizationFloatingSheetContainer: FrameLayout =
@@ -204,6 +206,20 @@ class CustomizationPickerFragment2 :
                 statusBarHeight = insets.top,
                 navBarHeight = insets.bottom,
             )
+
+            if (isMotionContainerInitialized) {
+                // Reconfigure motion container constraints if already initialized, to adjust
+                // for new insets (doing it only after it's initialized to avoid jumping if
+                // insets first arrive before the first initialization)
+                configurePickerMotionConstraints(
+                    pickerMotionContainer = pickerMotionContainer,
+                    wallpaperPickerEntry = view.requireViewById(R.id.wallpaper_picker_entry),
+                    previewLabelHeight = view.requireViewById<View>(R.id.label_placeholder).height,
+                    optionContainerHeight = optionContainer.height,
+                    packThemeSuggestedChip = packThemeSuggestedChip,
+                    bottomInset = insets.bottom,
+                )
+            }
             WindowInsetsCompat.CONSUMED
         }
         // Inflate the views of customization options only when options data is ready.
@@ -242,6 +258,7 @@ class CustomizationPickerFragment2 :
                     previewLabelHeight = view.requireViewById<View>(R.id.label_placeholder).height,
                     optionContainerHeight = optionContainer.height,
                     packThemeSuggestedChip = packThemeSuggestedChip,
+                    bottomInset = optionContainer.paddingBottom,
                 )
 
                 if (isInitSecondaryScreen && initSelectedOption != null) {
@@ -276,6 +293,7 @@ class CustomizationPickerFragment2 :
                         packThemeSuggestedChip,
                     )
                 }
+                isMotionContainerInitialized = true
             }
         }
 
@@ -364,6 +382,7 @@ class CustomizationPickerFragment2 :
         previewLabelHeight: Int,
         optionContainerHeight: Int,
         packThemeSuggestedChip: PackThemeSuggestedChip?,
+        bottomInset: Int,
     ) {
         val isLargeScreenSingleDisplayPortrait = displayUtils.isLargeScreenSingleDisplayPortrait()
         val wallpaperPickerEntryExpandedHeight = wallpaperPickerEntry.height
@@ -402,6 +421,7 @@ class CustomizationPickerFragment2 :
         val expandedHeaderHeight =
             (pickerMotionContainer.height -
                     wallpaperPickerEntryExpandedHeight -
+                    bottomInset -
                     resources.getDimensionPixelSize(R.dimen.customization_option_entry_height) / 2)
                 .coerceAtMost(maxExpandedPagerHeight)
                 .coerceAtLeast(minExpandedPagerHeight)
@@ -608,6 +628,16 @@ class CustomizationPickerFragment2 :
     private fun setupToolbar(navButton: FrameLayout, toolbar: Toolbar, applyButton: ApplyButton) {
         toolbar.title = getString(R.string.app_name)
         toolbar.setBackgroundColor(Color.TRANSPARENT)
+        DarkModeUpdateBinder.bind(
+            onProgressChange = { progress ->
+                val shouldUseLightText = progress == 1f
+                setUpStatusBar(shouldUseLightText)
+            },
+            colorUpdateViewModel = colorUpdateViewModel,
+            // Status bar text can only be set to light or dark, and cannot be animated
+            shouldAnimate = { false },
+            lifecycleOwner = viewLifecycleOwner,
+        )
         toolbarBinder.bind(
             navButton,
             toolbar,
@@ -719,6 +749,7 @@ class CustomizationPickerFragment2 :
             previewPager = previewPagerViews.previewPager,
             preview = previewPagerViews.lockPreview,
             isFirstBinding = isFirstBinding,
+            previewTextLabel = previewPagerViews.lockPreviewLabel,
         )
 
         bindPreview(
@@ -726,6 +757,7 @@ class CustomizationPickerFragment2 :
             previewPager = previewPagerViews.previewPager,
             preview = previewPagerViews.homePreview,
             isFirstBinding = isFirstBinding,
+            previewTextLabel = previewPagerViews.homePreviewLabel,
         )
     }
 
@@ -734,6 +766,7 @@ class CustomizationPickerFragment2 :
         previewPager: ClickableMotionLayout,
         preview: View,
         isFirstBinding: Boolean,
+        previewTextLabel: View? = null,
     ) {
         val appContext = context?.applicationContext ?: return
         val activity = activity ?: return
@@ -791,6 +824,7 @@ class CustomizationPickerFragment2 :
                 customizationPickerViewModel.setPreviewReady(previewScreen, false)
             },
             clockViewFactory = clockViewFactory,
+            previewTextLabel = previewTextLabel,
         )
     }
 

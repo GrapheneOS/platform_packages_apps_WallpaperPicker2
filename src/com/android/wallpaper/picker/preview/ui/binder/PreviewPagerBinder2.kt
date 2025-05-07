@@ -101,7 +101,11 @@ object PreviewPagerBinder2 {
                                 // longer than the FOLDED preview
                                 if (display == DeviceDisplayType.UNFOLDED) onPreviewReady else null,
                             onStartTransition = onStartTransition,
-                            onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
+                            onPreviewSurfaceDestroyed =
+                                // Align with onPreviewReady to only report
+                                // onPreviewSurfaceDestroyed for UNFOLDED preview
+                                if (display == DeviceDisplayType.UNFOLDED) onPreviewSurfaceDestroyed
+                                else null,
                             isFoldable = isFoldable,
                         )
                     }

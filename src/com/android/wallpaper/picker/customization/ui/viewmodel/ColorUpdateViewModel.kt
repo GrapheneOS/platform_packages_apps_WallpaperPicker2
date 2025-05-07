@@ -230,4 +230,8 @@ constructor(
             coroutineContext.cancel()
         }
     }
+
+    companion object {
+        const val COLOR_ANIMATION_DURATION_MILLIS = 1500L
+    }
 }

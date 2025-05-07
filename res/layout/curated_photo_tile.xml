@@ -41,6 +41,7 @@
         android:layout_marginBottom="10dp"
         android:textColor="@color/system_primary"
         android:textSize="14sp"
+        android:textStyle="bold"
         android:background="@android:color/transparent"
         android:padding="4dp"/>
 

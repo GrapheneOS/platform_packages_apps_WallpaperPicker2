@@ -22,12 +22,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel.Companion.COLOR_ANIMATION_DURATION_MILLIS
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 object ColorUpdateBinder {
-
-    const val COLOR_ANIMATION_DURATION_MILLIS = 1500L
 
     interface Binding {
         /** Destroys the binding in spite of lifecycle state. */
