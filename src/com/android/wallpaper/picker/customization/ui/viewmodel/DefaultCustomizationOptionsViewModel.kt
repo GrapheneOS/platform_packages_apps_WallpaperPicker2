@@ -49,12 +49,13 @@ constructor(
     override val discardChangesDialogViewModel: Flow<DiscardChangesDialogViewModel?> =
         _discardChangesDialogViewModel.asStateFlow()
 
-    fun showDiscardChangesDialogViewModel() {
+    fun showDiscardChangesDialogViewModel(onDiscard: () -> Unit) {
         _discardChangesDialogViewModel.value =
             DiscardChangesDialogViewModel(
                 onDismiss = { _discardChangesDialogViewModel.value = null },
                 onKeepEditing = { _discardChangesDialogViewModel.value = null },
                 onDiscard = {
+                    onDiscard.invoke()
                     _discardChangesDialogViewModel.value = null
                     unselectOption()
                 },
@@ -79,6 +80,8 @@ constructor(
     }
 
     override fun resetPreview() {}
+
+    override fun onTransitionToSecondaryScreenComplete() {}
 
     fun selectOption(option: CustomizationOptionUtil.CustomizationOption) {
         _selectedOptionState.value = option

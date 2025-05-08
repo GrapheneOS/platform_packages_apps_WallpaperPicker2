@@ -46,6 +46,9 @@ interface CustomizationOptionsViewModel {
 
     /** Reset all the customization options that are being previewed. */
     fun resetPreview()
+
+    /** When the transition to a secondary customization option screen completes. */
+    fun onTransitionToSecondaryScreenComplete()
 }
 
 interface CustomizationOptionsViewModelFactory {

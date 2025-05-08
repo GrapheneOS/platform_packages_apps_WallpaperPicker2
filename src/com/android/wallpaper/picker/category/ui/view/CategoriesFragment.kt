@@ -101,13 +101,21 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        val view =
-            inflater.inflate(R.layout.categories_fragment, container, /* attachToRoot= */ false)
+        val isNewPickerUi = BaseFlags.get().isNewPickerUi()
 
+        val view =
+            if (isNewPickerUi) {
+                // Inflate categories fragment with new toolbar.
+                inflater.inflate(
+                    R.layout.categories_fragment2,
+                    container,
+                    /* attachToRoot= */ false,
+                )
+            } else {
+                inflater.inflate(R.layout.categories_fragment, container, /* attachToRoot= */ false)
+            }
         setUpToolbar(view)
         setTitle(getText(R.string.wallpaper_title))
-
-        val isNewPickerUi = BaseFlags.get().isNewPickerUi()
 
         val categoriesHeaderImage: ImageView? = view.findViewById(R.id.categories_header_image)
         categoriesHeaderImage?.let { it.isVisible = isNewPickerUi }
@@ -119,9 +127,9 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
                     // AppBarLayout, therefore remove and re-add view to update colors based on new
                     // context
                     val contentParent = view.requireViewById<ViewGroup>(R.id.content_parent)
-                    val appBarLayout = view.requireViewById<AppBarLayout>(R.id.app_bar)
+                    val appBarLayout = contentParent.requireViewById<AppBarLayout>(R.id.app_bar)
                     contentParent.removeView(appBarLayout)
-                    layoutInflater.inflate(R.layout.section_header_content, contentParent, true)
+                    layoutInflater.inflate(R.layout.section_header_content2, contentParent, true)
                     setUpToolbar(view)
                     setTitle(getText(R.string.wallpaper_title))
                     contentParent.requestApplyInsets()

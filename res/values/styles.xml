@@ -155,6 +155,8 @@
         <item name="android:textFontWeight">500</item>
     </style>
 
+    <style name="CategorySectionTitleTextAppearance.TitleMedium" />
+
     <style name="CategorySectionTitleTextAppearance.TitleMediumEmphasized" />
 
     <!-- Individual components / Widgets -->
@@ -223,7 +225,7 @@
 
     <!-- Preview cards -->
     <style name="PreviewCard" parent="CardView">
-        <item name="cardCornerRadius">?android:dialogCornerRadius</item>
+        <item name="cardCornerRadius">@dimen/preview_corner_radius</item>
         <item name="android:clipChildren">true</item>
         <item name="contentPadding">@dimen/preview_card_padding</item>
         <item name="cardElevation">0dp</item>
@@ -324,9 +326,13 @@
     <style name="TextAppearance.DeviceDefault.Small"
         parent="@android:style/TextAppearance.DeviceDefault.Small" />
 
-    <style name="TextAppearance.DeviceDefault.Small.LabelMedium" />
+    <style name="TextAppearance.DeviceDefault.Small.LabelMedium">
+        <item name="android:textSize">12sp</item>
+    </style>
 
-    <style name="TextAppearance.DeviceDefault.Small.LabelMediumEmphasized" />
+    <style name="TextAppearance.DeviceDefault.Small.LabelMediumEmphasized">
+        <item name="android:textSize">12sp</item>
+    </style>
 
     <style name="TextAppearance.DeviceDefault.Small.LabelLargeEmphasized" />
 

@@ -158,4 +158,8 @@
     <string name="max_zoom_percentage" msgid="2111670558746866030">"උපරිම විශාලනය ලබා ගන්නා ලදි"</string>
     <string name="min_zoom_percentage" msgid="5931879817379214316">"අවම විශාලනය ලබා ගන්නා ලදි"</string>
     <string name="categories_collection_label" msgid="319541962984573943">"එකතු"</string>
+    <!-- no translation found for carousel_content_description_photos (3664564065854277456) -->
+    <skip />
+    <!-- no translation found for carousel_content_description_default_wallpapers (2497547285129692731) -->
+    <skip />
 </resources>

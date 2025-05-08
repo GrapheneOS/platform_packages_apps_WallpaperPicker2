@@ -25,7 +25,7 @@
         android:id="@+id/section_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/CategorySectionTitleTextAppearance.TitleMediumEmphasized"
+        android:textAppearance="@style/CategorySectionTitleTextAppearance"
         android:focusable="false"
         android:layout_centerVertical="true"
         android:layout_marginBottom="@dimen/grid_item_category_title_margin_bottom"/>
@@ -40,7 +40,7 @@
             android:id="@+id/more_photos_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/CategorySectionTitleTextAppearance.TitleMediumEmphasized"
+            android:textAppearance="@style/CategorySectionTitleTextAppearance"
             android:focusable="false"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/more_photos_button"

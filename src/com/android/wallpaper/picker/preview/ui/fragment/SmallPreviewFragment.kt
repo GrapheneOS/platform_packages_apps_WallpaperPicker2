@@ -48,9 +48,7 @@ import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.TrampolinePickerActivity
-import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.util.EmptyTransitionListener
-import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import com.android.wallpaper.picker.preview.ui.binder.ApplyWallpaperScreenBinder
@@ -96,7 +94,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
     @Inject lateinit var logger: UserEventLogger
     @Inject lateinit var imageEffectDialogUtil: ImageEffectDialogUtil
     @Inject lateinit var wallpaperConnectionUtils: WallpaperConnectionUtils
-    @Inject lateinit var colorUpdateViewModel: ColorUpdateViewModel
 
     private val flags = InjectorProvider.getInjector().getFlags()
 
@@ -188,24 +185,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                         container.addView(shade)
                     }
                 }
-
-            ColorUpdateBinder.bind(
-                setColor = { color ->
-                    lockPreviewShades?.forEach { shade -> shade.setBackgroundColor(color) }
-                },
-                color = colorUpdateViewModel.colorSurfaceContainer,
-                shouldAnimate = { lockPreviewShades?.first()?.alpha != 0F },
-                lifecycleOwner = viewLifecycleOwner,
-            )
-
-            ColorUpdateBinder.bind(
-                setColor = { color ->
-                    homePreviewShades?.forEach { shade -> shade.setBackgroundColor(color) }
-                },
-                color = colorUpdateViewModel.colorSurfaceContainer,
-                shouldAnimate = { homePreviewShades?.first()?.alpha != 0F },
-                lifecycleOwner = viewLifecycleOwner,
-            )
 
             SmallPreviewAlphaAnimationBinder.bind(
                 lockPreviewShades = lockPreviewShades,

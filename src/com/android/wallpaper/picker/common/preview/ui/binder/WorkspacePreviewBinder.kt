@@ -28,7 +28,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.systemui.shared.keyguard.shared.model.KeyguardQuickAffordanceSlots.SLOT_ID_BOTTOM_START
-import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_HIDE_CLOCK
 import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_HIGHLIGHT_QUICK_AFFORDANCES
 import com.android.systemui.shared.quickaffordance.shared.model.KeyguardPreviewConstants.KEY_INITIALLY_SELECTED_SLOT_ID
 import com.android.wallpaper.model.Screen
@@ -163,7 +162,6 @@ object WorkspacePreviewBinder {
                     )
                     .apply {
                         if (screen == Screen.LOCK_SCREEN) {
-                            putBoolean(KEY_HIDE_CLOCK, true)
                             putString(KEY_INITIALLY_SELECTED_SLOT_ID, SLOT_ID_BOTTOM_START)
                             putBoolean(KEY_HIGHLIGHT_QUICK_AFFORDANCES, false)
                         }

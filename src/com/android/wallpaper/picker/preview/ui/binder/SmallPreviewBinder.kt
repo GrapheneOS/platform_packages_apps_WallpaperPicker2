@@ -112,9 +112,12 @@ object SmallPreviewBinder {
         // Don't set radius for set wallpaper dialog
         if (!viewModel.showSetWallpaperDialog.value) {
             // When putting the surface on top for full transition, the card view is behind the
-            // surface view so we need to apply radius on surface view instead
-            wallpaperSurface.cornerRadius = previewCard.radius
-            workspaceSurface.cornerRadius = previewCard.radius
+            // surface view so we need to apply radius on surface view instead, posting to get the
+            // final radius
+            previewCard.post {
+                wallpaperSurface.cornerRadius = previewCard.radius
+                workspaceSurface.cornerRadius = previewCard.radius
+            }
         }
 
         // Set transition names to enable the small to full preview enter and return shared
@@ -222,7 +225,9 @@ object SmallPreviewBinder {
                             } else {
                                 onClick?.let {
                                     view.setOnClickListener {
-                                        if (BaseFlags.get().isNewPickerUi()) {
+                                        // If tab != screen, it's pager switching tab and no need to
+                                        // set z order
+                                        if (BaseFlags.get().isNewPickerUi() && tab == screen) {
                                             // Set top z order for shared element transition
                                             wallpaperSurface.setZOrderOnTop(true)
                                             workspaceSurface.setZOrderOnTop(true)

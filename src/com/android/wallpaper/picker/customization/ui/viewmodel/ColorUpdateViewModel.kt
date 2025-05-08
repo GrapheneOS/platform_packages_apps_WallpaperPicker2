@@ -232,6 +232,6 @@ constructor(
     }
 
     companion object {
-        const val COLOR_ANIMATION_DURATION_MILLIS = 1500L
+        const val COLOR_ANIMATION_DURATION_MILLIS = 500L
     }
 }

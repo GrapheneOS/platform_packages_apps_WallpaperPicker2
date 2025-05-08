@@ -158,4 +158,6 @@
     <string name="max_zoom_percentage" msgid="2111670558746866030">"ຊູມຮອດລະດັບສູງສຸດແລ້ວ"</string>
     <string name="min_zoom_percentage" msgid="5931879817379214316">"ຊູມຮອດລະດັບຕ່ຳສຸດແລ້ວ"</string>
     <string name="categories_collection_label" msgid="319541962984573943">"ຄໍເລັກຊັນ"</string>
+    <string name="carousel_content_description_photos" msgid="3664564065854277456">"ຮູບພາບ %1$d ຈາກ %2$d"</string>
+    <string name="carousel_content_description_default_wallpapers" msgid="2497547285129692731">"ຮູບພື້ນຫຼັງເລີ່ມຕົ້ນ %1$d ໃນ %2$d"</string>
 </resources>

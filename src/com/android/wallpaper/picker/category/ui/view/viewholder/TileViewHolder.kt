@@ -65,6 +65,9 @@ class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val isNewPickerUi = BaseFlags.get().isNewPickerUi()
         if (isNewPickerUi) {
+            categorySubtitle.setTextAppearance(
+                R.style.TextAppearance_DeviceDefault_Small_LabelMedium
+            )
             ColorUpdateBinder.bind(
                 setColor = { color ->
                     title.setTextColor(color)

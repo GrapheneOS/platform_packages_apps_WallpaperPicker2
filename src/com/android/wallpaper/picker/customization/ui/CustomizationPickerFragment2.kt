@@ -449,7 +449,7 @@ class CustomizationPickerFragment2 :
                         // isLargeScreenSingleDisplayPortrait is true
                         if (!isLargeScreenSingleDisplayPortrait) {
                             wallpaperPickerEntry.animateToCollapsed()
-                            packThemeSuggestedChip?.animateToCollapsed()
+                            packThemeSuggestedChip?.animateToCollapsed({})
                         }
                     }
 
@@ -467,6 +467,9 @@ class CustomizationPickerFragment2 :
                         // sheet content, which can possibly be interrupted by the floating sheet
                         // translating down.
                         customizationPickerViewModel.customizationOptionsViewModel.resetPreview()
+                    } else if (currentId == R.id.secondary) {
+                        customizationPickerViewModel.customizationOptionsViewModel
+                            .onTransitionToSecondaryScreenComplete()
                     }
                 }
             }

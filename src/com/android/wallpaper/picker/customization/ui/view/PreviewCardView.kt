@@ -26,10 +26,7 @@ import com.android.wallpaper.util.ScreenSizeCalculator
  * [CardView] that calculates the corner radius dynamically when on measure. We use the ratio
  * between its height and the screen height to calculate the corner radius.
  */
-class PreviewCardView(
-    context: Context,
-    attrs: AttributeSet?,
-) : CardView(context, attrs) {
+class PreviewCardView(context: Context, attrs: AttributeSet?) : CardView(context, attrs) {
 
     // This should be the corner radius when the preview height is the screen height
     private val previewCornerRadius = resources.getDimensionPixelSize(R.dimen.preview_corner_radius)

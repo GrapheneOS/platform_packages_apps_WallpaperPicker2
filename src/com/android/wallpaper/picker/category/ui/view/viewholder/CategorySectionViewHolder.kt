@@ -57,8 +57,8 @@ class CategorySectionViewHolder(itemView: View, private val windowWidth: Int) :
     ) {
         val isNewPickerUi = BaseFlags.get().isNewPickerUi()
 
-        // color binding happens with BC-25 flag turned on
         if (isNewPickerUi) {
+            sectionTitle.setTextAppearance(R.style.TextAppearance_DeviceDefault_Small_TitleMedium)
             ColorUpdateBinder.bind(
                 setColor = { color -> sectionTitle.setTextColor(color) },
                 color = colorUpdateViewModel.colorOnSurface,

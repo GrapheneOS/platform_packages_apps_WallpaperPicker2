@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.customization.ui.view
 import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
+import android.provider.Settings
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -57,6 +58,7 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
     private var progress = 1f
     private var animator: ValueAnimator? = null
     private var state: State = State.EXPANDED
+    private var hideSuggestedChip = false
 
     init {
         inflate(context, R.layout.pack_theme_suggested_chip, this)
@@ -69,6 +71,20 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
         post {
             expandedWidth = width
             expandedHeight = height
+        }
+
+        cancelButton.setOnClickListener {
+            animateToCollapsed(
+                animationEndCallback = {
+                    hideSuggestedChip = true
+                    visibility = View.GONE
+                }
+            )
+            Settings.Secure.putInt(
+                context.contentResolver,
+                Settings.Secure.SUGGESTED_THEME_FEATURE_ENABLED,
+                0,
+            )
         }
     }
 
@@ -84,13 +100,13 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
         params.width = (expandedWidth * progress).toInt()
         params.height = (expandedHeight * progress).toInt()
 
-        visibility = if (params.height == 0) View.GONE else View.VISIBLE
+        visibility = if (params.height == 0 || hideSuggestedChip) View.GONE else View.VISIBLE
 
         layoutParams = params
     }
 
     fun animateToExpanded() {
-        if (state == State.EXPANDED || state == State.EXPANDING) {
+        if (state == State.EXPANDED || state == State.EXPANDING || hideSuggestedChip) {
             return
         }
         animator?.cancel()
@@ -122,8 +138,8 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
         animator?.start()
     }
 
-    fun animateToCollapsed() {
-        if (state == State.COLLAPSED || state == State.COLLAPSING) {
+    fun animateToCollapsed(animationEndCallback: () -> Unit) {
+        if (state == State.COLLAPSED || state == State.COLLAPSING || hideSuggestedChip) {
             return
         }
         animator?.cancel()
@@ -140,6 +156,7 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
 
                         override fun onAnimationEnd(animation: Animator) {
                             state = State.COLLAPSED
+                            animationEndCallback()
                         }
 
                         override fun onAnimationCancel(animation: Animator) {
