@@ -157,6 +157,10 @@ interface UserEventLogger {
     @Retention(AnnotationRetention.SOURCE)
     annotation class CustomizationPickerScreen
 
+    @IntDef(StyleEnums.APP_ICON_STYLE_UNSPECIFIED, StyleEnums.APP_ICON_STYLE_THEMED)
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class AppIconStyle
+
     companion object {
         @WallpaperDestination
         fun toWallpaperDestinationForLogging(@Destination destination: Int): Int {

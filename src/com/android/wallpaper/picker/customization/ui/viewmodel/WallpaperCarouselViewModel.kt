@@ -26,6 +26,7 @@ import com.android.wallpaper.picker.category.domain.interactor.OnDeviceWallpaper
 import com.android.wallpaper.picker.category.ui.view.SectionCardinality
 import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
 import com.android.wallpaper.picker.customization.shared.model.CategoryType
+import com.android.wallpaper.picker.customization.ui.util.PhotoMediaUtils
 import com.android.wallpaper.picker.data.WallpaperModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -55,34 +56,36 @@ constructor(
     val navigationEvents = _navigationEvents.asSharedFlow()
 
     val curatedPhotoCarouselItems: Flow<List<TileViewModel>> =
-        curatedPhotosInteractor.category.distinctUntilChanged().map { category ->
-            category.categoryModel.collectionCategoryData?.wallpaperModels?.withIndex()?.map {
-                wallpaperModelWithIndex ->
-                val staticWallpaperModel =
-                    wallpaperModelWithIndex.value as? WallpaperModel.StaticWallpaperModel
-                val total = category.categoryModel.collectionCategoryData.wallpaperModels.size
+        curatedPhotosInteractor.category
+            .distinctUntilChanged(PhotoMediaUtils.distinctMediaKeyChanged())
+            .map { category ->
+                category.categoryModel.collectionCategoryData?.wallpaperModels?.withIndex()?.map {
+                    wallpaperModelWithIndex ->
+                    val staticWallpaperModel =
+                        wallpaperModelWithIndex.value as? WallpaperModel.StaticWallpaperModel
+                    val total = category.categoryModel.collectionCategoryData.wallpaperModels.size
 
-                TileViewModel(
-                    defaultDrawable = null,
-                    thumbnailAsset =
-                        ContentUriAsset(context, staticWallpaperModel?.imageWallpaperData?.uri),
-                    text = category.categoryModel.commonCategoryData.title,
-                    showTitle = false,
-                    maxCategoriesInRow = SectionCardinality.Single,
-                    contentDescription =
-                        context.getString(
-                            R.string.carousel_content_description_photos,
-                            wallpaperModelWithIndex.index + 1,
-                            total,
-                        ),
-                ) {
-                    navigateToPreviewScreen(
-                        wallpaperModelWithIndex.value,
-                        CategoryType.CuratedPhotos,
-                    )
-                }
-            } ?: emptyList()
-        }
+                    TileViewModel(
+                        defaultDrawable = null,
+                        thumbnailAsset =
+                            ContentUriAsset(context, staticWallpaperModel?.imageWallpaperData?.uri),
+                        text = category.categoryModel.commonCategoryData.title,
+                        showTitle = false,
+                        maxCategoriesInRow = SectionCardinality.Single,
+                        contentDescription =
+                            context.getString(
+                                R.string.carousel_content_description_photos,
+                                wallpaperModelWithIndex.index + 1,
+                                total,
+                            ),
+                    ) {
+                        navigateToPreviewScreen(
+                            wallpaperModelWithIndex.value,
+                            CategoryType.CuratedPhotos,
+                        )
+                    }
+                } ?: emptyList()
+            }
 
     /**
      * This [Flow] maps on device [WallpaperModel] to [TileViewModel]. It is consumed by the

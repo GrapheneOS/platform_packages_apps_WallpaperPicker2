@@ -42,6 +42,8 @@ class FakeCuratedPhotosInteractorImpl @Inject constructor() : CuratedPhotosInter
         TODO("Not yet implemented")
     }
 
+    override fun refreshContent() {}
+
     fun setCategory(newCategory: PhotoCategoryModel) {
         _category.value = newCategory
     }

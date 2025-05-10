@@ -33,4 +33,7 @@ interface CuratedPhotosInteractor {
      * visibility of sign in banner.
      */
     fun setBannerDismissed(dismissed: Boolean)
+
+    /** This method will trigger a refresh of the curated photos collection */
+    fun refreshContent()
 }

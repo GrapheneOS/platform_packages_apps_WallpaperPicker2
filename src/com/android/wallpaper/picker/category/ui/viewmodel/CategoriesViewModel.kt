@@ -36,6 +36,7 @@ import com.android.wallpaper.picker.category.domain.interactor.MyPhotosInteracto
 import com.android.wallpaper.picker.category.domain.interactor.ThirdPartyCategoryInteractor
 import com.android.wallpaper.picker.category.ui.view.SectionCardinality
 import com.android.wallpaper.picker.customization.shared.model.CategoryType
+import com.android.wallpaper.picker.customization.ui.util.PhotoMediaUtils
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.data.category.CategoryModel
 import com.android.wallpaper.picker.network.domain.NetworkStatusInteractor
@@ -102,6 +103,10 @@ constructor(
             },
             Intent.ACTION_SET_WALLPAPER,
         )
+    }
+
+    fun refreshCuratedPhotos() {
+        curatedPhotosInteractor.refreshContent()
     }
 
     private fun updateLiveWallpapersCategories(packageName: String, @PackageStatus status: Int) {
@@ -307,7 +312,9 @@ constructor(
 
     private val myPhotosSectionViewModel: Flow<SectionViewModel> =
         if (BaseFlags.get().isNewPickerUi()) {
-                curatedPhotosInteractor.category.distinctUntilChanged().map { category ->
+            curatedPhotosInteractor.category
+                .distinctUntilChanged(PhotoMediaUtils.distinctMediaKeyChanged())
+                .map { category ->
                     val tileViewModels =
                         category.categoryModel.collectionCategoryData
                             ?.wallpaperModels
@@ -318,6 +325,7 @@ constructor(
                                 val total =
                                     category.categoryModel.collectionCategoryData.wallpaperModels
                                         .size
+
                                 TileViewModel(
                                     defaultDrawable = null,
                                     thumbnailAsset =
@@ -356,8 +364,10 @@ constructor(
                         navigateToPhotosPicker(null)
                     }
                 }
-            } else {
-                myPhotosInteractor.category.distinctUntilChanged().map { category ->
+        } else {
+            myPhotosInteractor.category
+                .distinctUntilChanged()
+                .map { category ->
                     SectionViewModel(
                         tileViewModels =
                             listOf(
@@ -375,16 +385,16 @@ constructor(
                         sectionTitle = context.getString(R.string.choose_a_wallpaper_section_title),
                     )
                 }
-            }
-            .onEmpty {
-                emit(
-                    SectionViewModel(
-                        tileViewModels = emptyList(),
-                        columnCount = 0,
-                        sectionTitle = "No Photos Available",
+                .onEmpty {
+                    emit(
+                        SectionViewModel(
+                            tileViewModels = emptyList(),
+                            columnCount = 0,
+                            sectionTitle = "No Photos Available",
+                        )
                     )
-                )
-            }
+                }
+        }
 
     // The ordering of addition of viewModels here decides the final ordering how sections would
     // appear in the categories page.

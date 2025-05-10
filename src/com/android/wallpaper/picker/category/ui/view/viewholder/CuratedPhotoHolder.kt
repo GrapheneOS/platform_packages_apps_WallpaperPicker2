@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.category.ui.view.viewholder
 
 import android.app.WallpaperColors
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.View
@@ -69,9 +70,15 @@ class CuratedPhotoHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             if (item.showTitle) {
                 asset.decodeBitmap { bitmap ->
                     if (bitmap != null) {
+                        val safeBitmap =
+                            if (bitmap.config == Bitmap.Config.HARDWARE) {
+                                bitmap.copy(Bitmap.Config.ARGB_8888, false)
+                            } else {
+                                bitmap
+                            }
                         bindJob =
                             CoroutineScope(Dispatchers.IO).launch {
-                                val colors = WallpaperColors.fromBitmap(bitmap)
+                                val colors = WallpaperColors.fromBitmap(safeBitmap)
                                 withContext(Dispatchers.Main) {
                                     val backgroundColor =
                                         colors?.primaryColor?.toArgb() ?: Color.DKGRAY

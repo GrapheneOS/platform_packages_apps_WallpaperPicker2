@@ -40,6 +40,7 @@ import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
@@ -98,6 +99,7 @@ object SmallPreviewScreenBinder {
                             viewModel.preferredClockSize.filterNotNull(),
                             ::Triple,
                         )
+                        .distinctUntilChanged()
                         .collect { (shouldUpdate, dest, clockSize) ->
                             if (
                                 shouldUpdate &&
@@ -107,7 +109,11 @@ object SmallPreviewScreenBinder {
                                 previewPager.jumpToState(R.id.lock_preview_selected)
                                 viewModel.setSmallPreviewSelectedTab(Screen.LOCK_SCREEN)
                             }
-                            viewModel.setShouldUpdateSelectedPreviewTab(false)
+                            // Only set false if the current value is true, otherwise it might set
+                            // false multiple times and override true before true has been read
+                            if (shouldUpdate) {
+                                viewModel.setShouldUpdateSelectedPreviewTab(false)
+                            }
                         }
                 }
 

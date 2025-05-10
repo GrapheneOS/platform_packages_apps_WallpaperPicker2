@@ -131,6 +131,11 @@ class CustomizationPickerActivity2 :
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        categoriesViewModel.refreshCuratedPhotos()
+    }
+
     override fun onEnterAnimationComplete() {
         super.onEnterAnimationComplete()
         if (isInitialCreation) {

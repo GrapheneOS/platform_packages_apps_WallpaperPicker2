@@ -39,4 +39,6 @@ class DefaultCuratedPhotosInteractorImpl @Inject constructor() : CuratedPhotosIn
     override fun setBannerDismissed(dismissed: Boolean) {
         TODO("Not yet implemented")
     }
+
+    override fun refreshContent() {}
 }
