@@ -21,12 +21,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.category.ui.view.viewholder.CuratedPhotoHolder
 import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
+import com.android.wallpaper.util.CuratedPhotosTimeUtil
 
 /** Custom adaptor for curated photos carousel in the categories page. */
-class CuratedPhotosAdapter(val items: List<TileViewModel>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CuratedPhotosAdapter(
+    val items: List<TileViewModel>,
+    val curatedPhotosTimeUtil: CuratedPhotosTimeUtil,
+    val userEventLogger: UserEventLogger,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var visiblePosition = -1 // Track the position of the visible TextView
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -49,7 +54,7 @@ class CuratedPhotosAdapter(val items: List<TileViewModel>) :
     private fun createIndividualHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view: View = layoutInflater.inflate(R.layout.curated_photo_tile, parent, false)
-        return CuratedPhotoHolder(view)
+        return CuratedPhotoHolder(view, curatedPhotosTimeUtil, userEventLogger)
     }
 
     fun setVisiblePosition(position: Int) {

@@ -16,8 +16,10 @@
 
 package com.android.wallpaper.picker.category.ui.view
 
+import android.annotation.NonNull
 import android.annotation.RequiresApi
 import android.content.Context
+import android.content.res.Configuration
 import android.hardware.display.DisplayManager
 import android.net.Uri
 import android.os.Build
@@ -45,6 +47,7 @@ import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import com.android.wallpaper.util.ActivityUtils
 import com.android.wallpaper.util.converter.WallpaperModelFactory
+import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.concurrent.Executors
@@ -78,9 +81,23 @@ class PhotoPickerFragment : Hilt_PhotoPickerFragment() {
         savedInstanceState: Bundle?,
     ): View? {
         view = inflater.inflate(R.layout.fragment_photo_picker, container, false)
+        navigateToExtendedWallpaperEffects =
+            arguments?.getBoolean(ARG_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS) ?: false
+        setUpToolbar(view)
+        setTitle(getText(R.string.select_a_photo))
+
         ColorUpdateBinder.bind(
             setColor = { _ ->
-                setUpToolbar(view)
+                // There is no way to programmatically set app:liftOnScrollColor in
+                // AppBarLayout, therefore remove and re-add view to update colors based on new
+                // context
+                val contentParent = view?.requireViewById<ViewGroup>(R.id.content_parent)
+                val appBarLayout = view?.requireViewById<AppBarLayout>(R.id.app_bar)
+                contentParent?.removeView(appBarLayout)
+                val sectionHeader =
+                    layoutInflater.inflate(R.layout.section_header_content, contentParent, false)
+                contentParent?.addView(sectionHeader, 0)
+                setUpToolbar(contentParent)
                 setTitle(getText(R.string.select_a_photo))
                 view?.requestApplyInsets()
             },
@@ -88,11 +105,14 @@ class PhotoPickerFragment : Hilt_PhotoPickerFragment() {
             shouldAnimate = { false },
             lifecycleOwner = viewLifecycleOwner,
         )
-        navigateToExtendedWallpaperEffects =
-            arguments?.getBoolean(ARG_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS) ?: false
-        setUpToolbar(view)
-        setTitle(getText(R.string.select_a_photo))
         return view
+    }
+
+    override fun onConfigurationChanged(@NonNull newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (session != null) {
+            session?.notifyConfigurationChanged(newConfig)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -165,6 +185,9 @@ class PhotoPickerFragment : Hilt_PhotoPickerFragment() {
         override fun onSessionOpened(session: EmbeddedPhotoPickerSession) {
             this@PhotoPickerFragment.session = session
             this@PhotoPickerFragment.session?.notifyPhotoPickerExpanded(true)
+            this@PhotoPickerFragment.session?.notifyConfigurationChanged(
+                appContext.resources.configuration
+            )
             surfaceView.setChildSurfacePackage(session.surfacePackage)
             Log.d(TAG, "Embedded PhotoPicker session opened successfully")
         }

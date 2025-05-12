@@ -430,6 +430,11 @@
     <dimen name="preview_corner_radius">@*android:dimen/rounded_corner_content_padding</dimen>
     <dimen name="apply_button_end_margin">16dp</dimen>
     <dimen name="nav_button_start_margin">16dp</dimen>
+    <dimen name="nav_button_width">56dp</dimen>
+    <dimen name="nav_button_height">48dp</dimen>
+    <dimen name="nav_button_end_padding">16dp</dimen>
+    <dimen name="nav_button_vertical_padding">4dp</dimen>
+    <dimen name="nav_button_background_size">40dp</dimen>
     <dimen name="wallpaper_picker_entry_bottom_space">4dp</dimen>
     <dimen name="wallpaper_picker_entry_background_top_corner_radius">42dp</dimen>
     <dimen name="wallpaper_picker_entry_button_drawable_padding">12dp</dimen>

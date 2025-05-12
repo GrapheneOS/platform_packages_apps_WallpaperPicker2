@@ -33,6 +33,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
 import com.android.wallpaper.config.BaseFlags
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.category.ui.binder.BannerProvider
 import com.android.wallpaper.picker.category.ui.view.adapter.CuratedPhotosAdapter
 import com.android.wallpaper.picker.category.ui.viewmodel.PhotosViewModel
@@ -40,12 +41,17 @@ import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.view.listener.CarouselHorizontalScrollEnforcer
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.data.PhotosErrorData
+import com.android.wallpaper.util.CuratedPhotosTimeUtil
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
 
 /** This view holder is specifically for the curated photos section. */
-class CuratedPhotoSectionViewHolder(itemView: View, private val windowWidth: Int) :
-    RecyclerView.ViewHolder(itemView) {
+class CuratedPhotoSectionViewHolder(
+    itemView: View,
+    private val windowWidth: Int,
+    private val curatedPhotosTimeUtil: CuratedPhotosTimeUtil,
+    private val userEventLogger: UserEventLogger,
+) : RecyclerView.ViewHolder(itemView) {
 
     // recycler view for the tiles
     private val sectionTiles: RecyclerView = itemView.requireViewById(R.id.category_wallpaper_tiles)
@@ -269,7 +275,12 @@ class CuratedPhotoSectionViewHolder(itemView: View, private val windowWidth: Int
                 morePhotosLabel.visibility = View.GONE
             } else {
                 morePhotosLabel.visibility = View.VISIBLE
-                sectionTiles.adapter = CuratedPhotosAdapter(item.tileViewModels)
+                sectionTiles.adapter =
+                    CuratedPhotosAdapter(
+                        item.tileViewModels,
+                        curatedPhotosTimeUtil,
+                        userEventLogger,
+                    )
                 val currentParams = sectionTiles.layoutParams
                 currentParams.height =
                     sectionTiles.context.resources

@@ -24,10 +24,12 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.android.systemui.monet.ColorScheme
 import com.android.wallpaper.R
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.category.ui.view.viewholder.CuratedPhotoHolder
 import com.android.wallpaper.picker.customization.animation.view.LoadingAnimation2
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
+import com.android.wallpaper.util.CuratedPhotosTimeUtil
 import com.android.wallpaper.util.ResourceUtils
 
 /** Custom adaptor for curated photos carousel in the categories page. */
@@ -36,6 +38,8 @@ class LoadingAnimationAdapter(
     private val colorUpdateViewModel: ColorUpdateViewModel,
     private val shouldAnimateColor: () -> Boolean,
     private val lifecycleOwner: LifecycleOwner,
+    private val userEventLogger: UserEventLogger,
+    private val curatedPhotosTimeUtil: CuratedPhotosTimeUtil,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -90,6 +94,6 @@ class LoadingAnimationAdapter(
     private fun createIndividualHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view: View = layoutInflater.inflate(R.layout.curated_photo_tile, parent, false)
-        return CuratedPhotoHolder(view)
+        return CuratedPhotoHolder(view, curatedPhotosTimeUtil, userEventLogger)
     }
 }

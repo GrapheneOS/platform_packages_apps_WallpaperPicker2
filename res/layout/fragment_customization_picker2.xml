@@ -22,9 +22,8 @@
 
     <FrameLayout
         android:id="@+id/nav_button"
-        android:layout_width="36dp"
-        android:layout_height="@dimen/wallpaper_control_button_size"
-        android:background="@drawable/nav_button_background"
+        android:layout_width="@dimen/nav_button_width"
+        android:layout_height="@dimen/nav_button_height"
         android:layout_marginStart="@dimen/nav_button_start_margin"
         android:contentDescription="@string/bottom_action_bar_back"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,10 +31,14 @@
         app:layout_constraintBottom_toBottomOf="@id/toolbar">
         <View
             android:id="@+id/nav_button_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@drawable/ic_close_24dp"
-            android:layout_gravity="center" />
+            android:layout_height="@dimen/nav_button_background_size"
+            android:layout_width="@dimen/nav_button_background_size"
+            android:layout_gravity="center"
+            android:paddingEnd="@dimen/nav_button_end_padding"
+            android:paddingVertical="@dimen/nav_button_vertical_padding"
+            android:background="@drawable/nav_button_background"
+            android:foregroundGravity="center"
+            android:foreground="@drawable/ic_close_24dp"/>
     </FrameLayout>
 
     <Toolbar

@@ -19,10 +19,20 @@
 
     <item android:id="@android:id/mask">
         <shape android:shape="rectangle">
+            <size android:width="@dimen/nav_button_background_size"
+                android:height="@dimen/nav_button_background_size" />
             <solid android:color="?android:colorControlHighlight" />
-            <corners android:radius="20dp" />
+            <corners android:radius="100dp" />
         </shape>
     </item>
 
-    <item android:drawable="@drawable/nav_button_background_base" />
+    <item>
+        <shape>
+            <size android:width="@dimen/nav_button_background_size"
+                android:height="@dimen/nav_button_background_size" />
+            <solid android:color="@color/settingslib_materialColorSurfaceContainerHighest" />
+            <corners
+                android:radius="100dp" />
+        </shape>
+    </item>
 </ripple>

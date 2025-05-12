@@ -22,12 +22,14 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.category.ui.binder.BannerProvider
 import com.android.wallpaper.picker.category.ui.view.viewholder.CategorySectionViewHolder
 import com.android.wallpaper.picker.category.ui.view.viewholder.CuratedPhotoSectionViewHolder
 import com.android.wallpaper.picker.category.ui.viewmodel.PhotosViewModel
 import com.android.wallpaper.picker.category.ui.viewmodel.SectionViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
+import com.android.wallpaper.util.CuratedPhotosTimeUtil
 
 class CategorySectionsAdapter(
     var items: List<SectionViewModel>,
@@ -37,6 +39,8 @@ class CategorySectionsAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val onSignInBannerDismissed: (dismissed: Boolean) -> Unit,
     private var bannerProvider: BannerProvider,
+    private var curatedPhotosTimeUtil: CuratedPhotosTimeUtil,
+    private var userEventLogger: UserEventLogger,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -87,7 +91,12 @@ class CategorySectionsAdapter(
         val view: View = layoutInflater.inflate(R.layout.category_section_view, parent, false)
         return when (viewType) {
             SectionViewType.PHOTOS.value -> {
-                CuratedPhotoSectionViewHolder(view, windowWidth)
+                CuratedPhotoSectionViewHolder(
+                    view,
+                    windowWidth,
+                    curatedPhotosTimeUtil,
+                    userEventLogger,
+                )
             }
             SectionViewType.CATEGORY.value -> {
                 CategorySectionViewHolder(view, windowWidth)

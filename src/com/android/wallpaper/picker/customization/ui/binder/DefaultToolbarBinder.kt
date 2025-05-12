@@ -59,7 +59,7 @@ class DefaultToolbarBinder @Inject constructor() : ToolbarBinder {
 
         ColorUpdateBinder.bind(
             setColor = { color ->
-                DrawableCompat.setTint(DrawableCompat.wrap(navButton.background), color)
+                DrawableCompat.setTint(DrawableCompat.wrap(navButtonIcon.background), color)
             },
             color = colorUpdateViewModel.colorSurfaceContainerHighest,
             shouldAnimate = { true },
@@ -68,7 +68,7 @@ class DefaultToolbarBinder @Inject constructor() : ToolbarBinder {
 
         ColorUpdateBinder.bind(
             setColor = { color ->
-                DrawableCompat.setTint(DrawableCompat.wrap(navButtonIcon.background), color)
+                DrawableCompat.setTint(DrawableCompat.wrap(navButtonIcon.foreground), color)
             },
             color = colorUpdateViewModel.colorOnSurfaceVariant,
             shouldAnimate = { true },
@@ -80,13 +80,13 @@ class DefaultToolbarBinder @Inject constructor() : ToolbarBinder {
                 launch {
                     viewModel.selectedOption.collect {
                         if (it == null) {
-                            navButtonIcon.background =
+                            navButtonIcon.foreground =
                                 AppCompatResources.getDrawable(
                                     appContext,
                                     R.drawable.ic_arrow_back_24dp,
                                 )
                         } else {
-                            navButtonIcon.background =
+                            navButtonIcon.foreground =
                                 AppCompatResources.getDrawable(appContext, R.drawable.ic_close_24dp)
                         }
                     }

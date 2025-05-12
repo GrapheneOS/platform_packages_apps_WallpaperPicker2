@@ -22,6 +22,7 @@ import com.android.wallpaper.module.logging.UserEventLogger.EffectStatus
 import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.module.logging.UserEventLogger.WallpaperDestination
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
+import io.grpc.Status
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -71,5 +72,13 @@ open class TestUserEventLogger @Inject constructor() : UserEventLogger {
         customizationOption: CustomizationOption
     ): Int {
         return SCREEN_UNSPECIFIED
+    }
+
+    override fun logCuratedPhotosRendered(timeElapsedMillis: Long, userPhoto: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun logCuratedPhotosFetched(timeElapsedMillis: Long, status: Status) {
+        TODO("Not yet implemented")
     }
 }

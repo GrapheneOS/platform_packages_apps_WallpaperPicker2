@@ -22,6 +22,7 @@ import com.android.wallpaper.module.WallpaperPersister
 import com.android.wallpaper.module.WallpaperPersister.Destination
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
+import io.grpc.Status
 
 /** Interface for logging user events in the wallpaper picker. */
 interface UserEventLogger {
@@ -67,6 +68,12 @@ interface UserEventLogger {
 
     /** Log when entering a screen */
     fun logEnterScreen(@CustomizationPickerScreen screen: Int)
+
+    /** Log when curated photos are rendered in carousel */
+    fun logCuratedPhotosRendered(timeElapsedMillis: Long, userPhoto: Boolean)
+
+    /** Log when curated photos are fetched in carousel */
+    fun logCuratedPhotosFetched(timeElapsedMillis: Long, status: Status)
 
     /** Map a [CustomizationOptionUtil.CustomizationOption] to a picker screen. */
     @CustomizationPickerScreen

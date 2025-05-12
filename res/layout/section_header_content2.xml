@@ -27,10 +27,10 @@
     app:elevation="0dp">
 
     <Toolbar
+        style="@style/ToolbarTheme"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        style="@style/ToolbarTheme"
         android:importantForAccessibility="yes"
         android:layout_gravity="top" />
 

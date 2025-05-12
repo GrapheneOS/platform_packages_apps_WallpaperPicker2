@@ -202,10 +202,18 @@ public abstract class AppbarFragment extends BottomActionBarFragment
     }
 
     private void setUpUpArrow() {
-        Drawable backIcon = getResources().getDrawable(R.drawable.material_ic_arrow_back_black_24,
-                null).mutate();
+        boolean isNewPickerUi = BaseFlags.get().isNewPickerUi();
+        Drawable backIcon = isNewPickerUi
+                ? getResources().getDrawable(
+                        com.android.settingslib.collapsingtoolbar.R.drawable
+                                .settingslib_expressive_icon_back)
+                .mutate()
+                : getResources().getDrawable(R.drawable.material_ic_arrow_back_black_24, null)
+                    .mutate();
         backIcon.setAutoMirrored(true);
-        backIcon.setTint(getToolbarTextColor());
+        if (!isNewPickerUi) {
+            backIcon.setTint(getToolbarTextColor());
+        }
         mToolbar.setNavigationIcon(backIcon);
         mToolbar.setNavigationContentDescription(R.string.bottom_action_bar_back);
         mToolbar.setNavigationOnClickListener(v -> mHost.onUpArrowPressed());

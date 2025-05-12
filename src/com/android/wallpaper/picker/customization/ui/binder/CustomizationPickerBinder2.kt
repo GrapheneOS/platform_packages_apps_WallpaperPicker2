@@ -30,6 +30,7 @@ import com.android.wallpaper.config.BaseFlags.Companion.get
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.Screen.HOME_SCREEN
 import com.android.wallpaper.model.Screen.LOCK_SCREEN
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.customization.shared.model.CategoryType
 import com.android.wallpaper.picker.customization.ui.CustomizationPickerActivity2
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
@@ -42,6 +43,7 @@ import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPick
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.PickerScreen.MAIN
 import com.android.wallpaper.picker.data.WallpaperModel
 import com.android.wallpaper.picker.preview.ui.view.ClickableMotionLayout
+import com.android.wallpaper.util.CuratedPhotosTimeUtil
 import kotlinx.coroutines.launch
 
 object CustomizationPickerBinder2 {
@@ -73,6 +75,8 @@ object CustomizationPickerBinder2 {
         navigateToExtendedWallpaperEffects: (() -> Unit)?,
         packThemeSuggestedChip: PackThemeSuggestedChip?,
         packThemeSuggestedEntryBinder: PackThemeSuggestedEntryBinder,
+        curatedPhotosTimeUtil: CuratedPhotosTimeUtil,
+        userEventLogger: UserEventLogger,
     ) {
         val lockCustomizationOptionContainer: LinearLayout =
             view.requireViewById(R.id.lock_customization_option_container)
@@ -149,6 +153,8 @@ object CustomizationPickerBinder2 {
             navigateToPreviewScreen = navigateToPreviewScreen,
             navigateToWallpaperCollectionScreen = navigateToWallpaperCollectionScreen,
             navigateToExtendedWallpaperEffects = navigateToExtendedWallpaperEffects,
+            curatedPhotosTimeUtil = curatedPhotosTimeUtil,
+            userEventLogger = userEventLogger,
         )
 
         customizationOptionsBinder.bind(

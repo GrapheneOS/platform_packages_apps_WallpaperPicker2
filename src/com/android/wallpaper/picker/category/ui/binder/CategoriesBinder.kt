@@ -24,8 +24,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
+import com.android.wallpaper.util.CuratedPhotosTimeUtil
 import kotlinx.coroutines.launch
 
 /** Binds the wallpaper categories and its meta data to the category screen */
@@ -37,6 +39,8 @@ object CategoriesBinder {
         windowWidth: Int,
         colorUpdateViewModel: ColorUpdateViewModel,
         shouldAnimateColor: () -> Boolean,
+        curatedPhotosTimeUtil: CuratedPhotosTimeUtil,
+        userEventLogger: UserEventLogger,
         bannerProvider: BannerProvider,
         lifecycleOwner: LifecycleOwner,
         navigationHandler:
@@ -68,6 +72,8 @@ object CategoriesBinder {
                                 viewModel.setBannerDismissed(dismissed)
                             },
                             bannerProvider,
+                            curatedPhotosTimeUtil,
+                            userEventLogger,
                         )
                     }
                 }

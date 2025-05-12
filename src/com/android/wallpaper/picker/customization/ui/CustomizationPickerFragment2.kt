@@ -85,6 +85,7 @@ import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import com.android.wallpaper.picker.preview.ui.view.ClickableMotionLayout
 import com.android.wallpaper.util.ActivityUtils
+import com.android.wallpaper.util.CuratedPhotosTimeUtil
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.WallpaperConnection
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
@@ -113,6 +114,7 @@ class CustomizationPickerFragment2 :
     @Inject lateinit var multiPanesChecker: MultiPanesChecker
     @Inject lateinit var individualPickerFactory: IndividualPickerFactory
     @Inject lateinit var userEventLogger: UserEventLogger
+    @Inject lateinit var curatedPhotosTimeUtil: CuratedPhotosTimeUtil
 
     private val customizationPickerViewModel: CustomizationPickerViewModel2 by viewModels()
 
@@ -576,6 +578,8 @@ class CustomizationPickerFragment2 :
             },
             packThemeSuggestedChip = packThemeSuggestedChip,
             packThemeSuggestedEntryBinder = packThemeSuggestedEntryBinder,
+            curatedPhotosTimeUtil = curatedPhotosTimeUtil,
+            userEventLogger = userEventLogger,
         )
 
         customizationOptionsBinder.bindDiscardChangesDialog(
