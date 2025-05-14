@@ -52,7 +52,9 @@ class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(
         item: TileViewModel,
         context: Context,
+        /** The number of spans (spanSize) the category occupies */
         columnCount: Int,
+        /** The number of tiles in the category */
         tileCount: Int,
         windowWidth: Int,
         colorUpdateViewModel: ColorUpdateViewModel,

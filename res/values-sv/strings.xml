@@ -110,7 +110,7 @@
     <string name="previous_page_content_description" msgid="1138597031571078429">"Föregående"</string>
     <string name="wallpaper_title" msgid="6754214682228331092">"Bakgrund"</string>
     <string name="wallpaper_preview_card_content_description" msgid="6049261033541034584">"Förhandsgranska bakgrunden"</string>
-    <string name="wallpaper_preview_card_content_description_editable" msgid="8147628993184862003">"Förhandsgranska bakgrunden på %1$s i %2$s. Tryck snabbt två gånger för att redigera fotot"</string>
+    <string name="wallpaper_preview_card_content_description_editable" msgid="8147628993184862003">"Förhandsgranska bakgrunden på %1$s i %2$s. Dubbeltryck för att redigera fotot"</string>
     <string name="wallpaper_preview_card_content_description_non_editable" msgid="2201116657175733260">"Förhandsgranskning av bakgrunden på %1$s i %2$s"</string>
     <string name="lock_wallpaper_preview_card_content_description" msgid="5236839857695985498">"Förhandsgranskning av låsskärmens bakgrund"</string>
     <string name="home_wallpaper_preview_card_content_description" msgid="4059418716070821630">"Förhandsgranskning av startskärmens bakgrund"</string>
@@ -121,9 +121,9 @@
     <string name="hide_ui_preview_text" msgid="6766076482511252295">"Dölj förhandsgranskning av UI"</string>
     <string name="hint_hide_ui_preview" msgid="4527603797714586070">"Döljer gränssnitt förhandsg. Dubbeltryck och visa"</string>
     <string name="show_ui_preview_text" msgid="5993063062417070806">"Visa förhandsgranskning av UI"</string>
-    <string name="hide_preview_controls_content_description" msgid="894958599274977655">"Förhandsversioner av kontroller visas. Tryck snabbt två gånger för att dölja dem"</string>
+    <string name="hide_preview_controls_content_description" msgid="894958599274977655">"Förhandsversioner av kontroller visas. Dubbeltryck för att dölja dem"</string>
     <string name="hide_preview_controls_action" msgid="3419260118386783295">"Dölj förhandsversioner av kontroller"</string>
-    <string name="show_preview_controls_content_description" msgid="908147864005440602">"Förhandsversioner av kontroller är dolda. Tryck snabbt två gånger för att visa dem"</string>
+    <string name="show_preview_controls_content_description" msgid="908147864005440602">"Förhandsversioner av kontroller är dolda. Dubbeltryck för att visa dem"</string>
     <string name="show_preview_controls_action" msgid="7700775001986890400">"Visa förhandsversioner av kontroller"</string>
     <string name="hide_wallpaper_info_action" msgid="6572492484253895374">"Dölj bakgrundsinformation"</string>
     <string name="hint_show_ui_preview" msgid="2744155435325318349">"Visar gränssnitt förhandsg. Dubbeltryck och dölj"</string>
@@ -158,8 +158,6 @@
     <string name="max_zoom_percentage" msgid="2111670558746866030">"Högsta zoomnivån har nåtts"</string>
     <string name="min_zoom_percentage" msgid="5931879817379214316">"Minsta zoomnivån har nåtts"</string>
     <string name="categories_collection_label" msgid="319541962984573943">"Samlingar"</string>
-    <!-- no translation found for carousel_content_description_photos (3664564065854277456) -->
-    <skip />
-    <!-- no translation found for carousel_content_description_default_wallpapers (2497547285129692731) -->
-    <skip />
+    <string name="carousel_content_description_photos" msgid="3664564065854277456">"Foto %1$d av %2$d"</string>
+    <string name="carousel_content_description_default_wallpapers" msgid="2497547285129692731">"Standardbakgrund %1$d av %2$d"</string>
 </resources>

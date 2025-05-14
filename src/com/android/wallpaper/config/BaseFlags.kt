@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.config
 
+import android.app.Flags.updateRecentsFromSystem
 import android.app.WallpaperManager
 import android.content.Context
 import com.android.settings.accessibility.Flags.enableColorContrastControl
@@ -151,6 +152,19 @@ abstract class BaseFlags {
         return fullscreenPreviewFlag() &&
             isNewPickerUi() &&
             DesktopState.fromContext(context).canEnterDesktopMode
+    }
+
+    open fun isRecentWallpapersFromSystemEnabled(context: Context): Boolean {
+        val wallpaperManager = context.getSystemService(WallpaperManager::class.java)
+        try {
+            wallpaperManager.javaClass.getMethod(
+                "getWallpaperInstance",
+                Int::class.javaPrimitiveType,
+            )
+            return updateRecentsFromSystem()
+        } catch (e: NoSuchMethodException) {
+            return false
+        }
     }
 
     companion object {

@@ -240,7 +240,7 @@ constructor(
             listOf(
                 SectionViewModel(
                     tileViewModels = listOf(),
-                    columnCount = 3,
+                    columnCount = context.resources.getInteger(R.integer.category_span_count),
                     sectionTitle = context.getString(R.string.categories_collection_label),
                 )
             ) + list1 + list2
@@ -267,7 +267,7 @@ constructor(
                 }
                 return@map SectionViewModel(
                     tileViewModels = tiles,
-                    columnCount = 3,
+                    columnCount = context.resources.getInteger(R.integer.category_span_count),
                     sectionTitle = "",
                 )
             }
@@ -305,7 +305,7 @@ constructor(
                 }
                 return@map SectionViewModel(
                     tileViewModels = tiles,
-                    columnCount = 3,
+                    columnCount = context.resources.getInteger(R.integer.category_span_count),
                     sectionTitle = context.getString(R.string.creative_wallpaper_title),
                 )
             }
@@ -352,7 +352,7 @@ constructor(
                     val isSuggestedPhotoCarouselVisible = tileViewModels.size >= 3
                     PhotosViewModel(
                         tileViewModels = tileViewModels,
-                        columnCount = 3,
+                        columnCount = context.resources.getInteger(R.integer.category_span_count),
                         sectionTitle =
                             context.getString(R.string.choose_a_curated_photo_section_title),
                         displayType = DisplayType.Carousel,
@@ -381,7 +381,7 @@ constructor(
                                     navigateToPhotosPicker(null)
                                 }
                             ),
-                        columnCount = 3,
+                        columnCount = context.resources.getInteger(R.integer.category_span_count),
                         sectionTitle = context.getString(R.string.choose_a_wallpaper_section_title),
                     )
                 }

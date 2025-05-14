@@ -24,6 +24,7 @@ import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel.*
  */
 open class SectionViewModel(
     open val tileViewModels: List<TileViewModel>,
+    /** The number of spans (spanSize) the SectionViewModel occupies. */
     open val columnCount: Int,
     open val sectionTitle: String? = null,
     open val displayType: DisplayType = DisplayType.Default,

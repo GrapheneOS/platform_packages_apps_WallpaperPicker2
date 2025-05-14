@@ -180,6 +180,7 @@ class CustomizationPickerFragment2 :
                 val stubView: ViewStub = view.requireViewById(R.id.stub_pack_theme_suggested_chip)
                 stubView.inflate() as PackThemeSuggestedChip
             } else null
+        packThemeSuggestedChip?.visibility = View.INVISIBLE
 
         val pickerMotionContainer: MotionLayout = view.requireViewById(R.id.picker_motion_layout)
 

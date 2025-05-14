@@ -43,16 +43,6 @@ public class SizeCalculator {
     private static final int COLUMN_COUNT_THRESHOLD_DP = 820;
 
     /**
-     * The number of columns for a "fewer columns" configuration of the category tiles grid.
-     */
-    private static final int CATEGORY_FEWER_COLUMNS = 3;
-
-    /**
-     * The number of columns for a "more columns" configuration of the category tiles grid.
-     */
-    private static final int CATEGORY_MORE_COLUMNS = 3;
-
-    /**
      * The number of columns for a "fewer columns" configuration of the featured category tiles
      * grid.
      */
@@ -62,18 +52,6 @@ public class SizeCalculator {
      * The number of columns for a "more columns" configuration of the featured category tiles grid.
      */
     private static final int FEATURED_CATEGORY_MORE_COLUMNS = 2;
-
-    /**
-     * The number of columns for a "fewer columns" configuration of the individual wallpaper tiles
-     * grid.
-     */
-    private static final int INDIVIDUAL_FEWER_COLUMNS = 3;
-
-    /**
-     * The number of columns for a "more columns" configuration of the individual wallpaper tiles
-     * grid.
-     */
-    private static final int INDIVIDUAL_MORE_COLUMNS = 3;
 
     /**
      * The number of columns for a "fewer columns" configuration of the featured individual
@@ -120,13 +98,19 @@ public class SizeCalculator {
     }
 
     private static int getNumCategoryColumns(Activity activity, int windowWidthPx) {
-        return getNumColumns(activity, windowWidthPx, CATEGORY_FEWER_COLUMNS,
-                CATEGORY_MORE_COLUMNS);
+        int minColumnCount = activity.getResources().getInteger(
+                R.integer.category_min_column_count);
+        int maxColumnCount = activity.getResources().getInteger(
+                R.integer.category_max_column_count);
+        return getNumColumns(activity, windowWidthPx, minColumnCount,
+                maxColumnCount);
     }
 
     private static int getNumCategoryColumns(Context context, int windowWidthPx) {
-        return getNumColumns(context, windowWidthPx, CATEGORY_FEWER_COLUMNS,
-                CATEGORY_MORE_COLUMNS);
+        int minColumnCount = context.getResources().getInteger(R.integer.category_min_column_count);
+        int maxColumnCount = context.getResources().getInteger(R.integer.category_max_column_count);
+        return getNumColumns(context, windowWidthPx, minColumnCount,
+                maxColumnCount);
     }
 
     private static int getNumFeaturedCategoryColumns(Activity activity, int windowWidthPx) {
@@ -141,7 +125,9 @@ public class SizeCalculator {
 
     private static int getNumIndividualColumns(Activity activity, int windowWidthPx) {
         return getNumColumns(
-                activity, windowWidthPx, INDIVIDUAL_FEWER_COLUMNS, INDIVIDUAL_MORE_COLUMNS);
+                activity, windowWidthPx,
+                activity.getResources().getInteger(R.integer.individual_min_column_count),
+                activity.getResources().getInteger(R.integer.individual_max_column_count));
     }
 
     private static int getNumFeaturedIndividualColumns(Activity activity, int windowWidthPx) {
@@ -254,7 +240,9 @@ public class SizeCalculator {
         // display.
         int windowWidthPx = getDeviceDisplayWidthPx(appContext);
         int columnCount = getNumColumns(
-                appContext, windowWidthPx, INDIVIDUAL_FEWER_COLUMNS, INDIVIDUAL_MORE_COLUMNS);
+                appContext, windowWidthPx,
+                appContext.getResources().getInteger(R.integer.individual_min_column_count),
+                appContext.getResources().getInteger(R.integer.individual_max_column_count));
         return getTileSize(appContext, columnCount, windowWidthPx);
     }
 

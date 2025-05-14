@@ -58,7 +58,8 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
     private var progress = 1f
     private var animator: ValueAnimator? = null
     private var state: State = State.EXPANDED
-    private var hideSuggestedChip = false
+
+    var hideSuggestedChip = true
 
     init {
         inflate(context, R.layout.pack_theme_suggested_chip, this)
