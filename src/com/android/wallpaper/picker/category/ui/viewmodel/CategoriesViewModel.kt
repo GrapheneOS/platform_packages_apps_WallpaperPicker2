@@ -268,7 +268,7 @@ constructor(
                 return@map SectionViewModel(
                     tileViewModels = tiles,
                     columnCount = context.resources.getInteger(R.integer.category_span_count),
-                    sectionTitle = "",
+                    sectionTitle = context.getString(R.string.wallpaper_studio_title),
                 )
             }
 
@@ -306,7 +306,6 @@ constructor(
                 return@map SectionViewModel(
                     tileViewModels = tiles,
                     columnCount = context.resources.getInteger(R.integer.category_span_count),
-                    sectionTitle = context.getString(R.string.creative_wallpaper_title),
                 )
             }
 

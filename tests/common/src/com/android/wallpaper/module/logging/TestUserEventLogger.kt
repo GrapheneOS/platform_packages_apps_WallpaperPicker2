@@ -34,7 +34,7 @@ open class TestUserEventLogger @Inject constructor() : UserEventLogger {
     var numWallpaperSetResultEvents = 0
         private set
 
-    override fun logSnapshot() {}
+    override suspend fun logSnapshot() {}
 
     override fun logAppLaunched(launchSource: Intent) {}
 

@@ -26,7 +26,7 @@ import io.grpc.Status
 /** [UserEventLogger] implementation that does nothing. */
 open class NoOpUserEventLogger : UserEventLogger {
 
-    override fun logSnapshot() {}
+    override suspend fun logSnapshot() {}
 
     override fun logAppLaunched(launchSource: Intent) {}
 

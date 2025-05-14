@@ -38,6 +38,8 @@ object ContentHandlingUtil {
 
     private const val TAG = "ContentHandlingUtil"
 
+    private const val KEY_EFFECT_NAME = "EffectName"
+
     /**
      * Updates the current preview using the WallpaperDescription returned with the Intent if any.
      *
@@ -87,6 +89,9 @@ object ContentHandlingUtil {
 
         newWallpaperModel?.let {
             val sourceLiveData = it.liveWallpaperData
+            val effectNames =
+                wallpaperDescription.content.getString(KEY_EFFECT_NAME, null)
+                    ?: sourceLiveData.effectNames
             val updatedLiveData =
                 LiveWallpaperData(
                     sourceLiveData.groupName,
@@ -94,7 +99,7 @@ object ContentHandlingUtil {
                     sourceLiveData.isTitleVisible,
                     sourceLiveData.isApplied,
                     sourceLiveData.isEffectWallpaper,
-                    sourceLiveData.effectNames,
+                    effectNames,
                     sourceLiveData.contextDescription,
                     description,
                 )

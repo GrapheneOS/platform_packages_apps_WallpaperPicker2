@@ -72,6 +72,9 @@
     <!-- Label indicating the title for Creative Wallpapers block in the WallpaperPicker screen [CHAR LIMIT=100] -->
     <string name="creative_wallpaper_title">Create wallpaper</string>
 
+    <!-- New label indicating the title for Creative Wallpapers block in the categories screen [CHAR LIMIT=100] -->
+    <string name="wallpaper_studio_title">Wallpaper Studio</string>
+
     <!-- Label referring to the home screen of the device, i.e. shown behind the launcher.
          [CHAR LIMIT=30] -->
     <string name="home_screen_message">Home screen</string>

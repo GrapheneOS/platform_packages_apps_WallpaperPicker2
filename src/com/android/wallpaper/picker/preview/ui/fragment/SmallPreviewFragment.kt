@@ -196,7 +196,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         }
         if (isNewPickerUi) {
             requireActivity().onBackPressedDispatcher.let {
-                it.addCallback {
+                it.addCallback(owner = viewLifecycleOwner) {
                     isEnabled = wallpaperPreviewViewModel.handleBackPressed()
                     if (!isEnabled) it.onBackPressed()
                 }
@@ -455,7 +455,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 (view as ViewGroup).isTransitionGroup = false
                 findNavController().let {
                     if (it.currentDestination?.id == R.id.smallPreviewFragment) {
-
+                        wallpaperPreviewViewModel.onTransitionToFullPreview()
                         it.navigate(
                             resId = R.id.action_smallPreviewFragment_to_fullPreviewFragment,
                             args = null,

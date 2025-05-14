@@ -35,3 +35,13 @@ flag {
     description: "Enables full screen wallpaper preview"
     bug: "409100074"
 }
+
+flag {
+    name: "desktop_ui_flag"
+    namespace: "desktop_personalization"
+    description: "Mouse, keyboard, large screen improvements for customization picker"
+    bug: "415883086"
+    metadata {
+        purpose: PURPOSE_FEATURE
+    }
+}

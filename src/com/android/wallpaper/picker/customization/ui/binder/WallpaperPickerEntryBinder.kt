@@ -18,6 +18,8 @@ package com.android.wallpaper.picker.customization.ui.binder
 
 import android.content.res.ColorStateList
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
@@ -26,6 +28,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
+import com.android.wallpaper.R
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.category.ui.view.adapter.CuratedPhotosAdapter
@@ -77,8 +80,10 @@ object WallpaperPickerEntryBinder {
             curatedPhotosTimeUtil = curatedPhotosTimeUtil,
             userEventLogger = userEventLogger,
         )
-
+        val container =
+            view.requireViewById<ConstraintLayout>(R.id.wallpaper_picker_entry_expanded_container)
         bindWallpaperPickerEntryLabels(
+            container = container,
             suggestedPhotosLabel = view.suggestedPhotosText,
             viewModel = viewModel.customizationOptionsViewModel.wallpaperCarouselViewModel,
             lifecycleOwner = lifecycleOwner,
@@ -228,6 +233,7 @@ object WallpaperPickerEntryBinder {
     }
 
     private fun bindWallpaperPickerEntryLabels(
+        container: ConstraintLayout,
         suggestedPhotosLabel: TextView,
         viewModel: WallpaperCarouselViewModel,
         lifecycleOwner: LifecycleOwner,
@@ -237,9 +243,53 @@ object WallpaperPickerEntryBinder {
                 launch {
                     viewModel.shouldShowSuggestedPhotosLabel.collect {
                         suggestedPhotosLabel.isVisible = it
+                        if (it) {
+                            applyEndAlignedConstraints(container)
+                        } else {
+                            applyCenteredConstraints(container)
+                        }
                     }
                 }
             }
         }
+    }
+
+    private fun applyEndAlignedConstraints(
+        wallpaperPickerEntryExpandedContainer: ConstraintLayout
+    ) {
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(wallpaperPickerEntryExpandedContainer)
+
+        constraintSet.clear(R.id.more_wallpapers_button, ConstraintSet.START)
+        constraintSet.connect(
+            R.id.more_wallpapers_button,
+            ConstraintSet.END,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.END,
+        )
+
+        constraintSet.applyTo(wallpaperPickerEntryExpandedContainer)
+    }
+
+    private fun applyCenteredConstraints(wallpaperPickerEntryExpandedContainer: ConstraintLayout) {
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(wallpaperPickerEntryExpandedContainer)
+
+        constraintSet.clear(R.id.more_wallpapers_button, ConstraintSet.END)
+        constraintSet.connect(
+            R.id.more_wallpapers_button,
+            ConstraintSet.START,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.START,
+        )
+        constraintSet.connect(
+            R.id.more_wallpapers_button,
+            ConstraintSet.END,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.END,
+        )
+        constraintSet.setHorizontalBias(R.id.more_wallpapers_button, 0.5f)
+
+        constraintSet.applyTo(wallpaperPickerEntryExpandedContainer)
     }
 }

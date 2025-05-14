@@ -184,14 +184,14 @@ object SmallPreviewScreenBinder {
                                         else R.id.home_preview_selected
                                     )
                                 }
-                                PreviewScreen.FULL_PREVIEW -> {
-                                    // TODO(b/367374790): Transition to full preview
-                                }
                                 PreviewScreen.APPLY_WALLPAPER -> {
                                     fragmentLayout.transitionToState(R.id.small_preview_no_header)
                                     previewPagerContainer.transitionToState(
                                         R.id.show_apply_wallpaper
                                     )
+                                }
+                                PreviewScreen.FULL_PREVIEW -> {
+                                    // No-op
                                 }
                             }
                         }

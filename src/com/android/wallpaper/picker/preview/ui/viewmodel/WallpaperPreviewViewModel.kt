@@ -203,17 +203,31 @@ constructor(
 
     /**
      * Returns true if back pressed is handled due to conditions like users at a secondary screen.
+     *
+     * [PreviewScreen.SMALL_PREVIEW] with floating sheet should collapse sheet and consume press.
+     * [PreviewScreen.APPLY_WALLPAPER] to [PreviewScreen.SMALL_PREVIEW] should consume press.
+     * [PreviewScreen.FULL_PREVIEW] to [PreviewScreen.SMALL_PREVIEW] shouldn't consume press. Other
+     * cases shouldn't consume press.
      */
     fun handleBackPressed(): Boolean {
-        if (_currentPreviewScreen.value == PreviewScreen.APPLY_WALLPAPER) {
+        if (
+            _currentPreviewScreen.value == PreviewScreen.SMALL_PREVIEW &&
+                previewActionsViewModel.isFloatingSheetVisible()
+        ) {
+            previewActionsViewModel.onFloatingSheetCollapsed()
+            return true
+        } else if (_currentPreviewScreen.value == PreviewScreen.APPLY_WALLPAPER) {
             _currentPreviewScreen.value = PreviewScreen.SMALL_PREVIEW
             return true
         } else if (_currentPreviewScreen.value == PreviewScreen.FULL_PREVIEW) {
             _currentPreviewScreen.value = PreviewScreen.SMALL_PREVIEW
-            // TODO(b/367374790): Returns true when shared element transition is removed
             return false
         }
         return false
+    }
+
+    fun onTransitionToFullPreview() {
+        _currentPreviewScreen.value = PreviewScreen.FULL_PREVIEW
     }
 
     fun getSmallPreviewTabIndex(): Int {

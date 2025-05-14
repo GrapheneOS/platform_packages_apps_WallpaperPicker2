@@ -27,6 +27,7 @@ import androidx.core.view.WindowCompat
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.wallpaper.R
 import com.android.wallpaper.module.MultiPanesChecker
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.category.ui.viewmodel.CategoriesViewModel
 import com.android.wallpaper.picker.common.preview.data.repository.PersistentWallpaperModelRepository
@@ -71,6 +72,7 @@ class CustomizationPickerActivity2 :
     @Inject lateinit var wallpaperConnectionUtils: WallpaperConnectionUtils
     @Inject lateinit var colorUpdateViewModel: ColorUpdateViewModel
     @Inject lateinit var clockViewFactory: ClockViewFactory
+    @Inject lateinit var logger: UserEventLogger
 
     private var configuration: Configuration? = null
     private val categoriesViewModel: CategoriesViewModel by viewModels()
@@ -78,6 +80,10 @@ class CustomizationPickerActivity2 :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (intent != null) {
+            logger.logAppLaunched(intent)
+        }
 
         if (savedInstanceState != null) {
             // Activity is being restored, not initial creation

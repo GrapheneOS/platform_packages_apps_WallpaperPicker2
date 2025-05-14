@@ -80,7 +80,7 @@
 
         <TextView
             android:id="@+id/more_wallpapers_button"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/accessibility_min_height"
             android:gravity="center"
@@ -95,6 +95,7 @@
             app:drawableStartCompat="@drawable/ic_nav_wallpaper"
             app:drawableTint="@color/system_primary"
             android:clickable="true" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView

@@ -28,7 +28,7 @@ import io.grpc.Status
 interface UserEventLogger {
 
     /** Logs the current snapshot data, e.g. the currently-set home and lock screen wallpapers. */
-    fun logSnapshot()
+    suspend fun logSnapshot()
 
     /** Logs when the app is launched */
     fun logAppLaunched(launchSource: Intent)

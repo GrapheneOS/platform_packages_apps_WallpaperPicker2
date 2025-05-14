@@ -564,6 +564,9 @@ constructor(
         }
     }
 
+    fun isFloatingSheetVisible(): Boolean =
+        _isInformationChecked.value || _isEffectsChecked.value || _isCustomizeChecked.value
+
     fun isAnyActionChecked(): Boolean =
         _isInformationChecked.value ||
             _isDeleteChecked.value ||

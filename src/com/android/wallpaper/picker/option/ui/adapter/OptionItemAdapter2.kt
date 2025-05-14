@@ -21,8 +21,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
@@ -48,6 +50,17 @@ class OptionItemAdapter2<T>(
 
     private val items = mutableListOf<OptionItemViewModel2<T>>()
     private var setItemsJob: Job? = null
+
+    init {
+        lifecycleOwner.lifecycleScope.launch {
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                colorUpdateViewModel.get()?.systemColorsUpdated?.collect {
+                    // Re-draw all items when color is updated to reflect new view colors
+                    notifyDataSetChanged()
+                }
+            }
+        }
+    }
 
     fun setItems(items: List<OptionItemViewModel2<T>>, callback: (() -> Unit)? = null) {
         setItemsJob?.cancel()

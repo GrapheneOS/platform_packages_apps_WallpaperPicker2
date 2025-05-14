@@ -340,6 +340,10 @@
 
     <style name="TextAppearance.DeviceDefault.Small.TitleMediumEmphasized" />
 
+    <style name="Preview.Label.Emphasized" parent="TextAppearance.DeviceDefault.Small.TitleMedium">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
     <style name="TextAppearance.DeviceDefault.Large" parent="@android:style/TextAppearance.DeviceDefault.Large" />
 
     <style name="TextAppearance.DeviceDefault.Large.TitleLargeEmphasized" />
