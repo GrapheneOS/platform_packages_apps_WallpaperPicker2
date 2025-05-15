@@ -21,10 +21,14 @@ import android.content.res.TypedArray;
 
 /**
  * A set of common resource utilities.
+ *
+ * @deprecated Use {@link ResourceUtilsKt} instead.
  */
 public class ResourceUtils {
     /**
      * Returns the default color for a given attribute.
+     *
+     * @deprecated Not null safe, use {@link ResourceUtilsKt} instead.
      */
     public static int getColorAttr(Context context, int attr) {
         TypedArray ta = context.obtainStyledAttributes(new int[]{attr});

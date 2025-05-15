@@ -313,6 +313,7 @@ class CustomizationPickerFragment2 :
         val previewPagerViews: PreviewPagerViews =
             initPreviewPager(rootView = view, previewPager = previewPager)
         bindPreviewPager(
+            rootView = view,
             previewPagerViews = previewPagerViews,
             isFirstBinding = savedInstanceState == null,
         )
@@ -702,7 +703,11 @@ class CustomizationPickerFragment2 :
         )
     }
 
-    private fun bindPreviewPager(previewPagerViews: PreviewPagerViews, isFirstBinding: Boolean) {
+    private fun bindPreviewPager(
+        rootView: View,
+        previewPagerViews: PreviewPagerViews,
+        isFirstBinding: Boolean,
+    ) {
         PagerTouchInterceptorBinder.bind(
             previewPagerViews.pagerTouchInterceptor,
             customizationPickerViewModel,
@@ -743,6 +748,7 @@ class CustomizationPickerFragment2 :
         if (clockHostView != null && clockFaceClickDelegateView != null) {
             customizationOptionsBinder.bindClockPreview(
                 context = requireContext(),
+                rootView = rootView,
                 clockHostView = clockHostView,
                 clockFaceClickDelegateView = clockFaceClickDelegateView,
                 viewModel = customizationPickerViewModel,

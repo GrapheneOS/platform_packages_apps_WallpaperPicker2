@@ -54,6 +54,7 @@ interface CustomizationOptionsBinder {
 
     fun bindClockPreview(
         context: Context,
+        rootView: View,
         clockHostView: View,
         clockFaceClickDelegateView: View,
         viewModel: CustomizationPickerViewModel2,

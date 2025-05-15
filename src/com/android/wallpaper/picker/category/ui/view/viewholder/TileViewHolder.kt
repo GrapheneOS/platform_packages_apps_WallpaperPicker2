@@ -30,7 +30,7 @@ import com.android.wallpaper.picker.category.ui.view.SectionCardinality
 import com.android.wallpaper.picker.category.ui.viewmodel.TileViewModel
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
-import com.android.wallpaper.util.ResourceUtils
+import com.android.wallpaper.util.ResourceUtilsKt
 import com.android.wallpaper.util.SizeCalculator
 import com.bumptech.glide.Glide
 
@@ -113,18 +113,16 @@ class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         if (item.thumbnailAsset != null) {
             val placeHolderColor =
-                ResourceUtils.getColorAttr(context, android.R.attr.colorSecondary)
+                ResourceUtilsKt.getColorAttr(context, android.R.attr.colorSecondary)
+                    ?: context.getColor(R.color.system_secondary)
             item.thumbnailAsset.loadDrawable(context, wallpaperCategoryImage, placeHolderColor)
         } else {
-            if (item.defaultDrawable == null) {
-                wallpaperCategoryImage.setBackgroundColor(
-                    ResourceUtils.getColorAttr(context, R.color.myphoto_background_color)
-                )
-            } else {
-                item.defaultDrawable?.let {
-                    Glide.with(itemView.context).load(it).into(wallpaperCategoryImage)
-                }
+            item.defaultDrawable?.let {
+                Glide.with(itemView.context).load(it).into(wallpaperCategoryImage)
             }
+                ?: wallpaperCategoryImage.setBackgroundColor(
+                    context.getColor(R.color.myphoto_background_color)
+                )
         }
         categorySubtitle.text = item.text
 

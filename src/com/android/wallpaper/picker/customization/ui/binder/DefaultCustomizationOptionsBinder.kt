@@ -58,6 +58,7 @@ class DefaultCustomizationOptionsBinder @Inject constructor() : CustomizationOpt
 
     override fun bindClockPreview(
         context: Context,
+        rootView: View,
         clockHostView: View,
         clockFaceClickDelegateView: View,
         viewModel: CustomizationPickerViewModel2,
