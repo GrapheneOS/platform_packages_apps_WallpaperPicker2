@@ -105,9 +105,9 @@ constructor(
     val lockPreviewLabelTextAppearance: Flow<Int> =
         selectedPreviewScreen.map {
             if (it == LOCK_SCREEN) {
-                R.style.Preview_Label_Emphasized
+                R.style.TextAppearance_Preview_Label_Selected
             } else {
-                R.style.TextAppearance_DeviceDefault_Small_TitleMedium
+                R.style.TextAppearance_Preview_Label_Unselected
             }
         }
 
@@ -131,9 +131,9 @@ constructor(
     val homePreviewLabelTextAppearance: Flow<Int> =
         selectedPreviewScreen.map {
             if (it == HOME_SCREEN) {
-                R.style.Preview_Label_Emphasized
+                R.style.TextAppearance_Preview_Label_Selected
             } else {
-                R.style.TextAppearance_DeviceDefault_Small_TitleMedium
+                R.style.TextAppearance_Preview_Label_Unselected
             }
         }
 

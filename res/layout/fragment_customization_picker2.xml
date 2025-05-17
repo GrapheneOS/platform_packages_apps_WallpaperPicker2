@@ -114,7 +114,8 @@
                         android:textColor="@color/system_on_surface"
                         android:maxLines="1"
                         android:ellipsize="end"
-                        android:text="@string/lock_screen_tab" />
+                        android:text="@string/lock_screen_tab"
+                        android:importantForAccessibility="no"/>
                 </FrameLayout>
 
                 <include layout="@layout/wallpaper_preview_card2"
@@ -135,7 +136,8 @@
                         android:textColor="@color/system_on_surface"
                         android:maxLines="1"
                         android:ellipsize="end"
-                        android:text="@string/home_screen_tab" />
+                        android:text="@string/home_screen_tab"
+                        android:importantForAccessibility="no"/>
                 </FrameLayout>
 
 

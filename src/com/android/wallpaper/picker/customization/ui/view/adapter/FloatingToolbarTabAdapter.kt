@@ -67,12 +67,13 @@ class FloatingToolbarTabAdapter(
     ) {
         val payload = if (payloads.isNotEmpty()) payloads[0] as? Int else null
         val item = getItem(position)
-        bindLabelContentColor(holder, item.isSelected)
         holder.label.setTextAppearance(
             if (item.isSelected)
                 R.style.WallpaperPicker_Preview_TextAppearance_NoAllCaps_LabelLargeEmphasized
             else R.style.WallpaperPicker_Preview_TextAppearance_NoAllCaps_LabelLarge
         )
+        // Bind label color after text appearance since setting text appearance overwrites the color
+        bindLabelContentColor(holder, item.isSelected)
         when (payload) {
             SELECT_ITEM -> {
                 // When transition from unselected to selected, initial state should be unselected

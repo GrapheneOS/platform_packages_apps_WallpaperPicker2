@@ -398,6 +398,8 @@ class CustomizationPickerFragment2 :
             resources.getDimensionPixelSize(
                 R.dimen.customization_picker_min_preview_collapsed_height
             )
+        wallpaperPickerEntry.configureForAnimation()
+
         val minCollapsedPagerHeight = minCollapsedPreviewHeight + previewLabelHeight
         val minExpandedPreviewHeight =
             resources.getDimensionPixelSize(

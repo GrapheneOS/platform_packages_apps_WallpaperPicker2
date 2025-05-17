@@ -20,6 +20,7 @@ package com.android.wallpaper.picker.customization.shared.model
 import android.app.WallpaperManager.FLAG_LOCK
 import android.app.WallpaperManager.FLAG_SYSTEM
 import android.app.WallpaperManager.SetWallpaperFlags
+import com.android.wallpaper.model.Screen
 import com.android.wallpaper.module.WallpaperPersister.DEST_BOTH
 import com.android.wallpaper.module.WallpaperPersister.DEST_HOME_SCREEN
 import com.android.wallpaper.module.WallpaperPersister.DEST_LOCK_SCREEN
@@ -59,6 +60,14 @@ enum class WallpaperDestination {
                 BOTH -> FLAG_LOCK or FLAG_SYSTEM
                 HOME -> FLAG_SYSTEM
                 LOCK -> FLAG_LOCK
+            }
+        }
+
+        fun WallpaperDestination.toScreens(): Set<Screen> {
+            return when (this) {
+                BOTH -> setOf(Screen.HOME_SCREEN, Screen.LOCK_SCREEN)
+                HOME -> setOf(Screen.HOME_SCREEN)
+                LOCK -> setOf(Screen.LOCK_SCREEN)
             }
         }
     }

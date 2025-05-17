@@ -94,7 +94,9 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
 
         clipChildren = false
         clipToPadding = false
+    }
 
+    fun configureForAnimation() {
         post {
             // Make fixed width and height of the container, so it does not shrink with parent.
             expandedContainer.layoutParams =

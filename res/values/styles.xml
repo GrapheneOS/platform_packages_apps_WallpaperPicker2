@@ -346,14 +346,26 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="TextAppearance.OptionItem.Label.Unselected" parent="TextAppearance.DeviceDefault.Small.LabelMedium">
+        <item name="android:textColor">@color/system_on_surface_variant</item>
+    </style>
+
+    <style name="TextAppearance.OptionItem.Label.Selected" parent="TextAppearance.DeviceDefault.Small.LabelMediumEmphasized">
+        <item name="android:textColor">@color/system_on_surface</item>
+    </style>
+
     <style name="TextAppearance.DeviceDefault.Small.LabelLargeEmphasized" />
 
     <style name="TextAppearance.DeviceDefault.Small.TitleMedium" />
 
     <style name="TextAppearance.DeviceDefault.Small.TitleMediumEmphasized" />
 
-    <style name="Preview.Label.Emphasized" parent="TextAppearance.DeviceDefault.Small.TitleMedium">
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    <style name="TextAppearance.Preview.Label.Unselected" parent="TextAppearance.DeviceDefault.Small.TitleMedium">
+        <item name="android:textColor">@color/system_on_surface</item>
+    </style>
+
+    <style name="TextAppearance.Preview.Label.Selected" parent="TextAppearance.DeviceDefault.Small.TitleMediumEmphasized">
+        <item name="android:textColor">@color/system_on_surface</item>
     </style>
 
     <style name="TextAppearance.DeviceDefault.Large" parent="@android:style/TextAppearance.DeviceDefault.Large" />

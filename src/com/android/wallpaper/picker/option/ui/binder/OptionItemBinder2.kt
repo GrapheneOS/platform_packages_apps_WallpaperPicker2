@@ -124,69 +124,8 @@ object OptionItemBinder2 {
             }
         view.isLongClickable = viewModel.onLongClicked != null
 
-        val job =
-            lifecycleOwner.lifecycleScope.launch {
-                lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    launch {
-                        // We only want to animate if the view-model is updating in response to a
-                        // selection or deselection of the same exact option. For that, we save the
-                        // last value of isSelected.
-                        var lastSelected: Boolean? = null
-
-                        viewModel.key
-                            .flatMapLatest {
-                                // If the key changed, then it means that this binding is no longer
-                                // rendering the UI for the same option as before, we nullify the
-                                // last  selected value to "forget" that we've ever seen a value for
-                                // isSelected, effectively starting a new so the first update
-                                // doesn't animate.
-                                lastSelected = null
-                                viewModel.isSelected
-                            }
-                            .collect { isSelected ->
-                                textView?.setTextAppearance(
-                                    if (isSelected) {
-                                        R.style
-                                            .TextAppearance_DeviceDefault_Small_LabelMediumEmphasized
-                                    } else {
-                                        R.style.TextAppearance_DeviceDefault_Small_LabelMedium
-                                    }
-                                )
-                                val shouldAnimate =
-                                    lastSelected != null && lastSelected != isSelected
-                                if (shouldAnimate) {
-                                    animatedSelection(
-                                        backgroundView = backgroundView,
-                                        isSelected = isSelected,
-                                        animationSpec = animationSpec,
-                                    )
-                                } else {
-                                    backgroundView.setProgress(if (isSelected) 1f else 0f)
-                                }
-
-                                view.isSelected = isSelected
-                                lastSelected = isSelected
-                            }
-                    }
-
-                    launch {
-                        viewModel.onClicked.collect { onClicked ->
-                            view.setOnClickListener(
-                                if (onClicked != null) {
-                                    View.OnClickListener { onClicked.invoke() }
-                                } else {
-                                    null
-                                }
-                            )
-                        }
-                    }
-                }
-            }
-
         var colorBindingDisposableHandle: DisposableHandle? = null
         colorUpdateViewModel.get()?.let {
-            // Bind setTextColor at the end, after binding setTextAppearance above, to make sure
-            // text color is set correctly on init.
             val textColorBinding =
                 ColorUpdateBinder.bind(
                     setColor = { color -> textView?.setTextColor(color) },
@@ -238,6 +177,64 @@ object OptionItemBinder2 {
                 selectedBackgroundColorBinding.destroy()
             }
         }
+
+        val job =
+            lifecycleOwner.lifecycleScope.launch {
+                lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    launch {
+                        // We only want to animate if the view-model is updating in response to a
+                        // selection or deselection of the same exact option. For that, we save the
+                        // last value of isSelected.
+                        var lastSelected: Boolean? = null
+
+                        viewModel.key
+                            .flatMapLatest {
+                                // If the key changed, then it means that this binding is no longer
+                                // rendering the UI for the same option as before, we nullify the
+                                // last  selected value to "forget" that we've ever seen a value for
+                                // isSelected, effectively starting a new so the first update
+                                // doesn't animate.
+                                lastSelected = null
+                                viewModel.isSelected
+                            }
+                            .collect { isSelected ->
+                                textView?.setTextAppearance(
+                                    if (isSelected) {
+                                        R.style.TextAppearance_OptionItem_Label_Selected
+                                    } else {
+                                        R.style.TextAppearance_OptionItem_Label_Unselected
+                                    }
+                                )
+                                val shouldAnimate =
+                                    lastSelected != null && lastSelected != isSelected
+                                if (shouldAnimate) {
+                                    animatedSelection(
+                                        backgroundView = backgroundView,
+                                        isSelected = isSelected,
+                                        animationSpec = animationSpec,
+                                    )
+                                } else {
+                                    backgroundView.setProgress(if (isSelected) 1f else 0f)
+                                }
+
+                                view.isSelected = isSelected
+                                lastSelected = isSelected
+                            }
+                    }
+
+                    launch {
+                        viewModel.onClicked.collect { onClicked ->
+                            view.setOnClickListener(
+                                if (onClicked != null) {
+                                    View.OnClickListener { onClicked.invoke() }
+                                } else {
+                                    null
+                                }
+                            )
+                        }
+                    }
+                }
+            }
 
         return DisposableHandle {
             job.cancel()
