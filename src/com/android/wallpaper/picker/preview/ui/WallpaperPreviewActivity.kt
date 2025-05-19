@@ -130,21 +130,6 @@ class WallpaperPreviewActivity :
             wallpaperPreviewRepository.setWallpaperModel(wallpaper)
         }
 
-        if (isFirstRun && isInMultiWindowMode && isFullscreenPreviewEnabled()) {
-            requestFullscreenMode(
-                FULLSCREEN_MODE_REQUEST_ENTER,
-                object : OutcomeReceiver<Void, Throwable> {
-                    override fun onResult(result: Void) {}
-
-                    override fun onError(t: Throwable) {
-                        Log.e(TAG, "Error requesting fullscreen mode", t)
-                        onBackPressedWithToast()
-                    }
-                },
-            )
-            return
-        }
-
         val navController =
             (supportFragmentManager.findFragmentById(R.id.wallpaper_preview_nav_host)
                     as NavHostFragment)
@@ -238,6 +223,19 @@ class WallpaperPreviewActivity :
                 return
             }
             if (isFirstRun && isFullscreenPreviewEnabled()) {
+                requestFullscreenMode(
+                    FULLSCREEN_MODE_REQUEST_ENTER,
+                    object : OutcomeReceiver<Void, Throwable> {
+                        override fun onResult(result: Void) {
+                            Log.v(TAG, "requestFullscreenMode success")
+                        }
+
+                        override fun onError(t: Throwable) {
+                            Log.e(TAG, "Error requesting fullscreen mode", t)
+                            onBackPressedWithToast()
+                        }
+                    },
+                )
                 // Don't dismiss the preview right away while it is still switching to fullscreen.
                 return
             }
