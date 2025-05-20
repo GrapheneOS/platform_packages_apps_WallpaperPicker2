@@ -78,7 +78,22 @@ object BasePreviewBinder {
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.isPreviewClickable.collect { view.isClickable = it } }
+                launch {
+                    val previewAlpha =
+                        if (screen == HOME_SCREEN) {
+                            viewModel.homePreviewAlpha
+                        } else {
+                            viewModel.lockPreviewAlpha
+                        }
+                    previewAlpha.collect {
+                        if (it.alpha == 0f) {
+                            view.importantForAccessibility =
+                                View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+                        } else {
+                            view.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+                        }
+                    }
+                }
 
                 launch {
                     combine(
@@ -87,13 +102,20 @@ object BasePreviewBinder {
                                 else it.lockWallpaper ?: it.homeWallpaper
                             },
                             viewModel.selectedPreviewScreen,
-                            ::Pair,
+                            viewModel.isPreviewClickable,
+                            ::Triple,
                         )
-                        .collect { (wallpaper, selectedPreviewScreen) ->
-                            if (selectedPreviewScreen == screen) {
-                                view.setOnClickListener { onLaunchPreview?.invoke(wallpaper) }
+                        .collect { (wallpaper, selectedPreviewScreen, isPreviewClickable) ->
+                            if (isPreviewClickable) {
+                                if (selectedPreviewScreen == screen) {
+                                    view.setOnClickListener { onLaunchPreview?.invoke(wallpaper) }
+                                } else {
+                                    view.setOnClickListener { onTransitionToScreen?.invoke(screen) }
+                                }
+                                view.isClickable = true
                             } else {
-                                view.setOnClickListener { onTransitionToScreen?.invoke(screen) }
+                                view.setOnClickListener(null)
+                                view.isClickable = false
                             }
                             previewTextLabel?.let {
                                 ViewCompat.setAccessibilityDelegate(

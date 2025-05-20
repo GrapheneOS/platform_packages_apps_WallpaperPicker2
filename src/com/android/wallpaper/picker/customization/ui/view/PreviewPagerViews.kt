@@ -22,7 +22,6 @@ import com.android.wallpaper.picker.preview.ui.view.ClickableMotionLayout
 
 data class PreviewPagerViews(
     val previewPager: ClickableMotionLayout,
-    val pagerTouchInterceptor: View,
     val lockPreviewLabel: TextView,
     val homePreviewLabel: TextView,
     val lockPreview: View,

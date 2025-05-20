@@ -23,6 +23,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
+import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.picker.MyPhotosStarter
 import com.android.wallpaper.picker.MyPhotosStarter.PermissionChangedListener
@@ -39,6 +40,7 @@ import javax.inject.Singleton
 class MyPhotosStarterImpl @Inject constructor() : MyPhotosStarter {
 
     private val permissionChangedListeners: MutableList<PermissionChangedListener> = mutableListOf()
+    private val isNewPickerUi = BaseFlags.get().isNewPickerUi()
 
     override fun requestCustomPhotoPicker(
         listener: PermissionChangedListener,
@@ -46,7 +48,7 @@ class MyPhotosStarterImpl @Inject constructor() : MyPhotosStarter {
         photoPickerLauncher: ActivityResultLauncher<Intent>,
     ) {
         // TODO (b/282073506): Figure out a better way to have better photos experience
-        if (!isReadExternalStoragePermissionGranted(activity)) {
+        if (!isReadExternalStoragePermissionGranted(activity) && !isNewPickerUi) {
             val wrappedListener: PermissionChangedListener =
                 object : PermissionChangedListener {
                     override fun onPermissionsGranted() {

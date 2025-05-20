@@ -153,13 +153,6 @@
             </com.android.wallpaper.picker.preview.ui.view.ClickableMotionLayout>
 
             <View
-                android:id="@+id/pager_touch_interceptor"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                android:clickable="true" />
-
-            <View
                 android:id="@+id/clock_face_click_delegate"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

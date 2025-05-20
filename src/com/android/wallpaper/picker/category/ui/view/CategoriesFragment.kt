@@ -121,8 +121,10 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
         setUpToolbar(view)
         setTitle(getText(R.string.wallpaper_title))
 
+        // Explicitly hiding the background for now
+        // we'll turn it back on again once we have a better contrast image
         val categoriesHeaderImage: ImageView? = view.findViewById(R.id.categories_header_image)
-        categoriesHeaderImage?.let { it.isVisible = isNewPickerUi }
+        categoriesHeaderImage?.let { it.isVisible = false }
 
         if (isNewPickerUi) {
             ColorUpdateBinder.bind(

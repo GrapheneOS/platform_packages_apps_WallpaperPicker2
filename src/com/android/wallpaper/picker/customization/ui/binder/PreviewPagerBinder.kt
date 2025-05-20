@@ -16,26 +16,32 @@
 
 package com.android.wallpaper.picker.customization.ui.binder
 
-import android.view.View
-import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.wallpaper.R
+import com.android.wallpaper.picker.customization.ui.view.PreviewPagerViews
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2
 import kotlinx.coroutines.launch
 
-object PagerTouchInterceptorBinder {
+/** Binds the main screen home and lock screen preview MotionLayout. */
+object PreviewPagerBinder {
 
     fun bind(
-        pagerTouchInterceptor: View,
+        previewPagerViews: PreviewPagerViews,
         viewModel: CustomizationPickerViewModel2,
         lifecycleOwner: LifecycleOwner,
     ) {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.isPagerInteractable.collect { pagerTouchInterceptor.isVisible = !it }
+                    viewModel.isPagerInteractable.collect {
+                        previewPagerViews.previewPager.apply {
+                            getTransition(R.id.preview_swipe_transition).isEnabled = it
+                            shouldInterceptTouch = it
+                        }
+                    }
                 }
             }
         }

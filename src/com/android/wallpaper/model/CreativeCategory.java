@@ -31,6 +31,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.wallpaper.asset.CreativeWallpaperThumbAsset;
+import com.android.wallpaper.module.InjectorProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,10 +55,16 @@ public class CreativeCategory extends WallpaperCategory {
     public static final String KEY_WALLPAPER_SAVE_CREATIVE_WALLPAPER_CURRENT =
             "android.service.wallpaper.currentwallpapers";
 
+    private boolean mIsCollectionWallpaper = false;
+
     /** Return true for CreativeCategories since we support user generated wallpapers here. */
     @Override
     public boolean supportsUserCreatedWallpapers() {
-        return true;
+        if (InjectorProvider.getInjector().getFlags().isCreativeWallpaperCollectionFieldEnabled()) {
+            return !mIsCollectionWallpaper;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -100,7 +107,7 @@ public class CreativeCategory extends WallpaperCategory {
 
     public CreativeCategory(Context context, String title, String collectionId, Uri thumbUri,
             List<WallpaperInfo> wallpaperInfos, int priority,
-            android.app.WallpaperInfo wallpaperInfo) {
+            android.app.WallpaperInfo wallpaperInfo, boolean isCollectionWallpaper) {
         super(title,
                 collectionId,
                 wallpaperInfos.isEmpty() ? null : new CreativeWallpaperThumbAsset(context,
@@ -108,6 +115,7 @@ public class CreativeCategory extends WallpaperCategory {
                 wallpaperInfos,
                 priority);
         mWallpaperInfo = wallpaperInfo;
+        mIsCollectionWallpaper = isCollectionWallpaper;
     }
 
     public CreativeCategory(Context context, String title, String collectionId, Uri thumbUri,

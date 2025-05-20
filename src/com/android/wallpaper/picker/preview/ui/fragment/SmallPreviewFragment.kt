@@ -455,6 +455,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 (view as ViewGroup).isTransitionGroup = false
                 findNavController().let {
                     if (it.currentDestination?.id == R.id.smallPreviewFragment) {
+                        arguments?.clear()
                         wallpaperPreviewViewModel.onTransitionToFullPreview()
                         it.navigate(
                             resId = R.id.action_smallPreviewFragment_to_fullPreviewFragment,

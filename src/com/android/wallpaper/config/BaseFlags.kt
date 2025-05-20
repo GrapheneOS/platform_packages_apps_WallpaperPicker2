@@ -28,6 +28,7 @@ import com.android.systemui.shared.customization.data.content.CustomizationProvi
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
 import com.android.systemui.shared.customization.data.content.CustomizationProviderContract as Contract
 import com.android.wallpaper.Flags.composeRefactorFlag
+import com.android.wallpaper.Flags.creativeWallpaperFieldCollectionWallpaper
 import com.android.wallpaper.Flags.desktopUiFlag
 import com.android.wallpaper.Flags.fullscreenPreviewFlag
 import com.android.wallpaper.Flags.newCreativeWallpaperCategory
@@ -61,6 +62,9 @@ abstract class BaseFlags {
 
     open fun isNewCreativeWallpaperCategoryEnabled() = newCreativeWallpaperCategory()
 
+    open fun isCreativeWallpaperCollectionFieldEnabled() =
+        creativeWallpaperFieldCollectionWallpaper()
+
     open fun isColorContrastControlEnabled() = enableColorContrastControl()
 
     open fun isExtendedWallpaperEnabled() = extendedWallpaperEffects()
@@ -75,7 +79,7 @@ abstract class BaseFlags {
 
     // This is just a local flag in order to ensure right behaviour in case
     // something goes wrong with PhotoPicker integration.
-    open fun isPhotoPickerEnabled() = true
+    open fun isPhotoPickerEnabled() = false
 
     open fun isKeyguardQuickAffordanceEnabled(context: Context): Boolean {
         return getCachedFlags(context)

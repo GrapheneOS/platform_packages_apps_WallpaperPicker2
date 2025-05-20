@@ -23,6 +23,13 @@ flag {
 }
 
 flag {
+    name: "creative_wallpaper_field_collection_wallpaper"
+    namespace: "customization_picker"
+    description: "Add new field IsCollectionWallpaper for the new creative wallpaper."
+    bug: "381009822"
+}
+
+flag {
    name: "compose_refactor_flag"
    namespace: "customization_picker"
    description: "Refactor pieces of picker UI into compose."

@@ -23,6 +23,8 @@ public final class WallpaperInfoContract {
     public static final String CATEGORY_TITLE = "category_title";
     public static final String CATEGORY_THUMBNAIL = "category_thumbnail";
     public static final String CATEGORY_PRIORITY = "category_priority";
+    public static final String CATEGORY_IS_COLLECTION_WALLPAPER =
+            "category_is_collection_wallpaper";
     public static final String ASSET_ID = "asset_id";
     public static final String WALLPAPER_TITLE = "wallpaper_title";
     public static final String WALLPAPER_AUTHOR = "wallpaper_author";

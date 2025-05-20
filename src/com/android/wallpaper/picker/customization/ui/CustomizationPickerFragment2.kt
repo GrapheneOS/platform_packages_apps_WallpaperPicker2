@@ -68,7 +68,7 @@ import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptions
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationPickerBinder2
 import com.android.wallpaper.picker.customization.ui.binder.DarkModeUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.PackThemeSuggestedEntryBinder
-import com.android.wallpaper.picker.customization.ui.binder.PagerTouchInterceptorBinder
+import com.android.wallpaper.picker.customization.ui.binder.PreviewPagerBinder
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
@@ -693,7 +693,6 @@ class CustomizationPickerFragment2 :
 
         return PreviewPagerViews(
             previewPager = previewPager,
-            pagerTouchInterceptor = rootView.requireViewById(R.id.pager_touch_interceptor),
             lockPreviewLabel = previewPager.requireViewById(R.id.lock_preview_label),
             homePreviewLabel = previewPager.requireViewById(R.id.home_preview_label),
             lockPreview = previewPager.requireViewById(R.id.lock_preview),
@@ -710,11 +709,7 @@ class CustomizationPickerFragment2 :
         previewPagerViews: PreviewPagerViews,
         isFirstBinding: Boolean,
     ) {
-        PagerTouchInterceptorBinder.bind(
-            previewPagerViews.pagerTouchInterceptor,
-            customizationPickerViewModel,
-            viewLifecycleOwner,
-        )
+        PreviewPagerBinder.bind(previewPagerViews, customizationPickerViewModel, viewLifecycleOwner)
 
         ColorUpdateBinder.bind(
             setColor = { color -> previewPagerViews.lockPreviewLabel.setTextColor(color) },

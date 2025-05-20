@@ -18,6 +18,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Transition
+        android:id="@+id/preview_swipe_transition"
         app:constraintSetStart="@id/lock_preview_selected"
         app:constraintSetEnd="@id/home_preview_selected"
         app:duration="200">
