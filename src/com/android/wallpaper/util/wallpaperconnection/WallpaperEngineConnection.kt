@@ -29,6 +29,7 @@ class WallpaperEngineConnection(
 ) : IWallpaperConnection.Stub() {
 
     var engine: IWallpaperEngine? = null
+
     private var engineContinuation: CancellableContinuation<IWallpaperEngine>? = null
     private var listener: WallpaperEngineConnectionListener? = null
 
@@ -57,9 +58,13 @@ class WallpaperEngineConnection(
         // passed in attachEngine callback for WallpaperEngineConnection.
         this.engine = engine
         engine?.apply {
-            setVisibility(true)
-            resizePreview(Rect(0, 0, displayMetrics.x, displayMetrics.y))
-            requestWallpaperColors()
+            try {
+                setVisibility(true)
+                resizePreview(Rect(0, 0, displayMetrics.x, displayMetrics.y))
+                requestWallpaperColors()
+            } catch (e: RemoteException) {
+                Log.w(TAG, "Error in attachEngine", e)
+            }
         }
     }
 

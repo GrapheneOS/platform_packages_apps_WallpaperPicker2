@@ -67,6 +67,7 @@ class FloatingToolbarTabAdapter(
     ) {
         val payload = if (payloads.isNotEmpty()) payloads[0] as? Int else null
         val item = getItem(position)
+        holder.itemView.isSelected = item.isSelected
         holder.label.setTextAppearance(
             if (item.isSelected)
                 R.style.WallpaperPicker_Preview_TextAppearance_NoAllCaps_LabelLargeEmphasized

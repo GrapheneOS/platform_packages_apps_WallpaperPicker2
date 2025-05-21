@@ -19,6 +19,7 @@ package com.android.wallpaper.picker.category.ui.view
 import android.Manifest
 import android.app.Activity
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.net.Uri
@@ -78,6 +79,7 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
     @Inject lateinit var curatedPhotosTimeUtil: CuratedPhotosTimeUtil
     @Inject lateinit var userEventLogger: UserEventLogger
     private lateinit var photoPickerLauncher: ActivityResultLauncher<Intent>
+    private lateinit var extendedWallpaperEffectsLauncher: ActivityResultLauncher<Intent>
 
     // TODO: this may need to be scoped to fragment if the architecture changes
     private val categoriesViewModel by activityViewModels<CategoriesViewModel>()
@@ -96,8 +98,29 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
                 val context = context ?: return@registerForActivityResult
                 val wallpaperModel =
                     wallpaperModelFactory.getWallpaperModel(context, imageWallpaperInfo)
-                startWallpaperPreviewActivity(wallpaperModel, false)
+                startWallpaperPreviewActivity(wallpaperModel, false, false)
             }
+
+        extendedWallpaperEffectsLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (
+                    result.resultCode != Activity.RESULT_OK ||
+                        result.data?.data == null ||
+                        context == null
+                ) {
+                    return@registerForActivityResult
+                }
+
+                val wallpaperModel =
+                    extractWallpaperModelFromResult(result.data!!, requireContext())
+                startWallpaperPreviewActivity(wallpaperModel, false, true)
+            }
+    }
+
+    private fun extractWallpaperModelFromResult(result: Intent, context: Context): WallpaperModel {
+        val imageUri = result.data
+        val imageWallpaperInfo = ImageWallpaperInfo(imageUri)
+        return wallpaperModelFactory.getWallpaperModel(context, imageWallpaperInfo)
     }
 
     override fun onCreateView(
@@ -167,34 +190,7 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
                     )
                 }
                 is CategoriesViewModel.NavigationEvent.NavigateToPhotosPicker -> {
-                    if (BaseFlags.get().isPhotoPickerEnabled()) {
-                        parentFragmentManager.commit {
-                            replace(
-                                R.id.fragment_container,
-                                PhotoPickerFragment.newInstance(
-                                    shouldNavigateToExtendedWallpaperEffects = false
-                                ),
-                            )
-                            addToBackStack(null)
-                        }
-                    } else {
-                        // make call to permission handler to grab photos and pass callback
-                        myPhotosStarterImpl.requestCustomPhotoPicker(
-                            object : MyPhotosStarter.PermissionChangedListener {
-                                override fun onPermissionsGranted() {
-                                    callback?.invoke()
-                                }
-
-                                override fun onPermissionsDenied(dontAskAgain: Boolean) {
-                                    if (dontAskAgain) {
-                                        showPermissionSnackbar()
-                                    }
-                                }
-                            },
-                            requireActivity(),
-                            photoPickerLauncher,
-                        )
-                    }
+                    startPhotoPicker(shouldNavigateToExtendedWallpaperEffects = false, callback)
                 }
                 is CategoriesViewModel.NavigationEvent.NavigateToThirdParty -> {
                     startThirdPartyCategoryActivity(
@@ -207,27 +203,57 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
                     startWallpaperPreviewActivity(
                         navigationEvent.wallpaperModel,
                         navigationEvent.categoryType == CategoryType.CreativeCategories,
+                        false,
                     )
                 }
                 is CategoriesViewModel.NavigationEvent.NavigateToExtendedWallpaperEffects -> {
-                    parentFragmentManager.commit {
-                        replace(
-                            R.id.fragment_container,
-                            PhotoPickerFragment.newInstance(
-                                shouldNavigateToExtendedWallpaperEffects = true
-                            ),
-                        )
-                        addToBackStack(null)
-                    }
+                    startPhotoPicker(shouldNavigateToExtendedWallpaperEffects = true, callback)
                 }
             }
         }
         return view
     }
 
+    private fun startPhotoPicker(
+        shouldNavigateToExtendedWallpaperEffects: Boolean,
+        callback: (() -> Unit)?,
+    ) {
+        if (BaseFlags.get().isPhotoPickerEnabled()) {
+            parentFragmentManager.commit {
+                replace(
+                    R.id.fragment_container,
+                    PhotoPickerFragment.newInstance(
+                        shouldNavigateToExtendedWallpaperEffects =
+                            shouldNavigateToExtendedWallpaperEffects
+                    ),
+                )
+                addToBackStack(null)
+            }
+        } else {
+            // make call to permission handler to grab photos and pass callback
+            myPhotosStarterImpl.requestCustomPhotoPicker(
+                object : MyPhotosStarter.PermissionChangedListener {
+                    override fun onPermissionsGranted() {
+                        callback?.invoke()
+                    }
+
+                    override fun onPermissionsDenied(dontAskAgain: Boolean) {
+                        if (dontAskAgain) {
+                            showPermissionSnackbar()
+                        }
+                    }
+                },
+                requireActivity(),
+                if (shouldNavigateToExtendedWallpaperEffects) extendedWallpaperEffectsLauncher
+                else photoPickerLauncher,
+            )
+        }
+    }
+
     private fun startWallpaperPreviewActivity(
         wallpaperModel: WallpaperModel,
         isCreativeCategories: Boolean,
+        shouldNavigateToExtendedWallpaperEffects: Boolean,
     ) {
         val appContext = requireContext()
         val activity = requireActivity()
@@ -240,6 +266,7 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
                 isViewAsHome = true,
                 isNewTask = isMultiPanel,
                 shouldCategoryRefresh = isCreativeCategories,
+                shouldNavigateToExtendedWallpaperEffects = shouldNavigateToExtendedWallpaperEffects,
             )
         ActivityUtils.startActivityForResultSafely(
             activity,

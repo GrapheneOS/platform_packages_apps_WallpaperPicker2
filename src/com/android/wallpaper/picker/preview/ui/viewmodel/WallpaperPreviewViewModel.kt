@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.picker.preview.ui.viewmodel
 
-import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context
 import android.graphics.Point
 import android.graphics.Rect
@@ -49,6 +48,7 @@ import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
 import com.android.wallpaper.picker.preview.ui.WallpaperPreviewActivity
 import com.android.wallpaper.picker.preview.ui.binder.ApplyWallpaperOptionsProvider
 import com.android.wallpaper.picker.preview.ui.binder.PreviewTooltipBinder
+import com.android.wallpaper.picker.preview.ui.util.AccessibilityUtil
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.PreviewUtils
 import com.android.wallpaper.util.WallpaperConnection.WhichPreview
@@ -655,15 +655,7 @@ constructor(
 
     @VisibleForTesting
     fun isAccessibilityEnabled(am: AccessibilityManager): Boolean {
-        val enabledServices =
-            am.getEnabledAccessibilityServiceList(
-                AccessibilityServiceInfo.FEEDBACK_AUDIBLE or
-                    AccessibilityServiceInfo.FEEDBACK_SPOKEN or
-                    AccessibilityServiceInfo.FEEDBACK_VISUAL or
-                    AccessibilityServiceInfo.FEEDBACK_HAPTIC or
-                    AccessibilityServiceInfo.FEEDBACK_BRAILLE
-            )
-        return enabledServices.isNotEmpty()
+        return AccessibilityUtil.isAccessibilityEnabled(am)
     }
 
     companion object {

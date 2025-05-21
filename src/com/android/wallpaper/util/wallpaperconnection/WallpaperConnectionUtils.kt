@@ -34,6 +34,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import java.lang.ref.WeakReference
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CompletableDeferred
@@ -197,6 +198,25 @@ constructor(
         }
     }
 
+    suspend fun disconnect(connection: WallpaperConnection) {
+        mutex.withLock {
+            wallpaperConnectionMap
+                .filterValues { engine ->
+                    engine.await().engineConnection.get().let {
+                        it != null && it == connection.engineConnection.get()
+                    }
+                }
+                .keys
+                .forEach { key ->
+                    wallpaperConnectionMap.remove(key)?.await()?.disconnect(context)
+                    surfaceControlMap.remove(key)?.let { surfaceControls ->
+                        surfaceControls.forEach { it.release() }
+                        surfaceControls.clear()
+                    }
+                }
+        }
+    }
+
     suspend fun setEngineVisibility(packageName: String, screen: Screen, isVisible: Boolean) {
         if (isPreviewEnginesConnected.await()) {
             mutex.withLock {
@@ -294,9 +314,15 @@ constructor(
                 wallpaperModel.liveWallpaperData.systemWallpaperInfo.component,
             )
         latestConnectionMap[serviceKey]?.await()?.engineConnection?.get()?.engine?.let {
-            return it.javaClass
-                .getMethod("onApplyWallpaper", Int::class.javaPrimitiveType)
-                .invoke(it, destination.toSetWallpaperFlags()) as WallpaperDescription?
+            try {
+                return it.javaClass
+                    .getMethod("onApplyWallpaper", Int::class.javaPrimitiveType)
+                    .invoke(it, destination.toSetWallpaperFlags()) as WallpaperDescription?
+            } catch (e: RemoteException) {
+                // We catch this explicitly because it means that the method is defined, but the
+                // bound object is dead.
+                Log.w(TAG, "Error calling onApplyWallpaper", e)
+            }
         }
         return null
     }
@@ -321,21 +347,35 @@ constructor(
         val (serviceConnection, wallpaperService) = bindWallpaperService(context, wallpaperIntent)
         val engineConnection = WallpaperEngineConnection(displayMetrics, whichPreview)
         listener?.let { engineConnection.setListener(it) }
+        val connection =
+            WallpaperConnection(
+                WeakReference(engineConnection),
+                WeakReference(serviceConnection),
+                WeakReference(wallpaperService),
+                WeakReference(surfaceView.windowToken),
+            )
+        (serviceConnection as WallpaperServiceConnection).deadConnectionListener =
+            object : WallpaperServiceConnection.DeadConnectionListener {
+                override fun onConnectionDead(serviceConnection: ServiceConnection) {
+                    connection.disconnect(context)
+                }
+            }
         // Attach wallpaper connection to service and get wallpaper engine
         engineConnection
             .getEngine(wallpaperService, destinationFlag, surfaceView, description)
-            .apply {
-                surfaceView.viewTreeObserver.addOnWindowVisibilityChangeListener { visibility ->
-                    setVisibility(visibility == View.VISIBLE)
-                }
+            .let { engine ->
+                engine.asBinder()?.linkToDeath({ connection.disconnect(context) }, /* flags= */ 0)
             }
+        surfaceView.viewTreeObserver.addOnWindowVisibilityChangeListener { visibility ->
+            try {
+                engineConnection.engine?.setVisibility(visibility == View.VISIBLE)
+            } catch (e: RemoteException) {
+                Log.w(TAG, "Error setting engine visibility", e)
+            }
+        }
+        wallpaperService.asBinder().linkToDeath({ connection.disconnect(context) }, 0)
 
-        return WallpaperConnection(
-            WeakReference(engineConnection),
-            WeakReference(serviceConnection),
-            WeakReference(wallpaperService),
-            WeakReference(surfaceView.windowToken),
-        )
+        return connection
     }
 
     // Calculates a unique key for the wallpaper engine instance
@@ -413,7 +453,7 @@ constructor(
         onPreviewReady: (() -> Unit)?,
     ) {
         fun logError(e: Exception) {
-            Log.e(WallpaperConnection::class.simpleName, "Fail to reparent wallpaper surface", e)
+            Log.e(TAG, "Fail to reparent wallpaper surface", e)
         }
 
         try {
@@ -481,14 +521,52 @@ constructor(
         val wallpaperService: WeakReference<IWallpaperService>,
         val windowToken: WeakReference<IBinder>,
     ) {
+        private val disconnected = AtomicBoolean(false)
+
         fun disconnect(context: Context) {
-            engineConnection.get()?.apply {
-                engine?.destroy()
-                removeListener()
-                engine = null
+            if (disconnected.compareAndSet(/* expectedValue= */ false, /* newValue= */ true)) {
+                engineConnection.get()?.apply {
+                    engine.let {
+                        engine = null
+                        try {
+                            it?.destroy()
+                        } catch (e: RemoteException) {
+                            Log.w(TAG, "Error destroying wallpaper engine", e)
+                        }
+                        removeListener()
+                    }
+                }
+                windowToken.get()?.let { window ->
+                    wallpaperService.get()?.let { service ->
+                        try {
+                            service.detach(window)
+                        } catch (e: RemoteException) {
+                            Log.w(TAG, "Error disconnecting wallpaper service", e)
+                        }
+                    }
+                }
+                serviceConnection.get()?.let {
+                    try {
+                        context.unbindService(it)
+                    } catch (e: RemoteException) {
+                        Log.w(TAG, "Error unbinding service connection", e)
+                    }
+                }
             }
-            windowToken.get()?.let { wallpaperService.get()?.detach(it) }
-            serviceConnection.get()?.let { context.unbindService(it) }
+        }
+
+        override fun toString(): String {
+            return listOf(
+                    "engineConnection serviceConnection wallpaperService windowToken",
+                    toHex(engineConnection.get()),
+                    toHex(serviceConnection.get()),
+                    toHex(wallpaperService.get()),
+                    toHex(windowToken.get()),
+                    (serviceConnection.get() as? WallpaperServiceConnection)
+                        ?.componentName
+                        ?.packageName,
+                )
+                .joinToString()
         }
     }
 
@@ -529,5 +607,9 @@ constructor(
 
         fun isExtendedEffectWallpaper(context: Context, component: ComponentName) =
             component.packageName == context.getString(R.string.extended_wallpaper_effects_package)
+
+        fun toHex(o: Any?): String {
+            return o.hashCode().toString(16).padStart(7, '0')
+        }
     }
 }
