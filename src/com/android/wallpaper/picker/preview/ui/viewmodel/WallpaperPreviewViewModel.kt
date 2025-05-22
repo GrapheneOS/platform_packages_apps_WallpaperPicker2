@@ -25,6 +25,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.customization.picker.clock.shared.ClockSize
+import com.android.systemui.shared.Flags
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
@@ -54,6 +55,7 @@ import com.android.wallpaper.util.PreviewUtils
 import com.android.wallpaper.util.WallpaperConnection.WhichPreview
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.util.EnumSet
 import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -426,7 +428,9 @@ constructor(
     val showSetWallpaperDialog = _showSetWallpaperDialog.asStateFlow()
 
     private val _setWallpaperDialogSelectedScreens: MutableStateFlow<Set<Screen>> =
-        MutableStateFlow(setOf())
+        MutableStateFlow(
+            if (Flags.newCustomizationPickerUi()) setOf() else EnumSet.allOf(Screen::class.java)
+        )
     val setWallpaperDialogSelectedScreens: StateFlow<Set<Screen>> =
         _setWallpaperDialogSelectedScreens.asStateFlow()
 

@@ -16,15 +16,10 @@
 
 package com.android.wallpaper.picker.category.ui.view.viewholder
 
-import android.app.WallpaperColors
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
 import com.android.wallpaper.module.logging.UserEventLogger
@@ -37,11 +32,6 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class CuratedPhotoHolder(
     itemView: View,
@@ -52,9 +42,6 @@ class CuratedPhotoHolder(
     var backgroundColorBinding: ColorUpdateBinder.Binding? = null
     var loadingAnimation: LoadingAnimation2? = null
     private val curatedPhotoImage: ImageView = itemView.requireViewById(R.id.carousel_image_view)
-    private val curatedPhotoTitle: TextView = itemView.requireViewById(R.id.carousel_text_view)
-
-    private var bindJob: Job? = null
 
     fun bind(item: TileViewModel, context: Context, isFirst: Boolean) {
         curatedPhotoImage.contentDescription = item.contentDescription
@@ -75,29 +62,6 @@ class CuratedPhotoHolder(
                 },
                 context.getColor(R.color.system_surface_bright),
             )
-
-            if (item.showTitle) {
-                asset.decodeBitmap { bitmap ->
-                    if (bitmap != null) {
-                        val safeBitmap =
-                            if (bitmap.config == Bitmap.Config.HARDWARE) {
-                                bitmap.copy(Bitmap.Config.ARGB_8888, false)
-                            } else {
-                                bitmap
-                            }
-                        bindJob =
-                            CoroutineScope(Dispatchers.IO).launch {
-                                val colors = WallpaperColors.fromBitmap(safeBitmap)
-                                withContext(Dispatchers.Main) {
-                                    val backgroundColor =
-                                        colors?.primaryColor?.toArgb() ?: Color.DKGRAY
-                                    val textColor = getContrastingTextColor(backgroundColor)
-                                    curatedPhotoTitle.setTextColor(textColor)
-                                }
-                            }
-                    }
-                }
-            }
         }
             ?: run {
                 // Glide will render the gif and on completion or failure will dismiss the
@@ -121,11 +85,6 @@ class CuratedPhotoHolder(
                                     backgroundColorBinding?.destroy()
                                     backgroundColorBinding = null
                                 }
-
-                                val colors = WallpaperColors.fromDrawable(resource)
-                                val backgroundColor = colors?.primaryColor?.toArgb() ?: Color.DKGRAY
-                                val textColor = getContrastingTextColor(backgroundColor)
-                                curatedPhotoTitle.setTextColor(textColor)
                                 return false
                             }
 
@@ -150,25 +109,7 @@ class CuratedPhotoHolder(
         curatedPhotoImage.layoutParams.height =
             context.resources.getDimension(R.dimen.curated_photo_height).toInt()
 
-        curatedPhotoTitle.text = item.text
-        curatedPhotoTitle.visibility =
-            if (isFirst && item.showTitle) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
-
         itemView.setOnClickListener { _ -> item.onClicked?.invoke() }
-    }
-
-    fun getContrastingTextColor(backgroundColor: Int): Int {
-        // Calculate luminance (brightness) of the background color
-        val luminance = ColorUtils.calculateLuminance(backgroundColor)
-        return if (luminance > 0.5) {
-            Color.BLACK // background is light, so use dark text
-        } else {
-            Color.WHITE // background is dark, so use light text
-        }
     }
 
     fun cleanUp() {
@@ -176,9 +117,5 @@ class CuratedPhotoHolder(
         backgroundColorBinding = null
         loadingAnimation?.cancel()
         loadingAnimation = null
-    }
-
-    fun recycle() {
-        bindJob?.cancel()
     }
 }

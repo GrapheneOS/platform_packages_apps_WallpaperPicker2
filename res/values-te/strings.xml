@@ -33,6 +33,7 @@
     <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"వాల్‌పేపర్‌ను ఎంచుకోండి"</string>
     <string name="choose_a_curated_photo_section_title" msgid="7360675459203465887">"సూచించిన ఫోటోలు"</string>
     <string name="creative_wallpaper_title" msgid="3581650238648981372">"వాల్‌పేపర్‌ను క్రియేట్ చేయండి"</string>
+    <string name="wallpaper_studio_title" msgid="4521517442580329214">"వాల్‌పేపర్ స్టూడియో"</string>
     <string name="home_screen_message" msgid="106444102822522813">"మొదటి స్క్రీన్"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"లాక్ స్క్రీన్"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"హోమ్ &amp; లాక్"</string>
