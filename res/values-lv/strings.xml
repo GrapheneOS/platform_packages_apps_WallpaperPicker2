@@ -33,8 +33,7 @@
     <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"Fona tapetes izvēle"</string>
     <string name="choose_a_curated_photo_section_title" msgid="7360675459203465887">"Ieteiktie fotoattēli"</string>
     <string name="creative_wallpaper_title" msgid="3581650238648981372">"Fona tapetes izveide"</string>
-    <!-- no translation found for wallpaper_studio_title (4521517442580329214) -->
-    <skip />
+    <string name="wallpaper_studio_title" msgid="4521517442580329214">"Fona tapešu studija"</string>
     <string name="home_screen_message" msgid="106444102822522813">"Sākuma ekrāns"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"Bloķēšanas ekrāns"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"Sākuma un bloķēšanas ekrāns"</string>

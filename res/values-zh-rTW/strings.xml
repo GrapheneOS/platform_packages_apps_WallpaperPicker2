@@ -33,8 +33,7 @@
     <string name="choose_a_wallpaper_section_title" msgid="1009823506890453891">"選擇桌布"</string>
     <string name="choose_a_curated_photo_section_title" msgid="7360675459203465887">"建議的相片"</string>
     <string name="creative_wallpaper_title" msgid="3581650238648981372">"建立桌布"</string>
-    <!-- no translation found for wallpaper_studio_title (4521517442580329214) -->
-    <skip />
+    <string name="wallpaper_studio_title" msgid="4521517442580329214">"桌布工作室"</string>
     <string name="home_screen_message" msgid="106444102822522813">"主畫面"</string>
     <string name="lock_screen_message" msgid="1534506081955058013">"螢幕鎖定"</string>
     <string name="home_and_lock_short_label" msgid="2937922943541927983">"主畫面和螢幕鎖定"</string>
