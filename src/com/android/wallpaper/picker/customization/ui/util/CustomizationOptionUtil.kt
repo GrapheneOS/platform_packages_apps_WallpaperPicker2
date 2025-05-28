@@ -16,35 +16,15 @@
 
 package com.android.wallpaper.picker.customization.ui.util
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import com.android.wallpaper.model.Screen
-import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
-
-/** This util creates the views for customization options. */
+/** This util provides the different [CustomizationOption]'s and util functions. */
 interface CustomizationOptionUtil {
 
     // Enum for customization options
     interface CustomizationOption
 
-    fun getOptionEntries(
-        customizationOptionsData: CustomizationOptionsData,
-        screen: Screen,
-        optionContainer: LinearLayout,
-        layoutInflater: LayoutInflater,
-    ): List<Pair<CustomizationOption, View>>
-
-    fun initFloatingSheet(
-        customizationOptionsData: CustomizationOptionsData,
-        bottomSheetContainer: FrameLayout,
-        layoutInflater: LayoutInflater,
-    ): Map<CustomizationOption, View>
-
-    fun createClockPreviewAndAddToParent(
-        parentView: ViewGroup,
-        layoutInflater: LayoutInflater,
-    ): View?
+    /**
+     * Map the destination to [CustomizationOption]. This is for handling deep link intents. The
+     * intent contains the string of the destination.
+     */
+    fun getCustomizationOptionFromDestination(destination: String): CustomizationOption?
 }

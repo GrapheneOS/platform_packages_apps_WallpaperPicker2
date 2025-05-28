@@ -16,37 +16,14 @@
 
 package com.android.wallpaper.picker.customization.ui.util
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import com.android.wallpaper.model.Screen
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
-import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationOptionsData
-import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@ActivityScoped
+@Singleton
 class DefaultCustomizationOptionUtil @Inject constructor() : CustomizationOptionUtil {
 
-    override fun getOptionEntries(
-        customizationOptionsData: CustomizationOptionsData,
-        screen: Screen,
-        optionContainer: LinearLayout,
-        layoutInflater: LayoutInflater,
-    ): List<Pair<CustomizationOption, View>> = emptyList()
-
-    override fun initFloatingSheet(
-        customizationOptionsData: CustomizationOptionsData,
-        bottomSheetContainer: FrameLayout,
-        layoutInflater: LayoutInflater,
-    ): Map<CustomizationOption, View> = mapOf()
-
-    override fun createClockPreviewAndAddToParent(
-        parentView: ViewGroup,
-        layoutInflater: LayoutInflater,
-    ): View? {
+    override fun getCustomizationOptionFromDestination(destination: String): CustomizationOption? {
         return null
     }
 }

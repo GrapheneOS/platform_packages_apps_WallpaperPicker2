@@ -21,6 +21,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Utility class to provide methods to generate effects for the wallpaper.
@@ -89,6 +90,14 @@ public abstract class EffectsController {
      */
     public boolean isEffectsWallpaper(@NonNull WallpaperInfo info) {
         return false;
+    }
+
+    /**
+     * Returns the name of the package handling effects, or null if none.
+     */
+    @Nullable
+    public String getEffectsPackageName() {
+        return null;
     }
 
     /**

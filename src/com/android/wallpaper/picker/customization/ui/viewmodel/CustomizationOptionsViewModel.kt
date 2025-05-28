@@ -53,5 +53,12 @@ interface CustomizationOptionsViewModel {
 
 interface CustomizationOptionsViewModelFactory {
 
-    fun create(viewModelScope: CoroutineScope): CustomizationOptionsViewModel
+    /**
+     * @param initialDeepLinkDestination This field will only be not null, when receiving an intent
+     *   requiring to deep-link to screens other than the main screen.
+     */
+    fun create(
+        viewModelScope: CoroutineScope,
+        initialDeepLinkDestination: String?,
+    ): CustomizationOptionsViewModel
 }

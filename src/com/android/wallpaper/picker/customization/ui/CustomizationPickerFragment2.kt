@@ -16,6 +16,8 @@
 
 package com.android.wallpaper.picker.customization.ui
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -31,6 +33,7 @@ import android.widget.LinearLayout
 import android.widget.Toolbar
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -38,7 +41,6 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnPreDraw
-import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
@@ -47,6 +49,7 @@ import androidx.transition.Transition
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.wallpaper.R
 import com.android.wallpaper.config.BaseFlags
+import com.android.wallpaper.model.ImageWallpaperInfo
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.Screen.HOME_SCREEN
 import com.android.wallpaper.model.Screen.LOCK_SCREEN
@@ -54,8 +57,10 @@ import com.android.wallpaper.module.LargeScreenMultiPanesChecker
 import com.android.wallpaper.module.MultiPanesChecker
 import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.picker.AppbarFragment
+import com.android.wallpaper.picker.MyPhotosStarter
 import com.android.wallpaper.picker.WallpaperPickerDelegate.VIEW_ONLY_PREVIEW_WALLPAPER_REQUEST_CODE
 import com.android.wallpaper.picker.category.ui.view.CategoriesFragment
+import com.android.wallpaper.picker.category.ui.view.MyPhotosStarterImpl
 import com.android.wallpaper.picker.category.ui.view.PhotoPickerFragment
 import com.android.wallpaper.picker.category.ui.view.providers.IndividualPickerFactory
 import com.android.wallpaper.picker.common.preview.data.repository.PersistentWallpaperModelRepository
@@ -70,8 +75,8 @@ import com.android.wallpaper.picker.customization.ui.binder.DarkModeUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.PackThemeSuggestedEntryBinder
 import com.android.wallpaper.picker.customization.ui.binder.PreviewPagerBinder
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
-import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
+import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionViewUtil
 import com.android.wallpaper.picker.customization.ui.util.EmptyTransitionListener
 import com.android.wallpaper.picker.customization.ui.view.ApplyButton
 import com.android.wallpaper.picker.customization.ui.view.PackThemeSuggestedChip
@@ -88,6 +93,7 @@ import com.android.wallpaper.util.ActivityUtils
 import com.android.wallpaper.util.CuratedPhotosTimeUtil
 import com.android.wallpaper.util.DisplayUtils
 import com.android.wallpaper.util.WallpaperConnection
+import com.android.wallpaper.util.converter.WallpaperModelFactory
 import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -100,7 +106,7 @@ import kotlinx.coroutines.launch
 class CustomizationPickerFragment2 :
     Hilt_CustomizationPickerFragment2(), ActivityEnterAnimationCallback {
 
-    @Inject lateinit var customizationOptionUtil: CustomizationOptionUtil
+    @Inject lateinit var customizationOptionViewUtil: CustomizationOptionViewUtil
     @Inject lateinit var customizationOptionsBinder: CustomizationOptionsBinder
     @Inject lateinit var packThemeSuggestedEntryBinder: PackThemeSuggestedEntryBinder
     @Inject lateinit var toolbarBinder: ToolbarBinder
@@ -115,6 +121,8 @@ class CustomizationPickerFragment2 :
     @Inject lateinit var individualPickerFactory: IndividualPickerFactory
     @Inject lateinit var userEventLogger: UserEventLogger
     @Inject lateinit var curatedPhotosTimeUtil: CuratedPhotosTimeUtil
+    @Inject lateinit var wallpaperModelFactory: WallpaperModelFactory
+    @Inject lateinit var myPhotosStarterImpl: MyPhotosStarterImpl
 
     private val customizationPickerViewModel: CustomizationPickerViewModel2 by viewModels()
 
@@ -125,6 +133,7 @@ class CustomizationPickerFragment2 :
     private var fullyCollapsed = false
 
     private var onBackPressedCallback: OnBackPressedCallback? = null
+    private lateinit var extendedWallpaperEffectsLauncher: ActivityResultLauncher<Intent>
 
     private val startForResult =
         this.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
@@ -151,8 +160,35 @@ class CustomizationPickerFragment2 :
             }
         }
 
+        if (!BaseFlags.get().isPhotoPickerEnabled()) {
+            extendedWallpaperEffectsLauncher =
+                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result
+                    ->
+                    if (
+                        result.resultCode != Activity.RESULT_OK ||
+                            result.data?.data == null ||
+                            context == null
+                    ) {
+                        return@registerForActivityResult
+                    }
+
+                    result.data?.let { data ->
+                        context?.let { ctx ->
+                            val wallpaperModel = extractWallpaperModelFromResult(data, ctx)
+                            startWallpaperPreviewActivity(wallpaperModel, false, true)
+                        }
+                    }
+                }
+        }
+
         prepareFragmentExitTransitionAnimation()
         prepareFragmentReenterTransitionAnimation()
+    }
+
+    private fun extractWallpaperModelFromResult(result: Intent, context: Context): WallpaperModel {
+        val imageUri = result.data
+        val imageWallpaperInfo = ImageWallpaperInfo(imageUri)
+        return wallpaperModelFactory.getWallpaperModel(context, imageWallpaperInfo)
     }
 
     override fun onCreateView(
@@ -184,15 +220,6 @@ class CustomizationPickerFragment2 :
 
         val pickerMotionContainer: MotionLayout = view.requireViewById(R.id.picker_motion_layout)
 
-        val initSelectedOption: CustomizationOption? =
-            customizationPickerViewModel.screen.value.second
-        val isInitSecondaryScreen = initSelectedOption != null
-        if (isInitSecondaryScreen) {
-            // If initially on secondary screen, hide the whole motion container until children's
-            // dimensions are calculated and ready to render.
-            pickerMotionContainer.isInvisible = true
-        }
-
         var isMotionContainerInitialized = false
         val optionContainer: ConstraintLayout =
             view.requireViewById(R.id.customization_option_container)
@@ -214,7 +241,7 @@ class CustomizationPickerFragment2 :
                 // Reconfigure motion container constraints if already initialized, to adjust
                 // for new insets (doing it only after it's initialized to avoid jumping if
                 // insets first arrive before the first initialization)
-                configurePickerMotionConstraints(
+                updateHeaderHeightConstraints(
                     pickerMotionContainer = pickerMotionContainer,
                     wallpaperPickerEntry = view.requireViewById(R.id.wallpaper_picker_entry),
                     previewLabelHeight = view.requireViewById<View>(R.id.label_placeholder).height,
@@ -232,6 +259,9 @@ class CustomizationPickerFragment2 :
             val customizationOptionsData =
                 customizationPickerViewModel.customizationOptionsViewModel.customizationOptionsData
                     .first()
+            // When nonnull, the first screen shown is the secondary screen of the selected option.
+            val initialSelectedOption: CustomizationOption? =
+                customizationPickerViewModel.screen.first().second
 
             val lockScreenCustomizationOptionEntries: List<Pair<CustomizationOption, View>> =
                 initCustomizationOptionEntries(
@@ -246,16 +276,16 @@ class CustomizationPickerFragment2 :
                     screen = HOME_SCREEN,
                 )
             val customizationOptionFloatingSheetViewMap: Map<CustomizationOption, View> =
-                customizationOptionUtil.initFloatingSheet(
+                customizationOptionViewUtil.initFloatingSheet(
                     customizationOptionsData,
                     customizationFloatingSheetContainer,
                     layoutInflater,
                 )
 
             view.post {
-                // Post to wait for the essential view dimensions to be obtained, to
-                // further calculate the motion scene dimensions.
-                configurePickerMotionConstraints(
+                // Post to wait for the essential view dimensions to be obtained, to further
+                // calculate the motion scene dimensions.
+                updateHeaderHeightConstraints(
                     pickerMotionContainer = pickerMotionContainer,
                     wallpaperPickerEntry = view.requireViewById(R.id.wallpaper_picker_entry),
                     previewLabelHeight = view.requireViewById<View>(R.id.label_placeholder).height,
@@ -263,17 +293,46 @@ class CustomizationPickerFragment2 :
                     packThemeSuggestedChip = packThemeSuggestedChip,
                     bottomInset = optionContainer.paddingBottom,
                 )
-
-                if (isInitSecondaryScreen && initSelectedOption != null) {
+                if (initialSelectedOption != null) {
                     // If initially on secondary screen, initiate the secondary screen and bind the
                     // picker content after.
                     initSecondaryScreen(
                         customizationOptionFloatingSheetViewMap,
-                        initSelectedOption,
+                        initialSelectedOption,
                         customizationFloatingSheetContainer,
                         pickerMotionContainer,
-                        onComplete = {
-                            pickerMotionContainer.isInvisible = false
+                        onTransitionComplete = {
+                            // Set back the transition listener to the regular
+                            setMotionLayoutOnTransitionCompleteListener(
+                                pickerMotionContainer = pickerMotionContainer,
+                                wallpaperPickerEntry =
+                                    view.requireViewById(R.id.wallpaper_picker_entry),
+                                packThemeSuggestedChip = packThemeSuggestedChip,
+                            )
+                            // Set back the transition alpha constraints to the regular
+                            pickerMotionContainer
+                                .getConstraintSet(R.id.expanded_header_primary)
+                                ?.apply {
+                                    setAlpha(
+                                        R.id.customization_option_floating_sheet_container,
+                                        0.0f,
+                                    )
+                                    setAlpha(R.id.bottom_scroll_view, 1.0f)
+                                }
+                            pickerMotionContainer
+                                .getConstraintSet(R.id.collapsed_header_primary)
+                                ?.apply {
+                                    setAlpha(
+                                        R.id.customization_option_floating_sheet_container,
+                                        0.0f,
+                                    )
+                                    setAlpha(R.id.bottom_scroll_view, 1.0f)
+                                }
+                            pickerMotionContainer.getConstraintSet(R.id.secondary)?.apply {
+                                setAlpha(R.id.customization_option_floating_sheet_container, 1.0f)
+                            }
+
+                            customizationFloatingSheetContainer.alpha = 1.0f
                             bindCustomizationPicker(
                                 customizationOptionsData,
                                 pickerMotionContainer,
@@ -286,6 +345,11 @@ class CustomizationPickerFragment2 :
                         },
                     )
                 } else {
+                    setMotionLayoutOnTransitionCompleteListener(
+                        pickerMotionContainer = pickerMotionContainer,
+                        wallpaperPickerEntry = view.requireViewById(R.id.wallpaper_picker_entry),
+                        packThemeSuggestedChip = packThemeSuggestedChip,
+                    )
                     bindCustomizationPicker(
                         customizationOptionsData,
                         pickerMotionContainer,
@@ -380,7 +444,11 @@ class CustomizationPickerFragment2 :
         customizationFloatingSheetContainer.setPaddingRelative(0, 0, 0, navBarHeight)
     }
 
-    private fun configurePickerMotionConstraints(
+    /**
+     * Update the expanded and collapsed height constraint of the header that hosts the home and
+     * lock screen preview and label. The header expands and collapses with a scroll gesture.
+     */
+    private fun updateHeaderHeightConstraints(
         pickerMotionContainer: MotionLayout,
         wallpaperPickerEntry: WallpaperPickerEntry,
         previewLabelHeight: Int,
@@ -434,7 +502,14 @@ class CustomizationPickerFragment2 :
         pickerMotionContainer
             .getConstraintSet(R.id.expanded_header_primary)
             ?.constrainHeight(R.id.preview_header, expandedHeaderHeight)
+    }
 
+    private fun setMotionLayoutOnTransitionCompleteListener(
+        pickerMotionContainer: MotionLayout,
+        wallpaperPickerEntry: WallpaperPickerEntry,
+        packThemeSuggestedChip: PackThemeSuggestedChip?,
+    ) {
+        val isLargeScreenSingleDisplayPortrait = displayUtils.isLargeScreenSingleDisplayPortrait()
         // Transition listener handle 2 things
         // 1. Expand and collapse the wallpaper entry
         // 2. Reset the transition and preview when transition back to the primary
@@ -482,24 +557,37 @@ class CustomizationPickerFragment2 :
         )
     }
 
+    /** Only called when the first screen shown on the picker is a secondary screen. */
     private fun initSecondaryScreen(
         customizationOptionFloatingSheetViewMap: Map<CustomizationOption, View>,
         initSelectedOption: CustomizationOption,
         customizationFloatingSheetContainer: FrameLayout,
         pickerMotionContainer: MotionLayout,
-        onComplete: () -> Unit,
+        onTransitionComplete: () -> Unit,
     ) {
         // If initially on secondary screen, set the correspondent floating layout
         // content, calculate motion layout dimensions and bind the content after.
         customizationOptionFloatingSheetViewMap[initSelectedOption]?.let { floatingSheetView ->
             setCustomizationOptionFloatingSheet(
+                isInitialSecondaryScreen = true,
                 floatingSheetViewContent = floatingSheetView,
                 floatingSheetContainer = customizationFloatingSheetContainer,
                 motionContainer = pickerMotionContainer,
-                onComplete = {
+                onSetComplete = {
+                    pickerMotionContainer.setTransitionListener(
+                        object : EmptyTransitionListener {
+                            override fun onTransitionCompleted(
+                                motionLayout: MotionLayout?,
+                                currentId: Int,
+                            ) {
+                                if (currentId == R.id.secondary) {
+                                    onTransitionComplete.invoke()
+                                }
+                            }
+                        }
+                    )
+                    pickerMotionContainer.setTransitionDuration(0)
                     pickerMotionContainer.transitionToState(R.id.secondary)
-                    pickerMotionContainer.progress = 1.0f
-                    pickerMotionContainer.post { onComplete.invoke() }
                 },
             )
         }
@@ -526,22 +614,30 @@ class CustomizationPickerFragment2 :
             lifecycleOwner = viewLifecycleOwner,
             navigateToPrimary = {
                 if (pickerMotionContainer.currentState == R.id.secondary) {
-                    pickerMotionContainer.setTransition(
-                        R.id.secondary,
-                        if (fullyCollapsed) R.id.collapsed_header_primary
-                        else R.id.expanded_header_primary,
-                    )
-                    pickerMotionContainer.transitionToEnd()
+                    // For some reasons, for transitioning to R.id.collapsed_header_primary or
+                    // R.id.expanded_header_primary we need to use different methods; otherwise
+                    // there will be unexpected expand or collapse of the preview after the
+                    // transition completes.
+                    if (fullyCollapsed) {
+                        pickerMotionContainer.transitionToState(R.id.collapsed_header_primary)
+                    } else {
+                        pickerMotionContainer.setTransition(
+                            R.id.secondary,
+                            R.id.expanded_header_primary,
+                        )
+                        pickerMotionContainer.transitionToEnd()
+                    }
                 }
             },
             navigateToSecondary = { option ->
                 if (pickerMotionContainer.currentState != R.id.secondary) {
                     customizationOptionFloatingSheetViewMap[option]?.let { floatingSheetView ->
                         setCustomizationOptionFloatingSheet(
+                            isInitialSecondaryScreen = false,
                             floatingSheetViewContent = floatingSheetView,
                             floatingSheetContainer = customizationFloatingSheetContainer,
                             motionContainer = pickerMotionContainer,
-                            onComplete = {
+                            onSetComplete = {
                                 userEventLogger.logEnterScreen(
                                     userEventLogger.transformCustomizationOptionToScreenForLogging(
                                         option
@@ -569,7 +665,7 @@ class CustomizationPickerFragment2 :
             },
             navigateToPreviewScreen = { wallpaperModel ->
                 // navigate to standard preview screen
-                startWallpaperPreviewActivity(wallpaperModel, false)
+                startWallpaperPreviewActivity(wallpaperModel, false, false)
             },
             navigateToPackThemeActivity = { intent -> context?.startActivity(intent) },
             navigateToWallpaperCollectionScreen = { categoryId, categoryType ->
@@ -578,9 +674,23 @@ class CustomizationPickerFragment2 :
                 )
             },
             navigateToExtendedWallpaperEffects = {
-                switchFragment(
-                    PhotoPickerFragment.newInstance(shouldNavigateToExtendedWallpaperEffects = true)
-                )
+                if (BaseFlags.get().isPhotoPickerEnabled()) {
+                    switchFragment(
+                        PhotoPickerFragment.newInstance(
+                            shouldNavigateToExtendedWallpaperEffects = true
+                        )
+                    )
+                } else {
+                    myPhotosStarterImpl.requestCustomPhotoPicker(
+                        object : MyPhotosStarter.PermissionChangedListener {
+                            override fun onPermissionsGranted() {}
+
+                            override fun onPermissionsDenied(dontAskAgain: Boolean) {}
+                        },
+                        requireActivity(),
+                        extendedWallpaperEffectsLauncher,
+                    )
+                }
             },
             packThemeSuggestedChip = packThemeSuggestedChip,
             packThemeSuggestedEntryBinder = packThemeSuggestedEntryBinder,
@@ -674,7 +784,7 @@ class CustomizationPickerFragment2 :
         val lockPreviewContainer: ViewGroup =
             lockPreview.requireViewById(R.id.wallpaper_preview_crop)
         val clockHostView =
-            customizationOptionUtil.createClockPreviewAndAddToParent(
+            customizationOptionViewUtil.createClockPreviewAndAddToParent(
                 lockPreviewContainer,
                 layoutInflater,
             )
@@ -850,7 +960,7 @@ class CustomizationPickerFragment2 :
                 }
             )
         val optionEntries =
-            customizationOptionUtil.getOptionEntries(
+            customizationOptionViewUtil.getOptionEntries(
                 customizationOptionsData = customizationOptionsData,
                 screen = screen,
                 optionContainer = optionEntriesContainer,
@@ -872,12 +982,17 @@ class CustomizationPickerFragment2 :
     /**
      * Set customization option floating sheet content to the floating sheet container and get the
      * new container's height for repositioning the preview's guideline.
+     *
+     * @param isInitialSecondaryScreen If the first screen shown is a secondary screen, we should
+     *   hide the bottom scroll view on the main screen as well as the floating sheet on the
+     *   secondary screen for the whole transition.
      */
     private fun setCustomizationOptionFloatingSheet(
+        isInitialSecondaryScreen: Boolean,
         floatingSheetViewContent: View,
         floatingSheetContainer: FrameLayout,
         motionContainer: MotionLayout,
-        onComplete: () -> Unit,
+        onSetComplete: () -> Unit,
     ) {
         floatingSheetContainer.removeAllViews()
         floatingSheetContainer.addView(floatingSheetViewContent)
@@ -903,6 +1018,7 @@ class CustomizationPickerFragment2 :
                     R.id.customization_option_floating_sheet_container,
                     ConstraintLayout.LayoutParams.WRAP_CONTENT,
                 )
+                setAlpha(R.id.bottom_scroll_view, if (isInitialSecondaryScreen) 0.0f else 1.0f)
             }
             motionContainer.getConstraintSet(R.id.collapsed_header_primary)?.apply {
                 setTranslationY(
@@ -920,23 +1036,28 @@ class CustomizationPickerFragment2 :
                     R.id.customization_option_floating_sheet_container,
                     ConstraintLayout.LayoutParams.WRAP_CONTENT,
                 )
+                setAlpha(R.id.bottom_scroll_view, if (isInitialSecondaryScreen) 0.0f else 1.0f)
             }
             motionContainer.getConstraintSet(R.id.secondary)?.apply {
                 setTranslationY(R.id.customization_option_floating_sheet_container, 0.0f)
-                setAlpha(R.id.customization_option_floating_sheet_container, 1.0f)
+                setAlpha(
+                    R.id.customization_option_floating_sheet_container,
+                    if (isInitialSecondaryScreen) 0.0f else 1.0f,
+                )
                 constrainHeight(
                     R.id.customization_option_floating_sheet_container,
                     ConstraintLayout.LayoutParams.WRAP_CONTENT,
                 )
             }
             // Wait until motion container's constraints are updated
-            motionContainer.post { onComplete() }
+            motionContainer.post { onSetComplete() }
         }
     }
 
     private fun startWallpaperPreviewActivity(
         wallpaperModel: WallpaperModel,
         isCreativeCategories: Boolean,
+        shouldNavigateToExtendedWallpaperEffects: Boolean,
     ) {
         val appContext = requireContext()
         val activity = requireActivity()
@@ -949,6 +1070,7 @@ class CustomizationPickerFragment2 :
                 isViewAsHome = true,
                 isNewTask = isMultiPanel,
                 shouldCategoryRefresh = isCreativeCategories,
+                shouldNavigateToExtendedWallpaperEffects = shouldNavigateToExtendedWallpaperEffects,
             )
         ActivityUtils.startActivityForResultSafely(
             activity,

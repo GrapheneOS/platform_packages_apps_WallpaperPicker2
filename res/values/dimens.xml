@@ -306,6 +306,7 @@
 
     <!-- Floating Sheet -->
     <dimen name="floating_sheet_corner_radius">12dp</dimen>
+    <dimen name="floating_sheet_corner_radius_large">28dp</dimen>
     <dimen name="floating_sheet_margin">24dp</dimen>
     <dimen name="floating_sheet_bottom_margin">120dp</dimen>
     <dimen name="floating_sheet_customize_content_min_height">120dp</dimen>
@@ -460,16 +461,18 @@
     <dimen name="handheld_apply_wallpaper_screen_margin_horizontal">24dp</dimen>
     <dimen name="handheld_apply_wallpaper_screen_margin_bottom">34dp</dimen>
     <dimen name="handheld_apply_wallpaper_screen_button_space">8dp</dimen>
-    <dimen name="handheld_apply_wallpaper_screen_header_margin_vertical">16dp</dimen>
-    <dimen name="handheld_apply_wallpaper_preview_title_margin_bottom">16dp</dimen>
+    <dimen name="handheld_apply_wallpaper_screen_header_margin_vertical">12dp</dimen>
+    <dimen name="handheld_apply_wallpaper_preview_title_margin_bottom">12dp</dimen>
     <dimen name="handheld_apply_wallpaper_preview_button_margin_bottom">28dp</dimen>
     <dimen name="handheld_apply_wallpaper_preview_button_min_height">56dp</dimen>
 
     <!-- Dimensions for multi-crop foldable small preview -->
     <dimen name="foldable_small_preview_space_between_preview">8dp</dimen>
-    <dimen name="foldable_apply_wallpaper_preview_title_margin_bottom">@dimen/handheld_apply_wallpaper_preview_title_margin_bottom</dimen>
+    <dimen name="foldable_apply_wallpaper_preview_sub_title_margin_top">@dimen/handheld_apply_wallpaper_preview_title_margin_bottom</dimen>
     <dimen name="foldable_apply_wallpaper_preview_button_min_height">@dimen/handheld_apply_wallpaper_preview_button_min_height</dimen>
     <dimen name="foldable_apply_wallpaper_preview_button_min_width">178dp</dimen>
+    <dimen name="foldable_apply_wallpaper_screen_button_space">@dimen/handheld_apply_wallpaper_screen_button_space</dimen>
+    <dimen name="foldable_apply_wallpaper_preview_checkbox_height">48dp</dimen>
 
     <!-- Height for curated photo tile. This height is actually set on horizontal RecyclerView
      which sets it for the curated photos. -->

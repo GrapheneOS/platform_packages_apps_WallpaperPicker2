@@ -23,6 +23,7 @@ import android.view.SurfaceView
 import android.view.View
 import com.android.app.tracing.TraceUtils.traceAsync
 import com.android.wallpaper.R
+import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -51,6 +52,7 @@ import kotlinx.coroutines.sync.withLock
 class WallpaperConnectionUtils
 @Inject
 constructor(
+    private val effectsController: EffectsController,
     @ApplicationContext private val context: Context,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
 ) {
@@ -388,7 +390,12 @@ constructor(
     ): String {
         // This is NOT the right way to do this long term. See b/390731022.
         val multiEngineExt =
-            if (isExtendedEffectWallpaper(context, component)) ":$destinationFlag" else ""
+            if (
+                isExtendedEffectWallpaper(context, component) ||
+                    isLegacyCinematicWallpaper(component)
+            )
+                ":$destinationFlag"
+            else ""
         val keyWithoutSizeInformation =
             this.packageName
                 .plus(":")
@@ -514,6 +521,9 @@ constructor(
         metrics.getValues(values)
         return values
     }
+
+    private fun isLegacyCinematicWallpaper(component: ComponentName) =
+        component.packageName == effectsController.effectsPackageName
 
     data class WallpaperConnection(
         val engineConnection: WeakReference<WallpaperEngineConnection>,

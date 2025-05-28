@@ -42,12 +42,12 @@ import com.android.wallpaper.util.wallpaperconnection.WallpaperConnectionUtils
 object ExtendedWallpaperEffectsUtils {
 
     fun registerExtendedWallpaperEffectsActivityLauncher(
-        activity: FragmentActivity?,
+        activity: FragmentActivity,
         lifecycleOwner: LifecycleOwner,
         wallpaperPreviewViewModel: WallpaperPreviewViewModel,
         context: Context?,
-    ): ActivityResultLauncher<Intent>? {
-        return activity?.activityResultRegistry?.register(
+    ): ActivityResultLauncher<Intent> {
+        return activity.activityResultRegistry.register(
             PREVIEW_RESULT_REGISTRY,
             lifecycleOwner,
             object : ActivityResultContract<Intent, Int>() {

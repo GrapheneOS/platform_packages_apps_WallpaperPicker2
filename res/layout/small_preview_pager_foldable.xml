@@ -34,7 +34,6 @@
             android:id="@+id/apply_wallpaper_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/foldable_apply_wallpaper_preview_title_margin_bottom"
             android:text="@string/apply_wallpaper_title_text"
             android:textAppearance="@style/TextAppearance.SettingsLib.HeadlineLarge"  />
 
@@ -42,38 +41,59 @@
             android:id="@+id/apply_wallpaper_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/foldable_apply_wallpaper_preview_sub_title_margin_top"
             android:textAppearance="@style/TextAppearance.SettingsLib.TitleSmall" />
     </LinearLayout>
 
-    <include layout="@layout/small_preview_foldable_card_view2"
-        android:id="@+id/lock_preview" />
-
-    <CheckBox
-        android:id="@+id/lock_checkbox"
+    <LinearLayout
+        android:id="@+id/lock_preview_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:button="@drawable/checkbox_circle_shape"
-        android:singleLine="true"
-        android:ellipsize="end"
-        android:scrollHorizontally="true"
-        android:text="@string/set_wallpaper_lock_screen_destination"
-        android:visibility="gone"/>
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <include layout="@layout/small_preview_foldable_card_view2"
-        android:id="@+id/home_preview" />
+        <include layout="@layout/small_preview_foldable_card_view2"
+            android:id="@+id/lock_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/foldable_apply_wallpaper_screen_button_space" />
 
-    <CheckBox
-        android:id="@+id/home_checkbox"
+        <CheckBox
+            android:id="@+id/lock_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/foldable_apply_wallpaper_preview_checkbox_height"
+            android:gravity="center_vertical"
+            android:button="@drawable/checkbox_circle_shape"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:scrollHorizontally="true"
+            android:text="@string/set_wallpaper_lock_screen_destination" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/home_preview_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:button="@drawable/checkbox_circle_shape"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:scrollHorizontally="true"
-        android:singleLine="true"
-        android:text="@string/set_wallpaper_home_screen_destination"
-        android:visibility="gone" />
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <include layout="@layout/small_preview_foldable_card_view2"
+            android:id="@+id/home_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/foldable_apply_wallpaper_screen_button_space" />
+
+        <CheckBox
+            android:id="@+id/home_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/foldable_apply_wallpaper_preview_checkbox_height"
+            android:gravity="center_vertical"
+            android:button="@drawable/checkbox_circle_shape"
+            android:ellipsize="end"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="@string/set_wallpaper_home_screen_destination" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/apply_button"

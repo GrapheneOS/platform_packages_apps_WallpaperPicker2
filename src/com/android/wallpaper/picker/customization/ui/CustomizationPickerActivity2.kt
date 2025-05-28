@@ -35,8 +35,9 @@ import com.android.wallpaper.picker.common.preview.ui.binder.WorkspaceCallbackBi
 import com.android.wallpaper.picker.customization.ui.binder.ColorUpdateBinder
 import com.android.wallpaper.picker.customization.ui.binder.CustomizationOptionsBinder
 import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
-import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
+import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionViewUtil
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.Companion.KEY_DESTINATION
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.util.ActivityUtils
@@ -60,7 +61,7 @@ class CustomizationPickerActivity2 :
     }
 
     @Inject lateinit var multiPanesChecker: MultiPanesChecker
-    @Inject lateinit var customizationOptionUtil: CustomizationOptionUtil
+    @Inject lateinit var customizationOptionViewUtil: CustomizationOptionViewUtil
     @Inject lateinit var customizationOptionsBinder: CustomizationOptionsBinder
     @Inject lateinit var workspaceCallbackBinder: WorkspaceCallbackBinder
     @Inject lateinit var toolbarBinder: ToolbarBinder
@@ -132,7 +133,18 @@ class CustomizationPickerActivity2 :
         if (fragment == null) {
             supportFragmentManager
                 .beginTransaction()
-                .add(R.id.fragment_container, CustomizationPickerFragment2())
+                .add(
+                    R.id.fragment_container,
+                    CustomizationPickerFragment2().apply {
+                        arguments =
+                            Bundle().apply {
+                                putString(
+                                    KEY_DESTINATION,
+                                    intent.extras?.getString(KEY_DESTINATION),
+                                )
+                            }
+                    },
+                )
                 .commit()
         }
     }

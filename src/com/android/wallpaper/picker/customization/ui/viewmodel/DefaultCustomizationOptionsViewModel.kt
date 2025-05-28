@@ -17,6 +17,7 @@
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
+import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -31,17 +32,23 @@ class DefaultCustomizationOptionsViewModel
 @AssistedInject
 constructor(
     wallpaperCarouselViewModelFactory: WallpaperCarouselViewModel.Factory,
+    customizationOptionUtil: CustomizationOptionUtil,
     @Assisted viewModelScope: CoroutineScope,
+    @Assisted private val initialDeepLinkDestination: String?,
 ) : CustomizationOptionsViewModel {
 
     override val customizationOptionsData: Flow<CustomizationOptionsData> =
         flowOf(DefaultCustomizationOptionsData())
 
-    override val wallpaperCarouselViewModel =
+    override val wallpaperCarouselViewModel: WallpaperCarouselViewModel =
         wallpaperCarouselViewModelFactory.create(viewModelScope)
 
-    private val _selectedOptionState =
-        MutableStateFlow<CustomizationOptionUtil.CustomizationOption?>(null)
+    private val _selectedOptionState: MutableStateFlow<CustomizationOption?> =
+        MutableStateFlow(
+            initialDeepLinkDestination?.let {
+                customizationOptionUtil.getCustomizationOptionFromDestination(it)
+            }
+        )
     override val selectedOption = _selectedOptionState.asStateFlow()
 
     private val _discardChangesDialogViewModel: MutableStateFlow<DiscardChangesDialogViewModel?> =
@@ -63,6 +70,12 @@ constructor(
     }
 
     override fun handleBackPressed(): Boolean {
+        if (initialDeepLinkDestination != null) {
+            // If initial deep link destination is not null. We should navigate back to the previous
+            // app or activity, instead of navigating back the main screen. Thus we return false to
+            // have the parent activity handle the navigation to the previous app or activity.
+            return false
+        }
         return unselectOption()
     }
 
@@ -83,13 +96,16 @@ constructor(
 
     override fun onTransitionToSecondaryScreenComplete() {}
 
-    fun selectOption(option: CustomizationOptionUtil.CustomizationOption) {
+    fun selectOption(option: CustomizationOption) {
         _selectedOptionState.value = option
     }
 
     @ViewModelScoped
     @AssistedFactory
     interface Factory : CustomizationOptionsViewModelFactory {
-        override fun create(viewModelScope: CoroutineScope): DefaultCustomizationOptionsViewModel
+        override fun create(
+            viewModelScope: CoroutineScope,
+            initialDeepLinkDestination: String?,
+        ): DefaultCustomizationOptionsViewModel
     }
 }

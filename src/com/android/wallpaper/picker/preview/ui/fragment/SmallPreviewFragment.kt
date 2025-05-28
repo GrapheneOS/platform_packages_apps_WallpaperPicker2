@@ -79,6 +79,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
@@ -113,6 +114,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
     private var isViewDestroyed: Boolean? = null
 
     private var setWallpaperProgressDialog: AlertDialog? = null
+    private var launchExtendedEffectWallpaperJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -320,23 +322,25 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
         if (arguments?.getBoolean(SHOULD_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS) == true) {
             wallpaperPreviewViewModel.wallpaper.value?.let { wallpaperModel ->
                 ExtendedWallpaperEffectsUtils.registerExtendedWallpaperEffectsActivityLauncher(
-                        activity = activity,
+                        activity = requireActivity(),
                         lifecycleOwner = viewLifecycleOwner,
                         wallpaperPreviewViewModel = wallpaperPreviewViewModel,
                         context = context,
                     )
-                    ?.let { launcher ->
-                        mainScope.launch {
-                            context?.let { unwrappedContext ->
-                                ExtendedWallpaperEffectsUtils.startExtendedWallpaperEffects(
-                                    wallpaperModel,
-                                    launcher,
-                                    unwrappedContext,
-                                    wallpaperConnectionUtils,
-                                    flags,
-                                )
+                    .let { launcher ->
+                        arguments?.clear()
+                        launchExtendedEffectWallpaperJob =
+                            mainScope.launch {
+                                context?.let { unwrappedContext ->
+                                    ExtendedWallpaperEffectsUtils.startExtendedWallpaperEffects(
+                                        wallpaperModel,
+                                        launcher,
+                                        unwrappedContext,
+                                        wallpaperConnectionUtils,
+                                        flags,
+                                    )
+                                }
                             }
-                        }
                     }
             }
         }
@@ -371,6 +375,7 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        launchExtendedEffectWallpaperJob?.cancel()
         setWallpaperProgressDialog?.dismiss()
         isViewDestroyed = true
     }
@@ -455,7 +460,6 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 (view as ViewGroup).isTransitionGroup = false
                 findNavController().let {
                     if (it.currentDestination?.id == R.id.smallPreviewFragment) {
-                        arguments?.clear()
                         wallpaperPreviewViewModel.onTransitionToFullPreview()
                         it.navigate(
                             resId = R.id.action_smallPreviewFragment_to_fullPreviewFragment,

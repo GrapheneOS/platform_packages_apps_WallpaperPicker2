@@ -279,9 +279,7 @@ object PreviewActionsBinder {
                 launch {
                     actionsViewModel.onEffectsClicked.collect {
                         actionGroup.setClickListener(EFFECTS) {
-                            extendedWallpaperEffectActivityLauncher?.let { launcher ->
-                                it?.invoke(launcher)
-                            }
+                            it?.invoke(extendedWallpaperEffectActivityLauncher)
                         }
                     }
                 }

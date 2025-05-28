@@ -20,7 +20,6 @@ import android.stats.style.StyleEnums
 import androidx.annotation.IntDef
 import com.android.wallpaper.module.WallpaperPersister
 import com.android.wallpaper.module.WallpaperPersister.Destination
-import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import io.grpc.Status
 
@@ -75,7 +74,7 @@ interface UserEventLogger {
     /** Log when curated photos are fetched in carousel */
     fun logCuratedPhotosFetched(timeElapsedMillis: Long, status: Status)
 
-    /** Map a [CustomizationOptionUtil.CustomizationOption] to a picker screen. */
+    /** Map a [CustomizationOption] to a picker screen. */
     @CustomizationPickerScreen
     fun transformCustomizationOptionToScreenForLogging(
         customizationOption: CustomizationOption

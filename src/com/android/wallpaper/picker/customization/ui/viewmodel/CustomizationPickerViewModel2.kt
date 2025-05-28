@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.picker.customization.ui.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.wallpaper.R
@@ -28,13 +29,11 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
 class CustomizationPickerViewModel2
@@ -42,10 +41,16 @@ class CustomizationPickerViewModel2
 constructor(
     customizationOptionsViewModelFactory: CustomizationOptionsViewModelFactory,
     basePreviewViewModelFactory: BasePreviewViewModel.Factory,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
+    private val initialDestination: String? = savedStateHandle[KEY_DESTINATION]
+
     val customizationOptionsViewModel =
-        customizationOptionsViewModelFactory.create(viewModelScope = viewModelScope)
+        customizationOptionsViewModelFactory.create(
+            viewModelScope = viewModelScope,
+            initialDestination,
+        )
     val basePreviewViewModel = basePreviewViewModelFactory.create(viewModelScope)
 
     enum class PickerScreen {
@@ -69,11 +74,7 @@ constructor(
                     Pair(PickerScreen.MAIN, null)
                 }
             }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(),
-                Pair(PickerScreen.MAIN, null),
-            )
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
 
     private val isLockPreviewReady: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val isHomePreviewReady: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -182,5 +183,7 @@ constructor(
         const val PREVIEW_SHOW_ALPHA = 1F
         const val PREVIEW_HIDE_ALPHA = 0F
         const val PREVIEW_FADE_ALPHA = 0.4F
+
+        const val KEY_DESTINATION = "destination"
     }
 }

@@ -22,6 +22,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -63,6 +64,13 @@ object ApplyWallpaperScreenBinder {
         val subTitle = previewPager.requireViewById<TextView>(R.id.apply_wallpaper_description)
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.currentPreviewScreen.collect {
+                        homeCheckbox.isVisible = it == PreviewScreen.APPLY_WALLPAPER
+                        lockCheckbox.isVisible = it == PreviewScreen.APPLY_WALLPAPER
+                    }
+                }
+
                 launch {
                     combine(
                             viewModel.applyWallpaperPreviewSelectedTab.filterNotNull(),
@@ -116,7 +124,12 @@ object ApplyWallpaperScreenBinder {
                         }
                 }
 
-                launch { viewModel.applyWallpaperSubTitle.collect { subTitle.text = it } }
+                launch {
+                    viewModel.applyWallpaperSubTitle.collect {
+                        subTitle.text = it
+                        subTitle.isVisible = !it.isNullOrEmpty()
+                    }
+                }
 
                 launch {
                     viewModel.onCancelButtonClicked.collect { onClicked ->
