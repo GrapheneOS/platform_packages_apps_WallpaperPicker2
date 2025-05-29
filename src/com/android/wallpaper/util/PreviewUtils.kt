@@ -26,6 +26,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
+import android.util.Log
 import com.android.wallpaper.model.Screen
 import java.util.concurrent.Executors
 
@@ -72,6 +73,7 @@ class PreviewUtils(
                     context.checkSelfPermission(it.readPermission) !=
                         PackageManager.PERMISSION_GRANTED
                 ) {
+                    Log.i(TAG, "No permission to query authority $authority")
                     providerInfo = null
                 }
             }
@@ -113,6 +115,7 @@ class PreviewUtils(
     }
 
     companion object {
+        private const val TAG = "PreviewUtils"
         private const val PREVIEW = "preview"
         private const val METHOD_GET_PREVIEW = "get_preview"
         private val EXECUTOR_SERVICE = Executors.newSingleThreadExecutor()
@@ -124,8 +127,11 @@ class PreviewUtils(
                     homeIntent,
                     PackageManager.MATCH_DEFAULT_ONLY or PackageManager.GET_META_DATA,
                 )
-
-            return info?.activityInfo?.metaData?.getString(authorityMetadataKey)
+            val providerAuthority = info?.activityInfo?.metaData?.getString(authorityMetadataKey)
+            if (providerAuthority == null) {
+                Log.i(TAG, "Couldn't resolve $authorityMetadataKey from $homeIntent")
+            }
+            return providerAuthority
         }
     }
 }

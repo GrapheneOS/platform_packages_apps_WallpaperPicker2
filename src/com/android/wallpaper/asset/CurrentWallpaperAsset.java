@@ -29,8 +29,6 @@ import android.os.ParcelFileDescriptor.AutoCloseInputStream;
 import android.util.Log;
 import android.widget.ImageView;
 
-import androidx.annotation.WorkerThread;
-
 import com.android.wallpaper.util.WallpaperCropUtils;
 
 import com.bumptech.glide.Glide;
@@ -43,7 +41,6 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.io.InputStream;
 import java.security.MessageDigest;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Asset representing the currently-set image wallpaper, including when daily rotation
@@ -111,21 +108,6 @@ public class CurrentWallpaperAsset extends StreamableAsset {
                 .apply(RequestOptions.bitmapTransform(multiTransformation)
                         .placeholder(new ColorDrawable(placeholderColor)))
                 .into(imageView);
-    }
-
-    @Override
-    @WorkerThread
-    public Bitmap getLowResBitmap(Context context) {
-        try {
-            return Glide.with(context)
-                    .asBitmap()
-                    .load(this)
-                    .submit()
-                    .get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.w(TAG, "Couldn't obtain low res bitmap", e);
-        }
-        return null;
     }
 
     @Override
