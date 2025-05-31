@@ -15,9 +15,12 @@
  */
 package com.android.wallpaper.util
 
+import android.app.WallpaperManager
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Point
+import android.graphics.Rect
+import android.util.SparseArray
 import com.android.wallpaper.module.InjectorProvider
 import com.android.wallpaper.testing.FakeDisplaysProvider
 import com.android.wallpaper.testing.FakeDisplaysProvider.Companion.FOLDABLE_FOLDED
@@ -280,5 +283,37 @@ class DisplayUtilsTest {
         assertThat(displaySizes).contains(Point(300, 400))
         assertThat(displaySizes).contains(Point(500, 250))
         assertThat(displaySizes).contains(Point(400, 300))
+    }
+
+    @Test
+    fun convertCropHints_succeeds() {
+        val portrait = Point(250, 500)
+        val landscape = Point(500, 250)
+        val squarePortrait = Point(350, 400)
+        val squareLandscape = Point(400, 350)
+        val displayConfig1 = FakeDisplaysProvider.FakeDisplayConfig(portrait)
+        val displayConfig2 = FakeDisplaysProvider.FakeDisplayConfig(squareLandscape)
+        val displays = listOf(displayConfig1, displayConfig2)
+        displaysProvider.setDisplays(displays)
+        val rect1 = Rect(1, 2, 3, 4)
+        val rect2 = Rect(2, 3, 4, 5)
+        val rect3 = Rect(3, 4, 5, 6)
+        val rect4 = Rect(4, 5, 6, 7)
+        val cropHintsIn =
+            SparseArray<Rect>().apply {
+                put(WallpaperManager.ORIENTATION_PORTRAIT, rect1)
+                put(WallpaperManager.ORIENTATION_LANDSCAPE, rect2)
+                put(WallpaperManager.ORIENTATION_SQUARE_PORTRAIT, rect3)
+                put(WallpaperManager.ORIENTATION_SQUARE_LANDSCAPE, rect4)
+            }
+
+        val cropHintsOut = displayUtils.convertCropHints(cropHintsIn)
+
+        assertThat(cropHintsOut.keys)
+            .containsExactly(portrait, landscape, squarePortrait, squareLandscape)
+        assertThat(cropHintsOut[portrait]).isEqualTo(rect1)
+        assertThat(cropHintsOut[landscape]).isEqualTo(rect2)
+        assertThat(cropHintsOut[squarePortrait]).isEqualTo(rect3)
+        assertThat(cropHintsOut[squareLandscape]).isEqualTo(rect4)
     }
 }

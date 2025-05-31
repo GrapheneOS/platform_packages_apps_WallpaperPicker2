@@ -68,6 +68,7 @@ import com.android.wallpaper.picker.preview.shared.model.FullPreviewCropModel
 import com.android.wallpaper.util.CurrentWallpaperInfoUtils.getCurrentWallpapers
 import com.android.wallpaper.util.WallpaperCropUtils
 import com.android.wallpaper.util.converter.WallpaperModelFactory
+import com.android.wallpaper.util.toDescription
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException
 import java.io.InputStream
@@ -169,12 +170,10 @@ constructor(
                 } ?: emptyMap()
             val managerId =
                 if (BaseFlags.get().isRecentWallpapersFromSystemEnabled(context)) {
-                    val description =
-                        WallpaperDescription.Builder().setCropHints(cropHintsWithParallax).build()
                     wallpaperManager.setStaticWallpaperWithDescription(
                         asset.getStreamOrFromBitmap(bitmap),
                         bitmap,
-                        description,
+                        wallpaperModel.toDescription(cropHintsWithParallax),
                         destination,
                         asset,
                     )
@@ -363,6 +362,10 @@ constructor(
         wallpaperModel: LiveWallpaperModel,
         destination: WallpaperDestination,
     ): Boolean {
+        val description =
+            if (BaseFlags.get().isRecentWallpapersFromSystemEnabled(context))
+                wallpaperModel.toDescription()
+            else wallpaperModel.liveWallpaperData.description
         try {
             val method =
                 wallpaperManager.javaClass.getMethod(
@@ -370,11 +373,7 @@ constructor(
                     WallpaperDescription::class.java,
                     Int::class.javaPrimitiveType,
                 )
-            method.invoke(
-                wallpaperManager,
-                wallpaperModel.liveWallpaperData.description,
-                destination.toSetWallpaperFlags(),
-            )
+            method.invoke(wallpaperManager, description, destination.toSetWallpaperFlags())
             return true
         } catch (e: NoSuchMethodException) {
             return false

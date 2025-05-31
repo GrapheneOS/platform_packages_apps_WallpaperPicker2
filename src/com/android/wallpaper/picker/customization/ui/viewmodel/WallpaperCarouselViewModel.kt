@@ -132,7 +132,7 @@ constructor(
                     defaultDrawable = category.commonCategoryData?.thumbnailDrawable,
                     thumbnailAsset = category.collectionCategoryData?.thumbAsset,
                     text = category.commonCategoryData.title,
-                    showTitle = true,
+                    showTitle = false,
                     maxCategoriesInRow = SectionCardinality.Triple,
                     contentDescription = category.commonCategoryData.title,
                 ) {
@@ -159,7 +159,7 @@ constructor(
                     defaultDrawable = category.commonCategoryData?.thumbnailDrawable,
                     thumbnailAsset = category.collectionCategoryData?.thumbAsset,
                     text = category.commonCategoryData.title,
-                    showTitle = true,
+                    showTitle = false,
                     maxCategoriesInRow = SectionCardinality.Triple,
                 ) {
                     navigateToExtendedWallpaperEffects()

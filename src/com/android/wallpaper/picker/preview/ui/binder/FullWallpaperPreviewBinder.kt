@@ -21,6 +21,7 @@ import android.graphics.Point
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.SurfaceControlViewHost
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
@@ -329,6 +330,7 @@ object FullWallpaperPreviewBinder {
         return object : SurfaceViewUtils.SurfaceCallback {
 
             var job: Job? = null
+            var surfaceControlViewHost: SurfaceControlViewHost? = null
 
             // Suppress lint warning for setting on touch listener to a live wallpaper surface view.
             // This is because the touch effect on a live wallpaper is purely visual, instead of
@@ -415,15 +417,17 @@ object FullWallpaperPreviewBinder {
                                     onZoomChanged,
                                 )
                                 // Bind static wallpaper
-                                StaticWallpaperPreviewBinder.bind(
-                                    staticPreviewView = preview,
-                                    wallpaperSurface = surfaceView,
-                                    viewModel = viewModel.staticWallpaperPreviewViewModel,
-                                    displaySize = displaySize,
-                                    parentCoroutineScope = this,
-                                    isFullScreen = true,
-                                    onStartTransition = { onStartTransition?.invoke() },
-                                )
+                                surfaceControlViewHost?.release()
+                                surfaceControlViewHost =
+                                    StaticWallpaperPreviewBinder.bind(
+                                        staticPreviewView = preview,
+                                        wallpaperSurface = surfaceView,
+                                        viewModel = viewModel.staticWallpaperPreviewViewModel,
+                                        displaySize = displaySize,
+                                        parentCoroutineScope = this,
+                                        isFullScreen = true,
+                                        onStartTransition = { onStartTransition?.invoke() },
+                                    )
                                 fullResImageView.doOnLayout {
                                     val imageSize =
                                         Point(fullResImageView.width, fullResImageView.height)
@@ -464,6 +468,8 @@ object FullWallpaperPreviewBinder {
             override fun surfaceDestroyed(holder: SurfaceHolder) {
                 job?.cancel()
                 job = null
+                surfaceControlViewHost?.release()
+                surfaceControlViewHost = null
                 // Clean up surface view's on touche listener
                 surfaceTouchForwardingLayout.removeTouchForwarding()
                 surfaceView.setOnTouchListener(null)

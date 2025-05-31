@@ -205,7 +205,9 @@ object WallpaperPickerEntryBinder {
                             false,
                         )
                         customLayoutManager.setIsScrollable(true)
-                        wallpaperCarousel.addOnScrollListener(WallpaperTitleScrollListener())
+                        if (!it.isEmpty() && it.get(0).showTitle) {
+                            wallpaperCarousel.addOnScrollListener(WallpaperTitleScrollListener())
+                        }
                     }
                 }
 

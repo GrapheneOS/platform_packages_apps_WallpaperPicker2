@@ -103,8 +103,26 @@ object CustomizationPickerBinder2 {
                 launch {
                     viewModel.screen.collect { (screen, option) ->
                         when (screen) {
-                            MAIN -> navigateToPrimary()
-                            CUSTOMIZATION_OPTION -> option?.let(navigateToSecondary)
+                            MAIN -> {
+                                navigateToPrimary()
+                                // setting the visibility of the home and lock labels
+                                val lockPreviewLabel: View =
+                                    previewPager.requireViewById(R.id.lock_preview_label)
+                                lockPreviewLabel.visibility = View.VISIBLE
+                                val homePreviewLabel: View =
+                                    previewPager.requireViewById(R.id.home_preview_label)
+                                homePreviewLabel.visibility = View.VISIBLE
+                            }
+                            CUSTOMIZATION_OPTION -> {
+                                val lockPreviewLabel: View =
+                                    previewPager.requireViewById(R.id.lock_preview_label)
+                                // setting the visibility of the home and lock labels
+                                lockPreviewLabel.visibility = View.GONE
+                                val homePreviewLabel: View =
+                                    previewPager.requireViewById(R.id.home_preview_label)
+                                homePreviewLabel.visibility = View.GONE
+                                option?.let(navigateToSecondary)
+                            }
                         }
                     }
                 }

@@ -15,8 +15,11 @@
  */
 package com.android.wallpaper.util
 
+import android.app.WallpaperManager
 import android.content.Context
 import android.graphics.Point
+import android.graphics.Rect
+import android.util.SparseArray
 import android.view.Display
 import android.view.DisplayInfo
 import android.view.Surface.ROTATION_0
@@ -234,5 +237,13 @@ constructor(
                     it
                 }
             }
+    }
+
+    fun convertCropHints(cropHints: SparseArray<Rect>): Map<Point, Rect> {
+        return getInternalDisplaySizes(allDimensions = true)
+            .map { size ->
+                cropHints[WallpaperManager.getOrientation(size)].let { crop -> size to crop }
+            }
+            .toMap()
     }
 }

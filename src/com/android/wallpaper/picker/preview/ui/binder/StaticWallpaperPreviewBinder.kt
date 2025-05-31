@@ -21,6 +21,7 @@ import android.graphics.Point
 import android.graphics.Rect
 import android.graphics.RenderEffect
 import android.graphics.Shader
+import android.view.SurfaceControlViewHost
 import android.view.SurfaceView
 import android.view.View
 import android.view.animation.Interpolator
@@ -60,7 +61,7 @@ object StaticWallpaperPreviewBinder {
         isFullScreen: Boolean = false,
         onPreviewReady: (() -> Unit)? = null,
         onStartTransition: (() -> Unit)? = null,
-    ) {
+    ): SurfaceControlViewHost {
         val fullResImageView =
             staticPreviewView.requireViewById<SystemScaledSubsamplingScaleImageView>(
                 R.id.full_res_image
@@ -71,13 +72,14 @@ object StaticWallpaperPreviewBinder {
         // one represents the size of the view and the other represents the
         // size of the surface. When setting a view to the surface host,
         // we want to set it based on the surface's size not the view's size
-        adjustSizeAndAttachPreview(
-            wallpaperSurface.holder.surfaceFrame,
-            wallpaperSurface,
-            staticPreviewView,
-            fullResImageView,
-            isFullScreen,
-        )
+        val surfaceControlViewHost =
+            adjustSizeAndAttachPreview(
+                wallpaperSurface.holder.surfaceFrame,
+                wallpaperSurface,
+                staticPreviewView,
+                fullResImageView,
+                isFullScreen,
+            )
 
         lowResImageView.initLowResImageView()
         fullResImageView.initFullResImageView()
@@ -150,6 +152,7 @@ object StaticWallpaperPreviewBinder {
                 }
             }
         }
+        return surfaceControlViewHost
     }
 
     private fun ImageView.initLowResImageView() {
@@ -222,7 +225,7 @@ object StaticWallpaperPreviewBinder {
         preview: View,
         fullResView: SystemScaledSubsamplingScaleImageView,
         isFullScreen: Boolean,
-    ) {
+    ): SurfaceControlViewHost {
         val width = surfacePosition.width()
         val height = surfacePosition.height()
         preview.measure(
@@ -236,7 +239,7 @@ object StaticWallpaperPreviewBinder {
         // For small preview it contains the low res view, for full preview it only contains the
         // full res view to calculate crops correctly.
         val targetView = if (isFullScreen) fullResView else preview
-        surfaceView.attachView(targetView, width, height)
+        return surfaceView.attachView(targetView, width, height)
     }
 
     private const val TAG = "StaticWallpaperPreviewBinder"

@@ -19,6 +19,7 @@ import android.app.WallpaperColors
 import android.content.Context
 import android.graphics.Point
 import android.view.LayoutInflater
+import android.view.SurfaceControlViewHost
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.lifecycle.Lifecycle
@@ -128,6 +129,7 @@ object SmallWallpaperPreviewBinder {
 
             var job: Job? = null
             var loadingAnimationBinding: PreviewEffectsLoadingBinder.Binding? = null
+            var surfaceControlViewHost: SurfaceControlViewHost? = null
 
             override fun surfaceCreated(holder: SurfaceHolder) {
                 job =
@@ -184,15 +186,17 @@ object SmallWallpaperPreviewBinder {
                                         R.id.full_res_image
                                     )
                                 // Bind static wallpaper
-                                StaticWallpaperPreviewBinder.bind(
-                                    staticPreviewView = staticPreviewView,
-                                    wallpaperSurface = surface,
-                                    viewModel = viewModel.staticWallpaperPreviewViewModel,
-                                    displaySize = displaySize,
-                                    parentCoroutineScope = this,
-                                    onPreviewReady = { onPreviewReady?.invoke(screen) },
-                                    onStartTransition = { onStartTransition?.invoke() },
-                                )
+                                surfaceControlViewHost?.release()
+                                surfaceControlViewHost =
+                                    StaticWallpaperPreviewBinder.bind(
+                                        staticPreviewView = staticPreviewView,
+                                        wallpaperSurface = surface,
+                                        viewModel = viewModel.staticWallpaperPreviewViewModel,
+                                        displaySize = displaySize,
+                                        parentCoroutineScope = this,
+                                        onPreviewReady = { onPreviewReady?.invoke(screen) },
+                                        onStartTransition = { onStartTransition?.invoke() },
+                                    )
                                 // This is to possibly shut down all live wallpaper services
                                 // if they exist; otherwise static wallpaper can not show up.
                                 wallpaperConnectionUtils.disconnectAllServices()
@@ -213,6 +217,8 @@ object SmallWallpaperPreviewBinder {
                 job = null
                 loadingAnimationBinding?.destroy()
                 loadingAnimationBinding = null
+                surfaceControlViewHost?.release()
+                surfaceControlViewHost = null
                 onPreviewSurfaceDestroyed?.invoke(screen)
                 // Note that we disconnect wallpaper connection for live wallpapers in
                 // WallpaperPreviewActivity's onDestroy().
