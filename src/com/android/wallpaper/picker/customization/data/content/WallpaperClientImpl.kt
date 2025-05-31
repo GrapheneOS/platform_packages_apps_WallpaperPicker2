@@ -170,10 +170,11 @@ constructor(
                 } ?: emptyMap()
             val managerId =
                 if (BaseFlags.get().isRecentWallpapersFromSystemEnabled(context)) {
+                    val hash = "${BitmapUtils.generateHashCode(bitmap)}"
                     wallpaperManager.setStaticWallpaperWithDescription(
                         asset.getStreamOrFromBitmap(bitmap),
                         bitmap,
-                        wallpaperModel.toDescription(cropHintsWithParallax),
+                        wallpaperModel.toDescription(hash, cropHintsWithParallax),
                         destination,
                         asset,
                     )
@@ -203,12 +204,14 @@ constructor(
 
             // Save the static wallpaper to recent wallpapers
             // TODO(b/309138446): check if we can update recent with all cropHints from WM later
-            wallpaperPreferences.addStaticWallpaperToRecentWallpapers(
-                destination,
-                wallpaperModel,
-                bitmap,
-                cropHintsWithParallax,
-            )
+            if (!BaseFlags.get().isRecentWallpapersFromSystemEnabled(context)) {
+                wallpaperPreferences.addStaticWallpaperToRecentWallpapers(
+                    destination,
+                    wallpaperModel,
+                    bitmap,
+                    cropHintsWithParallax,
+                )
+            }
         }
     }
 
@@ -354,7 +357,9 @@ constructor(
                     UserEventLogger.toWallpaperDestinationForLogging(destination.toDestinationInt()),
             )
 
-            wallpaperPreferences.addLiveWallpaperToRecentWallpapers(destination, wallpaperModel)
+            if (!BaseFlags.get().isRecentWallpapersFromSystemEnabled(context)) {
+                wallpaperPreferences.addLiveWallpaperToRecentWallpapers(destination, wallpaperModel)
+            }
         }
     }
 

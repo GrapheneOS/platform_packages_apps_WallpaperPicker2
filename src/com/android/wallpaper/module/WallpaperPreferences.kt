@@ -402,6 +402,9 @@ interface WallpaperPreferences {
         cropHints: Map<Point, Rect>?,
     )
 
+    /** Add a wallpaper to recent wallpapers by querying the framework for current info. */
+    suspend fun updateRecentsFromSystem(@SetWallpaperFlags which: Int)
+
     /**
      * Add a live wallpaper to recent wallpapers as json array, saved in preferences.
      *

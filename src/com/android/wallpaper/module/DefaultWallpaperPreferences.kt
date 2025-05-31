@@ -938,6 +938,8 @@ constructor(@ApplicationContext private val context: Context) : WallpaperPrefere
         wallpaperModel: LiveWallpaperModel,
     ) {}
 
+    override suspend fun updateRecentsFromSystem(@SetWallpaperFlags which: Int) {}
+
     override fun setHasSmallPreviewTooltipBeenShown(hasTooltipBeenShown: Boolean) {
         sharedPrefs
             .edit()

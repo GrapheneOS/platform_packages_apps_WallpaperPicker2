@@ -92,7 +92,10 @@ fun LiveWallpaperModel.toDescription(): WallpaperDescription {
     }
 }
 
-fun StaticWallpaperModel.toDescription(cropHints: Map<Point, Rect>): WallpaperDescription {
+fun StaticWallpaperModel.toDescription(
+    id: String,
+    cropHints: Map<Point, Rect>,
+): WallpaperDescription {
     val content =
         updateMetadata(
             PersistableBundle(),
@@ -104,6 +107,7 @@ fun StaticWallpaperModel.toDescription(cropHints: Map<Point, Rect>): WallpaperDe
     val title = attribs?.getOrNull(0)
     val desc = attribs?.subList(1, attribs.size).orEmpty()
     return WallpaperDescription.Builder()
+        .setId(id)
         .setTitle(title)
         .setDescription(desc)
         .setContextUri(commonWallpaperData.exploreActionUrl?.toUri())

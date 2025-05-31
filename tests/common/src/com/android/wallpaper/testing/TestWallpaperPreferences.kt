@@ -511,6 +511,10 @@ open class TestWallpaperPreferences @Inject constructor() : WallpaperPreferences
         return hasFullPreviewTooltipBeenShown
     }
 
+    override suspend fun updateRecentsFromSystem(which: Int) {
+        TODO("Not yet implemented")
+    }
+
     private fun setAppLaunchCount(count: Int) {
         appLaunchCount = count
     }

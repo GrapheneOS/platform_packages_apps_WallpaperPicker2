@@ -179,8 +179,10 @@ class WallpaperDescriptionUtilsTest {
                 actionUrl = contextUri.toString(),
             )
 
-        val description = staticWallpaperModel.toDescription(mapOf(Point(100, 200) to cropRect))
+        val description =
+            staticWallpaperModel.toDescription("id", mapOf(Point(100, 200) to cropRect))
 
+        assertThat(description.id).isEqualTo("id")
         assertThat(description.component).isEqualTo(null)
         assertThat(getCollectionId(description.content)).isEqualTo("collectionId")
         assertThat(getPlaceHolderColor(description.content)).isEqualTo(123)
