@@ -7,6 +7,7 @@ import android.content.ComponentName
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.graphics.Matrix
 import android.graphics.Point
@@ -26,6 +27,7 @@ import com.android.wallpaper.R
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.Screen
 import com.android.wallpaper.model.wallpaper.DeviceDisplayType
+import com.android.wallpaper.picker.broadcast.BroadcastDispatcher
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination.Companion.toSetWallpaperFlags
 import com.android.wallpaper.picker.data.WallpaperModel.LiveWallpaperModel
@@ -40,10 +42,12 @@ import javax.inject.Inject
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -54,7 +58,9 @@ class WallpaperConnectionUtils
 constructor(
     private val effectsController: EffectsController,
     @ApplicationContext private val context: Context,
+    private val broadcastDispatcher: BroadcastDispatcher,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
+    @BackgroundDispatcher private val bgScope: CoroutineScope,
 ) {
 
     // The engineMap and the surfaceControlMap are used for disconnecting wallpaper services.
@@ -70,6 +76,14 @@ constructor(
     private val isPreviewEnginesConnected = CompletableDeferred<Boolean>()
 
     private val mutex = Mutex()
+
+    init {
+        // We need to clear existing previews when a wallpaper is set since it's possible they will
+        // be stale. See b/414490885.
+        val wallpaperChanged =
+            broadcastDispatcher.broadcastFlow(IntentFilter(Intent.ACTION_WALLPAPER_CHANGED))
+        bgScope.launch { wallpaperChanged.collect { disconnectAll() } }
+    }
 
     /**
      * Only call this function when the surface view is attached.
