@@ -30,6 +30,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wallpaper.R
+import com.android.wallpaper.config.BaseFlags
 
 /**
  * The wallpaper entry on the main screen. This view needs to be in a [ConstraintLayout].
@@ -71,7 +72,13 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
     private var state: State = State.EXPANDED
 
     init {
-        inflate(context, R.layout.wallpaper_picker_entry, this)
+        val layoutResource =
+            if (BaseFlags.get().shouldShowDesktopUi(context)) {
+                R.layout.wallpaper_picker_entry_desktop
+            } else {
+                R.layout.wallpaper_picker_entry
+            }
+        inflate(context, layoutResource, this)
 
         collapsedButton =
             requireViewById(R.id.customization_option_entry_wallpaper_collapsed_button)

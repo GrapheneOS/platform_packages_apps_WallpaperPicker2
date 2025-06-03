@@ -39,6 +39,12 @@ interface WorkspaceCallbackBinder {
         lifecycleOwner: LifecycleOwner,
     )
 
+    /**
+     * Unbind the current binder. This method should be called when the lifecycle of the caller is
+     * destroyed.
+     */
+    fun unbind()
+
     companion object {
         fun Message.sendMessage(what: Int, data: Bundle) {
             this.replyTo.send(

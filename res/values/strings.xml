@@ -557,6 +557,14 @@
 
     <!--
     Label for button that lets the user navigate to a full-screen experience of selecting
+    wallpapers. This button needs to be paired with the list of suggested photos.
+
+    [CHAR LIMIT=128].
+    -->
+    <string name="view_all_wallpapers">>\nView all</string>
+
+    <!--
+    Label for button that lets the user navigate to a full-screen experience of selecting
     wallpapers.
 
     [CHAR LIMIT=128].

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2025 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/wallpaper_picker_entry_background"
+    android:background="@drawable/wallpaper_picker_entry_background"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:clipChildren="false">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/wallpaper_picker_entry_expanded_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/customization_option_entry_vertical_padding_large"
+        android:paddingHorizontal="@dimen/customization_option_entry_horizontal_padding">
+
+        <FrameLayout
+            android:id="@+id/wallpaper_carousel_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/more_wallpapers_button"
+            android:layout_marginEnd="@dimen/curated_photo_horizontal_margin">
+            <!--
+             This is an invisible placeholder put in place so that the parent keeps its height
+             stable as the RecyclerView updates from 0 items to N items. Keeping it stable allows
+             the layout logic to keep the size of the preview container stable as well, which
+             bodes well for setting up the SurfaceView for remote rendering without changing its
+             size after the content is loaded into the RecyclerView.
+
+             It's critical for any TextViews inside the included layout to have text.
+             -->
+            <include
+                layout="@layout/curated_photo_tile"
+                android:layout_width="@dimen/curated_photo_tile_width"
+                android:layout_height="match_parent"
+                android:visibility="invisible" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/wallpaper_carousel"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/curated_photo_height"
+                android:clipToPadding="false"
+                android:clipChildren="false"
+                android:orientation="horizontal"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/more_wallpapers_button"
+            android:background="@drawable/view_all_button_background"
+            android:layout_width="@dimen/view_all_button_width"
+            android:layout_height="@dimen/curated_photo_height"
+            android:minHeight="@dimen/accessibility_min_height"
+            android:gravity="center"
+            android:text="@string/view_all_wallpapers"
+            android:textAppearance="@style/TextAppearance.DeviceDefault.Small.LabelLargeEmphasized"
+            android:textColor="@color/system_primary"
+            android:textSize="@dimen/wallpaper_header_text_size"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="@+id/wallpaper_carousel_container"
+            app:layout_constraintBottom_toBottomOf="@+id/wallpaper_carousel_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:clickable="true"
+        />
+
+        <TextView
+            android:id="@+id/wallpaper_picker_entry_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/accessibility_min_height"
+            android:gravity="center"
+            android:text="@string/choose_a_curated_photo_section_title"
+            android:textAppearance="@style/TextAppearance.DeviceDefault.Small.LabelLargeEmphasized"
+            android:textSize="@dimen/wallpaper_header_text_size"
+            android:ellipsize="end"
+            android:singleLine="true"
+            app:layout_constraintTop_toBottomOf="@+id/wallpaper_carousel_container"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/customization_option_entry_wallpaper_collapsed_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/accessibility_min_height"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:drawablePadding="@dimen/wallpaper_picker_entry_button_drawable_padding"
+        android:text="@string/wallpapers"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        android:textColor="@color/system_primary"
+        android:textSize="@dimen/wallpaper_header_text_size"
+        android:alpha="0.0"
+        android:visibility="invisible"
+        app:drawableStartCompat="@drawable/ic_nav_wallpaper"
+        app:drawableTint="@color/system_primary"
+        android:clickable="true" />
+</FrameLayout>
+

@@ -132,6 +132,7 @@ object WorkspacePreviewBinder {
             }
 
             override fun surfaceDestroyed(holder: SurfaceHolder) {
+                workspaceCallbackBinder.unbind()
                 job?.cancel()
                 job = null
                 previewDisposableHandle?.dispose()

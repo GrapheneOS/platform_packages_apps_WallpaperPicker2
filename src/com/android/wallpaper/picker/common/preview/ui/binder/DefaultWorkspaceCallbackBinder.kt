@@ -37,6 +37,8 @@ class DefaultWorkspaceCallbackBinder @Inject constructor() : WorkspaceCallbackBi
         lifecycleOwner: LifecycleOwner,
     ) {}
 
+    override fun unbind() {}
+
     companion object {
         const val MESSAGE_ID_UPDATE_PREVIEW = 1337
         const val KEY_HIDE_BOTTOM_ROW = "hide_bottom_row"

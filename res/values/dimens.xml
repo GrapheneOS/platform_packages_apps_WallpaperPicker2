@@ -484,6 +484,7 @@
     <dimen name="photos_carousel_padding">8dp</dimen>
     <dimen name="more_photos_button_length">154dp</dimen>
     <dimen name="more_photos_button_padding">16dp</dimen>
+    <dimen name="view_all_button_width">100dp</dimen>
 
     <!-- Dimensions for the photos sign in banner -->
     <dimen name="sign_in_banner_radius">28dp</dimen>

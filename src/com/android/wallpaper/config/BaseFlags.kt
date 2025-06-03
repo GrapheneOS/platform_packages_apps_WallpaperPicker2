@@ -22,6 +22,7 @@ import android.content.pm.PackageManager
 import com.android.settings.accessibility.Flags.enableColorContrastControl
 import com.android.systemui.shared.Flags.clockReactiveVariants
 import com.android.systemui.shared.Flags.extendedWallpaperEffects
+import com.android.systemui.shared.Flags.extendibleThemeManager
 import com.android.systemui.shared.Flags.lockscreenCustomClocks
 import com.android.systemui.shared.Flags.newCustomizationPickerUi
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
@@ -68,6 +69,8 @@ abstract class BaseFlags {
     open fun isColorContrastControlEnabled() = enableColorContrastControl()
 
     open fun isExtendedWallpaperEnabled() = extendedWallpaperEffects()
+
+    open fun isExtendibleThemeManager() = extendibleThemeManager()
 
     open fun isNewPickerUi() = newCustomizationPickerUi()
 

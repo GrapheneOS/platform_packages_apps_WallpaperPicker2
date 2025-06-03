@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2024 The Android Open Source Project
+  ~ Copyright (C) 2025 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,23 +14,27 @@
   ~ limitations under the License.
   -->
 
-<com.google.android.material.carousel.MaskableFrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/carousel_item_container"
-    android:layout_width="@dimen/curated_photo_tile_width"
-    android:layout_marginStart="@dimen/curated_photo_horizontal_margin"
-    android:layout_marginEnd="@dimen/curated_photo_horizontal_margin"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:foreground="?attr/selectableItemBackground"
-    app:shapeAppearance="@style/ShapeAppearance.Wallpaper.Corner.ExtraLarge">
-
-    <ImageView
-        android:id="@+id/carousel_image_view"
+    android:orientation="vertical">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/carousel_image_card"
         android:layout_width="match_parent"
-        android:importantForAccessibility="no"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+        android:foreground="?attr/selectableItemBackground"
+        app:cardCornerRadius="?android:dialogCornerRadius"
+        app:cardElevation="0dp">
+        <ImageView
+            android:id="@+id/carousel_image_view"
+            android:layout_width="match_parent"
+            android:importantForAccessibility="no"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/carousel_text_view"
@@ -39,10 +43,10 @@
         android:layout_gravity="bottom|start"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="10dp"
-        android:textColor="@color/white"
+        android:textColor="@color/system_primary"
         android:textSize="14sp"
         android:textStyle="bold"
         android:background="@android:color/transparent"
         android:padding="4dp"/>
 
-</com.google.android.material.carousel.MaskableFrameLayout>
+</LinearLayout>
