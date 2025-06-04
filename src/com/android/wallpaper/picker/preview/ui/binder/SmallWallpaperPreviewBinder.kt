@@ -97,6 +97,7 @@ object SmallWallpaperPreviewBinder {
             }
             // When OnDestroy, release the surface
             surfaceCallback?.let {
+                it.releaseSurfaceControlViewHost()
                 surface.holder.removeCallback(it)
                 surfaceCallback = null
             }
@@ -217,13 +218,16 @@ object SmallWallpaperPreviewBinder {
                 job = null
                 loadingAnimationBinding?.destroy()
                 loadingAnimationBinding = null
-                surfaceControlViewHost?.release()
-                surfaceControlViewHost = null
                 onPreviewSurfaceDestroyed?.invoke(screen)
                 // Note that we disconnect wallpaper connection for live wallpapers in
                 // WallpaperPreviewActivity's onDestroy().
                 // This is to reduce multiple times of connecting and disconnecting live
                 // wallpaper services, when going back and forth small and full preview.
+            }
+
+            override fun releaseSurfaceControlViewHost() {
+                surfaceControlViewHost?.release()
+                surfaceControlViewHost = null
             }
         }
     }

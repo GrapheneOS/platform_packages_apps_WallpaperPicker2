@@ -113,6 +113,12 @@ class CuratedPhotoHolder(
         curatedPhotoImage.layoutParams.height =
             context.resources.getDimension(R.dimen.curated_photo_height).toInt()
 
+        updateTitleVisibility(item, context, isFirst)
+
+        itemView.setOnClickListener { _ -> item.onClicked?.invoke() }
+    }
+
+    public fun updateTitleVisibility(item: TileViewModel, context: Context, isFirst: Boolean) {
         curatedPhotoTitle.text = item.text
         curatedPhotoTitle.visibility =
             if (isFirst && item.showTitle) {
@@ -128,8 +134,6 @@ class CuratedPhotoHolder(
         } else {
             curatedPhotoImage.foreground = null
         }
-
-        itemView.setOnClickListener { _ -> item.onClicked?.invoke() }
     }
 
     fun cleanUp() {

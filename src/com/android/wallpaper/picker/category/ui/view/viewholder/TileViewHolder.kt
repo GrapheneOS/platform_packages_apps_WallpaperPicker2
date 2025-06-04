@@ -18,6 +18,7 @@ package com.android.wallpaper.picker.category.ui.view.viewholder
 
 import android.content.Context
 import android.graphics.Point
+import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -128,5 +129,14 @@ class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         // bind the tile action to the button
         itemView.setOnClickListener { _ -> item.onClicked?.invoke() }
+
+        // Set up key listener to handle keyboard Enter presses as clicks
+        categoryCardView.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
+                item.onClicked?.invoke()
+                return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+        }
     }
 }

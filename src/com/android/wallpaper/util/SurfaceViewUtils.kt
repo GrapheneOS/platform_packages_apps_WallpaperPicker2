@@ -75,5 +75,7 @@ object SurfaceViewUtils {
         override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
 
         override fun surfaceDestroyed(holder: SurfaceHolder) {}
+
+        fun releaseSurfaceControlViewHost() {}
     }
 }

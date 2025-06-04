@@ -25,6 +25,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.os.RemoteException
 import android.text.TextUtils
 import android.util.Log
 import com.android.wallpaper.model.Screen
@@ -96,8 +97,12 @@ class PreviewUtils(
 
     /** Cleans up the preview on the renderer side */
     fun cleanUp(workspaceCallback: Message?) {
-        // Send any message to clean up the corresponding preview on the renderer side.
-        workspaceCallback?.replyTo?.send(workspaceCallback)
+        try {
+            // Send any message to clean up the corresponding preview on the renderer side.
+            workspaceCallback?.replyTo?.send(workspaceCallback)
+        } catch (remoteException: RemoteException) {
+            Log.e(TAG, "Fail to clean up the workspace preview", remoteException)
+        }
     }
 
     /** Easy way to generate a Uri with the provider info from this class. */

@@ -373,7 +373,15 @@ class CustomizationPickerFragment2 :
             previewViewModel.updateDisplayConfiguration(size)
         }
 
-        val previewPager: ClickableMotionLayout = view.requireViewById(R.id.preview_pager)
+        var previewPager: ClickableMotionLayout = view.requireViewById(R.id.preview_pager)
+        if (BaseFlags.get().shouldShowDesktopUi(view.context)) {
+            val previewPagerParent: ViewGroup = previewPager.parent as ViewGroup
+            previewPagerParent.removeView(previewPager)
+            previewPager =
+                inflater.inflate(R.layout.preview_pager2_desktop, previewPagerParent, false)
+                    as ClickableMotionLayout
+            previewPagerParent.addView(previewPager)
+        }
         val previewPagerViews: PreviewPagerViews =
             initPreviewPager(rootView = view, previewPager = previewPager)
         bindPreviewPager(
@@ -778,6 +786,20 @@ class CustomizationPickerFragment2 :
         previewPager: ClickableMotionLayout,
     ): PreviewPagerViews {
         previewPager.addClickableViewId(R.id.preview_card)
+        if (BaseFlags.get().shouldShowDesktopUi(rootView.context)) {
+            previewPager.addClickableViewId(R.id.home_preview_label_container)
+            previewPager.addClickableViewId(R.id.lock_preview_label_container)
+            val lockPreviewLabelContainer: View =
+                previewPager.requireViewById(R.id.lock_preview_label_container)
+            val homePreviewLabelContainer: View =
+                previewPager.requireViewById(R.id.home_preview_label_container)
+            homePreviewLabelContainer.setOnClickListener {
+                customizationPickerViewModel.selectPreviewScreen(HOME_SCREEN)
+            }
+            lockPreviewLabelContainer.setOnClickListener {
+                customizationPickerViewModel.selectPreviewScreen(LOCK_SCREEN)
+            }
+        }
 
         // Inflate the clock and attach to the lock preview and bind clock view
         val lockPreview: View = previewPager.requireViewById(R.id.lock_preview)
@@ -1082,10 +1104,6 @@ class CustomizationPickerFragment2 :
     companion object {
         private const val WALLPAPER_ENTRY_EARLY_COLLAPSE_PROGRESS_THRESHOLD = 0.25f
         private const val ANIMATION_DURATION = 200
-        private const val PACK_THEME_PACKAGE_NAME =
-            "com.google.android.apps.pixel.customizationbundle"
-        private const val PACK_THEME_SERVICE_NAME =
-            "$PACK_THEME_PACKAGE_NAME.tiktok.app.MainActivity"
     }
 
     private fun prepareFragmentExitTransitionAnimation() {

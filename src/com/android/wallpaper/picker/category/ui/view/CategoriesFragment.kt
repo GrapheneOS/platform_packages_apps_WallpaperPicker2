@@ -33,6 +33,9 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -212,6 +215,27 @@ class CategoriesFragment : Hilt_CategoriesFragment() {
             }
         }
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val categoryGrid: RecyclerView = view.findViewById(R.id.category_grid)
+
+        activity?.let { WindowCompat.setDecorFitsSystemWindows(it.window, false) }
+
+        // Apply the window insets as padding to the RecyclerView
+        // This ensures the RecyclerView content can scroll above the navigation bar
+        ViewCompat.setOnApplyWindowInsetsListener(categoryGrid) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            // Get current padding, and add the bottom system bar inset to it
+            val bottomPadding = systemBars.bottom
+
+            // Apply padding to the RecyclerView
+            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, bottomPadding)
+            insets
+        }
     }
 
     private fun startPhotoPicker(

@@ -45,11 +45,13 @@ constructor(
 ) : ViewModel() {
 
     private val initialDestination: String? = savedStateHandle[KEY_DESTINATION]
+    private val initialShortcutSlotId: String? = savedStateHandle[KEY_SHORTCUT_SLOT_ID]
 
     val customizationOptionsViewModel =
         customizationOptionsViewModelFactory.create(
             viewModelScope = viewModelScope,
-            initialDestination,
+            initialDeepLinkDestination = initialDestination,
+            initialDeepLinkShortcutSlotId = initialShortcutSlotId,
         )
     val basePreviewViewModel = basePreviewViewModelFactory.create(viewModelScope)
 
@@ -185,5 +187,6 @@ constructor(
         const val PREVIEW_FADE_ALPHA = 0.4F
 
         const val KEY_DESTINATION = "destination"
+        const val KEY_SHORTCUT_SLOT_ID = "slot_id"
     }
 }

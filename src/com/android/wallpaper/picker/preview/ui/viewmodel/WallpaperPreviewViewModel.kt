@@ -260,11 +260,18 @@ constructor(
     val smallTooltipViewModel =
         object : PreviewTooltipBinder.TooltipViewModel {
             override val shouldShowTooltip: Flow<Boolean> =
-                combine(isWallpaperCroppable, interactor.hasSmallPreviewTooltipBeenShown) {
-                        isCroppable,
-                        hasTooltipBeenShown ->
+                combine(
+                        isWallpaperCroppable,
+                        interactor.hasSmallPreviewTooltipBeenShown,
+                        currentPreviewScreen,
+                    ) { isCroppable, hasTooltipBeenShown, previewScreen ->
                         // Only show tooltip if it has not been shown before.
-                        isCroppable && !hasTooltipBeenShown
+                        val shouldShow = isCroppable && !hasTooltipBeenShown
+                        if (BaseFlags.get().isNewPickerUi()) {
+                            shouldShow && previewScreen == PreviewScreen.SMALL_PREVIEW
+                        } else {
+                            shouldShow
+                        }
                     }
                     .distinctUntilChanged()
 

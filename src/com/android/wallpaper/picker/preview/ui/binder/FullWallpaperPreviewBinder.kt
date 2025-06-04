@@ -230,6 +230,7 @@ object FullWallpaperPreviewBinder {
             }
             // When OnDestroy, release the surface
             surfaceCallback?.let {
+                it.releaseSurfaceControlViewHost()
                 wallpaperSurface.holder.removeCallback(it)
                 surfaceCallback = null
             }
@@ -468,8 +469,6 @@ object FullWallpaperPreviewBinder {
             override fun surfaceDestroyed(holder: SurfaceHolder) {
                 job?.cancel()
                 job = null
-                surfaceControlViewHost?.release()
-                surfaceControlViewHost = null
                 // Clean up surface view's on touche listener
                 surfaceTouchForwardingLayout.removeTouchForwarding()
                 surfaceView.setOnTouchListener(null)
@@ -477,6 +476,11 @@ object FullWallpaperPreviewBinder {
                 // WallpaperPreviewActivity's onDestroy().
                 // This is to reduce multiple times of connecting and disconnecting live
                 // wallpaper services, when going back and forth small and full preview.
+            }
+
+            override fun releaseSurfaceControlViewHost() {
+                surfaceControlViewHost?.release()
+                surfaceControlViewHost = null
             }
         }
     }

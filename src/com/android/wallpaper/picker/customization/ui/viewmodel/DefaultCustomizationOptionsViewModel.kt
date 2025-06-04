@@ -34,7 +34,8 @@ constructor(
     wallpaperCarouselViewModelFactory: WallpaperCarouselViewModel.Factory,
     customizationOptionUtil: CustomizationOptionUtil,
     @Assisted viewModelScope: CoroutineScope,
-    @Assisted private val initialDeepLinkDestination: String?,
+    @Assisted("destination") private val initialDeepLinkDestination: String?,
+    @Assisted("shortcutSlotId") initialDeepLinkShortcutSlotId: String?,
 ) : CustomizationOptionsViewModel {
 
     override val customizationOptionsData: Flow<CustomizationOptionsData> =
@@ -105,7 +106,8 @@ constructor(
     interface Factory : CustomizationOptionsViewModelFactory {
         override fun create(
             viewModelScope: CoroutineScope,
-            initialDeepLinkDestination: String?,
+            @Assisted("destination") initialDeepLinkDestination: String?,
+            @Assisted("shortcutSlotId") initialDeepLinkShortcutSlotId: String?,
         ): DefaultCustomizationOptionsViewModel
     }
 }
