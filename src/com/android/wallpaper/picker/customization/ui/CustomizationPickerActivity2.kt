@@ -44,6 +44,7 @@ import com.android.wallpaper.picker.customization.ui.binder.ToolbarBinder
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionViewUtil
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.Companion.KEY_DESTINATION
+import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel2.Companion.KEY_SHORTCUT_SLOT_ID
 import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
 import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.util.ActivityUtils
@@ -147,6 +148,10 @@ class CustomizationPickerActivity2 :
                                 putString(
                                     KEY_DESTINATION,
                                     intent.extras?.getString(KEY_DESTINATION),
+                                )
+                                putString(
+                                    KEY_SHORTCUT_SLOT_ID,
+                                    intent.extras?.getString(KEY_SHORTCUT_SLOT_ID),
                                 )
                             }
                     }, // fragment
