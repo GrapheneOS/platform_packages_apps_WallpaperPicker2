@@ -145,6 +145,7 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"পরিবর্তন রিসেট করবেন?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"আপনার করা পরিবর্তন সেভ করা হবে না"</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"আরও ওয়ালপেপার"</string>
+    <string name="view_all_wallpapers" msgid="1555854274767599522">"&gt;\nসবকটি দেখুন"</string>
     <string name="wallpapers" msgid="7133442512006469886">"ওয়ালপেপার"</string>
     <string name="recents_wallpaper_label" msgid="8653165542635660222">"%1$s, %2$d"</string>
     <string name="default_wallpaper_title" msgid="2541071182656978180">"ওয়ালপেপার"</string>
