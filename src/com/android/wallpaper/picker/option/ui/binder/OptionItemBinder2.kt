@@ -76,7 +76,7 @@ object OptionItemBinder2 {
         colorUpdateViewModel: WeakReference<ColorUpdateViewModel>,
         shouldAnimateColor: () -> Boolean,
     ): DisposableHandle {
-        val backgroundView: OptionItemBackground = view.requireViewById(R.id.background)
+        val backgroundView: OptionItemBackground? = view.findViewById(R.id.background)
         val foregroundView: ImageView? = view.findViewById(R.id.foreground)
         val textView: TextView? = view.findViewById(R.id.text)
 
@@ -86,7 +86,7 @@ object OptionItemBinder2 {
             // Use the text as the content description of the foreground if we don't have a TextView
             // dedicated to for the text.
             ContentDescriptionViewBinder.bind(
-                view = foregroundView ?: backgroundView,
+                view = foregroundView ?: backgroundView ?: view,
                 viewModel = viewModel.text,
             )
         }
@@ -99,7 +99,7 @@ object OptionItemBinder2 {
                 animationSpec.disabledTextAlpha
             }
 
-        backgroundView.alpha =
+        backgroundView?.alpha =
             if (viewModel.isEnabled) {
                 animationSpec.enabledAlpha
             } else {
@@ -158,14 +158,14 @@ object OptionItemBinder2 {
 
             val unselectedBackgroundColorBinding =
                 ColorUpdateBinder.bind(
-                    setColor = { color -> backgroundView.setUnselectedColor(color) },
+                    setColor = { color -> backgroundView?.setUnselectedColor(color) },
                     color = it.colorSurfaceContainerHigh,
                     shouldAnimate = shouldAnimateColor,
                     lifecycleOwner = lifecycleOwner,
                 )
             val selectedBackgroundColorBinding =
                 ColorUpdateBinder.bind(
-                    setColor = { color -> backgroundView.setSelectedColor(color) },
+                    setColor = { color -> backgroundView?.setSelectedColor(color) },
                     color = it.colorPrimaryFixedDim,
                     shouldAnimate = shouldAnimateColor,
                     lifecycleOwner = lifecycleOwner,
@@ -208,13 +208,15 @@ object OptionItemBinder2 {
                                 val shouldAnimate =
                                     lastSelected != null && lastSelected != isSelected
                                 if (shouldAnimate) {
-                                    animatedSelection(
-                                        backgroundView = backgroundView,
-                                        isSelected = isSelected,
-                                        animationSpec = animationSpec,
-                                    )
+                                    backgroundView?.let {
+                                        animatedSelection(
+                                            backgroundView = it,
+                                            isSelected = isSelected,
+                                            animationSpec = animationSpec,
+                                        )
+                                    }
                                 } else {
-                                    backgroundView.setProgress(if (isSelected) 1f else 0f)
+                                    backgroundView?.setProgress(if (isSelected) 1f else 0f)
                                 }
 
                                 view.isSelected = isSelected
@@ -222,15 +224,17 @@ object OptionItemBinder2 {
                             }
                     }
 
-                    launch {
-                        viewModel.onClicked.collect { onClicked ->
-                            view.setOnClickListener(
-                                if (onClicked != null) {
-                                    View.OnClickListener { onClicked.invoke() }
-                                } else {
-                                    null
-                                }
-                            )
+                    if (!viewModel.skipOnClickBinding) {
+                        launch {
+                            viewModel.onClicked.collect { onClicked ->
+                                view.setOnClickListener(
+                                    if (onClicked != null) {
+                                        View.OnClickListener { onClicked.invoke() }
+                                    } else {
+                                        null
+                                    }
+                                )
+                            }
                         }
                     }
                 }

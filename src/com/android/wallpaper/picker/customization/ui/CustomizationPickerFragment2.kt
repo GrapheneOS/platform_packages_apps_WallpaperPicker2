@@ -47,6 +47,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.Transition
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
+import com.android.customization.picker.icon.ui.util.IconStyleViewUtil
 import com.android.wallpaper.R
 import com.android.wallpaper.config.BaseFlags
 import com.android.wallpaper.model.ImageWallpaperInfo
@@ -123,6 +124,7 @@ class CustomizationPickerFragment2 :
     @Inject lateinit var curatedPhotosTimeUtil: CuratedPhotosTimeUtil
     @Inject lateinit var wallpaperModelFactory: WallpaperModelFactory
     @Inject lateinit var myPhotosStarterImpl: MyPhotosStarterImpl
+    @Inject lateinit var iconStyleViewUtil: IconStyleViewUtil
 
     private val customizationPickerViewModel: CustomizationPickerViewModel2 by viewModels()
 
@@ -704,6 +706,7 @@ class CustomizationPickerFragment2 :
             packThemeSuggestedEntryBinder = packThemeSuggestedEntryBinder,
             curatedPhotosTimeUtil = curatedPhotosTimeUtil,
             userEventLogger = userEventLogger,
+            iconStyleViewUtil = iconStyleViewUtil,
         )
 
         customizationOptionsBinder.bindDiscardChangesDialog(

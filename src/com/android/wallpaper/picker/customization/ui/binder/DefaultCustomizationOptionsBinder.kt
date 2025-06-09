@@ -26,6 +26,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
+import com.android.customization.picker.icon.ui.util.IconStyleViewUtil
 import com.android.wallpaper.R
 import com.android.wallpaper.picker.customization.ui.util.CustomizationOptionUtil.CustomizationOption
 import com.android.wallpaper.picker.customization.ui.viewmodel.ColorUpdateViewModel
@@ -52,6 +53,7 @@ class DefaultCustomizationOptionsBinder @Inject constructor() : CustomizationOpt
         navigateToColorContrastSettingsActivity: () -> Unit,
         navigateToLockScreenNotificationsSettingsActivity: () -> Unit,
         navigateToPackThemeActivity: (Intent) -> Unit,
+        iconStyleViewUtil: IconStyleViewUtil,
     ) {
         // Do nothing intended
     }

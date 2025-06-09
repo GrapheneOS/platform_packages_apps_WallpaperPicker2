@@ -25,6 +25,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.android.customization.picker.icon.ui.util.IconStyleViewUtil
 import com.android.wallpaper.R
 import com.android.wallpaper.config.BaseFlags.Companion.get
 import com.android.wallpaper.model.Screen
@@ -77,6 +78,7 @@ object CustomizationPickerBinder2 {
         packThemeSuggestedEntryBinder: PackThemeSuggestedEntryBinder,
         curatedPhotosTimeUtil: CuratedPhotosTimeUtil,
         userEventLogger: UserEventLogger,
+        iconStyleViewUtil: IconStyleViewUtil,
     ) {
         val lockCustomizationOptionContainer: LinearLayout =
             view.requireViewById(R.id.lock_customization_option_container)
@@ -188,6 +190,7 @@ object CustomizationPickerBinder2 {
             navigateToColorContrastSettingsActivity,
             navigateToLockScreenNotificationsSettingsActivity,
             navigateToPackThemeActivity,
+            iconStyleViewUtil,
         )
     }
 }
