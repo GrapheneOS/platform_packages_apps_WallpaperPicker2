@@ -31,6 +31,7 @@ import com.android.systemui.shared.customization.data.content.CustomizationProvi
 import com.android.wallpaper.Flags.composeRefactorFlag
 import com.android.wallpaper.Flags.creativeWallpaperFieldCollectionWallpaper
 import com.android.wallpaper.Flags.desktopUiFlag
+import com.android.wallpaper.Flags.enablePackThemeEntry
 import com.android.wallpaper.Flags.fullscreenPreviewFlag
 import com.android.wallpaper.Flags.newCreativeWallpaperCategory
 import com.android.wallpaper.Flags.refactorWallpaperCategoryFlag
@@ -51,7 +52,7 @@ abstract class BaseFlags {
 
     open fun isWallpaperEffectEnabled() = false
 
-    open fun isPackThemeEnabled() = false
+    open fun isPackThemeEnabled() = enablePackThemeEntry()
 
     open fun isWallpaperEffectModelDownloadEnabled() = true
 
