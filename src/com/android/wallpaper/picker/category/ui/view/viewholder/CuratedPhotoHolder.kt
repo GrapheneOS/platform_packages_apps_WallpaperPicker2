@@ -17,6 +17,7 @@
 package com.android.wallpaper.picker.category.ui.view.viewholder
 
 import android.content.Context
+import android.graphics.drawable.AnimatedImageDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
@@ -49,6 +50,7 @@ class CuratedPhotoHolder(
 
     fun bind(item: TileViewModel, context: Context, isFirst: Boolean) {
         curatedPhotoImage.contentDescription = item.contentDescription
+
         item.thumbnailAsset?.let { asset ->
             asset.loadDrawableWithTransition(
                 context,
@@ -81,6 +83,14 @@ class CuratedPhotoHolder(
                                 dataSource: DataSource,
                                 isFirstResource: Boolean,
                             ): Boolean {
+                                // Check if it's a GIF and set it to play only once
+                                if (resource is AnimatedImageDrawable) {
+                                    // repeat count here means to replay the gif more than once
+                                    // so we need to set it to zero
+                                    resource.repeatCount = 0
+                                    resource.start()
+                                }
+
                                 val startTime = curatedPhotosTimeUtil.getStartTime()
                                 val timeMilliseconds = System.currentTimeMillis() - startTime
                                 userEventLogger.logCuratedPhotosRendered(timeMilliseconds, false)
