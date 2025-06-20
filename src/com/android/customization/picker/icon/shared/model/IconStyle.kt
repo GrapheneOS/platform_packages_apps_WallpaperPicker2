@@ -20,7 +20,4 @@ interface IconStyle {
     val nameResId: Int
 
     fun getIsThemedIcon(): Boolean
-
-    /** Check if the IconStyle option should navigate to an external link. */
-    fun getIsExternalLink(): Boolean
 }

@@ -142,19 +142,21 @@ object OptionItemBinder2 {
                 )
 
             val foregroundColorBinding =
-                ColorUpdateBinder.bind(
-                    setColor = { color -> foregroundView?.setColorFilter(color) },
-                    color =
-                        viewModel.isSelected.flatMapLatest { isSelected ->
-                            if (isSelected) {
-                                it.colorOnPrimaryFixed
-                            } else {
-                                it.colorOnSurfaceVariant
-                            }
-                        },
-                    shouldAnimate = { false },
-                    lifecycleOwner = lifecycleOwner,
-                )
+                if (!viewModel.skipForegroundColorBinding) {
+                    ColorUpdateBinder.bind(
+                        setColor = { color -> foregroundView?.setColorFilter(color) },
+                        color =
+                            viewModel.isSelected.flatMapLatest { isSelected ->
+                                if (isSelected) {
+                                    it.colorOnPrimaryFixed
+                                } else {
+                                    it.colorOnSurfaceVariant
+                                }
+                            },
+                        shouldAnimate = { false },
+                        lifecycleOwner = lifecycleOwner,
+                    )
+                } else null
 
             val unselectedBackgroundColorBinding =
                 ColorUpdateBinder.bind(
@@ -172,7 +174,7 @@ object OptionItemBinder2 {
                 )
             colorBindingDisposableHandle = DisposableHandle {
                 textColorBinding.destroy()
-                foregroundColorBinding.destroy()
+                foregroundColorBinding?.destroy()
                 unselectedBackgroundColorBinding.destroy()
                 selectedBackgroundColorBinding.destroy()
             }

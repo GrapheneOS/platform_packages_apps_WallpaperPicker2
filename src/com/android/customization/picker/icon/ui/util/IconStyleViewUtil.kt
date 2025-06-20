@@ -16,11 +16,8 @@
 
 package com.android.customization.picker.icon.ui.util
 
-import android.graphics.drawable.Drawable
 import com.android.customization.picker.icon.shared.model.IconStyle
 
 interface IconStyleViewUtil {
-    fun getDrawable(iconStyle: IconStyle): Drawable?
-
     fun getOnClick(iconStyle: IconStyle): (() -> Unit)?
 }
