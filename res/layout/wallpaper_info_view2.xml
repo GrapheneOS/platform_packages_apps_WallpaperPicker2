@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textColor="@color/system_on_surface"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/wallpaper_info_subtitle1"
@@ -42,7 +42,7 @@
         android:id="@+id/wallpaper_info_subtitle2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_color_secondary"
+        android:textColor="@color/system_on_surface_variant"
         android:textSize="14sp"
         android:visibility="gone" />
 
