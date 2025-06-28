@@ -497,7 +497,7 @@ constructor(
             (enabledSet, dest) ->
             if (enabledSet) {
                 {
-                    val screens = dest?.toScreens() ?: setOf(smallPreviewSelectedTab.value)
+                    val screens = dest?.toScreens() ?: WallpaperDestination.BOTH.toScreens()
                     initSetWallpaperDialogScreenSelected(screens)
                     setApplyWallpaperPreviewSelectedTab(smallPreviewSelectedTab.value)
                     _currentPreviewScreen.value = PreviewScreen.APPLY_WALLPAPER
