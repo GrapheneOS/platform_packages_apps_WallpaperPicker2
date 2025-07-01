@@ -77,12 +77,16 @@ constructor(
 
     private val mutex = Mutex()
 
+    private var disconnectOnWallpaperChange = false
+
     init {
         // We need to clear existing previews when a wallpaper is set since it's possible they will
         // be stale. See b/414490885.
         val wallpaperChanged =
             broadcastDispatcher.broadcastFlow(IntentFilter(Intent.ACTION_WALLPAPER_CHANGED))
-        bgScope.launch { wallpaperChanged.collect { disconnectAll() } }
+        bgScope.launch {
+            wallpaperChanged.collect { if (disconnectOnWallpaperChange) disconnectAll() }
+        }
     }
 
     /**
@@ -99,10 +103,12 @@ constructor(
         surfaceView: SurfaceView,
         engineRenderingConfig: EngineRenderingConfig,
         isFirstBindingDeferred: CompletableDeferred<Boolean>,
+        disconnectOnWallpaperChange: Boolean,
         totalEngineNum: Int = 1,
         listener: WallpaperEngineConnection.WallpaperEngineConnectionListener? = null,
         onPreviewReady: (() -> Unit)? = null,
     ) {
+        this.disconnectOnWallpaperChange = disconnectOnWallpaperChange
         val wallpaperInfo = wallpaperModel.liveWallpaperData.systemWallpaperInfo
         val engineDisplaySize = engineRenderingConfig.getEngineDisplaySize()
         val engineKey =

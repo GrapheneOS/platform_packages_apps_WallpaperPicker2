@@ -359,6 +359,7 @@ object FullWallpaperPreviewBinder {
                                     surfaceView,
                                     engineRenderingConfig,
                                     isFirstBindingDeferred,
+                                    disconnectOnWallpaperChange = false,
                                     onPreviewReady = { onStartTransition?.invoke() },
                                 )
                                 if (!viewModel.isAccessibilityEnabled()) {

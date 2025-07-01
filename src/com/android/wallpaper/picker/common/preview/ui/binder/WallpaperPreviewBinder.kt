@@ -158,6 +158,7 @@ object WallpaperPreviewBinder {
                                     surfaceView = surfaceView,
                                     engineRenderingConfig = engineRenderingConfig,
                                     isFirstBindingDeferred = isFirstBindingDeferred,
+                                    disconnectOnWallpaperChange = true,
                                     listener = listener,
                                     onPreviewReady = { onPreviewReady?.invoke(screen) },
                                 )
