@@ -39,6 +39,12 @@ object PreviewPagerBinder2 {
     private val commonClickableViewIds =
         listOf(R.id.apply_button, R.id.cancel_button, R.id.home_checkbox, R.id.lock_checkbox)
 
+    interface Binding {
+        fun showSurfaces()
+
+        fun hideSurfaces()
+    }
+
     fun bind(
         applicationContext: Context,
         mainScope: CoroutineScope,
@@ -55,7 +61,8 @@ object PreviewPagerBinder2 {
         onStartTransition: (() -> Unit)? = null,
         onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
         navigate: (View) -> Unit,
-    ) {
+    ): Binding {
+        val bindings: MutableList<SmallPreviewBinder.Binding> = mutableListOf()
         pagerItems.forEach { item ->
             val container = previewPager.requireViewById<View>(item)
             PreviewTooltipBinder.bindSmallPreviewTooltip(
@@ -80,59 +87,77 @@ object PreviewPagerBinder2 {
                 DeviceDisplayType.FOLDABLE_DISPLAY_TYPES.forEach { display ->
                     dualDisplayAspectRatioLayout.getPreviewDisplaySize(display)?.let { displaySize
                         ->
-                        SmallPreviewBinder.bind(
-                            applicationContext = applicationContext,
-                            view =
-                                dualDisplayAspectRatioLayout.requireViewById(display.getViewId()),
-                            viewModel = viewModel,
-                            screen = viewModel.smallPreviewTabs[pagerItems.indexOf(item)],
-                            displaySize = displaySize,
-                            deviceDisplayType = display,
-                            mainScope = mainScope,
-                            viewLifecycleOwner = lifecycleOwner,
-                            currentNavDestId = R.id.smallPreviewFragment,
-                            transition = transition,
-                            transitionConfig = transitionConfig,
-                            wallpaperConnectionUtils = wallpaperConnectionUtils,
-                            isFirstBindingDeferred = isFirstBindingDeferred,
-                            navigate = navigate,
-                            onPreviewReady =
-                                // Only report onPreviewReady for UNFOLDED preview as it loads
-                                // longer than the FOLDED preview
-                                if (display == DeviceDisplayType.UNFOLDED) onPreviewReady else null,
-                            onStartTransition = onStartTransition,
-                            onPreviewSurfaceDestroyed =
-                                // Align with onPreviewReady to only report
-                                // onPreviewSurfaceDestroyed for UNFOLDED preview
-                                if (display == DeviceDisplayType.UNFOLDED) onPreviewSurfaceDestroyed
-                                else null,
-                            isFoldable = isFoldable,
+                        bindings.add(
+                            SmallPreviewBinder.bind(
+                                applicationContext = applicationContext,
+                                view =
+                                    dualDisplayAspectRatioLayout.requireViewById(
+                                        display.getViewId()
+                                    ),
+                                viewModel = viewModel,
+                                screen = viewModel.smallPreviewTabs[pagerItems.indexOf(item)],
+                                displaySize = displaySize,
+                                deviceDisplayType = display,
+                                mainScope = mainScope,
+                                viewLifecycleOwner = lifecycleOwner,
+                                currentNavDestId = R.id.smallPreviewFragment,
+                                transition = transition,
+                                transitionConfig = transitionConfig,
+                                wallpaperConnectionUtils = wallpaperConnectionUtils,
+                                isFirstBindingDeferred = isFirstBindingDeferred,
+                                navigate = navigate,
+                                onPreviewReady =
+                                    // Only report onPreviewReady for UNFOLDED preview as it loads
+                                    // longer than the FOLDED preview
+                                    if (display == DeviceDisplayType.UNFOLDED) onPreviewReady
+                                    else null,
+                                onStartTransition = onStartTransition,
+                                onPreviewSurfaceDestroyed =
+                                    // Align with onPreviewReady to only report
+                                    // onPreviewSurfaceDestroyed for UNFOLDED preview
+                                    if (display == DeviceDisplayType.UNFOLDED)
+                                        onPreviewSurfaceDestroyed
+                                    else null,
+                                isFoldable = isFoldable,
+                            )
                         )
                     }
                 }
             } else {
                 val previewViewId = R.id.preview
                 previewPager.setClickableViewIds(commonClickableViewIds.toList() + previewViewId)
-                SmallPreviewBinder.bind(
-                    applicationContext = applicationContext,
-                    view = container.requireViewById(previewViewId),
-                    viewModel = viewModel,
-                    screen = viewModel.smallPreviewTabs[pagerItems.indexOf(item)],
-                    displaySize = previewDisplaySize,
-                    deviceDisplayType = DeviceDisplayType.SINGLE,
-                    mainScope = mainScope,
-                    viewLifecycleOwner = lifecycleOwner,
-                    currentNavDestId = R.id.smallPreviewFragment,
-                    transition = transition,
-                    transitionConfig = transitionConfig,
-                    wallpaperConnectionUtils = wallpaperConnectionUtils,
-                    isFirstBindingDeferred = isFirstBindingDeferred,
-                    navigate = navigate,
-                    onPreviewReady = onPreviewReady,
-                    onStartTransition = onStartTransition,
-                    onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
-                    isFoldable = isFoldable,
+                bindings.add(
+                    SmallPreviewBinder.bind(
+                        applicationContext = applicationContext,
+                        view = container.requireViewById(previewViewId),
+                        viewModel = viewModel,
+                        screen = viewModel.smallPreviewTabs[pagerItems.indexOf(item)],
+                        displaySize = previewDisplaySize,
+                        deviceDisplayType = DeviceDisplayType.SINGLE,
+                        mainScope = mainScope,
+                        viewLifecycleOwner = lifecycleOwner,
+                        currentNavDestId = R.id.smallPreviewFragment,
+                        transition = transition,
+                        transitionConfig = transitionConfig,
+                        wallpaperConnectionUtils = wallpaperConnectionUtils,
+                        isFirstBindingDeferred = isFirstBindingDeferred,
+                        navigate = navigate,
+                        onPreviewReady = onPreviewReady,
+                        onStartTransition = onStartTransition,
+                        onPreviewSurfaceDestroyed = onPreviewSurfaceDestroyed,
+                        isFoldable = isFoldable,
+                    )
                 )
+            }
+        }
+
+        return object : Binding {
+            override fun showSurfaces() {
+                bindings.forEach { it.showSurfaces() }
+            }
+
+            override fun hideSurfaces() {
+                bindings.forEach { it.hideSurfaces() }
             }
         }
     }

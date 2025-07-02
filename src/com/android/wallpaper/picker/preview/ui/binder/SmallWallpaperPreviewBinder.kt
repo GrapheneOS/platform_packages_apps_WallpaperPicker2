@@ -50,6 +50,10 @@ object SmallWallpaperPreviewBinder {
     private const val HANDHELD_CONNECTION_NUM = 2
     private const val FOLDABLE_CONNECTION_NUM = 4
 
+    interface Binding {
+        fun destroy()
+    }
+
     /**
      * @param onFullResImageViewCreated This callback is only used when the wallpaperModel is a
      *   [WallpaperModel.StaticWallpaperModel]. [FullWallpaperPreviewBinder] needs the callback to
@@ -71,7 +75,7 @@ object SmallWallpaperPreviewBinder {
         onStartTransition: (() -> Unit)? = null,
         onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
         isFoldable: Boolean? = null,
-    ) {
+    ): Binding {
         var surfaceCallback: SurfaceViewUtils.SurfaceCallback? = null
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
@@ -100,6 +104,12 @@ object SmallWallpaperPreviewBinder {
                 it.releaseSurfaceControlViewHost()
                 surface.holder.removeCallback(it)
                 surfaceCallback = null
+            }
+        }
+        return object : Binding {
+            // Called when exiting the SmallPreviewFragment through back press
+            override fun destroy() {
+                mainScope.launch { wallpaperConnectionUtils.disconnectAllServices() }
             }
         }
     }
