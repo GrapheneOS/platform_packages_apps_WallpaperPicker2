@@ -248,6 +248,27 @@ class WallpaperPreviewViewModelTest {
         }
 
     @Test
+    fun onApplyWallpaperScreen_bothScreensDefault() =
+        testScope.runTest {
+            val onNextButtonClicked =
+                collectLastValue(wallpaperPreviewViewModel.onNextButtonClicked)
+            val model =
+                WallpaperModelUtils.getStaticWallpaperModel(
+                    wallpaperId = "testId",
+                    collectionId = "testCollection",
+                )
+            wallpaperPreviewRepository.setWallpaperModel(model)
+            executePendingWork(this)
+
+            onNextButtonClicked()?.invoke()
+
+            val selectedScreens =
+                collectLastValue(wallpaperPreviewViewModel.setWallpaperDialogSelectedScreens)()
+            assertThat(selectedScreens).contains(Screen.HOME_SCREEN)
+            assertThat(selectedScreens).contains(Screen.LOCK_SCREEN)
+        }
+
+    @Test
     fun clickCancelButton_setsSmallPreviewScreen() =
         testScope.runTest {
             val onCancelButtonClicked =
