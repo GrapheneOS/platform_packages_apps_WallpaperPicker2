@@ -151,6 +151,7 @@ object SmallWallpaperPreviewBinder {
                                         viewModel.wallpaperDisplaySize.value,
                                     ),
                                     isFirstBindingDeferred,
+                                    disconnectOnWallpaperChange = false,
                                     totalEngineNum =
                                         isFoldable?.let {
                                             if (it) {
