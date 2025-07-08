@@ -37,7 +37,7 @@ class PreviewUtils(
     authorityMetadataKey: String? = null,
     authority: String? = null,
     val screen: Screen,
-) {
+) : BasePreviewUtils {
     /** Callback for a call to the provider to render preview */
     interface WorkspacePreviewCallback {
         /** Called with the result from the provider. */
@@ -106,7 +106,7 @@ class PreviewUtils(
     }
 
     /** Easy way to generate a Uri with the provider info from this class. */
-    fun getUri(path: String?): Uri {
+    override fun getUri(path: String?): Uri {
         return Uri.Builder()
             .scheme(ContentResolver.SCHEME_CONTENT)
             .authority(checkNotNull(providerInfo).authority)
@@ -115,7 +115,7 @@ class PreviewUtils(
     }
 
     /** Return whether preview is supported. */
-    fun supportsPreview(): Boolean {
+    override fun supportsPreview(): Boolean {
         return providerInfo != null
     }
 
