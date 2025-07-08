@@ -29,6 +29,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 
 import com.android.wallpaper.R;
@@ -56,6 +57,27 @@ public final class ActivityUtils {
             Toast.makeText(activity, R.string.app_not_found, Toast.LENGTH_SHORT).show();
         } catch (SecurityException e) {
             Toast.makeText(activity, R.string.app_not_found, Toast.LENGTH_SHORT).show();
+            Log.e("Wallpaper", "Wallpaper does not have the permission to launch " + intent
+                    + ". Make sure to create a MAIN intent-filter for the corresponding activity "
+                    + "or use the exported attribute for this activity.", e);
+        }
+    }
+
+    /**
+     * Starts an activity with the given intent "safely" - i.e., catches exceptions that may occur
+     * and displays a toast to the user in response to such issues.
+     *
+     * @param launcher
+     * @param intent
+     */
+    public static void startActivityForResultSafely(
+            Context context, ActivityResultLauncher<Intent> launcher, Intent intent) {
+        try {
+            launcher.launch(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(context, R.string.app_not_found, Toast.LENGTH_SHORT).show();
+        } catch (SecurityException e) {
+            Toast.makeText(context, R.string.app_not_found, Toast.LENGTH_SHORT).show();
             Log.e("Wallpaper", "Wallpaper does not have the permission to launch " + intent
                     + ". Make sure to create a MAIN intent-filter for the corresponding activity "
                     + "or use the exported attribute for this activity.", e);
