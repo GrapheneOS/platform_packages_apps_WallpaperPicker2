@@ -16,6 +16,13 @@ flag {
 }
 
 flag {
+    name: "enable_pack_theme_entry"
+    namespace: "customization_picker"
+    description: "Enable the entry of the theme."
+    bug: "372344184"
+}
+
+flag {
     name: "new_creative_wallpaper_category"
     namespace: "customization_picker"
     description: "Add new column for the new creative wallpaper."
