@@ -104,6 +104,9 @@ class WallpaperPreviewActivity :
         navigateToExtendedWallpaperEffects =
             intent.getBooleanExtra(SHOULD_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS, false)
 
+        wallpaperPreviewViewModel.previewActionsViewModel.hideInformationFloatingSheet.value =
+            intent.getBooleanExtra(HIDE_INFO_SHEET, false)
+
         if (isCategoriesRefactorEnabled) {
             refreshCreativeCategories = intent.getBooleanExtra(SHOULD_CATEGORY_REFRESH, false)
         }
@@ -307,6 +310,8 @@ class WallpaperPreviewActivity :
     companion object {
         private const val SHOULD_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS =
             "should_navigate_to_extended_wallpaper_effects"
+        private const val HIDE_INFO_SHEET = "hide_info_sheet"
+
         private const val TAG = "WallpaperPreviewActivity"
 
         /**
@@ -321,6 +326,7 @@ class WallpaperPreviewActivity :
             isAssetIdPresent: Boolean,
             isViewAsHome: Boolean = false,
             isNewTask: Boolean = false,
+            hideInfoSheet: Boolean = false,
         ): Intent {
             val isNewPickerUi = BaseFlags.get().isNewPickerUi()
             val isCategoriesRefactorEnabled =
@@ -334,6 +340,7 @@ class WallpaperPreviewActivity :
             intent.putExtra(IS_ASSET_ID_PRESENT, isAssetIdPresent)
             intent.putExtra(EXTRA_VIEW_AS_HOME, isViewAsHome)
             intent.putExtra(IS_NEW_TASK, isNewTask)
+            intent.putExtra(HIDE_INFO_SHEET, hideInfoSheet)
             return intent
         }
 

@@ -100,11 +100,18 @@ constructor(
         context.getString(R.string.extended_wallpaper_effects_package)
     private val extendedWallpaperEffectActivityName =
         context.getString(R.string.extended_wallpaper_effects_activity)
+    val hideInformationFloatingSheet = MutableStateFlow(false)
 
     /** [INFORMATION] */
     private val informationFloatingSheetViewModel: Flow<InformationFloatingSheetViewModel?> =
-        previewActionsInteractor.wallpaperModel.map { wallpaperModel ->
-            if (wallpaperModel == null || !wallpaperModel.shouldShowInformationFloatingSheet()) {
+        combine(previewActionsInteractor.wallpaperModel, hideInformationFloatingSheet) {
+            wallpaperModel,
+            hideSheet ->
+            if (
+                hideSheet ||
+                    wallpaperModel == null ||
+                    !wallpaperModel.shouldShowInformationFloatingSheet()
+            ) {
                 null
             } else {
                 InformationFloatingSheetViewModel(
