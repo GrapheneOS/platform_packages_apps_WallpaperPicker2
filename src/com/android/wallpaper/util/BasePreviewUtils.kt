@@ -13,11 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.android.wallpaper.util
 
-package com.android.customization.picker.icon.shared.model
+import android.net.Uri
 
-interface IconStyle {
-    val nameResId: Int
+/** Util class for wallpaper preview. */
+interface BasePreviewUtils {
 
-    fun getIsThemedIcon(): Boolean
+    /** Easy way to generate a Uri with the provider info from this class. */
+    fun getUri(path: String?): Uri
+
+    /** Return whether preview is supported. */
+    fun supportsPreview(): Boolean
 }

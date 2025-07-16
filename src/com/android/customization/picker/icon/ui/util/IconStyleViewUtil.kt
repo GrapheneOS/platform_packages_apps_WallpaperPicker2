@@ -16,11 +16,9 @@
 
 package com.android.customization.picker.icon.ui.util
 
-import android.graphics.drawable.Drawable
+import androidx.lifecycle.DefaultLifecycleObserver
 import com.android.customization.picker.icon.shared.model.IconStyle
 
-interface IconStyleViewUtil {
-    fun getDrawable(iconStyle: IconStyle): Drawable?
-
+interface IconStyleViewUtil : DefaultLifecycleObserver {
     fun getOnClick(iconStyle: IconStyle): (() -> Unit)?
 }
