@@ -204,6 +204,16 @@ class WallpaperPreviewActivity :
         }
     }
 
+    override fun onEnterAnimationComplete() {
+        super.onEnterAnimationComplete()
+        if (BaseFlags.get().isNewPickerUi()) {
+            val navHostFragment =
+                supportFragmentManager.findFragmentById(R.id.wallpaper_preview_nav_host)
+            (navHostFragment?.getChildFragmentManager()?.fragments?.get(0) as? SmallPreviewFragment)
+                ?.onEnterAnimationComplete()
+        }
+    }
+
     override fun onUpArrowPressed() {
         onBackPressedDispatcher.onBackPressed()
     }

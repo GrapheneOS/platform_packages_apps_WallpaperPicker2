@@ -61,7 +61,7 @@ object SmallPreviewScreenBinder {
         onStartTransition: (() -> Unit)? = null,
         onPreviewSurfaceDestroyed: ((Screen) -> Unit)? = null,
         navigate: (View) -> Unit,
-    ) {
+    ): PreviewPagerBinder2.Binding {
         val previewPager = fragmentLayout.requireViewById<ClickableMotionLayout>(R.id.preview_pager)
         previewPager.jumpToState(
             if (viewModel.smallPreviewSelectedTab.value == Screen.LOCK_SCREEN)
@@ -72,23 +72,24 @@ object SmallPreviewScreenBinder {
             fragmentLayout.requireViewById<MotionLayout>(R.id.small_preview_container)
         val nextButton = fragmentLayout.requireViewById<Button>(R.id.button_next)
 
-        PreviewPagerBinder2.bind(
-            applicationContext,
-            mainScope,
-            lifecycleOwner,
-            previewPager,
-            viewModel,
-            previewDisplaySize,
-            transition,
-            transitionConfig,
-            wallpaperConnectionUtils,
-            isFirstBindingDeferred,
-            isFoldable,
-            onPreviewReady,
-            onStartTransition,
-            onPreviewSurfaceDestroyed,
-            navigate,
-        )
+        val binding =
+            PreviewPagerBinder2.bind(
+                applicationContext,
+                mainScope,
+                lifecycleOwner,
+                previewPager,
+                viewModel,
+                previewDisplaySize,
+                transition,
+                transitionConfig,
+                wallpaperConnectionUtils,
+                isFirstBindingDeferred,
+                isFoldable,
+                onPreviewReady,
+                onStartTransition,
+                onPreviewSurfaceDestroyed,
+                navigate,
+            )
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -224,6 +225,7 @@ object SmallPreviewScreenBinder {
                 }
             }
         }
+        return binding
     }
 
     private data class Quintuple<A, B, C, D, E>(
