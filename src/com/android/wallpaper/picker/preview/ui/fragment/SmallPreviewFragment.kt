@@ -118,23 +118,10 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
     private var setWallpaperProgressDialog: AlertDialog? = null
     private var launchExtendedEffectWallpaperJob: Job? = null
 
-    private var hideSurfacesOnEnter = false
-    private var hideSurfacesOnExit = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         exitTransition = AnimationUtil.getFastFadeOutTransition()
         reenterTransition = AnimationUtil.getFastFadeInTransition()
-        hideSurfacesOnEnter =
-            arguments?.getBoolean(WallpaperPreviewActivity.HIDE_SURFACES_FOR_ENTER_TRANSITION) ==
-                true
-        // Activity enter transition only plays once. Remove enter transition argument so it is not
-        // saved across configuration change.
-        arguments?.remove(WallpaperPreviewActivity.HIDE_SURFACES_FOR_ENTER_TRANSITION)
-        // Do not remove exit transition argument so it is saved across configuration change.
-        hideSurfacesOnExit =
-            arguments?.getBoolean(WallpaperPreviewActivity.HIDE_SURFACES_FOR_EXIT_TRANSITION) ==
-                true
     }
 
     override fun onCreateView(
@@ -238,7 +225,11 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                 it.addCallback(owner = viewLifecycleOwner) {
                     isEnabled = wallpaperPreviewViewModel.handleBackPressed()
                     if (!isEnabled) {
-                        if (hideSurfacesOnExit) {
+                        if (
+                            arguments?.getBoolean(
+                                WallpaperPreviewActivity.HIDE_SURFACES_FOR_EXIT_TRANSITION
+                            ) == true
+                        ) {
                             surfacesBinding?.hideSurfaces()
                         }
                         it.onBackPressed()
@@ -492,7 +483,16 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
                         }
                     }
                     .also {
-                        if (hideSurfacesOnEnter) {
+                        if (
+                            arguments?.getBoolean(
+                                WallpaperPreviewActivity.HIDE_SURFACES_FOR_ENTER_TRANSITION
+                            ) == true
+                        ) {
+                            // Activity enter transition only plays once. Remove enter transition
+                            // argument so it is not saved across configuration change.
+                            arguments?.remove(
+                                WallpaperPreviewActivity.HIDE_SURFACES_FOR_ENTER_TRANSITION
+                            )
                             it.hideSurfaces()
                         }
                     }
