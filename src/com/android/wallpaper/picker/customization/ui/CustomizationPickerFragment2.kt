@@ -149,6 +149,8 @@ class CustomizationPickerFragment2 :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        lifecycle.addObserver(iconStyleViewUtil)
+
         if (savedInstanceState != null) {
             // Fragment is being restored, not initial creation
             isInitialCreation = false
