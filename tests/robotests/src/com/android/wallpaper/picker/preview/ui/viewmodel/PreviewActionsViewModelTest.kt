@@ -163,6 +163,16 @@ class PreviewActionsViewModelTest {
     }
 
     @Test
+    fun isInformationVisible_invisibleWhenHideInformationSheetIsTrue() = runTest {
+        val model = WallpaperModelUtils.getStaticWallpaperModel("testId", "testCollection")
+        wallpaperPreviewRepository.setWallpaperModel(model)
+        underTest.hideInformationFloatingSheet.value = true
+
+        val isInformationButtonVisible = collectLastValue(underTest.isInformationVisible)
+        assertThat(isInformationButtonVisible()).isFalse()
+    }
+
+    @Test
     fun isInformationVisible_invisibleWhenActionUrlNull() = runTest {
         val model = WallpaperModelUtils.getStaticWallpaperModel("testId", "testCollection")
         wallpaperPreviewRepository.setWallpaperModel(model)

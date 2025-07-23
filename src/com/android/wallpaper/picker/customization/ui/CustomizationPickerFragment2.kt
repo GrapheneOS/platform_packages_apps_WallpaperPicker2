@@ -945,6 +945,9 @@ class CustomizationPickerFragment2 :
                         isAssetIdPresent = false,
                         isViewAsHome = screen == HOME_SCREEN,
                         isNewTask = isMultiPanel,
+                        // Hide info sheet for current wallpapers because attribution is not
+                        // updated when language updates, see b/418619944
+                        hideInfoSheet = true,
                     )
                 )
             },
