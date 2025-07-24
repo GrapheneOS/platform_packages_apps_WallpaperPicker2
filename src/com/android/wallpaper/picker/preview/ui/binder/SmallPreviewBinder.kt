@@ -113,10 +113,6 @@ object SmallPreviewBinder {
             }
         val wallpaperSurface = view.requireViewById<SurfaceView>(R.id.wallpaper_surface)
         val workspaceSurface = view.requireViewById<SurfaceView>(R.id.workspace_surface)
-        if (BaseFlags.get().isNewPickerUi()) {
-            wallpaperSurface.visibility = View.INVISIBLE
-            workspaceSurface.visibility = View.INVISIBLE
-        }
 
         // Don't set radius for set wallpaper dialog
         if (!viewModel.showSetWallpaperDialog.value) {

@@ -138,25 +138,30 @@ class WallpaperPreviewActivity :
                     as NavHostFragment)
                 .navController
         val graph = navController.navInflater.inflate(R.navigation.wallpaper_preview_nav_graph)
-        val startDestinationArgs: Bundle? =
-            if (navigateToExtendedWallpaperEffects == true) {
-                Bundle().apply {
-                    putBoolean(
-                        SHOULD_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS,
-                        navigateToExtendedWallpaperEffects ?: false,
-                    )
+        val startDestinationArgs: Bundle =
+            Bundle().apply {
+                if (navigateToExtendedWallpaperEffects == true) {
+                    putBoolean(SHOULD_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS, true)
+                    // SmallPreviewFragment is the starting fragment. Hide its surfaces when
+                    // entering and exiting to remove activity transition jank.
+                    putBoolean(HIDE_SURFACES_FOR_ENTER_TRANSITION, true)
+                    putBoolean(HIDE_SURFACES_FOR_EXIT_TRANSITION, true)
+                } else if (
+                    wallpaper is WallpaperModel.LiveWallpaperModel &&
+                        wallpaper.isNewCreativeWallpaper()
+                ) {
+                    putAll(wallpaper.getNewCreativeWallpaperArgs())
+                    // For creating a new creative wallpaper, replace the default start
+                    // destination
+                    // with CreativeEditPreviewFragment.
+                    graph.setStartDestination(R.id.creativeEditPreviewFragment)
+                } else {
+                    // SmallPreviewFragment is the starting fragment. Hide its surfaces when
+                    // entering and exiting to remove activity transition jank.
+                    putBoolean(HIDE_SURFACES_FOR_ENTER_TRANSITION, true)
+                    putBoolean(HIDE_SURFACES_FOR_EXIT_TRANSITION, true)
                 }
-            } else
-                (wallpaper as? WallpaperModel.LiveWallpaperModel)
-                    ?.let {
-                        if (it.isNewCreativeWallpaper()) it.getNewCreativeWallpaperArgs() else null
-                    }
-                    ?.also {
-                        // For creating a new creative wallpaper, replace the default start
-                        // destination
-                        // with CreativeEditPreviewFragment.
-                        graph.setStartDestination(R.id.creativeEditPreviewFragment)
-                    }
+            }
 
         navController.setGraph(graph, startDestinationArgs)
         // Fits screen to navbar and statusbar
@@ -308,6 +313,8 @@ class WallpaperPreviewActivity :
     private fun isFullscreenPreviewEnabled() = BaseFlags.get().isFullscreenPreviewEnabled(this)
 
     companion object {
+        const val HIDE_SURFACES_FOR_ENTER_TRANSITION = "hide_surfaces_for_enter_transition"
+        const val HIDE_SURFACES_FOR_EXIT_TRANSITION = "hide_surfaces_for_exit_transition"
         private const val SHOULD_NAVIGATE_TO_EXTENDED_WALLPAPER_EFFECTS =
             "should_navigate_to_extended_wallpaper_effects"
         private const val HIDE_INFO_SHEET = "hide_info_sheet"
