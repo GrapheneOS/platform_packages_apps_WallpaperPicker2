@@ -310,7 +310,7 @@ constructor(
             }
 
     private val myPhotosSectionViewModel: Flow<SectionViewModel> =
-        if (BaseFlags.get().isNewPickerUi()) {
+        if (false) {
             curatedPhotosInteractor.category
                 .distinctUntilChanged(PhotoMediaUtils.distinctMediaKeyChanged())
                 .map { category ->
