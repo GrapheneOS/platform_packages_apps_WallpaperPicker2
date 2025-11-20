@@ -71,7 +71,7 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
     private var collapsedWidth = 0
     private var progress = 1f
     private var animator: ValueAnimator? = null
-    private var state: State = State.EXPANDED
+    private var state: State = State.COLLAPSED
 
     init {
         val shouldShowDesktopUi = BaseFlags.get().shouldShowDesktopUi(context)
@@ -124,6 +124,7 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
                         R.dimen.customization_option_container_horizontal_padding
                     ) * 4
             collapsedHeight = collapsedButton.height
+            setProgress(PROGRESS_COLLAPSED)
         }
     }
 
@@ -176,6 +177,7 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
     }
 
     fun animateToExpanded() {
+        if (true) return
         if (wallpaperCarousel?.adapter?.itemCount == 0) return
 
         if (state == State.EXPANDED || state == State.EXPANDING) {
