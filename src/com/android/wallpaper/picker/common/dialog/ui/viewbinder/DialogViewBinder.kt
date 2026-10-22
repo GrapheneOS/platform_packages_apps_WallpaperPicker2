@@ -101,20 +101,23 @@ object DialogViewBinder {
 
         buttonContainer.removeAllViews()
         viewModel.buttons.forEach { buttonViewModel ->
-            buttonContainer.addView(
-                ButtonViewBinder.create(
-                    context = context,
-                    parent = buttonContainer,
-                    viewModel =
-                        buttonViewModel.copy(
-                            onClicked = {
-                                buttonViewModel.onClicked?.invoke()
-                                dialog.dismiss()
-                            },
-                        ),
-                    buttonLayoutResourceId = buttonLayoutResourceId,
-                )
+            val buttonView = ButtonViewBinder.create(
+                context = context,
+                parent = buttonContainer,
+                viewModel =
+                    buttonViewModel.copy(
+                        onClicked = {
+                            buttonViewModel.onClicked?.invoke()
+                            dialog.dismiss()
+                        },
+                    ),
+                buttonLayoutResourceId = buttonLayoutResourceId,
             )
+
+            buttonView.background = null
+            buttonView.elevation = 0f
+
+            buttonContainer.addView(buttonView)
         }
 
         dialog.show()
